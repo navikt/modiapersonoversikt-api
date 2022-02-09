@@ -151,6 +151,10 @@ internal class EnhetligKodeverkServiceImplTest {
                     OppgavetypeDTO(
                         oppgavetype = "IKKE_STØTTET",
                         term = "Oppgavetype vi ikke støtter"
+                    ),
+                    OppgavetypeDTO(
+                        oppgavetype = "KONT_BRUK",
+                        term = "Kontakt bruker"
                     )
                 ),
                 gjelderverdier = listOf(
@@ -163,6 +167,10 @@ internal class EnhetligKodeverkServiceImplTest {
                         behandlingstemaTerm = "Dagliglivet",
                         behandlingstype = "ae0007",
                         behandlingstypeTerm = "Utbetaling"
+                    ),
+                    GjelderDTO(
+                        behandlingstema = "ab0241",
+                        behandlingstemaTerm = "A Underkategori som skal sorteres først",
                     )
                 )
             ),
@@ -173,22 +181,31 @@ internal class EnhetligKodeverkServiceImplTest {
                 ),
                 oppgavetyper = emptyList(),
                 gjelderverdier = null
+            ),
+            KodeverkkombinasjonDTO(
+                tema = TemaDTO(
+                    tema = "AAR",
+                    term = "Aa-registeret, som skal havne foran AAP i lista"
+                ),
+                oppgavetyper = emptyList(),
+                gjelderverdier = null
             )
         )
 
         val kodeverk = provider.hentKodeverk(KodeverkConfig.OPPGAVE.navn)
         val kodeverkVerdier = kodeverk.hentAlleVerdier().toList()
 
-        assertThat(kodeverkVerdier.size).isEqualTo(1)
-        assertThat(kodeverkVerdier[0].prioriteter.size).isEqualTo(3)
-        assertThat(kodeverkVerdier[0].prioriteter[0].tekst).isEqualTo("Høy")
-        assertThat(kodeverkVerdier[0].oppgavetyper.size).isEqualTo(1)
-        assertThat(kodeverkVerdier[0].oppgavetyper[0].dagerFrist).isEqualTo(0)
-        assertThat(kodeverkVerdier[0].underkategorier.size).isEqualTo(2)
-        assertThat(kodeverkVerdier[0].underkategorier[0].kode).isEqualTo("ab0241:")
-        assertThat(kodeverkVerdier[0].underkategorier[0].tekst).isEqualTo("Dagliglivet")
-        assertThat(kodeverkVerdier[0].underkategorier[1].kode).isEqualTo("ab0241:ae0007")
-        assertThat(kodeverkVerdier[0].underkategorier[1].tekst).isEqualTo("Dagliglivet - Utbetaling")
+        assertThat(kodeverkVerdier.size).isEqualTo(2)
+        assertThat(kodeverkVerdier[1].prioriteter.size).isEqualTo(3)
+        assertThat(kodeverkVerdier[1].prioriteter[0].tekst).isEqualTo("Høy")
+        assertThat(kodeverkVerdier[1].oppgavetyper.size).isEqualTo(2)
+        assertThat(kodeverkVerdier[1].oppgavetyper[0].dagerFrist).isEqualTo(2)
+        assertThat(kodeverkVerdier[1].oppgavetyper[1].dagerFrist).isEqualTo(0)
+        assertThat(kodeverkVerdier[1].underkategorier.size).isEqualTo(3)
+        assertThat(kodeverkVerdier[1].underkategorier[1].kode).isEqualTo("ab0241:")
+        assertThat(kodeverkVerdier[1].underkategorier[1].tekst).isEqualTo("Dagliglivet")
+        assertThat(kodeverkVerdier[1].underkategorier[2].kode).isEqualTo("ab0241:ae0007")
+        assertThat(kodeverkVerdier[1].underkategorier[2].tekst).isEqualTo("Dagliglivet - Utbetaling")
     }
 
     private fun withTimerMock(): Triple<Timer, CapturingSlot<Date>, CapturingSlot<Long>> {

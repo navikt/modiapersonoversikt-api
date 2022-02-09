@@ -87,7 +87,7 @@ object OppgaveKodeverk {
                 prioriteter = hentPrioriteter(it),
                 underkategorier = hentUnderkategorier(it.gjelderverdier)
             )
-        }.associateBy { it.kode }
+        }.sortedBy { it.tekst }.associateBy { it.kode }
     }
 
     internal fun hentPrioriteter(oppgaveKodeverk: KodeverkkombinasjonDTO): List<Prioritet> {
@@ -102,7 +102,7 @@ object OppgaveKodeverk {
                 tekst = listOfNotNull(it.behandlingstemaTerm, it.behandlingstypeTerm).joinToString(" - "),
                 erGyldig = true
             )
-        }
+        }?.sortedBy { it.tekst }
             ?: emptyList()
     }
 
@@ -113,7 +113,7 @@ object OppgaveKodeverk {
                 tekst = it.term,
                 dagerFrist = hentFrist(tema, it.oppgavetype)
             )
-        }
+        }.sortedBy { it.tekst }
     }
 
     internal fun hentFrist(tema: String, oppgavetype: String): Int {
