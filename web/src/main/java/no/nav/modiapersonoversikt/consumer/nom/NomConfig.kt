@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.nom
 
 import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
 import no.nav.common.client.nom.CachedNomClient
 import no.nav.common.client.nom.NomClient
 import no.nav.common.client.nom.NomClientImpl
@@ -14,12 +15,16 @@ import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.util.concurrent.TimeUnit
 
 @Configuration
 open class NomConfig {
     val url: String = EnvironmentUtils.getRequiredProperty("NOM_URL")
     val httpClient: OkHttpClient = RestClient.baseClient()
-    private val veilederCache: Cache<NavIdent, VeilederNavn> = TODO("Lage cache")
+    private val veilederCache: Cache<NavIdent, VeilederNavn> = Caffeine.newBuilder()
+        .expireAfterWrite(24, TimeUnit.HOURS)
+        .maximumSize(10_000)
+        .build()
 
     @Autowired
     var tokenProvider: ServiceToServiceTokenProvider
