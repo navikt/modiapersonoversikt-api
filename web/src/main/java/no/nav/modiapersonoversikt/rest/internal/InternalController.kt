@@ -76,7 +76,7 @@ class InternalController @Autowired constructor(
             .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Nom)) {
                 nomClient.finnNavn(
                     tilgangskontroll.context().hentSaksbehandlereMedTilgangTilInternal().map {
-                    NavIdent(it)
+                        NavIdent(it)
                     }
                 )
             }
