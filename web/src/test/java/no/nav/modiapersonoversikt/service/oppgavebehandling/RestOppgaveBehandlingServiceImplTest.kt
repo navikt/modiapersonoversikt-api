@@ -895,7 +895,7 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
+            every { arbeidsfordelingService.hentBehandlendeEnheterV2(any(), any(), any(), any()) } returns listOf(
                 NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
             )
 
@@ -944,7 +944,7 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
+            every { arbeidsfordelingService.hentBehandlendeEnheterV2(any(), any(), any(), any()) } returns listOf(
                 NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
             )
             every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(

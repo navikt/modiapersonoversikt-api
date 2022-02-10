@@ -31,6 +31,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SV
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInnslag
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
+import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.mapUnderkategori
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import org.slf4j.LoggerFactory
@@ -485,21 +486,6 @@ class RestOppgaveBehandlingServiceImpl(
         return henvendelseOppgave
     }
 
-    fun mapUnderkategori(underkategoriKode: String?): Optional<Behandling> {
-        return ofNullable(underkategoriKode).map { kode ->
-            val behandlingstemaOgType = kode.split(":").map {
-                it.ifEmpty { null }
-            }
-            require(behandlingstemaOgType.size == 2) {
-                "Underkategorikode inneholdt ikke forventet informasjon: $underkategoriKode"
-            }
-            Behandling(
-                behandlingstemaOgType.first(),
-                behandlingstemaOgType.last()
-            )
-        }
-    }
-
     private fun hentOppgaveJsonDTO(oppgaveId: String): OppgaveJsonDTO {
         return apiClient.hentOppgave(
             xCorrelationID = correlationId(),
@@ -539,7 +525,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheter(
+        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheterV2(
             brukerIdent = Fnr.of(pdlOppslagService.hentFnr(aktorId)),
             fagomrade = oppgave.tema,
             oppgavetype = oppgave.oppgavetype,
