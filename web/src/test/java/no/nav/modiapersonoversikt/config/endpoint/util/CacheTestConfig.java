@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.service.ScheduledAnsattListePrefetch;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
@@ -49,11 +48,6 @@ public class CacheTestConfig {
     @Bean
     public SakOgBehandlingV1 sakOgBehandlingPortType() {
         return mock(SakOgBehandlingV1.class);
-    }
-
-    @Bean
-    public HenvendelsePortType henvendelsePortType() {
-        return mock(HenvendelsePortType.class);
     }
 
     @Bean

@@ -7,7 +7,6 @@ import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
@@ -109,16 +108,6 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?) {
-        if (fagsakSystem == Sak.BIDRAG_MARKOR || saksTema == Sak.BIDRAG_MARKOR) {
-            // Fikser opp i bidrags-hack verdier, og kaller metoden på nytt
-            return journalforHenvendelse(
-                enhet = enhet,
-                kjedeId = kjedeId,
-                saksTema = "BID",
-                fagsakSystem = Sak.FAGSYSTEMKODE_BIDRAG,
-                saksId = null
-            )
-        }
         val fagsaksystem = if (saksId != null) {
             JournalRequestDTO.Fagsaksystem.valueOf(
                 requireNotNull(fagsakSystem) {
