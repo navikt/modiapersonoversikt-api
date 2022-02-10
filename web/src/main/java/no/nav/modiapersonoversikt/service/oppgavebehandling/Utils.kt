@@ -2,9 +2,11 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.*
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import java.time.Clock
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.math.ceil
 
 object Utils {
@@ -73,5 +75,21 @@ object Utils {
         } while (page < maxPage)
 
         return buffer
+    }
+
+    @JvmStatic
+    fun mapUnderkategori(underkategoriKode: String?): Optional<Behandling> {
+        return Optional.ofNullable(underkategoriKode).map { kode ->
+            val behandlingstemaOgType = kode.split(":").map {
+                it.ifEmpty { null }
+            }
+            require(behandlingstemaOgType.size == 2) {
+                "Underkategorikode inneholdt ikke forventet informasjon: $underkategoriKode"
+            }
+            Behandling(
+                behandlingstemaOgType.first(),
+                behandlingstemaOgType.last()
+            )
+        }
     }
 }
