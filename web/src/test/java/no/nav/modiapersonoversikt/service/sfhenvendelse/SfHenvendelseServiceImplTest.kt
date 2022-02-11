@@ -114,6 +114,28 @@ internal class SfHenvendelseServiceImplTest {
         assertThat(henvendelser[0].meldinger?.get(0)?.fritekst).isEqualTo("Innholdet i denne henvendelsen er slettet av NAV.")
     }
 
+    @Test
+    internal fun `skal fjerne henvendelse om den ikke har noen meldinger`() {
+        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
+        every { arbeidsfordeling.hentGeografiskTilknyttning(any()) } returns listOf(
+            EnhetGeografiskTilknyttning(
+                enhetId = "5678",
+                geografiskOmraade = "005678"
+            )
+        )
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns listOf(
+            dummyHenvendelse.medJournalpost("DAG"),
+            dummyHenvendelse.copy(meldinger = emptyList()),
+            dummyHenvendelse.medJournalpost("SYK")
+        )
+
+        val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")
+
+        assertThat(henvendelser).hasSize(2)
+        assertThat(henvendelser[0].meldinger?.get(0)?.fritekst).isEqualTo("Melding innhold")
+        assertThat(henvendelser[1].meldinger?.get(0)?.fritekst).isEqualTo("Du kan ikke se innholdet i denne henvendelsen fordi tråden er journalført på et tema du ikke har tilgang til.")
+    }
+
     private val dummyHenvendelse = HenvendelseDTO(
         henvendelseType = HenvendelseDTO.HenvendelseType.MELDINGSKJEDE,
         fnr = "12345678910",
