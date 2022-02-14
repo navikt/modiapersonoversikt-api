@@ -1,10 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
 
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.PlainJWT;
-import no.nav.common.auth.context.AuthContext;
-import no.nav.common.auth.context.UserRole;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata;
@@ -78,16 +74,6 @@ public class TilgangskontrollServiceTest {
 
         assertThat(result.result.isPresent(), is(TRUE));
         assertThat(result.result.get(), is(TRUE));
-    }
-
-    @Test
-    public void temaBidragGirFeilmelding() {
-        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode("BID");
-        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
-
-
-        assertThat(result.result.isPresent(), is(FALSE));
-        assertThat(result.feilmelding, is(TEMAKODE_ER_BIDRAG));
     }
 
     @Test
