@@ -26,12 +26,13 @@ import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.asV2BehandlingString
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInnslag
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
-import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.mapUnderkategori
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import org.slf4j.LoggerFactory
@@ -84,12 +85,9 @@ class RestOppgaveBehandlingServiceImpl(
         return opprettOppgaveV2(
             request.copy(
                 oppgavetype = oppgavetype,
-                underkategoriKode = behandling.map {
-                    listOf(
-                        it.behandlingstema,
-                        it.behandlingstype
-                    ).joinToString(":") { it ?: "" }
-                }.orElse(null),
+                underkategoriKode = behandling
+                    .map { it.asV2BehandlingString() }
+                    .orElse(null),
             )
         )
     }
@@ -97,7 +95,7 @@ class RestOppgaveBehandlingServiceImpl(
     override fun opprettOppgaveV2(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
         val ident: String = AuthContextUtils.requireIdent()
-        val behandling = mapUnderkategori(request.underkategoriKode)
+        val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
         val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
@@ -118,8 +116,8 @@ class RestOppgaveBehandlingServiceImpl(
                 ),
                 tema = request.tema,
                 oppgavetype = request.oppgavetype,
-                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
-                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                behandlingstema = behandling?.behandlingstema,
+                behandlingstype = behandling?.behandlingstype,
                 aktivDato = LocalDate.now(clock),
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
@@ -139,12 +137,9 @@ class RestOppgaveBehandlingServiceImpl(
         return opprettSkjermetOppgaveV2(
             request.copy(
                 oppgavetype = oppgavetype,
-                underkategoriKode = behandling.map {
-                    listOf(
-                        it.behandlingstema,
-                        it.behandlingstype
-                    ).joinToString(":") { it ?: "" }
-                }.orElse(null),
+                underkategoriKode = behandling
+                    .map { it.asV2BehandlingString() }
+                    .orElse(null),
             )
         )
     }
@@ -152,7 +147,7 @@ class RestOppgaveBehandlingServiceImpl(
     override fun opprettSkjermetOppgaveV2(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
         val ident: String = AuthContextUtils.requireIdent()
-        val behandling = mapUnderkategori(request.underkategoriKode)
+        val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
         val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
@@ -171,8 +166,8 @@ class RestOppgaveBehandlingServiceImpl(
                 ),
                 tema = request.tema,
                 oppgavetype = request.oppgavetype,
-                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
-                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                behandlingstema = behandling?.behandlingstema,
+                behandlingstype = behandling?.behandlingstype,
                 aktivDato = LocalDate.now(clock),
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))

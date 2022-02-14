@@ -26,15 +26,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     @Autowired
     private Tilgangskontroll tilgangskontroll;
 
-    public final static String TEMAKODE_BIDRAG = "BID";
-    private static final Logger logger = getLogger(TilgangskontrollService.class);
-
     public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata, String fnr, String urlTemakode) {
-        String temakode = journalpostMetadata.getTemakode();
-
-        if (temakodeErBidrag(temakode)) {
-            return new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG);
-        } else if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
+        if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
             return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning(), fnr));
         } else if (!journalpostMetadata.isErJournalfort()) {
             return new TjenesteResultatWrapper(IKKE_JOURNALFORT, ikkeJournalfortEkstraFeilInfo(fnr));
@@ -43,13 +36,6 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         }
 
         return new TjenesteResultatWrapper(TRUE);
-    }
-
-    private String settEnhetDersomCookieIkkeErSatt(String valgtEnhet, List<String> enhetsListe) {
-        if ("".equals(valgtEnhet)) {
-            valgtEnhet = enhetsListe.get(0);
-        }
-        return valgtEnhet;
     }
 
     public boolean harEnhetTilgangTilTema(String temakode, String valgtEnhet) {
@@ -69,10 +55,6 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
                         .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
                         .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT))
                         .collect(toList()));
-    }
-
-    private boolean temakodeErBidrag(String temakode) {
-        return TEMAKODE_BIDRAG.equals(temakode);
     }
 
     private boolean erJournalfortPaAnnetTema(String temakode, DokumentMetadata dokumentMetadata) {

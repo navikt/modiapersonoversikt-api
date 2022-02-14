@@ -9,7 +9,8 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilkny
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
-import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.mapUnderkategori
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.asV2BehandlingString
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.parseV2BehandlingString
 import org.slf4j.LoggerFactory
 
 interface ArbeidsfordelingService {
@@ -49,12 +50,11 @@ class ArbeidsfordelingServiceImpl(
         return runCatching {
             val mappedOppgaveType = kodeverksmapper.hentOppgavetype()[oppgavetype]
             val behandling: Behandling? = kodeverksmapper.hentUnderkategori()[underkategori]
-            val parsedUnderkategori = parseUnderkategori(behandling)
             hentBehandlendeEnheterV2(
                 fagomrade = fagomrade,
                 oppgavetype = mappedOppgaveType,
                 brukerIdent = brukerIdent,
-                underkategori = parsedUnderkategori
+                underkategori = behandling?.asV2BehandlingString()
             )
         }
             .getOrElse {
@@ -73,7 +73,7 @@ class ArbeidsfordelingServiceImpl(
         underkategori: String?
     ): List<NorgDomain.Enhet> {
         return runCatching {
-            val behandling: Behandling? = mapUnderkategori(underkategori).orElse(null)
+            val behandling: Behandling? = underkategori?.parseV2BehandlingString()
             val geografiskTilknyttning = brukerIdent?.get()?.let(persondataService::hentGeografiskTilknytning)
             val diskresjonskode = brukerIdent?.get()
                 ?.let(persondataService::hentAdressebeskyttelse)
@@ -110,14 +110,5 @@ class ArbeidsfordelingServiceImpl(
             }
             .onFailure { log.error("Kunne ikke hente geografisk tilknyttning", it) }
             .getOrDefault(emptyList())
-    }
-
-    private fun parseUnderkategori(behandling: Behandling?): String? {
-        return if (behandling != null) {
-            listOf(
-                behandling.behandlingstema,
-                behandling.behandlingstype
-            ).joinToString(":") { it ?: "" }
-        } else null
     }
 }
