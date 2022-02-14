@@ -1,31 +1,52 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
-enum class KodeverkConfig(private val kilde: EnhetligKodeverk.Kilde) {
-    ARKIVTEMA(FellesKodeverkKilde("Arkivtemaer")),
-    BEHANDLINGSTEMA(FellesKodeverkKilde("Behandlingstema")),
-    KJONN(FellesKodeverkKilde("Kjønnstyper")),
-    LAND(FellesKodeverkKilde("Landkoder")),
-    SPRAK(FellesKodeverkKilde("Språk")),
-    RETNINGSNUMRE(FellesKodeverkKilde("Retningsnumre")),
-    POSTNUMMER(FellesKodeverkKilde("Postnummer")),
-    PERSONSTATUSER(FellesKodeverkKilde("Personstatuser")),
-    SIVILSTAND(FellesKodeverkKilde("Sivilstander")),
-    DISKRESJONSKODER(FellesKodeverkKilde("Diskresjonskoder")),
-    VALUTA(FellesKodeverkKilde("Valutaer")),
-    TEMA(FellesKodeverkKilde("Tema")),
-    SF_TEMAGRUPPER(SfHenvendelseKodeverkKilde());
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 
-    fun hentKodeverk(providers: KodeverkProviders) = kilde.hentKodeverk(providers)
-}
+abstract class ObjectEnum<T> {
+    private val values = mutableListOf<T>()
+    fun values(): List<T> = values
 
-class FellesKodeverkKilde(val kodeverkNavn: String) : EnhetligKodeverk.Kilde {
-    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk {
-        return providers.fraFellesKodeverk(kodeverkNavn)
+    protected fun <V : T> add(value: V): V {
+        values.add(value)
+        return value
     }
 }
 
-class SfHenvendelseKodeverkKilde() : EnhetligKodeverk.Kilde {
-    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk {
-        return providers.fraSfHenvendelseKodeverk()
+object KodeverkConfig : ObjectEnum<EnhetligKodeverk.Kilde<*, *>>() {
+    @JvmField
+    val ARKIVTEMA = add(FellesKodeverkKilde("Arkivtemaer"))
+    val BEHANDLINGSTEMA = add(FellesKodeverkKilde("Behandlingstema"))
+    val KJONN = add(FellesKodeverkKilde("Kjønnstyper"))
+    val LAND = add(FellesKodeverkKilde("Landkoder"))
+    val SPRAK = add(FellesKodeverkKilde("Språk"))
+    val RETNINGSNUMRE = add(FellesKodeverkKilde("Retningsnumre"))
+    val POSTNUMMER = add(FellesKodeverkKilde("Postnummer"))
+    val PERSONSTATUSER = add(FellesKodeverkKilde("Personstatuser"))
+    val SIVILSTAND = add(FellesKodeverkKilde("Sivilstander"))
+    val DISKRESJONSKODER = add(FellesKodeverkKilde("Diskresjonskoder"))
+    val VALUTA = add(FellesKodeverkKilde("Valutaer"))
+    val TEMA = add(FellesKodeverkKilde("Tema"))
+    val SF_TEMAGRUPPER = add(SfHenvendelseKodeverkKilde())
+    val OPPGAVE = add(OppgaveKodeverkKilde())
+}
+
+class FellesKodeverkKilde(override val navn: String) : EnhetligKodeverk.Kilde<String, String> {
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> {
+        return providers.fellesKodeverk.hentKodeverk(navn)
+    }
+}
+
+class SfHenvendelseKodeverkKilde : EnhetligKodeverk.Kilde<String, String> {
+    override val navn = "SF_TEMAGRUPPER"
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> {
+        return providers.sfHenvendelseKodeverk.hentKodeverk(navn)
+    }
+}
+
+class OppgaveKodeverkKilde : EnhetligKodeverk.Kilde<String, OppgaveKodeverk.Tema> {
+    override val navn = "OPPGAVE"
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, OppgaveKodeverk.Tema> {
+        return providers.oppgaveKodeverk.hentKodeverk(navn)
     }
 }

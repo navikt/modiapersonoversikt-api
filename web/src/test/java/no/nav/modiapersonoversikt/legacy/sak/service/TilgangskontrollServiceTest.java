@@ -77,16 +77,6 @@ public class TilgangskontrollServiceTest {
     }
 
     @Test
-    public void temaBidragGirFeilmelding() {
-        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode("BID");
-        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
-
-
-        assertThat(result.result.isPresent(), is(FALSE));
-        assertThat(result.feilmelding, is(TEMAKODE_ER_BIDRAG));
-    }
-
-    @Test
     public void journalfortAnnetTema() {
         DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode("FOR");
         TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);

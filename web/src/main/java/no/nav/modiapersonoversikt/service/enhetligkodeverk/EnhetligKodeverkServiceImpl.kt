@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
 import no.nav.modiapersonoversikt.utils.Retry
 import java.time.*
 import java.time.temporal.ChronoUnit
@@ -13,10 +14,10 @@ class EnhetligKodeverkServiceImpl(
     scheduler: Timer = Timer(),
     private val clock: Clock = Clock.systemDefaultZone()
 ) : EnhetligKodeverk.Service {
-    private data class KodeverkCacheEntry(val timestamp: LocalDateTime, val kodeverk: EnhetligKodeverk.Kodeverk)
+    private data class KodeverkCacheEntry(val timestamp: LocalDateTime, val kodeverk: EnhetligKodeverk.Kodeverk<*, *>)
 
-    private val emptyKodeverk = EnhetligKodeverk.Kodeverk("EMPTY", emptyMap())
-    private val cache: MutableMap<KodeverkConfig, KodeverkCacheEntry> = mutableMapOf()
+    private val emptyKodeverk = EnhetligKodeverk.Kodeverk<Nothing, Nothing>("EMPTY", emptyMap())
+    private val cache: MutableMap<EnhetligKodeverk.Kilde<*, *>, KodeverkCacheEntry> = mutableMapOf()
     private val cacheRetention = Duration.ofHours(24)
     private val cacheGraceperiod = Duration.ofMinutes(15)
     private val retry = Retry(
@@ -52,8 +53,8 @@ class EnhetligKodeverkServiceImpl(
         }
     }
 
-    override fun hentKodeverk(kodeverkNavn: KodeverkConfig): EnhetligKodeverk.Kodeverk {
-        return cache[kodeverkNavn]?.kodeverk ?: emptyKodeverk
+    override fun <KEY, VALUE> hentKodeverk(kilde: EnhetligKodeverk.Kilde<KEY, VALUE>): EnhetligKodeverk.Kodeverk<KEY, VALUE> {
+        return (cache[kilde]?.kodeverk ?: emptyKodeverk) as EnhetligKodeverk.Kodeverk<KEY, VALUE>
     }
 
     override fun ping() = SelfTestCheck(
@@ -61,13 +62,13 @@ class EnhetligKodeverkServiceImpl(
         false
     ) {
         val limit = LocalDateTime.now(clock).minus(cacheRetention.plus(cacheGraceperiod))
-        val missingValues: List<KodeverkConfig> = KodeverkConfig.values().toList().minus(cache.keys)
+        val missingValues: List<EnhetligKodeverk.Kilde<*, *>> = KodeverkConfig.values().minus(cache.keys)
         val outdatedCacheEntries = cache.entries.filter { it.value.timestamp.isBefore(limit) }
 
         if (outdatedCacheEntries.isEmpty() && missingValues.isEmpty()) {
             HealthCheckResult.healthy()
         } else {
-            val outdatedCaches = outdatedCacheEntries.joinToString(", ") { it.key.name }
+            val outdatedCaches = outdatedCacheEntries.joinToString(", ") { it.key.navn }
             val missingCaches = missingValues.joinToString(", ")
             HealthCheckResult.unhealthy(
                 """

@@ -1,27 +1,41 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
 import org.slf4j.LoggerFactory
 
 object EnhetligKodeverk {
     interface Service : Pingable {
-        fun hentKodeverk(kodeverkNavn: KodeverkConfig): Kodeverk
+        fun <KEY, VALUE> hentKodeverk(kilde: Kilde<KEY, VALUE>): Kodeverk<KEY, VALUE>
     }
 
-    class Kodeverk(val navn: String, val kodeverk: Map<String, String>) {
+    class Kodeverk<KEY, VALUE>(val navn: String, private val kodeverk: Map<KEY, VALUE>) {
         private val log = LoggerFactory.getLogger(Kodeverk::class.java)
 
-        fun hentBeskrivelse(kodeRef: String): String {
-            val beskrivelse = kodeverk[kodeRef]
-            if (beskrivelse == null) {
+        fun hentVerdi(kodeRef: KEY, default: VALUE): VALUE {
+            val verdi = kodeverk[kodeRef]
+            if (verdi == null) {
                 log.warn("Ukjent kodeRef $kodeRef i kodeverk $navn")
-                return kodeRef
+                return default
             }
-            return beskrivelse
+            return verdi
         }
+
+        fun hentVerdiEllerNull(kodeRef: KEY): VALUE? = kodeverk[kodeRef]
+
+        fun hentVerdi(kodeRef: KEY): VALUE = requireNotNull(hentVerdiEllerNull(kodeRef)) {
+            "Ukjent kodeRef $kodeRef i kodeverk $navn"
+        }
+
+        fun hentAlleVerdier(): Collection<VALUE> = kodeverk.values
     }
 
-    interface Kilde {
-        fun hentKodeverk(providers: KodeverkProviders): Kodeverk
+    interface Kilde<KEY, VALUE> {
+        val navn: String
+        fun hentKodeverk(providers: KodeverkProviders): Kodeverk<KEY, VALUE>
+    }
+
+    interface KodeverkProvider<KEY, VALUE> {
+        fun hentKodeverk(kodeverkNavn: String): Kodeverk<KEY, VALUE>
     }
 }

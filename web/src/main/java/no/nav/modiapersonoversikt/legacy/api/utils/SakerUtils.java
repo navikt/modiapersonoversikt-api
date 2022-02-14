@@ -15,7 +15,7 @@ public class SakerUtils {
             String fagsystemnavn = fagsystemMapping.get(sak.fagsystemKode);
             sak.fagsystemNavn = fagsystemnavn != null ? fagsystemnavn : sak.fagsystemKode;
 
-            String temaNavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentBeskrivelse(sak.temaKode);
+            String temaNavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentVerdi(sak.temaKode, sak.temaKode);
             sak.temaNavn = temaNavn != null ? temaNavn : sak.temaKode;
         });
     }

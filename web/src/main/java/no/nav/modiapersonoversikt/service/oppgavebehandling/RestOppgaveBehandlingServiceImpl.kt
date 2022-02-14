@@ -26,6 +26,8 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.asV2BehandlingString
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInnslag
@@ -42,6 +44,7 @@ import java.util.*
 import java.util.Optional.ofNullable
 
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
+
 class RestOppgaveBehandlingServiceImpl(
     private val kodeverksmapperService: KodeverksmapperService,
     private val pdlOppslagService: PdlOppslagService,
@@ -84,9 +87,22 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val ident: String = AuthContextUtils.requireIdent()
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
-        val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
+        val oppgavetype = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
+        return opprettOppgaveV2(
+            request.copy(
+                oppgavetype = oppgavetype,
+                underkategoriKode = behandling
+                    .map { it.asV2BehandlingString() }
+                    .orElse(null),
+            )
+        )
+    }
+
+    override fun opprettOppgaveV2(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
+        requireNotNull(request)
+        val ident: String = AuthContextUtils.requireIdent()
+        val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
         val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
@@ -106,9 +122,9 @@ class RestOppgaveBehandlingServiceImpl(
                     clock = clock
                 ),
                 tema = request.tema,
-                oppgavetype = oppgaveType,
-                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
-                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                oppgavetype = request.oppgavetype,
+                behandlingstema = behandling?.behandlingstema,
+                behandlingstype = behandling?.behandlingstype,
                 aktivDato = LocalDate.now(clock),
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
@@ -123,9 +139,22 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettSkjermetOppgave(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val ident: String = AuthContextUtils.requireIdent()
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
-        val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
+        val oppgavetype = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
+        return opprettSkjermetOppgaveV2(
+            request.copy(
+                oppgavetype = oppgavetype,
+                underkategoriKode = behandling
+                    .map { it.asV2BehandlingString() }
+                    .orElse(null),
+            )
+        )
+    }
+
+    override fun opprettSkjermetOppgaveV2(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
+        requireNotNull(request)
+        val ident: String = AuthContextUtils.requireIdent()
+        val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
         val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
@@ -143,9 +172,9 @@ class RestOppgaveBehandlingServiceImpl(
                     clock = clock
                 ),
                 tema = request.tema,
-                oppgavetype = oppgaveType,
-                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
-                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                oppgavetype = request.oppgavetype,
+                behandlingstema = behandling?.behandlingstema,
+                behandlingstype = behandling?.behandlingstype,
                 aktivDato = LocalDate.now(clock),
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
@@ -229,14 +258,13 @@ class RestOppgaveBehandlingServiceImpl(
     override fun finnTildelteKNAOppgaverIGsak(): MutableList<Oppgave> {
         val ident: String = AuthContextUtils.requireIdent()
         val correlationId = correlationId()
-        val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
 
         return hentOppgaverPaginertOgTilgangskontroll { offset ->
             apiClient.finnOppgaver(
                 correlationId,
                 tilordnetRessurs = ident,
                 tema = listOf(Utils.KONTAKT_NAV),
-                oppgavetype = listOf(oppgaveType),
+                oppgavetype = listOf(SPORSMAL_OG_SVAR),
                 aktivDatoTom = LocalDate.now(clock).toString(),
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
@@ -326,11 +354,27 @@ class RestOppgaveBehandlingServiceImpl(
     override fun leggTilbakeOppgaveIGsak(request: LeggTilbakeOppgaveIGsakRequest?) {
         requireNotNull(request)
         requireNotNull(request.oppgaveId)
+        if (request.nyTemagruppe != null) {
+            val behandling = kodeverksmapperService.mapUnderkategori(request.nyTemagruppe.underkategori)
+            val nyUnderkategori = behandling
+                .map { it.asV2BehandlingString() }
+                .orElse(null)
+            if (nyUnderkategori != null) {
+                request.nyTemagruppe.setUnderkategori(nyUnderkategori)
+            }
+        }
+        leggTilbakeOppgaveIGsakV2(request)
+    }
+
+    override fun leggTilbakeOppgaveIGsakV2(request: LeggTilbakeOppgaveIGsakRequest?) {
+        requireNotNull(request)
+        requireNotNull(request.oppgaveId)
         val ident: String = AuthContextUtils.requireIdent()
         val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
 
         if (oppgave.tilordnetRessurs != ident) {
-            val feilmelding = "Innlogget saksbehandler $ident er ikke tilordnet oppgave ${request.oppgaveId}, den er tilordnet: ${oppgave.tilordnetRessurs}"
+            val feilmelding =
+                "Innlogget saksbehandler $ident er ikke tilordnet oppgave ${request.oppgaveId}, den er tilordnet: ${oppgave.tilordnetRessurs}"
             throw ResponseStatusException(HttpStatus.FORBIDDEN, feilmelding)
         }
 
@@ -349,11 +393,11 @@ class RestOppgaveBehandlingServiceImpl(
             endretAvEnhetsnr = defaultEnhetGittTemagruppe(request.nyTemagruppe, request.saksbehandlersValgteEnhet)
         )
         if (request.nyTemagruppe != null) {
-            val behandling = kodeverksmapperService.mapUnderkategori(request.nyTemagruppe.underkategori)
+            val behandling: Behandling = request.nyTemagruppe.underkategori.parseV2BehandlingString()
             oppdatertOppgave = oppdatertOppgave.copy(
                 tildeltEnhetsnr = finnAnsvarligEnhet(oppgave, request.nyTemagruppe),
-                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
-                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null)
+                behandlingstema = behandling.behandlingstema,
+                behandlingstype = behandling.behandlingstype
             )
         }
 
@@ -406,7 +450,7 @@ class RestOppgaveBehandlingServiceImpl(
     ): Oppgave? {
         val aktorId = pdlOppslagService.hentAktorId(fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
-        val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
+
         val correlationId = correlationId()
 
         val oppgaver = hentOppgaverPaginertOgTilgangskontroll { offset ->
@@ -414,7 +458,7 @@ class RestOppgaveBehandlingServiceImpl(
                 aktoerId = listOf(aktorId),
                 xCorrelationID = correlationId,
                 tema = listOf(Utils.KONTAKT_NAV),
-                oppgavetype = listOf(oppgaveType),
+                oppgavetype = listOf(SPORSMAL_OG_SVAR),
                 aktivDatoTom = LocalDate.now(clock).toString(),
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
@@ -473,7 +517,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheter(
+        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheterV2(
             brukerIdent = Fnr.of(pdlOppslagService.hentFnr(aktorId)),
             fagomrade = oppgave.tema,
             oppgavetype = oppgave.oppgavetype,

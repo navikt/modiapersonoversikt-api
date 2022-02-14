@@ -25,7 +25,11 @@ public enum Temagruppe {
     public static final List<Temagruppe> PLUKKBARE = asList(ARBD, HELSE, FMLI, FDAG, HJLPM, BIL, ORT_HJE, PENS, PLEIEPENGERSY, UFRT, UTLAND, OVRG);
     public static final List<Temagruppe> KOMMUNALE_TJENESTER = asList(OKSOS, ANSOS);
 
-    public final String underkategori;
+    public String underkategori;
+
+    public void setUnderkategori(String underkategori) {
+        this.underkategori = underkategori;
+    }
 
     Temagruppe(String underkategori) {
         this.underkategori = underkategori;

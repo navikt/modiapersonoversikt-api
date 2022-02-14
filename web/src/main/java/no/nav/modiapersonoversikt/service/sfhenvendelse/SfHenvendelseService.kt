@@ -14,6 +14,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.mode
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
+import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.time.OffsetDateTime
@@ -253,7 +254,7 @@ class SfHenvendelseServiceImpl(
     }
 
     enum class ApiFeilType {
-        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST
+        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD
     }
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
     private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
@@ -261,11 +262,14 @@ class SfHenvendelseServiceImpl(
         val now = OffsetDateTime.now()
         for (henvendelse in henvendelser) {
             val meldinger = henvendelse.meldinger ?: emptyList()
-            if (meldinger.any { it.fra.ident == null }) {
+            if (meldinger.any { it.fra.identType != MeldingFraDTO.IdentType.SYSTEM && it.fra.ident == null }) {
                 feil.add(ApiFeil(ApiFeilType.IDENT, henvendelse.kjedeId))
             }
             if (henvendelse.gjeldendeTemagruppe == null) {
                 feil.add(ApiFeil(ApiFeilType.TEMAGRUPPE, henvendelse.kjedeId))
+            }
+            if (henvendelse.meldinger.isNullOrEmpty()) {
+                feil.add(ApiFeil(ApiFeilType.TOM_TRAD, henvendelse.kjedeId))
             }
             val journalposter = henvendelse.journalposter ?: emptyList()
             if (journalposter.any { it.journalforerNavIdent == null }) {
@@ -284,7 +288,10 @@ class SfHenvendelseServiceImpl(
                 feil.add(ApiFeil(ApiFeilType.FRITEKST, henvendelse.kjedeId))
             }
         }
-        val kanJobbesMedIModia = henvendelser.filter { it.gjeldendeTemagruppe != null }
+        val kanJobbesMedIModia = henvendelser
+            .filter { it.gjeldendeTemagruppe != null }
+            .filter { it.meldinger.isNotNullOrEmpty() }
+
         if (feil.isNotEmpty()) {
             val grupperteFeil = feil
                 .groupBy { it.type }
