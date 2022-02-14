@@ -10,7 +10,7 @@ env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   CI: true
   TZ: Europe/Oslo
-  Q1_TEST_BRANCH: refs/heads/feat/opp-1342-axsys-nom
+  Q1_TEST_BRANCH: 'refs/heads/feat/opp-1342-axsys-nom'
 
 jobs:
   build:
@@ -53,7 +53,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
-          RESOURCE: .nais/nais-q0.yml
+          RESOURCE: .nais/nais-q1.yml
           VAR: version=${{ github.sha }}
   deploy-qa:
     name: Deploy to preprod
