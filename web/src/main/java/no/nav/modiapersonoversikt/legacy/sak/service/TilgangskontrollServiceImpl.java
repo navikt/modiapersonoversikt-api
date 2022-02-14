@@ -30,11 +30,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
     public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata, String fnr, String urlTemakode) {
-        String temakode = journalpostMetadata.getTemakode();
-
-        if (temakodeErBidrag(temakode)) {
-            return new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG);
-        } else if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
+        if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
             return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning(), fnr));
         } else if (!journalpostMetadata.isErJournalfort()) {
             return new TjenesteResultatWrapper(IKKE_JOURNALFORT, ikkeJournalfortEkstraFeilInfo(fnr));
