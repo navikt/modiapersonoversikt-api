@@ -21,7 +21,7 @@ internal class TredjepartspersonMapperTest {
 
     @BeforeEach
     internal fun setUp() {
-        every { kodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk("kodeverk", emptyMap())
+        every { kodeverk.hentKodeverk<String, String>(any()) } returns EnhetligKodeverk.Kodeverk("kodeverk", emptyMap())
     }
 
     @Test

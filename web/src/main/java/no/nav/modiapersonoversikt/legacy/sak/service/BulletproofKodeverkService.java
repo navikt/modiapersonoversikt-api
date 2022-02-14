@@ -18,15 +18,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class BulletproofKodeverkService {
 
     private static final Logger LOG = getLogger(BulletproofKodeverkService.class);
-    public static final KodeverkConfig BEHANDLINGSTEMA = KodeverkConfig.BEHANDLINGSTEMA;
-    public static final KodeverkConfig ARKIVTEMA = KodeverkConfig.ARKIVTEMA;
+    public static final EnhetligKodeverk.Kilde<String, String> ARKIVTEMA = KodeverkConfig.ARKIVTEMA;
 
     @Autowired
     private EnhetligKodeverk.Service kodeverk;
 
-    public ResultatWrapper<String> getTemanavnForTemakode(String temakode, KodeverkConfig kodeverknavn) {
+    public ResultatWrapper<String> getTemanavnForTemakode(String temakode, EnhetligKodeverk.Kilde<String, String> kodeverkKilde) {
         try {
-            return new ResultatWrapper<>(kodeverk.hentKodeverk(kodeverknavn).hentBeskrivelse(temakode));
+            return new ResultatWrapper<>(kodeverk.hentKodeverk(kodeverkKilde).hentVerdi(temakode, temakode));
         } catch (ApplicationException e) {
             LOG.warn("Fant ikke kodeverkid '" + temakode + "'. Bruker generisk tittel.", e);
             return new ResultatWrapper<>(temakode);

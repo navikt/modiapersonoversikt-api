@@ -83,7 +83,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             ),
             linje2 = listOf(
                 adresse.postnummer,
-                adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
+                adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentVerdi(it, it) }
             ),
             sistEndret = null
         )
@@ -116,7 +116,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                 adresse.regionDistriktOmraade
             ),
             linje3 = listOf(
-                kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
+                kodeverk.hentKodeverk(Kodeverk.LAND).hentVerdi(adresse.landkode, adresse.landkode)
             ),
             sistEndret = null
         )

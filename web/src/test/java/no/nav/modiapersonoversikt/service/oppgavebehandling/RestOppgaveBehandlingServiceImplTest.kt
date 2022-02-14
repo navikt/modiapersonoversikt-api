@@ -895,8 +895,14 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
+            every { arbeidsfordelingService.hentBehandlendeEnheterV2(any(), any(), any(), any()) } returns listOf(
                 NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
+            )
+
+            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(
+                Behandling()
+                    .withBehandlingstema("behandlingstema_ANSOS")
+                    .withBehandlingstype("behandlingstype_ANSOS")
             )
 
             withIdent("Z999999") {
@@ -923,7 +929,9 @@ class RestOppgaveBehandlingServiceImplTest {
                             tekst = "ny beskrivelse"
                         ),
                         endretAvEnhetsnr = "4110",
-                        tildeltEnhetsnr = "4567"
+                        tildeltEnhetsnr = "4567",
+                        behandlingstema = "behandlingstema_ANSOS",
+                        behandlingstype = "behandlingstype_ANSOS"
                     )
                 )
             }
@@ -936,7 +944,7 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
+            every { arbeidsfordelingService.hentBehandlendeEnheterV2(any(), any(), any(), any()) } returns listOf(
                 NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
             )
             every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(

@@ -22,7 +22,7 @@ internal class PersondataFletterTest {
 
     @BeforeEach
     internal fun setUp() {
-        every { kodeverk.hentKodeverk(any()) } returns gittKodeverk()
+        every { kodeverk.hentKodeverk<String, String>(any()) } returns gittKodeverk()
     }
 
     @Test

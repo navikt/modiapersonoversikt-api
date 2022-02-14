@@ -9,10 +9,19 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilkny
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.asV2BehandlingString
+import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.parseV2BehandlingString
 import org.slf4j.LoggerFactory
 
 interface ArbeidsfordelingService {
     fun hentBehandlendeEnheter(
+        fagomrade: String?,
+        oppgavetype: String?,
+        brukerIdent: Fnr?,
+        underkategori: String?
+    ): List<NorgDomain.Enhet>
+
+    fun hentBehandlendeEnheterV2(
         fagomrade: String?,
         oppgavetype: String?,
         brukerIdent: Fnr?,
@@ -41,6 +50,30 @@ class ArbeidsfordelingServiceImpl(
         return runCatching {
             val mappedOppgaveType = kodeverksmapper.hentOppgavetype()[oppgavetype]
             val behandling: Behandling? = kodeverksmapper.hentUnderkategori()[underkategori]
+            hentBehandlendeEnheterV2(
+                fagomrade = fagomrade,
+                oppgavetype = mappedOppgaveType,
+                brukerIdent = brukerIdent,
+                underkategori = behandling?.asV2BehandlingString()
+            )
+        }
+            .getOrElse {
+                log.error("Kunne ikke hente behandlende enheter", it)
+                throw ArbeidsfordelingService.ArbeidsfordelingException(
+                    "Kunne ikke hente behandlende enheter",
+                    it
+                )
+            }
+    }
+
+    override fun hentBehandlendeEnheterV2(
+        fagomrade: String?,
+        oppgavetype: String?,
+        brukerIdent: Fnr?,
+        underkategori: String?
+    ): List<NorgDomain.Enhet> {
+        return runCatching {
+            val behandling: Behandling? = underkategori?.parseV2BehandlingString()
             val geografiskTilknyttning = brukerIdent?.get()?.let(persondataService::hentGeografiskTilknytning)
             val diskresjonskode = brukerIdent?.get()
                 ?.let(persondataService::hentAdressebeskyttelse)
@@ -55,7 +88,7 @@ class ArbeidsfordelingServiceImpl(
             norgApi.hentBehandlendeEnheter(
                 behandling = behandling,
                 geografiskTilknyttning = geografiskTilknyttning,
-                oppgavetype = mappedOppgaveType,
+                oppgavetype = oppgavetype,
                 fagomrade = fagomrade,
                 erEgenAnsatt = erEgenAnsatt,
                 diskresjonskode = diskresjonskode
