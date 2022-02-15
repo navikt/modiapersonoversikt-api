@@ -3,12 +3,7 @@ package no.nav.modiapersonoversikt.rest.internal
 import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.client.axsys.AxsysClient
-import no.nav.common.client.nom.NomClient
-import no.nav.common.client.nom.VeilederNavn
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.common.types.identer.EnhetId
-import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
@@ -25,9 +20,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/rest/internal")
 class InternalController @Autowired constructor(
     private val systemUserTokenProvider: SystemUserTokenProvider,
-    private val tilgangskontroll: Tilgangskontroll,
-    private val axsysClient: AxsysClient,
-    private val nomClient: NomClient
+    private val tilgangskontroll: Tilgangskontroll
 ) {
     data class Tokens(val user: String, val system: String)
     private val pdlClient = PdlOppslagServiceImpl.createClient()
@@ -55,30 +48,6 @@ class InternalController @Autowired constructor(
                     val paging = SokPerson.Paging(pageNumber = 1, resultsPerPage = 30)
                     SokPerson(pdlClient).execute(SokPerson.Variables(paging, criteria), systemTokenAuthHeader)
                 }
-            }
-    }
-
-    @GetMapping("/axsys")
-    fun hentAxsysClient(): List<NavIdent> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .check(Policies.kanBrukeInternal)
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Axsys)) {
-                axsysClient.hentAnsatte(EnhetId("2990"))
-            }
-    }
-
-    @GetMapping("/nom")
-    fun hentNomClient(): List<VeilederNavn> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .check(Policies.kanBrukeInternal)
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Nom)) {
-                nomClient.finnNavn(
-                    tilgangskontroll.context().hentSaksbehandlereMedTilgangTilInternal().map {
-                        NavIdent(it)
-                    }
-                )
             }
     }
 
