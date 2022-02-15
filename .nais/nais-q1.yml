@@ -51,6 +51,7 @@ spec:
       - kvPath: /apikey/appdynamics/dev
         mountPath: /var/run/secrets/nais.io/vault
   leaderElection: true
+  webproxy: true
   azure:
     application:
       enabled: true
