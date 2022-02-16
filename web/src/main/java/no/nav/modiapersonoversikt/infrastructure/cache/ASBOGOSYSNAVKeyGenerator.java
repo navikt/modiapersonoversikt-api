@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.infrastructure.cache;
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFagomradeListeRequest;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.*;
 import no.nav.modiapersonoversikt.legacy.api.utils.cache.AutentisertBrukerKeyGenerator;
 
@@ -68,20 +66,6 @@ public class ASBOGOSYSNAVKeyGenerator extends AutentisertBrukerKeyGenerator {
             @Override
             public Object apply(ASBOGOSYSFinnArenaNAVEnhetListeRequest obj) {
                 return obj.getEnhetIdSokeStreng() + obj.getEnhetNavnSokeStreng() + obj.getMaxantall();
-            }
-        });
-
-        put(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class, new Function<ASBOGOSYSHentNAVAnsattFagomradeListeRequest, Object>() {
-            @Override
-            public Object apply(ASBOGOSYSHentNAVAnsattFagomradeListeRequest obj) {
-                return obj.getEnhetsId() + obj.getAnsattId();
-            }
-        });
-
-        put(ASBOGOSYSNAVAnsatt.class, new Function<ASBOGOSYSNAVAnsatt, Object>() {
-            @Override
-            public Object apply(ASBOGOSYSNAVAnsatt obj) {
-                return obj.getAnsattId() + obj.getAnsattNavn() + obj.getEnheter().toString();
             }
         });
     }};

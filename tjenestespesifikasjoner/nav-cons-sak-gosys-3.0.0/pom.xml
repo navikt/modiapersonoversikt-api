@@ -32,11 +32,6 @@
                             <wsdlOptions>
                                 <wsdlOption>
                                     <wsdl>
-                                        ${wsdl.directory}/tjenestespesifikasjon/nav-cons-sak-gosys-3.0.0_GOSYSNAVAnsattWSEXP.wsdl
-                                    </wsdl>
-                                </wsdlOption>
-                                <wsdlOption>
-                                    <wsdl>
                                         ${wsdl.directory}/tjenestespesifikasjon/nav-cons-sak-gosys-3.0.0_GOSYSNAVOrgEnhetWSEXP.wsdl
                                     </wsdl>
                                 </wsdlOption>
