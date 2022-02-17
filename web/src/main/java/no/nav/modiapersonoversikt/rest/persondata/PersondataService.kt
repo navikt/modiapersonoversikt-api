@@ -64,6 +64,7 @@ class PersondataServiceImpl(
 
         return persondataFletter.flettSammenData(
             PersondataFletter.Data(
+                personIdent,
                 persondata,
                 geografiskeTilknytning,
                 erEgenAnsatt,

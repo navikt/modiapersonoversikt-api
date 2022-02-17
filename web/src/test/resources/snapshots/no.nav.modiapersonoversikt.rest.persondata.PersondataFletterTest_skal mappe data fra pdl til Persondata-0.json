@@ -251,6 +251,7 @@
         "tidspunkt" : "2020-07-01T10:00:00"
       }
     } ] ],
+    "personIdent" : "12345678910",
     "personstatus" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Bosatt",
       "kode" : "BOSATT"
