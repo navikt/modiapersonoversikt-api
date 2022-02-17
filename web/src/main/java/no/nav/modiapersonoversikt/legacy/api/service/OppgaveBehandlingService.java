@@ -11,11 +11,7 @@ public interface OppgaveBehandlingService {
 
     OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest request);
 
-    OpprettOppgaveResponse opprettOppgaveV2(OpprettOppgaveRequest request);
-
     OpprettOppgaveResponse opprettSkjermetOppgave(OpprettSkjermetOppgaveRequest request);
-
-    OpprettOppgaveResponse opprettSkjermetOppgaveV2(OpprettSkjermetOppgaveRequest request);
 
     void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet, boolean tvungenTilordning) throws FikkIkkeTilordnet;
 
@@ -35,8 +31,6 @@ public interface OppgaveBehandlingService {
     void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String beskrivelse);
 
     void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request);
-
-    void leggTilbakeOppgaveIGsakV2(LeggTilbakeOppgaveIGsakRequest request);
 
     void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
 

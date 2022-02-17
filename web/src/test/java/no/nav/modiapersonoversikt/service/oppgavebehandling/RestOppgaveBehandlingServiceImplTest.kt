@@ -24,7 +24,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -63,8 +62,6 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @BeforeEach
     fun setupStandardMocker() {
-        every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
-        every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
         every { pdlOppslagService.hentAktorId(any()) } answers {
             val ident = this.args[0] as String
             "000${ident}000"
@@ -107,7 +104,7 @@ class RestOppgaveBehandlingServiceImplTest {
                         oppgavetype = "SPM_OG_SVR",
                         behandlingstype = "",
                         prioritet = "NORM",
-                        underkategoriKode = "KNA",
+                        underkategoriKode = "",
                         opprettetavenhetsnummer = "4100",
                         oppgaveFrist = now(fixedClock),
                         valgtEnhetsId = "",
@@ -661,7 +658,7 @@ class RestOppgaveBehandlingServiceImplTest {
         fun `skal hente eldste oppgave`() {
             val eldsteOppgave = dummyOppgave.copy(
                 id = 1111,
-                opprettetTidspunkt = OffsetDateTime.now().minusDays(1)
+                opprettetTidspunkt = OffsetDateTime.now().minusDays(1),
             )
             every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
                 listOf(Response(Decision.Permit, null))
@@ -679,11 +676,8 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.endreOppgave(any(), any(), any()) } answers {
                 thirdArg<PutOppgaveRequestJsonDTO>().toPutOppgaveResponseJsonDTO()
             }
-            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(
-                Behandling()
-                    .withBehandlingstema("behandlingstema_ARBD")
-                    .withBehandlingstype("behandlingstype_ARBD")
-            )
+            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
+            every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
 
             withIdent("Z999999") {
                 oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, "4110")
@@ -699,8 +693,6 @@ class RestOppgaveBehandlingServiceImplTest {
                     tildeltRessurs = false,
                     tildeltEnhetsnr = "4100",
                     ikkeTidligereTilordnetRessurs = "Z999999",
-                    behandlingstema = "behandlingstema_ARBD",
-                    behandlingstype = "behandlingstype_ARBD",
                     sorteringsfelt = "OPPRETTET_TIDSPUNKT",
                     sorteringsrekkefolge = "ASC",
                     limit = 20
@@ -722,8 +714,6 @@ class RestOppgaveBehandlingServiceImplTest {
                     tildeltRessurs = false,
                     tildeltEnhetsnr = "4100",
                     ikkeTidligereTilordnetRessurs = "Z999999",
-                    behandlingstema = "behandlingstema_ARBD",
-                    behandlingstype = "behandlingstype_ARBD",
                     sorteringsfelt = "OPPRETTET_TIDSPUNKT",
                     sorteringsrekkefolge = "ASC",
                     limit = 100
@@ -892,17 +882,14 @@ class RestOppgaveBehandlingServiceImplTest {
             val tilordnetRessurs = buildString { append("Z999999") }
             val testoppgave = dummyOppgave
                 .copy(tilordnetRessurs = tilordnetRessurs, aktoerId = "00007063000250000")
+            val temagruppe = Temagruppe.ANSOS
+            temagruppe.setUnderkategori("behandlingstema_ANSOS:behandlingstype_ANSOS")
+
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.hentBehandlendeEnheterV2(any(), any(), any(), any()) } returns listOf(
+            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
                 NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
-            )
-
-            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(
-                Behandling()
-                    .withBehandlingstema("behandlingstema_ANSOS")
-                    .withBehandlingstype("behandlingstype_ANSOS")
             )
 
             withIdent("Z999999") {
@@ -911,7 +898,7 @@ class RestOppgaveBehandlingServiceImplTest {
                         .withSaksbehandlersValgteEnhet("4110")
                         .withOppgaveId("1234")
                         .withBeskrivelse("ny beskrivelse")
-                        .withTemagruppe(Temagruppe.ANSOS)
+                        .withTemagruppe(temagruppe)
                 )
             }
 
@@ -941,16 +928,14 @@ class RestOppgaveBehandlingServiceImplTest {
         fun `skal legge tilbake oppgave med endret temagruppe`() {
             val testoppgave = dummyOppgave
                 .copy(tilordnetRessurs = "Z999999", aktoerId = "00007063000250000")
+            val temagruppe = Temagruppe.ANSOS
+            temagruppe.setUnderkategori("behandlingstema_ANSOS:behandlingstype_ANSOS")
+
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.hentBehandlendeEnheterV2(any(), any(), any(), any()) } returns listOf(
+            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
                 NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
-            )
-            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(
-                Behandling()
-                    .withBehandlingstema("behandlingstema_ANSOS")
-                    .withBehandlingstype("behandlingstype_ANSOS")
             )
 
             withIdent("Z999999") {
@@ -959,7 +944,7 @@ class RestOppgaveBehandlingServiceImplTest {
                         .withSaksbehandlersValgteEnhet("4110")
                         .withOppgaveId("1234")
                         .withBeskrivelse("ny beskrivelse")
-                        .withTemagruppe(Temagruppe.ANSOS)
+                        .withTemagruppe(temagruppe)
                 )
             }
 

@@ -26,7 +26,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.asV2BehandlingString
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
@@ -87,20 +86,6 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
-        val oppgavetype = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        return opprettOppgaveV2(
-            request.copy(
-                oppgavetype = oppgavetype,
-                underkategoriKode = behandling
-                    .map { it.asV2BehandlingString() }
-                    .orElse(null),
-            )
-        )
-    }
-
-    override fun opprettOppgaveV2(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
-        requireNotNull(request)
         val ident: String = AuthContextUtils.requireIdent()
         val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
         val aktorId = pdlOppslagService.hentAktorId(request.fnr)
@@ -138,20 +123,6 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     override fun opprettSkjermetOppgave(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
-        requireNotNull(request)
-        val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
-        val oppgavetype = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        return opprettSkjermetOppgaveV2(
-            request.copy(
-                oppgavetype = oppgavetype,
-                underkategoriKode = behandling
-                    .map { it.asV2BehandlingString() }
-                    .orElse(null),
-            )
-        )
-    }
-
-    override fun opprettSkjermetOppgaveV2(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
         val ident: String = AuthContextUtils.requireIdent()
         val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
@@ -354,21 +325,6 @@ class RestOppgaveBehandlingServiceImpl(
     override fun leggTilbakeOppgaveIGsak(request: LeggTilbakeOppgaveIGsakRequest?) {
         requireNotNull(request)
         requireNotNull(request.oppgaveId)
-        if (request.nyTemagruppe != null) {
-            val behandling = kodeverksmapperService.mapUnderkategori(request.nyTemagruppe.underkategori)
-            val nyUnderkategori = behandling
-                .map { it.asV2BehandlingString() }
-                .orElse(null)
-            if (nyUnderkategori != null) {
-                request.nyTemagruppe.setUnderkategori(nyUnderkategori)
-            }
-        }
-        leggTilbakeOppgaveIGsakV2(request)
-    }
-
-    override fun leggTilbakeOppgaveIGsakV2(request: LeggTilbakeOppgaveIGsakRequest?) {
-        requireNotNull(request)
-        requireNotNull(request.oppgaveId)
         val ident: String = AuthContextUtils.requireIdent()
         val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
 
@@ -517,7 +473,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheterV2(
+        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheter(
             brukerIdent = Fnr.of(pdlOppslagService.hentFnr(aktorId)),
             fagomrade = oppgave.tema,
             oppgavetype = oppgave.oppgavetype,
