@@ -7,7 +7,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +21,6 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import java.util.*
 
 @WebMvcTest(EnhetController::class)
 @ExtendWith(SnapshotExtension::class)

@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.legacy.sak.service;
 
 
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sakstema;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -25,6 +27,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TilgangskontrollServiceTest {
+    @Mock
+    private AnsattService ansattService;
+
     private MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 
     @InjectMocks

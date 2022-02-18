@@ -3,7 +3,9 @@ package no.nav.modiapersonoversikt.config.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
+import no.nav.common.sts.ServiceToServiceTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
+import no.nav.common.sts.utils.AzureAdServiceTokenProviderBuilder;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
@@ -13,12 +15,13 @@ import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
+import no.nav.modiapersonoversikt.service.AnsattServiceImpl;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
 import no.nav.modiapersonoversikt.service.dkif.Dkif;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
@@ -189,6 +192,13 @@ public class ServiceConfig {
                 .url(EnvironmentUtils.getRequiredProperty("SECURITYTOKENSERVICE_URL"))
                 .username(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME))
                 .password(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD))
+                .build();
+    }
+
+    @Bean
+    public ServiceToServiceTokenProvider serviceToServiceTokenProvider() {
+        return AzureAdServiceTokenProviderBuilder.builder()
+                .withEnvironmentDefaults()
                 .build();
     }
 

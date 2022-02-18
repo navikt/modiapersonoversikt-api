@@ -71,6 +71,11 @@
             <groupId>no.nav.common</groupId>
             <artifactId>cxf</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>client</artifactId>
+        </dependency>
+
 
         <!-- Spring -->
         <dependency>
