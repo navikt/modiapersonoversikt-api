@@ -40,7 +40,8 @@ class AnsattServiceImpl @Autowired constructor(
     }
 
     override fun hentAnsattNavn(ident: String): String {
-        return nomClient.finnNavn(NavIdent(ident)).visningsNavn
+        val veilederNavn = nomClient.finnNavn(NavIdent(ident))
+        return "${veilederNavn.fornavn} ${veilederNavn.etternavn}"
     }
 
     override fun hentAnsattFagomrader(ident: String, enhet: String): Set<String> {
