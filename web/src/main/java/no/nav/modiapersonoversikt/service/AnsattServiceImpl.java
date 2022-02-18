@@ -8,7 +8,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +34,7 @@ public class AnsattServiceImpl implements AnsattService {
     }
 
     public List<AnsattEnhet> hentEnhetsliste() {
+        // axsys /api/v2/tilgang/{ident}, sannsynligvis feil i swagger-spec
         return AuthContextUtils.getIdent()
                 .map((ident) -> {
                     try {
@@ -53,6 +54,7 @@ public class AnsattServiceImpl implements AnsattService {
     }
 
     public String hentAnsattNavn(String ident) {
+        // nom - graphql ressurser([Z999001, Z999002])
         try {
             ASBOGOSYSNAVAnsatt ansattRequest = new ASBOGOSYSNAVAnsatt();
             ansattRequest.setAnsattId(ident);
@@ -62,8 +64,8 @@ public class AnsattServiceImpl implements AnsattService {
         }
     }
 
-    public @NotNull
-    Set<String> hentAnsattFagomrader(@NotNull String ident, @NotNull String enhet) {
+    public @NotNull Set<String> hentAnsattFagomrader(@NotNull String ident, @NotNull String enhet) {
+        // axsys /api/v2/tilgang/{ident}, sannsynligvis feil i swagger-spec
         try {
             ASBOGOSYSHentNAVAnsattFagomradeListeRequest request = new ASBOGOSYSHentNAVAnsattFagomradeListeRequest();
             request.setAnsattId(ident);
@@ -93,6 +95,10 @@ public class AnsattServiceImpl implements AnsattService {
         request.setEnhetsId(enhet.enhetId);
         request.setEnhetsNavn(enhet.enhetNavn);
         try {
+            /**
+             * 1. hent alle ansatte fra axsys, /api/v2/enhet/{enhetId}/brukere
+             * 2. hent navn for alle vha nom, se hentAnsattNavn
+             */
             return ansattWS.hentNAVAnsattListe(request)
                     .getNAVAnsatte()
                     .stream()

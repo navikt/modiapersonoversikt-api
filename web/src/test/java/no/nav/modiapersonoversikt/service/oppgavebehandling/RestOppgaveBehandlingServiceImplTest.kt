@@ -19,9 +19,9 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveRequestJ
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling

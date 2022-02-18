@@ -8,7 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import java.util.*
 
 open class TilgangskontrollContextImpl(
