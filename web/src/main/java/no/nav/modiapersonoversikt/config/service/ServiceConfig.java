@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.config.service;
 
-import no.nav.common.client.axsys.AxsysClient;
-import no.nav.common.client.nom.NomClient;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.ServiceToServiceTokenProvider;
@@ -22,7 +21,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
-import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl;
+import no.nav.modiapersonoversikt.service.AnsattServiceImpl;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
 import no.nav.modiapersonoversikt.service.dkif.Dkif;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
@@ -126,8 +125,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public AnsattService ansattService(AxsysClient axsys, NomClient nomClient) {
-        return new AnsattServiceImpl(axsys, nomClient);
+    public AnsattService ansattService(GOSYSNAVansatt gosysNavAnsatt) {
+        return new AnsattServiceImpl(gosysNavAnsatt);
     }
 
     @Bean

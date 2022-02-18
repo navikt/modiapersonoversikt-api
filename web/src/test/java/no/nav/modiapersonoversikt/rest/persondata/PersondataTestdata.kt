@@ -11,6 +11,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 fun gittData(
+    personIdent: String,
     persondata: HentPersondata.Person,
     geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching("gt") { "0123" },
     erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching("egenAnsatt") { false },
@@ -19,6 +20,7 @@ fun gittData(
     bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching("bankkonto") { utenlandskBankkonto },
     tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching("tredjepartsperson") { tredjepartsPersoner }
 ) = PersondataFletter.Data(
+    personIdent = personIdent,
     persondata = persondata,
     geografiskeTilknytning = geografiskeTilknytning,
     erEgenAnsatt = erEgenAnsatt,
@@ -51,7 +53,6 @@ fun gittPerson(
     kontaktadresse: HentPersondata.Kontaktadresse = kontaktadresseData,
     oppholdsadresse: HentPersondata.Oppholdsadresse = oppholdsadresseData
 ) = HentPersondata.Person(
-    folkeregisteridentifikator = listOf(HentPersondata.Folkeregisteridentifikator(fnr, "I_BRUK", "FNR")),
     navn = listOf(gittHentPersondataNavn(navn)),
     kjoenn = listOf(HentPersondata.Kjoenn(kjonn)),
     foedsel = listOf(HentPersondata.Foedsel(gittDato(fodselsdato))),
