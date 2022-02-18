@@ -25,6 +25,7 @@ val log: Logger = LoggerFactory.getLogger(PersondataFletter::class.java)
 
 class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     data class Data(
+        val personIdent: String,
         val persondata: HentPersondata.Person,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
@@ -59,7 +60,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return Persondata.Data(
             feilendeSystemer = feilendeSystemer,
             person = Persondata.Person(
-                fnr = hentNaturligIdent(data),
+                fnr = data.personIdent,
+                personIdent = data.personIdent,
                 navn = hentNavn(data),
                 kjonn = hentKjonn(data),
                 fodselsdato = hentFodselsdato(data),
@@ -99,12 +101,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentGeografiskTilknytning(data: Data): String? {
         return data.geografiskeTilknytning.getOrNull()
-    }
-
-    private fun hentNaturligIdent(data: Data): String {
-        return data.persondata.folkeregisteridentifikator
-            .first { it.status == "I_BRUK" }
-            .identifikasjonsnummer
     }
 
     private fun hentNavn(data: Data): List<Persondata.Navn> {
@@ -188,7 +184,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
                         mapOf(
-                            "fnr" to hentNaturligIdent(data),
+                            "personIdent" to data.personIdent,
                             "feil" to "Ukjent bostedsadresse struktur",
                             "addresse" to adresse
                         )
@@ -246,7 +242,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
                         mapOf(
-                            "fnr" to hentNaturligIdent(data),
+                            "personIdent" to data.personIdent,
                             "feil" to "Ukjent kontaktadresse struktur",
                             "addresse" to adresse
                         )
@@ -296,7 +292,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
                         mapOf(
-                            "fnr" to hentNaturligIdent(data),
+                            "personIdent" to data.personIdent,
                             "feil" to "Ukjent kontaktadresse struktur",
                             "addresse" to adresse
                         )

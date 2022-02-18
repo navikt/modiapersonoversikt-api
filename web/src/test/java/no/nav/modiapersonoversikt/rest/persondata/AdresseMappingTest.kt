@@ -58,6 +58,7 @@ internal class AdresseMappingTest {
 
         val persondata = mapper.flettSammenData(
             data = gittData(
+                personIdent = "",
                 persondata = hovedperson,
                 tredjepartsPerson = PersondataResult.runCatching("tredjepartsperson") {
                     mapOf(barnFnr to requireNotNull(tredjepartsPersonData))

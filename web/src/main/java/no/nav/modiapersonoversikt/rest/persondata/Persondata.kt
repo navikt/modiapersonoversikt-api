@@ -12,6 +12,7 @@ object Persondata {
 
     data class Person(
         val fnr: String,
+        val personIdent: String,
         val navn: List<Navn>,
         val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val fodselsdato: List<LocalDate>,

@@ -55,11 +55,6 @@ fragment sistEndret on Metadata {
 
 query($ident: ID!){
     hentPerson(ident: $ident) {
-        folkeregisteridentifikator {
-            identifikasjonsnummer
-            status
-            type
-        }
         navn {
             fornavn
             mellomnavn
