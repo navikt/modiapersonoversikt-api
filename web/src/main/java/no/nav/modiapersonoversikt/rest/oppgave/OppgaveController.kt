@@ -7,14 +7,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.He
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-
-private val logger = LoggerFactory.getLogger(OppgaveController::class.java)
-private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 
 @RestController
 @RequestMapping("/rest/oppgaver")
@@ -62,19 +57,4 @@ private fun mapOppgave(oppgave: Oppgave) = OppgaveDTO(
     oppgave.henvendelseId,
     oppgave.fnr,
     oppgave.erSTOOppgave
-)
-
-enum class LeggTilbakeAarsak {
-    Innhabil,
-    FeilTema,
-    AnnenAarsak
-}
-
-data class LeggTilbakeRequest(
-    val enhet: String?,
-    val type: LeggTilbakeAarsak,
-    val oppgaveId: String,
-    val temagruppe: Temagruppe?,
-    val beskrivelse: String?,
-    val traadId: String?
 )

@@ -19,7 +19,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl;
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
 import no.nav.modiapersonoversikt.service.dkif.Dkif;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
@@ -66,14 +65,12 @@ public class ServiceConfig {
     public OppgaveBehandlingService oppgaveBehandlingService(
             PdlOppslagService pdlOppslagService,
             AnsattService ansattService,
-            ArbeidsfordelingService arbeidsfordelingService,
             Tilgangskontroll tilgangskontroll,
             SystemUserTokenProvider stsService
     ) {
         return RestOppgaveBehandlingServiceImpl.create(
                 pdlOppslagService,
                 ansattService,
-                arbeidsfordelingService,
                 tilgangskontroll,
                 stsService
         );
