@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.service.saker.kilder
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.BIDRAG_MARKOR
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -22,7 +21,7 @@ internal class BidragSaker(
          * Må fjerne tidligere generelle saker lagt til for BID fra GenerelleSaker.
          * Dette må gjøres fordi disse sakene ikke nødvendigvis blir lagt til med riktige markør-felt.
          */
-        saker.removeIf { it.temaKode == BIDRAG_MARKOR }
+        saker.removeIf { it.temaKode == "BID" }
 
         saker.addAll(sakerFra.map(::tilSak))
         saker.add(generellBidragsSak(hentDataFraBisys))
@@ -33,9 +32,9 @@ internal class BidragSaker(
             return Sak().apply {
                 saksId = "-"
                 fagsystemSaksId = "-"
-                temaKode = BIDRAG_MARKOR
+                temaKode = "BID"
                 temaNavn = "Bidrag"
-                fagsystemKode = BIDRAG_MARKOR
+                fagsystemKode = Sak.FAGSYSTEMKODE_BIDRAG
                 fagsystemNavn = "Kopiert inn i Bisys"
                 sakstype = if (hentDataFraBisys) Sak.SAKSTYPE_GENERELL else Sak.SAKSTYPE_MED_FAGSAK
                 opprettetDato = null

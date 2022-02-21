@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.sak.config;
 
-import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
@@ -69,11 +68,6 @@ public class ModiaStubConfig {
     @Bean
     public Tilgangskontroll tilgangskontroll() {
         return TilgangskontrollMock.get();
-    }
-
-    @Bean
-    public ContentRetriever contentRetriever() {
-        return mock(ContentRetriever.class);
     }
 
     @Bean

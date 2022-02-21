@@ -22,7 +22,6 @@ import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode
@@ -34,7 +33,6 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -55,9 +53,6 @@ class SakerServiceImplTest {
 
     @MockK
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
-
-    @MockK
-    private lateinit var behandleHenvendelsePortType: BehandleHenvendelsePortType
 
     @MockK
     private lateinit var psakService: PsakService
@@ -104,7 +99,7 @@ class SakerServiceImplTest {
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
-        assertThat(saksliste[saksliste.size - 1].temaKode, `is`(BIDRAG_MARKOR))
+        assertThat(saksliste[saksliste.size - 1].temaKode, `is`("BID"))
         assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
         assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
     }
@@ -167,109 +162,6 @@ class SakerServiceImplTest {
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
         assertThat(saker[0].fagsystemKode, `is`(FAGSYSTEMKODE_ARENA))
         assertThat(saker[0].finnesIGsak, `is`(false))
-    }
-
-    @Test
-    fun `knytter behandlingskjede til sak uavhengig om den finnesIGsak`() {
-        val sak = lagSak()
-        val valgtNavEnhet = "0219"
-        sakerService.knyttBehandlingskjedeTilSak(
-            FNR,
-            BEHANDLINGSKJEDEID,
-            sak,
-            valgtNavEnhet
-        )
-        verify(exactly = 1) {
-            behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                BEHANDLINGSKJEDEID,
-                SAKS_ID,
-                sak.temaKode,
-                valgtNavEnhet
-            )
-        }
-    }
-
-    @Test
-    fun `knytter behandlingsKjede til sak uavhengig om den finnesIGsak uten fagsystemId`() {
-        val sak = lagSakUtenFagsystemId()
-        val valgtNavEnhet = "0219"
-        sakerService.knyttBehandlingskjedeTilSak(
-            FNR,
-            BEHANDLINGSKJEDEID,
-            sak,
-            valgtNavEnhet
-        )
-        verify(exactly = 1) {
-            behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                BEHANDLINGSKJEDEID,
-                SAKS_ID,
-                sak.temaKode,
-                valgtNavEnhet
-            )
-        }
-    }
-
-    @Test
-    fun `knytt behandlingskjede til sak kaller alternativ metode om bidrags hack saken er valgt`() {
-        val valgtNavEnhet = "0219"
-        val sak = Sak()
-        sak.temaKode = BIDRAG_MARKOR
-        sakerService.knyttBehandlingskjedeTilSak(
-            FNR,
-            BEHANDLINGSKJEDEID,
-            sak,
-            valgtNavEnhet
-        )
-        verify(exactly = 0) {
-            behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                String(),
-                String(),
-                String(),
-                String()
-            )
-        }
-        verify(exactly = 1) {
-            behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(
-                BEHANDLINGSKJEDEID,
-                "BID"
-            )
-        }
-    }
-
-    @Test
-    fun `knytt behandlingskjede til sak kaster feil hvis enhet ikke er satt`() {
-        assertThrows(IllegalArgumentException::class.java) {
-            sakerService.knyttBehandlingskjedeTilSak(
-                FNR,
-                BEHANDLINGSKJEDEID,
-                lagSak(),
-                ""
-            )
-        }
-    }
-
-    @Test
-    fun `knytt behandlingskjede til sak kaster feil hvis behandlingskjede ikke er satt`() {
-        assertThrows(IllegalArgumentException::class.java) {
-            sakerService.knyttBehandlingskjedeTilSak(
-                FNR,
-                null,
-                lagSak(),
-                "1337"
-            )
-        }
-    }
-
-    @Test
-    fun `knytt Behandlingskjede til sak kaster feil hvis FNR ikke er satt`() {
-        assertThrows(IllegalArgumentException::class.java) {
-            sakerService.knyttBehandlingskjedeTilSak(
-                "",
-                BEHANDLINGSKJEDEID,
-                lagSak(),
-                "1337"
-            )
-        }
     }
 
     companion object {

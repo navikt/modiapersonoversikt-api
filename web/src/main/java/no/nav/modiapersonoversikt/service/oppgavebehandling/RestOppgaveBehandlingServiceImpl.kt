@@ -35,8 +35,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskriv
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
-import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
 import java.time.LocalDate
 import java.util.*
@@ -78,11 +76,6 @@ class RestOppgaveBehandlingServiceImpl(
             stsService = stsService
         )
     }
-
-    private val plukkOppgaveApi = PlukkOppgaveApi(
-        apiClient,
-        kodeverksmapperService
-    )
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
@@ -226,45 +219,6 @@ class RestOppgaveBehandlingServiceImpl(
         }
     }
 
-    override fun finnTildelteKNAOppgaverIGsak(): MutableList<Oppgave> {
-        val ident: String = AuthContextUtils.requireIdent()
-        val correlationId = correlationId()
-
-        return hentOppgaverPaginertOgTilgangskontroll { offset ->
-            apiClient.finnOppgaver(
-                correlationId,
-                tilordnetRessurs = ident,
-                tema = listOf(Utils.KONTAKT_NAV),
-                oppgavetype = listOf(SPORSMAL_OG_SVAR),
-                aktivDatoTom = LocalDate.now(clock).toString(),
-                statuskategori = "AAPEN",
-                limit = OPPGAVE_MAX_LIMIT,
-                offset = offset
-            )
-        }
-    }
-
-    override fun plukkOppgaverFraGsak(
-        temagruppe: Temagruppe?,
-        saksbehandlersValgteEnhet: String?
-    ): MutableList<Oppgave> {
-        val oppgaver = plukkOppgaveApi.plukkOppgaverFraGsak(temagruppe, saksbehandlersValgteEnhet)
-        val aktorIdTilganger: Map<String?, DecisionEnums> = hentAktorIdTilgang(oppgaver)
-
-        return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
-            .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
-            .fold(
-                transformSuccess = this::mapTilOppgave,
-                transformFailure = { it }
-            )
-            .getWithFailureHandling { failures ->
-                val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
-                tjenestekallLogg.warn("[OPPGAVE] plukkOppgaverFraGsak la tilbake oppgaver pga manglende tilgang: $oppgaveIds")
-                systemLeggTilbakeOppgaver(failures)
-            }
-            .toMutableList()
-    }
-
     override fun ferdigstillOppgaveIGsak(
         oppgaveId: String?,
         temagruppe: Temagruppe?,
@@ -320,48 +274,6 @@ class RestOppgaveBehandlingServiceImpl(
         for (oppgaveId in oppgaveIder) {
             ferdigstillOppgaveIGsak(oppgaveId, temagruppe, saksbehandlersValgteEnhet, "")
         }
-    }
-
-    override fun leggTilbakeOppgaveIGsak(request: LeggTilbakeOppgaveIGsakRequest?) {
-        requireNotNull(request)
-        requireNotNull(request.oppgaveId)
-        val ident: String = AuthContextUtils.requireIdent()
-        val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
-
-        if (oppgave.tilordnetRessurs != ident) {
-            val feilmelding =
-                "Innlogget saksbehandler $ident er ikke tilordnet oppgave ${request.oppgaveId}, den er tilordnet: ${oppgave.tilordnetRessurs}"
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, feilmelding)
-        }
-
-        var oppdatertOppgave = oppgave.copy(
-            tilordnetRessurs = null,
-            beskrivelse = leggTilBeskrivelse(
-                oppgave.beskrivelse,
-                beskrivelseInnslag(
-                    ident = ident,
-                    navn = ansattService.hentAnsattNavn(ident),
-                    enhet = request.saksbehandlersValgteEnhet,
-                    innhold = request.beskrivelse,
-                    clock = clock
-                )
-            ),
-            endretAvEnhetsnr = defaultEnhetGittTemagruppe(request.nyTemagruppe, request.saksbehandlersValgteEnhet)
-        )
-        if (request.nyTemagruppe != null) {
-            val behandling: Behandling = request.nyTemagruppe.underkategori.parseV2BehandlingString()
-            oppdatertOppgave = oppdatertOppgave.copy(
-                tildeltEnhetsnr = finnAnsvarligEnhet(oppgave, request.nyTemagruppe),
-                behandlingstema = behandling.behandlingstema,
-                behandlingstype = behandling.behandlingstype
-            )
-        }
-
-        apiClient.endreOppgave(
-            correlationId(),
-            request.oppgaveId.toLong(),
-            oppdatertOppgave.toPutOppgaveRequestJsonDTO()
-        )
     }
 
     override fun systemLeggTilbakeOppgaveIGsak(
