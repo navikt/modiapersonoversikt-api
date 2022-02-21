@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.config;
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
@@ -77,11 +76,6 @@ public class MockServiceTestContext {
     @Bean
     public AnsattService ansattService() {
         return mock(AnsattService.class);
-    }
-
-    @Bean
-    public GOSYSNAVOrgEnhet GOSYSNAVOrgEnhet() {
-        return mock(GOSYSNAVOrgEnhet.class);
     }
 
     @Bean
