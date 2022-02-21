@@ -83,6 +83,9 @@ class SfDialogController @Autowired constructor(
                             fritekst = request.fritekst
                         )
                     }
+                    HenvendelseDTO.HenvendelseType.CHAT -> {
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Kan ikke opprette chat-melding fra modia")
+                    }
                 }
                 Unit
             }
