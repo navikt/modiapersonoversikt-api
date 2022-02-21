@@ -20,11 +20,6 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
-            <artifactId>nav-cons-sak-gosys-3.0.0</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
             <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
         </dependency>
