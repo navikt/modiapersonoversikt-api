@@ -1,10 +1,9 @@
 package no.nav.modiapersonoversikt.service.kodeverksmapper.domain
 
-fun Behandling.asV2BehandlingString(): String {
-    return "${this.behandlingstema ?: ""}:${this.behandlingstype ?: ""}"
-}
-
 fun String.parseV2BehandlingString(): Behandling {
+    if (this.isBlank()) {
+        return Behandling(null, null)
+    }
     val temaOgType = this.split(":").map {
         it.ifEmpty { null }
     }

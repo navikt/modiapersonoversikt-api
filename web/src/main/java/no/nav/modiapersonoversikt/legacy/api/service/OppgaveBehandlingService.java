@@ -11,11 +11,7 @@ public interface OppgaveBehandlingService {
 
     OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest request);
 
-    OpprettOppgaveResponse opprettOppgaveV2(OpprettOppgaveRequest request);
-
     OpprettOppgaveResponse opprettSkjermetOppgave(OpprettSkjermetOppgaveRequest request);
-
-    OpprettOppgaveResponse opprettSkjermetOppgaveV2(OpprettSkjermetOppgaveRequest request);
 
     void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet, boolean tvungenTilordning) throws FikkIkkeTilordnet;
 

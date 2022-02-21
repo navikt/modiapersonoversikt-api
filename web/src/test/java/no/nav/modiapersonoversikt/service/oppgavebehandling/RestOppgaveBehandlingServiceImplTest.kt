@@ -18,9 +18,9 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveRequestJ
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
@@ -60,8 +60,6 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @BeforeEach
     fun setupStandardMocker() {
-        every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
-        every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
         every { pdlOppslagService.hentAktorId(any()) } answers {
             val ident = this.args[0] as String
             "000${ident}000"
@@ -104,7 +102,7 @@ class RestOppgaveBehandlingServiceImplTest {
                         oppgavetype = "SPM_OG_SVR",
                         behandlingstype = "",
                         prioritet = "NORM",
-                        underkategoriKode = "KNA",
+                        underkategoriKode = "",
                         opprettetavenhetsnummer = "4100",
                         oppgaveFrist = now(fixedClock),
                         valgtEnhetsId = "",

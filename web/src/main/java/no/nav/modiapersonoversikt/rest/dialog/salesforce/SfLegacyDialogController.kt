@@ -191,6 +191,10 @@ class SfLegacyDialogController(
                     fagsakSystem = fortsettDialogRequest.sak.fagsystemKode
                 )
             }
+
+            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
+                sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
+            }
         }
         if (oppgaveId != null) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(

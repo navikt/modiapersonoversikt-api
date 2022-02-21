@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*
 class InternalController @Autowired constructor(
     private val systemUserTokenProvider: SystemUserTokenProvider,
     private val tilgangskontroll: Tilgangskontroll
+
 ) {
     data class Tokens(val user: String, val system: String)
     private val pdlClient = PdlOppslagServiceImpl.createClient()

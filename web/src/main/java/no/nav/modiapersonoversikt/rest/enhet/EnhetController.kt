@@ -12,7 +12,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -48,7 +48,7 @@ constructor(
             }
     }
 
-    @GetMapping("/oppgavebehandlere/foreslatte")
+    @GetMapping("/oppgavebehandlere/v2/foreslatte")
     fun hentBehandlendeEnhet(
         @RequestParam("fnr") fnr: String,
         @RequestParam("temakode") temakode: String,
@@ -59,25 +59,6 @@ constructor(
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(READ, Enhet.Foreslatte)) {
                 arbeidsfordeling.hentBehandlendeEnheter(
-                    brukerIdent = Fnr.of(fnr),
-                    fagomrade = temakode,
-                    oppgavetype = typekode,
-                    underkategori = underkategorikode
-                )
-            }
-    }
-
-    @GetMapping("/oppgavebehandlere/v2/foreslatte")
-    fun hentBehandlendeEnhetV2(
-        @RequestParam("fnr") fnr: String,
-        @RequestParam("temakode") temakode: String,
-        @RequestParam("typekode") typekode: String,
-        @RequestParam("underkategori") underkategorikode: String?
-    ): List<NorgDomain.Enhet> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(READ, Enhet.Foreslatte)) {
-                arbeidsfordeling.hentBehandlendeEnheterV2(
                     brukerIdent = Fnr.of(fnr),
                     fagomrade = temakode,
                     oppgavetype = typekode,

@@ -30,6 +30,7 @@ internal class PersondataFletterTest {
         snapshot.assertMatches(
             mapper.flettSammenData(
                 data = gittData(
+                    personIdent = fnr,
                     persondata = gittPerson(fnr = fnr)
                 ),
                 clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())

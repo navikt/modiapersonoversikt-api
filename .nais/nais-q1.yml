@@ -51,6 +51,10 @@ spec:
       - kvPath: /apikey/appdynamics/dev
         mountPath: /var/run/secrets/nais.io/vault
   leaderElection: true
+  webproxy: true
+  azure:
+    application:
+      enabled: true
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q1"
@@ -186,3 +190,9 @@ spec:
       value: "Z990351,Z994123,Z994404"
     - name: CXF_SECURE_LOG
       value: "enabled"
+    - name: AXSYS_URL
+      value: "https://axsys.dev.adeo.no"
+    - name: AXSYS_CLUSTER
+      value: "dev-fss"
+    - name: NOM_URL
+      value: "https://nom-api.dev.intern.nav.no"

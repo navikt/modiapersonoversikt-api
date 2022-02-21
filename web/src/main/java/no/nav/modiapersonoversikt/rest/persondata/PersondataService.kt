@@ -17,10 +17,10 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 
 interface PersondataService {
-    fun hentPerson(fnr: String): Persondata.Data
-    fun hentGeografiskTilknytning(fnr: String): String?
-    fun hentNavEnhet(fnr: String): Persondata.Enhet?
-    fun hentAdressebeskyttelse(fnr: String): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>
+    fun hentPerson(personIdent: String): Persondata.Data
+    fun hentGeografiskTilknytning(personIdent: String): String?
+    fun hentNavEnhet(personIdent: String): Persondata.Enhet?
+    fun hentAdressebeskyttelse(personIdent: String): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>
 
     data class Tilganger(
         val kode6: Boolean,
@@ -40,14 +40,14 @@ class PersondataServiceImpl(
     val persondataFletter = PersondataFletter(kodeverk)
     val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
 
-    override fun hentPerson(fnr: String): Persondata.Data {
-        val persondata = requireNotNull(pdl.hentPersondata(fnr)) {
-            "Fant ikke person med fnr $fnr"
+    override fun hentPerson(personIdent: String): Persondata.Data {
+        val persondata = requireNotNull(pdl.hentPersondata(personIdent)) {
+            "Fant ikke person med personIdent $personIdent"
         }
-        val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }
+        val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(personIdent) }
         val adressebeskyttelse = persondataFletter.hentAdressebeskyttelse(persondata.adressebeskyttelse)
         val navEnhet = hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning)
-        val erEgenAnsatt = PersondataResult.runCatching("TPS-EGEN-ANSATT") { egenAnsattService.erEgenAnsatt(fnr) }
+        val erEgenAnsatt = PersondataResult.runCatching("TPS-EGEN-ANSATT") { egenAnsattService.erEgenAnsatt(personIdent) }
         val tilganger = PersondataResult
             .runCatching("TILGANGSKONTROLL") { hentTilganger() }
             .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
@@ -59,11 +59,12 @@ class PersondataServiceImpl(
                 .associateBy { it.fnr }
         }
 
-        val dkifData = PersondataResult.runCatching("DKIF") { dkif.hentDigitalKontaktinformasjon(fnr) }
-        val bankkonto = PersondataResult.runCatching("TPS") { hentBankkonto(fnr) }
+        val dkifData = PersondataResult.runCatching("DKIF") { dkif.hentDigitalKontaktinformasjon(personIdent) }
+        val bankkonto = PersondataResult.runCatching("TPS") { hentBankkonto(personIdent) }
 
         return persondataFletter.flettSammenData(
             PersondataFletter.Data(
+                personIdent,
                 persondata,
                 geografiskeTilknytning,
                 erEgenAnsatt,
@@ -75,18 +76,18 @@ class PersondataServiceImpl(
         )
     }
 
-    override fun hentGeografiskTilknytning(fnr: String): String? {
-        return PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }.getOrNull()
+    override fun hentGeografiskTilknytning(personIdent: String): String? {
+        return PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(personIdent) }.getOrNull()
     }
 
-    override fun hentNavEnhet(fnr: String): Persondata.Enhet? {
-        val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }
-        val adressebeskyttelse = hentAdressebeskyttelse(fnr)
+    override fun hentNavEnhet(personIdent: String): Persondata.Enhet? {
+        val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(personIdent) }
+        val adressebeskyttelse = hentAdressebeskyttelse(personIdent)
         return hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning).let { persondataFletter.hentNavEnhet(it) }
     }
 
-    override fun hentAdressebeskyttelse(fnr: String): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
-        return pdl.hentTredjepartspersondata(listOf(fnr)).mapNotNull {
+    override fun hentAdressebeskyttelse(personIdent: String): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
+        return pdl.hentTredjepartspersondata(listOf(personIdent)).mapNotNull {
             tredjepartspersonMapper.lagTredjepartsperson(
                 ident = it.ident,
                 person = it.person,
