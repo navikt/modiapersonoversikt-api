@@ -161,11 +161,6 @@ public class ServiceConfig {
         return new PsakServiceImpl(pensjonSakV1);
     }
 
-    @Bean
-    public ScheduledAnsattListePrefetch scheduledAnsattListePrefetch() {
-        return new ScheduledAnsattListePrefetch();
-    }
-
     @Bean(name = "DkifSoap")
     public Dkif.Service defaultDkifService(DigitalKontaktinformasjonV1 dkifV1) {
         return new DkifServiceImpl(dkifV1);
