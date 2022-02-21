@@ -9,12 +9,15 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 
 class ExperimentSafService(
     private val control: SafService,
-    private val experiment: SafService
+    private val experiment: SafService,
+    unleashService: UnleashService
 ) : SafService {
-    private val experimentRate = Scientist.FixedValueRate(0.05)
+    private val experimentRate = Scientist.UnleashRate(unleashService, Feature.SAF_RATE)
     private val journalportExperiment =
         createExperiment<ResultatWrapper<List<DokumentMetadata>>>(Config("SAF-Journalpost", experimentRate))
 
