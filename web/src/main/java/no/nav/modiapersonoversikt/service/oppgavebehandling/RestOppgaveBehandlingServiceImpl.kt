@@ -24,9 +24,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.Al
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
-import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInnslag
@@ -43,7 +40,6 @@ import java.util.Optional.ofNullable
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 
 class RestOppgaveBehandlingServiceImpl(
-    private val kodeverksmapperService: KodeverksmapperService,
     private val pdlOppslagService: PdlOppslagService,
     private val ansattService: AnsattService,
     private val arbeidsfordelingService: ArbeidsfordelingService,
@@ -61,14 +57,12 @@ class RestOppgaveBehandlingServiceImpl(
     companion object {
         @JvmStatic
         fun create(
-            kodeverksmapperService: KodeverksmapperService,
             pdlOppslagService: PdlOppslagService,
             ansattService: AnsattService,
             arbeidsfordelingService: ArbeidsfordelingService,
             tilgangskontroll: Tilgangskontroll,
             stsService: SystemUserTokenProvider
         ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
-            kodeverksmapperService = kodeverksmapperService,
             pdlOppslagService = pdlOppslagService,
             ansattService = ansattService,
             arbeidsfordelingService = arbeidsfordelingService,

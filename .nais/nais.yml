@@ -86,12 +86,6 @@ spec:
       value: "https://dokarkiv.nais.adeo.no/services/innsynjournal/v2"
     - name: JOURNAL_V2_ENDPOINTURL
       value: "https://wasapp.adeo.no/joark/Journal/v2"
-    - name: KODEVERKSMAPPER_OPPGAVETYPE_URL
-      value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/mapOppgavetype"
-    - name: KODEVERKSMAPPER_PING_URL
-      value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/ping"
-    - name: KODEVERKSMAPPER_UNDERKATEGORI_URL
-      value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/mapUnderkategori"
     - name: FELLES_KODEVERK_URL
       value: "https://kodeverk.nais.adeo.no"
     - name: LDAP_BASEDN
