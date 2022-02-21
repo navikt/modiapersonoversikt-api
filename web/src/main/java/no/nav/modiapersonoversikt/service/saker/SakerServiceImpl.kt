@@ -4,10 +4,10 @@ import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.Bid
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
-import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
 import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.saker.kilder.*
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -24,9 +24,6 @@ private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
 
 @ExperimentalContracts
 class SakerServiceImpl : SakerService {
-    @Autowired
-    private lateinit var gsakKodeverk: GsakKodeverk
-
     @Autowired
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
@@ -88,7 +85,11 @@ class SakerServiceImpl : SakerService {
         resultat.leggTilDataFraKilde(fnr, generelleSaker)
         resultat.leggTilDataFraKilde(fnr, oppfolgingsSaker)
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), kodeverk)
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(
+            resultat.saker,
+            kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM),
+            kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA)
+        )
 
         /**
          * Bidragssaken må legges til etter `leggTilFagsystemnavnOgTemanavn` siden vi ikke har
@@ -108,7 +109,11 @@ class SakerServiceImpl : SakerService {
     fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker)
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), kodeverk)
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(
+            resultat.saker,
+            kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM),
+            kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA)
+        )
         return resultat
     }
 

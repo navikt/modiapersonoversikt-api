@@ -15,7 +15,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.*
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
-import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
@@ -45,9 +44,6 @@ import kotlin.streams.toList
 
 @ExperimentalContracts
 class SakerServiceImplTest {
-    @MockK
-    private lateinit var gsakKodeverk: GsakKodeverk
-
     @MockK
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
@@ -79,7 +75,6 @@ class SakerServiceImplTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
-        every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
         every { kodeverk.hentKodeverk<String, String>(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
         every { pdlOppslagService.hentAktorId(any()) } returns "123456789"
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))

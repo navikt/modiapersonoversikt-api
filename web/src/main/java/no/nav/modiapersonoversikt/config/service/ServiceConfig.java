@@ -16,13 +16,11 @@ import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
-import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.Dkif;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
-import no.nav.modiapersonoversikt.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.modiapersonoversikt.service.ldap.LDAPServiceImpl;
 import no.nav.modiapersonoversikt.service.ldap.LdapContextProvider;
 import no.nav.modiapersonoversikt.service.oppgavebehandling.RestOppgaveBehandlingServiceImpl;
@@ -79,11 +77,6 @@ public class ServiceConfig {
     @Bean
     public AnsattService ansattService(AxsysClient axsys, NomClient nomClient) {
         return new AnsattServiceImpl(axsys, nomClient);
-    }
-
-    @Bean
-    public GsakKodeverk gsakKodeverk() {
-        return new GsakKodeverkFraFil();
     }
 
     @Bean
