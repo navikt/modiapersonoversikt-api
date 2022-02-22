@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.config.endpoint.util;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
@@ -68,11 +67,6 @@ public class CacheTestConfig {
     @Bean
     public OppfolgingsinfoApiService oppfolgingsApi() {
         return mock(OppfolgingsinfoApiService.class);
-    }
-
-    @Bean
-    public Kodeverksmapper kodeverksmapper() {
-        return mock(Kodeverksmapper.class);
     }
 
     @Bean

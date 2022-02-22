@@ -41,7 +41,6 @@ public class CacheConfig {
                 cache("asbogosysAnsattListe", 43200, 10_000),
                 cache("ldap", 3600, 20_000),
                 cache("varslingCache", 180, 10_000),
-                cache("kodeverksmapperCache", 86400),
                 cache("innsynJournalCache", 1800, 10_000),
                 cache("pesysCache", 600)
         ));

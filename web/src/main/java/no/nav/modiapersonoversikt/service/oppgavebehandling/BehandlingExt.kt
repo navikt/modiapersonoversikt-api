@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.service.kodeverksmapper.domain
+package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 fun String.parseV2BehandlingString(): Behandling {
     if (this.isBlank()) {

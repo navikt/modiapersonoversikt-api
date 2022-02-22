@@ -15,7 +15,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetskontaktinfoApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
+import no.nav.modiapersonoversikt.service.oppgavebehandling.Behandling
 import no.nav.modiapersonoversikt.utils.Retry
 import no.nav.modiapersonoversikt.utils.isNumeric
 import okhttp3.OkHttpClient

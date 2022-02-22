@@ -73,12 +73,6 @@
             <cache:cacheable method="finn*" />
         </cache:caching>
     </cache:advice>
-    <cache:advice id="kodeverksmapperAdvice" key-generator="defaultkeygenerator">
-        <cache:caching cache="kodeverksmapperCache">
-            <cache:cacheable method="hentOppgavetype" key="'hentOppgavetype'" />
-            <cache:cacheable method="hentUnderkategori" key="'hentUnderkategori'" />
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="oppfolgingsinfoAdvice" key-generator="userkeygenerator">
         <cache:caching cache="oppfolgingsinfoCache">
             <cache:cacheable method="hent*" />
@@ -109,7 +103,6 @@
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
         <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
-        <aop:advisor advice-ref="kodeverksmapperAdvice" pointcut="bean(kodeverksmapper)"/>
         <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsApi)"/>
         <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingPortType)"/>
         <aop:advisor advice-ref="innsynJournalAdvice" pointcut="bean(innsynJournalV2)"/>
