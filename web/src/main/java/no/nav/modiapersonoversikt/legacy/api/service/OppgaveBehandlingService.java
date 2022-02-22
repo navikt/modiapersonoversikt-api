@@ -27,8 +27,6 @@ public interface OppgaveBehandlingService {
 
     void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String beskrivelse);
 
-    void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
-
     boolean oppgaveErFerdigstilt(String oppgaveid);
 
     Oppgave finnOgTilordneSTOOppgave(String fnr, String henvendelseId, Temagruppe temagruppe, String enhet, boolean tvungenTilordning);

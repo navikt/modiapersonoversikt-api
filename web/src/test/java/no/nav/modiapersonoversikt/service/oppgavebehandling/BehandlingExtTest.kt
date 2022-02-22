@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.service.kodeverksmapper.domain
+package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Nested

@@ -21,8 +21,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.Al
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
-import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -37,20 +35,16 @@ import java.util.*
 class RestOppgaveBehandlingServiceImplTest {
     private val apiClient: OppgaveApi = mockk()
     private val systemApiClient: OppgaveApi = mockk()
-    private val kodeverksmapperService: KodeverksmapperService = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
     private val tilgangskontrollContext: TilgangskontrollContext = mockk()
     private val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
     private val ansattService: AnsattService = mockk()
-    private val arbeidsfordelingService: ArbeidsfordelingService = mockk()
     private val stsService: SystemUserTokenProvider = mockk()
     private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
-        kodeverksmapperService,
         pdlOppslagService,
         ansattService,
-        arbeidsfordelingService,
         tilgangskontroll,
         stsService,
         apiClient,

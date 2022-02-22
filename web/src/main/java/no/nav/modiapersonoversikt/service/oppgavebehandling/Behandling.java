@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.service.kodeverksmapper.domain;
+package no.nav.modiapersonoversikt.service.oppgavebehandling;
 
 import static java.lang.String.format;
 
@@ -28,16 +28,6 @@ public class Behandling {
 
     public void setBehandlingstype(String behandlingstype) {
         this.behandlingstype = behandlingstype;
-    }
-
-    public Behandling withBehandlingstema(String behandlingstema) {
-        setBehandlingstema(behandlingstema);
-        return this;
-    }
-
-    public Behandling withBehandlingstype(String behandlingstype) {
-        setBehandlingstype(behandlingstype);
-        return this;
     }
 
     @Override

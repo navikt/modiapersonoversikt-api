@@ -18,14 +18,11 @@ import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
-import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl;
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
 import no.nav.modiapersonoversikt.service.dkif.Dkif;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
 import no.nav.modiapersonoversikt.service.kodeverk.GsakKodeverkFraFil;
-import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.modiapersonoversikt.service.ldap.LDAPServiceImpl;
 import no.nav.modiapersonoversikt.service.ldap.LdapContextProvider;
 import no.nav.modiapersonoversikt.service.oppgavebehandling.RestOppgaveBehandlingServiceImpl;
@@ -35,10 +32,8 @@ import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory;
-import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
-import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -67,24 +62,15 @@ public class ServiceConfig {
     }
 
     @Bean
-    public KodeverksmapperService kodeverksmapperService(Kodeverksmapper kodeverksmapper) {
-        return new KodeverksmapperService(kodeverksmapper);
-    }
-
-    @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(
-            KodeverksmapperService kodeverksmapperService,
             PdlOppslagService pdlOppslagService,
             AnsattService ansattService,
-            ArbeidsfordelingService arbeidsfordelingService,
             Tilgangskontroll tilgangskontroll,
             SystemUserTokenProvider stsService
     ) {
         return RestOppgaveBehandlingServiceImpl.create(
-                kodeverksmapperService,
                 pdlOppslagService,
                 ansattService,
-                arbeidsfordelingService,
                 tilgangskontroll,
                 stsService
         );
