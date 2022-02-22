@@ -9,11 +9,8 @@ import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.sts.utils.AzureAdServiceTokenProviderBuilder;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
-import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
-import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.modiapersonoversikt.service.*;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
-import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
@@ -27,8 +24,6 @@ import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingServi
 import no.nav.modiapersonoversikt.service.dkif.Dkif;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
-import no.nav.modiapersonoversikt.service.henvendelse.DelsvarService;
-import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
 import no.nav.modiapersonoversikt.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.modiapersonoversikt.service.ldap.LDAPServiceImpl;
@@ -41,9 +36,6 @@ import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.cache.CacheManager;
@@ -68,37 +60,10 @@ public class ServiceConfig {
     }
 
     @Bean
-    public HenvendelseUtsendingService henvendelseUtsendingService(HenvendelsePortType henvendelsePortType,
-                                                                   SendUtHenvendelsePortType sendUtHenvendelsePortType,
-                                                                   BehandleHenvendelsePortType behandleHenvendelsePortType,
-                                                                   OppgaveBehandlingService oppgaveBehandlingService,
-                                                                   SakerService sakerService,
-                                                                   Tilgangskontroll tilgangskontroll,
-                                                                   ContentRetriever propertyResolver,
-                                                                   PersondataService persondataService,
-                                                                   LDAPService ldapService,
-                                                                   CacheManager cacheManager) {
-
-        return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
-                behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, tilgangskontroll,
-                propertyResolver, persondataService, ldapService, cacheManager);
-    }
-
-    @Bean
-    public HenvendelseLesService henvendelseLesService(
-            SystemUserTokenProvider systemUserTokenProvider,
-            UnleashService unleashService
-    ) {
+    public HenvendelseLesService henvendelseLesService() {
         return new HenvendelseLesServiceImpl(
-                systemUserTokenProvider,
-                SfHenvendelseApiFactory.INSTANCE.createHenvendelseInfoApi(),
-                unleashService
+                SfHenvendelseApiFactory.INSTANCE.createHenvendelseInfoApi()
         );
-    }
-
-    @Bean
-    public DelsvarService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService, OppgaveBehandlingService oppgaveBehandlingService) {
-        return new DelsvarServiceImpl(henvendelseUtsendingService, oppgaveBehandlingService);
     }
 
     @Bean

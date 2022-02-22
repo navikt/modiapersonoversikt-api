@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
-import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.sak.BehandlingskjedeBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.SakBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.mock.MockCreationUtil;
@@ -14,11 +13,9 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.util.stream.Collectors.toList;
@@ -29,22 +26,11 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FilterTest {
-
-    @Mock
-    private ContentRetriever cms;
-
     @InjectMocks
     private Filter filter = new Filter();
-
-    @Before
-    public void setup() {
-        when(cms.hentTekst("filter.lovligebehandlingstyper")).thenReturn("ae0047,ae0034,ae0014,ae0020,ae0019,ae0011,ae0045");
-        when(cms.hentTekst("filter.ulovligesakstema")).thenReturn("FEI,SAK,SAP,OPP,YRA,GEN,AAR,KLA,HEL");
-    }
 
     @Test
     public void sjekkerLovligeTema_vedFiltrering_avSaker() throws Exception {

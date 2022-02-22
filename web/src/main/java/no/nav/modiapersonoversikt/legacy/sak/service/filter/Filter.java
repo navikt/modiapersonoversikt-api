@@ -1,13 +1,11 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.filter;
 
-import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Behandling;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.BehandlingsStatus;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -23,15 +21,10 @@ import static java.util.stream.Collectors.toList;
 public class Filter {
     public final static String ULOVLIG_PREFIX = "17"; //ukjent årsak til dette ulovlige prefixet
 
-    @Autowired
-    private ContentRetriever cms;
-
-    private static List<String> ulovligeSakstema;
-    private static List<String> lovligeBehandlingstyper;
+    private static final List<String> ulovligeSakstema = Arrays.asList("FEI,SAK,SAP,OPP,YRA,GEN,AAR,KLA,HEL".split("\\s*,\\s*"));
+    private static final List<String> lovligeBehandlingstyper = Arrays.asList("ae0047,ae0034,ae0014,ae0020,ae0019,ae0011,ae0045".split("\\s*,\\s*"));
 
     public synchronized List<Sak> filtrerSaker(List<Sak> saker) {
-        lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
-        ulovligeSakstema = Arrays.asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
         return saker.stream()
                 .filter(HAR_LOVLIG_SAKSTEMA)
                 .filter(HAR_BEHANDLINGER)
@@ -39,7 +32,6 @@ public class Filter {
     }
 
     public synchronized List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger) {
-        lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
         Stream<Behandling> lovligeBehandlinger = behandlinger.stream().filter(HAR_LOVLIG_BEHANDLINGSTYPE);
 
         return lovligeBehandlinger

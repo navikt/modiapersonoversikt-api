@@ -11,11 +11,11 @@ import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveRequest
 import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveResponse
 import no.nav.modiapersonoversikt.legacy.api.service.OpprettSkjermetOppgaveRequest
-import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
+import no.nav.modiapersonoversikt.utils.arbeidsdagerFraDatoJava
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate

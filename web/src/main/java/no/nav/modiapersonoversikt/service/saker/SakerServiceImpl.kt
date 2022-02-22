@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.service.saker
 
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
@@ -13,7 +12,6 @@ import no.nav.modiapersonoversikt.service.saker.kilder.*
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,9 +29,6 @@ class SakerServiceImpl : SakerService {
 
     @Autowired
     private lateinit var kodeverk: EnhetligKodeverk.Service
-
-    @Autowired
-    private lateinit var behandleHenvendelsePortType: BehandleHenvendelsePortType
 
     @Autowired
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
@@ -117,34 +112,6 @@ class SakerServiceImpl : SakerService {
         return resultat
     }
 
-    override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak, enhet: String?) {
-        requireKnyttTilSakParametereNotNullOrBlank(sak, behandlingskjede, fnr, enhet)
-
-        if (Sak.FAGSYSTEMKODE_BIDRAG == sak.temaKode || Sak.BIDRAG_MARKOR == sak.temaKode) {
-            behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(behandlingskjede, "BID")
-            return
-        }
-
-        if (sakFinnesIkkeIPsakOgGsak(sak)) {
-            sak.saksId = restSakSaker.opprettSak(fnr, sak)
-        }
-
-        requireNotNullOrBlank(sak.saksId) {
-            "SaksId-parameter må være tilstede for å kunne knytte behandlingskjede $behandlingskjede til sak."
-        }
-
-        try {
-            behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                behandlingskjede,
-                sak.saksId,
-                sak.temaKode,
-                enhet
-            )
-        } catch (e: Exception) {
-            throw JournalforingFeilet(e)
-        }
-    }
-
     companion object {
         private fun SakerService.Resultat.leggTilDataFraKilde(fnr: String, kilde: SakerKilde): SakerService.Resultat {
             try {
@@ -165,10 +132,6 @@ class SakerServiceImpl : SakerService {
                 (pesys.saker + restSak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }).toMutableList(),
                 (pesys.feiledeSystemer + restSak.feiledeSystemer).toMutableList()
             )
-        }
-
-        private fun sakFinnesIkkeIPsakOgGsak(sak: Sak): Boolean {
-            return !(sak.finnesIPsak || sak.finnesIGsak)
         }
 
         private val GODKJENT_FAGSAK: (Sak) -> Boolean = { sak ->

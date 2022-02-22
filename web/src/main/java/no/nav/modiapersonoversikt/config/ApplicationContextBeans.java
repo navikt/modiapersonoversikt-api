@@ -6,14 +6,11 @@ import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfig;
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient;
 import no.nav.modiapersonoversikt.consumer.abac.AbacClientConfig;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
-import no.nav.modiapersonoversikt.service.plukkoppgave.PlukkOppgaveService;
-import no.nav.modiapersonoversikt.service.plukkoppgave.PlukkOppgaveServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -34,14 +31,6 @@ public class ApplicationContextBeans {
     @Bean
     public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
-    }
-
-    @Bean
-    public PlukkOppgaveService plukkOppgaveService(OppgaveBehandlingService oppgaveBehandlingService, Tilgangskontroll tilgangskontroll) {
-        return new PlukkOppgaveServiceImpl(
-                oppgaveBehandlingService,
-                tilgangskontroll
-        );
     }
 
     @Bean
