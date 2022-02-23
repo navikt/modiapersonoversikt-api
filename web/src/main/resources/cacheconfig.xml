@@ -8,10 +8,6 @@
           class="no.nav.modiapersonoversikt.legacy.api.utils.cache.AutentisertBrukerKeyGenerator"/>
     <bean id="methodawarekeygenerator"
           class="no.nav.modiapersonoversikt.legacy.api.utils.cache.MethodAwareKeyGenerator" />
-    <bean id="asbogosyskeygenerator"
-          class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVKeyGenerator"/>
-    <bean id="asbogosysansattlistekeygenerator"
-          class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVAnsattListeKeyGenerator"/>
     <bean id="defaultkeygenerator"
           class="org.springframework.cache.interceptor.SimpleKeyGenerator"/>
 
@@ -19,25 +15,6 @@
         <cache:caching cache="endpointCache">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
-        </cache:caching>
-    </cache:advice>
-    <cache:advice id="asbogosysEnhetAdvice" key-generator="asbogosyskeygenerator">
-        <cache:caching cache="asbogosysEnhet">
-            <cache:cacheable method="hent*"/>
-            <cache:cacheable method="finn*"/>
-        </cache:caching>
-    </cache:advice>
-    <cache:advice id="asbogosysAnsattAdvice">
-        <!--Cachene må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
-        <cache:caching cache="asbogosysAnsattListe" key-generator="asbogosysansattlistekeygenerator">
-            <cache:cacheable method="hentNAVAnsattListe" />
-        </cache:caching>
-
-        <cache:caching cache="asbogosysAnsatt" key-generator="asbogosyskeygenerator">
-            <cache:cacheable method="hentNAVAnsatt"/>
-            <cache:cacheable method="finnArenaNAVAnsattListe"/>
-            <cache:cacheable method="hentNAVAnsattFagomradeListe"/>
-            <cache:cacheable method="hentNAVAnsattEnhetListe"/>
         </cache:caching>
     </cache:advice>
     <cache:advice id="pdlAdvice" key-generator="userkeygenerator">
@@ -96,8 +73,6 @@
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
-        <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
-        <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
