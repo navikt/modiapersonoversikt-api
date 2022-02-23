@@ -17,7 +17,6 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -96,17 +95,13 @@ class SfLegacyDialogController(
             fritekst = infomeldingRequest.fritekst
         )
 
-        inParallel(
-            {
-                sfHenvendelseService.journalforHenvendelse(
-                    enhet = enhet,
-                    kjedeId = henvendelse.kjedeId,
-                    saksId = infomeldingRequest.sak.fagsystemSaksId,
-                    saksTema = infomeldingRequest.sak.temaKode,
-                    fagsakSystem = infomeldingRequest.sak.fagsystemKode
-                )
-            },
-            { sfHenvendelseService.lukkTraad(henvendelse.kjedeId) }
+        sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
+        sfHenvendelseService.journalforHenvendelse(
+            enhet = enhet,
+            kjedeId = henvendelse.kjedeId,
+            saksId = infomeldingRequest.sak.fagsystemSaksId,
+            saksTema = infomeldingRequest.sak.temaKode,
+            fagsakSystem = infomeldingRequest.sak.fagsystemKode
         )
 
         return ResponseEntity(HttpStatus.OK)
@@ -190,10 +185,6 @@ class SfLegacyDialogController(
                     saksTema = fortsettDialogRequest.sak.temaKode,
                     fagsakSystem = fortsettDialogRequest.sak.fagsystemKode
                 )
-            }
-
-            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
-                sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
         }
         if (oppgaveId != null) {
