@@ -369,6 +369,13 @@ class SfLegacyDialogController(
                     MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.SVAR_SKRIFTLIG
                 }
             }
+            HenvendelseDTO.HenvendelseType.CHAT -> {
+                when (melding.fra.identType) {
+                    MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) Meldingstype.SPORSMAL_SKRIFTLIG else Meldingstype.SVAR_SBL_INNGAAENDE
+                    MeldingFraDTO.IdentType.NAVIDENT -> if (erForsteMelding) Meldingstype.SPORSMAL_MODIA_UTGAAENDE else Meldingstype.SVAR_SKRIFTLIG
+                    MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.SVAR_SKRIFTLIG
+                }
+            }
         }
     }
 
