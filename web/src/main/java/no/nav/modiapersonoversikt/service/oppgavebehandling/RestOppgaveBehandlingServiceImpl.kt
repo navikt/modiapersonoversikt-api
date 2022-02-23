@@ -1,8 +1,6 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
@@ -11,8 +9,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.legacy.api.domain.MetadataKey
 import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.ANSOS
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.OKSOS
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
@@ -23,10 +19,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
-import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInnslag
@@ -35,8 +27,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskriv
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
-import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
 import java.time.LocalDate
 import java.util.*
@@ -45,10 +35,8 @@ import java.util.Optional.ofNullable
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 
 class RestOppgaveBehandlingServiceImpl(
-    private val kodeverksmapperService: KodeverksmapperService,
     private val pdlOppslagService: PdlOppslagService,
     private val ansattService: AnsattService,
-    private val arbeidsfordelingService: ArbeidsfordelingService,
     private val tilgangskontroll: Tilgangskontroll,
     private val stsService: SystemUserTokenProvider,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
@@ -63,26 +51,17 @@ class RestOppgaveBehandlingServiceImpl(
     companion object {
         @JvmStatic
         fun create(
-            kodeverksmapperService: KodeverksmapperService,
             pdlOppslagService: PdlOppslagService,
             ansattService: AnsattService,
-            arbeidsfordelingService: ArbeidsfordelingService,
             tilgangskontroll: Tilgangskontroll,
             stsService: SystemUserTokenProvider
         ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
-            kodeverksmapperService = kodeverksmapperService,
             pdlOppslagService = pdlOppslagService,
             ansattService = ansattService,
-            arbeidsfordelingService = arbeidsfordelingService,
             tilgangskontroll = tilgangskontroll,
             stsService = stsService
         )
     }
-
-    private val plukkOppgaveApi = PlukkOppgaveApi(
-        apiClient,
-        kodeverksmapperService
-    )
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
@@ -226,45 +205,6 @@ class RestOppgaveBehandlingServiceImpl(
         }
     }
 
-    override fun finnTildelteKNAOppgaverIGsak(): MutableList<Oppgave> {
-        val ident: String = AuthContextUtils.requireIdent()
-        val correlationId = correlationId()
-
-        return hentOppgaverPaginertOgTilgangskontroll { offset ->
-            apiClient.finnOppgaver(
-                correlationId,
-                tilordnetRessurs = ident,
-                tema = listOf(Utils.KONTAKT_NAV),
-                oppgavetype = listOf(SPORSMAL_OG_SVAR),
-                aktivDatoTom = LocalDate.now(clock).toString(),
-                statuskategori = "AAPEN",
-                limit = OPPGAVE_MAX_LIMIT,
-                offset = offset
-            )
-        }
-    }
-
-    override fun plukkOppgaverFraGsak(
-        temagruppe: Temagruppe?,
-        saksbehandlersValgteEnhet: String?
-    ): MutableList<Oppgave> {
-        val oppgaver = plukkOppgaveApi.plukkOppgaverFraGsak(temagruppe, saksbehandlersValgteEnhet)
-        val aktorIdTilganger: Map<String?, DecisionEnums> = hentAktorIdTilgang(oppgaver)
-
-        return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
-            .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
-            .fold(
-                transformSuccess = this::mapTilOppgave,
-                transformFailure = { it }
-            )
-            .getWithFailureHandling { failures ->
-                val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
-                tjenestekallLogg.warn("[OPPGAVE] plukkOppgaverFraGsak la tilbake oppgaver pga manglende tilgang: $oppgaveIds")
-                systemLeggTilbakeOppgaver(failures)
-            }
-            .toMutableList()
-    }
-
     override fun ferdigstillOppgaveIGsak(
         oppgaveId: String?,
         temagruppe: Temagruppe?,
@@ -320,75 +260,6 @@ class RestOppgaveBehandlingServiceImpl(
         for (oppgaveId in oppgaveIder) {
             ferdigstillOppgaveIGsak(oppgaveId, temagruppe, saksbehandlersValgteEnhet, "")
         }
-    }
-
-    override fun leggTilbakeOppgaveIGsak(request: LeggTilbakeOppgaveIGsakRequest?) {
-        requireNotNull(request)
-        requireNotNull(request.oppgaveId)
-        val ident: String = AuthContextUtils.requireIdent()
-        val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
-
-        if (oppgave.tilordnetRessurs != ident) {
-            val feilmelding =
-                "Innlogget saksbehandler $ident er ikke tilordnet oppgave ${request.oppgaveId}, den er tilordnet: ${oppgave.tilordnetRessurs}"
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, feilmelding)
-        }
-
-        var oppdatertOppgave = oppgave.copy(
-            tilordnetRessurs = null,
-            beskrivelse = leggTilBeskrivelse(
-                oppgave.beskrivelse,
-                beskrivelseInnslag(
-                    ident = ident,
-                    navn = ansattService.hentAnsattNavn(ident),
-                    enhet = request.saksbehandlersValgteEnhet,
-                    innhold = request.beskrivelse,
-                    clock = clock
-                )
-            ),
-            endretAvEnhetsnr = defaultEnhetGittTemagruppe(request.nyTemagruppe, request.saksbehandlersValgteEnhet)
-        )
-        if (request.nyTemagruppe != null) {
-            val behandling: Behandling = request.nyTemagruppe.underkategori.parseV2BehandlingString()
-            oppdatertOppgave = oppdatertOppgave.copy(
-                tildeltEnhetsnr = finnAnsvarligEnhet(oppgave, request.nyTemagruppe),
-                behandlingstema = behandling.behandlingstema,
-                behandlingstype = behandling.behandlingstype
-            )
-        }
-
-        apiClient.endreOppgave(
-            correlationId(),
-            request.oppgaveId.toLong(),
-            oppdatertOppgave.toPutOppgaveRequestJsonDTO()
-        )
-    }
-
-    override fun systemLeggTilbakeOppgaveIGsak(
-        oppgaveId: String?,
-        temagruppe: Temagruppe?,
-        saksbehandlersValgteEnhet: String?
-    ) {
-        requireNotNull(oppgaveId)
-        /**
-         * NB Viktig at systemApiClient brukes her.
-         * Vi skal potensielt sett hente en oppgave saksbehandler ikke har tilgang til.
-         */
-        val oppgave = systemApiClient.hentOppgave(
-            xCorrelationID = correlationId(),
-            id = oppgaveId.toLong()
-        ).toOppgaveJsonDTO()
-
-        tjenestekallLogg.warn("[OPPGAVE] systemLeggTilbakeOppgaveIGsak la tilbake oppgaver pga manglende tilgang: $oppgaveId")
-        systemApiClient
-            .endreOppgave(
-                correlationId(),
-                oppgaveId.toLong(),
-                oppgave.copy(
-                    tilordnetRessurs = null,
-                    endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet)
-                ).toPutOppgaveRequestJsonDTO()
-            )
     }
 
     override fun oppgaveErFerdigstilt(oppgaveId: String?): Boolean {
@@ -469,22 +340,6 @@ class RestOppgaveBehandlingServiceImpl(
                 systemLeggTilbakeOppgaver(failures)
             }
             .toMutableList()
-    }
-
-    private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
-        val aktorId = requireNotNull(oppgave.aktoerId)
-        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheter(
-            brukerIdent = Fnr.of(pdlOppslagService.hentFnr(aktorId)),
-            fagomrade = oppgave.tema,
-            oppgavetype = oppgave.oppgavetype,
-            underkategori = underkategoriOverstyringForArbeidsfordeling(temagruppe)
-        )
-        return enheter.firstOrNull()?.enhetId ?: oppgave.tildeltEnhetsnr
-    }
-
-    private fun underkategoriOverstyringForArbeidsfordeling(temagruppe: Temagruppe): String {
-        val overstyrtTemagruppe = if (temagruppe == OKSOS) ANSOS else temagruppe
-        return overstyrtTemagruppe.underkategori
     }
 
     private fun mapTilOppgave(oppgave: OppgaveJsonDTO): Oppgave {

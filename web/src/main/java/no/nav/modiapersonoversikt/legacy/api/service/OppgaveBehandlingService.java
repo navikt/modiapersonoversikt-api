@@ -18,9 +18,6 @@ public interface OppgaveBehandlingService {
     @Deprecated
     List<Oppgave> finnTildelteOppgaverIGsak();
     List<Oppgave> finnTildelteOppgaverIGsak(String fnr);
-    List<Oppgave> finnTildelteKNAOppgaverIGsak();
-
-    List<Oppgave> plukkOppgaverFraGsak(Temagruppe temagruppe, String saksbehandlersValgteEnhet);
 
     void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet);
 
@@ -29,10 +26,6 @@ public interface OppgaveBehandlingService {
     void ferdigstillOppgaverIGsak(List<String> oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet);
 
     void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String beskrivelse);
-
-    void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request);
-
-    void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
 
     boolean oppgaveErFerdigstilt(String oppgaveid);
 

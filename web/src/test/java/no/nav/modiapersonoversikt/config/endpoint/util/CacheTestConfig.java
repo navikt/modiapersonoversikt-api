@@ -1,11 +1,9 @@
 package no.nav.modiapersonoversikt.config.endpoint.util;
 
-import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
@@ -39,11 +37,6 @@ public class CacheTestConfig {
     }
 
     @Bean
-    public HenvendelsePortType henvendelsePortType() {
-        return mock(HenvendelsePortType.class);
-    }
-
-    @Bean
     public NorgApi norgApi() {
         return mock(NorgApi.class);
     }
@@ -61,11 +54,6 @@ public class CacheTestConfig {
     @Bean
     public OppfolgingsinfoApiService oppfolgingsApi() {
         return mock(OppfolgingsinfoApiService.class);
-    }
-
-    @Bean
-    public Kodeverksmapper kodeverksmapper() {
-        return mock(Kodeverksmapper.class);
     }
 
     @Bean

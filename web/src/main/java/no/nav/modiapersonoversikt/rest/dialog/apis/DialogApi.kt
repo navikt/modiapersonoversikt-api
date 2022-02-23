@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.rest.dialog.apis
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.rest.api.DTO
 import org.springframework.http.ResponseEntity
 import java.util.HashMap
 import javax.servlet.http.HttpServletRequest
@@ -54,9 +53,9 @@ interface DialogApi {
 }
 
 data class BehandlingsId(val behandlingsId: String)
-data class TraadDTO(val traadId: String, val meldinger: List<MeldingDTO>) : DTO
-class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map), DTO
-class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?) : DTO
+data class TraadDTO(val traadId: String, val meldinger: List<MeldingDTO>)
+class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map)
+class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?)
 
 data class OpprettHenvendelseRequest(
     val enhet: String?,

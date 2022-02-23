@@ -488,6 +488,7 @@ components:
           enum:
           - "SAMTALEREFERAT"
           - "MELDINGSKJEDE"
+          - "CHAT"
         fnr:
           type: "string"
           example: "12345678910"

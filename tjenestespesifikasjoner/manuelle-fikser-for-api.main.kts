@@ -8,6 +8,7 @@ import Manuelle_fikser_for_api_main.ChangeUtils.addResponse
 import Manuelle_fikser_for_api_main.ChangeUtils.changeFile
 import Manuelle_fikser_for_api_main.ChangeUtils.forDefinition
 import Manuelle_fikser_for_api_main.ChangeUtils.forEndpoint
+import Manuelle_fikser_for_api_main.ChangeUtils.forProperty
 import Manuelle_fikser_for_api_main.ChangeUtils.getTyped
 import Manuelle_fikser_for_api_main.ChangeUtils.objectOf
 import Manuelle_fikser_for_api_main.ChangeUtils.removeProperty
@@ -53,6 +54,9 @@ changeFile(
      */
     forDefinition("Henvendelse") {
         setRequired("gjeldendeTemagruppe", false)
+        forProperty("henvendelseType") {
+            getTyped<MutableList<String>>("enum").add("CHAT")
+        }
     }
     forDefinition("Markering") {
         setRequired("markertDato", false)
@@ -125,6 +129,9 @@ object ChangeUtils {
     }
     fun Json.forEndpoint(method: String, path: String, block: Json.() -> Unit) {
         block(this.getTyped<Json>("paths").getTyped<Json>(path).getTyped(method))
+    }
+    fun Json.forProperty(name: String, block: Json.() -> Unit) {
+        block(this.getTyped<Json>("properties").getTyped(name))
     }
     fun Json.removeProperty(vararg names: String) {
         if (this.has("properties")) {

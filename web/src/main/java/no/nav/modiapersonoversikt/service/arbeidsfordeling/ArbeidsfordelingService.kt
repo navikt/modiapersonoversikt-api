@@ -7,8 +7,8 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
-import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.parseV2BehandlingString
+import no.nav.modiapersonoversikt.service.oppgavebehandling.Behandling
+import no.nav.modiapersonoversikt.service.oppgavebehandling.parseV2BehandlingString
 import org.slf4j.LoggerFactory
 
 interface ArbeidsfordelingService {

@@ -4,21 +4,15 @@ import no.nav.modiapersonoversikt.infrastructure.http.GraphQLException
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
-import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlFelt
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlKriterie
-import no.nav.modiapersonoversikt.rest.lagXmlGregorianDato
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.AdresseFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.PersonFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -35,7 +29,6 @@ import java.time.LocalDate
 class PersonsokController @Autowired constructor(
     private val personsokPortType: PersonsokPortType,
     private val pdlOppslagService: PdlOppslagService,
-    unleashService: UnleashService,
     val tilgangskontroll: Tilgangskontroll
 ) {
     private val auditDescriptor =
@@ -46,89 +39,22 @@ class PersonsokController @Autowired constructor(
             )
         }
 
-    val experiment = Scientist.createExperiment<List<PersonSokResponsDTO>>(
-        Scientist.Config(
-            name = "personsok",
-            experimentRate = Scientist.UnleashRate(unleashService, Feature.PDL_PERSONSOK_RATE),
-            logAndCompareValues = false
-        )
-    )
-
-    @PostMapping
-    fun sok(@RequestBody personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(auditDescriptor) {
-                experiment.run(
-                    control = { legacyPersonsok(personsokRequest) },
-                    experiment = { pdlPersonsok(personsokRequest) },
-                    dataFields = { control, triedExperiment ->
-                        val experiment = when (val experiment = triedExperiment.getOrNull()) {
-                            is List<*> -> experiment as List<PersonSokResponsDTO>
-                            else -> emptyList()
-                        }
-                        val controlIdenter = control.mapNotNull { it.ident?.ident }
-                        val experimentIdenter = experiment.mapNotNull { it.ident?.ident }
-                        val missing = controlIdenter.filter { !experimentIdenter.contains(it) }
-
-                        mapOf(
-                            "equal-length" to (control.size == experiment.size),
-                            "missing" to missing.joinToString(", "),
-                            "control-length" to control.size,
-                            "experiment-length" to experiment.size
-                        )
-                    }
-                )
-            }
-    }
-
     @PostMapping("/v2")
     fun sokPdl(@RequestBody personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(auditDescriptor) {
-                pdlPersonsok(personsokRequest)
+                handterFeil {
+                    if (!personsokRequest.kontonummer.isNullOrBlank()) {
+                        kontonummerSok(personsokRequest.kontonummer)
+                            .mapNotNull(::lagPersonResponse)
+                    } else {
+                        pdlOppslagService
+                            .sokPerson(personsokRequest.tilPdlKriterier())
+                            .mapNotNull(::lagPersonResponse)
+                    }
+                }
             }
-    }
-
-    private fun legacyPersonsok(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
-        return handterFeil {
-            if (!personsokRequest.utenlandskID.isNullOrBlank()) {
-                pdlOppslagService
-                    .sokPerson(
-                        listOf(
-                            PdlKriterie(
-                                PdlFelt.UTENLANDSK_ID,
-                                personsokRequest.utenlandskID
-                            )
-                        )
-                    )
-                    .mapNotNull(::lagPersonResponse)
-            } else {
-                legacySokMotTPS(personsokRequest)
-            }
-        }
-    }
-
-    private fun pdlPersonsok(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
-        return handterFeil {
-            if (!personsokRequest.kontonummer.isNullOrBlank()) {
-                kontonummerSok(personsokRequest.kontonummer)
-                    .mapNotNull(::lagPersonResponse)
-            } else {
-                pdlOppslagService
-                    .sokPerson(personsokRequest.tilPdlKriterier())
-                    .mapNotNull(::lagPersonResponse)
-            }
-        }
-    }
-
-    private fun legacySokMotTPS(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
-        return personsokPortType
-            .finnPerson(lagPersonsokRequest(personsokRequest))
-            .personListe
-            ?.mapNotNull(::lagPersonResponse)
-            ?: emptyList()
     }
 
     private fun kontonummerSok(kontonummer: String): List<Person> {
@@ -420,33 +346,6 @@ private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: MidlertidigPostadre
 data class KodeverdiDTO(val kodeRef: String?, val beskrivelse: String?)
 
 private fun lagKodeverdi(fimKodeverdi: Kodeverdi) = KodeverdiDTO(fimKodeverdi.kodeRef, fimKodeverdi.value)
-
-private fun lagPersonsokRequest(request: PersonsokRequest): FinnPersonRequest =
-    FinnPersonRequest()
-        .apply {
-            soekekriterie = Soekekriterie()
-                .apply {
-                    fornavn = request.fornavn
-                    etternavn = request.etternavn
-                    gatenavn = request.gatenavn
-                    bankkontoNorge = request.kontonummer
-                }
-            personFilter = PersonFilter()
-                .apply {
-                    alderFra = request.alderFra
-                    alderTil = request.alderTil
-                    enhetId = request.kommunenummer
-                    foedselsdatoFra = lagXmlGregorianDato(request.fodselsdatoFra)
-                    foedselsdatoTil = lagXmlGregorianDato(request.fodselsdatoTil)
-                    kjoenn = request.kjonn
-                }
-            adresseFilter = AdresseFilter()
-                .apply {
-                    gatenummer = request.husnummer
-                    husbokstav = request.husbokstav
-                    postnummer = request.postnummer
-                }
-        }
 
 data class PersonsokRequest(
     val fornavn: String?,
