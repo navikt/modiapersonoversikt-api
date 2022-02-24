@@ -10,13 +10,14 @@ import java.util.Map;
 
 public class SakerUtils {
 
-    public static void leggTilFagsystemnavnOgTemanavn(List<Sak> sakerForBruker, final Map<String, String> fagsystemMapping, final EnhetligKodeverk.Service kodeverk) {
+    public static void leggTilFagsystemnavnOgTemanavn(
+            List<Sak> sakerForBruker,
+            final EnhetligKodeverk.Kodeverk<String, String> fagsystemKodeverk,
+            final EnhetligKodeverk.Kodeverk<String, String> arkivtemaKodeverk
+    ) {
         sakerForBruker.forEach(sak -> {
-            String fagsystemnavn = fagsystemMapping.get(sak.fagsystemKode);
-            sak.fagsystemNavn = fagsystemnavn != null ? fagsystemnavn : sak.fagsystemKode;
-
-            String temaNavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentVerdi(sak.temaKode, sak.temaKode);
-            sak.temaNavn = temaNavn != null ? temaNavn : sak.temaKode;
+            sak.fagsystemNavn = fagsystemKodeverk.hentVerdi(sak.fagsystemKode, sak.fagsystemKode);
+            sak.temaNavn = arkivtemaKodeverk.hentVerdi(sak.temaKode, sak.temaKode);
         });
     }
 
