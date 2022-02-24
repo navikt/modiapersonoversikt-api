@@ -32,6 +32,12 @@ interface SafService {
     fun hentSaker(ident: String): GraphQLResponse<Hentbrukerssaker.Result>
 }
 
+private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
+private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
+
+@KtorExperimentalAPI
+private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
+
 class SafServiceImpl : SafService {
     private val LOG = LoggerFactory.getLogger(SafService::class.java)
     private val client: OkHttpClient = RestClient.baseClient().newBuilder()
@@ -46,12 +52,6 @@ class SafServiceImpl : SafService {
         .build()
 
     companion object {
-        private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
-        private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
-
-        @KtorExperimentalAPI
-        private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
-
         const val VEDLEGG_START_INDEX = 1
 
         val JOURNALPOSTTYPE_INN = Journalposttype.I
@@ -74,7 +74,7 @@ class SafServiceImpl : SafService {
                     .dokumentoversiktBruker
                     .journalposter
                     .filterNotNull()
-                    .map { DokumentMetadata().fraSafJournalpost(it) }
+                    .mapNotNull { fraSafJournalpost(it) }
                 ResultatWrapper(data, emptySet())
             } else {
                 ResultatWrapper(emptyList(), setOf(Baksystem.SAF))
