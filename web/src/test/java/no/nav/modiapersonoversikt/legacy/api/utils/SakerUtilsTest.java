@@ -1,12 +1,10 @@
 package no.nav.modiapersonoversikt.legacy.api.utils;
 
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
-import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.util.*;
 
@@ -14,45 +12,40 @@ import static java.util.Arrays.asList;
 import static no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SakerUtilsTest {
     private static final String SAKSTYPE_FAG = "Fag";
     private static final String KODEVERK_TEMAKODE = "Tema kode";
     private static final String KODEVERK_TEMANAVN = "Tema navn";
-    public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
+    public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<>() {
         {
             put("ARBD", asList("FUL", "AAP"));
             put("FMLI", asList("FOR", "BID"));
         }
     };
-    private static final Map<String, String> KODEVERK_MOCK_MAP = new HashMap<String, String>() {
+    private static final Map<String, String> KODEVERK_MOCK_MAP = new HashMap<>() {
         {
-            put(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "FAGSYSTEMNAVN");
+            put(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "BISYS");
         }
     };
     private static final List<String> EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE = new ArrayList<>(asList("FUL", "SER", "SYM", "VEN", "STO", "UFM"));
-
-    @Mock
-    private GsakKodeverk gsakKodeverk;
-    @Mock
-    private EnhetligKodeverk.Service standardKodeverk;
 
     private ArrayList<Sak> saksliste;
     private List<String> alleTemaer;
     private List<String> alleTemagrupper;
     private String godkjentTemaSomFinnesIEnTemagruppe;
+    private EnhetligKodeverk.Kodeverk<String, String> arkivtemaKodeverk;
+    private EnhetligKodeverk.Kodeverk<String, String> fagsystemKodeverk;
 
     @BeforeEach
     public void setup() {
         initMocks(this);
-        EnhetligKodeverk.Kodeverk dummyKodeverk = new EnhetligKodeverk.Kodeverk("Dummy", new HashMap<>() {{
+        arkivtemaKodeverk = new EnhetligKodeverk.Kodeverk<>("Dummy", new HashMap<>() {{
             put(KODEVERK_TEMAKODE, KODEVERK_TEMANAVN);
         }});
-        when(standardKodeverk.hentKodeverk(any())).thenReturn(dummyKodeverk);
-        when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
+        fagsystemKodeverk = new EnhetligKodeverk.Kodeverk<>("Dummy", new HashMap<>() {
+        });
 
         alleTemaer = getAlleEksisterendeTemaer();
         saksliste = createSakslisteBasertPaTemaMap();
@@ -64,7 +57,7 @@ public class SakerUtilsTest {
         Sak sak = createSak("id 1", alleTemaer.get(0), GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now().minusDays(1));
         List<Sak> sakerForBruker = asList(sak);
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, fagsystemKodeverk, arkivtemaKodeverk);
 
         assertThat(sak.fagsystemNavn, is(KODEVERK_MOCK_MAP.get(sak.fagsystemKode)));
     }
@@ -74,7 +67,7 @@ public class SakerUtilsTest {
         Sak sak = createSak("id 1", alleTemaer.get(0), GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(1), "sakstype", DateTime.now().minusDays(1));
         List<Sak> sakerForBruker = asList(sak);
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, fagsystemKodeverk, arkivtemaKodeverk);
 
         assertThat(sak.fagsystemNavn, is(sak.fagsystemKode));
     }
@@ -84,7 +77,7 @@ public class SakerUtilsTest {
         Sak sak = createSak("id 1", KODEVERK_TEMAKODE, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now().minusDays(1));
         List<Sak> sakerForBruker = asList(sak);
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, fagsystemKodeverk, arkivtemaKodeverk);
 
         assertThat(sak.temaNavn, is(KODEVERK_TEMANAVN));
     }
@@ -95,7 +88,7 @@ public class SakerUtilsTest {
         Sak sak = createSak("id 1", temaKodeSomIkkeFinnesIMapping, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(1), "sakstype", DateTime.now().minusDays(1));
         List<Sak> sakerForBruker = asList(sak);
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, fagsystemKodeverk, arkivtemaKodeverk);
 
         assertThat(sak.temaNavn, is(temaKodeSomIkkeFinnesIMapping));
     }
@@ -128,7 +121,7 @@ public class SakerUtilsTest {
                 createSak("66666666", "STO", "", SAKSTYPE_GENERELL, DateTime.now().minusDays(4))
         ));
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(liste, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(liste, fagsystemKodeverk, arkivtemaKodeverk);
 
         return liste;
     }
