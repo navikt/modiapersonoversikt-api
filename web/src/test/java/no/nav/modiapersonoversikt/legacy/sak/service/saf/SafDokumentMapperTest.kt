@@ -2,11 +2,16 @@ package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
 import io.mockk.every
 import io.mockk.mockkStatic
+import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter
+import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.SLADDET
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Entitet.*
-import org.junit.Assert.assertEquals
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INN
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INTERN
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_UT
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -14,26 +19,25 @@ import java.time.format.DateTimeFormatter
 
 private val datoOpprettet = LocalDateTime.parse("2019-02-04T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 private const val temanavn = "Arbeidsavklaringspenger"
-private const val tema = "AAP"
-private const val journalStatus = "JOURNALFOERT"
-private const val journalpostType = JOURNALPOSTTYPE_INN
+private val tema = Tema.AAP
+private val journalStatus = Journalstatus.JOURNALFOERT
+private val journalpostType = JOURNALPOSTTYPE_INN
 private const val journalpostTittel = "Journalpost Tittel"
 private const val journalpostId = "456"
 private const val avsenderMottakerNavn = "Aremark"
 private const val fagsakSystem = "FS22"
 private const val fagsakId = "987"
-private const val arkivsaksystem = "GSAK"
 private const val arkivsaknummer = "789"
-private const val datotype = DATOTYPE_REGISTRERT
+private val datotype = Datotype.DATO_REGISTRERT
 private val relevantdato = LocalDateTime.parse("2011-05-07T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 private const val logiskVedleggtittel = "Logisk Vedlegg tittel"
-private const val variantformat = "ARKIV"
-private const val POL = "POL"
+private val variantformat = Variantformat.ARKIV
+private val POL = SkjermingType.POL
 private const val dokumentinfoid = "123"
 private const val hovedDokumentTittel = "Dokument Tittel"
 private const val vedleggTittel = "Vedleggtittel"
 private const val aremarkFNR = "10108000398"
-private const val dokumentStatus = "FERDIGSTILT"
+private val dokumentStatus = Dokumentstatus.FERDIGSTILT
 
 internal class SafDokumentMapperKtTest {
 
@@ -41,7 +45,7 @@ internal class SafDokumentMapperKtTest {
     fun `dokumentMetadata mapper hele objektet`() {
         val journalpost = lagJournalpost()
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(Kommunikasjonsretning.INN, dokumentMetadata.retning)
         assertEquals(relevantdato, dokumentMetadata.dato)
@@ -67,7 +71,7 @@ internal class SafDokumentMapperKtTest {
         assertEquals(arkivsaknummer, dokumentMetadata.tilhorendeSakid)
         assertEquals(fagsakId, dokumentMetadata.tilhorendeFagsakId)
         assert(dokumentMetadata.baksystem.contains(Baksystem.SAF))
-        assertEquals(tema, dokumentMetadata.temakode)
+        assertEquals(tema.name, dokumentMetadata.temakode)
         assertEquals(temanavn, dokumentMetadata.temakodeVisning)
     }
 
@@ -78,7 +82,7 @@ internal class SafDokumentMapperKtTest {
         )
 
         assertThrows(RuntimeException::class.java) {
-            DokumentMetadata().fraSafJournalpost(journalpost)
+            fraSafJournalpost(journalpost)
         }
     }
 
@@ -86,7 +90,7 @@ internal class SafDokumentMapperKtTest {
     fun `Retning I mappes korrekt`() {
         val journalpost = lagJournalpost().copy(journalposttype = JOURNALPOSTTYPE_INN)
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(Kommunikasjonsretning.INN, dokumentMetadata.retning)
     }
@@ -95,7 +99,7 @@ internal class SafDokumentMapperKtTest {
     fun `Retning U mappes korrekt`() {
         val journalpost = lagJournalpost().copy(journalposttype = JOURNALPOSTTYPE_UT)
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(Kommunikasjonsretning.UT, dokumentMetadata.retning)
     }
@@ -104,7 +108,7 @@ internal class SafDokumentMapperKtTest {
     fun `Retning N mappes korrekt`() {
         val journalpost = lagJournalpost().copy(journalposttype = JOURNALPOSTTYPE_INTERN)
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(Kommunikasjonsretning.INTERN, dokumentMetadata.retning)
     }
@@ -115,22 +119,22 @@ internal class SafDokumentMapperKtTest {
             dokumenter = listOf(
                 lagHoveddokument().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, ARKIV.name, null),
-                        Dokumentvariant(true, SLADDET.name, null),
-                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                        Dokumentvariant(true, Variantformat.ARKIV, null),
+                        Dokumentvariant(true, Variantformat.SLADDET, null),
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null)
                     )
                 ),
                 lagVedlegg().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, ARKIV.name, null),
-                        Dokumentvariant(true, SLADDET.name, null),
-                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                        Dokumentvariant(true, Variantformat.ARKIV, null),
+                        Dokumentvariant(true, Variantformat.SLADDET, null),
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null)
                     )
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(SLADDET, dokumentMetadata.hoveddokument.variantformat)
         assertEquals(SLADDET, dokumentMetadata.vedlegg[0].variantformat)
@@ -143,22 +147,22 @@ internal class SafDokumentMapperKtTest {
             dokumenter = listOf(
                 lagHoveddokument().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, "ANNET_FORMAT", null),
-                        Dokumentvariant(true, ARKIV.name, null),
-                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                        Dokumentvariant(true, Variantformat.ARKIV, null),
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null)
                     )
                 ),
                 lagVedlegg().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, "ANNET_FORMAT", null),
-                        Dokumentvariant(true, ARKIV.name, null),
-                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                        Dokumentvariant(true, Variantformat.ARKIV, null),
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null)
                     )
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(ARKIV, dokumentMetadata.hoveddokument.variantformat)
         assertEquals(ARKIV, dokumentMetadata.vedlegg[0].variantformat)
@@ -166,27 +170,34 @@ internal class SafDokumentMapperKtTest {
     }
 
     @Test
-    fun `Kast feil om vi mangler både ARKIV og SLADDET i variantformater`() {
+    fun `fjerne dokumenter uten gyldige varianter`() {
         val journalpost = lagJournalpost().copy(
             dokumenter = listOf(
                 lagHoveddokument().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, "ANNET_FORMAT", null),
-                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                        Dokumentvariant(true, Variantformat.ARKIV, null),
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null)
                     )
                 ),
                 lagVedlegg().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, "ANNET_FORMAT", null),
-                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null)
+                    )
+                ),
+                lagVedlegg().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, Variantformat.SLADDET, null),
+                        Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null)
                     )
                 )
             )
         )
 
-        assertThrows(RuntimeException::class.java) {
-            DokumentMetadata().fraSafJournalpost(journalpost)
-        }
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
+        assertEquals(ARKIV, dokumentMetadata.hoveddokument.variantformat)
+        assertEquals(1, dokumentMetadata.vedlegg.filter { !it.isLogiskDokument }.size)
+        assertEquals(SLADDET, dokumentMetadata.vedlegg[0].variantformat)
     }
 
     @Test
@@ -195,23 +206,23 @@ internal class SafDokumentMapperKtTest {
             dokumenter = listOf(
                 lagHoveddokument().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, ARKIV.name, POL)
+                        Dokumentvariant(true, Variantformat.ARKIV, SkjermingType.POL)
                     )
                 ),
                 lagVedlegg().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, ARKIV.name, POL)
+                        Dokumentvariant(true, Variantformat.ARKIV, POL)
                     )
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(ARKIV, dokumentMetadata.hoveddokument.variantformat)
-        assertEquals(POL, dokumentMetadata.hoveddokument.skjerming)
+        assertEquals(POL.name, dokumentMetadata.hoveddokument.skjerming)
         assertEquals(ARKIV, dokumentMetadata.vedlegg[0].variantformat)
-        assertEquals(POL, dokumentMetadata.vedlegg[0].skjerming)
+        assertEquals(POL.name, dokumentMetadata.vedlegg[0].skjerming)
     }
 
     @Test
@@ -220,14 +231,14 @@ internal class SafDokumentMapperKtTest {
             dokumenter = listOf(
                 lagHoveddokument().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, ARKIV.name, POL),
-                        Dokumentvariant(true, SLADDET.name, null)
+                        Dokumentvariant(true, Variantformat.ARKIV, POL),
+                        Dokumentvariant(true, Variantformat.SLADDET, null)
                     )
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(SLADDET, dokumentMetadata.hoveddokument.variantformat)
         assertEquals(null, dokumentMetadata.hoveddokument.skjerming)
@@ -239,17 +250,17 @@ internal class SafDokumentMapperKtTest {
             dokumenter = listOf(
                 lagHoveddokument().copy(
                     dokumentvarianter = listOf(
-                        Dokumentvariant(true, SLADDET.name, POL),
-                        Dokumentvariant(true, ARKIV.name, POL)
+                        Dokumentvariant(true, Variantformat.SLADDET, POL),
+                        Dokumentvariant(true, Variantformat.ARKIV, POL)
                     )
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(SLADDET, dokumentMetadata.hoveddokument.variantformat)
-        assertEquals(POL, dokumentMetadata.hoveddokument.skjerming)
+        assertEquals(POL.name, dokumentMetadata.hoveddokument.skjerming)
     }
 
     @Test
@@ -260,7 +271,7 @@ internal class SafDokumentMapperKtTest {
             journalposttype = JOURNALPOSTTYPE_INN
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(SLUTTBRUKER, dokumentMetadata.avsender)
         assertEquals(NAV, dokumentMetadata.mottaker)
@@ -275,7 +286,7 @@ internal class SafDokumentMapperKtTest {
             journalposttype = JOURNALPOSTTYPE_UT
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(NAV, dokumentMetadata.avsender)
         assertEquals(SLUTTBRUKER, dokumentMetadata.mottaker)
@@ -289,7 +300,7 @@ internal class SafDokumentMapperKtTest {
             journalposttype = JOURNALPOSTTYPE_INTERN
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(NAV, dokumentMetadata.avsender)
         assertEquals(NAV, dokumentMetadata.mottaker)
@@ -304,7 +315,7 @@ internal class SafDokumentMapperKtTest {
             journalposttype = JOURNALPOSTTYPE_UT
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(NAV, dokumentMetadata.avsender)
         assertEquals(EKSTERN_PART, dokumentMetadata.mottaker)
@@ -320,7 +331,7 @@ internal class SafDokumentMapperKtTest {
             journalposttype = JOURNALPOSTTYPE_INN
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(NAV, dokumentMetadata.mottaker)
         assertEquals(EKSTERN_PART, dokumentMetadata.avsender)
@@ -333,17 +344,17 @@ internal class SafDokumentMapperKtTest {
             avsenderMottaker = null
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals("ukjent", dokumentMetadata.navn)
     }
 
     @Test
     fun `Kaster feil ved ukjent journalposttype`() {
-        val journalpost = lagJournalpost().copy(journalposttype = "UGYLDIGTYPE")
+        val journalpost = lagJournalpost().copy(journalposttype = Journalposttype.__UNKNOWN_VALUE)
 
         assertThrows(RuntimeException::class.java) {
-            DokumentMetadata().fraSafJournalpost(journalpost)
+            fraSafJournalpost(journalpost)
         }
     }
 
@@ -358,7 +369,7 @@ internal class SafDokumentMapperKtTest {
                 relevanteDatoer = emptyList()
             )
 
-            val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+            val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
             assertEquals(now, dokumentMetadata.dato)
         }
@@ -371,13 +382,13 @@ internal class SafDokumentMapperKtTest {
         val journalpost = lagJournalpost().copy(
             relevanteDatoer = listOf(
                 RelevantDato(
-                    datotype = DATOTYPE_REGISTRERT,
-                    dato = registrertDato
+                    datotype = Datotype.DATO_REGISTRERT,
+                    dato = DateTime(registrertDato)
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(registrertDato, dokumentMetadata.dato)
     }
@@ -392,21 +403,21 @@ internal class SafDokumentMapperKtTest {
             journalposttype = JOURNALPOSTTYPE_UT,
             relevanteDatoer = listOf(
                 RelevantDato(
-                    datotype = DATOTYPE_EKSPEDERT,
-                    dato = ekspedertDato
+                    datotype = Datotype.DATO_EKSPEDERT,
+                    dato = DateTime(ekspedertDato)
                 ),
                 RelevantDato(
-                    datotype = DATOTYPE_SENDT_PRINT,
-                    dato = sendtPrintDato
+                    datotype = Datotype.DATO_SENDT_PRINT,
+                    dato = DateTime(sendtPrintDato)
                 ),
                 RelevantDato(
-                    datotype = DATOTYPE_JOURNALFOERT,
-                    dato = journalFoertDato
+                    datotype = Datotype.DATO_JOURNALFOERT,
+                    dato = DateTime(journalFoertDato)
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(ekspedertDato, dokumentMetadata.dato)
     }
@@ -420,17 +431,17 @@ internal class SafDokumentMapperKtTest {
             journalposttype = JOURNALPOSTTYPE_UT,
             relevanteDatoer = listOf(
                 RelevantDato(
-                    datotype = DATOTYPE_SENDT_PRINT,
-                    dato = sendtPrintDato
+                    datotype = Datotype.DATO_SENDT_PRINT,
+                    dato = DateTime(sendtPrintDato)
                 ),
                 RelevantDato(
-                    datotype = DATOTYPE_JOURNALFOERT,
-                    dato = journalFoertDato
+                    datotype = Datotype.DATO_JOURNALFOERT,
+                    dato = DateTime(journalFoertDato)
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(sendtPrintDato, dokumentMetadata.dato)
     }
@@ -443,13 +454,13 @@ internal class SafDokumentMapperKtTest {
             journalposttype = JOURNALPOSTTYPE_UT,
             relevanteDatoer = listOf(
                 RelevantDato(
-                    datotype = DATOTYPE_JOURNALFOERT,
-                    dato = journalFoertDato
+                    datotype = Datotype.DATO_JOURNALFOERT,
+                    dato = DateTime(journalFoertDato)
                 )
             )
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(journalFoertDato, dokumentMetadata.dato)
     }
@@ -460,23 +471,23 @@ internal class SafDokumentMapperKtTest {
         val journalpost = lagJournalpost().copy(
             relevanteDatoer = listOf(
                 RelevantDato(
-                    datotype = DATOTYPE_JOURNALFOERT,
-                    dato = journalFoertDato
+                    datotype = Datotype.DATO_JOURNALFOERT,
+                    dato = DateTime(journalFoertDato)
                 )
             ),
             journalposttype = JOURNALPOSTTYPE_INTERN
         )
 
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
 
         assertEquals(journalFoertDato, dokumentMetadata.dato)
     }
 }
 
 private fun lagJournalpost(): Journalpost {
-    val bruker = Bruker(id = aremarkFNR, type = "FNR")
+    val bruker = Bruker(id = aremarkFNR, type = BrukerIdType.FNR)
     val dokumenter: List<DokumentInfo> = listOf(lagHoveddokument(), lagVedlegg())
-    val relevanteDatoer = listOf(RelevantDato(dato = relevantdato, datotype = datotype))
+    val relevanteDatoer = listOf(RelevantDato(dato = DateTime(relevantdato), datotype = datotype))
     val sak = lagSak()
 
     return Journalpost(
@@ -485,7 +496,7 @@ private fun lagJournalpost(): Journalpost {
         dokumenter = dokumenter,
         journalpostId = journalpostId,
         tittel = journalpostTittel,
-        datoOpprettet = datoOpprettet,
+        datoOpprettet = DateTime(datoOpprettet),
         journalposttype = journalpostType,
         journalstatus = journalStatus,
         relevanteDatoer = relevanteDatoer,
@@ -495,10 +506,9 @@ private fun lagJournalpost(): Journalpost {
     )
 }
 
-private fun lagSak(): Sak {
-    return Sak(
+private fun lagSak(): HentBrukersDokumenter.Sak {
+    return HentBrukersDokumenter.Sak(
         arkivsaksnummer = arkivsaknummer,
-        arkivsaksystem = arkivsaksystem,
         fagsakId = fagsakId,
         fagsaksystem = fagsakSystem
     )
@@ -514,8 +524,7 @@ private fun lagDokumentInfo(tittel: String): DokumentInfo {
         dokumentInfoId = dokumentinfoid,
         dokumentvarianter = listOf(lagDokumentVariant()),
         logiskeVedlegg = listOf(LogiskVedlegg(logiskVedleggtittel)),
-        dokumentStatus = dokumentStatus
-
+        dokumentstatus = dokumentStatus
     )
 }
 
