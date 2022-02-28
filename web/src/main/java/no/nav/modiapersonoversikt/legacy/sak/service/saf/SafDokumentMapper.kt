@@ -4,23 +4,24 @@ import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDok
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import java.time.LocalDateTime
 
-fun DokumentMetadata.fraSafJournalpost(journalpost: HentBrukersDokumenter.Journalpost): DokumentMetadata {
-    retning = getRetning(journalpost)
-    dato = getDato(journalpost)
-    navn = journalpost.avsenderMottaker?.navn ?: "ukjent"
-    journalpostId = journalpost.journalpostId
-    hoveddokument = Dokument().fraSafDokumentInfo(getHoveddokumentet(journalpost))
-    vedlegg = getVedlegg(journalpost)
-    avsender = getAvsender(journalpost)
-    mottaker = getMottaker(journalpost)
-    tilhorendeSakid = journalpost.sak?.arkivsaksnummer // TODO denne er deprecated, men brukes per i dag.
-    tilhorendeFagsakId = journalpost.sak?.fagsakId
-    baksystem = baksystem.plus(Baksystem.SAF)
-    temakode = journalpost.tema?.name
-    temakodeVisning = journalpost.temanavn
-    return this
+fun fraSafJournalpost(journalpost: HentBrukersDokumenter.Journalpost): DokumentMetadata? {
+    val hovedDokument = fraSafDokumentInfo(getHoveddokumentet(journalpost)) ?: return null
+    return DokumentMetadata().apply {
+        retning = getRetning(journalpost)
+        dato = getDato(journalpost)
+        navn = journalpost.avsenderMottaker?.navn ?: "ukjent"
+        journalpostId = journalpost.journalpostId
+        hoveddokument = hovedDokument
+        vedlegg = getVedlegg(journalpost)
+        avsender = getAvsender(journalpost)
+        mottaker = getMottaker(journalpost)
+        tilhorendeSakid = journalpost.sak?.arkivsaksnummer // TODO denne er deprecated, men brukes per i dag.
+        tilhorendeFagsakId = journalpost.sak?.fagsakId
+        baksystem = baksystem.plus(Baksystem.SAF)
+        temakode = journalpost.tema?.name
+        temakodeVisning = journalpost.temanavn
+    }
 }
-
 private fun getAvsender(journalpost: HentBrukersDokumenter.Journalpost): Entitet =
     when (journalpost.journalposttype) {
         SafServiceImpl.JOURNALPOSTTYPE_INTERN -> Entitet.NAV
@@ -76,7 +77,7 @@ private fun getElektroniskeVedlegg(journalpost: HentBrukersDokumenter.Journalpos
         .orEmpty()
         .subList(SafServiceImpl.VEDLEGG_START_INDEX, journalpost.dokumenter?.size ?: 0)
         .filterNotNull()
-        .map { dok -> Dokument().fraSafDokumentInfo(dok) }
+        .mapNotNull { dok -> fraSafDokumentInfo(dok) }
 
 private fun getHoveddokumentet(journalpost: HentBrukersDokumenter.Journalpost): HentBrukersDokumenter.DokumentInfo =
     journalpost.dokumenter?.get(0) ?: throw RuntimeException("Fant sak uten hoveddokument!")
@@ -84,17 +85,20 @@ private fun getHoveddokumentet(journalpost: HentBrukersDokumenter.Journalpost): 
 private fun getLogiskeVedlegg(journalpost: HentBrukersDokumenter.Journalpost): List<Dokument> =
     getHoveddokumentet(journalpost).logiskeVedlegg
         .filterNotNull()
-        .map { logiskVedlegg -> Dokument().fraSafLogiskVedlegg(logiskVedlegg) }
+        .map { logiskVedlegg -> fraSafLogiskVedlegg(logiskVedlegg) }
 
-private fun Dokument.fraSafDokumentInfo(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument {
-    tittel = dokumentInfo.tittel
-    dokumentreferanse = dokumentInfo.dokumentInfoId
-    isKanVises = true
-    isLogiskDokument = false
-    variantformat = getVariantformat(dokumentInfo)
-    skjerming = getSkjerming(dokumentInfo)?.toString()
-    dokumentStatus = getDokumentStatus(dokumentInfo)
-    return this
+private fun fraSafDokumentInfo(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument? {
+    val variantFormat = getVariantformat(dokumentInfo) ?: return null
+
+    return Dokument().apply {
+        tittel = dokumentInfo.tittel
+        dokumentreferanse = dokumentInfo.dokumentInfoId
+        isKanVises = true
+        isLogiskDokument = false
+        variantformat = variantFormat
+        skjerming = getSkjerming(dokumentInfo)?.toString()
+        dokumentStatus = getDokumentStatus(dokumentInfo)
+    }
 }
 
 private fun getDokumentStatus(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument.DokumentStatus =
@@ -106,31 +110,31 @@ private fun getDokumentStatus(dokumentInfo: HentBrukersDokumenter.DokumentInfo):
         else -> Dokument.DokumentStatus.FERDIGSTILT
     }
 
-private fun getVariantformat(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument.Variantformat =
-    when (getVariant(dokumentInfo).variantformat) {
+private fun getVariantformat(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument.Variantformat? =
+    when (getVariant(dokumentInfo)?.variantformat) {
         HentBrukersDokumenter.Variantformat.ARKIV -> Dokument.Variantformat.ARKIV
         HentBrukersDokumenter.Variantformat.SLADDET -> Dokument.Variantformat.SLADDET
         HentBrukersDokumenter.Variantformat.FULLVERSJON -> Dokument.Variantformat.FULLVERSJON
         HentBrukersDokumenter.Variantformat.PRODUKSJON -> Dokument.Variantformat.PRODUKSJON
         HentBrukersDokumenter.Variantformat.PRODUKSJON_DLF -> Dokument.Variantformat.PRODUKSJON_DLF
-        else -> throw RuntimeException("Ugyldig tekst for mapping til variantformat. Tekst: ${getVariant(dokumentInfo).variantformat}")
+        null -> null
+        else -> throw RuntimeException("Ugyldig tekst for mapping til variantformat. Tekst: ${getVariant(dokumentInfo)?.variantformat}")
     }
 
 private fun getSkjerming(dokumentInfo: HentBrukersDokumenter.DokumentInfo): HentBrukersDokumenter.SkjermingType? =
-    getVariant(dokumentInfo).skjerming
+    getVariant(dokumentInfo)?.skjerming
 
-private fun getVariant(dokumentInfo: HentBrukersDokumenter.DokumentInfo): HentBrukersDokumenter.Dokumentvariant =
+private fun getVariant(dokumentInfo: HentBrukersDokumenter.DokumentInfo): HentBrukersDokumenter.Dokumentvariant? =
     dokumentInfo.dokumentvarianter.let {
         it.find { variant -> variant?.variantformat == HentBrukersDokumenter.Variantformat.SLADDET }
             ?: it.find { variant -> variant?.variantformat == HentBrukersDokumenter.Variantformat.ARKIV }
-            ?: throw RuntimeException("Dokument med id ${dokumentInfo.dokumentInfoId} mangler både ARKIV og SLADDET variantformat")
     }
 
-private fun Dokument.fraSafLogiskVedlegg(logiskVedlegg: HentBrukersDokumenter.LogiskVedlegg): Dokument {
-    tittel = logiskVedlegg.tittel
-    dokumentreferanse = null
-    isKanVises = true
-    isLogiskDokument = true
-
-    return this
+private fun fraSafLogiskVedlegg(logiskVedlegg: HentBrukersDokumenter.LogiskVedlegg): Dokument {
+    return Dokument().apply {
+        tittel = logiskVedlegg.tittel
+        dokumentreferanse = null
+        isKanVises = true
+        isLogiskDokument = true
+    }
 }
