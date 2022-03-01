@@ -337,12 +337,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         sistEndring: Persondata.SistEndret?,
         gyldighetsPeriode: Persondata.GyldighetsPeriode? = null
     ) = Persondata.Adresse(
-        linje1 = listOf(adresse.postboks),
-        linje2 = listOf(
+        linje1 = listOf(adresse.postbokseier),
+        linje2 = listOf("Postboks", adresse.postboks),
+        linje3 = listOf(
             adresse.postnummer,
             adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentVerdi(it, it) }
         ),
-        linje3 = listOf(adresse.postbokseier),
         sistEndret = sistEndring,
         gyldighetsPeriode = gyldighetsPeriode
     )
