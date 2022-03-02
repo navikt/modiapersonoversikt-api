@@ -209,7 +209,7 @@ class SfDialogController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
-            .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Kontorsperre, *auditIdentifier)) {
+            .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Sladding, *auditIdentifier)) {
                 sfHenvendelseService.sendTilSladding(kjedeId)
             }
     }
