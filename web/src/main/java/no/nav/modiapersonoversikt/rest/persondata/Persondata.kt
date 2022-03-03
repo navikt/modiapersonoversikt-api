@@ -83,7 +83,8 @@ object Persondata {
         val navn: List<Navn>,
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
-        val harSammeAdresse: Boolean
+        val harSammeAdresse: Boolean,
+        val dodsdato: List<LocalDate>
     )
 
     data class Sikkerhetstiltak(
