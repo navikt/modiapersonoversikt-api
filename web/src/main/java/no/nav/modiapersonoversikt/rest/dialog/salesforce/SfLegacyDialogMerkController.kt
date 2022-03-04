@@ -6,14 +6,13 @@ import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.util.*
-import javax.ws.rs.NotSupportedException
 
 class SfLegacyDialogMerkController(
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService
 ) : DialogMerkApi {
 
-    override fun merkSomFeilsendt(request: FeilmerkRequest): ResponseEntity<Void> {
+    override fun merkSomFeilsendt(request: MerkSomFeilsendtRequest): ResponseEntity<Void> {
         require(request.behandlingsidListe.size == 1) {
             "Man forventer en enkelt kjedeId"
         }
@@ -21,40 +20,26 @@ class SfLegacyDialogMerkController(
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun merkSomBidrag(request: BidragRequest): ResponseEntity<Void> {
-        throw NotSupportedException("Operasjonen er erstattet med standard journalføring")
-    }
-
-    override fun merkSomKontorsperret(request: KontorsperretRequest): ResponseEntity<Void> {
-        throw NotSupportedException("Operasjonen er erstattet med sladding")
-    }
-
     override fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void> {
         sfHenvendelseService.sendTilSladding(request.traadId)
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
-        // TODO SF vil det være innafor å merke meldinger på denne måten.
-        // Hva skjer evt om vi forsøker å gjøre det med samtalereferat etc?
-        sfHenvendelseService.lukkTraad(request.eldsteMeldingTraadId)
+    override fun lukkTraad(request: LukkTraadRequest): ResponseEntity<Void> {
+        sfHenvendelseService.lukkTraad(request.traadId)
+        if (request.oppgaveId != null && !oppgaveBehandlingService.oppgaveErFerdigstilt(request.oppgaveId)) {
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(
+                request.oppgaveId,
+                Optional.empty(),
+                request.saksbehandlerValgtEnhet,
+                "Dialog avsluttet fra modiapersonoversikt."
+            )
+        }
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun tvungenFerdigstill(request: TvungenFerdigstillRequest): ResponseEntity<Void> {
-        throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
-    }
-
-    override fun avsluttGosysOppgave(request: FerdigstillOppgaveRequest): ResponseEntity<Void> {
+    override fun avsluttGosysOppgave(request: AvsluttGosysOppgaveRequest): ResponseEntity<Void> {
         oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse)
         return ResponseEntity(HttpStatus.OK)
-    }
-
-    override fun slettBehandlingskjede(request: FeilmerkRequest): ResponseEntity<Void> {
-        throw NotSupportedException("Operasjonen må gjøres via Salesforce")
-    }
-
-    override fun kanSlette(): ResponseEntity<Boolean> {
-        return ResponseEntity(false, HttpStatus.OK)
     }
 }

@@ -45,7 +45,6 @@ class AuditResources {
                 val Ferdigstill = AuditResource("person.henvendelse.ferdigstill")
                 val SlaSammen = AuditResource("person.henvendelse.slasammen")
                 val Print = AuditResource("person.henvendelse.print")
-                val Delsvar = AuditResource("person.henvendelse.delsvar")
 
                 @JvmField
                 val Journalfor = AuditResource("person.henvendelse.journalfor")
@@ -54,19 +53,14 @@ class AuditResources {
             class Merk {
                 companion object {
                     val Feilsendt = AuditResource("person.henvendelse.merk.feilsendt")
-                    val Bidrag = AuditResource("person.henvendelse.merk.bidrag")
-                    val Kontorsperre = AuditResource("person.henvendelse.merk.kontorsperre")
                     val Sladding = AuditResource("person.henvendelse.merk.sladding")
-                    val Avslutt = AuditResource("person.henvendelse.merk.avslutt")
-                    val Slett = AuditResource("person.henvendelse.merk.slett")
+                    val Lukk = AuditResource("person.henvendelse.merk.lukk")
                 }
             }
 
             class Oppgave {
                 companion object {
                     val Opprett = AuditResource("person.henvendelse.oppgave.opprett")
-                    val LeggTilbake = AuditResource("person.henvendelse.oppgave.leggTilbake")
-                    val Plukk = AuditResource("person.henvendelse.oppgave.plukk")
                     val Tildelte = AuditResource("person.henvendelse.oppgave.tildel")
                     val Metadata = AuditResource("person.henvendelse.oppgave.metadata")
                     val Avslutt = AuditResource("person.henvendelse.oppgave.avslutt")
