@@ -272,6 +272,7 @@
           "kode" : "UGRADERT"
         } ] ],
         "alder" : 20,
+        "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
         "fnr" : "11225678910",
         "harSammeAdresse" : false,
         "navn" : [ "java.util.Collections$SingletonList", [ {

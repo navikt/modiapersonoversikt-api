@@ -595,7 +595,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             navn = person.navn,
             alder = person.alder,
             adressebeskyttelse = person.adressebeskyttelse,
-            harSammeAdresse = harSammeAdresse(hentBostedAdresse(data).firstOrNull(), person.bostedAdresse.firstOrNull())
+            harSammeAdresse = harSammeAdresse(hentBostedAdresse(data).firstOrNull(), person.bostedAdresse.firstOrNull()),
+            dodsdato = person.dodsdato
         )
     }
 
