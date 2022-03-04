@@ -20,7 +20,7 @@ class DialogMerkController @Autowired constructor(
 ) {
 
     @PostMapping("/feilsendt")
-    fun merkSomFeilsendt(@RequestBody request: FeilmerkRequest): ResponseEntity<Void> {
+    fun merkSomFeilsendt(@RequestBody request: MerkSomFeilsendtRequest): ResponseEntity<Void> {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to request.fnr,
             AuditIdentifier.BEHANDLING_ID to request.behandlingsidListe.joinToString(", ")
@@ -30,34 +30,6 @@ class DialogMerkController @Autowired constructor(
             .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Feilsendt, *auditIdentifier)) {
                 dialogMerkApi.merkSomFeilsendt(request)
-            }
-    }
-
-    @PostMapping("/bidrag")
-    fun merkSomBidrag(@RequestBody request: BidragRequest): ResponseEntity<Void> {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to request.fnr,
-            AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId
-        )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
-            .get(Audit.describe(UPDATE, Henvendelse.Merk.Bidrag, *auditIdentifier)) {
-                dialogMerkApi.merkSomBidrag(request)
-            }
-    }
-
-    @PostMapping("/kontorsperret")
-    fun merkSomKontorsperret(@RequestBody request: KontorsperretRequest): ResponseEntity<Void> {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to request.fnr,
-            AuditIdentifier.BEHANDLING_ID to request.meldingsidListe.joinToString(", ")
-        )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.meldingsidListe)))
-            .get(Audit.describe(UPDATE, Henvendelse.Merk.Kontorsperre, *auditIdentifier)) {
-                dialogMerkApi.merkSomKontorsperret(request)
             }
     }
 
@@ -75,38 +47,23 @@ class DialogMerkController @Autowired constructor(
             }
     }
 
-    @PostMapping("/avslutt")
-    fun avsluttUtenSvar(@RequestBody request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
+    @PostMapping("/lukk-traad")
+    fun lukkTraad(@RequestBody request: LukkTraadRequest): ResponseEntity<Void> {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to request.fnr,
-            AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId,
-            AuditIdentifier.OPPGAVE_ID to request.eldsteMeldingOppgaveId
+            AuditIdentifier.TRAAD_ID to request.traadId,
+            AuditIdentifier.OPPGAVE_ID to request.oppgaveId
         )
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
-            .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, *auditIdentifier)) {
-                dialogMerkApi.avsluttUtenSvar(request)
-            }
-    }
-
-    @PostMapping("/tvungenferdigstill")
-    fun tvungenFerdigstill(@RequestBody request: TvungenFerdigstillRequest): ResponseEntity<Void> {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to request.fnr,
-            AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId,
-            AuditIdentifier.OPPGAVE_ID to request.eldsteMeldingOppgaveId
-        )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
-            .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, *auditIdentifier)) {
-                dialogMerkApi.tvungenFerdigstill(request)
+            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.traadId))))
+            .get(Audit.describe(UPDATE, Henvendelse.Merk.Lukk, *auditIdentifier)) {
+                dialogMerkApi.lukkTraad(request)
             }
     }
 
     @PostMapping("/avsluttgosysoppgave")
-    fun avsluttGosysOppgave(@RequestBody request: FerdigstillOppgaveRequest): ResponseEntity<Void> {
+    fun avsluttGosysOppgave(@RequestBody request: AvsluttGosysOppgaveRequest): ResponseEntity<Void> {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to request.fnr,
             AuditIdentifier.OPPGAVE_ID to request.oppgaveid
@@ -115,30 +72,6 @@ class DialogMerkController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(request.fnr))
             .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, *auditIdentifier)) {
                 dialogMerkApi.avsluttGosysOppgave(request)
-            }
-    }
-
-    @PostMapping("/slett")
-    fun slettBehandlingskjede(@RequestBody request: FeilmerkRequest): ResponseEntity<Void> {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to request.fnr,
-            AuditIdentifier.BEHANDLING_ID to request.behandlingsidListe.joinToString(", ")
-        )
-        return tilgangskontroll
-            .check(Policies.kanHastekassere)
-            .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
-            .get(Audit.describe(DELETE, Henvendelse.Merk.Slett, *auditIdentifier)) {
-                dialogMerkApi.slettBehandlingskjede(request)
-            }
-    }
-
-    @GetMapping("/slett")
-    fun kanSlette(): ResponseEntity<Boolean> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.skipAuditLog()) {
-                dialogMerkApi.kanSlette()
             }
     }
 }
