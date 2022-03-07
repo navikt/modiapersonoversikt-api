@@ -301,7 +301,6 @@ class SfLegacyDialogController(
             MeldingDTO(
                 mapOf(
                     "id" to "${henvendelse.kjedeId}---${(melding.hashCode())}",
-                    "oppgaveId" to null,
                     "meldingstype" to meldingstypeFraSfTyper(henvendelse, melding),
                     "temagruppe" to henvendelse.gjeldendeTemagruppe,
                     "skrevetAvTekst" to skrevetAv,
@@ -317,18 +316,13 @@ class SfLegacyDialogController(
                         melding.lestDato != null -> Status.LEST_AV_BRUKER
                         else -> Status.IKKE_LEST_AV_BRUKER
                     },
-                    "statusTekst" to null, // Blir ikke brukt av frontend uansett
                     "opprettetDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "avsluttetDato" to henvendelse.avsluttetDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "ferdigstiltDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
-                    "erFerdigstiltUtenSvar" to false, // TODO Informasjon finnes ikke i SF
-                    "ferdigstiltUtenSvarDato" to null, // TODO Informasjon finnes ikke i SF
-                    "ferdigstiltUtenSvarAv" to null, // TODO Informasjon finnes ikke i SF
                     "kontorsperretEnhet" to kontorsperretEnhet,
                     "kontorsperretAv" to kontorsperretAv,
                     "sendtTilSladding" to (henvendelse.sladding ?: false),
-                    "markertSomFeilsendtAv" to markertSomFeilsendtAv,
-                    "erDokumentMelding" to false // Brukes ikke
+                    "markertSomFeilsendtAv" to markertSomFeilsendtAv
                 )
             )
         }
