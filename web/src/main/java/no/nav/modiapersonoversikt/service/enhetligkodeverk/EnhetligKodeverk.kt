@@ -28,6 +28,8 @@ object EnhetligKodeverk {
         }
 
         fun hentAlleVerdier(): Collection<VALUE> = kodeverk.values
+
+        fun asMap(): Map<KEY, VALUE> = kodeverk.toMap()
     }
 
     interface Kilde<KEY, VALUE> {
