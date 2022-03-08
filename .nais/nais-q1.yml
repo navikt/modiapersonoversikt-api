@@ -190,3 +190,7 @@ spec:
       value: "dev-fss"
     - name: NOM_URL
       value: "https://nom-api.dev.intern.nav.no"
+    - name: SKJERMEDE_PERSONER_PIP_CLUSTER
+      value: "dev-gcp"
+    - name: SKJERMEDE_PERSONER_PIP_URL
+      value: "https://skjermede-personer-pip.dev.intern.nav.no"
