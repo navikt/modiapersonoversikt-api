@@ -99,6 +99,7 @@
     } ] ],
     "dodsdato" : [ "java.util.ArrayList", [ "2010-01-02" ] ],
     "erEgenAnsatt" : "NEI",
+    "erSkjermetPerson" : "NEI",
     "fnr" : "12345678910",
     "fodselsdato" : [ "java.util.ArrayList", [ "2000-01-02" ] ],
     "forelderBarnRelasjon" : [ "java.util.Arrays$ArrayList", [ {
