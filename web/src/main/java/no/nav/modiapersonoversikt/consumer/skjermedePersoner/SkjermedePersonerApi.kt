@@ -22,7 +22,7 @@ class SkjermedePersonerApiImpl(
         return skjermingPipApi.isSkjermetPostUsingPOST(SkjermetDataRequestDTO(fnr))
     }
 
-    override fun ping() = SelfTestCheck (
+    override fun ping() = SelfTestCheck(
         "SkjermedePersonerApi via $url",
         false
     ) {

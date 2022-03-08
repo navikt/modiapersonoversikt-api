@@ -29,15 +29,17 @@ open class SkjermedePersonerConfig {
                     }
                 }
             )
-            .addInterceptor(AuthorizationInterceptor {
-                tokenProvider.getServiceToken(
-                    "skjermede-personer-pip",
-                    "nom",
-                    EnvironmentUtils
-                        .getRequiredProperty("SKJERMEDE_PERSONER_PIP_CLUSTER")
-                )
-            }
-        )
+            .addInterceptor(
+                AuthorizationInterceptor {
+                    tokenProvider
+                        .getServiceToken(
+                            "skjermede-personer-pip",
+                            "nom",
+                            EnvironmentUtils
+                                .getRequiredProperty("SKJERMEDE_PERSONER_PIP_CLUSTER")
+                        )
+                }
+            )
             .build()
         return SkjermedePersonerApiImpl(url, httpClient)
     }
