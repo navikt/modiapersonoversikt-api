@@ -139,7 +139,7 @@ class NorgApiImpl(
         geografiskTilknyttning: String?,
         oppgavetype: String?,
         fagomrade: String?,
-        erSkjermetPerson: Boolean?,
+        erEgenAnsatt: Boolean?,
         diskresjonskode: String?
     ): List<Enhet> {
         return arbeidsfordelingApi
@@ -148,7 +148,7 @@ class NorgApiImpl(
                     RsArbeidsFordelingCriteriaSkjermetDTO(
                         oppgavetype = oppgavetype,
                         tema = fagomrade,
-                        skjermet = erSkjermetPerson,
+                        skjermet = erEgenAnsatt,
                         behandlingstema = behandling?.behandlingstema,
                         behandlingstype = behandling?.behandlingstype,
                         geografiskOmraade = geografiskTilknyttning ?: "",
