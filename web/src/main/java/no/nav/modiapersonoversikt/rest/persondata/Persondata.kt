@@ -27,7 +27,6 @@ object Persondata {
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val sikkerhetstiltak: List<Sikkerhetstiltak>,
         val erEgenAnsatt: EgenAnsatt,
-        val erSkjermetPerson: SkjermetPerson,
         val personstatus: List<KodeBeskrivelse<PersonStatus>>,
         val sivilstand: List<Sivilstand>,
         val foreldreansvar: List<Foreldreansvar>,
@@ -251,10 +250,6 @@ object Persondata {
     }
 
     enum class EgenAnsatt {
-        JA, NEI, UKJENT
-    }
-
-    enum class SkjermetPerson {
         JA, NEI, UKJENT
     }
 

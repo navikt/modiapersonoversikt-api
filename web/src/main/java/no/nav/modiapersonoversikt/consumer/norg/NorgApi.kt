@@ -48,7 +48,7 @@ interface NorgApi : Pingable {
         geografiskTilknyttning: String?,
         oppgavetype: String?,
         fagomrade: String?,
-        erSkjermetPerson: Boolean?,
+        erEgenAnsatt: Boolean?,
         diskresjonskode: String?
     ): List<Enhet>
 

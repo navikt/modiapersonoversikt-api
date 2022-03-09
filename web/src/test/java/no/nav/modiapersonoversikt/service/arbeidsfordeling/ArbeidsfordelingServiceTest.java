@@ -2,11 +2,9 @@ package no.nav.modiapersonoversikt.service.arbeidsfordeling;
 
 import no.nav.common.types.identer.Fnr;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
-import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.modiapersonoversikt.rest.persondata.*;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService.ArbeidsfordelingException;
-import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.utils.PropertyRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,8 +33,6 @@ class ArbeidsfordelingServiceTest {
     private PersondataService persondataService = mock(PersondataService.class);
     private NorgApi norgApi = mock(NorgApi.class);
     private EgenAnsattService egenAnsattService = mock(EgenAnsattService.class);
-    private SkjermedePersonerApi skjermedePersonerApi = mock(SkjermedePersonerApi.class);
-    private UnleashService unleashService = mock(UnleashService.class);
     private ArbeidsfordelingService arbeidsfordelingService;
 
     @BeforeEach
@@ -44,11 +40,9 @@ class ArbeidsfordelingServiceTest {
         Mockito.reset(
                 persondataService,
                 norgApi,
-                egenAnsattService,
-                skjermedePersonerApi,
-                unleashService
+                egenAnsattService
         );
-        arbeidsfordelingService = new ArbeidsfordelingServiceImpl(norgApi, persondataService, egenAnsattService, skjermedePersonerApi, unleashService);
+        arbeidsfordelingService = new ArbeidsfordelingServiceImpl(norgApi, persondataService, egenAnsattService);
     }
 
     @Test

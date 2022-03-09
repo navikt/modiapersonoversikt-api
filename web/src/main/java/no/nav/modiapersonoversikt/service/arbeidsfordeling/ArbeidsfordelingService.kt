@@ -5,13 +5,10 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
-import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.parseV2BehandlingString
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
 
 interface ArbeidsfordelingService {
@@ -30,9 +27,7 @@ interface ArbeidsfordelingService {
 class ArbeidsfordelingServiceImpl(
     private val norgApi: NorgApi,
     private val persondataService: PersondataService,
-    private val egenAnsattService: EgenAnsattService,
-    private val skjermedePersonerApi: SkjermedePersonerApi,
-    private val unleashService: UnleashService
+    private val egenAnsattService: EgenAnsattService
 ) : ArbeidsfordelingService {
     val log = LoggerFactory.getLogger(ArbeidsfordelingService::class.java)
 
@@ -49,16 +44,10 @@ class ArbeidsfordelingServiceImpl(
                 ?.let(persondataService::hentAdressebeskyttelse)
                 ?.let { if (it.isEmpty()) null else it.first().kode.name }
 
-            val brukSkjermetPersonApi = unleashService.isEnabled(Feature.BRUK_SKJERMET_PERSON)
-
-            val erSkjermetPerson = if (underkategori == "ANSOS_KNA") {
+            val erEgenAnsatt = if (underkategori == "ANSOS_KNA") {
                 false
             } else {
-                if (brukSkjermetPersonApi) {
-                    brukerIdent?.get()?.let(skjermedePersonerApi::erSkjermetPerson)
-                } else {
-                    brukerIdent?.get()?.let(egenAnsattService::erEgenAnsatt)
-                }
+                brukerIdent?.get()?.let(egenAnsattService::erEgenAnsatt)
             }
 
             norgApi.hentBehandlendeEnheter(
@@ -66,7 +55,7 @@ class ArbeidsfordelingServiceImpl(
                 geografiskTilknyttning = geografiskTilknyttning,
                 oppgavetype = oppgavetype,
                 fagomrade = fagomrade,
-                erSkjermetPerson = erSkjermetPerson,
+                erEgenAnsatt = erEgenAnsatt,
                 diskresjonskode = diskresjonskode
             )
         }

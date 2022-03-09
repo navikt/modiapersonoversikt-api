@@ -29,7 +29,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val persondata: HentPersondata.Person,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
-        val erSkjermetPerson: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<HentPersonResponse>,
@@ -38,7 +37,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         private val ekstraDatapunker = listOf(
             geografiskeTilknytning,
             erEgenAnsatt,
-            erSkjermetPerson,
             navEnhet,
             dkifData,
             bankkonto,
@@ -78,7 +76,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 adressebeskyttelse = hentAdressebeskyttelse(data.persondata.adressebeskyttelse),
                 sikkerhetstiltak = hentSikkerhetstiltak(data),
                 erEgenAnsatt = hentErEgenAnsatt(data),
-                erSkjermetPerson = hentErSkjermetPerson(data),
                 personstatus = hentPersonstatus(data),
                 sivilstand = hentSivilstand(data),
                 foreldreansvar = hentForeldreansvar(data),
@@ -543,17 +540,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     Persondata.EgenAnsatt.NEI
                 }
             }.getOrElse(Persondata.EgenAnsatt.UKJENT)
-    }
-
-    private fun hentErSkjermetPerson(data: Data): Persondata.SkjermetPerson {
-        return data.erSkjermetPerson
-            .map {
-                if (it) {
-                    Persondata.SkjermetPerson.JA
-                } else {
-                    Persondata.SkjermetPerson.NEI
-                }
-            }.getOrElse(Persondata.SkjermetPerson.UKJENT)
     }
 
     private fun hentPersonstatus(data: Data): List<Persondata.KodeBeskrivelse<Persondata.PersonStatus>> {

@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
-import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
@@ -21,7 +20,6 @@ open class PersondataConfig {
         norgApi: NorgApi,
         personV3: PersonV3,
         egenAnsattService: EgenAnsattService,
-        skjermedePersonerApi: SkjermedePersonerApi,
         tilgangskontroll: Tilgangskontroll,
         kodeverk: EnhetligKodeverk.Service
     ): PersondataService {
@@ -31,7 +29,6 @@ open class PersondataConfig {
             norgApi,
             personV3,
             egenAnsattService,
-            skjermedePersonerApi,
             tilgangskontroll,
             kodeverk
         )
