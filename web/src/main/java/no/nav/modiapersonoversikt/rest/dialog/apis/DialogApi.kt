@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import org.springframework.http.ResponseEntity
+import java.time.OffsetDateTime
 import java.util.HashMap
 import javax.servlet.http.HttpServletRequest
 
@@ -50,10 +51,31 @@ interface DialogApi {
         fnr: String,
         slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?>
+
+    data class Journalpost(
+        val journalfortAv: Veileder?,
+        val journalfortDato: OffsetDateTime,
+        val journalfortTema: String,
+        val journalfortTemanavn: String,
+        val journalfortSaksid: String?
+    )
+
+    data class Veileder(
+        val ident: String,
+        val navn: String
+    ) {
+        companion object {
+            val UKJENT = Veileder("-", "Ukjent")
+        }
+    }
 }
 
 data class BehandlingsId(val behandlingsId: String)
-data class TraadDTO(val traadId: String, val meldinger: List<MeldingDTO>)
+data class TraadDTO(
+    val traadId: String,
+    val meldinger: List<MeldingDTO>,
+    val journalposter: List<DialogApi.Journalpost>
+)
 class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map)
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?)
 
