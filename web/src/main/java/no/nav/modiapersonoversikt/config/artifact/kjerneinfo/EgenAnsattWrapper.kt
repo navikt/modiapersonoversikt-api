@@ -1,21 +1,31 @@
-package no.nav.modiapersonoversikt.config.artifact.kjerneinfo;
+package no.nav.modiapersonoversikt.config.artifact.kjerneinfo
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattServiceImpl;
-import no.nav.modiapersonoversikt.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
-import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
+import no.nav.modiapersonoversikt.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig
+import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
+import org.springframework.beans.factory.annotation.Autowired
+import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattServiceImpl
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.modiapersonoversikt.utils.UnleashProxySwitcher
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 
-@Import(EgenAnsattV1EndpointConfig.class)
-public class EgenAnsattWrapper {
-
+@Configuration
+@Import(EgenAnsattV1EndpointConfig::class)
+open class EgenAnsattWrapper {
     @Autowired
-    private EgenAnsattV1 egenAnsattV1;
+    lateinit var egenAnsattV1: EgenAnsattV1
 
     @Bean
-    public EgenAnsattService egenAnsattService() {
-        return new EgenAnsattServiceImpl(egenAnsattV1);
+    open fun egenAnsattService(unleashService: UnleashService, skjermedePersonerApi: SkjermedePersonerApi): EgenAnsattService {
+        return UnleashProxySwitcher.createSwitcher(
+            featureToggle = Feature.BRUK_SKJERMET_PERSON,
+            unleashService = unleashService,
+            ifEnabled = skjermedePersonerApi,
+            ifDisabled = EgenAnsattServiceImpl(egenAnsattV1)
+        )
     }
 }
