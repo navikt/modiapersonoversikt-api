@@ -6,9 +6,10 @@ import no.nav.common.utils.UrlUtils
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.legacy.api.domain.skjermedePersonerPip.generated.apis.SkjermingPipApi
 import no.nav.modiapersonoversikt.legacy.api.domain.skjermedePersonerPip.generated.models.SkjermetDataRequestDTO
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import okhttp3.OkHttpClient
 
-interface SkjermedePersonerApi : Pingable {
+interface SkjermedePersonerApi : Pingable, EgenAnsattService {
     fun erSkjermetPerson(fnr: String): Boolean
 }
 
@@ -27,5 +28,9 @@ class SkjermedePersonerApiImpl(
         false
     ) {
         HealthCheckUtils.pingUrl(UrlUtils.joinPaths(url, "/internal/health/liveness"), client)
+    }
+
+    override fun erEgenAnsatt(ident: String): Boolean {
+        return erSkjermetPerson(ident)
     }
 }
