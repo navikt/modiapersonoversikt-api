@@ -1,10 +1,11 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils;
 
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.utils.OppfolgingskontraktMapper;
 import no.nav.modiapersonoversikt.testutils.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.mock.OppfolgingkontraktMockFactory;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.oppfolging.Bruker;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.oppfolging.Bruker;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeRequest;

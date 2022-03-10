@@ -1,13 +1,13 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.oppfolging.SYFOPunkt
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Dagpengeytelse
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Vedtak
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Ytelse
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.oppfolging.SYFOPunkt
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Dagpengeytelse
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Vedtak
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Ytelse
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -163,7 +163,8 @@ private fun hentEnhet(enhet: Optional<AnsattEnhet>): Map<String, Any?>? {
 }
 
 private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: String?): YtelseskontraktRequest {
-    val request = YtelseskontraktRequest()
+    val request =
+        YtelseskontraktRequest()
     request.fodselsnummer = fodselsnummer
     request.from = lagRiktigDato(start)
     request.to = lagRiktigDato(slutt)
@@ -171,7 +172,8 @@ private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: Strin
 }
 
 private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?, slutt: String?): OppfolgingskontraktRequest {
-    val request = OppfolgingskontraktRequest()
+    val request =
+        OppfolgingskontraktRequest()
     request.fodselsnummer = fodselsnummer
     request.from = lagRiktigDato(start)
     request.to = lagRiktigDato(slutt)

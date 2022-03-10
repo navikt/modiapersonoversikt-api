@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static no.nav.modiapersonoversikt.config.endpoint.joark.InnsynJournalEndpointConfig.INNSYN_JOURNAL_V2_URL;
+import static no.nav.modiapersonoversikt.consumer.joark.InnsynJournalEndpointConfig.INNSYN_JOURNAL_V2_URL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;

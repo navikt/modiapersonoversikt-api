@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.service.dkif.Dkif
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

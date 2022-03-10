@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.to;
 
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 

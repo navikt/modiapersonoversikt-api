@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.config.artifact.kjerneinfo;
 
-import no.nav.modiapersonoversikt.config.DkifConsumerConfig;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.config.PersonV3EndpointConfig;
+import no.nav.modiapersonoversikt.consumer.dkif.DkifConsumerConfig;
+import no.nav.modiapersonoversikt.consumer.tps.PersonV3EndpointConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
         DkifConsumerConfig.class,
         PersonV3EndpointConfig.class,
         EgenAnsattWrapper.class,
-        no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.config.spring.SykmeldingsperioderConsumerConfig.class
+        no.nav.modiapersonoversikt.consumer.infotrygd.config.spring.SykmeldingsperioderConsumerConfig.class
 })
 public class KjerneinfoContext {
 }
