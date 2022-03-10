@@ -5,7 +5,7 @@ import no.nav.common.utils.EnvironmentUtils;
 import no.nav.common.utils.NaisUtils;
 
 import no.nav.common.utils.SslUtils;
-import no.nav.modiapersonoversikt.service.ldap.LdapContextProvider;
+import no.nav.modiapersonoversikt.consumer.ldap.LDAP;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -33,8 +33,8 @@ public class Main {
         EnvironmentUtils.setProperty(SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
 
         Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
-        EnvironmentUtils.setProperty(LdapContextProvider.LDAP_USERNAME, ldapUser.username, PUBLIC);
-        EnvironmentUtils.setProperty(LdapContextProvider.LDAP_PASSWORD, ldapUser.password, SECRET);
+        EnvironmentUtils.setProperty(LDAP.USERNAME, ldapUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(LDAP.PASSWORD, ldapUser.password, SECRET);
 
         Credentials gosysUser = NaisUtils.getCredentials("gosys_user");
         EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_USERNAME, gosysUser.username, PUBLIC);
