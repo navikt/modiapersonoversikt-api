@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.config.endpoint.v1.pensjonsak.PensjonSakEndpoi
 import no.nav.modiapersonoversikt.config.endpoint.v1.personsok.PersonsokEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig;
+import no.nav.modiapersonoversikt.service.unleash.UnleashEndpointConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -30,7 +31,6 @@ import org.springframework.context.annotation.Import;
         UnleashEndpointConfig.class,
         InnsynJournalEndpointConfig.class,
         OppfolgingsinfoApiEndpointConfig.class,
-        SfHenvendelseConfig.class,
         PersonsokEndpointConfig.class
 })
 public class EndpointsConfig {
