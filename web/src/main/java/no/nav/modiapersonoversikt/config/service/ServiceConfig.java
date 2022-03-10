@@ -9,7 +9,6 @@ import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.sts.utils.AzureAdServiceTokenProviderBuilder;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.service.*;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
@@ -21,8 +20,6 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl;
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif;
 import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceRestImpl;
-import no.nav.modiapersonoversikt.service.ldap.LDAPServiceImpl;
-import no.nav.modiapersonoversikt.service.ldap.LdapContextProvider;
 import no.nav.modiapersonoversikt.service.oppgavebehandling.RestOppgaveBehandlingServiceImpl;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
@@ -46,11 +43,6 @@ import static no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.SECURITY
 public class ServiceConfig {
     public static final String SYSTEMUSER_USERNAME = "no.nav.modig.security.systemuser.username";
     public static final String SYSTEMUSER_PASSWORD = "no.nav.modig.security.systemuser.password";
-
-    @Bean
-    public LDAPService ldapService() {
-        return new LDAPServiceImpl(new LdapContextProvider());
-    }
 
     @Bean
     public HenvendelseLesService henvendelseLesService() {

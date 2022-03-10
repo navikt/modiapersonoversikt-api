@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.config.endpoint;
 
 import no.nav.modiapersonoversikt.config.endpoint.util.CacheTest;
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

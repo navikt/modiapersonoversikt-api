@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.oppfolging.SY
 import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Dagpengeytelse
 import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Vedtak
 import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Ytelse
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -16,7 +17,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagRiktigDato
@@ -163,8 +163,7 @@ private fun hentEnhet(enhet: Optional<AnsattEnhet>): Map<String, Any?>? {
 }
 
 private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: String?): YtelseskontraktRequest {
-    val request =
-        YtelseskontraktRequest()
+    val request = YtelseskontraktRequest()
     request.fodselsnummer = fodselsnummer
     request.from = lagRiktigDato(start)
     request.to = lagRiktigDato(slutt)
@@ -172,8 +171,7 @@ private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: Strin
 }
 
 private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?, slutt: String?): OppfolgingskontraktRequest {
-    val request =
-        OppfolgingskontraktRequest()
+    val request = OppfolgingskontraktRequest()
     request.fodselsnummer = fodselsnummer
     request.from = lagRiktigDato(start)
     request.to = lagRiktigDato(slutt)

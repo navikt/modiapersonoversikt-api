@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfig;
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;

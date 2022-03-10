@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogMerkApi

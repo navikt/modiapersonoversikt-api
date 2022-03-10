@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.service.oppfolgingsinfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import no.nav.common.json.JsonMapper;
 import no.nav.common.rest.client.RestClient;
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor;
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor;
@@ -14,7 +14,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.Oppfolgingsi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.rest.OppfolgingsEnhetOgVeileder;
 import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.rest.OppfolgingsStatus;
 import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.rest.Oppfolgingsenhet;
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
