@@ -290,11 +290,6 @@
                 <artifactId>dialogarena-behandlingsinformasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
 
             <!--Virksomhetstjenester-->
             <dependency>

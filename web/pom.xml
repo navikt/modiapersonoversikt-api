@@ -262,10 +262,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>

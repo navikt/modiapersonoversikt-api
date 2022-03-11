@@ -3,16 +3,12 @@ package no.nav.modiapersonoversikt.legacy.sak.transformers;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.Behandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.Behandlingstyper;
 import org.joda.time.DateTime;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -20,8 +16,6 @@ import static java.util.stream.Collectors.toList;
 import static no.nav.modiapersonoversikt.legacy.sak.providerdomain.BehandlingsStatus.*;
 import static no.nav.modiapersonoversikt.legacy.sak.providerdomain.BehandlingsType.BEHANDLING;
 import static no.nav.modiapersonoversikt.legacy.sak.providerdomain.BehandlingsType.KVITTERING;
-import static no.nav.modiapersonoversikt.legacy.sak.providerdomain.HenvendelseType.valueOf;
-import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
 
 public class Transformers {
 
@@ -78,40 +72,6 @@ public class Transformers {
             }
         }
         throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
-    }
-
-    public static Soknad transformTilSoknad(WSSoknad wsSoknad) {
-        String behandlingskjedeId = wsSoknad.getBehandlingsId();
-
-        if (wsSoknad.getBehandlingsKjedeId() != null && !wsSoknad.getBehandlingsKjedeId().isEmpty()) {
-            behandlingskjedeId = wsSoknad.getBehandlingsKjedeId();
-        }
-        return new Soknad()
-                .withBehandlingsId(wsSoknad.getBehandlingsId())
-                .withBehandlingskjedeId(behandlingskjedeId)
-                .withJournalpostId(wsSoknad.getJournalpostId())
-                .withStatus(Soknad.HenvendelseStatus.valueOf(wsSoknad.getHenvendelseStatus()))
-                .withOpprettetDato(wsSoknad.getOpprettetDato())
-                .withInnsendtDato(wsSoknad.getInnsendtDato())
-                .withSistEndretDato(wsSoknad.getSistEndretDato())
-                .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
-                .withEttersending(wsSoknad.isEttersending())
-                .withHenvendelseType(valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
-                .withDokumenter(Optional.ofNullable(wsSoknad.getDokumentforventninger())
-                        .orElse(new Dokumentforventninger())
-                        .getDokumentforventning()
-                        .stream()
-                        .map(wsDokumentforventning -> transformTilDokument(wsDokumentforventning, wsSoknad.getHovedskjemaKodeverkId())).collect(toList()));
-    }
-
-    public static DokumentFraHenvendelse transformTilDokument(WSDokumentforventning wsDokumentforventning, String hovedskjemaId) {
-        return new DokumentFraHenvendelse()
-                .withKodeverkRef(wsDokumentforventning.getKodeverkId())
-                .withTilleggstittel(wsDokumentforventning.getTilleggsTittel())
-                .withUuid(wsDokumentforventning.getUuid())
-                .withArkivreferanse(wsDokumentforventning.getArkivreferanse())
-                .withInnsendingsvalg(DokumentFraHenvendelse.Innsendingsvalg.valueOf(wsDokumentforventning.getInnsendingsvalg()))
-                .withErHovedskjema(hovedskjemaId.equals(wsDokumentforventning.getKodeverkId()));
     }
 
     private static List<DokumentFraHenvendelse> filtrerVedlegg(Soknad soknad, Predicate<DokumentFraHenvendelse> betingelse) {

@@ -78,8 +78,6 @@ spec:
       value: "https://modapp-q1.adeo.no/henvendelse/services/domene.Brukerdialog/BehandleHenvendelse_v1"
     - name: DOMENE_BRUKERDIALOG_HENVENDELSE_V2_ENDPOINTURL
       value: "https://modapp-q1.adeo.no/henvendelse/services/domene.Brukerdialog/Henvendelse_v2"
-    - name: DOMENE_BRUKERDIALOG_HENVENDELSESOKNADERSERVICE_V1_ENDPOINTURL
-      value: "https://modapp-q1.adeo.no/henvendelse/services/domene.Brukerdialog/HenvendelseSoknaderService_v1"
     - name: DOMENE_BRUKERDIALOG_SENDUTHENVENDELSE_V1_ENDPOINTURL
       value: "https://modapp-q1.adeo.no/henvendelse/services/domene.Brukerdialog/SendUtHenvendelse_v1"
     - name: INNSYNJOURNAL_V2_ENDPOINTURL
