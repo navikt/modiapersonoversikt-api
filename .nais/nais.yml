@@ -188,3 +188,7 @@ spec:
       value: "prod-fss"
     - name: NOM_URL
       value: "https://nom-api.intern.nav.no"
+    - name: SKJERMEDE_PERSONER_PIP_CLUSTER
+      value: "prod-gcp"
+    - name: SKJERMEDE_PERSONER_PIP_URL
+      value: "https://skjermede-personer-pip.intern.nav.no"
