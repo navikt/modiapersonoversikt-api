@@ -5,16 +5,17 @@ import no.nav.common.utils.EnvironmentUtils;
 import no.nav.common.utils.NaisUtils;
 
 import no.nav.common.utils.SslUtils;
+import no.nav.modiapersonoversikt.consumer.arena.ArbeidOgAktivitetEndpointConfig;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAP;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static no.nav.common.utils.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.common.utils.EnvironmentUtils.Type.SECRET;
-import static no.nav.modiapersonoversikt.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_PASSWORD;
-import static no.nav.modiapersonoversikt.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_USERNAME;
 import static no.nav.modiapersonoversikt.config.service.ServiceConfig.SYSTEMUSER_PASSWORD;
 import static no.nav.modiapersonoversikt.config.service.ServiceConfig.SYSTEMUSER_USERNAME;
+import static no.nav.modiapersonoversikt.consumer.arena.ArbeidOgAktivitetEndpointConfig.KJERNEINFO_TJENESTEBUSS_PASSWORD;
+import static no.nav.modiapersonoversikt.consumer.arena.ArbeidOgAktivitetEndpointConfig.KJERNEINFO_TJENESTEBUSS_USERNAME;
 
 @SpringBootApplication
 public class Main {

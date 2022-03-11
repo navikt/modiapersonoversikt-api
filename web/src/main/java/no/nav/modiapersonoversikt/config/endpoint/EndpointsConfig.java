@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.consumer.joark.JoarkEndpointConfig;
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.OppfolgingsinfoApiEndpointConfig;
 import no.nav.modiapersonoversikt.consumer.arena.ArbeidOgAktivitetEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
-import no.nav.modiapersonoversikt.config.endpoint.v1.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.modiapersonoversikt.consumer.pesys.PensjonSakEndpointConfig;
 import no.nav.modiapersonoversikt.consumer.tps.PersonsokEndpointConfig;
 import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingEndpointConfig;
@@ -24,7 +23,6 @@ import org.springframework.context.annotation.Import;
         UtbetalingEndpointConfig.class,
         JoarkEndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
-        HenvendelseSoknaderEndpointConfig.class,
         ArbeidOgAktivitetEndpointConfig.class,
         PensjonSakEndpointConfig.class,
         VarslingEndpointConfig.class,
