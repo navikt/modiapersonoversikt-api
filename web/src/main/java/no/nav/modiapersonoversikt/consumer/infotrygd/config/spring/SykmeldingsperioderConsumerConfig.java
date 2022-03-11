@@ -23,8 +23,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({SykepengerConsumerConfig.class, ForeldrepengerConsumerConfig.class,
-        PleiepengerConsumerConfig.class, OrganisasjonConsumerConfig.class})
 public class SykmeldingsperioderConsumerConfig {
 
     @Autowired

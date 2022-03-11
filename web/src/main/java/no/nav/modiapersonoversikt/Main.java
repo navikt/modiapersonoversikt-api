@@ -5,7 +5,6 @@ import no.nav.common.utils.EnvironmentUtils;
 import no.nav.common.utils.NaisUtils;
 
 import no.nav.common.utils.SslUtils;
-import no.nav.modiapersonoversikt.consumer.arena.ArbeidOgAktivitetEndpointConfig;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAP;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +18,10 @@ import static no.nav.modiapersonoversikt.consumer.arena.ArbeidOgAktivitetEndpoin
 
 @SpringBootApplication
 public class Main {
+    static {
+        System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl");
+    }
+
     public static void main(String... args) {
         loadVaultSecrets();
         SslUtils.setupTruststore();

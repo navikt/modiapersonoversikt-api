@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {
         ModiaStubConfig.class,
         SaksoversiktServiceConfig.class,
+        SakServiceConfig.class,
         KodeverkMock.class
 })
 public class SaksoversiktServiceConfigTest {

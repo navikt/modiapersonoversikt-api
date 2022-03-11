@@ -6,8 +6,10 @@ import no.nav.modiapersonoversikt.config.endpoint.v1.egenansatt.EgenAnsattV1Endp
 import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+@Configuration
 @Import(EgenAnsattV1EndpointConfig.class)
 public class EgenAnsattWrapper {
 

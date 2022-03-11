@@ -16,9 +16,6 @@ import static no.nav.modiapersonoversikt.config.artifact.kjerneinfo.KontrakterCo
 import static no.nav.modiapersonoversikt.config.artifact.kjerneinfo.KontrakterConsumerConfigImpl.createYtelseskontraktService;
 
 @Configuration
-@Import({
-        OppfolgingskontraktConsumerConfig.class,
-        YtelseskontraktConsumerConfig.class})
 public class KontrakterWrapper {
 
     @Autowired
