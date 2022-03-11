@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class SkjermedePersonerConfig {
-    var url = EnvironmentUtils.getRequiredProperty("NOM_URL")
+    var url = EnvironmentUtils.getRequiredProperty("SKJERMEDE_PERSONER_PIP_URL")
 
     @Autowired
     lateinit var tokenProvider: ServiceToServiceTokenProvider
