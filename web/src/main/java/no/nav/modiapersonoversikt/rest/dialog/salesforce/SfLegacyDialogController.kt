@@ -43,14 +43,10 @@ class SfLegacyDialogController(
         val bruker = EksternBruker.Fnr(fnr)
 
         val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
-        val (temakodeMap, identMap) = lagOppslagsverk(sfHenvendelser)
+        val dialogMappingContext = lagMappingContext(sfHenvendelser)
         return sfHenvendelser
             .map {
-                mapSfHenvendelserTilLegacyFormat(
-                    temakodeMap = temakodeMap,
-                    identMap = identMap,
-                    henvendelse = it
-                )
+                dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it)
             }
     }
 
@@ -234,11 +230,12 @@ class SfLegacyDialogController(
         return nyesteMelding?.fra?.identType == MeldingFraDTO.IdentType.AKTORID
     }
 
-    private fun lagOppslagsverk(henvendelser: List<HenvendelseDTO>): Pair<Map<String, String>, Map<String, Saksbehandler>> {
-        val temakoder = henvendelser
-            .flatMap { it.journalposter ?: emptyList() }
-            .map { it.journalfortTema }
-            .distinct()
+    data class DialogMappingContext(
+        val temakodeMap: Map<String, String>,
+        val identMap: Map<String, Saksbehandler>
+    )
+    private fun lagMappingContext(henvendelser: List<HenvendelseDTO>): DialogMappingContext {
+        val temakodeMap = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).asMap()
         val identer = henvendelser
             .flatMap { henvendelse ->
                 val journalportIdenter: List<String>? = henvendelse.journalposter?.mapNotNull { it.journalforerNavIdent } // TODO SF bør ikke svare med null for ident her. Rapportert feil
@@ -252,7 +249,6 @@ class SfLegacyDialogController(
             }
             .distinct()
 
-        val temakodeMap = temakoder.associateWith { kode -> kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentVerdi(kode, kode) }
         val identMap = identer.associateWith { ident ->
             runCatching {
                 ldapService.hentSaksbehandler(ident)
@@ -262,21 +258,20 @@ class SfLegacyDialogController(
             }.getOrThrow()
         }
 
-        return Pair(temakodeMap, identMap)
+        return DialogMappingContext(temakodeMap, identMap)
     }
 
-    private fun mapSfHenvendelserTilLegacyFormat(
-        temakodeMap: Map<String, String>,
-        identMap: Map<String, Saksbehandler>,
-        henvendelse: HenvendelseDTO
-    ): TraadDTO {
-        val journalpost: JournalpostDTO? = henvendelse.journalposter?.firstOrNull()
+    private fun DialogMappingContext.mapSfHenvendelserTilLegacyFormat(henvendelse: HenvendelseDTO): TraadDTO {
+        val journalposter = henvendelse.journalposter?.map {
+            tilJournalpostDTO(it)
+        } ?: emptyList()
+        val journalpost = journalposter.firstOrNull()
 
-        val journalfortSaksid = journalpost?.fagsakId
-        val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
+        val journalfortSaksid = journalpost?.journalfortSaksid
         val journalfortTema = journalpost?.journalfortTema
-        val journalfortTemanavn = temakodeMap[journalpost?.journalfortTema ?: ""]
-        val journalfortAv: Map<String, String>? = identMap[journalpost?.journalforerNavIdent ?: ""]
+        val journalfortTemanavn = journalpost?.journalfortTemanavn
+        val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
+        val journalfortAv: Map<String, String>? = identMap[journalpost?.journalfortAv?.ident ?: ""]
             ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn) }
 
         val kontorsperre: MarkeringDTO? = henvendelse.markeringer
@@ -326,8 +321,27 @@ class SfLegacyDialogController(
                 )
             )
         }
-        return TraadDTO(henvendelse.kjedeId, meldinger)
+        return TraadDTO(
+            traadId = henvendelse.kjedeId,
+            meldinger = meldinger,
+            journalposter = journalposter
+        )
     }
+
+    private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) = DialogApi.Journalpost(
+        journalfortDato = journalpost.journalfortDato,
+        journalfortTema = journalpost.journalfortTema,
+        journalfortTemanavn = temakodeMap[journalpost.journalfortTema] ?: journalpost.journalfortTema,
+        journalfortSaksid = journalpost.fagsakId,
+        journalfortAv = identMap[journalpost.journalforerNavIdent ?: ""]
+            ?.let {
+                DialogApi.Veileder(
+                    ident = it.ident,
+                    navn = "${it.fornavn} ${it.etternavn}"
+                )
+            }
+            ?: DialogApi.Veileder.UKJENT,
+    )
 
     private fun hentFritekstFraMelding(erKassert: Boolean, melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO): String {
         if (erKassert) {
