@@ -1,7 +1,17 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-sealed class PersondataResult<T>(val system: String) {
-    fun <S> map(newSystem: String = system, block: (t: T) -> S): PersondataResult<S> {
+sealed class PersondataResult<T>(val system: InformasjonElement) {
+    enum class InformasjonElement {
+        PDL_GT,
+        PDL_TREDJEPARTSPERSONER,
+        EGEN_ANSATT,
+        DKIF,
+        BANKKONTO,
+        VEILEDER_ROLLER,
+        NORG_NAVKONTOR,
+        NORG_KONTAKTINFORMASJON,
+    }
+    fun <S> map(newSystem: InformasjonElement = system, block: (t: T) -> S): PersondataResult<S> {
         return when (this) {
             is Failure<*> -> this as PersondataResult<S>
             is Success<T> -> runCatching(newSystem) {
@@ -24,19 +34,19 @@ sealed class PersondataResult<T>(val system: String) {
         }
     }
 
-    fun <S> fold(onSuccess: (t: T) -> S, onFailure: (system: String, t: Throwable) -> S): S {
+    fun <S> fold(onSuccess: (t: T) -> S, onFailure: (system: InformasjonElement, t: Throwable) -> S): S {
         return when (this) {
             is Failure<*> -> onFailure(this.system, this.exception)
             is Success<T> -> onSuccess(this.value)
         }
     }
 
-    class Success<T>(name: String, val value: T) : PersondataResult<T>(name)
-    class Failure<T>(name: String, val exception: Throwable) : PersondataResult<T>(name)
+    class Success<T>(name: InformasjonElement, val value: T) : PersondataResult<T>(name)
+    class Failure<T>(name: InformasjonElement, val exception: Throwable) : PersondataResult<T>(name)
 
     companion object {
         @JvmStatic
-        fun <T> runCatching(system: String, block: () -> T): PersondataResult<T> {
+        fun <T> runCatching(system: InformasjonElement, block: () -> T): PersondataResult<T> {
             return try {
                 Success(system, block())
             } catch (e: Throwable) {
