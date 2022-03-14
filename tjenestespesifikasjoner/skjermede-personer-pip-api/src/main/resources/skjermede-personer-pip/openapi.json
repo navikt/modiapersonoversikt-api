@@ -1,0 +1,334 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Beskrivelse kommer ...",
+    "version": "v1",
+    "title": "Skjermede personer pip API",
+    "contact": {
+      "name": "Team Org",
+      "url": "https://teamkatalog.nais.adeo.no/team/7cb86192-a6e9-42ed-be45-421807c96618"
+    }
+  },
+  "host": "skjermede-personer-pip.dev.adeo.no",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "admin",
+      "description": "Admin tjenester"
+    },
+    {
+      "name": "skjerming-pip",
+      "description": "PIP tjeneste for skjermede personer"
+    }
+  ],
+  "paths": {
+    "/admin/skjerming": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Henter cachen - alle skjerminger",
+        "operationId": "getAllUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "Api nøkkel",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/Skjermingsperiode"
+              }
+            }
+          },
+          "403": {
+            "description": "Feil api nøkkel"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin/skjerming/size": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Henter cache størrelsen - antall skjerminger i cachen",
+        "operationId": "isSkjermetUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "Api nøkkel",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "403": {
+            "description": "Feil api nøkkel"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin/status": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Henter cacher - alle skjerming statuser",
+        "operationId": "getAllStatusesUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "Api nøkkel",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "boolean"
+              }
+            }
+          },
+          "403": {
+            "description": "Feil api nøkkel"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin/status/size": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Henter cache størrelsen - antall skjerming statuser i cachen",
+        "operationId": "getStatusSizeUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "Api nøkkel",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "403": {
+            "description": "Feil api nøkkel"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/skjermet": {
+      "get": {
+        "tags": [
+          "skjerming-pip"
+        ],
+        "summary": "Sjekker hvorvidt oppgitt person er skjermet",
+        "operationId": "isSkjermetUsingGET_1",
+        "produces": [
+          "*/*",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "personident",
+            "in": "query",
+            "description": "Fødselsnummeret til personen",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": true
+      },
+      "post": {
+        "tags": [
+          "skjerming-pip"
+        ],
+        "summary": "Sjekker hvorvidt oppgitt person er skjermet",
+        "operationId": "isSkjermetPostUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "requestDTO",
+            "description": "Fødselsnummeret til personen",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SkjermetDataRequestDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/skjermetBulk": {
+      "post": {
+        "tags": [
+          "skjerming-pip"
+        ],
+        "summary": "Sjekker hvorvidt en liste av personer er skjermet",
+        "operationId": "isSkjermetBulkUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "requestDTO",
+            "description": "requestDTO",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SkjermetDataBulkRequestDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "boolean"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SkjermetDataBulkRequestDTO": {
+      "type": "object",
+      "properties": {
+        "personidenter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "SkjermetDataBulkRequestDTO"
+    },
+    "SkjermetDataRequestDTO": {
+      "type": "object",
+      "required": [
+        "personident"
+      ],
+      "properties": {
+        "personident": {
+          "type": "string"
+        }
+      },
+      "title": "SkjermetDataRequestDTO"
+    },
+    "Skjermingsperiode": {
+      "type": "object",
+      "properties": {
+        "fra": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "til": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "Skjermingsperiode"
+    }
+  }
+}

@@ -14,20 +14,20 @@ import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnhetStrat
 
 public class UnleashContextProviderImpl implements UnleashContextProvider {
 
-    private AnsattService annsattService;
+    private AnsattService ansattService;
 
     @Autowired
-    public UnleashContextProviderImpl(AnsattService annsattService) {
-        this.annsattService = annsattService;
+    public UnleashContextProviderImpl(AnsattService ansattService) {
+        this.ansattService = ansattService;
     }
 
     @Override
     public UnleashContext getContext() {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         String ident = AuthContextUtils.getIdent().orElse(null);
         String remoteAddr = null;
 
         try {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
             remoteAddr = attributes.getRequest().getRemoteAddr();
         } catch (Exception ignored) {
 
@@ -41,7 +41,7 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
     }
 
     private String getEnheter() {
-        return annsattService.hentEnhetsliste()
+        return ansattService.hentEnhetsliste()
                 .stream()
                 .map(enhet -> enhet.enhetId)
                 .collect(joining(","));
