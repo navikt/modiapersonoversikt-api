@@ -6,7 +6,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import javax.naming.directory.SearchControls
 import javax.naming.directory.SearchResult
 
-class LDAPServiceImpl(contextProvider: LDAPContextProvider) : LDAPService {
+open class LDAPServiceImpl(contextProvider: LDAPContextProvider) : LDAPService {
     private val searchBase = "OU=Users,OU=NAV,OU=BusinessUnits,${contextProvider.baseDN}"
     private val context = contextProvider.context
 
