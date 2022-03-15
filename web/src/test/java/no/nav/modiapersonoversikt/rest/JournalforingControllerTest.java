@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest;
 
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
-import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet;
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils;
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingApi;
@@ -34,7 +33,7 @@ class JournalforingControllerTest {
 
         JournalforingController journalforingController = new JournalforingController(mock(JournalforingApi.class), TilgangskontrollMock.get());
 
-        ResponseEntity response = AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
+        ResponseEntity<Void> response = AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
                 journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
         );
 
@@ -43,7 +42,7 @@ class JournalforingControllerTest {
 
     @Test
     @DisplayName("Forespørsler som feiler kaster 500 Internal Server Error")
-    void journalforingSomFeilerKasterFeil() throws JournalforingFeilet {
+    void journalforingSomFeilerKasterFeil() {
         JournalforingApi mock = mock(JournalforingApi.class);
         doThrow(RuntimeException.class).when(mock).knyttTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
@@ -59,7 +58,7 @@ class JournalforingControllerTest {
 
     @Test
     @DisplayName("Forespørsler uten enhet kaster 500 Internal Server Error med message satt i body")
-    void journalforingUtenEnhetKasterFeil() throws JournalforingFeilet {
+    void journalforingUtenEnhetKasterFeil() {
         JournalforingApi mock = mock(JournalforingApi.class);
         doThrow(EnhetIkkeSatt.class).when(mock).knyttTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());

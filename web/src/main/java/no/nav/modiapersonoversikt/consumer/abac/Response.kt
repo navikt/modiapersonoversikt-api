@@ -13,12 +13,12 @@ class PepException(message: String) : RuntimeException(message)
 
 data class AbacResponse(private val response: List<Response>) {
     private val result: Response
-        get() = {
+        get() {
             if (response.size > 1) {
                 throw PepException("Pep is giving ${response.size} responses. Only 1 is supported.")
             }
-            response[0]
-        }.invoke()
+            return response[0]
+        }
 
     fun getCause(): DenyCause {
         val associatedAdvice = result.associatedAdvice ?: emptyList()

@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo;
 
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 
 import java.io.IOException;
 

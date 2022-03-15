@@ -1,8 +1,7 @@
-package no.nav.modiapersonoversikt.config.service
+package no.nav.modiapersonoversikt.rest.dialog
 
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogMerkApi
@@ -11,19 +10,12 @@ import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogControlle
 import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogMerkController
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class DialogConfig {
-    @Autowired
-    private lateinit var unleashService: UnleashService
-
-    @Autowired
-    private lateinit var tilgangskontroll: Tilgangskontroll
-
     @Autowired
     private lateinit var sfHenvendelseService: SfHenvendelseService
 

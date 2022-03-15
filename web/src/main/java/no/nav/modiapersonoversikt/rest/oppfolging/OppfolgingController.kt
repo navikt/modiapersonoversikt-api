@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.kontrakter.domain.oppfolging.SYFOPunk
 import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Dagpengeytelse
 import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Vedtak
 import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Ytelse
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -16,7 +17,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagRiktigDato

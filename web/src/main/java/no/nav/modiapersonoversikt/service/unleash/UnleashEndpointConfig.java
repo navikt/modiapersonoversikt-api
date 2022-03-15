@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.config.endpoint;
+package no.nav.modiapersonoversikt.service.unleash;
 
 import no.finn.unleash.DefaultUnleash;
 import no.finn.unleash.Unleash;
