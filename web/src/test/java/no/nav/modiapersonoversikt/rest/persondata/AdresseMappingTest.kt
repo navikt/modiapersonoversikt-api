@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata
+import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -70,7 +71,7 @@ internal class AdresseMappingTest {
             data = gittData(
                 personIdent = "",
                 persondata = hovedperson,
-                tredjepartsPerson = PersondataResult.runCatching("tredjepartsperson") {
+                tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
                     mapOf(barnFnr to requireNotNull(tredjepartsPersonData))
                 }
             ),

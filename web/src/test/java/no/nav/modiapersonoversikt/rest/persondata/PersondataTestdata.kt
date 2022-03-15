@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
+import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
@@ -13,12 +14,12 @@ import java.time.LocalDateTime
 fun gittData(
     personIdent: String,
     persondata: HentPersondata.Person,
-    geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching("gt") { "0123" },
-    erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching("egenAnsatt") { false },
-    navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?> = PersondataResult.runCatching("navEnhet") { gittNavKontorEnhet() },
-    dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching("dkif") { digitalKontaktinformasjon },
-    bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching("bankkonto") { utenlandskBankkonto },
-    tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching("tredjepartsperson") { tredjepartsPersoner }
+    geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching(InformasjonElement.PDL_GT) { "0123" },
+    erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { false },
+    navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?> = PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) { gittNavKontorEnhet() },
+    dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
+    bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
+    tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner }
 ) = PersondataFletter.Data(
     personIdent = personIdent,
     persondata = persondata,
