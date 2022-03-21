@@ -71,7 +71,7 @@ class LDAPTest {
             )
 
         return object : LDAPContextProvider {
-            override val context: LdapContext = context
+            override fun getContext(): LdapContext = context
             override val baseDN: String get() = ""
         }
     }

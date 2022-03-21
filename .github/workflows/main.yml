@@ -10,7 +10,7 @@ env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   CI: true
   TZ: Europe/Oslo
-  Q1_TEST_BRANCH: ''
+  Q1_TEST_BRANCH: 'refs/heads/fix/ldap'
 
 jobs:
   build:

@@ -6,9 +6,8 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import javax.naming.directory.SearchControls
 import javax.naming.directory.SearchResult
 
-open class LDAPServiceImpl(contextProvider: LDAPContextProvider) : LDAPService {
+open class LDAPServiceImpl(private val contextProvider: LDAPContextProvider) : LDAPService {
     private val searchBase = "OU=Users,OU=NAV,OU=BusinessUnits,${contextProvider.baseDN}"
-    private val context = contextProvider.context
 
     override fun hentVeileder(ident: NavIdent): Saksbehandler {
         val result = search(ident).firstOrNull()
@@ -33,10 +32,12 @@ open class LDAPServiceImpl(contextProvider: LDAPContextProvider) : LDAPService {
         val searchCtl = SearchControls().apply {
             searchScope = SearchControls.SUBTREE_SCOPE
         }
-        return context.search(
-            searchBase,
-            "(&(objectClass=user)(CN=${ident.get()}))",
-            searchCtl
-        ).asSequence()
+        return contextProvider
+            .getContext()
+            .search(
+                searchBase,
+                "(&(objectClass=user)(CN=${ident.get()}))",
+                searchCtl
+            ).asSequence()
     }
 }
