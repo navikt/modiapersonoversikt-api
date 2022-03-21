@@ -29,7 +29,7 @@ interface LDAPService {
 }
 
 interface LDAPContextProvider {
-    val context: LdapContext
+    fun getContext(): LdapContext
     val baseDN: String
         get() = EnvironmentUtils.getRequiredProperty("LDAP_BASEDN")
 }
