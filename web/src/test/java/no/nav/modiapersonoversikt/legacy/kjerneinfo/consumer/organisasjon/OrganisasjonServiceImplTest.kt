@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonServiceImpl
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonV1ClientImpl
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
+import no.nav.modiapersonoversikt.testutils.TestEnvironmentRule
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
 import org.junit.Rule
@@ -17,6 +18,14 @@ class OrganisasjonServiceImplTest {
     @Rule
     @JvmField
     val wiremock = WireMockRule(0)
+
+    @Rule
+    @JvmField
+    val testenvironment = TestEnvironmentRule(
+        mapOf(
+            AppConstants.SYSTEMUSER_USERNAME_PROPERTY to "username"
+        )
+    )
 
     private val gyldigRespons = "{\"organisasjonsnummer\": \"orgnr\", \"navn\": { \"navnelinje2\": \"NAV\", \"navnelinje5\": \"IT\" }}"
     private val ORG_NR = "000000000"
