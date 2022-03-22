@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Import;
         KontrakterWrapper.class,
         DkifConsumerConfig.class,
         PersonV3EndpointConfig.class,
-        EgenAnsattWrapper.class,
         no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.config.spring.SykmeldingsperioderConsumerConfig.class
 })
 public class KjerneinfoContext {

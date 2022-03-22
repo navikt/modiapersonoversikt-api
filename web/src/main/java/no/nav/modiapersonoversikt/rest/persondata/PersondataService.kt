@@ -3,10 +3,10 @@ package no.nav.modiapersonoversikt.rest.persondata
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
+import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -34,7 +34,7 @@ class PersondataServiceImpl(
     private val dkif: Dkif.Service,
     private val norgApi: NorgApi,
     private val personV3: PersonV3,
-    private val egenAnsattService: EgenAnsattService,
+    private val skjermedePersonerApi: SkjermedePersonerApi,
     private val tilgangskontroll: Tilgangskontroll,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
@@ -49,7 +49,7 @@ class PersondataServiceImpl(
         val geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
         val adressebeskyttelse = persondataFletter.hentAdressebeskyttelse(persondata.adressebeskyttelse)
         val navEnhet = hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning)
-        val erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { egenAnsattService.erEgenAnsatt(personIdent) }
+        val erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { skjermedePersonerApi.erSkjermetPerson(personIdent) }
         val tilganger = PersondataResult
             .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
             .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))

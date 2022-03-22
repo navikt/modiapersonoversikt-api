@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
@@ -19,7 +19,7 @@ open class PersondataConfig {
         @Qualifier("DkifSoap") dkif: Dkif.Service,
         norgApi: NorgApi,
         personV3: PersonV3,
-        egenAnsattService: EgenAnsattService,
+        skjermedePersonerApi: SkjermedePersonerApi,
         tilgangskontroll: Tilgangskontroll,
         kodeverk: EnhetligKodeverk.Service
     ): PersondataService {
@@ -28,7 +28,7 @@ open class PersondataConfig {
             dkif,
             norgApi,
             personV3,
-            egenAnsattService,
+            skjermedePersonerApi,
             tilgangskontroll,
             kodeverk
         )
