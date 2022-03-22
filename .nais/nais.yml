@@ -74,12 +74,6 @@ spec:
       value: "https://abac-modia.intern.nav.no/application/authorize"
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app.adeo.no/varsel/ws/Brukervarsel/v1"
-    - name: DOMENE_BRUKERDIALOG_BEHANDLEHENVENDELSE_V1_ENDPOINTURL
-      value: "https://modapp.adeo.no/henvendelse/services/domene.Brukerdialog/BehandleHenvendelse_v1"
-    - name: DOMENE_BRUKERDIALOG_HENVENDELSE_V2_ENDPOINTURL
-      value: "https://modapp.adeo.no/henvendelse/services/domene.Brukerdialog/Henvendelse_v2"
-    - name: DOMENE_BRUKERDIALOG_SENDUTHENVENDELSE_V1_ENDPOINTURL
-      value: "https://modapp.adeo.no/henvendelse/services/domene.Brukerdialog/SendUtHenvendelse_v1"
     - name: INNSYNJOURNAL_V2_ENDPOINTURL
       value: "https://dokarkiv.nais.adeo.no/services/innsynjournal/v2"
     - name: JOURNAL_V2_ENDPOINTURL
