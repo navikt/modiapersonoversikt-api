@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.EnhetId
+import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Enhet
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetKontaktinformasjon
@@ -14,7 +15,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.Arbeidsf
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetskontaktinfoApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.*
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Behandling
 import no.nav.modiapersonoversikt.utils.Retry
 import no.nav.modiapersonoversikt.utils.isNumeric
@@ -194,7 +194,7 @@ class NorgApiImpl(
         retry.run {
             cache = enhetKontaktInfoApi
                 .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
-                    consumerId = RestConstants.MODIABRUKERDIALOG_SYSTEM_USER
+                    consumerId = AppConstants.SYSTEMUSER_USERNAME
                 )
                 .mapNotNull {
                     try {

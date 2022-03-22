@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
+import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonServiceImpl
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonV1ClientImpl
@@ -65,7 +66,7 @@ class OrganisasjonServiceImplTest {
         verify(
             getRequestedFor(urlEqualTo("/api/v1/organisasjon/$ORG_NR/noekkelinfo"))
                 .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
-                .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, matching(RestConstants.MODIABRUKERDIALOG_SYSTEM_USER))
+                .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, matching(AppConstants.SYSTEMUSER_USERNAME))
                 .withHeader("accept", matching("application/json"))
         )
     }

@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static no.nav.common.utils.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.common.utils.EnvironmentUtils.Type.SECRET;
-import static no.nav.modiapersonoversikt.config.ServiceConfig.SYSTEMUSER_PASSWORD;
-import static no.nav.modiapersonoversikt.config.ServiceConfig.SYSTEMUSER_USERNAME;
+import static no.nav.modiapersonoversikt.config.AppConstants.SYSTEMUSER_PASSWORD_PROPERTY;
+import static no.nav.modiapersonoversikt.config.AppConstants.SYSTEMUSER_USERNAME_PROPERTY;
 import static no.nav.modiapersonoversikt.consumer.arena.arbeidogaktivitet.ArbeidOgAktivitetConfig.KJERNEINFO_TJENESTEBUSS_PASSWORD;
 import static no.nav.modiapersonoversikt.consumer.arena.arbeidogaktivitet.ArbeidOgAktivitetConfig.KJERNEINFO_TJENESTEBUSS_USERNAME;
 
@@ -33,8 +33,8 @@ public class Main {
 
     private static void loadVaultSecrets() {
         Credentials serviceUser = NaisUtils.getCredentials("service_user");
-        EnvironmentUtils.setProperty(SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
-        EnvironmentUtils.setProperty(SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
+        EnvironmentUtils.setProperty(SYSTEMUSER_USERNAME_PROPERTY, serviceUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(SYSTEMUSER_PASSWORD_PROPERTY, serviceUser.password, SECRET);
 
         Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
         EnvironmentUtils.setProperty(LDAP.USERNAME, ldapUser.username, PUBLIC);
