@@ -140,8 +140,6 @@ spec:
       value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
     - name: DKIF_REST_URL
       value: "https://dkif.dev.adeo.no/"
-    - name: VIRKSOMHET_EGENANSATT_V1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/tpsws-aura/ws/EgenAnsatt/v1"
     - name: VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/infotrygd-ws/ForeldrepengerService/v2"
     - name: VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL

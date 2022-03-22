@@ -5,7 +5,7 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
+import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.parseV2BehandlingString
@@ -27,7 +27,7 @@ interface ArbeidsfordelingService {
 class ArbeidsfordelingServiceImpl(
     private val norgApi: NorgApi,
     private val persondataService: PersondataService,
-    private val egenAnsattService: EgenAnsattService
+    private val skjermedePersonerApi: SkjermedePersonerApi
 ) : ArbeidsfordelingService {
     val log = LoggerFactory.getLogger(ArbeidsfordelingService::class.java)
 
@@ -47,7 +47,7 @@ class ArbeidsfordelingServiceImpl(
             val erEgenAnsatt = if (underkategori == "ANSOS_KNA") {
                 false
             } else {
-                brukerIdent?.get()?.let(egenAnsattService::erEgenAnsatt)
+                brukerIdent?.get()?.let(skjermedePersonerApi::erSkjermetPerson)
             }
 
             norgApi.hentBehandlendeEnheter(

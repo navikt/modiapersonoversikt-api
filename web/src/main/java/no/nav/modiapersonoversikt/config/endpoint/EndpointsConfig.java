@@ -4,7 +4,6 @@ import no.nav.modiapersonoversikt.config.endpoint.joark.InnsynJournalEndpointCon
 import no.nav.modiapersonoversikt.config.endpoint.joark.JoarkEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.oppfolgingsinfo.OppfolgingsinfoApiEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.arena.arbeidogaktivitet.ArbeidOgAktivitetEndpointConfig;
-import no.nav.modiapersonoversikt.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.pensjonsak.PensjonSakEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.personsok.PersonsokEndpointConfig;
@@ -27,7 +26,6 @@ import org.springframework.context.annotation.Import;
         ArbeidOgAktivitetEndpointConfig.class,
         PensjonSakEndpointConfig.class,
         VarslingEndpointConfig.class,
-        EgenAnsattV1EndpointConfig.class,
         UnleashEndpointConfig.class,
         InnsynJournalEndpointConfig.class,
         OppfolgingsinfoApiEndpointConfig.class,
