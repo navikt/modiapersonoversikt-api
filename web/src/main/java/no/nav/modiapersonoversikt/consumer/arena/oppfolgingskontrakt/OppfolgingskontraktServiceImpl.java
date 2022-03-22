@@ -1,10 +1,8 @@
-package no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.support;
+package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
 import kotlin.Pair;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.utils.OppfolgingskontraktMapper;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest;
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
@@ -23,7 +21,7 @@ import static java.util.Optional.ofNullable;
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten for oppfolgingskontraker.
  */
-public class DefaultOppfolgingskontraktService implements OppfolgingskontraktServiceBi {
+public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktService {
     private static Audit.AuditDescriptor<WSHentOppfoelgingskontraktListeRequest> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Kontrakter,

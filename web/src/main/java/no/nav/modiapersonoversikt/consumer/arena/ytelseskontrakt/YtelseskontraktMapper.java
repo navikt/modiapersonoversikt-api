@@ -1,10 +1,10 @@
-package no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.mapping;
+package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Dagpengeytelse;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Vedtak;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Ytelse;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Dagpengeytelse;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Vedtak;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.*;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;

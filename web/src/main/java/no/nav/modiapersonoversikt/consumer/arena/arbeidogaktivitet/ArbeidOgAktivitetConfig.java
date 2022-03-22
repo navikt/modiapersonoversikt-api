@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.arena;
+package no.nav.modiapersonoversikt.consumer.arena.arbeidogaktivitet;
 
 import no.nav.common.cxf.CXFClient;
 import no.nav.common.health.HealthCheckResult;
@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory.createTimerProxyForWebService;
-import static no.nav.modiapersonoversikt.config.endpoint.Utils.withProperty;
+import static no.nav.modiapersonoversikt.utils.Utils.withProperty;
 
 @Configuration
-public class ArbeidOgAktivitetEndpointConfig {
+public class ArbeidOgAktivitetConfig {
 
     private static String address = EnvironmentUtils.getRequiredProperty("TJENESTEBUSS_URL") + "nav-tjeneste-arbeidOgAktivitet_v1Web/sca/ArbeidOgAktivitetWSEXP";
     public static final String KJERNEINFO_TJENESTEBUSS_USERNAME = "SRV_KJERNEINFO_TJENESTEBUSS_USERNAME";

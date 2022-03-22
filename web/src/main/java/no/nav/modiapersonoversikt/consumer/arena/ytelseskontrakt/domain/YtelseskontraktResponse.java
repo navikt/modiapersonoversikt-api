@@ -1,6 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to;
-
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Ytelse;
+package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain;
 
 import java.io.Serializable;
 import java.util.List;

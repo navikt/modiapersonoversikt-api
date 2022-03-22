@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.config;
+package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
 import no.nav.common.cxf.CXFClient;
 import no.nav.common.cxf.StsConfig;
@@ -16,7 +16,7 @@ import static no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory.c
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 
 @Configuration
-public class OppfolgingskontraktConsumerConfig {
+public class OppfolgingskontraktConfig {
 
     @Value("${VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL:}")
     private String oppfolgingskontraktEndpointUrl;
@@ -27,12 +27,16 @@ public class OppfolgingskontraktConsumerConfig {
     StsConfig stsConfig;
 
     @Bean
-    public OppfoelgingPortType oppfolgingPortType() {
-        return createTimerProxyForWebService(
-                "OppfoelgingV1",
-                getOppfolgingPortType().configureStsForSubject(stsConfig).build(),
-                OppfoelgingPortType.class
-        );
+    public OppfolgingskontraktService oppfolgingskontraktService() {
+        OppfoelgingPortType soapService = getOppfolgingPortType()
+                .configureStsForSubject(stsConfig)
+                .build();
+
+        OppfolgingskontraktServiceImpl service = new OppfolgingskontraktServiceImpl();
+        service.setOppfolgingskontraktService(soapService);
+        service.setMapper(OppfolgingskontraktMapper.getInstance());
+
+        return service;
     }
 
     @Bean

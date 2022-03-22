@@ -40,7 +40,7 @@ public class InnsynJournalCacheTest extends CacheTest {
 
     @BeforeEach
     void setUpMock() throws Exception {
-        InnsynJournalV2 unwrapped = (InnsynJournalV2) unwrapProxy(innsynJournalV2);
+        InnsynJournalV2 unwrapped = unwrapProxy(innsynJournalV2);
         reset(unwrapped);
 
         IdentifiserJournalpostResponse response1 = new IdentifiserJournalpostResponse().withJournalpostId(JOURNALPOST_ID_1);
@@ -64,7 +64,7 @@ public class InnsynJournalCacheTest extends CacheTest {
         IdentifiserJournalpostResponse response1 = innsynJournalV2.identifiserJournalpost(identifiserJournalpostRequest);
         IdentifiserJournalpostResponse response2 = innsynJournalV2.identifiserJournalpost(identifiserJournalpostRequest);
 
-        InnsynJournalV2 unwrapped = (InnsynJournalV2) unwrapProxy(innsynJournalV2);
+        InnsynJournalV2 unwrapped = unwrapProxy(innsynJournalV2);
         verify(unwrapped, times(1)).identifiserJournalpost(any());
 
         assertThat(response1.getJournalpostId(), is(response2.getJournalpostId()));
@@ -79,7 +79,7 @@ public class InnsynJournalCacheTest extends CacheTest {
         IdentifiserJournalpostResponse response1 = innsynJournalV2.identifiserJournalpost(identifiserJournalpostRequest1);
         IdentifiserJournalpostResponse response2 = innsynJournalV2.identifiserJournalpost(identifiserJournalpostRequest2);
 
-        InnsynJournalV2 unwrapped = (InnsynJournalV2) unwrapProxy(innsynJournalV2);
+        InnsynJournalV2 unwrapped = unwrapProxy(innsynJournalV2);
         verify(unwrapped, times(2)).identifiserJournalpost(any());
 
         assertThat(response1.getJournalpostId(), is(not(response2.getJournalpostId())));

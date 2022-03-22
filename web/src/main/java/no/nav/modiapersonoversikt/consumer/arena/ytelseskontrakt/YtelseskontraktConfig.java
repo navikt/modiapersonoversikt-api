@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.config;
+package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt;
 
 import no.nav.common.cxf.CXFClient;
 import no.nav.common.cxf.StsConfig;
@@ -16,7 +16,7 @@ import javax.xml.namespace.QName;
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 
 @Configuration
-public class YtelseskontraktConsumerConfig {
+public class YtelseskontraktConfig {
 
     @Value("${VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL:}")
     private String ytelseskontraktEndpointUrl;
@@ -25,13 +25,19 @@ public class YtelseskontraktConsumerConfig {
     @Autowired
     private StsConfig stsConfig;
 
+
     @Bean
-    public YtelseskontraktV3 ytelseskontraktV3() {
-        return getYtelseskontraktV3()
+    public YtelseskontraktService ytelseskontraktService() {
+        YtelseskontraktV3 soapService = getYtelseskontraktV3()
                 .configureStsForSubject(stsConfig)
                 .build();
-    }
 
+        YtelseskontraktServiceImpl service = new YtelseskontraktServiceImpl();
+        service.setYtelseskontraktService(soapService);
+        service.setMapper(YtelseskontraktMapper.getInstance());
+
+        return service;
+    }
 
     @Bean
     public Pingable ytelseskontraktV3Pingable() {

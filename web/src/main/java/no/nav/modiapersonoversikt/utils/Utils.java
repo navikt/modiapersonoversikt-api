@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.config.endpoint;
+package no.nav.modiapersonoversikt.utils;
 
 import java.util.function.Supplier;
 

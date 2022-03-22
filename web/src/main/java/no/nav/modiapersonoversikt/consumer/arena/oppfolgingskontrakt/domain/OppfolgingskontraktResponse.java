@@ -1,7 +1,5 @@
-package no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to;
+package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain;
 
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.oppfolging.Bruker;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.oppfolging.SYFOPunkt;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
