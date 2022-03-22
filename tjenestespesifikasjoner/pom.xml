@@ -37,6 +37,7 @@
         <module>dkif-api</module>
         <module>kodeverk-api</module>
         <module>norg-api</module>
+        <module>skjermede-personer-pip-api</module>
     </modules>
 
     <dependencyManagement>

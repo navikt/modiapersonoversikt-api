@@ -136,6 +136,44 @@ internal class SfHenvendelseServiceImplTest {
         assertThat(henvendelser[1].meldinger?.get(0)?.fritekst).isEqualTo("Du kan ikke se innholdet i denne henvendelsen fordi tråden er journalført på et tema du ikke har tilgang til.")
     }
 
+    @Test
+    internal fun `skal sortere meldinger kronologisk`() {
+        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
+        every { arbeidsfordeling.hentGeografiskTilknyttning(any()) } returns listOf(
+            EnhetGeografiskTilknyttning(
+                enhetId = "5678",
+                geografiskOmraade = "005678"
+            )
+        )
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns listOf(
+            dummyHenvendelse.copy(
+                meldinger = listOf(
+                    MeldingDTO(
+                        fritekst = "Andre melding",
+                        sendtDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
+                        fra = MeldingFraDTO(
+                            identType = MeldingFraDTO.IdentType.NAVIDENT,
+                            ident = "Z123456"
+                        )
+                    ),
+                    MeldingDTO(
+                        fritekst = "Første melding",
+                        sendtDato = OffsetDateTime.of(2021, 2, 1, 12, 37, 37, 0, ZoneOffset.UTC),
+                        fra = MeldingFraDTO(
+                            identType = MeldingFraDTO.IdentType.NAVIDENT,
+                            ident = "Z123456"
+                        )
+                    )
+                )
+            )
+        )
+
+        val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")
+        val henvendelse = henvendelser.first()
+        assertThat(henvendelse.meldinger).hasSize(2)
+        assertThat(henvendelse.meldinger?.get(0)?.fritekst).isEqualTo("Første melding")
+    }
+
     private val dummyHenvendelse = HenvendelseDTO(
         henvendelseType = HenvendelseDTO.HenvendelseType.MELDINGSKJEDE,
         fnr = "12345678910",

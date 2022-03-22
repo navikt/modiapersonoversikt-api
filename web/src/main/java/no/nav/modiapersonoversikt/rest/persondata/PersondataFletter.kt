@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
+import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bankkonto
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoNorge
@@ -47,7 +48,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             return ekstraDatapunker.mapNotNull {
                 if (it is PersondataResult.Failure<*>) {
                     TjenestekallLogger.logger.error("Persondata feilet system: ${it.system}", it.exception)
-                    it.system
+                    it.system.name
                 } else {
                     null
                 }
@@ -89,7 +90,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 bankkonto = hentBankkonto(data).fold(
                     onSuccess = { it },
                     onFailure = { system, cause ->
-                        feilendeSystemer.add(system)
+                        feilendeSystemer.add(system.name)
                         TjenestekallLogger.logger.error("Persondata feilet system: $system", cause)
                         null
                     }
@@ -854,7 +855,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentBankkonto(data: Data): PersondataResult<Persondata.Bankkonto?> {
         return data.bankkonto
-            .map("Bankkonto") {
+            .map(InformasjonElement.BANKKONTO) {
                 if (it.person is Bruker) {
                     when (val bankkonto = (it.person as Bruker).bankkonto) {
                         is BankkontoNorge -> Persondata.Bankkonto(

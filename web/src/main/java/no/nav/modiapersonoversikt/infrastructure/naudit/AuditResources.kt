@@ -28,7 +28,6 @@ class AuditResources {
 
             @JvmField
             val ValgtEnhet = AuditResource("saksbehandler.valgtenhet")
-            val EgenAnsatt = AuditResource("saksbehandler.egenansatt")
             val Roller = AuditResource("saksbehandler.roller")
         }
     }

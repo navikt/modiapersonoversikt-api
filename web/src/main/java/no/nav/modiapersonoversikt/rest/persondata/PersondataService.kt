@@ -4,10 +4,11 @@ import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
+import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
+import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov
@@ -33,7 +34,7 @@ class PersondataServiceImpl(
     private val dkif: Dkif.Service,
     private val norgApi: NorgApi,
     private val personV3: PersonV3,
-    private val egenAnsattService: EgenAnsattService,
+    private val skjermedePersonerApi: SkjermedePersonerApi,
     private val tilgangskontroll: Tilgangskontroll,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
@@ -44,14 +45,15 @@ class PersondataServiceImpl(
         val persondata = requireNotNull(pdl.hentPersondata(personIdent)) {
             "Fant ikke person med personIdent $personIdent"
         }
-        val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(personIdent) }
+
+        val geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
         val adressebeskyttelse = persondataFletter.hentAdressebeskyttelse(persondata.adressebeskyttelse)
         val navEnhet = hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning)
-        val erEgenAnsatt = PersondataResult.runCatching("TPS-EGEN-ANSATT") { egenAnsattService.erEgenAnsatt(personIdent) }
+        val erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { skjermedePersonerApi.erSkjermetPerson(personIdent) }
         val tilganger = PersondataResult
-            .runCatching("TILGANGSKONTROLL") { hentTilganger() }
+            .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
             .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
-        val tredjepartsPerson = PersondataResult.runCatching("PDL") {
+        val tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
             persondata
                 .findTredjepartsPersoner()
                 .let { pdl.hentTredjepartspersondata(it) }
@@ -59,8 +61,8 @@ class PersondataServiceImpl(
                 .associateBy { it.fnr }
         }
 
-        val dkifData = PersondataResult.runCatching("DKIF") { dkif.hentDigitalKontaktinformasjon(personIdent) }
-        val bankkonto = PersondataResult.runCatching("TPS") { hentBankkonto(personIdent) }
+        val dkifData = PersondataResult.runCatching(InformasjonElement.DKIF) { dkif.hentDigitalKontaktinformasjon(personIdent) }
+        val bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { hentBankkonto(personIdent) }
 
         return persondataFletter.flettSammenData(
             PersondataFletter.Data(
@@ -77,11 +79,11 @@ class PersondataServiceImpl(
     }
 
     override fun hentGeografiskTilknytning(personIdent: String): String? {
-        return PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(personIdent) }.getOrNull()
+        return PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }.getOrNull()
     }
 
     override fun hentNavEnhet(personIdent: String): Persondata.Enhet? {
-        val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(personIdent) }
+        val geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
         val adressebeskyttelse = hentAdressebeskyttelse(personIdent)
         return hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning).let { persondataFletter.hentNavEnhet(it) }
     }
@@ -128,12 +130,12 @@ class PersondataServiceImpl(
                 break
             }
         }
-        return PersondataResult.runCatching("NORG") {
+        return PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) {
             norgApi
                 .finnNavKontor(gt, diskresjonskode)
                 ?.enhetId
         }
-            .map("NORG Kontaktinformasjon") {
+            .map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
                 it?.let { enhetId -> norgApi.hentKontaktinfo(EnhetId(enhetId)) }
             }
     }

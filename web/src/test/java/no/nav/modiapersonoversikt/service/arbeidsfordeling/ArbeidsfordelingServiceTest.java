@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.service.arbeidsfordeling;
 
 import no.nav.common.types.identer.Fnr;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
+import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi;
 import no.nav.modiapersonoversikt.rest.persondata.*;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService.ArbeidsfordelingException;
 import no.nav.modiapersonoversikt.utils.PropertyRule;
@@ -32,7 +32,7 @@ class ArbeidsfordelingServiceTest {
 
     private PersondataService persondataService = mock(PersondataService.class);
     private NorgApi norgApi = mock(NorgApi.class);
-    private EgenAnsattService egenAnsattService = mock(EgenAnsattService.class);
+    private SkjermedePersonerApi egenAnsattService = mock(SkjermedePersonerApi.class);
     private ArbeidsfordelingService arbeidsfordelingService;
 
     @BeforeEach
@@ -84,12 +84,12 @@ class ArbeidsfordelingServiceTest {
             when(persondataService.hentGeografiskTilknytning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
             when(persondataService.hentAdressebeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
 
-            when(egenAnsattService.erEgenAnsatt(anyString())).thenReturn(false);
+            when(egenAnsattService.erSkjermetPerson(anyString())).thenReturn(false);
         });
     }
 
     private void gitt_er_egen_ansatt() {
-        when(egenAnsattService.erEgenAnsatt(anyString())).thenReturn(true);
+        when(egenAnsattService.erSkjermetPerson(anyString())).thenReturn(true);
     }
 
     private void gitt_feil_ved_henting_av_geografisk_tilknytning() {

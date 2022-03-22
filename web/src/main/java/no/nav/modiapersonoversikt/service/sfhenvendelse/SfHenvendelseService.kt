@@ -102,6 +102,7 @@ class SfHenvendelseServiceImpl(
             .filter(kontorsperreTilgang(enhetOgGTListe))
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
+            .map(::sorterMeldinger)
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
@@ -360,6 +361,12 @@ class SfHenvendelseServiceImpl(
                 )
             }
         }
+    }
+
+    private fun sorterMeldinger(henvendelse: HenvendelseDTO): HenvendelseDTO {
+        return henvendelse.copy(
+            meldinger = henvendelse.meldinger?.sortedBy { it.sendtDato }
+        )
     }
 
     private fun createPatchRequest(
