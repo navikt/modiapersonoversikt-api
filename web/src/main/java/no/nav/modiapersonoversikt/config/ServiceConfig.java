@@ -12,7 +12,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.Bid
 import no.nav.modiapersonoversikt.service.*;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl;
@@ -124,10 +124,4 @@ public class ServiceConfig {
                 .withEnvironmentDefaults()
                 .build();
     }
-
-    @Bean
-    public PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
-        return new PdlOppslagServiceImpl(sts);
-    }
-
 }

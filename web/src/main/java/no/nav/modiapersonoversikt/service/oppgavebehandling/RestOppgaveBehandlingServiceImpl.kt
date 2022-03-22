@@ -17,7 +17,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toOppgaveJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
@@ -25,6 +24,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInn
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import org.slf4j.LoggerFactory
 import java.time.Clock

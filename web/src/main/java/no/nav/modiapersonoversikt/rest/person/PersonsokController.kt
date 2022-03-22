@@ -7,9 +7,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPerson
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlFelt
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlKriterie
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.PdlFelt
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.PdlKriterie
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest

@@ -1,7 +1,7 @@
-package no.nav.modiapersonoversikt.legacy.api.service.pdl
+package no.nav.modiapersonoversikt.service.pdl
 
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.*
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.SokKriterieRule.*
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.SokKriterieRule.*
 
 interface PdlOppslagService {
     fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit>

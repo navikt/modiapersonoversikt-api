@@ -4,7 +4,7 @@ import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.Oppfolgings
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
