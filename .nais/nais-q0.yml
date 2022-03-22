@@ -150,8 +150,6 @@ spec:
       value: "https://modapp-q0.adeo.no/infotrygd-ws/SykepengerService/v2"
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL
       value: "https://arena-q0.adeo.no/ail_ws/Ytelseskontrakt_v3"
-    - name: HENVENDELSE_LES_API_URL
-      value: "https://modapp-q0.adeo.no/henvendelse-les/api"
     - name: SF_HENVENDELSE_URL
       value: "https://sf-henvendelse.dev.intern.nav.no/api"
     - name: PDL_API_URL

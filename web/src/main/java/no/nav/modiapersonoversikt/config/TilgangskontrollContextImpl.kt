@@ -7,16 +7,18 @@ import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
-import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import java.util.*
 
 open class TilgangskontrollContextImpl(
     private val abacClient: AbacClient,
     private val ldap: LDAPService,
     private val ansattService: AnsattService,
-    private val henvendelseLesService: HenvendelseLesService,
-    private val unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService
+    private val sfHenvendelseService: SfHenvendelseService,
+    private val unleashService: UnleashService
 ) : TilgangskontrollContext {
     override fun checkAbac(request: AbacRequest): AbacResponse = abacClient.evaluate(request)
     override fun hentSaksbehandlerId(): Optional<String> = AuthContextUtils.getIdent().map(String::uppercase)
@@ -43,7 +45,14 @@ open class TilgangskontrollContextImpl(
     }
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
-        return henvendelseLesService.alleBehandlingsIderTilhorerBruker(fnr, behandlingsIder)
+        val kjedeId = behandlingsIder.map { it.fixKjedeId() }.distinct()
+        require(kjedeId.size == 1) {
+            "Fant ${kjedeId.size} unike kjedeIder i samme spørring, men kan bare være 1."
+        }
+
+        val henvendelse = sfHenvendelseService.hentHenvendelse(kjedeId.first())
+
+        return henvendelse.fnr == fnr
     }
 
     override fun featureToggleEnabled(featureToggle: String): Boolean = unleashService.isEnabled(featureToggle)

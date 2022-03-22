@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.config.service;
+package no.nav.modiapersonoversikt.config;
 
 import no.nav.common.client.axsys.AxsysClient;
 import no.nav.common.client.nom.NomClient;
@@ -10,7 +10,6 @@ import no.nav.common.sts.utils.AzureAdServiceTokenProviderBuilder;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
 import no.nav.modiapersonoversikt.service.*;
-import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
@@ -26,7 +25,6 @@ import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
-import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.context.annotation.Bean;
@@ -43,13 +41,6 @@ import static no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.SECURITY
 public class ServiceConfig {
     public static final String SYSTEMUSER_USERNAME = "no.nav.modig.security.systemuser.username";
     public static final String SYSTEMUSER_PASSWORD = "no.nav.modig.security.systemuser.password";
-
-    @Bean
-    public HenvendelseLesService henvendelseLesService() {
-        return new HenvendelseLesServiceImpl(
-                SfHenvendelseApiFactory.INSTANCE.createHenvendelseInfoApi()
-        );
-    }
 
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(

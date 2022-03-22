@@ -3,8 +3,8 @@ package no.nav.modiapersonoversikt.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient;
-import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
@@ -29,14 +29,14 @@ public class ApplicationContextBeans {
             AbacClient abacClient,
             LDAPService ldapService,
             AnsattService ansattService,
-            HenvendelseLesService henvendelseLesService,
+            SfHenvendelseService sfHenvendelseService,
             UnleashService unleashService
     ) {
         TilgangskontrollContext context = new TilgangskontrollContextImpl(
                 abacClient,
                 ldapService,
                 ansattService,
-                henvendelseLesService,
+                sfHenvendelseService,
                 unleashService
         );
         return new Tilgangskontroll(context);

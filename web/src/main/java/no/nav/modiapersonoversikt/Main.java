@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static no.nav.common.utils.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.common.utils.EnvironmentUtils.Type.SECRET;
-import static no.nav.modiapersonoversikt.config.service.ServiceConfig.SYSTEMUSER_PASSWORD;
-import static no.nav.modiapersonoversikt.config.service.ServiceConfig.SYSTEMUSER_USERNAME;
+import static no.nav.modiapersonoversikt.config.ServiceConfig.SYSTEMUSER_PASSWORD;
+import static no.nav.modiapersonoversikt.config.ServiceConfig.SYSTEMUSER_USERNAME;
 import static no.nav.modiapersonoversikt.consumer.arena.arbeidogaktivitet.ArbeidOgAktivitetConfig.KJERNEINFO_TJENESTEBUSS_PASSWORD;
 import static no.nav.modiapersonoversikt.consumer.arena.arbeidogaktivitet.ArbeidOgAktivitetConfig.KJERNEINFO_TJENESTEBUSS_USERNAME;
 
