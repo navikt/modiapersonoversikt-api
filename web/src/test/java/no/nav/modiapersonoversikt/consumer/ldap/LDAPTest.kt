@@ -3,9 +3,11 @@ package no.nav.modiapersonoversikt.consumer.ldap
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.NavIdent
+import no.nav.modiapersonoversikt.testutils.TestEnvironmentExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.RegisterExtension
 import javax.naming.NamingEnumeration
 import javax.naming.directory.BasicAttribute
 import javax.naming.directory.BasicAttributes
@@ -13,6 +15,16 @@ import javax.naming.directory.SearchResult
 import javax.naming.ldap.LdapContext
 
 class LDAPTest {
+    @JvmField
+    @RegisterExtension
+    val testenvironment = TestEnvironmentExtension(
+        mapOf(
+            "NAIS_APP_NAME" to "appname",
+            "NAIS_CLUSTER_NAME" to "cluster",
+            "NAIS_NAMESPACE" to "namespace"
+        )
+    )
+
     @Test
     fun `henter veileder`() {
         val ldap = LDAPServiceImpl(createLDAPContext())
