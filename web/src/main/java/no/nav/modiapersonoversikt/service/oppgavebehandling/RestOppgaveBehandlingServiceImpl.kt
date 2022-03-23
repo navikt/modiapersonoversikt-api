@@ -6,18 +6,14 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.MetadataKey
-import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
+import no.nav.modiapersonoversikt.legacy.api.domain.*
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toOppgaveJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.service.*
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInnslag
@@ -47,22 +43,6 @@ class RestOppgaveBehandlingServiceImpl(
     },
     private val clock: Clock = Clock.systemDefaultZone()
 ) : OppgaveBehandlingService {
-
-    companion object {
-        @JvmStatic
-        fun create(
-            pdlOppslagService: PdlOppslagService,
-            ansattService: AnsattService,
-            tilgangskontroll: Tilgangskontroll,
-            stsService: SystemUserTokenProvider
-        ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
-            pdlOppslagService = pdlOppslagService,
-            ansattService = ansattService,
-            tilgangskontroll = tilgangskontroll,
-            stsService = stsService
-        )
-    }
-
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
         val ident: String = AuthContextUtils.requireIdent()
