@@ -6,28 +6,17 @@ import no.nav.modiapersonoversikt.infrastructure.jaxws.handlers.MDCOutHandler;
 import no.nav.modiapersonoversikt.infrastructure.ping.PingableWebService;
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import static no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory.createTimerProxyForWebService;
-import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
+import static no.nav.common.utils.EnvironmentUtils.getRequiredProperty;
 
 @Configuration
 public class OppfolgingskontraktConfig {
-
-    @Value("${VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL:}")
-    private String oppfolgingskontraktEndpointUrl;
-    @Value("${servicegateway.url:}")
-    private String servicegatewayUrl;
-
-    @Autowired
-    StsConfig stsConfig;
+    private final String oppfolgingskontraktEndpointUrl = getRequiredProperty("VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL");
 
     @Bean
-    public OppfolgingskontraktService oppfolgingskontraktService() {
+    public OppfolgingskontraktService oppfolgingskontraktService(StsConfig stsConfig) {
         OppfoelgingPortType soapService = getOppfolgingPortType()
                 .configureStsForSubject(stsConfig)
                 .build();
@@ -40,7 +29,7 @@ public class OppfolgingskontraktConfig {
     }
 
     @Bean
-    public Pingable oppfoelgingPingable() {
+    public Pingable oppfoelgingPingable(StsConfig stsConfig) {
         OppfoelgingPortType pingPorttype = getOppfolgingPortType()
                 .configureStsForSystemUser(stsConfig)
                 .build();
@@ -49,11 +38,7 @@ public class OppfolgingskontraktConfig {
 
     private CXFClient<OppfoelgingPortType> getOppfolgingPortType() {
         return new CXFClient<>(OppfoelgingPortType.class)
-                .address(getAdress())
+                .address(oppfolgingskontraktEndpointUrl)
                 .withHandler(new MDCOutHandler());
-    }
-
-    private String getAdress() {
-        return defaultIfBlank(servicegatewayUrl, oppfolgingskontraktEndpointUrl);
     }
 }
