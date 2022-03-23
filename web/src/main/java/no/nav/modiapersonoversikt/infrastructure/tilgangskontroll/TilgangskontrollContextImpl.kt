@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.config
+package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient
@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.consumer.abac.AbacRequest
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
