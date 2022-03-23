@@ -5,8 +5,6 @@ import no.nav.modiapersonoversikt.legacy.sak.BehandlingskjedeBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
 import no.nav.modiapersonoversikt.legacy.sak.transformers.Transformers;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.hamcrest.Matchers;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -76,70 +74,6 @@ public class TransformersTest {
 
         assertThat(kvittering.getInnsendteDokumenter().size(), is(0));
         assertThat(kvittering.getManglendeDokumenter().size(), is(0));
-    }
-
-    @Test
-    public void transformTilSoknadOk() {
-        DateTime opprettetdato = new DateTime();
-        DateTime innsendtdato = new DateTime();
-        DateTime sistendretdato = new DateTime();
-        WSSoknad wsSoknad = new WSSoknad()
-                .withBehandlingsId("behandlingid")
-                .withBehandlingsKjedeId("behandlingkjedeid")
-                .withJournalpostId("journalpostid")
-                .withHenvendelseStatus(Soknad.HenvendelseStatus.UNDER_ARBEID.name())
-                .withOpprettetDato(opprettetdato)
-                .withInnsendtDato(innsendtdato)
-                .withSistEndretDato(sistendretdato)
-                .withHovedskjemaKodeverkId("hovedskjemakodeverkref")
-                .withEttersending(false)
-                .withHenvendelseType(DOKUMENTINNSENDING.name())
-                .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(asList(
-                        new WSDokumentforventning()
-                                .withKodeverkId("dokKodeverkRef1")
-                                .withTilleggsTittel("tilleggstittel1")
-                                .withUuid("uuid1")
-                                .withArkivreferanse("arkivreferanse1")
-                                .withInnsendingsvalg(DokumentFraHenvendelse.Innsendingsvalg.INNSENDT.name()),
-                        new WSDokumentforventning()
-                                .withKodeverkId("hovedskjemakodeverkref")
-                                .withTilleggsTittel("tilleggstittel2")
-                                .withUuid("uuid2")
-                                .withArkivreferanse("arkivreferanse2")
-                                .withInnsendingsvalg(DokumentFraHenvendelse.Innsendingsvalg.INNSENDT.name())
-                )));
-
-        Soknad soknad = Transformers.transformTilSoknad(wsSoknad);
-
-        assertThat(soknad.getBehandlingsId(), is("behandlingid"));
-        assertThat(soknad.getBehandlingskjedeId(), is("behandlingkjedeid"));
-        assertThat(soknad.getJournalpostId(), is("journalpostid"));
-        assertThat(soknad.getStatus(), Matchers.is(Soknad.HenvendelseStatus.UNDER_ARBEID));
-        assertThat(soknad.getOpprettetDato(), is(opprettetdato));
-        assertThat(soknad.getInnsendtDato(), is(innsendtdato));
-        assertThat(soknad.getSistendretDato(), is(sistendretdato));
-        assertThat(soknad.getSkjemanummerRef(), is("hovedskjemakodeverkref"));
-        assertThat(soknad.getEttersending(), is(false));
-        assertThat(soknad.getType(), is(DOKUMENTINNSENDING));
-        assertThat(soknad.getDokumenter().size(), is(2));
-        assertThat(soknad.getDokumenter().get(0).getKodeverkRef(), is("dokKodeverkRef1"));
-        assertThat(soknad.getDokumenter().get(0).erHovedskjema(), is(false));
-        assertThat(soknad.getDokumenter().get(1).getKodeverkRef(), is("hovedskjemakodeverkref"));
-        assertThat(soknad.getDokumenter().get(1).erHovedskjema(), is(true));
-    }
-
-    @Test
-    public void brukerBehandlingsIdHvisBehandlingskjedeIdErNull() {
-        WSSoknad wsSoknad = new WSSoknad()
-                .withBehandlingsId("behandlingid")
-                .withBehandlingsKjedeId(null)
-                .withHenvendelseStatus(Soknad.HenvendelseStatus.UNDER_ARBEID.name())
-                .withHenvendelseType(DOKUMENTINNSENDING.name());
-
-        Soknad soknad = Transformers.transformTilSoknad(wsSoknad);
-
-        assertThat(soknad.getBehandlingsId(), is("behandlingid"));
-        assertThat(soknad.getBehandlingskjedeId(), is("behandlingid"));
     }
 
     @Test

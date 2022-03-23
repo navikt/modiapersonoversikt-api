@@ -1,13 +1,13 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.oppfolging.SYFOPunkt
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Dagpengeytelse
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Vedtak
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Ytelse
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.oppfolging.SYFOPunkt
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Dagpengeytelse
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Vedtak
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Ytelse
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ

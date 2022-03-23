@@ -3,6 +3,9 @@ package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonServiceImpl
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonV1ClientImpl
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`

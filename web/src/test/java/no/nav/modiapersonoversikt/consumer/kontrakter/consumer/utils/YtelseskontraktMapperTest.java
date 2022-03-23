@@ -2,12 +2,12 @@ package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils;
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
 import no.nav.modiapersonoversikt.testutils.SnapshotRule;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Dagpengeytelse;
-import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Ytelse;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Dagpengeytelse;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Ytelse;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.*;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;

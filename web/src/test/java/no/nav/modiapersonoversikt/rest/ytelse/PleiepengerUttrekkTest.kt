@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.rest.ytelse
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceImpl
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
+import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.PleiepengerServiceImpl
 import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1

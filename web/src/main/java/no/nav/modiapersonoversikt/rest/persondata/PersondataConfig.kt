@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import org.springframework.beans.factory.annotation.Qualifier

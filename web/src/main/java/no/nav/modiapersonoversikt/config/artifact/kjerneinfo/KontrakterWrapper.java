@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.config.artifact.kjerneinfo;
 
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.config.YtelseskontraktConsumerConfig;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.config.YtelseskontraktConsumerConfig;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.YtelseskontraktV3;
 import org.springframework.context.annotation.Bean;
@@ -16,9 +16,6 @@ import static no.nav.modiapersonoversikt.config.artifact.kjerneinfo.KontrakterCo
 import static no.nav.modiapersonoversikt.config.artifact.kjerneinfo.KontrakterConsumerConfigImpl.createYtelseskontraktService;
 
 @Configuration
-@Import({
-        OppfolgingskontraktConsumerConfig.class,
-        YtelseskontraktConsumerConfig.class})
 public class KontrakterWrapper {
 
     @Autowired

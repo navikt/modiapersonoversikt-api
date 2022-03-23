@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.common.types.identer.EnhetId
+import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
@@ -8,7 +9,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
-import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov

@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.mock;
 
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
-import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils.OppfolgingskontraktMapper;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.utils.OppfolgingskontraktMapper;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
 
 import java.util.Date;
