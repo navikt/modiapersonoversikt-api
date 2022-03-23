@@ -18,6 +18,7 @@ public class ModiaApplicationConfig {
 
     @Bean
     public ObjectMapper objectMapper() {
+        // TODO kan denne fjernes
         return JacksonConfig.mapper;
     }
 }

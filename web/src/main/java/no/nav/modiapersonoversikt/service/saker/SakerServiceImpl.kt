@@ -1,15 +1,16 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package no.nav.modiapersonoversikt.service.saker
 
+import no.nav.modiapersonoversikt.consumer.sak.SakApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
 import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
@@ -19,10 +20,8 @@ import java.util.function.Predicate.not
 import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
 
-@ExperimentalContracts
 private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
 
-@ExperimentalContracts
 class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var kodeverk: EnhetligKodeverk.Service
@@ -34,7 +33,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var psakService: PsakService
 
     @Autowired
-    private lateinit var sakApiGateway: SakApiGateway
+    private lateinit var sakApi: SakApi
 
     @Autowired
     private lateinit var bidragApiClient: BidragSakControllerApi
@@ -57,7 +56,7 @@ class SakerServiceImpl : SakerService {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker(bidragApiClient, unleashService)
         generelleSaker = GenerelleSaker()
-        restSakSaker = RestSakSaker(sakApiGateway, pdlOppslagService)
+        restSakSaker = RestSakSaker(sakApi, pdlOppslagService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
     }

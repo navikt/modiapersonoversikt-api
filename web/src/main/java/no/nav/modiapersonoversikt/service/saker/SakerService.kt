@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.service.saker
+package no.nav.modiapersonoversikt.service.saker
 
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 

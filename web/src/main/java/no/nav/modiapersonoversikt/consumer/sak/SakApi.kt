@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.service.saker.mediation
+package no.nav.modiapersonoversikt.consumer.sak
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
@@ -14,21 +14,21 @@ import okhttp3.RequestBody
 import okhttp3.Response
 import java.time.OffsetDateTime
 
-interface SakApiGateway {
+interface SakApi {
     fun hentSaker(aktorId: String): List<SakDto>
     fun opprettSak(sak: OpprettSakDto): SakDto
 }
 
-class SakApiGatewayImpl(
+class SakApiImpl(
     private val baseUrl: String = EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
     private val stsService: SystemUserTokenProvider
-) : SakApiGateway {
+) : SakApi {
     private val objectMapper = OkHttpUtils.objectMapper
     private val client = RestClient.baseClient().newBuilder()
         .addInterceptor(XCorrelationIdInterceptor())
         .addInterceptor(
             AuthorizationInterceptor {
-                stsService.systemUserToken
+                stsService.systemUserToken // TODO må undersøke om vi kan bruke veileders token istedet
             }
         )
         .addInterceptor(

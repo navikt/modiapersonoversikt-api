@@ -4,6 +4,7 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
+import no.nav.modiapersonoversikt.consumer.bisys.BidragSakConfig
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
@@ -56,7 +57,7 @@ internal class BidragApiClientTest {
             verify = {}
         ) { url ->
             AuthContextUtils.withContext(TEST_SUBJECT) {
-                val client = BidragSakControllerApi(url, BidragApiClient.client)
+                val client = BidragSakControllerApi(url, BidragSakConfig.client)
                 val saker = client.find("12345678910")
                 assertEquals(2, saker.size)
                 assertEquals(BidragSakDto::class, saker[0]::class)

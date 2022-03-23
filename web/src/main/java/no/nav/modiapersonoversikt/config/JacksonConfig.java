@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.kotlin.KotlinModule;
 
+// TODO kan denne fjernes, og erstattes med `OkHttpUtils.objectMapper`
 public class JacksonConfig {
     public static final ObjectMapper mapper = new ObjectMapper();
 

@@ -1,7 +1,7 @@
-package no.nav.modiapersonoversikt.service.saker.mediation
+package no.nav.modiapersonoversikt.consumer.sak
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
 import io.mockk.MockKAnnotations
@@ -11,10 +11,8 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.utils.WireMockUtils
-import no.nav.modiapersonoversikt.utils.WireMockUtils.getWithBody
-import no.nav.modiapersonoversikt.utils.WireMockUtils.postWithBody
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.core.Is.`is`
+import org.hamcrest.MatcherAssert
+import org.hamcrest.core.Is
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,7 +20,7 @@ import org.slf4j.MDC
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-internal class SakApiGatewayTest {
+internal class SakApiTest {
     @MockK
     private lateinit var stsService: SystemUserTokenProvider
 
@@ -69,24 +67,24 @@ internal class SakApiGatewayTest {
 
     @Test
     fun `hent saker som list av data objects fra SakApi`() {
-        withMockGateway(stub = getWithBody(statusCode = 200, body = sakDtoListe)) { sakApiGateway ->
-            val response = sakApiGateway.hentSaker(AKTOERID)
-            assertThat(response.size, `is`(1))
-            assertThat(response[0].opprettetTidspunkt, `is`(opprettetDato))
+        withMockGateway(stub = WireMockUtils.getWithBody(statusCode = 200, body = sakDtoListe)) { sakApi ->
+            val response = sakApi.hentSaker(AKTOERID)
+            MatcherAssert.assertThat(response.size, Is.`is`(1))
+            MatcherAssert.assertThat(response[0].opprettetTidspunkt, Is.`is`(opprettetDato))
         }
     }
 
     @Test
     fun `handterer status coder utenfor 200-299 rangen`() {
-        withMockGateway(stub = getWithBody(statusCode = 404, body = sakDtoListe)) { sakApiGateway ->
+        withMockGateway(stub = WireMockUtils.getWithBody(statusCode = 404, body = sakDtoListe)) { sakApi ->
             assertThrows<IllegalStateException> {
-                sakApiGateway.hentSaker(AKTOERID)
+                sakApi.hentSaker(AKTOERID)
             }
         }
 
-        withMockGateway(stub = getWithBody(statusCode = 500)) { sakApiGateway ->
+        withMockGateway(stub = WireMockUtils.getWithBody(statusCode = 500)) { sakApi ->
             assertThrows<IllegalStateException> {
-                sakApiGateway.hentSaker(AKTOERID)
+                sakApi.hentSaker(AKTOERID)
             }
         }
     }
@@ -94,10 +92,10 @@ internal class SakApiGatewayTest {
     @Test
     fun `skal kunne opprette Sak og parse resultatet`() {
         withMockGateway(
-            verify = { server -> verifyHeaders(server, postRequestedFor(urlEqualTo("/api/v1/saker")))() },
-            stub = postWithBody(statusCode = 200, body = sakDtoJson)
-        ) { sakApiGateway ->
-            val opprettetDto = sakApiGateway.opprettSak(
+            verify = { server -> verifyHeaders(server, WireMock.postRequestedFor(WireMock.urlEqualTo("/api/v1/saker")))() },
+            stub = WireMockUtils.postWithBody(statusCode = 200, body = sakDtoJson)
+        ) { sakApi ->
+            val opprettetDto = sakApi.opprettSak(
                 OpprettSakDto(
                     aktoerId = sakDto.aktoerId!!,
                     tema = sakDto.tema!!,
@@ -107,7 +105,7 @@ internal class SakApiGatewayTest {
                 )
             )
 
-            assertThat(opprettetDto, `is`(sakDto))
+            MatcherAssert.assertThat(opprettetDto, Is.`is`(sakDto))
         }
     }
 
@@ -116,24 +114,27 @@ internal class SakApiGatewayTest {
             call
                 .withHeader("X-Correlation-ID", AnythingPattern())
                 .withHeader(RestConstants.AUTHORIZATION, AnythingPattern())
-                .withHeader("accept", matching("application/json"))
+                .withHeader("accept", WireMock.matching("application/json"))
         )
     }
 
     private fun withMockGateway(
         stub: WireMockServer.() -> Unit = { },
         verify: ((WireMockServer) -> Unit)? = null,
-        test: (SakApiGateway) -> Unit
+        test: (SakApi) -> Unit
     ) {
         WireMockUtils.withMockGateway(
             stub = stub,
             verify = {
                 if (verify == null) {
-                    verifyHeaders(it, getRequestedFor(urlEqualTo("/api/v1/saker?aktoerId=$AKTOERID")))()
+                    verifyHeaders(
+                        it,
+                        WireMock.getRequestedFor(WireMock.urlEqualTo("/api/v1/saker?aktoerId=$AKTOERID"))
+                    )()
                 }
             },
             test = { url ->
-                val client = SakApiGatewayImpl(
+                val client = SakApiImpl(
                     baseUrl = url,
                     stsService = stsService
                 )

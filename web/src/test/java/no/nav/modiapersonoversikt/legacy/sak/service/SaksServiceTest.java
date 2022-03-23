@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
+import no.nav.modiapersonoversikt.service.saker.SakerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
