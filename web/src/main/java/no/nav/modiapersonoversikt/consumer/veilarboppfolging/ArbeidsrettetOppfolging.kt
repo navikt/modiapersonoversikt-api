@@ -6,7 +6,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 
 object ArbeidsrettetOppfolging {
     interface Service {
-        fun hentOppfolgingsinfo(ident: Fnr): Info
+        fun hentOppfolgingsinfo(fodselsnummer: Fnr): Info
         fun ping()
     }
 
