@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
+import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -7,7 +8,6 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.service.dkif.Dkif
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.web.bind.annotation.GetMapping

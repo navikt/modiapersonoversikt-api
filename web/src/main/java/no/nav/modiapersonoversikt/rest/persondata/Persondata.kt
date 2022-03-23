@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.service.dkif.Dkif
+import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import java.time.LocalDate
 import java.time.LocalDateTime
 

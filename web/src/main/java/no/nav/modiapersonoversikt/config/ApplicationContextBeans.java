@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
-import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfig;
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
@@ -11,14 +10,9 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
-@Import({
-        ConsumerContext.class,
-        CacheConfig.class
-})
 public class ApplicationContextBeans {
     @Bean
     public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {

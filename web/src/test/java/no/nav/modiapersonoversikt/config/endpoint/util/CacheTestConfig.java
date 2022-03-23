@@ -4,7 +4,6 @@ import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
@@ -16,11 +15,6 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 public class CacheTestConfig {
-    @Bean
-    public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
-        return mock(HenvendelseSoknaderPortType.class);
-    }
-
     @Bean
     public InnsynJournalV2 innsynJournalV2() {
         return mock(InnsynJournalV2.class);

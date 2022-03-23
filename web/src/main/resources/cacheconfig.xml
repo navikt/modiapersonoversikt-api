@@ -69,7 +69,6 @@
 
     <aop:config>
         <aop:advisor advice-ref="pdlAdvice" pointcut="bean(pdlOppslagService)"/>
-        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelseSoknaderPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>

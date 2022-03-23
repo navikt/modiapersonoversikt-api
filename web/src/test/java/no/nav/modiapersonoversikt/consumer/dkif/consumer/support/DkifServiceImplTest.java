@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.dkif.consumer.support;
 
-import no.nav.modiapersonoversikt.service.dkif.Dkif;
-import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
+import no.nav.modiapersonoversikt.consumer.dkif.Dkif;
+import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.HentDigitalKontaktinformasjonKontaktinformasjonIkkeFunnet;

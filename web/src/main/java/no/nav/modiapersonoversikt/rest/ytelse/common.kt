@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.HistoriskUtbetaling
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.KommendeUtbetaling
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.Kreditortrekk
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon.OrganisasjonService
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
+import no.nav.modiapersonoversikt.consumer.infotrygd.domain.HistoriskUtbetaling
+import no.nav.modiapersonoversikt.consumer.infotrygd.domain.KommendeUtbetaling
+import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kreditortrekk
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagPeriode
 

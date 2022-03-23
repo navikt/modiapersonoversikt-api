@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.domain.oppfolging;
 
+import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.oppfolging.SYFOPunkt;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 

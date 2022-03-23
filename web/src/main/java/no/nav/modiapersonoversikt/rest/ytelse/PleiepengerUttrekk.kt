@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Arbeidsforhold
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Pleiepengeperiode
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Pleiepengerrettighet
-import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Vedtak
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon.OrganisasjonService
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
+import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.PleiepengerService
+import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.mapping.to.PleiepengerListeRequest
+import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Arbeidsforhold
+import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Pleiepengeperiode
+import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Pleiepengerrettighet
+import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Vedtak
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagPleiepengePeriode
 import java.time.format.DateTimeFormatter
