@@ -13,9 +13,9 @@ import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.JournalApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.NyHenvendelseApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.modiapersonoversikt.utils.Utils.withProperty
 import org.assertj.core.api.Assertions.assertThat

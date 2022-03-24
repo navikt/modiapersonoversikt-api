@@ -1,4 +1,9 @@
-package no.nav.modiapersonoversikt.service.oppgavebehandling
+package no.nav.modiapersonoversikt.legacy.api.domain
+
+data class Behandling(
+    val behandlingstema: String?,
+    val behandlingstype: String?
+)
 
 fun String.parseV2BehandlingString(): Behandling {
     if (this.isBlank()) {

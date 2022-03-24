@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.infrastructure.ping.ConsumerPingable
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

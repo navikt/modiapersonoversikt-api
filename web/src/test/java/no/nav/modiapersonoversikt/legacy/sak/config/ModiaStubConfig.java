@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.legacy.sak.config;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;

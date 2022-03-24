@@ -17,7 +17,7 @@ import java.util.List;
 import static no.nav.common.utils.EnvironmentUtils.isDevelopment;
 
 @Configuration
-public class LoginContext {
+public class FilterRegistrationConfig {
     private static final String issoDiscoveryUrl = EnvironmentUtils.getRequiredProperty("ISSO_DISCOVERY_URL");
     private static final String modiaClientId = EnvironmentUtils.getRequiredProperty("MODIA_CLIENT_ID");
     private static final String modiaRefreshUrl = EnvironmentUtils.getRequiredProperty("MODIA_REFRESH_URL");
@@ -36,7 +36,7 @@ public class LoginContext {
     }
 
     @Bean
-    public FilterRegistrationBean authenticationFilterRegistration(List<OidcAuthenticator> authenticators) {
+    public FilterRegistrationBean<OidcAuthenticationFilter> authenticationFilterRegistration(List<OidcAuthenticator> authenticators) {
         FilterRegistrationBean<OidcAuthenticationFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new OidcAuthenticationFilter(authenticators));
         registration.setOrder(1);
@@ -46,7 +46,7 @@ public class LoginContext {
     }
 
     @Bean
-    public FilterRegistrationBean logFilterRegistrationBean() {
+    public FilterRegistrationBean<LogFilter> logFilterRegistrationBean() {
         FilterRegistrationBean<LogFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new LogFilter("modiapersonoversikt-api", isDevelopment().orElse(false)));
         registration.setOrder(2);
@@ -55,7 +55,7 @@ public class LoginContext {
     }
 
     @Bean
-    public FilterRegistrationBean setStandardHeadersFilterRegistrationBean() {
+    public FilterRegistrationBean<SetStandardHttpHeadersFilter> setStandardHeadersFilterRegistrationBean() {
         FilterRegistrationBean<SetStandardHttpHeadersFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new SetStandardHttpHeadersFilter());
         registration.setOrder(3);
@@ -64,7 +64,7 @@ public class LoginContext {
     }
 
     @Bean
-    public FilterRegistrationBean scientistFilterRegistrationBean() {
+    public FilterRegistrationBean<ScientistFilter> scientistFilterRegistrationBean() {
         FilterRegistrationBean<ScientistFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new ScientistFilter());
         registration.setOrder(4);
