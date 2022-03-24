@@ -4,10 +4,11 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import com.github.tomakehurst.wiremock.matching.UrlPattern
 
 object WireMockUtils {
     fun withMockGateway(
-        stub: WireMockServer.() -> Unit = { },
+        stub: Array<WireMockServer.() -> Unit> = emptyArray(),
         verify: ((WireMockServer) -> Unit),
         test: (String) -> Unit
     ) {
@@ -17,7 +18,7 @@ object WireMockUtils {
             .dynamicHttpsPort()
         val wireMockServer = WireMockServer(config)
         try {
-            stub(wireMockServer)
+            stub.forEach { it(wireMockServer) }
             wireMockServer.start()
             test("http://localhost:${wireMockServer.port()}")
             verify(wireMockServer)
@@ -26,12 +27,22 @@ object WireMockUtils {
         }
     }
 
-    fun getWithBody(statusCode: Int = 200, body: String? = null): WireMockServer.() -> Unit = {
-        this.stubFor(WireMock.get(WireMock.anyUrl()).withBody(statusCode, body))
+    fun withMockGateway(
+        stub: WireMockServer.() -> Unit = { },
+        verify: ((WireMockServer) -> Unit),
+        test: (String) -> Unit
+    ) = withMockGateway(
+        stub = arrayOf(stub),
+        verify = verify,
+        test = test
+    )
+
+    fun getWithBody(statusCode: Int = 200, url: UrlPattern? = WireMock.anyUrl(), body: String? = null): WireMockServer.() -> Unit = {
+        this.stubFor(WireMock.get(url).withBody(statusCode, body))
     }
 
-    fun postWithBody(statusCode: Int = 200, body: String? = null): WireMockServer.() -> Unit = {
-        this.stubFor(WireMock.post(WireMock.anyUrl()).withBody(statusCode, body))
+    fun postWithBody(statusCode: Int = 200, url: UrlPattern? = WireMock.anyUrl(), body: String? = null): WireMockServer.() -> Unit = {
+        this.stubFor(WireMock.post(url).withBody(statusCode, body))
     }
 
     private fun MappingBuilder.withBody(statusCode: Int = 200, body: String? = null): MappingBuilder {
