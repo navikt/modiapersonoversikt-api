@@ -6,8 +6,8 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.Henvendelse
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
+import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 

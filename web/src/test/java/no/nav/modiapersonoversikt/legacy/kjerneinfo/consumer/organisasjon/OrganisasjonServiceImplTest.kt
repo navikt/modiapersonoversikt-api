@@ -3,10 +3,12 @@ package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
+import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonServiceImpl
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonV1ClientImpl
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
+import no.nav.modiapersonoversikt.testutils.TestEnvironmentRule
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
 import org.junit.Rule
@@ -16,6 +18,14 @@ class OrganisasjonServiceImplTest {
     @Rule
     @JvmField
     val wiremock = WireMockRule(0)
+
+    @Rule
+    @JvmField
+    val testenvironment = TestEnvironmentRule(
+        mapOf(
+            AppConstants.SYSTEMUSER_USERNAME_PROPERTY to "username"
+        )
+    )
 
     private val gyldigRespons = "{\"organisasjonsnummer\": \"orgnr\", \"navn\": { \"navnelinje2\": \"NAV\", \"navnelinje5\": \"IT\" }}"
     private val ORG_NR = "000000000"
@@ -65,7 +75,7 @@ class OrganisasjonServiceImplTest {
         verify(
             getRequestedFor(urlEqualTo("/api/v1/organisasjon/$ORG_NR/noekkelinfo"))
                 .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
-                .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, matching(RestConstants.MODIABRUKERDIALOG_SYSTEM_USER))
+                .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, matching(AppConstants.SYSTEMUSER_USERNAME))
                 .withHeader("accept", matching("application/json"))
         )
     }

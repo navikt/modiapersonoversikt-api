@@ -1,10 +1,10 @@
-package no.nav.modiapersonoversikt.service.oppgavebehandling
+package no.nav.modiapersonoversikt.legacy.api.domain
 
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class BehandlingExtTest {
+internal class BehandlingTest {
     @Nested
     inner class Parsing {
         @Test

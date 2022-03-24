@@ -5,9 +5,9 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import okhttp3.Request
 import okhttp3.Response
@@ -41,7 +41,7 @@ class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequire
                     Request.Builder()
                         .url("$url$orgnummer/noekkelinfo")
                         .header(RestConstants.NAV_CALL_ID_HEADER, getCallId())
-                        .header(RestConstants.NAV_CONSUMER_ID_HEADER, MODIABRUKERDIALOG_SYSTEM_USER)
+                        .header(RestConstants.NAV_CONSUMER_ID_HEADER, AppConstants.SYSTEMUSER_USERNAME)
                         .header("accept", "application/json")
                         .build()
                 )

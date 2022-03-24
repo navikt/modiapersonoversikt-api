@@ -4,9 +4,9 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
+import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -20,8 +20,18 @@ internal class OppgaveControllerTest {
     @Test
     fun `Returnerer tildelte oppgaver`() {
         val oppgaveliste = listOf(
-            Oppgave(OPPGAVE_ID_1, "fnr", "traadId", true),
-            Oppgave(OPPGAVE_ID_2, "fnr", "traadId", true)
+            Oppgave(
+                OPPGAVE_ID_1,
+                "fnr",
+                "traadId",
+                true
+            ),
+            Oppgave(
+                OPPGAVE_ID_2,
+                "fnr",
+                "traadId",
+                true
+            )
         )
 
         every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
