@@ -17,12 +17,14 @@ class TestEnvironmentExtension(val testEnvironment: Map<String, String?>) :
         originalEnvironment.setAsEnvironment()
     }
 
-    private fun Map<String, String?>.setAsEnvironment() {
-        this.forEach { key, value ->
-            if (value == null) {
-                System.clearProperty(key)
-            } else {
-                System.setProperty(key, value)
+    companion object {
+        fun Map<String, String?>.setAsEnvironment() {
+            this.forEach { (key, value) ->
+                if (value == null) {
+                    System.clearProperty(key)
+                } else {
+                    System.setProperty(key, value)
+                }
             }
         }
     }

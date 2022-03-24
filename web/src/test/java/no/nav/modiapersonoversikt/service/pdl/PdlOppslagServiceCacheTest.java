@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.pdl;
 
 import no.nav.modiapersonoversikt.config.endpoint.util.CacheTest;
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;

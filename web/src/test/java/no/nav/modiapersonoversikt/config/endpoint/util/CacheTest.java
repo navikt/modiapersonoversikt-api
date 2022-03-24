@@ -108,7 +108,7 @@ public abstract class CacheTest {
         assertThat("Cache-size should equal the number of operations in test", getNativeCache().estimatedSize(), Matchers.is(length));
     }
 
-    protected static Object unwrapProxy(Object proxy) {
-        return AopProxyUtils.getSingletonTarget(proxy);
+    protected static <T> T unwrapProxy(T proxy) {
+        return (T) AopProxyUtils.getSingletonTarget(proxy);
     }
 }

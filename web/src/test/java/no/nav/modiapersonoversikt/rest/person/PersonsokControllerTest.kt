@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.person
 
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPerson
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.*
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import org.assertj.core.api.Assertions.assertThat

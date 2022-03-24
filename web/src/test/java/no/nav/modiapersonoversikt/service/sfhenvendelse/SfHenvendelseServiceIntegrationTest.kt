@@ -4,8 +4,8 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
-import no.nav.modiapersonoversikt.config.endpoint.Utils
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.utils.Utils
 import no.nav.modiapersonoversikt.utils.WireMockUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

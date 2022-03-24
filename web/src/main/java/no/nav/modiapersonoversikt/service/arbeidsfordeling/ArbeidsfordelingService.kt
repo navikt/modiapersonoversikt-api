@@ -6,9 +6,9 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
+import no.nav.modiapersonoversikt.legacy.api.domain.Behandling
+import no.nav.modiapersonoversikt.legacy.api.domain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService
-import no.nav.modiapersonoversikt.service.oppgavebehandling.Behandling
-import no.nav.modiapersonoversikt.service.oppgavebehandling.parseV2BehandlingString
 import org.slf4j.LoggerFactory
 
 interface ArbeidsfordelingService {

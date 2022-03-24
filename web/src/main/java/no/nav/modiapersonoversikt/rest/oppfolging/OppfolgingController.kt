@@ -1,14 +1,16 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.oppfolging.SYFOPunkt
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Dagpengeytelse
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Vedtak
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.domain.ytelse.Ytelse
+import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.SYFOPunkt
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Dagpengeytelse
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Vedtak
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -17,22 +19,20 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagRiktigDato
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/rest/oppfolging/{fnr}")
 class OppfolgingController @Autowired constructor(
-    private val service: OppfolgingsinfoApiService,
+    private val service: ArbeidsrettetOppfolging.Service,
     private val ldapService: LDAPService,
     private val tilgangskontroll: Tilgangskontroll,
-    private val ytelseskontraktService: YtelseskontraktServiceBi,
-    private val oppfolgingskontraktService: OppfolgingskontraktServiceBi
+    private val ytelseskontraktService: YtelseskontraktService,
+    private val oppfolgingskontraktService: OppfolgingskontraktService
 ) {
 
     private val logger = LoggerFactory.getLogger(OppfolgingController::class.java)
@@ -42,7 +42,7 @@ class OppfolgingController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fodselsnummer))
             .get(Audit.describe(READ, Person.Oppfolging, AuditIdentifier.FNR to fodselsnummer)) {
-                val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
+                val oppfolging = service.hentOppfolgingsinfo(Fnr(fodselsnummer))
 
                 mapOf(
                     "erUnderOppfolging" to oppfolging.erUnderOppfolging,
@@ -139,31 +139,28 @@ private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>
     }
 }
 
-private fun hentVeileder(veileder: Optional<Saksbehandler>): Map<String, Any?>? {
-    return if (veileder.isPresent) {
+private fun hentVeileder(veileder: Saksbehandler?): Map<String, Any?>? {
+    return veileder?.let {
         mapOf(
-            "ident" to veileder.get().ident,
-            "navn" to veileder.get().navn
+            "ident" to it.ident,
+            "navn" to it.navn
         )
-    } else {
-        null
     }
 }
 
-private fun hentEnhet(enhet: Optional<AnsattEnhet>): Map<String, Any?>? {
-    return if (enhet.isPresent) {
+private fun hentEnhet(enhet: AnsattEnhet?): Map<String, Any?>? {
+    return enhet?.let {
         mapOf(
-            "id" to enhet.get().enhetId,
-            "navn" to enhet.get().enhetNavn,
-            "status" to enhet.get().status
+            "id" to it.enhetId,
+            "navn" to it.enhetNavn,
+            "status" to it.status
         )
-    } else {
-        null
     }
 }
 
 private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: String?): YtelseskontraktRequest {
-    val request = YtelseskontraktRequest()
+    val request =
+        YtelseskontraktRequest()
     request.fodselsnummer = fodselsnummer
     request.from = lagRiktigDato(start)
     request.to = lagRiktigDato(slutt)
@@ -171,7 +168,8 @@ private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: Strin
 }
 
 private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?, slutt: String?): OppfolgingskontraktRequest {
-    val request = OppfolgingskontraktRequest()
+    val request =
+        OppfolgingskontraktRequest()
     request.fodselsnummer = fodselsnummer
     request.from = lagRiktigDato(start)
     request.to = lagRiktigDato(slutt)
