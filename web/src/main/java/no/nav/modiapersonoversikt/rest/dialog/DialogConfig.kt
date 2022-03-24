@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogMerkApi
@@ -9,6 +8,7 @@ import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDelsvarControll
 import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogController
 import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogMerkController
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean

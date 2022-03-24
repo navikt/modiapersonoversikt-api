@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

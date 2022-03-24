@@ -11,11 +11,11 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetKontaktinformasj
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetStatus
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.OppgaveBehandlerFilter
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
+import no.nav.modiapersonoversikt.legacy.api.domain.Behandling
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.ArbeidsfordelingApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetskontaktinfoApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.*
-import no.nav.modiapersonoversikt.service.oppgavebehandling.Behandling
 import no.nav.modiapersonoversikt.utils.Retry
 import no.nav.modiapersonoversikt.utils.isNumeric
 import okhttp3.OkHttpClient
