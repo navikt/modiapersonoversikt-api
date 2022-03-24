@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.domain.oppgave
+package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.*
 

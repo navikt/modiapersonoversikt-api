@@ -1,7 +1,9 @@
-package no.nav.modiapersonoversikt.legacy.api.service;
+package no.nav.modiapersonoversikt.service.oppgavebehandling;
 
-import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave;
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
+import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveRequest;
+import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveResponse;
+import no.nav.modiapersonoversikt.legacy.api.service.OpprettSkjermetOppgaveRequest;
 
 import java.util.List;
 import java.util.Optional;

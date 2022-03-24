@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.domain.oppgave
+package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
@@ -37,9 +37,9 @@ public fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = Oppgav
     ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
     endretTidspunkt = this.endretTidspunkt,
     status =
-    no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToJson(this.status),
+    OppgaveMappingHelpers.convertEnumToJson(this.status),
     prioritet =
-    no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToJson(this.prioritet)
+    OppgaveMappingHelpers.convertEnumToJson(this.prioritet)
 )
 
 public fun PutOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = OppgaveJsonDTO(
@@ -74,9 +74,9 @@ public fun PutOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = Oppgav
     ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
     endretTidspunkt = this.endretTidspunkt,
     status =
-    no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToJson(this.status),
+    OppgaveMappingHelpers.convertEnumToJson(this.status),
     prioritet =
-    no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToJson(this.prioritet)
+    OppgaveMappingHelpers.convertEnumToJson(this.prioritet)
 )
 
 public fun OppgaveJsonDTO.toPutOppgaveRequestJsonDTO(): PutOppgaveRequestJsonDTO =
@@ -86,7 +86,7 @@ public fun OppgaveJsonDTO.toPutOppgaveRequestJsonDTO(): PutOppgaveRequestJsonDTO
         versjon = this.versjon,
         aktivDato = this.aktivDato,
         id =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.requiredOppgaveId(this.id),
+        OppgaveMappingHelpers.requiredOppgaveId(this.id),
         endretAvEnhetsnr = this.endretAvEnhetsnr,
         journalpostId = this.journalpostId,
         journalpostkilde = this.journalpostkilde,
@@ -106,7 +106,7 @@ public fun OppgaveJsonDTO.toPutOppgaveRequestJsonDTO(): PutOppgaveRequestJsonDTO
         metadata = this.metadata,
         fristFerdigstillelse = this.fristFerdigstillelse,
         status =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutReq(this.status),
+        OppgaveMappingHelpers.convertEnumToPutReq(this.status),
         prioritet =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutReq(this.prioritet)
+        OppgaveMappingHelpers.convertEnumToPutReq(this.prioritet)
     )

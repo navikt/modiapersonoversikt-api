@@ -4,22 +4,18 @@ import no.nav.common.client.axsys.AxsysClient;
 import no.nav.common.client.nom.NomClient;
 import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
-import no.nav.modiapersonoversikt.service.*;
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
-import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
-import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
-import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl;
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif;
 import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceRestImpl;
-import no.nav.modiapersonoversikt.service.oppgavebehandling.RestOppgaveBehandlingServiceImpl;
+import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
+import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
+import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
+import no.nav.modiapersonoversikt.service.PsakServiceImpl;
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.context.annotation.Bean;
@@ -33,21 +29,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 public class ServiceConfig {
-    @Bean
-    public OppgaveBehandlingService oppgaveBehandlingService(
-            PdlOppslagService pdlOppslagService,
-            AnsattService ansattService,
-            Tilgangskontroll tilgangskontroll,
-            SystemUserTokenProvider stsService
-    ) {
-        return RestOppgaveBehandlingServiceImpl.create(
-                pdlOppslagService,
-                ansattService,
-                tilgangskontroll,
-                stsService
-        );
-    }
-
     @Bean
     public AnsattService ansattService(AxsysClient axsys, NomClient nomClient) {
         return new AnsattServiceImpl(axsys, nomClient);

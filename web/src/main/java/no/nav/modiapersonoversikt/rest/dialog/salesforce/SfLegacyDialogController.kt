@@ -1,20 +1,20 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
-import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Status
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO.*
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
+import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.slf4j.LoggerFactory

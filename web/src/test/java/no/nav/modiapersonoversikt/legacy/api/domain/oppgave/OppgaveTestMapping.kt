@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.api.domain.oppgave
 
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.*
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveMappingHelpers
 
 public fun OppgaveJsonDTO.toPostOppgaveResponseJsonDTO(): PostOppgaveResponseJsonDTO =
     PostOppgaveResponseJsonDTO(
@@ -35,9 +36,9 @@ public fun OppgaveJsonDTO.toPostOppgaveResponseJsonDTO(): PostOppgaveResponseJso
         ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
         endretTidspunkt = this.endretTidspunkt,
         status =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPostResp(this.status),
+        OppgaveMappingHelpers.convertEnumToPostResp(this.status),
         prioritet =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPostResp(this.prioritet)
+        OppgaveMappingHelpers.convertEnumToPostResp(this.prioritet)
     )
 
 public fun OppgaveJsonDTO.toGetOppgaveResponseJsonDTO(): GetOppgaveResponseJsonDTO =
@@ -73,9 +74,9 @@ public fun OppgaveJsonDTO.toGetOppgaveResponseJsonDTO(): GetOppgaveResponseJsonD
         ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
         endretTidspunkt = this.endretTidspunkt,
         status =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToGetResp(this.status),
+        OppgaveMappingHelpers.convertEnumToGetResp(this.status),
         prioritet =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToGetResp(this.prioritet)
+        OppgaveMappingHelpers.convertEnumToGetResp(this.prioritet)
     )
 
 public fun OppgaveJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
@@ -111,9 +112,9 @@ public fun OppgaveJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonD
         ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
         endretTidspunkt = this.endretTidspunkt,
         status =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutResp(this.status),
+        OppgaveMappingHelpers.convertEnumToPutResp(this.status),
         prioritet =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet)
+        OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet)
     )
 
 public fun PutOppgaveRequestJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
@@ -142,7 +143,7 @@ public fun PutOppgaveRequestJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveRes
         metadata = this.metadata,
         fristFerdigstillelse = this.fristFerdigstillelse,
         status =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutResp(this.status),
+        OppgaveMappingHelpers.convertEnumToPutResp(this.status),
         prioritet =
-        no.nav.modiapersonoversikt.legacy.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet)
+        OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet)
     )
