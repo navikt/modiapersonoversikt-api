@@ -30,11 +30,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class ServiceConfig {
     @Bean
-    public AnsattService ansattService(AxsysClient axsys, NomClient nomClient) {
-        return new AnsattServiceImpl(axsys, nomClient);
-    }
-
-    @Bean
     public SakerService sakerService() {
         return new SakerServiceImpl();
     }
