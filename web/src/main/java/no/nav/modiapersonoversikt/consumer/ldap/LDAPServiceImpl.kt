@@ -46,8 +46,8 @@ open class LDAPServiceImpl(private val contextProvider: LDAPContextProvider) : L
             }
 
             influxClient.report(
-                Event("modia-identrolle")
-                    .addTagToReport("ident", ident.get().hashCode().toString(16))
+                Event("modia-tilgang")
+                    .addFieldToReport("ident", ident.get().hashCode().toString(16))
                     .addTagToReport("tilgang", tilgang)
             )
         } catch (e: Exception) {
