@@ -1,6 +1,6 @@
-package no.nav.modiapersonoversikt.legacy.api.domain;
+package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-public enum MetadataKey {
+enum class MetadataKey {
     NORM_DATO,
     REVURDERINGSTYPE,
     SOKNAD_ID,
@@ -8,5 +8,5 @@ public enum MetadataKey {
     MOTTATT_DATO,
     EKSTERN_HENVENDELSE_ID,
     SKANNET_DATO,
-    RINA_SAKID
+    RINA_SAKID,
 }

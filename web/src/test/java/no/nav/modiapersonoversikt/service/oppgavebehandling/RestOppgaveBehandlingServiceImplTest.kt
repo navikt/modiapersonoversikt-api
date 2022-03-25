@@ -7,7 +7,6 @@ import no.nav.modiapersonoversikt.consumer.abac.Decision
 import no.nav.modiapersonoversikt.consumer.abac.Response
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
-import no.nav.modiapersonoversikt.legacy.api.domain.MetadataKey
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.*
