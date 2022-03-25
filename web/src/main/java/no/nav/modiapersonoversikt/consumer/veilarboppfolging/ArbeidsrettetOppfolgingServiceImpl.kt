@@ -3,11 +3,11 @@ package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
-import no.nav.modiapersonoversikt.config.JacksonConfig
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.utils.inRange
@@ -82,7 +82,7 @@ class ArbeidsrettetOppfolgingServiceImpl(
         val body = response.body()?.string()
 
         if (statusCode inRange Pair(200, 300)) {
-            return JacksonConfig.mapper.readValue(body, type.java)
+            return objectMapper.readValue(body, type.java)
         } else {
             throw IllegalStateException("Forventet 200-range svar og body fra oppfolging-api, men fikk: $statusCode\n$body")
         }

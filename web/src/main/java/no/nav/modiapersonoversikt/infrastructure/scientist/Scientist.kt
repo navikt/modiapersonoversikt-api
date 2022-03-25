@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.scientist
 
 import com.fasterxml.jackson.databind.JsonNode
-import no.nav.modiapersonoversikt.config.JacksonConfig
+import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.UtilityClasses.Try
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.UtilityClasses.measureTimeInMillies
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
@@ -163,8 +163,8 @@ object Scientist {
     }
 
     private fun process(value: Any?): Pair<String, JsonNode> {
-        val json = JacksonConfig.mapper.writeValueAsString(value)
-        val tree = JacksonConfig.mapper.readTree(json)
+        val json = objectMapper.writeValueAsString(value)
+        val tree = objectMapper.readTree(json)
         return Pair(json, tree)
     }
 }

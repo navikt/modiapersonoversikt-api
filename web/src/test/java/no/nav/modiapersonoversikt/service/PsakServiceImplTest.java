@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.service;
 
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.service.pensjonsak.PsakServiceImpl;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSArkivtema;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSPeriode;
