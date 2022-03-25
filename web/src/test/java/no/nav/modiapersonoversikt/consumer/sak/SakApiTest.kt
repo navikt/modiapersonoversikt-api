@@ -9,7 +9,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
+import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.utils.WireMockUtils
 import org.hamcrest.MatcherAssert
 import org.hamcrest.core.Is

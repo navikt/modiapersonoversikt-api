@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.legacy.sak.domain.widget.ModiaSakstema
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat
@@ -18,6 +17,7 @@ import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.SaksoversiktService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
+import no.nav.modiapersonoversikt.rest.RestUtils
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

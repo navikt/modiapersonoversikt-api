@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Arrays.asList;
-import static no.nav.modiapersonoversikt.legacy.api.utils.RestUtils.hentValgtEnhet;
+import static no.nav.modiapersonoversikt.rest.RestUtils.hentValgtEnhet;
 import static no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies.behandlingsIderTilhorerBruker;
 import static no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies.tilgangTilBruker;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ;

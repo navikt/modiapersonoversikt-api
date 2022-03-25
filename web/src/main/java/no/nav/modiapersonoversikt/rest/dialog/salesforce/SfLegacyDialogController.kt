@@ -5,8 +5,8 @@ import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO.*
-import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
+import no.nav.modiapersonoversikt.rest.RestUtils
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype

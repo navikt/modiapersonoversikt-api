@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.utils;
+package no.nav.modiapersonoversikt.rest;
 
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import org.apache.commons.lang3.StringUtils;

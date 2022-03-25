@@ -1,9 +1,9 @@
-package no.nav.modiapersonoversikt.legacy.api.utils.http;
+package no.nav.modiapersonoversikt.rest.hode;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import static no.nav.modiapersonoversikt.legacy.api.utils.RestUtils.*;
+import static no.nav.modiapersonoversikt.rest.RestUtils.*;
 
 public class CookieUtil {
     public static void setSaksbehandlersValgteEnhet(HttpServletResponse response, String enhetId) {

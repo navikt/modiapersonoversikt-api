@@ -11,7 +11,7 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
 import no.nav.common.utils.IdUtils
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
+import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import org.slf4j.LoggerFactory
 import java.net.URL

@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.utils;
+package no.nav.modiapersonoversikt.infrastructure;
 
 public class RestConstants {
     public static final String AUTHORIZATION = "Authorization";

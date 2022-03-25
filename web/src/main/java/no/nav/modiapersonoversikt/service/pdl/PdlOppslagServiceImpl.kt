@@ -9,10 +9,10 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAktorid.IdentGruppe
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.RestConstants.*
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.*
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import java.net.URL
 import kotlin.collections.set

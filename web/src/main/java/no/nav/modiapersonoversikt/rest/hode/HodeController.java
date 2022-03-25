@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest;
+package no.nav.modiapersonoversikt.rest.hode;
 
 import kotlin.Pair;
 import no.nav.common.types.identer.EnhetId;
@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.CookieUtil;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.ValgtEnhet;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.NavnOgEnheter;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.Enheter;
-import static no.nav.modiapersonoversikt.legacy.api.utils.RestUtils.hentValgtEnhet;
+import static no.nav.modiapersonoversikt.rest.RestUtils.hentValgtEnhet;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*;
 
 @RestController
