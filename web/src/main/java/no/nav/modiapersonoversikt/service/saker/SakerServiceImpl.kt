@@ -122,8 +122,8 @@ class SakerServiceImpl : SakerService {
             arkivtemaKodeverk: EnhetligKodeverk.Kodeverk<String, String>,
         ) {
             saker.forEach {
-                it.fagsystemNavn = fagsystemKodeverk.hentVerdi(it.fagsystemKode, it.fagsystemKode)
-                it.temaNavn = arkivtemaKodeverk.hentVerdi(it.temaKode, it.temaKode)
+                it.fagsystemNavn = fagsystemKodeverk.hentVerdi(it.fagsystemKode ?: "", it.fagsystemKode ?: "")
+                it.temaNavn = arkivtemaKodeverk.hentVerdi(it.temaKode ?: "", it.temaKode ?: "")
             }
         }
 
