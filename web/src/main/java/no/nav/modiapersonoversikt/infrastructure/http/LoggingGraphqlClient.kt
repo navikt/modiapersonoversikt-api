@@ -12,7 +12,7 @@ import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
 import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
-import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import org.slf4j.LoggerFactory
 import java.net.URL
 

@@ -7,8 +7,8 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory

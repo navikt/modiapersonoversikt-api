@@ -1,15 +1,16 @@
-package no.nav.modiapersonoversikt.legacy.api.utils
+package no.nav.modiapersonoversikt.infrastructure
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.lang.StringBuilder
 
-private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 object TjenestekallLogger {
+    private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
+
     fun info(header: String, fields: Map<String, Any?>) = tjenestekallLogg.info(format(header, fields))
     fun warn(header: String, fields: Map<String, Any?>) = tjenestekallLogg.warn(format(header, fields))
     fun error(header: String, fields: Map<String, Any?>) = tjenestekallLogg.error(format(header, fields))
-    fun error(header: String, fields: Map<String, Any?>, throwable: Throwable) = tjenestekallLogg.error(format(header, fields), throwable)
+    fun error(header: String, fields: Map<String, Any?>, throwable: Throwable) =
+        tjenestekallLogg.error(format(header, fields), throwable)
 
     val logger: Logger = tjenestekallLogg
 

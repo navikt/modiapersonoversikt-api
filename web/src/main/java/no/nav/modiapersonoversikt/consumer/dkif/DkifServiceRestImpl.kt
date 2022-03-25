@@ -7,13 +7,13 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.apis.DigitalKontaktinformasjonApi
 import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.apis.PingApi
-import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import okhttp3.OkHttpClient
 
 class DkifServiceRestImpl(

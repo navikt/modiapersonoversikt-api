@@ -9,7 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
-import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import okhttp3.*
 import okio.Buffer
 import org.slf4j.LoggerFactory
