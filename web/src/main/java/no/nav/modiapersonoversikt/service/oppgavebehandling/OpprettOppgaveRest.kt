@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.service
+package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import java.time.LocalDate
 

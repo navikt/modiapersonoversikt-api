@@ -11,7 +11,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.Oppga
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
