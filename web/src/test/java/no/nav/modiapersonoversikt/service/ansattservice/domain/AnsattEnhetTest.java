@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.domain.norg;
+package no.nav.modiapersonoversikt.service.ansattservice.domain;
 
 
 import org.junit.jupiter.api.Test;

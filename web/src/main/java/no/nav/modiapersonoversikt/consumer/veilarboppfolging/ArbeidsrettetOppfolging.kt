@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 
 object ArbeidsrettetOppfolging {
     interface Service {
@@ -17,7 +16,7 @@ object ArbeidsrettetOppfolging {
     data class Info(
         @JvmField val erUnderOppfolging: Boolean,
         val veileder: Saksbehandler?,
-        val oppfolgingsenhet: AnsattEnhet?
+        val oppfolgingsenhet: Enhet?
     )
 
     data class EnhetOgVeileder(

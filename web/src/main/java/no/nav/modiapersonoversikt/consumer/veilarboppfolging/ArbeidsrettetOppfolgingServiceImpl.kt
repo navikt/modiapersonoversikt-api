@@ -9,7 +9,6 @@ import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.utils.inRange
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -45,7 +44,12 @@ class ArbeidsrettetOppfolgingServiceImpl(
         return ArbeidsrettetOppfolging.Info(
             oppfolgingstatus.underOppfolging,
             enhetOgVeileder?.veilederId?.let { ldapService.hentVeileder(NavIdent(it)) },
-            enhetOgVeileder?.oppfolgingsenhet?.let { AnsattEnhet(it.enhetId, it.navn) }
+            enhetOgVeileder?.oppfolgingsenhet?.let {
+                ArbeidsrettetOppfolging.Enhet(
+                    it.enhetId,
+                    it.navn
+                )
+            }
         )
     }
 

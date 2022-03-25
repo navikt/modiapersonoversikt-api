@@ -10,9 +10,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Enhet
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
+import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -31,7 +31,12 @@ constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
-                ansattService.ansatteForEnhet(AnsattEnhet(enhetId, ""))
+                ansattService.ansatteForEnhet(
+                    AnsattEnhet(
+                        enhetId,
+                        ""
+                    )
+                )
             }
     }
 
