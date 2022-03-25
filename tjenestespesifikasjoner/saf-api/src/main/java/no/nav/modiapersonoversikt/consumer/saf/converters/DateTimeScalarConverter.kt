@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.utils.graphqlscalars
+package no.nav.modiapersonoversikt.consumer.saf.converters
 
 import com.expediagroup.graphql.client.converter.ScalarConverter
 import java.time.LocalDateTime

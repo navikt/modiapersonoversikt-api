@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*

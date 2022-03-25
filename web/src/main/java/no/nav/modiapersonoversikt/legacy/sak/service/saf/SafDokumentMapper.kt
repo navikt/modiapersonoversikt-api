@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import java.time.LocalDateTime
 
