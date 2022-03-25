@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
-import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
+import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO.*

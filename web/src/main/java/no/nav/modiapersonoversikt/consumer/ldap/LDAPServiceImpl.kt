@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.consumer.ldap
 
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.ldap.LDAP.parseADRolle
-import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import javax.naming.directory.SearchControls
 import javax.naming.directory.SearchResult
 

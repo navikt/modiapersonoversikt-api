@@ -6,13 +6,12 @@ import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
-import no.nav.modiapersonoversikt.legacy.api.domain.Person;
+import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.utils.http.CookieUtil;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
-import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.ValgtEnhet;
+import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.NavnOgEnheter;
+import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.Enheter;
 import static no.nav.modiapersonoversikt.legacy.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*;
 
@@ -78,7 +80,7 @@ public class HodeController {
     public Me hentSaksbehandler(HttpServletRequest request) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(READ, Saksbehandler.NavnOgEnheter), () -> {
+                .get(Audit.describe(READ, NavnOgEnheter), () -> {
                     String ident = AuthContextUtils.requireIdent();
                     Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
                     String enhetId = hentValgtEnhet(null, request);
@@ -97,7 +99,7 @@ public class HodeController {
     public Enheter hentEnheter() {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(READ, Saksbehandler.Enheter), () -> {
+                .get(Audit.describe(READ, Enheter), () -> {
                     String ident = AuthContextUtils.requireIdent();
                     List<Enhet> enheter = ansattService.hentEnhetsliste()
                             .stream()
@@ -112,16 +114,16 @@ public class HodeController {
     public String settValgtEnhet(HttpServletResponse response, @RequestBody String enhetId) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(UPDATE, Saksbehandler.ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
+                .get(Audit.describe(UPDATE, ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
                     CookieUtil.setSaksbehandlersValgteEnhet(response, enhetId);
                     return enhetId;
                 });
     }
 
     private Pair<String, String> hentSaksbehandlerNavn() {
-        Person saksbehandler = AuthContextUtils.getIdent()
+        Saksbehandler saksbehandler = AuthContextUtils.getIdent()
                 .map(ldapService::hentSaksbehandler)
                 .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
-        return new Pair<>(saksbehandler.fornavn, saksbehandler.etternavn);
+        return new Pair<>(saksbehandler.getFornavn(), saksbehandler.getEtternavn());
     }
 }

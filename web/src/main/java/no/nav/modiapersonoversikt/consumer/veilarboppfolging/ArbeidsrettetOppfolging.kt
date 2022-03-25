@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
+import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
 
 object ArbeidsrettetOppfolging {
     interface Service {
