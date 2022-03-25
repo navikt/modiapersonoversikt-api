@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.utils.cache;
+package no.nav.modiapersonoversikt.infrastructure.cache;
 
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;

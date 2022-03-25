@@ -1,11 +1,8 @@
-package no.nav.modiapersonoversikt.legacy.api.utils.cache;
+package no.nav.modiapersonoversikt.infrastructure.cache;
 
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
-import org.springframework.aop.framework.AopProxyUtils;
-import org.springframework.cache.interceptor.SimpleKeyGenerator;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 
 /**
  * Klasse for å lage cachekey som også tar høyde for
