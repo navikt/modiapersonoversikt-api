@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.pensjonsak;
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.service.saker.Sak;
 
 import java.util.List;
 

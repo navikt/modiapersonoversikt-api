@@ -54,20 +54,20 @@
                         </goals>
                         <configuration>
                             <schemaFile>src/main/resources/pdl/schema.graphql</schemaFile>
-                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.consumer.pdl.generated</packageName>
                             <queryFileDirectory>src/main/resources/pdl/queries</queryFileDirectory>
                             <converters>
                                 <Long>
                                     <type>kotlin.Long</type>
-                                    <converter>no.nav.modiapersonoversikt.legacy.api.utils.graphqlscalars.LongScalarConverter</converter>
+                                    <converter>no.nav.modiapersonoversikt.consumer.pdl.converters.LongScalarConverter</converter>
                                 </Long>
                                 <Date>
                                     <type>java.time.LocalDate</type>
-                                    <converter>no.nav.modiapersonoversikt.legacy.api.utils.graphqlscalars.DateScalarConverter</converter>
+                                    <converter>no.nav.modiapersonoversikt.consumer.pdl.converters.DateScalarConverter</converter>
                                 </Date>
                                 <DateTime>
                                     <type>java.time.LocalDateTime</type>
-                                    <converter>no.nav.modiapersonoversikt.legacy.api.utils.graphqlscalars.DateTimeScalarConverter</converter>
+                                    <converter>no.nav.modiapersonoversikt.consumer.pdl.converters.DateTimeScalarConverter</converter>
                                 </DateTime>
                             </converters>
                         </configuration>

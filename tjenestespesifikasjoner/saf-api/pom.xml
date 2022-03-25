@@ -54,21 +54,21 @@
                         </goals>
                         <configuration>
                             <schemaFile>src/main/resources/saf/schema.graphql</schemaFile>
-                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.saf.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.consumer.saf.generated</packageName>
                             <queryFileDirectory>src/main/resources/saf/queries</queryFileDirectory>
                             <allowDeprecatedFields>true</allowDeprecatedFields>
                             <converters>
                                 <Long>
                                     <type>kotlin.Long</type>
-                                    <converter>no.nav.modiapersonoversikt.legacy.api.utils.graphqlscalars.LongScalarConverter</converter>
+                                    <converter>no.nav.modiapersonoversikt.consumer.saf.converters.LongScalarConverter</converter>
                                 </Long>
                                 <Date>
                                     <type>java.time.LocalDate</type>
-                                    <converter>no.nav.modiapersonoversikt.legacy.api.utils.graphqlscalars.DateScalarConverter</converter>
+                                    <converter>no.nav.modiapersonoversikt.consumer.saf.converters.DateScalarConverter</converter>
                                 </Date>
                                 <DateTime>
                                     <type>java.time.LocalDateTime</type>
-                                    <converter>no.nav.modiapersonoversikt.legacy.api.utils.graphqlscalars.DateTimeScalarConverter</converter>
+                                    <converter>no.nav.modiapersonoversikt.consumer.saf.converters.DateTimeScalarConverter</converter>
                                 </DateTime>
                             </converters>
                         </configuration>

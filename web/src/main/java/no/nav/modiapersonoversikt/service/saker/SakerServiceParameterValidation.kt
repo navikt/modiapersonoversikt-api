@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.service.saker
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 

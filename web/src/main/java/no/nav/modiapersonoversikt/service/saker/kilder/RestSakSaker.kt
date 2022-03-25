@@ -4,9 +4,9 @@ import no.nav.modiapersonoversikt.consumer.sak.OpprettSakDto
 import no.nav.modiapersonoversikt.consumer.sak.SakApi
 import no.nav.modiapersonoversikt.consumer.sak.SakDto
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.saker.Sak
+import no.nav.modiapersonoversikt.service.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import org.joda.time.DateTime
 import java.time.OffsetDateTime

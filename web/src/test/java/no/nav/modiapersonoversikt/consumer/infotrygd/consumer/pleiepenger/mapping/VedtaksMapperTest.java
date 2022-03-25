@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.mapping;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Periode;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Vedtak;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPeriode;

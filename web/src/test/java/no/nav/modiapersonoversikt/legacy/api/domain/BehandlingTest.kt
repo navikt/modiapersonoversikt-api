@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.api.domain
 
+import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

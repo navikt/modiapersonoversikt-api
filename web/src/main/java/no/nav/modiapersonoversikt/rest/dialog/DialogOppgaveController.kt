@@ -7,13 +7,13 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.He
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveRequest
-import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveResponse
-import no.nav.modiapersonoversikt.legacy.api.service.OpprettSkjermetOppgaveRequest
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OpprettOppgaveRequest
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OpprettOppgaveResponse
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OpprettSkjermetOppgaveRequest
 import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
 import no.nav.modiapersonoversikt.utils.arbeidsdagerFraDatoJava
 import org.springframework.beans.factory.annotation.Autowired

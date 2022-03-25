@@ -13,10 +13,10 @@ import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
+import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolgingServiceImpl
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.utils.WireMockUtils
 import no.nav.modiapersonoversikt.utils.WireMockUtils.getWithBody
 import org.assertj.core.api.Assertions.assertThat
@@ -95,7 +95,7 @@ class ArbeidsrettetOppfolgingImplTest {
             assertThat(oppfolgingsinfo.veileder?.fornavn).isEqualTo("fornavn")
             assertThat(oppfolgingsinfo.veileder?.etternavn).isEqualTo("etternavn")
             assertThat(oppfolgingsinfo.oppfolgingsenhet?.enhetId).isEqualTo("1234")
-            assertThat(oppfolgingsinfo.oppfolgingsenhet?.enhetNavn).isEqualTo("NAV Enhet")
+            assertThat(oppfolgingsinfo.oppfolgingsenhet?.navn).isEqualTo("NAV Enhet")
         }
     }
 

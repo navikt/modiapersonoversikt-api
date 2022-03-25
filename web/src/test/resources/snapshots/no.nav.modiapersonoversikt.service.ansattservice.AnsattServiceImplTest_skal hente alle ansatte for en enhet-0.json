@@ -1,12 +1,12 @@
-[ [ "no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet", {
+[ [ "no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet", {
   "enhetId" : "111",
   "enhetNavn" : "testEnhet",
   "status" : null
-} ], [ "no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet", {
+} ], [ "no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet", {
   "enhetId" : "222",
   "enhetNavn" : "testEnhet2",
   "status" : null
-} ], [ "no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet", {
+} ], [ "no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet", {
   "enhetId" : "333",
   "enhetNavn" : "testEnhet3",
   "status" : null

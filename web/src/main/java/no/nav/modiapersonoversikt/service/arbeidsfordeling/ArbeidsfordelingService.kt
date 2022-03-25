@@ -2,12 +2,12 @@ package no.nav.modiapersonoversikt.service.arbeidsfordeling
 
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.Behandling
+import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
-import no.nav.modiapersonoversikt.legacy.api.domain.Behandling
-import no.nav.modiapersonoversikt.legacy.api.domain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService
 import org.slf4j.LoggerFactory
 

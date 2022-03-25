@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.infrastructure.scientist
 
 import com.fasterxml.jackson.databind.JsonNode
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.UtilityClasses.Try
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.UtilityClasses.measureTimeInMillies
-import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils

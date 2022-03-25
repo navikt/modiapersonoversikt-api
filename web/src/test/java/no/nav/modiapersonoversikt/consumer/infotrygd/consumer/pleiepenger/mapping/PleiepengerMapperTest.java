@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.mapping;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Arbeidsforhold;

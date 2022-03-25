@@ -11,8 +11,8 @@ import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.ALLE_TEMA_HEADERVERDI
+import no.nav.modiapersonoversikt.infrastructure.RestConstants
+import no.nav.modiapersonoversikt.infrastructure.RestConstants.ALLE_TEMA_HEADERVERDI
 import no.nav.modiapersonoversikt.testutils.AuthContextRule
 import no.nav.modiapersonoversikt.utils.TestUtils
 import org.junit.Assert.assertEquals

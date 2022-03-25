@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest
 
+import no.nav.modiapersonoversikt.commondomain.Periode
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat

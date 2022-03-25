@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
+import no.nav.modiapersonoversikt.commondomain.Periode
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Arbeidsforhold
@@ -7,7 +8,6 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Adops
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Foedsel
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Foreldrepengeperiode
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Foreldrepengerettighet
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagPeriode
 import org.joda.time.LocalDate
@@ -15,7 +15,12 @@ import org.joda.time.LocalDate
 class ForeldrepengerUttrekk constructor(private val forelderpengerService: ForeldrepengerServiceBi) {
 
     fun hent(fodselsnummer: String): Map<String, Any?> {
-        val foreldrepenger = forelderpengerService.hentForeldrepengerListe(ForeldrepengerListeRequest(fodselsnummer, Periode(LocalDate.now().minusYears(2), LocalDate.now())))
+        val foreldrepenger = forelderpengerService.hentForeldrepengerListe(
+            ForeldrepengerListeRequest(
+                fodselsnummer,
+                Periode(LocalDate.now().minusYears(2), LocalDate.now())
+            )
+        )
 
         return mapOf(
             "foreldrepenger" to foreldrepenger?.foreldrepengerettighet?.let {

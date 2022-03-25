@@ -7,7 +7,7 @@ import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonServiceImpl
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonV1ClientImpl
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
+import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.testutils.TestEnvironmentRule
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`

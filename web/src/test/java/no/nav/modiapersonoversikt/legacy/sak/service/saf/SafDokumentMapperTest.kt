@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter
-import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.*
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.SLADDET

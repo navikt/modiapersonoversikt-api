@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.EnhetId
+import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Enhet
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
@@ -11,7 +12,6 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetKontaktinformasj
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetStatus
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.OppgaveBehandlerFilter
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
-import no.nav.modiapersonoversikt.legacy.api.domain.Behandling
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.ArbeidsfordelingApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetskontaktinfoApi

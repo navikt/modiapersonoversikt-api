@@ -5,8 +5,8 @@ import no.nav.common.client.nom.NomClient
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
+import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
+import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import kotlin.Exception

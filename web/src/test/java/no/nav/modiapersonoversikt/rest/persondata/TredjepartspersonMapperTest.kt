@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata.AdressebeskyttelseGradering
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata.Bostedsadresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata.AdressebeskyttelseGradering
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata.Bostedsadresse
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import org.junit.jupiter.api.BeforeEach
