@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.rest.dialog.apis
 
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
-import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
+import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import org.springframework.http.ResponseEntity
 import java.time.OffsetDateTime
 import java.util.HashMap

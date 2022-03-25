@@ -1,6 +1,6 @@
-package no.nav.modiapersonoversikt.legacy.api.domain.henvendelse;
+package no.nav.modiapersonoversikt.rest.dialog.domain
 
-public enum Meldingstype {
+enum class Meldingstype {
     DOKUMENT_VARSEL,
     OPPGAVE_VARSEL,
     SPORSMAL_SKRIFTLIG,
@@ -13,5 +13,5 @@ public enum Meldingstype {
     SAMTALEREFERAT_TELEFON,
     SPORSMAL_MODIA_UTGAAENDE,
     SVAR_SBL_INNGAAENDE,
-    INFOMELDING_MODIA_UTGAAENDE
+    INFOMELDING_MODIA_UTGAAENDE,
 }
