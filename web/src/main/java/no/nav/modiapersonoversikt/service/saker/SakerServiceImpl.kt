@@ -4,7 +4,6 @@ package no.nav.modiapersonoversikt.service.saker
 
 import no.nav.modiapersonoversikt.consumer.sak.SakApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
-import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
@@ -83,7 +82,7 @@ class SakerServiceImpl : SakerService {
         resultat.leggTilDataFraKilde(fnr, generelleSaker)
         resultat.leggTilDataFraKilde(fnr, oppfolgingsSaker)
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(
+        leggTilFagsystemnavnOgTemanavn(
             resultat.saker,
             kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM),
             kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA)
@@ -107,7 +106,7 @@ class SakerServiceImpl : SakerService {
     fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker)
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(
+        leggTilFagsystemnavnOgTemanavn(
             resultat.saker,
             kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM),
             kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA)
@@ -116,6 +115,18 @@ class SakerServiceImpl : SakerService {
     }
 
     companion object {
+        @JvmStatic
+        fun leggTilFagsystemnavnOgTemanavn(
+            saker: List<Sak>,
+            fagsystemKodeverk: EnhetligKodeverk.Kodeverk<String, String>,
+            arkivtemaKodeverk: EnhetligKodeverk.Kodeverk<String, String>,
+        ) {
+            saker.forEach {
+                it.fagsystemNavn = fagsystemKodeverk.hentVerdi(it.fagsystemKode, it.fagsystemKode)
+                it.temaNavn = arkivtemaKodeverk.hentVerdi(it.temaKode, it.temaKode)
+            }
+        }
+
         private fun SakerService.Resultat.leggTilDataFraKilde(fnr: String, kilde: SakerKilde): SakerService.Resultat {
             try {
                 kilde.leggTilSaker(fnr, this.saker)
