@@ -6,30 +6,21 @@ import no.nav.modiapersonoversikt.infrastructure.jaxws.handlers.MDCOutHandler;
 import no.nav.modiapersonoversikt.infrastructure.ping.PingableWebService;
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.namespace.QName;
 
+import static no.nav.common.utils.EnvironmentUtils.getRequiredProperty;
 import static no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory.createTimerProxyForWebService;
-import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 
 
 @Configuration
 public class DkifConsumerConfig {
-
-    @Value("${VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL:}")
-    private String dkifEndpointUrl;
-    @Value("${servicegateway.url:}")
-    private String servicegatewayUrl;
-    @Autowired
-    private StsConfig stsConfig;
-
+    private final String dkifEndpointUrl = getRequiredProperty("VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL");
 
     @Bean
-    public DigitalKontaktinformasjonV1 dkifV1() {
+    public DigitalKontaktinformasjonV1 dkifV1(StsConfig stsConfig) {
         DigitalKontaktinformasjonV1 dkif = getDigitalKontaktinformasjonV1()
                 .configureStsForSystemUser(stsConfig)
                 .build();
@@ -37,7 +28,7 @@ public class DkifConsumerConfig {
     }
 
     @Bean
-    public Pingable digitalKontaktinformasjonPingable() {
+    public Pingable digitalKontaktinformasjonPingable(StsConfig stsConfig) {
         DigitalKontaktinformasjonV1 pingPorttype = getDigitalKontaktinformasjonV1()
                 .configureStsForSystemUser(stsConfig)
                 .build();
@@ -49,11 +40,7 @@ public class DkifConsumerConfig {
                 .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/digitalKontaktinformasjon/v1/Binding.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/digitalKontaktinformasjon/v1/Binding", "DigitalKontaktinformasjon_v1"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/digitalKontaktinformasjon/v1/Binding", "DigitalKontaktinformasjon_v1Port"))
-                .address(getAdress())
+                .address(dkifEndpointUrl)
                 .withHandler(new MDCOutHandler());
-    }
-
-    private String getAdress() {
-        return defaultIfBlank(servicegatewayUrl, dkifEndpointUrl);
     }
 }
