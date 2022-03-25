@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.saker.kilder
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
+import no.nav.modiapersonoversikt.service.saker.Sak
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker

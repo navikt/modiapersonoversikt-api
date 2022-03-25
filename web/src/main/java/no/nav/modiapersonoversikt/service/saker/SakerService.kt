@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.service.saker
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-
 interface SakerService {
     class Resultat(val saker: MutableList<Sak> = mutableListOf(), val feiledeSystemer: MutableList<String> = mutableListOf())
 

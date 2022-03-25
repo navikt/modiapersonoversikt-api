@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest;
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.service.saker.Sak;
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils;
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingApi;

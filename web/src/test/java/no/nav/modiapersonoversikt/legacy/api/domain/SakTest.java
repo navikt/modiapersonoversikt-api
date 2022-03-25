@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.api.domain;
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.service.saker.Sak;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

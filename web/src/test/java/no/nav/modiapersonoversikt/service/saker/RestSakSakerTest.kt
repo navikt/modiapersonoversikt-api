@@ -6,7 +6,6 @@ import io.mockk.verify
 import no.nav.modiapersonoversikt.consumer.sak.OpprettSakDto
 import no.nav.modiapersonoversikt.consumer.sak.SakApi
 import no.nav.modiapersonoversikt.consumer.sak.SakDto
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.saker.kilder.RestSakSaker

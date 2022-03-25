@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.service.saker.kilder
 
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
+import no.nav.modiapersonoversikt.service.saker.Sak
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService

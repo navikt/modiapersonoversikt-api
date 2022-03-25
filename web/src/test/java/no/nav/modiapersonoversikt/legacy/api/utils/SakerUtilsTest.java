@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.api.utils;
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.service.saker.Sak;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.*;
+import static no.nav.modiapersonoversikt.service.saker.Sak.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.MockitoAnnotations.initMocks;

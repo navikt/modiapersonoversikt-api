@@ -1,11 +1,9 @@
 package no.nav.modiapersonoversikt.legacy.api.utils;
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.service.saker.Sak;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
 
 import java.util.List;
-import java.util.Map;
 
 
 public class SakerUtils {

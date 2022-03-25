@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.domain.saker;
+package no.nav.modiapersonoversikt.service.saker;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.joda.time.DateTime;
