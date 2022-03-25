@@ -4,7 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.legacy.utbetaling.service.UtbetalingService
+import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingService
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

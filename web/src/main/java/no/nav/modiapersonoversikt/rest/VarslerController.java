@@ -6,8 +6,8 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
-import no.nav.modiapersonoversikt.legacy.varsel.domain.Varsel;
-import no.nav.modiapersonoversikt.legacy.varsel.service.VarslerService;
+import no.nav.modiapersonoversikt.service.varsel.domain.Varsel;
+import no.nav.modiapersonoversikt.service.varsel.VarslerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
