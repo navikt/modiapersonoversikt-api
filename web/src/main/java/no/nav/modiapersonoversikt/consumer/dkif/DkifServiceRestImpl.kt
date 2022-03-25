@@ -5,6 +5,7 @@ import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
@@ -12,7 +13,6 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.apis.DigitalKontaktinformasjonApi
 import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.apis.PingApi
-import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import okhttp3.OkHttpClient
 
@@ -40,7 +40,7 @@ class DkifServiceRestImpl(
                 .map { "Bearer $it" }
                 .orElseThrow { IllegalStateException("Fant ikke OIDC-token") },
             navCallId = getCallId(),
-            navConsumerId = RestConstants.MODIABRUKERDIALOG_SYSTEM_USER,
+            navConsumerId = AppConstants.SYSTEMUSER_USERNAME,
             navPersonidenter = listOf(fnr),
             inkluderSikkerDigitalPost = true
         )
@@ -72,7 +72,7 @@ class DkifServiceRestImpl(
             false,
             HealthCheck {
                 try {
-                    pingApi.getPingUsingGET(RestConstants.MODIABRUKERDIALOG_SYSTEM_USER)
+                    pingApi.getPingUsingGET(AppConstants.SYSTEMUSER_USERNAME)
                     HealthCheckResult.healthy()
                 } catch (e: Exception) {
                     HealthCheckResult.unhealthy(e)

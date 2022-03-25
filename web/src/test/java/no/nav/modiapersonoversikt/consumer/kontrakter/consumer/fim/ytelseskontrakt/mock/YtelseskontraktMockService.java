@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.mock;
 
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktMapper;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimBruker;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimRettighetsgruppe;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class YtelseskontraktMockService implements YtelseskontraktServiceBi, Serializable {
+public class YtelseskontraktMockService implements YtelseskontraktService, Serializable {
 
     private YtelseskontraktMapper mapper = null;
 

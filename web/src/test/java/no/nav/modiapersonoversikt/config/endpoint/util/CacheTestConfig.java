@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.config.endpoint.util;
 
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
-import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging;
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +21,8 @@ public class CacheTestConfig {
     }
 
     @Bean
-    public OppfoelgingPortType oppfolgingPortType() {
-        return mock(OppfoelgingPortType.class);
+    public OppfolgingskontraktService oppfolgingskontraktService() {
+        return mock(OppfolgingskontraktService.class);
     }
 
     @Bean
@@ -46,8 +46,8 @@ public class CacheTestConfig {
     }
 
     @Bean
-    public OppfolgingsinfoApiService oppfolgingsApi() {
-        return mock(OppfolgingsinfoApiService.class);
+    public ArbeidsrettetOppfolging.Service oppfolgingsApi() {
+        return mock(ArbeidsrettetOppfolging.Service.class);
     }
 
     @Bean

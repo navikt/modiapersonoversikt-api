@@ -2,7 +2,9 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.types.identer.EnhetId
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
@@ -10,9 +12,8 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
@@ -28,7 +29,15 @@ interface SfHenvendelseService {
     fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO>
     fun hentHenvendelse(kjedeId: String): HenvendelseDTO
     fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?)
-    fun sendSamtalereferat(kjedeId: String?, bruker: EksternBruker, enhet: String, temagruppe: String, kanal: SamtalereferatRequestDTO.Kanal, fritekst: String): HenvendelseDTO
+    fun sendSamtalereferat(
+        kjedeId: String?,
+        bruker: EksternBruker,
+        enhet: String,
+        temagruppe: String,
+        kanal: SamtalereferatRequestDTO.Kanal,
+        fritekst: String
+    ): HenvendelseDTO
+
     fun opprettNyDialogOgSendMelding(
         bruker: EksternBruker,
         enhet: String,
@@ -60,7 +69,7 @@ class SfHenvendelseServiceImpl(
     private val henvendelseJournalApi: JournalApi = SfHenvendelseApiFactory.createHenvendelseJournalApi(),
     private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
     private val pdlOppslagService: PdlOppslagService,
-    private val arbeidsfordeling: ArbeidsfordelingService,
+    private val norgApi: NorgApi,
     private val ansattService: AnsattService,
     private val stsService: SystemUserTokenProvider
 ) : SfHenvendelseService {
@@ -73,7 +82,7 @@ class SfHenvendelseServiceImpl(
 
     constructor(
         pdlOppslagService: PdlOppslagService,
-        arbeidsfordeling: ArbeidsfordelingService,
+        norgApi: NorgApi,
         ansattService: AnsattService,
         stsService: SystemUserTokenProvider
     ) : this(
@@ -82,13 +91,18 @@ class SfHenvendelseServiceImpl(
         SfHenvendelseApiFactory.createHenvendelseJournalApi(),
         SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
         pdlOppslagService,
-        arbeidsfordeling,
+        norgApi,
         ansattService,
         stsService
     )
 
     override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
-        val enhetOgGTListe = arbeidsfordeling.hentGeografiskTilknyttning(enhet)
+        val enhetOgGTListe = norgApi
+            .runCatching {
+                hentGeografiskTilknyttning(EnhetId(enhet))
+            }
+            .onFailure { logger.error("Kunne ikke hente geografisk tilknyttning", it) }
+            .getOrDefault(emptyList())
             .mapNotNull { it.geografiskOmraade }
             .plus(enhet)
         val tematilganger = ansattService.hentAnsattFagomrader(
@@ -109,7 +123,13 @@ class SfHenvendelseServiceImpl(
         return henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
     }
 
-    override fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?) {
+    override fun journalforHenvendelse(
+        enhet: String,
+        kjedeId: String,
+        saksTema: String,
+        saksId: String?,
+        fagsakSystem: String?
+    ) {
         val fagsaksystem = if (saksId != null) {
             JournalRequestDTO.Fagsaksystem.valueOf(
                 requireNotNull(fagsakSystem) {
@@ -246,8 +266,13 @@ class SfHenvendelseServiceImpl(
     enum class ApiFeilType {
         IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD, CHAT
     }
+
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
-    private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
+
+    private fun loggFeilSomErSpesialHandtert(
+        bruker: EksternBruker,
+        henvendelser: List<HenvendelseDTO>
+    ): List<HenvendelseDTO> {
         val feil = mutableListOf<ApiFeil>()
         val now = OffsetDateTime.now()
         for (henvendelse in henvendelser) {
@@ -309,7 +334,8 @@ class SfHenvendelseServiceImpl(
             if (!henvendelseDTO.kontorsperre) {
                 true
             } else {
-                val sperre = henvendelseDTO.markeringer?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
+                val sperre =
+                    henvendelseDTO.markeringer?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
                 val enhetEllerGT: String? = sperre?.kontorsperreGT ?: sperre?.kontorsperreEnhet
                 enhetEllerGT == null || enhetOgGTListe.any { it == enhetEllerGT }
             }
@@ -394,7 +420,10 @@ class SfHenvendelseServiceImpl(
         val patches: MutableMap<KProperty1<CLS, Any?>, Any?> = mutableMapOf()
         fun <TYPE> set(field: KProperty1<CLS, TYPE>) = PatchNoteEntry(this, field)
 
-        internal class PatchNoteEntry<CLS, TYPE>(private val collector: PatchNote<CLS>, val field: KProperty1<CLS, TYPE>) {
+        internal class PatchNoteEntry<CLS, TYPE>(
+            private val collector: PatchNote<CLS>,
+            val field: KProperty1<CLS, TYPE>
+        ) {
             fun to(value: TYPE): PatchNote<CLS> {
                 collector.patches[field] = value
                 return collector
@@ -415,11 +444,19 @@ class SfHenvendelseServiceImpl(
         when (this.responseType) {
             ResponseType.ClientError -> {
                 val localVarError = this as ClientError<*>
-                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, this)
+                throw ClientException(
+                    "Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}",
+                    localVarError.statusCode,
+                    this
+                )
             }
             ResponseType.ServerError -> {
                 val localVarError = this as ServerError<*>
-                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, this)
+                throw ServerException(
+                    "Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}",
+                    localVarError.statusCode,
+                    this
+                )
             }
             ResponseType.Informational -> {
                 throw UnsupportedOperationException("Client does not support Informational responses.")
@@ -431,6 +468,7 @@ class SfHenvendelseServiceImpl(
         }
     }
 }
+
 fun String.fixKjedeId(): String {
     val fragments = this.split("---")
     if (fragments.size > 1) {
@@ -457,6 +495,7 @@ object SfHenvendelseApiFactory {
             AuthorizationInterceptor(tokenProvider)
         )
         .build()
+
     fun createHenvendelseBehandlingApi() = HenvendelseBehandlingApi(url(), client)
     fun createHenvendelseInfoApi() = HenvendelseInfoApi(url(), client)
     fun createHenvendelseJournalApi() = JournalApi(url(), client)
