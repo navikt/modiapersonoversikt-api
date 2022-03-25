@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.domain.sykepenger;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
+import no.nav.modiapersonoversikt.commondomain.Periode;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 

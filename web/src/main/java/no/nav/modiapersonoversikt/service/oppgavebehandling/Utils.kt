@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.*
+import no.nav.modiapersonoversikt.commondomain.Temagruppe
+import no.nav.modiapersonoversikt.commondomain.Temagruppe.*
 import java.time.Clock
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

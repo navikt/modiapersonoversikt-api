@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.domain
+package no.nav.modiapersonoversikt.commondomain
 
 data class Behandling(
     val behandlingstema: String?,

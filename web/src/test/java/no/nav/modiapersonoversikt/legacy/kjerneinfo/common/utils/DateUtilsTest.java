@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils;
 
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.junit.Test;

@@ -1,6 +1,9 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.modiapersonoversikt.commondomain.Behandling
+import no.nav.modiapersonoversikt.commondomain.Temagruppe
+import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums

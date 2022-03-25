@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.domain;
+package no.nav.modiapersonoversikt.commondomain;
 
 import java.util.List;
 

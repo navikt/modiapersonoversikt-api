@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
-import no.nav.modiapersonoversikt.legacy.api.utils.TemagruppeTemaMapping
+import no.nav.modiapersonoversikt.commondomain.Temagruppe
+import no.nav.modiapersonoversikt.commondomain.TemagruppeTemaMapping
 
 object SfTemagruppeTemaMapping {
     private val legacyMapping = HashMap(TemagruppeTemaMapping.TEMA_TEMAGRUPPE_MAPPING)

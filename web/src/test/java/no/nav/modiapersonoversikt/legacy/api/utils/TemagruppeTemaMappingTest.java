@@ -1,11 +1,12 @@
 package no.nav.modiapersonoversikt.legacy.api.utils;
 
 
+import no.nav.modiapersonoversikt.commondomain.TemagruppeTemaMapping;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.*;
+import static no.nav.modiapersonoversikt.commondomain.Temagruppe.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

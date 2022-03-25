@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog.apis
 
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
+import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.service.saker.Sak
 import org.springframework.http.ResponseEntity

@@ -1,6 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.utils;
-
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
+package no.nav.modiapersonoversikt.commondomain;
 
 import java.util.*;
 

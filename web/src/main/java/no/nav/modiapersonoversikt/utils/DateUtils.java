@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils;
+package no.nav.modiapersonoversikt.utils;
 
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import org.joda.time.DateTime;
@@ -20,20 +20,6 @@ import java.util.GregorianCalendar;
 public class DateUtils {
     private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
-    public static XMLGregorianCalendar getCurrentXmlGregorianCalendar() {
-        return getCurrentXmlGregorianCalendar(0);
-    }
-
-    public static XMLGregorianCalendar getCurrentXmlGregorianCalendar(int dager) {
-        try {
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.add(Calendar.DAY_OF_YEAR, dager);
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
-        } catch (DatatypeConfigurationException e) {
-            logger.warn("DatatypeConfigurationException", e.getMessage());
-            throw new ApplicationException("DatatypeConfigurationException", e, "Klarer ikke å lage dato");
-        }
-    }
 
     public static boolean datoInside(XMLGregorianCalendar datoKravMottatt, Date cutFrom, Date cutTo) {
         return toDate(datoKravMottatt).compareTo(cutFrom) >= 0 && toDate(datoKravMottatt).compareTo(cutTo) < 0;
@@ -47,10 +33,6 @@ public class DateUtils {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month - 1, day);
         return cal.getTime();
-    }
-
-    public static LocalDateTime getLocalDateTime(int year, int month, int day) {
-        return new LocalDateTime(year, month, day, 0, 0, 0);
     }
 
     public static XMLGregorianCalendar convertDateToXmlGregorianCalendar(Date date) {
@@ -82,16 +64,6 @@ public class DateUtils {
         long offset = end.minusDays(50).getMillis();
         long diff = end.getMillis() - offset;
         return new Date(offset + (long) (Math.random() * diff));
-    }
-
-    /**
-     * @return A random localdatetime in 3 month interval
-     */
-    public static LocalDateTime getRandomLocalDateTime() {
-        LocalDateTime end = LocalDateTime.now().plusMonths(1);
-        long offset = end.minusMonths(2).getMillisOfSecond();
-        long diff = end.getMillisOfSecond() - offset + 1;
-        return new LocalDateTime(offset + (long) (Math.random() * diff));
     }
 
     public static Date[] getRandomDatePair() {

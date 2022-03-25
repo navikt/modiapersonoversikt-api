@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.commondomain.Periode;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.*;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Foedsel;
