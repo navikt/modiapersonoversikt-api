@@ -1,12 +1,10 @@
 package no.nav.modiapersonoversikt.service.arbeidsfordeling
 
-import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
-import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService
 import org.slf4j.LoggerFactory
@@ -18,8 +16,6 @@ interface ArbeidsfordelingService {
         brukerIdent: Fnr?,
         underkategori: String?
     ): List<NorgDomain.Enhet>
-
-    fun hentGeografiskTilknyttning(valgtEnhet: String): List<EnhetGeografiskTilknyttning>
 
     class ArbeidsfordelingException(message: String?, cause: Throwable?) : RuntimeException(message, cause)
 }
@@ -66,14 +62,5 @@ class ArbeidsfordelingServiceImpl(
                     it
                 )
             }
-    }
-
-    override fun hentGeografiskTilknyttning(valgtEnhet: String): List<EnhetGeografiskTilknyttning> {
-        return norgApi
-            .runCatching {
-                this.hentGeografiskTilknyttning(EnhetId.of(valgtEnhet))
-            }
-            .onFailure { log.error("Kunne ikke hente geografisk tilknyttning", it) }
-            .getOrDefault(emptyList())
     }
 }

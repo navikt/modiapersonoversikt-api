@@ -14,7 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import kotlin.reflect.KClass
 
-class ArbeidsrettetOppfolgingServiceImpl(
+open class ArbeidsrettetOppfolgingServiceImpl(
     apiUrl: String,
     private val ldapService: LDAPService
 ) : ArbeidsrettetOppfolging.Service {

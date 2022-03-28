@@ -19,7 +19,7 @@ class TestEnvironmentExtension(val testEnvironment: Map<String, String?>) :
 
     companion object {
         fun Map<String, String?>.setAsEnvironment() {
-            this.forEach { key, value ->
+            this.forEach { (key, value) ->
                 if (value == null) {
                     System.clearProperty(key)
                 } else {
