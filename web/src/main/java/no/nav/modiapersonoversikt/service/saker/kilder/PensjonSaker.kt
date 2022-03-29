@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.saker.kilder
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
+import no.nav.modiapersonoversikt.service.pensjonsak.PsakService
+import no.nav.modiapersonoversikt.service.saker.Sak
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 
 internal class PensjonSaker(val psakService: PsakService) : SakerKilde {

@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.varsel.service;
 
-import no.nav.modiapersonoversikt.legacy.varsel.domain.Varsel;
+import no.nav.modiapersonoversikt.service.varsel.domain.Varsel;
+import no.nav.modiapersonoversikt.service.varsel.VarslerServiceImpl;
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1;
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.HentVarselForBrukerUgyldigInput;
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerRequest;

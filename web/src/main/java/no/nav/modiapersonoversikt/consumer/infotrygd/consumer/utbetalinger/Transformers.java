@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.utbetalinger;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
+import no.nav.modiapersonoversikt.commondomain.Periode;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.HistoriskUtbetaling;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kreditortrekk;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.utbetalinger.Hovedytelse;

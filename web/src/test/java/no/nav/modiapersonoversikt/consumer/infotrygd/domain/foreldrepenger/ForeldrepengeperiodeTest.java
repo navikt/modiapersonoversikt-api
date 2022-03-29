@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger;
 
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
+import no.nav.modiapersonoversikt.commondomain.Periode;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.HistoriskUtbetaling;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kodeverkstype;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.KommendeUtbetaling;

@@ -6,8 +6,8 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import org.assertj.core.api.Assertions.assertThat
@@ -46,7 +46,11 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     @Test
     internal fun `hent ansatte gitt enhetid`() {
         every { ansattService.ansatteForEnhet(any()) } returns listOf(
-            Ansatt("fornavn", "etternavn", "Z999999")
+            Ansatt(
+                "fornavn",
+                "etternavn",
+                "Z999999"
+            )
         )
 
         getJson("/rest/enheter/1234/ansatte")

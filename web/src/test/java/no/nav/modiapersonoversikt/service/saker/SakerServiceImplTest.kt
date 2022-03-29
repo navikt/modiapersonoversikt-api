@@ -9,15 +9,14 @@ import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.consumer.sak.SakApi
+import no.nav.modiapersonoversikt.consumer.sak.SakDto
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.*
-import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
-import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
+import no.nav.modiapersonoversikt.service.pensjonsak.PsakService
+import no.nav.modiapersonoversikt.service.saker.Sak.*
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
@@ -54,7 +53,7 @@ class SakerServiceImplTest {
     private lateinit var psakService: PsakService
 
     @MockK
-    private lateinit var sakApiGateway: SakApiGateway
+    private lateinit var sakApi: SakApi
 
     @MockK
     private lateinit var pdlOppslagService: PdlOppslagService
@@ -80,14 +79,14 @@ class SakerServiceImplTest {
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
         every { unleashService.isEnabled(any<Feature>()) } returns false
 
-        every { sakApiGateway.opprettSak(any()) } returns SakDto(id = "123")
+        every { sakApi.opprettSak(any()) } returns SakDto(id = "123")
 
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
     }
 
     @Test
     fun `transformerer response til saksliste`() {
-        every { sakApiGateway.hentSaker(any()) } returns createSaksliste()
+        every { sakApi.hentSaker(any()) } returns createSaksliste()
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
         val saksliste: List<Sak> = sakerService.hentSammensatteSakerResultat(FNR).saker
         assertThat(saksliste[0].saksId, `is`(SakId_1))
@@ -101,7 +100,7 @@ class SakerServiceImplTest {
 
     @Test
     fun `transformerer response til saksliste pensjon`() {
-        every { sakApiGateway.hentSaker(any()) } returns listOf()
+        every { sakApi.hentSaker(any()) } returns listOf()
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
         every { bidragSakControllerApi.find(any()) } returns listOf()
 
@@ -122,7 +121,7 @@ class SakerServiceImplTest {
     @Test
     @DisplayName("oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak")
     fun `oppretter ikke generell oppfolgingssak`() {
-        every { sakApiGateway.hentSaker(any()) } returns createOppfolgingSaksliste()
+        every { sakApi.hentSaker(any()) } returns createOppfolgingSaksliste()
         val saker = sakerService.hentSammensatteSakerResultat(FNR).saker.stream()
             .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))

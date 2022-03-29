@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.domain;
 
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
+import no.nav.modiapersonoversikt.commondomain.Periode;
 
 import java.io.Serializable;
 

@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
-import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import okhttp3.*
 import okio.Buffer
 import org.slf4j.LoggerFactory
@@ -17,6 +18,7 @@ import java.util.*
 
 object OkHttpUtils {
     val objectMapper = jacksonObjectMapper()
+        .registerModule(JodaModule())
         .registerModule(JavaTimeModule())
         .registerModule(Jdk8Module())
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

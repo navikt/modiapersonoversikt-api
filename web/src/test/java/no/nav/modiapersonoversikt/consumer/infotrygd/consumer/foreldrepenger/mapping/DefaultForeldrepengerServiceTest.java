@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.mapping;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
+import no.nav.modiapersonoversikt.commondomain.Periode;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.DefaultForeldrepengerService;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ForeldrepengerMockFactory;

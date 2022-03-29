@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Vedtak
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
+import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
@@ -17,8 +18,6 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagRiktigDato
 import org.slf4j.LoggerFactory
@@ -148,12 +147,12 @@ private fun hentVeileder(veileder: Saksbehandler?): Map<String, Any?>? {
     }
 }
 
-private fun hentEnhet(enhet: AnsattEnhet?): Map<String, Any?>? {
+private fun hentEnhet(enhet: ArbeidsrettetOppfolging.Enhet?): Map<String, Any?>? {
     return enhet?.let {
         mapOf(
             "id" to it.enhetId,
-            "navn" to it.enhetNavn,
-            "status" to it.status
+            "navn" to it.navn,
+            "status" to null // TODO Ubrukt i frontend, men lar feltet være frem til det er fjernet fra domenemodellen der
         )
     }
 }

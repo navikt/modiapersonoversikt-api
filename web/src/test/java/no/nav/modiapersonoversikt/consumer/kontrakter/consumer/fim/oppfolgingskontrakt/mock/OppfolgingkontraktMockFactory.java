@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.mock;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 

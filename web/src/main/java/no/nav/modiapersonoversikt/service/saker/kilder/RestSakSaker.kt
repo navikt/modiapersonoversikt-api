@@ -1,24 +1,24 @@
 package no.nav.modiapersonoversikt.service.saker.kilder
 
+import no.nav.modiapersonoversikt.consumer.sak.OpprettSakDto
+import no.nav.modiapersonoversikt.consumer.sak.SakApi
+import no.nav.modiapersonoversikt.consumer.sak.SakDto
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.saker.Sak
+import no.nav.modiapersonoversikt.service.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
-import no.nav.modiapersonoversikt.service.saker.mediation.OpprettSakDto
-import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
-import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import org.joda.time.DateTime
 import java.time.OffsetDateTime
 
 class RestSakSaker(
-    private val sakApiGateway: SakApiGateway,
+    private val sakApi: SakApi,
     private val pdlOppslagService: PdlOppslagService
 ) : SakerKilde {
     override val kildeNavn: String = "SAK"
 
     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
-        val response = sakApiGateway.hentSaker(
+        val response = sakApi.hentSaker(
             requireNotNull(pdlOppslagService.hentAktorId(fnr)) {
                 "Kan ikke hente ut saker når mapping til aktorId feilet"
             }
@@ -29,7 +29,7 @@ class RestSakSaker(
 
     fun opprettSak(fnr: String, sak: Sak): String {
         val ident = AuthContextUtils.requireIdent()
-        val opprettetSak = sakApiGateway.opprettSak(
+        val opprettetSak = sakApi.opprettSak(
             OpprettSakDto(
                 aktoerId = requireNotNull(pdlOppslagService.hentAktorId(fnr)) {
                     "Kan ikke opprette sak når mapping til aktorId feilet"

@@ -1,16 +1,16 @@
-[ [ "no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt", {
+[ [ "no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt", {
   "etternavn" : "Karlsson",
   "fornavn" : "Kalle",
   "ident" : "111"
-} ], [ "no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt", {
+} ], [ "no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt", {
   "etternavn" : "Svensson",
   "fornavn" : "Klara",
   "ident" : "222"
-} ], [ "no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt", {
+} ], [ "no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt", {
   "etternavn" : "Larsson",
   "fornavn" : "Knut",
   "ident" : "333"
-} ], [ "no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt", {
+} ], [ "no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt", {
   "etternavn" : "Johansson",
   "fornavn" : "Kristina",
   "ident" : "444"

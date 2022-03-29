@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.service;
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.service.saker.Sak;
+import no.nav.modiapersonoversikt.service.pensjonsak.PsakServiceImpl;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSArkivtema;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSPeriode;
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.FAGSYSTEMKODE_PSAK;
+import static no.nav.modiapersonoversikt.service.saker.Sak.FAGSYSTEMKODE_PSAK;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;

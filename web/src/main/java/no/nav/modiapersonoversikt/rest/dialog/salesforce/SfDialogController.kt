@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
+import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.KjedeIdTilgangData
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.HenvendelseDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.SamtalereferatRequestDTO
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave

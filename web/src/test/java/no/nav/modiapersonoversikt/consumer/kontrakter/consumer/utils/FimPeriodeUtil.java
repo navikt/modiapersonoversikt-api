@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.WSPeriode;
 
 import java.util.Date;

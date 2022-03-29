@@ -1,15 +1,14 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package no.nav.modiapersonoversikt.service.saker
 
+import no.nav.modiapersonoversikt.consumer.sak.SakApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
-import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.pensjonsak.PsakService
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
@@ -19,10 +18,8 @@ import java.util.function.Predicate.not
 import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
 
-@ExperimentalContracts
 private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
 
-@ExperimentalContracts
 class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var kodeverk: EnhetligKodeverk.Service
@@ -34,7 +31,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var psakService: PsakService
 
     @Autowired
-    private lateinit var sakApiGateway: SakApiGateway
+    private lateinit var sakApi: SakApi
 
     @Autowired
     private lateinit var bidragApiClient: BidragSakControllerApi
@@ -57,7 +54,7 @@ class SakerServiceImpl : SakerService {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker(bidragApiClient, unleashService)
         generelleSaker = GenerelleSaker()
-        restSakSaker = RestSakSaker(sakApiGateway, pdlOppslagService)
+        restSakSaker = RestSakSaker(sakApi, pdlOppslagService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
     }
@@ -85,7 +82,7 @@ class SakerServiceImpl : SakerService {
         resultat.leggTilDataFraKilde(fnr, generelleSaker)
         resultat.leggTilDataFraKilde(fnr, oppfolgingsSaker)
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(
+        leggTilFagsystemnavnOgTemanavn(
             resultat.saker,
             kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM),
             kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA)
@@ -109,7 +106,7 @@ class SakerServiceImpl : SakerService {
     fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker)
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(
+        leggTilFagsystemnavnOgTemanavn(
             resultat.saker,
             kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM),
             kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA)
@@ -118,6 +115,18 @@ class SakerServiceImpl : SakerService {
     }
 
     companion object {
+        @JvmStatic
+        fun leggTilFagsystemnavnOgTemanavn(
+            saker: List<Sak>,
+            fagsystemKodeverk: EnhetligKodeverk.Kodeverk<String, String>,
+            arkivtemaKodeverk: EnhetligKodeverk.Kodeverk<String, String>,
+        ) {
+            saker.forEach {
+                it.fagsystemNavn = fagsystemKodeverk.hentVerdi(it.fagsystemKode ?: "", it.fagsystemKode ?: "")
+                it.temaNavn = arkivtemaKodeverk.hentVerdi(it.temaKode ?: "", it.temaKode ?: "")
+            }
+        }
+
         private fun SakerService.Resultat.leggTilDataFraKilde(fnr: String, kilde: SakerKilde): SakerService.Resultat {
             try {
                 kilde.leggTilSaker(fnr, this.saker)

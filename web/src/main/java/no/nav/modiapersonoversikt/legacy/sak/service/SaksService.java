@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
+import no.nav.modiapersonoversikt.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sak;

@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.service.saker
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

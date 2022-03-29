@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.pdl
 
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.*
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.SokKriterieRule.*
 
 interface PdlOppslagService {

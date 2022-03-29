@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.rest.journalforing;
 
 import kotlin.Pair;
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
+import no.nav.modiapersonoversikt.service.saker.Sak;
+import no.nav.modiapersonoversikt.service.saker.SakerService;
 import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.BehandlingsIdTilgangData;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Arrays.asList;
-import static no.nav.modiapersonoversikt.legacy.api.utils.RestUtils.hentValgtEnhet;
+import static no.nav.modiapersonoversikt.rest.RestUtils.hentValgtEnhet;
 import static no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies.behandlingsIderTilhorerBruker;
 import static no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies.tilgangTilBruker;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ;

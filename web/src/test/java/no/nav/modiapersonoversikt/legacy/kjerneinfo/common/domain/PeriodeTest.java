@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain;
 
+import no.nav.modiapersonoversikt.commondomain.Periode;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 

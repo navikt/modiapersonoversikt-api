@@ -3,13 +3,12 @@ package no.nav.modiapersonoversikt.service.saker
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
+import no.nav.modiapersonoversikt.consumer.sak.OpprettSakDto
+import no.nav.modiapersonoversikt.consumer.sak.SakApi
+import no.nav.modiapersonoversikt.consumer.sak.SakDto
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.saker.kilder.RestSakSaker
-import no.nav.modiapersonoversikt.service.saker.mediation.OpprettSakDto
-import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
-import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.FeatureMatcher
@@ -29,7 +28,7 @@ class RestSakSakerTest {
     val SakId_1 = "1"
     val FagsystemSakId_1 = "11"
 
-    val api = mockk<SakApiGateway>()
+    val api = mockk<SakApi>()
     val pdlOppslagService = mockk<PdlOppslagService>()
     val restClient = RestSakSaker(api, pdlOppslagService)
 

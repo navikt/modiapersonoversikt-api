@@ -4,7 +4,7 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
+import no.nav.modiapersonoversikt.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;

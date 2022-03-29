@@ -4,7 +4,6 @@ import no.nav.common.metrics.Event
 import no.nav.common.metrics.InfluxClient
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.ldap.LDAP.parseADRolle
-import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import org.slf4j.LoggerFactory
 import javax.naming.directory.SearchControls
 import javax.naming.directory.SearchResult

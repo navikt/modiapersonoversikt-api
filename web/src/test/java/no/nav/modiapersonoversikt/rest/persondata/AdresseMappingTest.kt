@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import org.junit.jupiter.api.Assertions

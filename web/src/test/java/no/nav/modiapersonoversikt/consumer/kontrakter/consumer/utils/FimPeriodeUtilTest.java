@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.WSPeriode;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimPeriode;
 import org.joda.time.DateTime;

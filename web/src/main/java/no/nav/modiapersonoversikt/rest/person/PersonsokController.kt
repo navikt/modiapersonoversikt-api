@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.rest.person
 
+import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.infrastructure.http.GraphQLException
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.PdlFelt
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.PdlKriterie

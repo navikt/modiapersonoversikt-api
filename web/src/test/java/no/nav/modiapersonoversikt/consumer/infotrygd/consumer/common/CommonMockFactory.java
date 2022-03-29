@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.common;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykArbeidsforhold;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykInntektsperiode;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykRefusjonstype;

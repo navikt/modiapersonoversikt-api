@@ -6,11 +6,11 @@ import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter.Journalposttype
+import no.nav.modiapersonoversikt.consumer.saf.generated.Hentbrukerssaker
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.*
-import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter
-import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Journalposttype
-import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.Hentbrukerssaker
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata

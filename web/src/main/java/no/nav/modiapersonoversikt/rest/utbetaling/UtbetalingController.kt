@@ -5,9 +5,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.utbetaling.service.UtbetalingService
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagRiktigDato
+import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

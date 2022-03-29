@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.mock;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils.FimPeriodeUtil;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimDagpengekontrakt;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimPeriode;

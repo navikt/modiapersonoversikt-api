@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.journalforing
 
-import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
+import no.nav.modiapersonoversikt.service.saker.Sak
+import no.nav.modiapersonoversikt.service.saker.SakerService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.beans.factory.annotation.Autowired
 

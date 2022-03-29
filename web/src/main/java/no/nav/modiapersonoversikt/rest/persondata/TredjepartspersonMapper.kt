@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import java.time.LocalDate
 import java.time.Period

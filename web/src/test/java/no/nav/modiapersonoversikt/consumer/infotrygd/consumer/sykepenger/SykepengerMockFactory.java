@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.common.CommonMockFactory;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeResponse;
