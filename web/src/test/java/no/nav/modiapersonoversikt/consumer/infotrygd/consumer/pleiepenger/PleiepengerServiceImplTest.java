@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetSikkerhetsbegrensning;
@@ -56,7 +54,7 @@ public class PleiepengerServiceImplTest {
         assertThat(response.getPleieepengerettighetListe().size(), is(1));
     }
 
-    @Test(expected = AuthorizationException.class)
+    @Test(expected = RuntimeException.class)
     public void hentPleiepengerListeSikkerhetsbegresning() throws HentPleiepengerettighetUgyldigIdentNr, HentPleiepengerettighetSikkerhetsbegrensning {
         when(pleiepengerV1.hentPleiepengerettighet(any(WSHentPleiepengerettighetRequest.class)))
                 .thenThrow(new HentPleiepengerettighetSikkerhetsbegrensning());
@@ -64,7 +62,7 @@ public class PleiepengerServiceImplTest {
         pleiepengerService.hentPleiepengerListe(new PleiepengerListeRequest("10108000398"));
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test(expected = RuntimeException.class)
     public void hentPleiepengerListeUgyldigIdentNr() throws HentPleiepengerettighetUgyldigIdentNr, HentPleiepengerettighetSikkerhetsbegrensning {
         when(pleiepengerV1.hentPleiepengerettighet(any(WSHentPleiepengerettighetRequest.class)))
                 .thenThrow(new HentPleiepengerettighetUgyldigIdentNr());

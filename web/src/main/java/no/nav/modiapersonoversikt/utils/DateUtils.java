@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.utils;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -42,7 +41,7 @@ public class DateUtils {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
         } catch (DatatypeConfigurationException e) {
             logger.warn("DatatypeConfigurationException", e.getMessage());
-            throw new ApplicationException("DatatypeConfigurationException", e, "Klarer ikke å lage dato");
+            throw new RuntimeException("Klarer ikke å lage dato", e);
         }
     }
 
@@ -52,7 +51,7 @@ public class DateUtils {
                     date.getMillisOfSecond(), 0);
         } catch (DatatypeConfigurationException e) {
             logger.warn("DatatypeConfigurationException", e.getMessage());
-            throw new ApplicationException("DatatypeConfigurationException", e, "Klarer ikke å lage dato");
+            throw new RuntimeException("Klarer ikke å lage dato", e);
         }
     }
 

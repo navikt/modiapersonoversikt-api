@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.sak.transformers;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
@@ -68,10 +67,10 @@ public class Transformers {
                 case FilterUtils.AVBRUTT:
                     return AVBRUTT;
                 default:
-                    throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
+                    throw new RuntimeException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
             }
         }
-        throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
+        throw new RuntimeException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
     }
 
     private static List<DokumentFraHenvendelse> filtrerVedlegg(Soknad soknad, Predicate<DokumentFraHenvendelse> betingelse) {

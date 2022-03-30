@@ -4,7 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.DefaultSykepengerService
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.mapping.SykepengerMapper
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException
 import no.nav.tjeneste.virksomhet.sykepenger.v2.HentSykepengerListeSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykArbeidskategori
@@ -39,7 +38,7 @@ internal class SykepengerUttrekkTest {
     fun`Kaster Auth exception`() {
         every { sykepengerV2.hentSykepengerListe(any()) } throws HentSykepengerListeSikkerhetsbegrensning()
 
-        assertFailsWith<AuthorizationException> { uttrekk.hent(FNR) }
+        assertFailsWith<RuntimeException> { uttrekk.hent(FNR) }
     }
 
     @Test

@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.consumer.dkif.consumer.support;
 
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif;
 import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceImpl;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.HentDigitalKontaktinformasjonKontaktinformasjonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.HentDigitalKontaktinformasjonPersonIkkeFunnet;
@@ -60,7 +59,7 @@ public class DkifServiceImplTest {
         assertThat(response.getReservasjon(), is(""));
     }
 
-    @Test(expected= ApplicationException.class)
+    @Test(expected= RuntimeException.class)
     public void kasterExcpetionVedFeil() throws HentDigitalKontaktinformasjonSikkerhetsbegrensing, HentDigitalKontaktinformasjonPersonIkkeFunnet, HentDigitalKontaktinformasjonKontaktinformasjonIkkeFunnet {
         DkifServiceImpl service = new DkifServiceImpl(wsService);
         when(wsService.hentDigitalKontaktinformasjon(any(WSHentDigitalKontaktinformasjonRequest.class)))
