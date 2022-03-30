@@ -1,8 +1,13 @@
 package no.nav.modiapersonoversikt.legacy.sak.mock;
 
+import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
+
+import javax.xml.datatype.DatatypeFactory;
+
+import java.time.LocalDate;
 
 import static no.nav.modiapersonoversikt.legacy.sak.mock.SakOgBehandlingMocks.toXMLCal;
 import static org.joda.time.DateTime.now;
@@ -17,6 +22,18 @@ public class MockCreationUtil {
         sakstemaer.setKodeverksRef("kodeverk-ref-mock");
         sak.setSakstema(sakstemaer);
         sak.setOpprettet(toXMLCal(now()));
+
+        Behandlingskjede behandling = createWSBehandlingskjede();
+        Behandlingsstatuser status = new Behandlingsstatuser();
+        status.setValue(FilterUtils.AVSLUTTET);
+        behandling.setSisteBehandlingsstatus(status);
+
+        Behandlingstyper type = new Behandlingstyper();
+        type.setValue("ae0047");
+        behandling.setSisteBehandlingstype(type);
+        behandling.setSisteBehandlingsoppdatering(DatatypeFactory.newInstance().newXMLGregorianCalendar(LocalDate.now().toString()));
+
+        sak.getBehandlingskjede().add(behandling);
         return sak;
     }
 

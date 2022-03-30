@@ -23,14 +23,11 @@ public class SakstemaGrupperer {
     public static final String TEMAGRUPPE_RESTERENDE_TEMA = "RESTERENDE_TEMA";
     public static final String OPPFOLGING = "OPP";
 
-    @Autowired
-    private TemagrupperHenter temagrupperHenter;
+    private static Predicate<Map.Entry<String, Set<String>>> harMinstEtTema = entrySet -> entrySet.getValue().size() > 1;
+    private static Predicate<Map.Entry<String, Set<String>>> inneholderOppfolgingstema = entrySet -> entrySet.getValue().contains(OPPFOLGING);
+    private static Predicate<Map.Entry<String, Set<String>>> erTemaMedOppfolging = harMinstEtTema.and(inneholderOppfolgingstema);
 
-    private Predicate<Map.Entry<String, Set<String>>> harMinstEtTema = entrySet -> entrySet.getValue().size() > 1;
-    private Predicate<Map.Entry<String, Set<String>>> inneholderOppfolgingstema = entrySet -> entrySet.getValue().contains(OPPFOLGING);
-    private Predicate<Map.Entry<String, Set<String>>> erTemaMedOppfolging = harMinstEtTema.and(inneholderOppfolgingstema);
-
-    public Map<String, Set<String>> grupperSakstema(List<Sak> saker, List<DokumentMetadata> dokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
+    public static Map<String, Set<String>> grupperSakstema(List<Sak> saker, List<DokumentMetadata> dokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
         Map<String, List<Pair<String, String>>> grupperteSaker = grupperSakstemaITemagrupper(saker, dokumentMetadata, behandlingskjeder);
         Map<String, Set<String>> grupperteSakstema = grupperTemagruppePar(grupperteSaker);
@@ -56,9 +53,9 @@ public class SakstemaGrupperer {
         }};
     }
 
-    private Map<String, List<Pair<String, String>>> grupperSakstemaITemagrupper(List<Sak> saker, List<DokumentMetadata> dokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
+    private static Map<String, List<Pair<String, String>>> grupperSakstemaITemagrupper(List<Sak> saker, List<DokumentMetadata> dokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        Map<String, List<String>> temagrupperMedTema = temagrupperHenter.genererTemagrupperMedTema();
+        Map<String, List<String>> temagrupperMedTema = TemagrupperHenter.genererTemagrupperMedTema();
 
         Map<String, List<Pair<String, String>>> parFraSaker = saker.stream()
                 .filter(harDokumentMetadata(dokumentMetadata))
@@ -92,7 +89,7 @@ public class SakstemaGrupperer {
         return parFraSaker;
     }
 
-    private Map<String, Set<String>> grupperTemagruppePar
+    private static Map<String, Set<String>> grupperTemagruppePar
             (Map<String, List<Pair<String, String>>> grupperteSaker) {
         return grupperteSaker.entrySet()
                 .stream().collect(toMap(Map.Entry::getKey,
@@ -131,15 +128,15 @@ public class SakstemaGrupperer {
                 .collect(toList());
     }
 
-    private Predicate<Sak> harDokumentMetadata(List<DokumentMetadata> dokumentMetadata) {
+    private static Predicate<Sak> harDokumentMetadata(List<DokumentMetadata> dokumentMetadata) {
         return harInnholdIHenvendelse(dokumentMetadata).or(harInnholdIJoark(dokumentMetadata));
     }
 
-    private Predicate<Sak> harInnholdIJoark(List<DokumentMetadata> dokumentMetadata) {
+    private static Predicate<Sak> harInnholdIJoark(List<DokumentMetadata> dokumentMetadata) {
         return sak -> dokumentMetadata.stream().anyMatch(dm -> sak.getSaksId().equals(dm.getTilhorendeSakid()));
     }
 
-    private Predicate<Sak> harInnholdIHenvendelse(List<DokumentMetadata> dokumentMetadata) {
+    private static Predicate<Sak> harInnholdIHenvendelse(List<DokumentMetadata> dokumentMetadata) {
         return sak -> dokumentMetadata.stream().anyMatch(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE) && dm.getTemakode().equals(sak.getTemakode()));
     }
 }

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class TemagrupperHenter {
 
-    public Map<String, List<String>> genererTemagrupperMedTema() {
+    public static Map<String, List<String>> genererTemagrupperMedTema() {
         String temagrupperStreng = System.getProperty("saksoversikt.temagrupper");
 
         return kommaseparertTekstTilListe(temagrupperStreng).stream()

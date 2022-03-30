@@ -29,9 +29,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FilterTest {
-    @InjectMocks
-    private Filter filter = new Filter();
-
     @Test
     public void sjekkerLovligeTema_vedFiltrering_avSaker() throws Exception {
         List<Sak> saker = asList(
@@ -41,7 +38,7 @@ public class FilterTest {
                 lagSak("SAP")
         );
 
-        List<Sak> filtrerteSaker = filter.filtrerSaker(saker);
+        List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(0));
     }
 
@@ -106,7 +103,7 @@ public class FilterTest {
 
         );
 
-        List<Sak> filtrerteSaker = filter.filtrerSaker(saker);
+        List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
 
         assertThat(filtrerteSaker.size(), is(0));
     }
@@ -193,7 +190,7 @@ public class FilterTest {
 
         );
 
-        List<Sak> filtrerteSaker = filter.filtrerSaker(saker);
+        List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(3));
 
 
@@ -227,7 +224,7 @@ public class FilterTest {
                         ).build()
 
         );
-        List<Sak> filtrerteSaker = filter.filtrerSaker(saker);
+        List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(0));
     }
 
@@ -308,7 +305,7 @@ public class FilterTest {
 
 
         );
-        List<Behandling> filtrerteBehandlinger = filter.filtrerBehandlinger(hentBehandlingerfraBehandlingskjede(saker.get(0).getBehandlingskjede()));
+        List<Behandling> filtrerteBehandlinger = Filter.filtrerBehandlinger(hentBehandlingerfraBehandlingskjede(saker.get(0).getBehandlingskjede()));
         assertThat(filtrerteBehandlinger.size(), is(2));
 
     }
@@ -322,13 +319,13 @@ public class FilterTest {
 
     @Test
     public void filtrerBehandlingerUlovligPrefix() {
-        List<Behandling> behandling = filter.filtrerBehandlinger(ulovligPrefix());
+        List<Behandling> behandling = Filter.filtrerBehandlinger(ulovligPrefix());
         assertThat(behandling.size(), is(0));
     }
 
     @Test
     public void filtrerBehandlingerUlovligBehandlingsstatus() {
-        List<Behandling> behandling = filter.filtrerBehandlinger(ulovligBehandlingsstatus());
+        List<Behandling> behandling = Filter.filtrerBehandlinger(ulovligBehandlingsstatus());
         assertThat(behandling.size(), is(0));
     }
 

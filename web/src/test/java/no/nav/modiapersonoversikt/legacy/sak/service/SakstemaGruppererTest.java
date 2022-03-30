@@ -25,20 +25,11 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SakstemaGruppererTest {
-
-    @Mock
-    private TemagrupperHenter temagrupperHenter;
-
-    @InjectMocks
-    private SakstemaGrupperer sakstemaGrupperer;
-
     @Before
     public void setup() {
-        when(temagrupperHenter.genererTemagrupperMedTema()).thenReturn(new HashMap<String, List<String>>() {
-            {
-                put(Konstanter.TEMAGRUPPE_ARBEID, asList(Konstanter.DAGPENGER, SakstemaGrupperer.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER));
-            }
-        });
+        System.setProperty("saksoversikt.temagrupper","Arbeid");
+        System.setProperty("saksoversikt.temagrupper.Arbeid.navn","Arbeid");
+        System.setProperty("saksoversikt.temagrupper.Arbeid.temaer","DAG,OPP,AAP");
     }
 
     @Test
@@ -49,7 +40,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(SakstemaGrupperer.OPPFOLGING)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), Arrays.asList(new DokumentMetadata()
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging), Arrays.asList(new DokumentMetadata()
                 .withTilhorendeSakid("321")
                 .withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
 
@@ -67,7 +58,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.DAGPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(), Collections.emptyMap());
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(), Collections.emptyMap());
 
         assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
         assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_FAMILIE));
@@ -88,7 +79,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, sak1), asList(), Collections.emptyMap());
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(sak, sak1), asList(), Collections.emptyMap());
 
         assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
         assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_FAMILIE));
@@ -110,7 +101,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.DAGPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, sak1), asList(), Collections.emptyMap());
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(sak, sak1), asList(), Collections.emptyMap());
 
         assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
         assertThat(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).size(), equalTo(1));
@@ -128,7 +119,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.DAGPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("321")
                         .withBaksystem(Baksystem.JOARK),
@@ -153,7 +144,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.DAGPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("123")
                         .withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
@@ -175,7 +166,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.DAGPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("321")
                         .withBaksystem(Baksystem.JOARK)
@@ -198,7 +189,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.DAGPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), new ArrayList<>(), Collections.emptyMap());
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), new ArrayList<>(), Collections.emptyMap());
 
         assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
         assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
@@ -213,7 +204,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(SakstemaGrupperer.OPPFOLGING)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(new DokumentMetadata().withTilhorendeSakid("321").withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(new DokumentMetadata().withTilhorendeSakid("321").withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
 
         assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
         assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
@@ -231,7 +222,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.DAGPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(new DokumentMetadata().withTilhorendeSakid("321").withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(new DokumentMetadata().withTilhorendeSakid("321").withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
 
         assertTrue(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
         assertTrue(map.get(Konstanter.TEMAGRUPPE_ARBEID).contains(SakstemaGrupperer.OPPFOLGING));
@@ -253,7 +244,7 @@ public class SakstemaGruppererTest {
         Map<String, List<Behandlingskjede>> behandlingskjeder = new HashMap<>();
         behandlingskjeder.put("FOR", asList(new Behandlingskjede()));
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("321")
                         .withBaksystem(Baksystem.JOARK),
@@ -277,7 +268,7 @@ public class SakstemaGruppererTest {
         Map<String, List<Behandlingskjede>> behandlingskjeder = new HashMap<>();
         behandlingskjeder.put("AAP", asList(new Behandlingskjede()));
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak), asList(
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(sak), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("321")
                         .withBaksystem(Baksystem.JOARK))
@@ -303,7 +294,7 @@ public class SakstemaGruppererTest {
         Map<String, List<Behandlingskjede>> behandlingskjeder = new HashMap<>();
         behandlingskjeder.put("DAG", asList(new Behandlingskjede()));
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("321")
                         .withBaksystem(Baksystem.JOARK))
@@ -322,7 +313,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(SakstemaGrupperer.OPPFOLGING)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(), Collections.emptyMap());
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(), Collections.emptyMap());
 
         assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
         assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
@@ -340,7 +331,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(Konstanter.DAGPENGER)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(), Collections.emptyMap());
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(), Collections.emptyMap());
 
         assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
         assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
@@ -355,7 +346,7 @@ public class SakstemaGruppererTest {
                 .withTemakode(SakstemaGrupperer.OPPFOLGING)
                 .withAvsluttet(null);
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid(null)
                         .withBaksystem(Baksystem.HENVENDELSE)
@@ -374,7 +365,7 @@ public class SakstemaGruppererTest {
     public void dokumentIHenvendelseUtenSakGirNyttSakstema() {
 
 
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(new ArrayList<>(), asList(new DokumentMetadata()
+        Map<String, Set<String>> map = SakstemaGrupperer.grupperSakstema(new ArrayList<>(), asList(new DokumentMetadata()
                 .withTilhorendeSakid(null)
                 .withBaksystem(Baksystem.HENVENDELSE)
                 .withTemakode("DAG")), Collections.emptyMap());

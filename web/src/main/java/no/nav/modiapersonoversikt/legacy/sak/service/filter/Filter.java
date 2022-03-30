@@ -24,14 +24,15 @@ public class Filter {
     private static final List<String> ulovligeSakstema = Arrays.asList("FEI,SAK,SAP,OPP,YRA,GEN,AAR,KLA,HEL".split("\\s*,\\s*"));
     private static final List<String> lovligeBehandlingstyper = Arrays.asList("ae0047,ae0034,ae0014,ae0020,ae0019,ae0011,ae0045".split("\\s*,\\s*"));
 
-    public synchronized List<Sak> filtrerSaker(List<Sak> saker) {
+    public static List<Sak> filtrerSaker(List<Sak> saker) {
         return saker.stream()
                 .filter(HAR_LOVLIG_SAKSTEMA)
                 .filter(HAR_BEHANDLINGER)
-                .filter(HAR_MINST_EN_LOVLIG_BEHANDLING).collect(toList());
+                .filter(HAR_MINST_EN_LOVLIG_BEHANDLING)
+                .collect(toList());
     }
 
-    public synchronized List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger) {
+    public static List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger) {
         Stream<Behandling> lovligeBehandlinger = behandlinger.stream().filter(HAR_LOVLIG_BEHANDLINGSTYPE);
 
         return lovligeBehandlinger
