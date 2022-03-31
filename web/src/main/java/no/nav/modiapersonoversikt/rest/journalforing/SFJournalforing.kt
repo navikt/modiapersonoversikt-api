@@ -19,7 +19,7 @@ class SFJournalforing @Autowired constructor(
             kjedeId = traadId,
             saksTema = sak.temaKode,
             fagsakSystem = sak.fagsystemKode,
-            saksId = sak.fagsystemSaksId
+            saksId = if (sak.temaKode == "BID") null else sak.fagsystemSaksId
         )
     }
 }
