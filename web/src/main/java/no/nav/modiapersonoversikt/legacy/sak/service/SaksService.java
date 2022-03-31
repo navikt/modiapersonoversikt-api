@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sak;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.modiapersonoversikt.legacy.sak.utils.Java8Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -59,8 +58,7 @@ public class SaksService {
         Stream<Sak> fraGSak = maybeFraGSak.orElse(Stream.empty());
         Stream<Sak> fraPesys = maybeFraPesys.stream().flatMap(Collection::stream);
 
-        return new ResultatWrapper<>(Java8Utils.concat(fraGSak, fraPesys)
-                .collect(toList()), feilendeBaksystemer);
+        return new ResultatWrapper<>(Stream.concat(fraGSak, fraPesys).collect(toList()), feilendeBaksystemer);
     }
 
 }

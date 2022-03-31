@@ -33,33 +33,12 @@ public class FilterTest {
     public void sjekkerLovligeTema_vedFiltrering_avSaker() throws Exception {
         List<Sak> saker = asList(
                 lagSak("FEI"),
-                lagSak("AAP"),
                 lagSak("SAK"),
                 lagSak("SAP")
         );
 
         List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(0));
-    }
-
-    private Sak lagSak(String sakstema) throws Exception {
-        Sak sak = MockCreationUtil.createWSSak();
-        Sakstemaer sakstemaer = new Sakstemaer();
-        sakstemaer.setValue(sakstema);
-
-        Behandlingskjede behandlingskjede = MockCreationUtil.createWSBehandlingskjede();
-        Behandlingsstatuser behandlingstatus = new Behandlingsstatuser();
-        behandlingstatus.setValue(FilterUtils.AVSLUTTET);
-        behandlingskjede.setSisteBehandlingsstatus(behandlingstatus);
-        behandlingskjede.setSisteBehandlingREF("lovlig");
-        Behandlingstyper behandlingstype = new Behandlingstyper();
-        behandlingstype.setValue("ae0014");
-        behandlingskjede.setSisteBehandlingstype(behandlingstype);
-
-        sak.getBehandlingskjede().add(behandlingskjede);
-        sak.setSakstema(sakstemaer);
-
-        return sak;
     }
 
     @Test
@@ -329,6 +308,26 @@ public class FilterTest {
         assertThat(behandling.size(), is(0));
     }
 
+    private Sak lagSak(String sakstema) throws Exception {
+        Sak sak = MockCreationUtil.createWSSak();
+        Sakstemaer sakstemaer = new Sakstemaer();
+        sakstemaer.setValue(sakstema);
+
+        Behandlingskjede behandlingskjede = MockCreationUtil.createWSBehandlingskjede();
+        Behandlingsstatuser behandlingstatus = new Behandlingsstatuser();
+        behandlingstatus.setValue(FilterUtils.AVSLUTTET);
+        behandlingskjede.setSisteBehandlingsstatus(behandlingstatus);
+        behandlingskjede.setSisteBehandlingREF("lovlig");
+        Behandlingstyper behandlingstype = new Behandlingstyper();
+        behandlingstype.setValue("ae0014");
+        behandlingskjede.setSisteBehandlingstype(behandlingstype);
+
+        sak.getBehandlingskjede().add(behandlingskjede);
+        sak.setSakstema(sakstemaer);
+
+        return sak;
+    }
+
     private List<Behandling> ulovligPrefix() {
         return asList(
                 new Behandling()
@@ -348,6 +347,4 @@ public class FilterTest {
 
         );
     }
-
-
 }
