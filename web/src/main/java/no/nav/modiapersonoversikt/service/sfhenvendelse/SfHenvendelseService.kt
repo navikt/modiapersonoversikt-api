@@ -146,7 +146,7 @@ class SfHenvendelseServiceImpl(
                     journalforendeEnhet = enhet,
                     kjedeId = kjedeId.fixKjedeId(),
                     temakode = saksTema,
-                    fagsakId = saksId,
+                    fagsakId = if (saksTema == "BID") null else saksId,
                     fagsaksystem = fagsaksystem
                 )
             )
