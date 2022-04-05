@@ -74,10 +74,6 @@ spec:
       value: "https://abac-modia.intern.nav.no/application/authorize"
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app.adeo.no/varsel/ws/Brukervarsel/v1"
-    - name: INNSYNJOURNAL_V2_ENDPOINTURL
-      value: "https://dokarkiv.nais.adeo.no/services/innsynjournal/v2"
-    - name: JOURNAL_V2_ENDPOINTURL
-      value: "https://wasapp.adeo.no/joark/Journal/v2"
     - name: FELLES_KODEVERK_URL
       value: "https://kodeverk.nais.adeo.no"
     - name: LDAP_BASEDN
