@@ -147,7 +147,7 @@ class SfHenvendelseServiceImpl(
                     kjedeId = kjedeId.fixKjedeId(),
                     temakode = saksTema,
                     fagsakId = if (saksTema == "BID") null else saksId,
-                    fagsaksystem = fagsaksystem
+                    fagsaksystem = if (saksTema == "BID") null else fagsaksystem,
                 )
             )
     }
