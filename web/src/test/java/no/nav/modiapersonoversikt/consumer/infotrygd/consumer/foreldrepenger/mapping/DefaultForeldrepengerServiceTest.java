@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.mapping;
 
 import no.nav.modiapersonoversikt.commondomain.Periode;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.DefaultForeldrepengerService;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ForeldrepengerMockFactory;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ForeldrepengerServiceBi;
@@ -50,7 +49,7 @@ public class DefaultForeldrepengerServiceTest {
 
     }
 
-    @Test(expected = AuthorizationException.class)
+    @Test(expected = RuntimeException.class)
     public void hentForeldrepengerFinnesIkke() throws Exception {
         when(portType.hentForeldrepengerettighet(any(FimHentForeldrepengerettighetRequest.class))).thenThrow(new HentForeldrepengerettighetSikkerhetsbegrensning());
         service.hentForeldrepengerListe(request);

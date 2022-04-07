@@ -1,8 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger;
 
 import kotlin.Pair;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources;
@@ -74,12 +72,12 @@ public class PleiepengerServiceImpl implements PleiepengerService {
 
     private PleiepengerListeResponse handterSikkerhetsbegresning(HentPleiepengerettighetSikkerhetsbegrensning e) {
         logger.warn("HentPleiepengerListeSikkerhetsbegrensning ved kall på hentPleiepengerListe", e.getMessage());
-        throw new AuthorizationException(e.getMessage(), e);
+        throw new RuntimeException(e.getMessage(), e);
     }
 
     private PleiepengerListeResponse handterUgyldigIdent(HentPleiepengerettighetUgyldigIdentNr e) {
         logger.warn("Ugyldig identnummer ved kall på hentPleiepengerListe", e.getMessage());
-        throw new ApplicationException("Ugyldig identnummer ved kall på hentPleiepengerListe", e);
+        throw new RuntimeException("Ugyldig identnummer ved kall på hentPleiepengerListe", e);
     }
 
 }

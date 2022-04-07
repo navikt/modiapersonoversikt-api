@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
@@ -26,9 +25,6 @@ public class BulletproofKodeverkService {
     public ResultatWrapper<String> getTemanavnForTemakode(String temakode, EnhetligKodeverk.Kilde<String, String> kodeverkKilde) {
         try {
             return new ResultatWrapper<>(kodeverk.hentKodeverk(kodeverkKilde).hentVerdi(temakode, temakode));
-        } catch (ApplicationException e) {
-            LOG.warn("Fant ikke kodeverkid '" + temakode + "'. Bruker generisk tittel.", e);
-            return new ResultatWrapper<>(temakode);
         } catch (RuntimeException e) {
             LOG.error("Ukjent feil mot kall mot kodeverk", e);
             Set<Baksystem> feilendeBaksystemer = new HashSet<>();

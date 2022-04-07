@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest
 
 import no.nav.modiapersonoversikt.commondomain.Periode
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -32,7 +31,7 @@ fun lagRiktigDato(dato: String?): LocalDate? = dato?.let {
     try {
         LocalDate.parse(dato, DateTimeFormat.forPattern(DATOFORMAT))
     } catch (exception: IllegalFieldValueException) {
-        throw ApplicationException(exception.message)
+        throw RuntimeException(exception.message)
     }
 }
 

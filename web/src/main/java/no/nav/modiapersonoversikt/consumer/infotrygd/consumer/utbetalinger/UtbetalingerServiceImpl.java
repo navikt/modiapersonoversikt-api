@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.utbetalinger;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.SystemException;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.utbetalinger.Hovedytelse;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonIkkeTilgang;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
@@ -50,14 +48,14 @@ public class UtbetalingerServiceImpl implements UtbetalingerService {
         try {
             return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingsinformasjonPeriodeIkkeGyldig ex) {
-            throw new ApplicationException("Utbetalingsperioden er ikke gyldig. ", ex);
+            throw new RuntimeException("Utbetalingsperioden er ikke gyldig. ", ex);
         } catch (HentUtbetalingsinformasjonPersonIkkeFunnet ex) {
-            throw new ApplicationException("Person ikke funnet. ", ex);
+            throw new RuntimeException("Person ikke funnet. ", ex);
         } catch (HentUtbetalingsinformasjonIkkeTilgang ex) {
-            throw new ApplicationException("Ikke tilgang. ", ex);
+            throw new RuntimeException("Ikke tilgang. ", ex);
         } catch (Exception e) {
             logger.error("Henting av utbetalinger for bruker feilet.", e);
-            throw new SystemException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
+            throw new RuntimeException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
         }
     }
 

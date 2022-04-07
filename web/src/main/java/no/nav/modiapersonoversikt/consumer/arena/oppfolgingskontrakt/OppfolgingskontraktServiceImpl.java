@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 import kotlin.Pair;
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest;
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources;
@@ -44,7 +43,7 @@ public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktServic
         } catch (HentOppfoelgingskontraktListeSikkerhetsbegrensning hentOppfoelgingskontraktBegrensning) {
             logger.warn("HentOppfoelgingskontraktListeSikkerhetsbegrensning ved kall på hentOppfoelgingskontraktListe", hentOppfoelgingskontraktBegrensning.getMessage());
             auditLogger.denied("Årsak: " + hentOppfoelgingskontraktBegrensning.getMessage());
-            throw new AuthorizationException(hentOppfoelgingskontraktBegrensning.getMessage(), hentOppfoelgingskontraktBegrensning);
+            throw new RuntimeException(hentOppfoelgingskontraktBegrensning.getMessage(), hentOppfoelgingskontraktBegrensning);
         }
 
         return mapper.map(rawResponse);

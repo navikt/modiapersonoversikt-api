@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.dkif;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.HentDigitalKontaktinformasjonKontaktinformasjonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSEpostadresse;
@@ -31,7 +30,7 @@ public class DkifServiceImpl implements Dkif.Service {
             return DkifSoapExtentions.responseFromDTO(lagTomDigitalKontaktinformasjonResponse());
         } catch (Exception e) {
             logger.error("Feil ved henting fra dkif, ", e.getMessage());
-            throw new ApplicationException("Feil ved henting fra dkif ", e);
+            throw new RuntimeException("Feil ved henting fra dkif ", e);
         }
     }
 
