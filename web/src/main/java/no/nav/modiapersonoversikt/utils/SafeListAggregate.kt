@@ -35,7 +35,9 @@ class SafeListAggregate<TYPE, ERRORTYPE>(
     }
 
     fun getWithFailureHandling(handleFailures: (List<ERRORTYPE>) -> Unit): List<TYPE> {
-        handleFailures(this.failures)
+        if (this.failures.isNotEmpty()) {
+            handleFailures(this.failures)
+        }
         return this.successes
     }
 }
