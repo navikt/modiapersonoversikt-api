@@ -1,8 +1,6 @@
 package no.nav.modiapersonoversikt.service.utbetaling;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.service.utbetaling.domain.Hovedytelse;
-import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingServiceImpl;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonIkkeTilgang;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPersonIkkeFunnet;
@@ -68,7 +66,7 @@ public class UtbetalingServiceImplTest {
         assertThat(hovedytelser.size(), is(4));
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test(expected = RuntimeException.class)
     public void haandtererIkkeGyldigPeriodeFeilFraTjenesten() throws HentUtbetalingsinformasjonPeriodeIkkeGyldig, HentUtbetalingsinformasjonPersonIkkeFunnet, HentUtbetalingsinformasjonIkkeTilgang {
         UtbetalingServiceImpl spyService = spy(utbetalingService);
         LocalDate fom = LocalDate.now().withDayOfYear(1);

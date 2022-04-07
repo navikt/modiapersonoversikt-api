@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.mapping.SykepengerMapper;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.HentSykepengerListeSikkerhetsbegrensning;
@@ -48,7 +47,7 @@ public class DefaultSykepengerServiceTest {
 
     }
 
-    @Test(expected = AuthorizationException.class)
+    @Test(expected = RuntimeException.class)
     public void hentSykepengerFinnesIkke() throws Exception {
         when(portType.hentSykepengerListe(any(FimHentSykepengerListeRequest.class))).thenThrow(new HentSykepengerListeSikkerhetsbegrensning());
         service.hentSykmeldingsperioder(request);

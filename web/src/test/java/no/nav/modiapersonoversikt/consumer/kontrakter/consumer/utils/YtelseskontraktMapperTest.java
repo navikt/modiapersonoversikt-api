@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelsesk
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse;
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Dagpengeytelse;
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.*;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;
@@ -152,7 +151,7 @@ public class YtelseskontraktMapperTest {
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendarDate(year, month, day, 0);
         } catch (DatatypeConfigurationException e) {
-            throw new ApplicationException("DatatypeConfigurationException", e, "Klarer ikke å lage dato");
+            throw new RuntimeException("Klarer ikke å lage dato", e);
         }
     }
 
@@ -161,7 +160,7 @@ public class YtelseskontraktMapperTest {
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendarDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(), 0);
         } catch (DatatypeConfigurationException e) {
-            throw new ApplicationException("DatatypeConfigurationException", e, "Klarer ikke å lage dato");
+            throw new RuntimeException("Klarer ikke å lage dato", e);
         }
     }
 }

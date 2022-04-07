@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger;
 
 import kotlin.Pair;
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources;
@@ -45,7 +44,7 @@ public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
         } catch (HentForeldrepengerettighetSikkerhetsbegrensning ex) {
             logger.warn("HentForeldrepengerListeSikkerhetsbegrensning ved kall på hentForeldrepengerListe", ex.getMessage());
             auditLogger.denied("Årsak: " + ex.getMessage());
-            throw new AuthorizationException(ex.getMessage(), ex);
+            throw new RuntimeException(ex.getMessage(), ex);
         }
         return mapper.map(rawResponse);
     }
