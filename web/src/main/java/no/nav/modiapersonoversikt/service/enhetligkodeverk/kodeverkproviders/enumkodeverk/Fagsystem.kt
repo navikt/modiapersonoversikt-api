@@ -9,7 +9,9 @@ enum class Fagsystem(name: String) : EnumKodeverk.WithValue<String> {
     PP01("Pesys"),
     V2("V2"),
     UFM("Unntak"),
-    FS36("Vedtaksløsning Foreldrepenger");
+    FS36("Vedtaksløsning Foreldrepenger"),
+    BISYS("Kopiert inn i Bisys"),
+    BIDRAG("Kopiert inn i Bisys");
 
     override fun getValue(): String = this.name
 }

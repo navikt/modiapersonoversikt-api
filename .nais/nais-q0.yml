@@ -90,8 +90,6 @@ spec:
       value: "ldaps://ldapgw.preprod.local"
     - name: LDAP_USER_BASEDN
       value: "ou=NAV,ou=BusinessUnits,dc=preprod,dc=local"
-    - name: PENSJON_PENSJONSAK_V1_ENDPOINTURL
-      value: "https://pensjon-pen-q0.nais.preprod.local/pen/services/PensjonSak_v1"
     - name: SAF_GRAPHQL_URL
       value: "https://saf-q0.nais.preprod.local/graphql"
     - name: SAF_HENTDOKUMENT_URL
@@ -140,8 +138,6 @@ spec:
       value: "https://app-q0.adeo.no/tpsws-aura/ws/Personsok/v1"
     - name: VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/infotrygd-ws/Pleiepenger/v1"
-    - name: SAK_ENDPOINTURL
-      value: "https://sak.nais.preprod.local"
     - name: VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/infotrygd-ws/SykepengerService/v2"
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL

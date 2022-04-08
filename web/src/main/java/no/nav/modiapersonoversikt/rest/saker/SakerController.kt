@@ -12,12 +12,12 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantform
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.service.DokumentMetadataService
-import no.nav.modiapersonoversikt.legacy.sak.service.SaksService
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.SaksoversiktService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.rest.RestUtils
+import no.nav.modiapersonoversikt.service.saker.SakerService
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest
 class SakerController @Autowired constructor(
     private val saksoversiktService: SaksoversiktService,
     private val sakstemaService: SakstemaService,
-    private val saksService: SaksService,
+    private val sakerService: SakerService,
     private val tilgangskontrollService: TilgangskontrollService,
     private val dokumentMetadataService: DokumentMetadataService,
     private val safService: SafService,
@@ -44,7 +44,7 @@ class SakerController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
-                val sakerWrapper = saksService.hentAlleSaker(fnr)
+                val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
                 val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr, false)
 
                 // TODO skal denne metoden ligge i tilgangskontrollService?
@@ -223,6 +223,29 @@ class SakerController @Autowired constructor(
     private fun finnesDokumentReferansenIMetadata(dokumentMetadata: DokumentMetadata, dokumentreferanse: String): Boolean {
         return dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
             dokumentMetadata.vedlegg.any { dokument -> dokument.dokumentreferanse == dokumentreferanse }
+    }
+
+    private fun SakerService.Resultat.asWrapper(): ResultatWrapper<List<Sak>> {
+        val saker = this.saker.map {
+            Sak()
+                .withSaksId(it.saksId)
+                .withFagsaksnummer(it.fagsystemSaksId)
+                .withTemakode(it.temaKode)
+                .withBaksystem(Baksystem.SAF)
+                .withFagsystem(it.fagsystemKode)
+        }
+        val feilendeSystemer = this.feiledeSystemer
+            .map {
+                runCatching {
+                    Baksystem.valueOf(it)
+                }.getOrNull()
+            }
+            .toSet()
+
+        return ResultatWrapper(
+            saker,
+            feilendeSystemer
+        )
     }
 
     private fun unikId(): String = UUID.randomUUID().toString()
