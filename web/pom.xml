@@ -199,12 +199,6 @@
             <artifactId>norg-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>bisys-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sf-henvendelse-api</artifactId>
