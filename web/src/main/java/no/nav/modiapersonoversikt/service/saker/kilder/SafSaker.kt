@@ -20,7 +20,7 @@ class SafSaker(private val service: SafService) : SakerKilde {
                     opprettetDato = it.datoOpprettet?.value?.let { convertJavaDateTimeToJoda(it) }
                     saksId = it.arkivsaksnummer
                     fagsystemSaksId = it.fagsakId
-                    temaKode = it.tema?.name
+                    temaKode = it.tema?.name ?: ""
                     fagsystemKode = it.fagsaksystem ?: ""
                     sakstype = when (it.sakstype) {
                         Hentbrukerssaker.Sakstype.FAGSAK -> "MFS"

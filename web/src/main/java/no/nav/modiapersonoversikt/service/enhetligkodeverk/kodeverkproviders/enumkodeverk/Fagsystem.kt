@@ -10,8 +10,7 @@ enum class Fagsystem(name: String) : EnumKodeverk.WithValue<String> {
     V2("V2"),
     UFM("Unntak"),
     FS36("Vedtaksløsning Foreldrepenger"),
-    BISYS("Kopiert inn i Bisys"),
-    BIDRAG("Kopiert inn i Bisys");
+    BISYS("Kopiert inn i Bisys");
 
     override fun getValue(): String = this.name
 }

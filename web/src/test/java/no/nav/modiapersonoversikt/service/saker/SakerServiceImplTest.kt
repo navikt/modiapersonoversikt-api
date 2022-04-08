@@ -11,15 +11,11 @@ import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.saf.generated.Hentbrukerssaker
-import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
-import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saker.Sak.*
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilFagsystemNavn
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilTemaNavn
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
@@ -51,12 +47,6 @@ class SakerServiceImplTest {
     @MockK
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
 
-    @MockK
-    private lateinit var bidragSakControllerApi: BidragSakControllerApi
-
-    @MockK
-    private lateinit var unleashService: UnleashService
-
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
 
@@ -67,8 +57,6 @@ class SakerServiceImplTest {
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { kodeverk.hentKodeverk<String, String>(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
-        every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
-        every { unleashService.isEnabled(any<Feature>()) } returns false
 
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
     }

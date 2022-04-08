@@ -2,12 +2,10 @@
 
 package no.nav.modiapersonoversikt.service.saker
 
-import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.or
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
@@ -28,12 +26,6 @@ class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
 
-    @Autowired
-    private lateinit var bidragApiClient: BidragSakControllerApi
-
-    @Autowired
-    private lateinit var unleashService: UnleashService
-
     private lateinit var safSaker: SafSaker
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
@@ -44,7 +36,7 @@ class SakerServiceImpl : SakerService {
     fun setup() {
         safSaker = SafSaker(safService)
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
-        bidragSaker = BidragSaker(bidragApiClient, unleashService)
+        bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
         oppfolgingsSaker = OppfolgingsSaker()
     }

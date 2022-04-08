@@ -150,8 +150,6 @@ spec:
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
       value: "https://oppgave-q0.nais.preprod.local/"
-    - name: BISYS_BASEURL
-      value: "https://bidrag-sak.dev.adeo.no/bidrag-sak"
     - name: NORG2_BASEURL
       value: "https://app-q0.adeo.no/norg2"
     - name: PREFETCH_NORG_ANSATTLISTE_SCHEDULE
