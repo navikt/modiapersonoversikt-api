@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.rest.dialog.apis
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.service.saker.Sak
-import org.springframework.http.ResponseEntity
 import java.time.OffsetDateTime
 import java.util.HashMap
 import javax.servlet.http.HttpServletRequest
@@ -19,19 +18,19 @@ interface DialogApi {
         request: HttpServletRequest,
         fnr: String,
         referatRequest: SendReferatRequest
-    ): ResponseEntity<Void>
+    ): TraadDTO
 
     fun sendSporsmal(
         request: HttpServletRequest,
         fnr: String,
         sporsmalsRequest: SendSporsmalRequest
-    ): ResponseEntity<Void>
+    ): TraadDTO
 
     fun sendInfomelding(
         request: HttpServletRequest,
         fnr: String,
         infomeldingRequest: InfomeldingRequest
-    ): ResponseEntity<Void>
+    ): TraadDTO
 
     fun startFortsettDialog(
         request: HttpServletRequest,
@@ -44,7 +43,7 @@ interface DialogApi {
         request: HttpServletRequest,
         fnr: String,
         fortsettDialogRequest: FortsettDialogRequest
-    ): ResponseEntity<Void>
+    ): TraadDTO
 
     fun slaaSammenTraader(
         request: HttpServletRequest,
