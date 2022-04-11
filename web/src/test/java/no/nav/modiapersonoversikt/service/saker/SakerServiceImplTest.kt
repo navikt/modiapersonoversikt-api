@@ -11,14 +11,10 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.sak.SakApi
 import no.nav.modiapersonoversikt.consumer.sak.SakDto
-import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
-import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.pensjonsak.PsakService
 import no.nav.modiapersonoversikt.service.saker.Sak.*
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
@@ -58,12 +54,6 @@ class SakerServiceImplTest {
     @MockK
     private lateinit var pdlOppslagService: PdlOppslagService
 
-    @MockK
-    private lateinit var bidragSakControllerApi: BidragSakControllerApi
-
-    @MockK
-    private lateinit var unleashService: UnleashService
-
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
 
@@ -76,8 +66,6 @@ class SakerServiceImplTest {
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { kodeverk.hentKodeverk<String, String>(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
         every { pdlOppslagService.hentAktorId(any()) } returns "123456789"
-        every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
-        every { unleashService.isEnabled(any<Feature>()) } returns false
 
         every { sakApi.opprettSak(any()) } returns SakDto(id = "123")
 
@@ -102,7 +90,6 @@ class SakerServiceImplTest {
     fun `transformerer response til saksliste pensjon`() {
         every { sakApi.hentSaker(any()) } returns listOf()
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
-        every { bidragSakControllerApi.find(any()) } returns listOf()
 
         val pensjon = Sak()
         pensjon.temaKode = "PENS"
