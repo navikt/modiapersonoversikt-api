@@ -2,17 +2,13 @@
 
 package no.nav.modiapersonoversikt.service.saker
 
-import no.nav.modiapersonoversikt.consumer.sak.SakApi
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
-import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.service.pensjonsak.PsakService
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.function.Predicate.not
 import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
 
@@ -23,100 +19,60 @@ class SakerServiceImpl : SakerService {
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @Autowired
+    private lateinit var safService: SafService
+
+    @Autowired
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
 
-    @Autowired
-    private lateinit var psakService: PsakService
-
-    @Autowired
-    private lateinit var sakApi: SakApi
-
-    @Autowired
-    private lateinit var pdlOppslagService: PdlOppslagService
-
+    private lateinit var safSaker: SafSaker
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
     private lateinit var generelleSaker: GenerelleSaker
-    private lateinit var restSakSaker: RestSakSaker
     private lateinit var oppfolgingsSaker: OppfolgingsSaker
-    private lateinit var pensjonSaker: PensjonSaker
 
     @PostConstruct
     fun setup() {
+        safSaker = SafSaker(safService)
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
-        restSakSaker = RestSakSaker(sakApi, pdlOppslagService)
         oppfolgingsSaker = OppfolgingsSaker()
-        pensjonSaker = PensjonSaker(psakService)
     }
 
-    override fun hentSakSaker(fnr: String): SakerService.Resultat {
+    override fun hentSafSaker(fnr: String): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
-        val resultat = SakerService.Resultat()
-        return resultat.leggTilDataFraKilde(fnr, restSakSaker)
+        return SakerService.Resultat()
+            .leggTilDataFraKilde(fnr, safSaker)
     }
 
     override fun hentSaker(fnr: String): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
-        val (restSakSaker, pesysSaker) = inParallel(
-            { hentSammensatteSakerResultat(fnr) },
-            { hentPensjonSakerResultat(fnr) }
-        )
-        return slaSammenGsakPesysSaker(restSakSaker, pesysSaker)
-    }
 
-    fun hentSammensatteSakerResultat(fnr: String?): SakerService.Resultat {
-        requireFnrNotNullOrBlank(fnr)
-        val resultat = SakerService.Resultat()
-        resultat.leggTilDataFraKilde(fnr, restSakSaker)
-        resultat.leggTilDataFraKilde(fnr, arenaSaker)
-        resultat.leggTilDataFraKilde(fnr, generelleSaker)
-        resultat.leggTilDataFraKilde(fnr, oppfolgingsSaker)
-
-        leggTilFagsystemnavnOgTemanavn(
-            resultat.saker,
-            kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM),
-            kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA)
-        )
-
-        /**
-         * Bidragssaken må legges til etter `leggTilFagsystemnavnOgTemanavn` siden vi ikke har
-         * fagsystemkode-mapping for bidrag-hack saken
-         */
-        resultat.leggTilDataFraKilde(fnr, bidragSaker)
-
-        return resultat
+        return SakerService.Resultat()
+            .leggTilDataFraKilde(fnr, safSaker)
+            .leggTilDataFraKilde(fnr, arenaSaker)
+            .leggTilDataFraKilde(fnr, generelleSaker)
+            .leggTilDataFraKilde(fnr, oppfolgingsSaker)
+            .leggTilDataFraKilde(fnr, bidragSaker)
+            .leggTilTemaNavn(kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA))
+            .leggTilFagsystemNavn(kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM))
             .fjernIkkeGodkjenteSaker()
-    }
-
-    private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
-        this.saker.removeIf(not(GODKJENT_FAGSAK or GODKJENT_GENERELL))
-        return this
-    }
-
-    fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
-        requireFnrNotNullOrBlank(fnr)
-        val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker)
-        leggTilFagsystemnavnOgTemanavn(
-            resultat.saker,
-            kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM),
-            kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA)
-        )
-        return resultat
+            .fjernDuplikater()
     }
 
     companion object {
-        @JvmStatic
-        fun leggTilFagsystemnavnOgTemanavn(
-            saker: List<Sak>,
-            fagsystemKodeverk: EnhetligKodeverk.Kodeverk<String, String>,
-            arkivtemaKodeverk: EnhetligKodeverk.Kodeverk<String, String>,
-        ) {
-            saker.forEach {
-                it.fagsystemNavn = fagsystemKodeverk.hentVerdi(it.fagsystemKode ?: "", it.fagsystemKode ?: "")
-                it.temaNavn = arkivtemaKodeverk.hentVerdi(it.temaKode ?: "", it.temaKode ?: "")
+        private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
+            this.saker.removeIf {
+                !godkjentFagSak(it) && !godkjentGenerellSak(it)
             }
+            return this
+        }
+
+        private fun SakerService.Resultat.fjernDuplikater(): SakerService.Resultat {
+            return this.copy(
+                saker = this.saker.distinctBy { Pair(it.temaKode, it.fagsystemSaksId) }.toMutableList(),
+                feiledeSystemer = this.feiledeSystemer.distinct().toMutableList()
+            )
         }
 
         private fun SakerService.Resultat.leggTilDataFraKilde(fnr: String, kilde: SakerKilde): SakerService.Resultat {
@@ -129,29 +85,33 @@ class SakerServiceImpl : SakerService {
             return this
         }
 
-        private fun slaSammenGsakPesysSaker(
-            restSak: SakerService.Resultat,
-            pesys: SakerService.Resultat
-        ): SakerService.Resultat {
-            val pesysIder = pesys.saker.map { it.fagsystemSaksId }
-            return SakerService.Resultat(
-                (pesys.saker + restSak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }).toMutableList(),
-                (pesys.feiledeSystemer + restSak.feiledeSystemer).toMutableList()
-            )
+        fun SakerService.Resultat.leggTilTemaNavn(kodeverk: EnhetligKodeverk.Kodeverk<String, String>): SakerService.Resultat {
+            saker.forEach {
+                it.temaNavn = kodeverk.hentVerdi(it.temaKode ?: "", it.temaKode ?: "")
+            }
+            return this
         }
 
-        private val GODKJENT_FAGSAK: (Sak) -> Boolean = { sak ->
-            !sak.isSakstypeForVisningGenerell &&
-                Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
-                Sak.TEMAKODE_KLAGE_ANKE != sak.temaKode
+        fun SakerService.Resultat.leggTilFagsystemNavn(kodeverk: EnhetligKodeverk.Kodeverk<String, String>): SakerService.Resultat {
+            saker.forEach {
+                it.fagsystemNavn = kodeverk.hentVerdi(it.fagsystemKode ?: "", it.fagsystemKode ?: "")
+            }
+            return this
         }
 
-        private val GODKJENT_GENERELL: (Sak) -> Boolean = { sak ->
-            sak.isSakstypeForVisningGenerell &&
-                Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
-                Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
+        private fun godkjentFagSak(sak: Sak): Boolean {
+            val godkjentType = !sak.isSakstypeForVisningGenerell
+            val godkjentSystem = Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode)
+            val godkjentTema = Sak.TEMAKODE_KLAGE_ANKE != sak.temaKode
+
+            return godkjentType && godkjentSystem && godkjentTema
+        }
+        private fun godkjentGenerellSak(sak: Sak): Boolean {
+            val godkjentType = sak.isSakstypeForVisningGenerell
+            val godkjentSystem = Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode)
+            val godkjentTema = Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
+
+            return godkjentType && godkjentSystem && godkjentTema
         }
     }
 }
-
-private infix fun <T> ((T) -> Boolean).or(other: (T) -> Boolean): (T) -> Boolean = { this(it) || other(it) }

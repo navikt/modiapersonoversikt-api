@@ -7,7 +7,6 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
-import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
@@ -35,11 +34,6 @@ public class ModiaStubConfig {
     @Bean
     public SakOgBehandlingService sakOgBehandlingService() {
         return mock(SakOgBehandlingService.class);
-    }
-
-    @Bean
-    public PensjonSakV1 pensjonSakV1() {
-        return mock(PensjonSakV1.class);
     }
 
     @Bean
