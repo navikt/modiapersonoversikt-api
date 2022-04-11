@@ -74,10 +74,6 @@ spec:
       value: "https://abac-modia-q1.dev.intern.nav.no/application/authorize"
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app-q1.adeo.no/varsel/ws/Brukervarsel/v1"
-    - name: INNSYNJOURNAL_V2_ENDPOINTURL
-      value: "https://dokarkiv-q1.nais.preprod.local/services/innsynjournal/v2"
-    - name: JOURNAL_V2_ENDPOINTURL
-      value: "https://wasapp-q1.adeo.no/joark/Journal/v2"
     - name: FELLES_KODEVERK_URL
       value: "https://kodeverk.nais.preprod.local"
     - name: LDAP_BASEDN
@@ -156,8 +152,6 @@ spec:
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
       value: "https://oppgave.nais.preprod.local/"
-    - name: BISYS_BASEURL
-      value: "https://bidrag-sak.dev.adeo.no/bidrag-sak"
     - name: NORG2_BASEURL
       value: "https://app-q1.adeo.no/norg2"
     - name: PREFETCH_NORG_ANSATTLISTE_SCHEDULE

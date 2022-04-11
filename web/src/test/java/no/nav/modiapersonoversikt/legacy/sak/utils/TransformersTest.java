@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.sak.utils;
 
-import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.legacy.sak.BehandlingskjedeBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
@@ -130,7 +129,7 @@ public class TransformersTest {
         assertThat(collect.get(0).behandlingsId, equalTo("hovedskjemakodeverkref"));
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test(expected = RuntimeException.class)
     public void ugyldigBehandlingsstatusKasterException() {
             Stream.of(
                     BehandlingskjedeBuilder.create()

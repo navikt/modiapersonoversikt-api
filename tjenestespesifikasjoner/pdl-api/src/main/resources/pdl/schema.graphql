@@ -17,6 +17,7 @@ type Query {
     hentIdenter(ident: ID!, grupper: [IdentGruppe!], historikk: Boolean = false): Identliste
     hentIdenterBolk(identer: [ID!]!, grupper: [IdentGruppe!], historikk: Boolean = false): [HentIdenterBolkResult!]!
     hentGeografiskTilknytning(ident: ID!): GeografiskTilknytning
+    hentGeografiskTilknytningBolk(identer: [ID!]!): [hentGeografiskTilknytningBolkResult!]!
     sokPerson(criteria:[Criterion], paging:Paging): PersonSearchResult
     sokAdresse(criteria:[Criterion], paging:Paging): AdresseSearchResult
     forslagAdresse(parameters:CompletionParameters): AdresseCompletionResult
@@ -432,6 +433,12 @@ type GeografiskTilknytning {
     gtBydel: String
     gtLand: String
     regel: String!
+}
+
+type hentGeografiskTilknytningBolkResult {
+    ident: String!
+    geografiskTilknytning: GeografiskTilknytning
+    code: String!
 }
 
 enum GtType {

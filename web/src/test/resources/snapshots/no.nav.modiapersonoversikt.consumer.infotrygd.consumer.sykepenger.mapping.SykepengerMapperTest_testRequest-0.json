@@ -1,7 +1,7 @@
 {
   "ident" : "12345612345",
   "sykmelding" : {
-    "fom" : [ "java.util.GregorianCalendar", "2019-10-12T22:00:00.000+00:00" ],
-    "tom" : [ "java.util.GregorianCalendar", "2020-10-12T22:00:00.000+00:00" ]
+    "fom" : [ "javax.xml.datatype.XMLGregorianCalendar", "2019-10-12T22:00:00.000+00:00" ],
+    "tom" : [ "javax.xml.datatype.XMLGregorianCalendar", "2020-10-12T22:00:00.000+00:00" ]
   }
 }

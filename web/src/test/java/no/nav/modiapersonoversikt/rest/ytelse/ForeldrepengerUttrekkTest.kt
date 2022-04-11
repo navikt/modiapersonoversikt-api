@@ -4,7 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.DefaultForeldrepengerService
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.mapping.ForeldrepengerMapper
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.ForeldrepengerV2
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.HentForeldrepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.informasjon.FimFoedsel
@@ -36,7 +35,7 @@ internal class ForeldrepengerUttrekkTest {
     fun `Kaster Auth exception`() {
         every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } throws HentForeldrepengerettighetSikkerhetsbegrensning()
 
-        assertFailsWith<AuthorizationException> { uttrekk.hent(FNR) }
+        assertFailsWith<RuntimeException> { uttrekk.hent(FNR) }
     }
 
     @Test

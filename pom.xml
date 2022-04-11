@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <version>2.6.5</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -23,7 +23,7 @@
     <properties>
         <java.version>11</java.version>
         <jaxb.version>2.3.0</jaxb.version>
-        <common.version>2.2022.02.02_08.38-0d7a7fabdc04</common.version>
+        <common.version>2.2022.04.01_08.27-cbfeb0be0ee0</common.version>
         <fluent-hc.version>4.2.4</fluent-hc.version>
         <kotlin.version>1.6.10</kotlin.version>
         <mockito.version>2.25.0</mockito.version>
@@ -44,26 +44,18 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Bump jackson as 2.11.2 (set by spring-boot-dependencies@2.3.4.RELEASE) contains a bug -->
-            <dependency>
-                <groupId>com.fasterxml.jackson</groupId>
-                <artifactId>jackson-bom</artifactId>
-                <version>2.11.3</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <!-- overskriver no.nav.common.bom for å sikre at vi har riktige versjoner i henhold til spring-boot -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
-                <version>5.2.9.RELEASE</version>
+                <version>5.3.18</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.3.4.RELEASE</version>
+                <version>2.6.5</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -206,16 +198,6 @@
             </dependency>
 
             <!--Dialogarena tjenestespesifikasjon-->
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>joark-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>nav-innsynJournal-v2-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>utbetaling-tjenestespesifikasjon</artifactId>

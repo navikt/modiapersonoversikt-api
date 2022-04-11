@@ -3,13 +3,11 @@
 package no.nav.modiapersonoversikt.service.saker
 
 import no.nav.modiapersonoversikt.consumer.sak.SakApi
-import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.pensjonsak.PsakService
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
@@ -34,13 +32,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var sakApi: SakApi
 
     @Autowired
-    private lateinit var bidragApiClient: BidragSakControllerApi
-
-    @Autowired
     private lateinit var pdlOppslagService: PdlOppslagService
-
-    @Autowired
-    private lateinit var unleashService: UnleashService
 
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
@@ -52,7 +44,7 @@ class SakerServiceImpl : SakerService {
     @PostConstruct
     fun setup() {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
-        bidragSaker = BidragSaker(bidragApiClient, unleashService)
+        bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
         restSakSaker = RestSakSaker(sakApi, pdlOppslagService)
         oppfolgingsSaker = OppfolgingsSaker()

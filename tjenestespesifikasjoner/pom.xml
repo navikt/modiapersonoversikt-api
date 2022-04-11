@@ -33,7 +33,6 @@
         <module>sf-henvendelse-api</module>
         <module>pdl-api</module>
         <module>saf-api</module>
-        <module>bisys-api</module>
         <module>dkif-api</module>
         <module>kodeverk-api</module>
         <module>norg-api</module>

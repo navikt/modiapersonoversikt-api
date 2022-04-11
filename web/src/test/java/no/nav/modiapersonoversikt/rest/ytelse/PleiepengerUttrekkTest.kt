@@ -4,7 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.PleiepengerServiceImpl
-import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1
@@ -33,7 +32,7 @@ internal class PleiepengerUttrekkTest {
     fun `Kaster Auth exception`() {
         every { pleiepengerV1.hentPleiepengerettighet(any()) } throws HentPleiepengerettighetSikkerhetsbegrensning()
 
-        assertFailsWith<AuthorizationException> { uttrekk.hent(FNR) }
+        assertFailsWith<RuntimeException> { uttrekk.hent(FNR) }
     }
 
     @Test

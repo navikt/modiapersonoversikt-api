@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
-import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import org.springframework.context.annotation.Bean;
@@ -15,10 +14,6 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 public class CacheTestConfig {
-    @Bean
-    public InnsynJournalV2 innsynJournalV2() {
-        return mock(InnsynJournalV2.class);
-    }
 
     @Bean
     public OppfolgingskontraktService oppfolgingskontraktService() {
