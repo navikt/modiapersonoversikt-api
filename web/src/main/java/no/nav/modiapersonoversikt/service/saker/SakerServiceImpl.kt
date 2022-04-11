@@ -6,11 +6,9 @@ import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.utils.or
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.function.Predicate.not
 import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
 
@@ -64,7 +62,9 @@ class SakerServiceImpl : SakerService {
 
     companion object {
         private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
-            this.saker.removeIf(not(::godkjentFagSak or ::godkjentGenerellSak))
+            this.saker.removeIf {
+                !godkjentFagSak(it) && !godkjentGenerellSak(it)
+            }
             return this
         }
 
