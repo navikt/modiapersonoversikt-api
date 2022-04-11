@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.saker
 
+import com.expediagroup.graphql.types.GraphQLResponse
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import io.mockk.*
@@ -9,12 +10,12 @@ import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.consumer.sak.SakApi
-import no.nav.modiapersonoversikt.consumer.sak.SakDto
+import no.nav.modiapersonoversikt.consumer.saf.generated.Hentbrukerssaker
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.service.pensjonsak.PsakService
 import no.nav.modiapersonoversikt.service.saker.Sak.*
+import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilFagsystemNavn
+import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilTemaNavn
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
@@ -25,15 +26,13 @@ import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import org.slf4j.MDC
-import java.time.OffsetDateTime
-import kotlin.collections.ArrayList
+import java.time.LocalDateTime
 import kotlin.contracts.ExperimentalContracts
 import kotlin.streams.toList
 
@@ -43,81 +42,52 @@ class SakerServiceImplTest {
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @MockK
+    private lateinit var safService: SafService
+
+    @MockK
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
-
-    @MockK
-    private lateinit var psakService: PsakService
-
-    @MockK
-    private lateinit var sakApi: SakApi
-
-    @MockK
-    private lateinit var pdlOppslagService: PdlOppslagService
 
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
 
     @BeforeEach
     fun setUp() {
-        EnvironmentUtils.setProperty("SAK_ENDPOINTURL", "https://sak-url", EnvironmentUtils.Type.PUBLIC)
         EnvironmentUtils.setProperty("BISYS_BASEURL", "https://bisys-url", EnvironmentUtils.Type.PUBLIC)
         MockKAnnotations.init(this, relaxUnitFun = true)
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { kodeverk.hentKodeverk<String, String>(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
-        every { pdlOppslagService.hentAktorId(any()) } returns "123456789"
-
-        every { sakApi.opprettSak(any()) } returns SakDto(id = "123")
 
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
     }
 
     @Test
     fun `transformerer response til saksliste`() {
-        every { sakApi.hentSaker(any()) } returns createSaksliste()
+        every { safService.hentSaker(any()) } returns createSaksliste()
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
-        val saksliste: List<Sak> = sakerService.hentSammensatteSakerResultat(FNR).saker
-        assertThat(saksliste[0].saksId, `is`(SakId_1))
+
+        val saksliste: List<Sak> = sakerService.hentSaker(FNR).saker
+
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
         assertThat(saksliste[saksliste.size - 1].temaKode, `is`("BID"))
-        assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
-        assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
-    }
-
-    @Test
-    fun `transformerer response til saksliste pensjon`() {
-        every { sakApi.hentSaker(any()) } returns listOf()
-        every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
-
-        val pensjon = Sak()
-        pensjon.temaKode = "PENS"
-        val ufore = Sak()
-        ufore.temaKode = "UFO"
-        val pensjonssaker = listOf(pensjon, ufore)
-        every { psakService.hentSakerFor(FNR) } returns pensjonssaker
-
-        val saksliste = sakerService.hentSaker(FNR).saker
-
-        assertThat(saksliste.size, `is`(3))
-        assertThat(saksliste[0].temaNavn, `is`("PENS"))
-        assertThat(saksliste[1].temaNavn, `is`("UFO"))
+        assertThat(saksliste[saksliste.size - 1].fagsystemKode, `is`("BISYS"))
     }
 
     @Test
     @DisplayName("oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak")
     fun `oppretter ikke generell oppfolgingssak`() {
-        every { sakApi.hentSaker(any()) } returns createOppfolgingSaksliste()
-        val saker = sakerService.hentSammensatteSakerResultat(FNR).saker.stream()
+        every { safService.hentSaker(any()) } returns createOppfolgingSaksliste()
+        val saker = sakerService.hentSaker(FNR).saker.stream()
             .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].sakstype, not(`is`(SAKSTYPE_GENERELL)))
     }
 
     @Test
-    @DisplayName("oppretter ìkke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak")
-    fun `oppretter ìkke generell oppfolgingssak dersom denne finnes allerede`() {
+    @DisplayName("oppretter ikke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak")
+    fun `oppretter ikke generell oppfolgingssak dersom denne finnes allerede`() {
         val saker =
             sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
@@ -126,7 +96,7 @@ class SakerServiceImplTest {
 
     @Test
     fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i sak`() {
-        every { psakService.hentSakerFor(any()) } returns emptyList()
+        every { safService.hentSaker(any()) } returns GraphQLResponse()
         val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse().withSakListe(
@@ -143,6 +113,90 @@ class SakerServiceImplTest {
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
         assertThat(saker[0].fagsystemKode, `is`(FAGSYSTEMKODE_ARENA))
         assertThat(saker[0].finnesIGsak, `is`(false))
+    }
+
+    @Test
+    fun `oversetter fagsystemkode til fagsystemnavn`() {
+        val kodeverk = EnhetligKodeverk.Kodeverk(
+            "mock",
+            mapOf(
+                "PP01" to "Pesys"
+            )
+        )
+        val resultat = SakerService.Resultat(
+            mutableListOf(
+                Sak().apply {
+                    fagsystemKode = "PP01"
+                }
+            )
+        )
+
+        resultat.leggTilFagsystemNavn(kodeverk)
+
+        assertThat(resultat.saker.first().fagsystemNavn, `is`("Pesys"))
+    }
+
+    @Test
+    fun `setter fagsystemnavn til fagsystemkode om mapping ikke finnes`() {
+        val kodeverk = EnhetligKodeverk.Kodeverk(
+            "mock",
+            mapOf(
+                "PP01" to "Pesys"
+            )
+        )
+        val resultat = SakerService.Resultat(
+            mutableListOf(
+                Sak().apply {
+                    fagsystemKode = "AO01"
+                }
+            )
+        )
+
+        resultat.leggTilFagsystemNavn(kodeverk)
+
+        assertThat(resultat.saker.first().fagsystemNavn, `is`("AO01"))
+    }
+
+    @Test
+    fun `oversetter temakode til temanavn`() {
+        val kodeverk = EnhetligKodeverk.Kodeverk(
+            "mock",
+            mapOf(
+                "DAG" to "Dagpenger"
+            )
+        )
+        val resultat = SakerService.Resultat(
+            mutableListOf(
+                Sak().apply {
+                    temaKode = "DAG"
+                }
+            )
+        )
+
+        resultat.leggTilTemaNavn(kodeverk)
+
+        assertThat(resultat.saker.first().temaNavn, `is`("Dagpenger"))
+    }
+
+    @Test
+    fun `setter temanavn til temakode om mapping ikke finnes`() {
+        val kodeverk = EnhetligKodeverk.Kodeverk(
+            "mock",
+            mapOf(
+                "DAG" to "Dagpenger"
+            )
+        )
+        val resultat = SakerService.Resultat(
+            mutableListOf(
+                Sak().apply {
+                    temaKode = "AAP"
+                }
+            )
+        )
+
+        resultat.leggTilTemaNavn(kodeverk)
+
+        assertThat(resultat.saker.first().temaNavn, `is`("AAP"))
     }
 
     companion object {
@@ -166,101 +220,77 @@ class SakerServiceImplTest {
         const val FagsystemSakId_3 = "33"
         const val SakId_4 = "4"
 
-        fun lagSak(): Sak {
-            val sak = Sak()
-            sak.temaKode = "GEN"
-            sak.finnesIGsak = false
-            sak.fagsystemKode = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
-            sak.sakstype = SAKSTYPE_GENERELL
-            sak.opprettetDato = DateTime.now()
-            return sak
-        }
+        fun earlierDateTimeWithOffSet(offset: Long) = Hentbrukerssaker.DateTime(
+            LocalDateTime.now().minusDays(offset)
+        )
 
-        fun lagSakUtenFagsystemId(): Sak {
-            val sak = Sak()
-            sak.temaKode = "STO"
-            sak.finnesIGsak = false
-            sak.fagsystemKode = ""
-            sak.sakstype = SAKSTYPE_GENERELL
-            sak.opprettetDato = DateTime.now()
-            return sak
-        }
-
-        fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
-
-        fun createSaksliste(): List<SakDto> {
-            return ArrayList(
-                listOf(
-                    SakDto(
-                        id = SakId_1,
-                        tema = "AAP",
-                        applikasjon = "IT01",
-                        aktoerId = "123",
-                        orgnr = null,
-                        fagsakNr = FagsystemSakId_1,
-                        opprettetAv = null,
-                        opprettetTidspunkt = earlierDateTimeWithOffSet(4)
-                    ),
-
-                    SakDto(
-                        id = SakId_2,
-                        tema = "AGR",
-                        applikasjon = "IT01",
-                        aktoerId = "123",
-                        orgnr = null,
-                        fagsakNr = FagsystemSakId_2,
-                        opprettetAv = null,
-                        opprettetTidspunkt = earlierDateTimeWithOffSet(3)
-                    ),
-
-                    SakDto(
-                        id = SakId_3,
-                        tema = "AAP",
-                        applikasjon = "IT01",
-                        aktoerId = "123",
-                        orgnr = null,
-                        fagsakNr = FagsystemSakId_3,
-                        opprettetAv = null,
-                        opprettetTidspunkt = earlierDateTimeWithOffSet(5)
-                    ),
-
-                    SakDto(
-                        id = SakId_4,
-                        tema = "STO",
-                        applikasjon = "",
-                        aktoerId = "123",
-                        orgnr = null,
-                        fagsakNr = null,
-                        opprettetAv = null,
-                        opprettetTidspunkt = earlierDateTimeWithOffSet(5)
+        fun createSaksliste(): GraphQLResponse<Hentbrukerssaker.Result> {
+            return GraphQLResponse(
+                data = Hentbrukerssaker.Result(
+                    saker = listOf(
+                        Hentbrukerssaker.Sak(
+                            arkivsaksnummer = SakId_1,
+                            arkivsaksystem = null,
+                            datoOpprettet = earlierDateTimeWithOffSet(4),
+                            fagsakId = FagsystemSakId_1,
+                            fagsaksystem = "IT01",
+                            sakstype = Hentbrukerssaker.Sakstype.FAGSAK,
+                            tema = null
+                        ),
+                        Hentbrukerssaker.Sak(
+                            arkivsaksnummer = SakId_2,
+                            arkivsaksystem = null,
+                            datoOpprettet = earlierDateTimeWithOffSet(3),
+                            fagsaksystem = "IT01",
+                            fagsakId = FagsystemSakId_2,
+                            sakstype = Hentbrukerssaker.Sakstype.FAGSAK,
+                            tema = null
+                        ),
+                        Hentbrukerssaker.Sak(
+                            arkivsaksnummer = SakId_3,
+                            arkivsaksystem = null,
+                            datoOpprettet = earlierDateTimeWithOffSet(5),
+                            fagsaksystem = "IT01",
+                            fagsakId = FagsystemSakId_3,
+                            sakstype = Hentbrukerssaker.Sakstype.FAGSAK,
+                            tema = null
+                        ),
+                        Hentbrukerssaker.Sak(
+                            arkivsaksnummer = SakId_4,
+                            arkivsaksystem = null,
+                            datoOpprettet = earlierDateTimeWithOffSet(5),
+                            fagsaksystem = null,
+                            fagsakId = null,
+                            sakstype = Hentbrukerssaker.Sakstype.GENERELL_SAK,
+                            tema = Hentbrukerssaker.Tema.STO
+                        )
                     )
                 )
             )
         }
 
-        fun createOppfolgingSaksliste(): MutableList<SakDto> {
-            return ArrayList(
-                listOf(
-                    SakDto(
-                        id = "4",
-                        tema = "OPP",
-                        applikasjon = "AO01",
-                        aktoerId = "123",
-                        orgnr = null,
-                        fagsakNr = "44",
-                        opprettetAv = null,
-                        opprettetTidspunkt = earlierDateTimeWithOffSet(0)
-                    ),
-
-                    SakDto(
-                        id = "5",
-                        tema = "OPP",
-                        applikasjon = "FS22",
-                        aktoerId = "123",
-                        orgnr = null,
-                        fagsakNr = null,
-                        opprettetAv = null,
-                        opprettetTidspunkt = earlierDateTimeWithOffSet(3)
+        fun createOppfolgingSaksliste(): GraphQLResponse<Hentbrukerssaker.Result> {
+            return GraphQLResponse(
+                data = Hentbrukerssaker.Result(
+                    saker = listOf(
+                        Hentbrukerssaker.Sak(
+                            arkivsaksnummer = "4",
+                            arkivsaksystem = null,
+                            datoOpprettet = earlierDateTimeWithOffSet(0),
+                            fagsaksystem = "AO01",
+                            fagsakId = "44",
+                            sakstype = Hentbrukerssaker.Sakstype.FAGSAK,
+                            tema = Hentbrukerssaker.Tema.OPP
+                        ),
+                        Hentbrukerssaker.Sak(
+                            arkivsaksnummer = "5",
+                            arkivsaksystem = null,
+                            datoOpprettet = earlierDateTimeWithOffSet(3),
+                            fagsaksystem = "FS22",
+                            fagsakId = null,
+                            sakstype = Hentbrukerssaker.Sakstype.GENERELL_SAK,
+                            tema = Hentbrukerssaker.Tema.OPP
+                        )
                     )
                 )
             )

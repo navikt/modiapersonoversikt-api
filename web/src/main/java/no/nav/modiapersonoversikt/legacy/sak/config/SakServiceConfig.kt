@@ -1,9 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.sak.config
 
 import no.nav.modiapersonoversikt.legacy.sak.service.DokumentMetadataService
-import no.nav.modiapersonoversikt.legacy.sak.service.PesysService
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService
-import no.nav.modiapersonoversikt.legacy.sak.service.SaksService
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl
@@ -19,18 +17,8 @@ open class SakServiceConfig {
     }
 
     @Bean
-    open fun pesysService(): PesysService {
-        return PesysService()
-    }
-
-    @Bean
     open fun sakstemaService(): SakstemaService {
         return SakstemaService()
-    }
-
-    @Bean
-    open fun saksService(): SaksService {
-        return SaksService()
     }
 
     @Bean
