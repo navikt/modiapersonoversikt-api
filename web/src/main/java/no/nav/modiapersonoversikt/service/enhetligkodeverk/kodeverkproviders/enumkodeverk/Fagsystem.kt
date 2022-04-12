@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.enumkodeverk
 
-enum class Fagsystem(name: String) : EnumKodeverk.WithValue<String> {
+enum class Fagsystem(private val systemnavn: String) : EnumKodeverk.WithValue<String> {
     AO01("Arena"),
     AO11("Grisen"),
     FS22("Gosys"),
@@ -12,5 +12,5 @@ enum class Fagsystem(name: String) : EnumKodeverk.WithValue<String> {
     FS36("Vedtaksløsning Foreldrepenger"),
     BISYS("Kopiert inn i Bisys");
 
-    override fun getValue(): String = this.name
+    override fun getValue(): String = this.systemnavn
 }
