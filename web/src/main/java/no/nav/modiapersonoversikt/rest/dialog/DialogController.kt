@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
@@ -36,7 +35,7 @@ class DialogController @Autowired constructor(
         request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody referatRequest: SendReferatRequest
-    ): ResponseEntity<Void> {
+    ): TraadDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
@@ -49,7 +48,7 @@ class DialogController @Autowired constructor(
         request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody sporsmalsRequest: SendSporsmalRequest
-    ): ResponseEntity<Void> {
+    ): TraadDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
@@ -62,7 +61,7 @@ class DialogController @Autowired constructor(
         request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody infomeldingRequest: InfomeldingRequest
-    ): ResponseEntity<Void> {
+    ): TraadDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
@@ -93,7 +92,7 @@ class DialogController @Autowired constructor(
         request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody fortsettDialogRequest: FortsettDialogRequest
-    ): ResponseEntity<Void> {
+    ): TraadDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to fnr,
             AuditIdentifier.BEHANDLING_ID to fortsettDialogRequest.behandlingsId,

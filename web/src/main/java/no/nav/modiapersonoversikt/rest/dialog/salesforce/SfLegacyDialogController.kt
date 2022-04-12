@@ -19,7 +19,6 @@ import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -50,8 +49,8 @@ class SfLegacyDialogController(
             }
     }
 
-    override fun sendMelding(request: HttpServletRequest, fnr: String, referatRequest: SendReferatRequest): ResponseEntity<Void> {
-        sfHenvendelseService.sendSamtalereferat(
+    override fun sendMelding(request: HttpServletRequest, fnr: String, referatRequest: SendReferatRequest): TraadDTO {
+        val henvendelse = sfHenvendelseService.sendSamtalereferat(
             kjedeId = null,
             bruker = EksternBruker.Fnr(fnr),
             enhet = RestUtils.hentValgtEnhet(null, request),
@@ -59,10 +58,15 @@ class SfLegacyDialogController(
             kanal = referatRequest.meldingstype.getKanal(),
             fritekst = referatRequest.fritekst
         )
-        return ResponseEntity(HttpStatus.OK)
+
+        return parseFraHenvendelseTilTraad(henvendelse)
     }
 
-    override fun sendSporsmal(request: HttpServletRequest, fnr: String, sporsmalsRequest: SendSporsmalRequest): ResponseEntity<Void> {
+    override fun sendSporsmal(
+        request: HttpServletRequest,
+        fnr: String,
+        sporsmalsRequest: SendSporsmalRequest
+    ): TraadDTO {
         val enhet = RestUtils.hentValgtEnhet(sporsmalsRequest.enhet, request)
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
@@ -78,10 +82,15 @@ class SfLegacyDialogController(
             saksTema = sporsmalsRequest.sak.temaKode,
             fagsakSystem = sporsmalsRequest.sak.fagsystemKode
         )
-        return ResponseEntity(HttpStatus.OK)
+
+        return parseFraHenvendelseTilTraad(henvendelse)
     }
 
-    override fun sendInfomelding(request: HttpServletRequest, fnr: String, infomeldingRequest: InfomeldingRequest): ResponseEntity<Void> {
+    override fun sendInfomelding(
+        request: HttpServletRequest,
+        fnr: String,
+        infomeldingRequest: InfomeldingRequest
+    ): TraadDTO {
         val enhet = RestUtils.hentValgtEnhet(infomeldingRequest.enhet, request)
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
@@ -100,7 +109,7 @@ class SfLegacyDialogController(
             fagsakSystem = infomeldingRequest.sak.fagsystemKode
         )
 
-        return ResponseEntity(HttpStatus.OK)
+        return parseFraHenvendelseTilTraad(henvendelse)
     }
 
     override fun startFortsettDialog(
@@ -113,7 +122,8 @@ class SfLegacyDialogController(
          * Artifakt av legacy-henvendelse, beholdt for å holde apiene like.
          */
         val traad = sfHenvendelseService.hentHenvendelse(opprettHenvendelseRequest.traadId)
-        val oppgaveId: String? = finnOgTilordneOppgaveIdTilTrad(traad, fnr, opprettHenvendelseRequest.enhet, ignorerConflict ?: false)
+        val oppgaveId: String? =
+            finnOgTilordneOppgaveIdTilTrad(traad, fnr, opprettHenvendelseRequest.enhet, ignorerConflict ?: false)
 
         return FortsettDialogDTO(opprettHenvendelseRequest.traadId, oppgaveId)
     }
@@ -122,7 +132,7 @@ class SfLegacyDialogController(
         request: HttpServletRequest,
         fnr: String,
         fortsettDialogRequest: FortsettDialogRequest
-    ): ResponseEntity<Void> {
+    ): TraadDTO {
         val kjedeId = fortsettDialogRequest.traadId
         val oppgaveId = fortsettDialogRequest.oppgaveId
 
@@ -137,16 +147,22 @@ class SfLegacyDialogController(
 
         if (oppgaveId != null) {
             val oppgave: Oppgave? = oppgaveBehandlingService.hentOppgave(oppgaveId)
-            if (fortsettDialogRequest.traadId != oppgave?.henvendelseId) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet '${fortsettDialogRequest.traadId}', men fant '${oppgave?.henvendelseId}'")
+            if (kjedeId != oppgave?.henvendelseId) {
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Feil oppgaveId fra client. Forventet '$kjedeId', men fant '${oppgave?.henvendelseId}'"
+                )
             } else if (oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId)) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt")
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt"
+                )
             }
         }
         val erSamtalereferat = REFERAT_TYPER.contains(fortsettDialogRequest.meldingstype)
         if (erSamtalereferat) {
             henvendelse = sfHenvendelseService.sendSamtalereferat(
-                kjedeId = fortsettDialogRequest.traadId,
+                kjedeId = kjedeId,
                 bruker = bruker,
                 enhet = enhet,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
@@ -167,7 +183,7 @@ class SfLegacyDialogController(
         } else {
             henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
                 bruker = bruker,
-                kjedeId = fortsettDialogRequest.traadId,
+                kjedeId = kjedeId,
                 enhet = enhet,
                 tilknyttetAnsatt = fortsettDialogRequest.erOppgaveTilknyttetAnsatt,
                 fritekst = fortsettDialogRequest.fritekst
@@ -191,7 +207,7 @@ class SfLegacyDialogController(
             )
         }
 
-        return ResponseEntity(HttpStatus.OK)
+        return parseFraHenvendelseTilTraad(henvendelse)
     }
 
     override fun slaaSammenTraader(
@@ -200,6 +216,11 @@ class SfLegacyDialogController(
         slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> {
         throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
+    }
+
+    private fun parseFraHenvendelseTilTraad(henvendelse: HenvendelseDTO): TraadDTO {
+        val dialogMappingContext = lagMappingContext(listOf(henvendelse))
+        return dialogMappingContext.mapSfHenvendelserTilLegacyFormat(henvendelse)
     }
 
     private fun finnOgTilordneOppgaveIdTilTrad(
@@ -234,11 +255,13 @@ class SfLegacyDialogController(
         val temakodeMap: Map<String, String>,
         val identMap: Map<String, Saksbehandler>
     )
+
     private fun lagMappingContext(henvendelser: List<HenvendelseDTO>): DialogMappingContext {
         val temakodeMap = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).asMap()
         val identer = henvendelser
             .flatMap { henvendelse ->
-                val journalportIdenter: List<String>? = henvendelse.journalposter?.mapNotNull { it.journalforerNavIdent } // TODO SF bør ikke svare med null for ident her. Rapportert feil
+                val journalportIdenter: List<String>? =
+                    henvendelse.journalposter?.mapNotNull { it.journalforerNavIdent } // TODO SF bør ikke svare med null for ident her. Rapportert feil
                 val markeringIdenter: List<String>? = henvendelse.markeringer?.mapNotNull { it.markertAv }
                 val meldingFraIdenter: List<String>? = henvendelse.meldinger
                     ?.filter { it.fra.identType == MeldingFraDTO.IdentType.NAVIDENT }
@@ -343,14 +366,20 @@ class SfLegacyDialogController(
             ?: DialogApi.Veileder.UKJENT,
     )
 
-    private fun hentFritekstFraMelding(erKassert: Boolean, melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO): String {
+    private fun hentFritekstFraMelding(
+        erKassert: Boolean,
+        melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO
+    ): String {
         if (erKassert) {
             return "Innholdet i denne henvendelsen er slettet av NAV."
         }
         return melding.fritekst ?: "Innholdet i denne henvendelsen er ikke tilgjengelig."
     }
 
-    private fun meldingstypeFraSfTyper(henvendelse: HenvendelseDTO, melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO): Meldingstype {
+    private fun meldingstypeFraSfTyper(
+        henvendelse: HenvendelseDTO,
+        melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO
+    ): Meldingstype {
         val erForsteMelding = henvendelse.meldinger?.firstOrNull() == melding
         return when (henvendelse.henvendelseType) {
             HenvendelseDTO.HenvendelseType.SAMTALEREFERAT -> {
