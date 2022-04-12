@@ -160,8 +160,8 @@ type Query {
         tilknytning: Tilknytning!
     ): [Journalpost]!
 
-    # * Query returnerer alle saker for bruker med angitt fnr / aktoerID.
-    saker(
+     # * Query returnerer alle saker for bruker med angitt fnr / aktoerID.
+        saker(
         # ID til bruker man ønsker å hente saker for.
         # * Hvis argumentet ikke er angitt så returneres en feil.
         brukerId: BrukerIdInput!
@@ -182,8 +182,14 @@ type SideInfo {
     # Når man paginerer forover, pekeren for å fortsette.
     sluttpeker: String
 
-    # True/False verdi for om neste side eksisterer, når man paginerer forover
+    # True/False verdi for om neste side eksisterer, når man paginerer forover.
     finnesNesteSide: Boolean!
+
+    # Antall journalposter på denne siden.
+    antall: Int
+
+    # Totalt antall journalposter på alle sider.
+    totaltAntall: Int
 }
 
 # * Fagsystemene som arkiverer kan legge til egne fagspesifikke attributter per journalpost.
@@ -423,6 +429,7 @@ type Dokumentvariant {
 
     # Dokumentets filtype, f.eks. PDFA, XML eller JPG. Gyldige verdier finnes på siden Fagarkiv - Filtype.
     # * NB: Informasjonen er ikke garantert å samsvare med dokumentets faktiske filtype, da dette ikke valideres under arkivering.
+    # * NB: Verdien 'PDFA' mappes til 'PDF'
     # * NB: Feltet skal kun brukes etter avtale med Team Dokument.
     filtype: String @deprecated(reason: "Feltet er deprekert og er kun til internt bruk. Feltet skal kun brukes etter avtale med Team Dokument.")
 
@@ -616,6 +623,17 @@ enum Kanal {
     # Bruker har fylt ut og sendt inn dokumentet sammen med en NAV-ansatt. Det er den NAV-ansatte som var pålogget innsendingsløsningen.
     INNSENDT_NAV_ANSATT
 
+    # Forsendelsen inneholder en komplett chatdialog (inngående og utgående meldinger) mellom en bruker og en veileder i NAV.
+    NAV_NO_CHAT
+
+    # Brevet er sendt via digital post til virksomhet.
+    # * Brukes for utgående journalposter.
+    DPV
+
+    # Brevet er sendt via digital post til virksomhet som sensitiv post.
+    # * Brukes for utgående journalposter.
+    DPVS
+
     # Forsendelsen har ingen kjent kanal.
     UKJENT
 }
@@ -650,6 +668,12 @@ enum Tema {
     # Erstatning
     ERS
 
+    #Barnepensjon
+    EYB
+
+    #Omstillingsstønad
+    EYO
+
     # Farskap
     FAR
 
@@ -662,7 +686,7 @@ enum Tema {
     # Forsikring
     FOS
 
-    # Midlertidig kompensasjonsordning for selvstendig næringsdrivende og frilansere
+    # Kompensasjon for selvstendig næringsdrivende/frilansere
     FRI
 
     # Fullmakt

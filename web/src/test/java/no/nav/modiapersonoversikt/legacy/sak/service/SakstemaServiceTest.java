@@ -39,9 +39,6 @@ public class SakstemaServiceTest {
     private HttpServletRequest request;
 
     @Mock
-    private PesysService pesysService;
-
-    @Mock
     private BulletproofKodeverkService kodeverk;
 
     @Mock
