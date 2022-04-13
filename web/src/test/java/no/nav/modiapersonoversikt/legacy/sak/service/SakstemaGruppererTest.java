@@ -1,387 +1,77 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
+import kotlin.Pair;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Behandlingskjede;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sak;
 import no.nav.modiapersonoversikt.legacy.sak.utils.Konstanter;
-import no.nav.modiapersonoversikt.legacy.sak.utils.TemagrupperHenter;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SakstemaGruppererTest {
 
-    @Mock
-    private TemagrupperHenter temagrupperHenter;
+    @Test
+    public void gruppererTemaFraSakerDokumentMetadataOgBehandlingskjeder() {
+        Set<String> temakoder = SakstemaGrupperer.hentAlleTema(
+                lagSaker(Konstanter.DAGPENGER, Konstanter.KONTROLL),
+                lagDokument(List.of(Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER), List.of("KNA", "IND")),
+                lagBehandlingskjeder(Konstanter.FORELDREPENGER, Konstanter.DAGPENGER, Konstanter.OPPFOLGING)
+        );
 
-    @InjectMocks
-    private SakstemaGrupperer sakstemaGrupperer;
+        assertThat(temakoder, hasItems(
+                Konstanter.DAGPENGER,
+                Konstanter.KONTROLL,
+                Konstanter.OPPFOLGING,
+                Konstanter.ARBEIDSAVKLARINGSPENGER,
+                Konstanter.FORELDREPENGER
+        ));
 
-    @Before
-    public void setup() {
-        when(temagrupperHenter.genererTemagrupperMedTema()).thenReturn(new HashMap<String, List<String>>() {
-            {
-                put(Konstanter.TEMAGRUPPE_ARBEID, asList(Konstanter.DAGPENGER, SakstemaGrupperer.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER));
-            }
-        });
+        assertThat(temakoder, not(hasItems(
+                "KNA",
+                "IND"
+        )));
+
+        assertThat(temakoder.size(), is(5));
     }
 
-    @Test
-    public void gruppererOppfolgingAleneOmDetManglerTilknyttedeSaker() {
-
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), Arrays.asList(new DokumentMetadata()
-                .withTilhorendeSakid("321")
-                .withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_FAMILIE));
-
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
+    private static List<Sak> lagSaker(String ...temakoder) {
+        return Stream.of(temakoder)
+                .map(temakode -> new Sak().withTemakode(temakode))
+                .collect(Collectors.toList());
     }
 
-    @Test
-    public void gruppererIkkeSelvstendigTemaSomTilhorerTemagruppe() {
-
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(), Collections.emptyMap());
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_FAMILIE));
-
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
-    }
-
-    @Test
-    public void fjernGrupperingOmDetIkkeFinnesOppfolging() {
-
-        Sak sak = new Sak()
-                .withSaksId("321")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Sak sak1 = new Sak()
-                .withSaksId("122")
-                .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, sak1), asList(), Collections.emptyMap());
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_FAMILIE));
-
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.ARBEIDSAVKLARINGSPENGER));
-    }
-
-    @Test
-    public void inneholderIkkeDuplikateTema() {
-
-        Sak sak = new Sak()
-                .withSaksId("321")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Sak sak1 = new Sak()
-                .withSaksId("122")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, sak1), asList(), Collections.emptyMap());
-
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
-        assertThat(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).size(), equalTo(1));
-    }
-
-    @Test
-    public void temaMedOppfolgingHvorBeggeHarDokumenterBlirGruppert(){
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Sak sak = new Sak()
-                .withSaksId("123")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
-                new DokumentMetadata()
-                        .withTilhorendeSakid("321")
-                        .withBaksystem(Baksystem.JOARK),
-                new DokumentMetadata()
-                        .withTilhorendeSakid("123")
-                        .withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
-
-        assertTrue(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertFalse(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
-
-    }
-
-    @Test
-    public void temaMedOppfolgingHvorOppfolgingErTomtTemaBlirIkkeGruppert(){
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Sak sak = new Sak()
-                .withSaksId("123")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
-                new DokumentMetadata()
-                        .withTilhorendeSakid("123")
-                        .withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
-    }
-
-    @Test
-    public void temaMedOppfolgingDerTemaErTomtBlirIkkeGruppert(){
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Sak sak = new Sak()
-                .withSaksId("123")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), asList(
-                new DokumentMetadata()
-                        .withTilhorendeSakid("321")
+    private static List<DokumentMetadata> lagDokument(List<String> henvendelseTemakoder, List<String> joarkTemakoder) {
+        Stream<DokumentMetadata> henvendelseDokument = henvendelseTemakoder
+                .stream()
+                .map(temakode -> new DokumentMetadata()
+                        .withTemakode(temakode)
+                        .withBaksystem(Baksystem.HENVENDELSE)
+                );
+        Stream<DokumentMetadata> joarkDokument = joarkTemakoder
+                .stream()
+                .map(temakode -> new DokumentMetadata()
+                        .withTemakode(temakode)
                         .withBaksystem(Baksystem.JOARK)
-        ), Collections.emptyMap());
+                );
 
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
+        return Stream.concat(henvendelseDokument, joarkDokument).collect(Collectors.toList());
     }
 
-    @Test
-    public void temaMedOppfolgingDerIngenHarDokumenterBlirIkkeGruppert(){
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Sak sak = new Sak()
-                .withSaksId("123")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging, sak), new ArrayList<>(), Collections.emptyMap());
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
+    private static Map<String, List<Behandlingskjede>> lagBehandlingskjeder(String ...temakoder) {
+        return Stream.of(temakoder)
+                .map(temakode -> new Pair<String, List<Behandlingskjede>>(temakode, emptyList()))
+                .collect(Collectors.toMap(Pair::component1, Pair::component2));
     }
-
-
-    @Test
-    public void oppfolingUtenTemaMedDokumenterBlirResterende() {
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(new DokumentMetadata().withTilhorendeSakid("321").withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
-    }
-
-    @Test
-    public void oppfolingMedTemaMedDokumenterBlirGruppert() {
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Sak sak = new Sak()
-                .withSaksId("321")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(new DokumentMetadata().withTilhorendeSakid("321").withBaksystem(Baksystem.JOARK)), Collections.emptyMap());
-
-        assertTrue(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(Konstanter.TEMAGRUPPE_ARBEID).contains(SakstemaGrupperer.OPPFOLGING));
-        assertFalse(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
-    }
-
-    @Test
-    public void behandlingskjedeUtenGruppeGruppersSomResterende() {
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Sak sak = new Sak()
-                .withSaksId("321")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, List<Behandlingskjede>> behandlingskjeder = new HashMap<>();
-        behandlingskjeder.put("FOR", asList(new Behandlingskjede()));
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(
-                new DokumentMetadata()
-                        .withTilhorendeSakid("321")
-                        .withBaksystem(Baksystem.JOARK),
-                new DokumentMetadata()
-                        .withTilhorendeSakid("123")
-                        .withBaksystem(Baksystem.JOARK))
-        ,behandlingskjeder);
-
-        assertTrue(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(Konstanter.TEMAGRUPPE_ARBEID).contains(SakstemaGrupperer.OPPFOLGING));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains("FOR"));
-    }
-
-    @Test
-    public void behandlingskjedeMedGruppeGruppersSomResterende() {
-        Sak sak = new Sak()
-                .withSaksId("321")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, List<Behandlingskjede>> behandlingskjeder = new HashMap<>();
-        behandlingskjeder.put("AAP", asList(new Behandlingskjede()));
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak), asList(
-                new DokumentMetadata()
-                        .withTilhorendeSakid("321")
-                        .withBaksystem(Baksystem.JOARK))
-                ,behandlingskjeder);
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.ARBEIDSAVKLARINGSPENGER));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
-    }
-
-    @Test
-    public void behandlingskjedeMedGruppeOgOppfolgingGruppersSomGruppe() {
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Sak sak = new Sak()
-                .withSaksId("321")
-                .withTemakode("FOR")
-                .withAvsluttet(null);
-
-        Map<String, List<Behandlingskjede>> behandlingskjeder = new HashMap<>();
-        behandlingskjeder.put("DAG", asList(new Behandlingskjede()));
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(
-                new DokumentMetadata()
-                        .withTilhorendeSakid("321")
-                        .withBaksystem(Baksystem.JOARK))
-                ,behandlingskjeder);
-
-        assertTrue(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(Konstanter.TEMAGRUPPE_ARBEID).contains(SakstemaGrupperer.OPPFOLGING));
-        assertTrue(map.get(Konstanter.TEMAGRUPPE_ARBEID).contains(Konstanter.DAGPENGER));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains("FOR"));
-    }
-
-    @Test
-    public void oppfolingUtenTemaUtenDokumenterBlirResterende() {
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(), Collections.emptyMap());
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
-    }
-
-    @Test
-    public void oppfolingMedTemaUtenDokumenterBlirResterende() {
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Sak sak = new Sak()
-                .withSaksId("123")
-                .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(sak, oppfolinging), asList(), Collections.emptyMap());
-
-        assertFalse(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(SakstemaGrupperer.OPPFOLGING));
-        assertTrue(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).contains(Konstanter.DAGPENGER));
-    }
-
-    @Test
-    public void oppfolgingssakMedDokumenterPaaOppfolgingOgAndreTemaGirGruppertTema() {
-
-        Sak oppfolinging = new Sak()
-                .withSaksId("321")
-                .withTemakode(SakstemaGrupperer.OPPFOLGING)
-                .withAvsluttet(null);
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(asList(oppfolinging), asList(
-                new DokumentMetadata()
-                        .withTilhorendeSakid(null)
-                        .withBaksystem(Baksystem.HENVENDELSE)
-                        .withTemakode("DAG"),
-                new DokumentMetadata()
-                        .withTilhorendeSakid(null)
-                        .withBaksystem(Baksystem.HENVENDELSE)
-                        .withTemakode("OPP")), Collections.emptyMap());
-
-        assertTrue(map.containsKey(Konstanter.TEMAGRUPPE_ARBEID));
-        assertThat(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).size(),is(0));
-        assertThat(map.get(Konstanter.TEMAGRUPPE_ARBEID).size(), is(2));
-    }
-
-    @Test
-    public void dokumentIHenvendelseUtenSakGirNyttSakstema() {
-
-
-        Map<String, Set<String>> map = sakstemaGrupperer.grupperSakstema(new ArrayList<>(), asList(new DokumentMetadata()
-                .withTilhorendeSakid(null)
-                .withBaksystem(Baksystem.HENVENDELSE)
-                .withTemakode("DAG")), Collections.emptyMap());
-
-        assertTrue(map.containsKey(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA));
-        assertThat(map.get(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA).size(), is(1));
-    }
-
-
 }

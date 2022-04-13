@@ -3,6 +3,10 @@ package no.nav.modiapersonoversikt.legacy.sak.service;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.function.Predicate;
@@ -10,16 +14,13 @@ import java.util.function.Predicate;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.concat;
 import static no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem.HENVENDELSE;
-import static no.nav.modiapersonoversikt.legacy.sak.service.BulletproofKodeverkService.ARKIVTEMA;
-import static no.nav.modiapersonoversikt.legacy.sak.service.SakstemaGrupperer.OPPFOLGING;
 
 @SuppressWarnings("squid:S1166") // Either log or rethrow
 public class SakstemaService {
 
-    private static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
+    private static final Logger LOG = LoggerFactory.getLogger(SakstemaService.class);
 
     @Autowired
     private DokumentMetadataService dokumentMetadataService;
@@ -28,69 +29,46 @@ public class SakstemaService {
     private SakOgBehandlingService sakOgBehandlingService;
 
     @Autowired
-    private BulletproofKodeverkService bulletproofKodeverkService;
+    private EnhetligKodeverk.Service kodeverk;
 
-    @Autowired
-    private SakstemaGrupperer sakstemaGrupperer;
-
-    private Map<String, Set<String>> grupperAlleSakstemaSomResterende(Map<String, Set<String>> grupperteSakstema) {
-        Set<String> sakstema = grupperteSakstema.values().stream()
-                .flatMap(Set::stream).collect(toSet());
-        Map<String, Set<String>> map = new HashMap<>();
-        map.put(RESTERENDE_TEMA, sakstema);
-        return map;
-    }
-
-    public ResultatWrapper<List<Sakstema>> hentSakstema(List<Sak> saker, String fnr, boolean skalGruppere) {
+    public ResultatWrapper<List<Sakstema>> hentSakstema(List<Sak> saker, String fnr) {
         ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(fnr);
 
         try {
             Map<String, List<Behandlingskjede>> behandlingskjeder = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);
-            Map<String, Set<String>> grupperteSakstema = sakstemaGrupperer.grupperSakstema(saker, wrapper.resultat, behandlingskjeder);
+            Set<String> temakoder = SakstemaGrupperer.hentAlleTema(saker, wrapper.resultat, behandlingskjeder);
 
-            if (!skalGruppere) {
-                grupperteSakstema = grupperAlleSakstemaSomResterende(grupperteSakstema);
-            }
-            return opprettSakstemaresultat(saker, wrapper, grupperteSakstema, behandlingskjeder, skalGruppere);
+            return opprettSakstemaresultat(saker, wrapper, temakoder, behandlingskjeder);
         } catch (FeilendeBaksystemException e) {
-            Map<String, Set<String>> grupperteSakstema = sakstemaGrupperer.grupperSakstema(saker, wrapper.resultat, emptyMap());
+            Set<String> temakoder = SakstemaGrupperer.hentAlleTema(saker, wrapper.resultat, emptyMap());
             wrapper.feilendeSystemer.add(e.getBaksystem());
-            return opprettSakstemaresultat(saker, wrapper, grupperteSakstema, emptyMap(), skalGruppere);
+            return opprettSakstemaresultat(saker, wrapper, temakoder, emptyMap());
         }
     }
 
     private ResultatWrapper<List<Sakstema>> opprettSakstemaresultat(
-            List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper,
-            Map<String, Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder, boolean skalGruppere) {
-
-        return grupperteSakstema.entrySet()
-                .stream()
-                .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder, skalGruppere))
-                .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
-                    accumulator.resultat.addAll(resultatwrapper.resultat);
-                    accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
-                    return accumulator;
-                })
+            List<Sak> saker,
+            ResultatWrapper<List<DokumentMetadata>> wrapper,
+            Set<String> temakoder,
+            Map<String, List<Behandlingskjede>> behandlingskjeder
+    ) {
+        return opprettSakstemaForEnTemagruppe(temakoder, saker, wrapper.resultat, behandlingskjeder)
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
     }
 
     protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(
-            Map.Entry<String, Set<String>> temagruppe,
+            Set<String> temakoder,
             List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata,
-            Map<String, List<Behandlingskjede>> behandlingskjeder, boolean skalGruppere) {
+            Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        Predicate<String> ikkeGruppertOppfolingssak = temakode -> (RESTERENDE_TEMA.equals(temagruppe.getKey()) || !OPPFOLGING.equals(temakode));
         Set<Baksystem> feilendeBaksystemer = new HashSet<>();
 
-        List<Sakstema> sakstema = temagruppe.getValue().stream()
-                .filter(ikkeGruppertOppfolingssak)
+        List<Sakstema> sakstema = temakoder.stream()
                 .map(temakode -> {
-                    List<Sak> tilhorendeSaker = sakerITemagruppe(temagruppe, alleSaker, temakode);
-                    List<DokumentMetadata> tilhorendeDokumentMetadata = tilhorendeDokumentMetadata(temagruppe, alleDokumentMetadata, temakode, tilhorendeSaker);
+                    List<Sak> tilhorendeSaker = sakerITemagruppe(alleSaker, temakode);
+                    List<DokumentMetadata> tilhorendeDokumentMetadata = tilhorendeDokumentMetadata(alleDokumentMetadata, temakode, tilhorendeSaker);
 
-                    boolean erGruppert = !RESTERENDE_TEMA.equals(temagruppe.getKey());
-
-                    ResultatWrapper<String> temanavn = temanavnFraKodeverk(temagruppe, temakode);
+                    ResultatWrapper<String> temanavn = getTemanavnForTemakode(temakode);
                     feilendeBaksystemer.addAll(temanavn.feilendeSystemer);
 
                     return new Sakstema()
@@ -99,13 +77,11 @@ public class SakstemaService {
                             .withTilhorendeSaker(tilhorendeSaker)
                             .withTemanavn(temanavn.resultat)
                             .withDokumentMetadata(tilhorendeDokumentMetadata)
-                            .withErGruppert(erGruppert);
+                            .withErGruppert(false);
                 })
                 .collect(toList());
 
-        List<Sakstema> ekstraGruppering = skalGruppere ? grupperSykepengerOgSykemelding(sakstema) : sakstema;
-
-        return new ResultatWrapper<>(ekstraGruppering, feilendeBaksystemer);
+        return new ResultatWrapper<>(sakstema, feilendeBaksystemer);
     }
 
     private List<Sakstema> grupperSykepengerOgSykemelding(List<Sakstema> sakstema) {
@@ -150,25 +126,26 @@ public class SakstemaService {
         return sakstema;
     }
 
-    private List<DokumentMetadata> tilhorendeDokumentMetadata(Map.Entry<String, Set<String>> temagruppe, List<DokumentMetadata> alleDokumentMetadata, String temakode, List<Sak> tilhorendeSaker) {
+    private List<DokumentMetadata> tilhorendeDokumentMetadata(List<DokumentMetadata> alleDokumentMetadata, String temakode, List<Sak> tilhorendeSaker) {
         return alleDokumentMetadata
                 .stream()
-                .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temagruppe, temakode)))
+                .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temakode)))
                 .collect(toList());
     }
 
-    private List<Sak> sakerITemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, String temakode) {
+    private List<Sak> sakerITemagruppe(List<Sak> alleSaker, String temakode) {
         return alleSaker.stream()
-                .filter(sak -> tilhorerSakTemagruppe(sak, temakode, temagruppe))
+                .filter(sak -> temakode.equals(sak.getTemakode()))
                 .collect(toList());
     }
 
-    private ResultatWrapper<String> temanavnFraKodeverk(Map.Entry<String, Set<String>> temagruppe, String temakode) {
-        ResultatWrapper<String> temanavnForTemakode = bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA);
-        if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
-            return temanavnForTemakode;
+    private ResultatWrapper<String> getTemanavnForTemakode(String temakode) {
+        String temanavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentVerdiEllerNull(temakode);
+        if (temanavn == null) {
+            LOG.warn("Fant ikke temanavn for temakode " + temakode + ". Bruker temakode som generisk tittel.");
+            return new ResultatWrapper<>(temakode).withEkstraFeilendeSystem(Baksystem.KODEVERK);
         } else {
-            return new ResultatWrapper<>(temanavnForTemakode.resultat + " og oppfølging", temanavnForTemakode.feilendeSystemer);
+            return new ResultatWrapper<>(temanavn);
         }
     }
 
@@ -176,17 +153,8 @@ public class SakstemaService {
         return dm -> tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dm.getTilhorendeSakid());
     }
 
-    private static Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+    private static Predicate<DokumentMetadata> tilhorendeFraHenvendelse(String temakode) {
         return dm -> dm.getBaksystem().contains(HENVENDELSE)
-                && (dm.getTemakode().equals(temakode)
-                || (!temagruppe.getKey().equals(RESTERENDE_TEMA) && dm.getTemakode().equals(OPPFOLGING)));
-    }
-
-    private static boolean tilhorerSakTemagruppe(Sak sak, String temakode, Map.Entry<String, Set<String>> temagruppe) {
-        if (!RESTERENDE_TEMA.equals(temagruppe.getKey())) {
-            return temakode.equals(sak.getTemakode()) || sak.temakode().equals(OPPFOLGING);
-        } else {
-            return temakode.equals(sak.getTemakode());
-        }
+                && (dm.getTemakode().equals(temakode));
     }
 }

@@ -23,4 +23,9 @@ public class ResultatWrapper<T> {
         this.feilendeSystemer.addAll(baksystemer);
         return this;
     }
+
+    public ResultatWrapper<T> withEkstraFeilendeSystem(Baksystem system) {
+        this.feilendeSystemer.add(system);
+        return this;
+    }
 }

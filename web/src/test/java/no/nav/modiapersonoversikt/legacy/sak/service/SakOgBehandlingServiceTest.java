@@ -30,9 +30,6 @@ public class SakOgBehandlingServiceTest {
     @Mock
     private PdlOppslagService pdlOppslagService;
 
-    @Mock
-    private Filter filter;
-
     @InjectMocks
     private SakOgBehandlingService sakOgBehandlingService;
 
@@ -48,7 +45,6 @@ public class SakOgBehandlingServiceTest {
         FinnSakOgBehandlingskjedeListeResponse response = new FinnSakOgBehandlingskjedeListeResponse();
         response.getSak().addAll(saker);
         when(sakOgBehandling_v1PortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(response);
-        when(filter.filtrerSaker(any())).thenReturn(saker);
 
         assertThat(sakOgBehandlingService.hentAlleSaker("11111111111").size(), equalTo(3));
     }
