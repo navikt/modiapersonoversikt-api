@@ -45,7 +45,7 @@ class SakerController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
                 val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
-                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr, false)
+                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
 
                 // TODO skal denne metoden ligge i tilgangskontrollService?
                 tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
