@@ -264,7 +264,7 @@ class SfHenvendelseServiceImpl(
     }
 
     enum class ApiFeilType {
-        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD, CHAT
+        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD, CHAT, DUPLIKAT_JOURNALPOST
     }
 
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
@@ -289,6 +289,10 @@ class SfHenvendelseServiceImpl(
             val journalposter = henvendelse.journalposter ?: emptyList()
             if (journalposter.any { it.journalforerNavIdent == null }) {
                 feil.add(ApiFeil(ApiFeilType.JOURNALFORENDE_IDENT, henvendelse.kjedeId))
+            }
+            val unikeJournalposter = journalposter.distinctBy { Pair(it.journalfortTema, it.fagsakId) }
+            if (unikeJournalposter.size != journalposter.size) {
+                feil.add(ApiFeil(ApiFeilType.DUPLIKAT_JOURNALPOST, henvendelse.kjedeId))
             }
 
             val markeringer = henvendelse.markeringer ?: emptyList()
