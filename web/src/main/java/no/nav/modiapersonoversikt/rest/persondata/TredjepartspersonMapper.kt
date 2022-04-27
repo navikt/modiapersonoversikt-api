@@ -17,17 +17,19 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         val harTilgang = person.harTilgang(tilganger)
         return Persondata.TredjepartsPerson(
             fnr = ident,
-            navn = person.navn.mapNotNull {
-                if (harTilgang) {
-                    Persondata.Navn(
-                        fornavn = it.fornavn,
-                        mellomnavn = it.mellomnavn,
-                        etternavn = it.etternavn
-                    )
-                } else {
-                    null
-                }
-            },
+            navn = person.navn
+                .prioriterKildesystem()
+                .mapNotNull {
+                    if (harTilgang) {
+                        Persondata.Navn(
+                            fornavn = it.fornavn,
+                            mellomnavn = it.mellomnavn,
+                            etternavn = it.etternavn
+                        )
+                    } else {
+                        null
+                    }
+                },
             fodselsdato = if (harTilgang) fodselsdato else emptyList(),
             alder = if (harTilgang) hentAlder(fodselsdato) else null,
             kjonn = if (harTilgang) hentKjonn(person) else emptyList(),
@@ -166,5 +168,9 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             7 -> tilganger.kode7
             else -> true
         }
+    }
+
+    private fun List<HentTredjepartspersondata.Navn>.prioriterKildesystem(): List<HentTredjepartspersondata.Navn> {
+        return this.sortedBy { MasterPrioritet[it.metadata.master] }
     }
 }

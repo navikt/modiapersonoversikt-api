@@ -95,7 +95,10 @@ internal class TredjepartspersonMapperTest {
         adressebeskyttelse: AdressebeskyttelseGradering = AdressebeskyttelseGradering.UGRADERT,
         bosted: List<Bostedsadresse> = ukjentBosted("Ingen ved hvor harry bor")
     ) = HentTredjepartspersondata.Person(
-        navn = listOf(gittNavn(navn)),
+        navn = listOf(
+            gittNavn(navn, "Freg"),
+            gittNavn(navn, "PDL")
+        ),
         adressebeskyttelse = listOf(
             HentTredjepartspersondata.Adressebeskyttelse(adressebeskyttelse)
         ),
@@ -107,16 +110,15 @@ internal class TredjepartspersonMapperTest {
 
     private fun gittTilganger(kode6: Boolean, kode7: Boolean) = PersondataService.Tilganger(kode6, kode7)
 
-    private fun gittNavn(navn: String): HentTredjepartspersondata.Navn {
+    private fun gittNavn(navn: String, master: String = "Freg"): HentTredjepartspersondata.Navn {
         val split = navn.split(" ")
         return HentTredjepartspersondata.Navn(
-            fornavn = split.first(),
+            fornavn = "$master __ ${split.first()}",
             mellomnavn = if (split.size <= 2) null else {
                 split.subList(1, split.size - 1).joinToString(" ")
             },
             etternavn = split.last(),
-            forkortetNavn = null,
-            originaltNavn = null
+            metadata = HentTredjepartspersondata.Metadata(master = master)
         )
     }
 
