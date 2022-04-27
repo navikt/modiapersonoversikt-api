@@ -66,7 +66,7 @@ class SnapshotExtension(
         assertMatches(getFile(counter++), value)
     }
 
-    fun updateSnapshot(value: Any) {
+    fun updateSnapshot(value: Any?) {
         val file = getFile(counter++)
         if (read(file) == createSnapshot(value)) {
             throw IllegalStateException("Cannot update snapshot since they already are equal")

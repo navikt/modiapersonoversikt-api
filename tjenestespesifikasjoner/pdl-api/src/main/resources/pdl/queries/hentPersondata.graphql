@@ -45,7 +45,8 @@ fragment postboksadresse on Postboksadresse {
     postnummer
 }
 
-fragment sistEndret on Metadata {
+fragment endringerOgMaster on Metadata {
+    master
     endringer {
         registrert
         registrertAv
@@ -59,6 +60,9 @@ query($ident: ID!){
             fornavn
             mellomnavn
             etternavn
+            metadata {
+                ...endringerOgMaster
+            }
         }
         kjoenn {
             kjoenn
@@ -129,7 +133,7 @@ query($ident: ID!){
                 landkode
             }
             metadata {
-                ...sistEndret
+                ...endringerOgMaster
             }
         }
         tilrettelagtKommunikasjon {
@@ -152,7 +156,7 @@ query($ident: ID!){
             nummer
             prioritet
             metadata {
-                ...sistEndret
+                ...endringerOgMaster
             }
         }
         vergemaalEllerFremtidsfullmakt {
@@ -216,7 +220,7 @@ query($ident: ID!){
             gyldigFraOgMed
             gyldigTilOgMed
             metadata {
-                ...sistEndret
+                ...endringerOgMaster
             }
             folkeregistermetadata {
                 ajourholdstidspunkt
@@ -239,7 +243,7 @@ query($ident: ID!){
             gyldigFraOgMed
             gyldigTilOgMed
             metadata {
-               ...sistEndret
+               ...endringerOgMaster
             }
             coAdressenavn
             postadresseIFrittFormat {
@@ -273,7 +277,7 @@ query($ident: ID!){
                 ...utenlandskadresse
             }
             metadata {
-                ...sistEndret
+                ...endringerOgMaster
             }
         }
     }
