@@ -48,7 +48,7 @@ class InternalController @Autowired constructor(
             .check(Policies.kanBrukeInternal)
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnr)) {
                 runBlocking {
-                    DebugPersondata(pdlClient).execute(DebugPersondata.Variables(fnr))
+                    DebugPersondata(pdlClient).execute(DebugPersondata.Variables(fnr), systemTokenAuthHeader)
                 }
             }
     }
