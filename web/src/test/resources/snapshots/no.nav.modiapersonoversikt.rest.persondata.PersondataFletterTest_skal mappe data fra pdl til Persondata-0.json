@@ -234,6 +234,10 @@
     },
     "navn" : [ "java.util.ArrayList", [ {
       "etternavn" : "McTestesen",
+      "fornavn" : "PDL_Teste",
+      "mellomnavn" : "Ruud"
+    }, {
+      "etternavn" : "McTestesen",
       "fornavn" : "Teste",
       "mellomnavn" : "Ruud"
     } ] ],
