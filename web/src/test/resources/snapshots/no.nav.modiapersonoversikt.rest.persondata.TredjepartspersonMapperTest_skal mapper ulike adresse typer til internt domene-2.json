@@ -17,7 +17,11 @@
   "kjonn" : [ "java.util.ArrayList", [ ] ],
   "navn" : [ "java.util.ArrayList", [ {
     "etternavn" : "Testfamilien",
-    "fornavn" : "Aremark",
+    "fornavn" : "PDL __ Aremark",
+    "mellomnavn" : null
+  }, {
+    "etternavn" : "Testfamilien",
+    "fornavn" : "Freg __ Aremark",
     "mellomnavn" : null
   } ] ]
 }
