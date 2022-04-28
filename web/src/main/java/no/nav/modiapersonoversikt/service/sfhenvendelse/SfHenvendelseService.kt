@@ -117,6 +117,7 @@ class SfHenvendelseServiceImpl(
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
             .map(::sorterMeldinger)
+            .map(::unikeJournalposter)
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
@@ -396,6 +397,12 @@ class SfHenvendelseServiceImpl(
     private fun sorterMeldinger(henvendelse: HenvendelseDTO): HenvendelseDTO {
         return henvendelse.copy(
             meldinger = henvendelse.meldinger?.sortedBy { it.sendtDato }
+        )
+    }
+
+    private fun unikeJournalposter(henvendelse: HenvendelseDTO): HenvendelseDTO {
+        return henvendelse.copy(
+            journalposter = henvendelse.journalposter?.distinctBy { Pair(it.journalfortTema, it.fagsakId) }
         )
     }
 
