@@ -366,16 +366,16 @@ class SfHenvendelseServiceImpl(
         return { henvendelseDTO ->
             val journalforteTemaer = (henvendelseDTO.journalposter ?: emptyList())
                 .map { it.journalfortTema }
-            val harTilgangTilAlleJournalforteTema: Boolean = journalforteTemaer
-                .all { tema -> tematilganger.contains(tema) }
+            val harTilgangTilMinstEttAvJournalforteTema: Boolean = journalforteTemaer
+                .any { tema -> tematilganger.contains(tema) }
 
-            if (harTilgangTilAlleJournalforteTema) {
+            if (journalforteTemaer.isEmpty() || harTilgangTilMinstEttAvJournalforteTema) {
                 henvendelseDTO
             } else {
                 val ident = AuthContextUtils.getIdent().orElse("-")
                 logger.info(
                     """
-                    Ikke tilgang til tema. 
+                    Ikke tilgang til noen av temaene tema. 
                     Ident: $ident
                     Henvendelse: ${henvendelseDTO.kjedeId}
                     Journalførte: $journalforteTemaer
