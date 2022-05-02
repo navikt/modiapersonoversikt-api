@@ -8,12 +8,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import no.nav.modiapersonoversikt.consumer.abac.Decision as AbacDecision
 
-fun AbacResponse.toDecisionEnum(): DecisionEnums = when (this.getDecision()) {
-    AbacDecision.Deny -> DecisionEnums.DENY
-    AbacDecision.Permit -> DecisionEnums.PERMIT
-    else -> DecisionEnums.NOT_APPLICABLE
-}
-
 fun AbacResponse.toDecision(denyReason: AbacResponse.() -> String): Decision = when (this.getDecision()) {
     AbacDecision.Deny -> Decision(denyReason(this), DecisionEnums.DENY)
     AbacDecision.Permit -> Decision("", DecisionEnums.PERMIT)
@@ -86,24 +80,6 @@ class Policies {
         }
 
         @JvmField
-        val tilgangTilKontorsperretMelding = PolicyGenerator<TilgangskontrollContext, TilgangTilKontorSperreData>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kontorsperret melding" }) {
-            when {
-                data.ansvarligEnhet == null || data.ansvarligEnhet.isEmpty() -> DecisionEnums.PERMIT
-                data.valgtEnhet == data.ansvarligEnhet -> DecisionEnums.PERMIT
-                else -> DecisionEnums.DENY
-            }
-        }
-
-        @JvmField
-        val tilgangTilOksosMelding = PolicyGenerator<TilgangskontrollContext, TilgangTilOksosSperreData>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til økonomisk sosialhjelp" }) {
-            when {
-                context.harSaksbehandlerRolle("0000-GA-Okonomisk_Sosialhjelp") -> DecisionEnums.PERMIT
-                data.valgtEnhet == data.brukersEnhet -> DecisionEnums.PERMIT
-                else -> DecisionEnums.DENY
-            }
-        }
-
-        @JvmField
         val behandlingsIderTilhorerBruker = PolicyGenerator<TilgangskontrollContext, BehandlingsIdTilgangData>({ "Ikke alle behandlingsIder tilhørte medsendt fødselsnummer. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
             if (context.alleBehandlingsIderTilhorerBruker(data.fnr, data.behandlingsIder)) {
                 DecisionEnums.PERMIT
@@ -117,15 +93,6 @@ class Policies {
             DecisionEnums.DENY
         }
 
-        @JvmField
-        val kanHastekassere = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hastekassering" }) {
-            hentSaksbehandlerId()
-                .map { ident ->
-                    val identer = hentSaksbehandlereMedTilgangTilHastekassering()
-                    if (identer.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
-                }.orElse(DecisionEnums.DENY)
-        }
-
         val kanBrukeInternal = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til internal endepunkter" }) {
             hentSaksbehandlerId()
                 .map { ident ->
@@ -133,22 +100,9 @@ class Policies {
                     if (identer.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
                 }.orElse(DecisionEnums.DENY)
         }
-
-        val kanStarteHasteUtsending = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hasteutsending av AAP-greier" }) {
-            val godkjenteIdenter = listOf(
-                "Z990351", // Testident for preprod
-                "R155645" // Robotident prod
-            )
-            hentSaksbehandlerId()
-                .map { ident ->
-                    if (godkjenteIdenter.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
-                }.orElse(DecisionEnums.DENY)
-        }
     }
 }
 
-data class TilgangTilKontorSperreData(val valgtEnhet: String, val ansvarligEnhet: String?)
-data class TilgangTilOksosSperreData(val valgtEnhet: String, val brukersEnhet: String?)
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
 data class KjedeIdTilgangData(val fnr: String, val kjedeId: String)
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String?)
