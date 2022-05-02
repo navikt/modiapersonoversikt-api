@@ -76,12 +76,6 @@ class Policies {
         }
 
         @JvmField
-        val kanPlukkeOppgave = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til plukk oppgave" }) {
-            checkAbac(AbacPolicies.kanPlukkeOppgave())
-                .toDecisionEnum()
-        }
-
-        @JvmField
         val tilgangTilTema = PolicyGenerator<TilgangskontrollContext, TilgangTilTemaData>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til tema: ${data.tema} enhet: ${data.valgtEnhet}" }) {
             val temaer = context.hentTemagrupperForSaksbehandler(data.valgtEnhet)
             if (temaer.contains(data.tema)) {

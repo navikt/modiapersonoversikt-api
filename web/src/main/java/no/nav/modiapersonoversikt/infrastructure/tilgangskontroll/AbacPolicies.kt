@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
 import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.consumer.abac.NavAttributes.*
-import no.nav.modiapersonoversikt.consumer.abac.StandardAttributter.ACTION_ID
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import java.util.*
 
@@ -54,21 +53,6 @@ object AbacPolicies {
                 attribute(RESOURCE_FELLES_DOMENE, "modia")
                 attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
                 attribute(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktorId)
-            }
-        }
-
-    fun kanPlukkeOppgave(): AbacRequest = AuthContextUtils.getToken()
-        .createWithTokenBody { tokenBody ->
-            environment {
-                attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
-                attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
-            }
-            resource {
-                attribute(RESOURCE_FELLES_DOMENE, "modia")
-                attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia.oppgave")
-            }
-            action {
-                attribute(ACTION_ID, "read")
             }
         }
 }
