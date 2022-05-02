@@ -13,6 +13,8 @@ interface PdlOppslagService {
     fun hentFnr(aktorid: String): String?
     fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>?
 
+    fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse>
+
     enum class SokKriterieRule {
         EQUALS,
         CONTAINS,

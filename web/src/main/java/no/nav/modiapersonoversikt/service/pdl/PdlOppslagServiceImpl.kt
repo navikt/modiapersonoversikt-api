@@ -102,6 +102,15 @@ open class PdlOppslagServiceImpl constructor(
         }
     }
 
+    override fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse> = runBlocking {
+        HentAdressebeskyttelse(pdlClient)
+            .execute(HentAdressebeskyttelse.Variables(fnr), systemTokenAuthorizationHeaders)
+            .data
+            ?.hentPerson
+            ?.adressebeskyttelse
+            ?: emptyList()
+    }
+
     fun hentAktivIdent(ident: String, gruppe: IdentGruppe): String? = runBlocking {
         HentAktorid(pdlClient)
             .execute(HentAktorid.Variables(ident, listOf(gruppe)), userTokenAuthorizationHeaders)
