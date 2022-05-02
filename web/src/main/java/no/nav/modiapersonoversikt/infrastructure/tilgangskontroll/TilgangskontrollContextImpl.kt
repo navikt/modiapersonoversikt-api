@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
+import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient
 import no.nav.modiapersonoversikt.consumer.abac.AbacRequest
@@ -20,27 +21,38 @@ open class TilgangskontrollContextImpl(
     private val unleashService: UnleashService
 ) : TilgangskontrollContext {
     override fun checkAbac(request: AbacRequest): AbacResponse = abacClient.evaluate(request)
-    override fun hentSaksbehandlerId(): Optional<String> = AuthContextUtils.getIdent().map(String::uppercase)
+    override fun hentSaksbehandlerId(): Optional<NavIdent> = AuthContextUtils.getIdent()
+        .map(String::uppercase)
+        .map(::NavIdent)
+
+    override fun hentSaksbehandlerRoller(): List<String> =
+        hentSaksbehandlerId()
+            .map(ldap::hentRollerForVeileder)
+            .orElse(emptyList())
+            .map { it.lowercase() }
+
     override fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.lowercase())
     override fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String> {
         return ansattService.hentAnsattFagomrader(
-            hentSaksbehandlerId().orElseThrow { RuntimeException("Fant ikke saksbehandlerIdent") },
+            hentSaksbehandlerId().orElseThrow { RuntimeException("Fant ikke saksbehandlerIdent") }.get(),
             valgtEnhet
         )
     }
 
-    override fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
+    override fun hentSaksbehandlereMedTilgangTilHastekassering(): List<NavIdent> {
         return EnvironmentUtils.getRequiredProperty("HASTEKASSERING_TILGANG", "")
             .split(",")
             .map(String::trim)
             .map(String::uppercase)
+            .map(::NavIdent)
     }
 
-    override fun hentSaksbehandlereMedTilgangTilInternal(): List<String> {
+    override fun hentSaksbehandlereMedTilgangTilInternal(): List<NavIdent> {
         return EnvironmentUtils.getRequiredProperty("INTERNAL_TILGANG", "")
             .split(",")
             .map(String::trim)
             .map(String::uppercase)
+            .map(::NavIdent)
     }
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
@@ -55,10 +67,4 @@ open class TilgangskontrollContextImpl(
     }
 
     override fun featureToggleEnabled(featureToggle: String): Boolean = unleashService.isEnabled(featureToggle)
-
-    private fun hentSaksbehandlerRoller(): List<String> =
-        hentSaksbehandlerId()
-            .map(ldap::hentRollerForVeileder)
-            .orElse(emptyList())
-            .map { it.lowercase() }
 }

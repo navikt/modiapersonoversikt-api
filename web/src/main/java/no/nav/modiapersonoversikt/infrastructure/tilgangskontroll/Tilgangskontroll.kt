@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.infrastructure.rsbac.*
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -16,12 +17,47 @@ fun AbacResponse.toDecision(denyReason: AbacResponse.() -> String): Decision = w
 
 class Policies {
     companion object {
+        private val modiaRoller = setOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-modia-oppfolging", "0000-ga-syfo-sensitiv")
+        val abacTilgangTilModiaExperiment = Scientist.createExperiment<Decision>(
+            Scientist.Config(
+                name = "internal-abac-tilgang-til-modia",
+                experimentRate = Scientist.FixedValueRate(0.05)
+            )
+        )
+        val abacTilgangTilFnrExperiment = Scientist.createExperiment<Decision>(
+            Scientist.Config(
+                name = "internal-abac-tilgang-til-fnr",
+                experimentRate = Scientist.FixedValueRate(0.0)
+            )
+        )
+        val abacTilgangTilAktoridExperiment = Scientist.createExperiment<Decision>(
+            Scientist.Config(
+                name = "internal-abac-tilgang-til-aktorid",
+                experimentRate = Scientist.FixedValueRate(0.0)
+            )
+        )
+
         @JvmField
         val tilgangTilModia = RulePolicy<TilgangskontrollContext> {
-            checkAbac(AbacPolicies.tilgangTilModia())
-                .toDecision {
-                    "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia. Årsak: ${getCause()}"
+            abacTilgangTilModiaExperiment.run(
+                control = {
+                    checkAbac(AbacPolicies.tilgangTilModia())
+                        .toDecision {
+                            "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia. Årsak: ${getCause()}"
+                        }
+                },
+                experiment = {
+                    internalTilgangTilModia(this)
                 }
+            )
+        }
+
+        private val internalTilgangTilModia = Policy<TilgangskontrollContext>({ "Saksbehandler (${this.hentSaksbehandlerId()}) har ikke tilgang til modia" }) {
+            if (modiaRoller.union(hentSaksbehandlerRoller()).isEmpty()) {
+                DecisionEnums.DENY
+            } else {
+                DecisionEnums.PERMIT
+            }
         }
 
         @JvmField
@@ -55,18 +91,35 @@ class Policies {
 
         @JvmField
         val tilgangTilBruker = RulePolicyGenerator<TilgangskontrollContext, String> {
-            context.checkAbac(AbacPolicies.tilgangTilBruker(data))
-                .toDecision {
-                    "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data. Årsak: ${getCause()}"
-                }
+            abacTilgangTilFnrExperiment.run(
+                control = {
+                    context.checkAbac(AbacPolicies.tilgangTilBruker(data))
+                        .toDecision {
+                            "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data. Årsak: ${getCause()}"
+                        }
+                },
+                experiment = { internalTilgangTilBruker(this.context) }
+            )
         }
 
         @JvmField
         val tilgangTilBrukerMedAktorId = RulePolicyGenerator<TilgangskontrollContext, String> {
-            context.checkAbac(AbacPolicies.tilgangTilBrukerMedAktorId(data))
-                .toDecision {
-                    "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data. Årsak: ${getCause()}"
-                }
+            abacTilgangTilAktoridExperiment.run(
+                control = {
+                    context.checkAbac(AbacPolicies.tilgangTilBrukerMedAktorId(data))
+                        .toDecision {
+                            "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data. Årsak: ${getCause()}"
+                        }
+                },
+                experiment = { internalTilgangTilBrukerMedAktorId(this.context) }
+            )
+        }
+
+        private val internalTilgangTilBruker = Policy<TilgangskontrollContext>({ "Saksbehandler (${this.hentSaksbehandlerId()}) har ikke tilgang til bruker" }) {
+            DecisionEnums.DENY
+        }
+        private val internalTilgangTilBrukerMedAktorId = Policy<TilgangskontrollContext>({ "Saksbehandler (${this.hentSaksbehandlerId()}) har ikke tilgang til bruker" }) {
+            DecisionEnums.DENY
         }
 
         @JvmField
