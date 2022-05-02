@@ -29,19 +29,19 @@ class Policies {
         val abacTilgangTilModiaExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
                 name = "internal-abac-tilgang-til-modia",
-                experimentRate = Scientist.FixedValueRate(0.05)
+                experimentRate = Scientist.FixedValueRate(0.01)
             )
         )
         val abacTilgangTilFnrExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
                 name = "internal-abac-tilgang-til-fnr",
-                experimentRate = Scientist.FixedValueRate(0.0)
+                experimentRate = Scientist.FixedValueRate(0.01)
             )
         )
         val abacTilgangTilAktoridExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
                 name = "internal-abac-tilgang-til-aktorid",
-                experimentRate = Scientist.FixedValueRate(0.0)
+                experimentRate = Scientist.FixedValueRate(0.01)
             )
         )
 
