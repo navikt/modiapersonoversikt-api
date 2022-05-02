@@ -6,6 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
 import no.nav.modiapersonoversikt.testutils.AuthContextRule
@@ -91,7 +92,7 @@ class TilgangskontrollTest {
 }
 
 private fun mockContext(
-    saksbehandlerIdent: String = "Z999999",
+    saksbehandlerIdent: NavIdent = NavIdent("Z999999"),
     tematilganger: Set<String> = setOf(),
     abacTilgang: Decision = Decision.Permit,
     denyPolicy: String = "fp3_behandle_egen_ansatt"
