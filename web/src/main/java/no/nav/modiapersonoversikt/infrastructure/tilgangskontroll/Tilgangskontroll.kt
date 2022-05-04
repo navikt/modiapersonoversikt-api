@@ -26,24 +26,36 @@ class Policies {
         private val kode6Roller = setOf("0000-ga-strengt_fortrolig_adresse", "0000-ga-gosys_kode6")
         private val kode7Roller = setOf("0000-ga-fortrolig_adresse", "0000-ga-gosys_kode7")
 
-        val abacTilgangTilModiaExperiment = Scientist.createExperiment<Decision>(
+        private val abacTilgangTilModiaExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
                 name = "internal-abac-tilgang-til-modia",
                 experimentRate = Scientist.FixedValueRate(0.01)
             )
         )
-        val abacTilgangTilFnrExperiment = Scientist.createExperiment<Decision>(
+        private val abacTilgangTilFnrExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
                 name = "internal-abac-tilgang-til-fnr",
                 experimentRate = Scientist.FixedValueRate(0.01)
             )
         )
-        val abacTilgangTilAktoridExperiment = Scientist.createExperiment<Decision>(
+        private val abacTilgangTilAktoridExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
                 name = "internal-abac-tilgang-til-aktorid",
                 experimentRate = Scientist.FixedValueRate(0.01)
             )
         )
+        private fun overrideAbacResultComparator(control: Decision, tryExperiment: Scientist.UtilityClasses.Try<Any?>): Map<String, Any?> {
+            if (tryExperiment.isFailure) {
+                return emptyMap()
+            }
+
+            val controlDecision = control.value
+            val experiment = tryExperiment.getOrThrow()
+            return when (experiment) {
+                is Decision? -> mapOf("ok" to (controlDecision == experiment?.value))
+                else -> mapOf("ok" to false, "error" to "Experiment Decision was not of the right type: ${experiment?.javaClass?.simpleName}")
+            }
+        }
 
         @JvmField
         val tilgangTilModia = RulePolicy<TilgangskontrollContext> {
@@ -56,7 +68,8 @@ class Policies {
                 },
                 experiment = {
                     internalTilgangTilModia(this)
-                }
+                },
+                dataFields = ::overrideAbacResultComparator
             )
         }
 
@@ -86,7 +99,8 @@ class Policies {
                             "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data. Årsak: ${getCause()}"
                         }
                 },
-                experiment = { internalTilgangTilBruker.with(Fnr(data)).invoke(context) }
+                experiment = { internalTilgangTilBruker.with(Fnr(data)).invoke(context) },
+                dataFields = ::overrideAbacResultComparator
             )
         }
 
@@ -99,7 +113,8 @@ class Policies {
                             "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data. Årsak: ${getCause()}"
                         }
                 },
-                experiment = { internalTilgangTilBruker.with(AktorId(data)).invoke(context) }
+                experiment = { internalTilgangTilBruker.with(AktorId(data)).invoke(context) },
+                dataFields = ::overrideAbacResultComparator
             )
         }
 
