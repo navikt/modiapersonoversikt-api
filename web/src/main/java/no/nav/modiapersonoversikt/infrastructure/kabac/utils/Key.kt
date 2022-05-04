@@ -8,6 +8,10 @@ class Key<T>(val name: String) {
     }
 
     override fun toString(): String {
-        return "Key{$name}"
+        return "Key($name)"
+    }
+
+    companion object {
+        operator fun <T> invoke(v: Any): Key<T> = Key(v::class.java.simpleName)
     }
 }

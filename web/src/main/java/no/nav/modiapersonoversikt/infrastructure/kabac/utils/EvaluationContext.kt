@@ -12,9 +12,8 @@ class EvaluationContext(providers: List<Kabac.AttributeProvider<*>>) {
     }
 
     fun <TValue : Any> getValue(key: Key<TValue>): TValue? {
-        val provider = requireNotNull(evaluationRegister[key]) {
-            "Could not find provider for $key in evaluation"
-        }
+        val provider = evaluationRegister[key]
+            ?: throw Kabac.MissingAttributeException("Could not find provider for $key")
 
         return provider.provide(this) as TValue?
     }

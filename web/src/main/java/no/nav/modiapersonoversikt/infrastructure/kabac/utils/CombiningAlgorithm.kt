@@ -6,9 +6,9 @@ interface CombiningAlgorithm {
     fun process(ctx: EvaluationContext, policies: List<Kabac.Policy>): Kabac.Decision
 
     companion object {
-        val firstApplicable : CombiningAlgorithm = FirstApplicable()
-        val denyOverride : CombiningAlgorithm = DecisionOverride(Kabac.Decision.Type.DENY)
-        val permitOverride : CombiningAlgorithm = DecisionOverride(Kabac.Decision.Type.PERMIT)
+        val firstApplicable: CombiningAlgorithm = FirstApplicable()
+        val denyOverride: CombiningAlgorithm = DecisionOverride(Kabac.Decision.Type.DENY)
+        val permitOverride: CombiningAlgorithm = DecisionOverride(Kabac.Decision.Type.PERMIT)
     }
 }
 

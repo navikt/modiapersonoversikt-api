@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.infrastructure.kabac.providers
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.CommonAttributes
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
+import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 
