@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.norg
 
+import no.nav.common.types.identer.EnhetId
+
 object NorgDomain {
     enum class EnhetStatus {
         UNDER_ETABLERING, AKTIV, UNDER_AVVIKLING, NEDLAGT;
@@ -29,7 +31,8 @@ object NorgDomain {
     )
     data class EnhetKontaktinformasjon(
         val enhet: Enhet,
-        val publikumsmottak: List<Publikumsmottak>
+        val publikumsmottak: List<Publikumsmottak>,
+        val overordnetEnhet: EnhetId?
     )
     data class Publikumsmottak(
         val besoksadresse: Gateadresse?,

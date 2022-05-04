@@ -1,13 +1,18 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
+import no.nav.common.types.identer.EksternBrukerId
+import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient
 import no.nav.modiapersonoversikt.consumer.abac.AbacRequest
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -17,6 +22,8 @@ open class TilgangskontrollContextImpl(
     private val abacClient: AbacClient,
     private val ldap: LDAPService,
     private val ansattService: AnsattService,
+    private val norg: NorgApi,
+    private val pdl: PdlOppslagService,
     private val sfHenvendelseService: SfHenvendelseService,
     private val unleashService: UnleashService
 ) : TilgangskontrollContext {
@@ -67,4 +74,41 @@ open class TilgangskontrollContextImpl(
     }
 
     override fun featureToggleEnabled(featureToggle: String): Boolean = unleashService.isEnabled(featureToggle)
+
+    override fun hentSaksbehandlersEnheter(): List<EnhetId> =
+        ansattService.hentEnhetsliste().map { EnhetId(it.enhetId) }
+
+    override fun hentBrukersRegionalEnhet(ident: EksternBrukerId): EnhetId? {
+        return hentBrukersEnhet(ident)
+            ?.let { norg.hentRegionalEnhet(it) }
+    }
+
+    override fun hentBrukersEnhet(ident: EksternBrukerId): EnhetId? {
+        return hentBrukersGeografiskeTilknyttning(ident)
+            ?.let { gt ->
+                norg.finnNavKontor(gt, null)
+            }
+            ?.let {
+                EnhetId(it.enhetId)
+            }
+    }
+
+    override fun hentDiskresjonskode(ident: EksternBrukerId): String? {
+        return pdl.hentAdressebeskyttelse(ident.get()).finnStrengesteKode()
+    }
+
+    private fun hentBrukersGeografiskeTilknyttning(ident: EksternBrukerId): String? {
+        return pdl.hentGeografiskTilknyttning(ident.get())
+    }
+
+    private fun List<HentAdressebeskyttelse.Adressebeskyttelse>.finnStrengesteKode(): String? {
+        return this
+            .mapNotNull {
+                when (it.gradering) {
+                    HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG, HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND -> "6"
+                    HentAdressebeskyttelse.AdressebeskyttelseGradering.FORTROLIG -> "7"
+                    else -> null
+                }
+            }.minOrNull()
+    }
 }
