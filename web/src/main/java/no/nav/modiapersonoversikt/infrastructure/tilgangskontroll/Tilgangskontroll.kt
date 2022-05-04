@@ -25,6 +25,7 @@ class Policies {
         private val regionalTilgangRoller = setOf("0000-ga-gosys_utvidbar_til_nasjonal", "0000-ga-gosys_utvidbar_til_regional", "0000-ga-pensjon_nasjonal_m_logg")
         private val kode6Roller = setOf("0000-ga-strengt_fortrolig_adresse", "0000-ga-gosys_kode6", "0000-ga-pensjon_kode6")
         private val kode7Roller = setOf("0000-ga-fortrolig_adresse", "0000-ga-gosys_kode7", "0000-ga-pensjon_kode7")
+        private val skjermetAnsattRoller = setOf("0000-ga-gosys_utvidet", "0000-ga-pensjon_utvidet")
 
         private val abacTilgangTilModiaExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
@@ -183,6 +184,20 @@ class Policies {
             }
         }
 
+        private val tilgangTilSkjermetAnsatt = PolicyGenerator<TilgangskontrollContext, EksternBrukerId>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til skjermet bruker" }) {
+            val harSkjermingRolle = skjermetAnsattRoller.union(context.hentSaksbehandlerRoller()).isNotEmpty()
+            if (harSkjermingRolle) {
+                DecisionEnums.PERMIT
+            } else {
+                val erSkjermet = context.hentErBrukerSkjermet(context.konverterTilFnr(data))
+                if (erSkjermet) {
+                    DecisionEnums.DENY
+                } else {
+                    DecisionEnums.PERMIT
+                }
+            }
+        }
+
         private val denyAlt = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til bruker basert på geografisk tilgang" }) { DecisionEnums.DENY }
 
         private val geografiskTilgang = PolicySetGenerator(
@@ -191,7 +206,7 @@ class Policies {
         )
 
         private val internalTilgangTilBruker = PolicySetGenerator(
-            policies = listOf(tilgangTilModia.asGenerator(), geografiskTilgang, tilgangTilKode6, tilgangTilKode7)
+            policies = listOf(tilgangTilModia.asGenerator(), geografiskTilgang, tilgangTilKode6, tilgangTilKode7, tilgangTilSkjermetAnsatt)
         )
 
         @JvmField
