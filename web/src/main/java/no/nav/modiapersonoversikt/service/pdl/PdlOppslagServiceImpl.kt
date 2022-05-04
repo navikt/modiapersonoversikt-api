@@ -24,13 +24,6 @@ open class PdlOppslagServiceImpl constructor(
 ) : PdlOppslagService {
     constructor(stsService: SystemUserTokenProvider) : this(stsService, createClient())
 
-    override fun hentPerson(fnr: String): HentPerson.Person? = runBlocking {
-        HentPerson(pdlClient)
-            .execute(HentPerson.Variables(fnr), userTokenAuthorizationHeaders)
-            .data
-            ?.hentPerson
-    }
-
     override fun hentPersondata(fnr: String): HentPersondata.Person? = runBlocking {
         HentPersondata(pdlClient)
             .execute(HentPersondata.Variables(fnr), userTokenAuthorizationHeaders)
@@ -107,6 +100,15 @@ open class PdlOppslagServiceImpl constructor(
                 ?.hits
                 ?: emptyList()
         }
+    }
+
+    override fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse> = runBlocking {
+        HentAdressebeskyttelse(pdlClient)
+            .execute(HentAdressebeskyttelse.Variables(fnr), systemTokenAuthorizationHeaders)
+            .data
+            ?.hentPerson
+            ?.adressebeskyttelse
+            ?: emptyList()
     }
 
     fun hentAktivIdent(ident: String, gruppe: IdentGruppe): String? = runBlocking {

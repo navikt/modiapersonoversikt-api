@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.SokKriterieRule.
 
 interface PdlOppslagService {
     fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit>
-    fun hentPerson(fnr: String): HentPerson.Person?
     fun hentPersondata(fnr: String): HentPersondata.Person?
     fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult>
     fun hentGeografiskTilknyttning(fnr: String): String?
@@ -13,6 +12,8 @@ interface PdlOppslagService {
     fun hentAktorId(fnr: String): String?
     fun hentFnr(aktorid: String): String?
     fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>?
+
+    fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse>
 
     enum class SokKriterieRule {
         EQUALS,

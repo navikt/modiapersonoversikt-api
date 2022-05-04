@@ -42,6 +42,8 @@ interface NorgApi : Pingable {
     ): List<Enhet>
 
     fun finnNavKontor(geografiskTilknytning: String, diskresjonskode: NorgDomain.DiskresjonsKode?): Enhet?
+    fun hentRegionalEnheter(enhet: List<EnhetId>): List<EnhetId>
+    fun hentRegionalEnhet(enhet: EnhetId): EnhetId?
 
     fun hentBehandlendeEnheter(
         behandling: Behandling?,
@@ -132,6 +134,14 @@ class NorgApiImpl(
                 null
             }
         }
+    }
+
+    override fun hentRegionalEnheter(enhet: List<EnhetId>): List<EnhetId> {
+        return enhet.mapNotNull(::hentRegionalEnhet)
+    }
+
+    override fun hentRegionalEnhet(enhet: EnhetId): EnhetId? {
+        return cache[enhet]?.overordnetEnhet
     }
 
     override fun hentBehandlendeEnheter(
@@ -232,7 +242,8 @@ class NorgApiImpl(
 
         internal fun toInternalDomain(enhet: RsEnhetInkludertKontaktinformasjonDTO) = EnhetKontaktinformasjon(
             enhet = toInternalDomain(requireNotNull(enhet.enhet)),
-            publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList()
+            publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList(),
+            overordnetEnhet = enhet.overordnetEnhet?.let(::EnhetId)
         )
 
         private fun toInternalDomain(mottak: RsPublikumsmottakDTO) = NorgDomain.Publikumsmottak(

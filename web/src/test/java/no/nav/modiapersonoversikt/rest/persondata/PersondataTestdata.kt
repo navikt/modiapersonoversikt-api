@@ -233,7 +233,8 @@ internal fun gittNavKontorEnhet(
                 )
             )
         )
-    )
+    ),
+    overordnetEnhet = null
 )
 
 internal fun gittEndring(
