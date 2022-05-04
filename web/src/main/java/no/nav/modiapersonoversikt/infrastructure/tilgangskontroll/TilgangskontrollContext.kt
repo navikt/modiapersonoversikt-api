@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
+import no.nav.common.types.identer.EksternBrukerId
+import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.abac.AbacRequest
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
@@ -15,4 +17,8 @@ interface TilgangskontrollContext {
     fun hentSaksbehandlereMedTilgangTilInternal(): List<NavIdent>
     fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean
     fun featureToggleEnabled(featureToggle: String): Boolean
+    fun hentSaksbehandlersEnheter(): List<EnhetId>
+    fun hentBrukersRegionalEnhet(ident: EksternBrukerId): EnhetId?
+    fun hentBrukersEnhet(ident: EksternBrukerId): EnhetId?
+    fun hentDiskresjonskode(ident: EksternBrukerId): String?
 }
