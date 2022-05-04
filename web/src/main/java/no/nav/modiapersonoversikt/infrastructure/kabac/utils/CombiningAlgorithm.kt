@@ -1,7 +1,9 @@
-package no.nav.modiapersonoversikt.infrastructure.kabac
+package no.nav.modiapersonoversikt.infrastructure.kabac.utils
+
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 
 interface CombiningAlgorithm {
-    context(EvaluationContext) fun process(policies: List<Kabac.Policy>): Kabac.Decision
+    fun process(ctx: EvaluationContext, policies: List<Kabac.Policy>): Kabac.Decision
 
     companion object {
         val firstApplicable : CombiningAlgorithm = FirstApplicable()
@@ -11,10 +13,10 @@ interface CombiningAlgorithm {
 }
 
 private class DecisionOverride(val overrideValue: Kabac.Decision.Type) : CombiningAlgorithm {
-    context(EvaluationContext)override fun process(policies: List<Kabac.Policy>): Kabac.Decision {
+    override fun process(ctx: EvaluationContext, policies: List<Kabac.Policy>): Kabac.Decision {
         var combined: Kabac.Decision = Kabac.Decision.NotApplicable("No applicable policy found")
         for (policy in policies) {
-            val decision = policy.evaluate()
+            val decision = policy.evaluate(ctx)
 
             combined = when (decision.type) {
                 overrideValue -> return decision
@@ -27,9 +29,9 @@ private class DecisionOverride(val overrideValue: Kabac.Decision.Type) : Combini
 }
 
 private class FirstApplicable : CombiningAlgorithm {
-    context(EvaluationContext) override fun process(policies: List<Kabac.Policy>): Kabac.Decision {
+    override fun process(ctx: EvaluationContext, policies: List<Kabac.Policy>): Kabac.Decision {
         for (policy in policies) {
-            val decision = policy.evaluate()
+            val decision = policy.evaluate(ctx)
             if (decision.isApplicable()) {
                 return decision
             }

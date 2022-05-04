@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.infrastructure.kabac
+package no.nav.modiapersonoversikt.infrastructure.kabac.utils
 
 class Key<T>(val name: String) {
     init {
