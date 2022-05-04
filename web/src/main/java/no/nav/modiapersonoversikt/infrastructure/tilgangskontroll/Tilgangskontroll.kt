@@ -23,8 +23,8 @@ class Policies {
         private val modiaRoller = setOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-modia-oppfolging", "0000-ga-syfo-sensitiv")
         private val nasjonalTilgangRoller = setOf("0000-ga-gosys_nasjonal", "0000-ga-gosys_utvidbar_til_nasjonal", "0000-ga-pensjon_nasjonal_u_logg")
         private val regionalTilgangRoller = setOf("0000-ga-gosys_utvidbar_til_nasjonal", "0000-ga-gosys_utvidbar_til_regional", "0000-ga-pensjon_nasjonal_m_logg")
-        private val kode6Roller = setOf("0000-ga-strengt_fortrolig_adresse", "0000-ga-gosys_kode6")
-        private val kode7Roller = setOf("0000-ga-fortrolig_adresse", "0000-ga-gosys_kode7")
+        private val kode6Roller = setOf("0000-ga-strengt_fortrolig_adresse", "0000-ga-gosys_kode6", "0000-ga-pensjon_kode6")
+        private val kode7Roller = setOf("0000-ga-fortrolig_adresse", "0000-ga-gosys_kode7", "0000-ga-pensjon_kode7")
 
         private val abacTilgangTilModiaExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
