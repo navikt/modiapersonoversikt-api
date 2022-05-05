@@ -392,9 +392,10 @@ type Doedsfall {
 }
 
 type ForelderBarnRelasjon {
-    relatertPersonsIdent: String!
+    relatertPersonsIdent: String
     relatertPersonsRolle: ForelderBarnRelasjonRolle!
     minRolleForPerson: ForelderBarnRelasjonRolle
+    relatertPersonUtenFolkeregisteridentifikator: RelatertBiPerson
 
     folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
@@ -862,6 +863,3 @@ input CompletionFieldValue {
     fieldName: String!
     fieldValue: String
 }
-
-
-
