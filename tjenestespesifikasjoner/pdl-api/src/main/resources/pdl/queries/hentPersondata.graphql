@@ -54,6 +54,17 @@ fragment endringerOgMaster on Metadata {
     }
 }
 
+fragment biPerson on RelatertBiPerson {
+    navn {
+        fornavn
+        mellomnavn
+        etternavn
+    }
+    foedselsdato
+    statsborgerskap
+    kjoenn
+}
+
 query($ident: ID!){
     hentPerson(ident: $ident) {
         navn {
@@ -185,18 +196,14 @@ query($ident: ID!){
                 historisk
             }
             ansvarligUtenIdentifikator {
-                navn {
-                    fornavn
-                    mellomnavn
-                    etternavn
-                }
-                foedselsdato
-                statsborgerskap
-                kjoenn
+                ...biPerson
             }
         }
         forelderBarnRelasjon {
             relatertPersonsIdent
+            relatertPersonUtenFolkeregisteridentifikator {
+                ...biPerson
+            }
             relatertPersonsRolle
         }
         deltBosted{
