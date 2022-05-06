@@ -9,15 +9,15 @@ object TilgangTilBrukerMedKode7Policy : Kabac.Policy {
     private val kode7Roller = setOf("0000-ga-fortrolig_adresse", "0000-ga-gosys_kode7")
 
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val veilederRoller = ctx.requireValue(VeiledersRollerPip)
+        val veilederRoller = ctx.getValue(VeiledersRollerPip) ?: emptySet()
 
-        if (kode7Roller.union(veilederRoller).isNotEmpty()) {
+        if (kode7Roller.intersect(veilederRoller).isNotEmpty()) {
             return Kabac.Decision.Permit()
         }
-        val diskresjonskode = ctx.requireValue(BrukersDiskresjonskodePip)
+        val diskresjonskode = ctx.getValue(BrukersDiskresjonskodePip)
 
-        return if (diskresjonskode == BrukersDiskresjonskodePip.Kode.KODE6) {
-            Kabac.Decision.Deny("Veileder har ikke tilgang til kode6")
+        return if (diskresjonskode == BrukersDiskresjonskodePip.Kode.KODE7) {
+            Kabac.Decision.Deny("Veileder har ikke tilgang til kode7")
         } else {
             Kabac.Decision.NotApplicable()
         }

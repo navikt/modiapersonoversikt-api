@@ -9,12 +9,12 @@ object TilgangTilBrukerMedKode6Policy : Kabac.Policy {
     private val kode6Roller = setOf("0000-ga-strengt_fortrolig_adresse", "0000-ga-gosys_kode6")
 
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val veilederRoller = ctx.requireValue(VeiledersRollerPip)
+        val veilederRoller = ctx.getValue(VeiledersRollerPip) ?: emptySet()
 
-        if (kode6Roller.union(veilederRoller).isNotEmpty()) {
+        if (kode6Roller.intersect(veilederRoller).isNotEmpty()) {
             return Kabac.Decision.Permit()
         }
-        val diskresjonskode = ctx.requireValue(BrukersDiskresjonskodePip)
+        val diskresjonskode = ctx.getValue(BrukersDiskresjonskodePip)
 
         return if (diskresjonskode == BrukersDiskresjonskodePip.Kode.KODE6) {
             Kabac.Decision.Deny("Veileder har ikke tilgang til kode6")

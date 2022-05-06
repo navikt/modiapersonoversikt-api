@@ -32,6 +32,6 @@ class KabacTilgangskontroll(
         install(VeiledersRollerPip(ldap))
         install(VeiledersTemaPip(ansattService))
         install(HenvendelseEierPip(henvendelseService))
-        install(InternalTilgangPip)
+        install(InternalTilgangPip())
     }
 }

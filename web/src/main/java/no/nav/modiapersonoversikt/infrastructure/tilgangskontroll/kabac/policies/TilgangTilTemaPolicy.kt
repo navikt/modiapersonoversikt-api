@@ -7,8 +7,10 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 
 internal object TilgangTilTemaPolicy : Kabac.Policy {
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val tema = ctx.requireValue(CommonAttributes.TEMA)
-        val veilederTema = ctx.requireValue(VeiledersTemaPip)
+        val tema = requireNotNull(ctx.getValue(CommonAttributes.TEMA)) {
+            "Kan ikke evaluere tilgang til tema uten at tema er gitt"
+        }
+        val veilederTema = ctx.getValue(VeiledersTemaPip) ?: emptySet()
 
         return if (veilederTema.contains(tema)) {
             Kabac.Decision.Permit()

@@ -13,7 +13,7 @@ class VeiledersRegionEnheterPip(private val norgApi: NorgApi) : Kabac.AttributeP
     }
 
     override fun provide(ctx: EvaluationContext): List<EnhetId> {
-        val enheter = ctx.requireValue(VeiledersEnheterPip)
+        val enheter = ctx.getValue(VeiledersEnheterPip) ?: return emptyList()
         return norgApi.hentRegionalEnheter(enheter)
     }
 }

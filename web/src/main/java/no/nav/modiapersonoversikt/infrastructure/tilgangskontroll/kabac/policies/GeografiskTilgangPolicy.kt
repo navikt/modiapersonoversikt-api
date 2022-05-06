@@ -20,7 +20,7 @@ private object BrukerUtenEnhet : Kabac.Policy {
 private object TilgangTilBrukersNavKontor : Kabac.Policy {
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
         val brukersEnhet: EnhetId? = ctx.getValue(BrukersEnhetPip)
-        val veiledersEnheter: List<EnhetId> = ctx.requireValue(VeiledersEnheterPip)
+        val veiledersEnheter: List<EnhetId> = ctx.getValue(VeiledersEnheterPip) ?: emptyList()
         return if (veiledersEnheter.contains(brukersEnhet)) {
             Kabac.Decision.Permit()
         } else {
@@ -38,8 +38,8 @@ private object NasjonalTilgang : Kabac.Policy {
     )
 
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val veilederRoller = ctx.requireValue(VeiledersRollerPip)
-        return if (nasjonalTilgangRoller.union(veilederRoller).isNotEmpty()) {
+        val veilederRoller = ctx.getValue(VeiledersRollerPip) ?: emptySet()
+        return if (nasjonalTilgangRoller.intersect(veilederRoller).isNotEmpty()) {
             Kabac.Decision.Permit()
         } else {
             Kabac.Decision.NotApplicable("Veileder hadde ikke nasjonal tilgang")
@@ -54,13 +54,13 @@ private object RegionalTilgangTilBrukersRegion : Kabac.Policy {
     )
 
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val veilederRoller = ctx.requireValue(VeiledersRollerPip)
-        if (regionalTilgangRoller.union(veilederRoller).isEmpty()) {
+        val veilederRoller = ctx.getValue(VeiledersRollerPip) ?: emptySet()
+        if (regionalTilgangRoller.intersect(veilederRoller).isEmpty()) {
             return Kabac.Decision.NotApplicable("Veileder har ikke regional tilgang")
         }
 
         val brukersRegion: EnhetId? = ctx.getValue(BrukersRegionEnhetPip)
-        val veiledersRegioner: List<EnhetId> = ctx.requireValue(VeiledersRegionEnheterPip)
+        val veiledersRegioner: List<EnhetId> = ctx.getValue(VeiledersRegionEnheterPip) ?: emptyList()
         return if (veiledersRegioner.contains(brukersRegion)) {
             Kabac.Decision.Permit()
         } else {
@@ -69,8 +69,8 @@ private object RegionalTilgangTilBrukersRegion : Kabac.Policy {
     }
 }
 
-internal object GeografiskTilgangPolicy : Kabac.Policy by CombiningAlgorithm.firstApplicable.combine(
-    policies = listOf(
+object GeografiskTilgangPolicy : Kabac.Policy by CombiningAlgorithm.firstApplicable.combine(
+    listOf(
         NasjonalTilgang,
         BrukerUtenEnhet,
         TilgangTilBrukersNavKontor,

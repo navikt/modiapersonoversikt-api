@@ -7,8 +7,10 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 
 internal object HenvendelseTilhorerBrukerPolicy : Kabac.Policy {
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val fnr = ctx.requireValue(CommonAttributes.FNR)
-        val eier = ctx.requireValue(HenvendelseEierPip)
+        val fnr = requireNotNull(ctx.getValue(CommonAttributes.FNR)) {
+            "Kan ikke evaluere eierskap av henvendelse uten FNR"
+        }
+        val eier = ctx.getValue(HenvendelseEierPip)
 
         return if (fnr == eier) {
             Kabac.Decision.Permit()

@@ -2,22 +2,22 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersDiskresjonskodePip
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersSkjermingPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 
 object TilgangTilBrukerMedSkjermingPolicy : Kabac.Policy {
     private val skjermingRoller = setOf("0000-ga-gosys_utvidet", "0000-ga-pensjon_utvidet")
 
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val veilederRoller = ctx.requireValue(VeiledersRollerPip)
+        val veilederRoller = ctx.getValue(VeiledersRollerPip) ?: emptySet()
 
-        if (skjermingRoller.union(veilederRoller).isNotEmpty()) {
+        if (skjermingRoller.intersect(veilederRoller).isNotEmpty()) {
             return Kabac.Decision.Permit()
         }
-        val diskresjonskode = ctx.requireValue(BrukersDiskresjonskodePip)
+        val erSkjermet = ctx.getValue(BrukersSkjermingPip)
 
-        return if (diskresjonskode == BrukersDiskresjonskodePip.Kode.KODE6) {
-            Kabac.Decision.Deny("Veileder har ikke tilgang til kode6")
+        return if (erSkjermet == true) {
+            Kabac.Decision.Deny("Veileder har ikke tilgang til skjermet person")
         } else {
             Kabac.Decision.NotApplicable()
         }

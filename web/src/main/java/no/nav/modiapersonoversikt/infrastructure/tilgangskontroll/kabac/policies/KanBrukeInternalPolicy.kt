@@ -6,8 +6,10 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 
 internal object KanBrukeInternalPolicy : Kabac.Policy {
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val ident = ctx.requireValue(NavIdentPip)
-        val internalTilgang = ctx.requireValue(InternalTilgangPip)
+        val ident = checkNotNull(ctx.getValue(NavIdentPip)) {
+            "Kan ikke avgjøre tilgang til internal uten navident"
+        }
+        val internalTilgang = ctx.getValue(InternalTilgangPip) ?: emptyList()
         return if (internalTilgang.contains(ident)) {
             Kabac.Decision.Permit()
         } else {
