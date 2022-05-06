@@ -10,7 +10,10 @@ import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.KabacTilgangskontroll
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
@@ -24,9 +27,11 @@ open class TilgangskontrollContextImpl(
     private val ansattService: AnsattService,
     private val norg: NorgApi,
     private val pdl: PdlOppslagService,
+    private val skjermedePersonerApi: SkjermedePersonerApi,
     private val sfHenvendelseService: SfHenvendelseService,
     private val unleashService: UnleashService
 ) : TilgangskontrollContext {
+    private val kabac: Kabac = KabacTilgangskontroll(pdl, skjermedePersonerApi, norg, ansattService, sfHenvendelseService, ldap)
     override fun checkAbac(request: AbacRequest): AbacResponse = abacClient.evaluate(request)
     override fun hentSaksbehandlerId(): Optional<NavIdent> = AuthContextUtils.getIdent()
         .map(String::uppercase)
@@ -111,4 +116,6 @@ open class TilgangskontrollContextImpl(
                 }
             }.minOrNull()
     }
+
+    override fun kabac(): Kabac = kabac
 }
