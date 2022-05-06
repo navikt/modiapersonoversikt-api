@@ -4,8 +4,12 @@ import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.EksternBrukerId
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
+import no.nav.modiapersonoversikt.infrastructure.kabac.utils.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.rsbac.*
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.PublicPolicies
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -20,12 +24,6 @@ fun AbacResponse.toDecision(denyReason: AbacResponse.() -> String): Decision = w
 
 class Policies {
     companion object {
-        private val modiaRoller = setOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-modia-oppfolging", "0000-ga-syfo-sensitiv")
-        private val nasjonalTilgangRoller = setOf("0000-ga-gosys_nasjonal", "0000-ga-gosys_utvidbar_til_nasjonal", "0000-ga-pensjon_nasjonal_u_logg")
-        private val regionalTilgangRoller = setOf("0000-ga-gosys_utvidbar_til_nasjonal", "0000-ga-gosys_utvidbar_til_regional", "0000-ga-pensjon_nasjonal_m_logg")
-        private val kode6Roller = setOf("0000-ga-strengt_fortrolig_adresse", "0000-ga-gosys_kode6")
-        private val kode7Roller = setOf("0000-ga-fortrolig_adresse", "0000-ga-gosys_kode7")
-
         private val abacTilgangTilModiaExperiment = Scientist.createExperiment<Decision>(
             Scientist.Config(
                 name = "internal-abac-tilgang-til-modia",
@@ -74,20 +72,9 @@ class Policies {
         }
 
         private val internalTilgangTilModia = Policy<TilgangskontrollContext>({ "Saksbehandler (${this.hentSaksbehandlerId()}) har ikke tilgang til modia" }) {
-            if (modiaRoller.union(hentSaksbehandlerRoller()).isEmpty()) {
-                DecisionEnums.DENY
-            } else {
-                DecisionEnums.PERMIT
-            }
-        }
-
-        @JvmField
-        val featureToggleEnabled = PolicyGenerator<TilgangskontrollContext, String>({ "Featuretoggle $data is not enabled" }) {
-            if (context.featureToggleEnabled(data)) {
-                DecisionEnums.PERMIT
-            } else {
-                DecisionEnums.DENY
-            }
+            kabac()
+                .evaluatePolicy(policy = PublicPolicies.tilgangTilModia)
+                .toDecisionEnum()
         }
 
         @JvmField
@@ -118,81 +105,19 @@ class Policies {
             )
         }
 
-        private val brukerUtenEnhet = PolicyGenerator<TilgangskontrollContext, EksternBrukerId>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke nasjonal tilgang" }) {
-            if (context.hentBrukersEnhet(data) == null) {
-                DecisionEnums.PERMIT
-            } else {
-                DecisionEnums.NOT_APPLICABLE
+        private val internalTilgangTilBruker = PolicyGenerator<TilgangskontrollContext, EksternBrukerId>({ "" }) {
+            val personAttribute = when (data) {
+                is Fnr -> AttributeValue(CommonAttributes.FNR, data)
+                is AktorId -> AttributeValue(CommonAttributes.AKTOR_ID, data)
+                else -> throw UnsupportedOperationException("Støtter ikke andre typer eksternID")
             }
+            context.kabac()
+                .evaluatePolicy(
+                    attributes = listOf(personAttribute),
+                    policy = PublicPolicies.tilgangTilBruker
+                )
+                .toDecisionEnum()
         }
-
-        private val nasjonalTilgang = PolicyGenerator<TilgangskontrollContext, EksternBrukerId>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke nasjonal tilgang" }) {
-            if (nasjonalTilgangRoller.union(context.hentSaksbehandlerRoller()).isNotEmpty()) {
-                DecisionEnums.PERMIT
-            } else {
-                DecisionEnums.NOT_APPLICABLE
-            }
-        }
-
-        private val tilgangTilLokalKontor = PolicyGenerator<TilgangskontrollContext, EksternBrukerId>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke nasjonal tilgang" }) {
-            val brukersEnhet = context.hentBrukersEnhet(data)
-            val saksbehandlersEnheter = context.hentSaksbehandlersEnheter()
-            if (saksbehandlersEnheter.contains(brukersEnhet)) {
-                DecisionEnums.PERMIT
-            } else {
-                DecisionEnums.NOT_APPLICABLE
-            }
-        }
-
-        private val regionalTilgang = PolicyGenerator<TilgangskontrollContext, EksternBrukerId>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke regional tilgang" }) {
-            if (regionalTilgangRoller.union(context.hentSaksbehandlerRoller()).isNotEmpty()) {
-                val brukersRegionalEnhet = context.hentBrukersRegionalEnhet(this.data)
-                val saksbehandlersEnheter = context.hentSaksbehandlersEnheter()
-                if (saksbehandlersEnheter.contains(brukersRegionalEnhet)) {
-                    DecisionEnums.PERMIT
-                } else {
-                    DecisionEnums.NOT_APPLICABLE
-                }
-            } else {
-                DecisionEnums.NOT_APPLICABLE
-            }
-        }
-
-        private val tilgangTilKode6 = PolicyGenerator<TilgangskontrollContext, EksternBrukerId>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kode6 brukere" }) {
-            val diskresjonskode: String? = context.hentDiskresjonskode(data)
-            if (arrayOf("6", "SPSF").contains(diskresjonskode)) {
-                if (kode6Roller.union(context.hentSaksbehandlerRoller()).isNotEmpty()) {
-                    DecisionEnums.PERMIT
-                } else {
-                    DecisionEnums.DENY
-                }
-            } else {
-                DecisionEnums.NOT_APPLICABLE
-            }
-        }
-        private val tilgangTilKode7 = PolicyGenerator<TilgangskontrollContext, EksternBrukerId>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kode7 brukere" }) {
-            val diskresjonskode: String? = context.hentDiskresjonskode(data)
-            if (arrayOf("7", "SPFO").contains(diskresjonskode)) {
-                if (kode7Roller.union(context.hentSaksbehandlerRoller()).isNotEmpty()) {
-                    DecisionEnums.PERMIT
-                } else {
-                    DecisionEnums.DENY
-                }
-            } else {
-                DecisionEnums.NOT_APPLICABLE
-            }
-        }
-
-        private val denyAlt = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til bruker basert på geografisk tilgang" }) { DecisionEnums.DENY }
-
-        private val geografiskTilgang = PolicySetGenerator(
-            combining = CombiningAlgo.firstApplicable,
-            policies = listOf(brukerUtenEnhet, nasjonalTilgang, tilgangTilLokalKontor, regionalTilgang, denyAlt.asGenerator())
-        )
-
-        private val internalTilgangTilBruker = PolicySetGenerator(
-            policies = listOf(tilgangTilModia.asGenerator(), geografiskTilgang, tilgangTilKode6, tilgangTilKode7)
-        )
 
         @JvmField
         val tilgangTilTema = PolicyGenerator<TilgangskontrollContext, TilgangTilTemaData>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til tema: ${data.tema} enhet: ${data.valgtEnhet}" }) {
@@ -226,6 +151,12 @@ class Policies {
                 }.orElse(DecisionEnums.DENY)
         }
     }
+}
+
+private fun Kabac.Decision.toDecisionEnum(): DecisionEnums = when (this.type) {
+    Kabac.Decision.Type.PERMIT -> DecisionEnums.PERMIT
+    Kabac.Decision.Type.DENY -> DecisionEnums.DENY
+    Kabac.Decision.Type.NOT_APPLICABLE -> DecisionEnums.NOT_APPLICABLE
 }
 
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
