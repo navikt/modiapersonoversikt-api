@@ -13,6 +13,7 @@ import kotlin.Exception
 
 interface AnsattService {
     fun hentEnhetsliste(): List<AnsattEnhet>
+    fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet>
     fun hentAnsattNavn(ident: String): String
     fun hentAnsattFagomrader(ident: String, enhet: String): Set<String>
     fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt>
@@ -27,16 +28,13 @@ class AnsattServiceImpl @Autowired constructor(
     override fun hentEnhetsliste(): List<AnsattEnhet> {
         return AuthContextUtils
             .getIdent()
-            .map {
-                axsys.hentTilganger(NavIdent(it))
-            }
+            .map { hentEnhetsliste(NavIdent(it)) }
             .orElse(emptyList())
-            .map {
-                AnsattEnhet(
-                    it.enhetId.get(),
-                    it.navn
-                )
-            }
+    }
+
+    override fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet> {
+        return (axsys.hentTilganger(ident) ?: emptyList())
+            .map { AnsattEnhet(it.enhetId.get(), it.navn) }
     }
 
     override fun hentAnsattNavn(ident: String): String {

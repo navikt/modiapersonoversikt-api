@@ -5,10 +5,10 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 
-class VeilederRollerPip(private val ldap: LDAPService) : Kabac.AttributeProvider<List<String>> {
+class VeiledersRollerPip(private val ldap: LDAPService) : Kabac.AttributeProvider<List<String>> {
     override val key = Companion.key
     companion object : Kabac.AttributeKey<List<String>> {
-        override val key = Key<List<String>>(VeilederRollerPip::class.java.simpleName)
+        override val key = Key<List<String>>(VeiledersRollerPip::class.java.simpleName)
     }
 
     override fun provide(ctx: EvaluationContext): List<String> {

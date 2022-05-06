@@ -6,11 +6,11 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 
-class VeilederTemaPip(private val ansattService: AnsattService) : Kabac.AttributeProvider<Set<String>> {
+class VeiledersTemaPip(private val ansattService: AnsattService) : Kabac.AttributeProvider<Set<String>> {
     override val key = Companion.key
 
     companion object : Kabac.AttributeKey<Set<String>> {
-        override val key = Key<Set<String>>(VeilederTemaPip::class.java.simpleName)
+        override val key = Key<Set<String>>(VeiledersTemaPip::class.java.simpleName)
     }
 
     override fun provide(ctx: EvaluationContext): Set<String> {
