@@ -11,6 +11,10 @@ class Key<T>(val name: String) {
         return "Key($name)"
     }
 
+    override fun hashCode(): Int = name.hashCode()
+
+    override fun equals(other: Any?): Boolean = name == other
+
     companion object {
         operator fun <T> invoke(v: Any): Key<T> = Key(v::class.java.simpleName)
     }

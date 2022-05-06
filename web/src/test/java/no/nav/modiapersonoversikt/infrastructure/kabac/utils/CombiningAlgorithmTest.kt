@@ -96,14 +96,14 @@ internal class CombiningAlgorithmTest {
     @ParameterizedTest
     @MethodSource("singlePolicyTests")
     fun `single policy tests`(algorithm: CombiningAlgorithm, policies: List<Kabac.Policy>, expected: Decision.Type) {
-        val decision = algorithm.process(evaluationContext, policies)
+        val decision = algorithm.combine(policies).evaluate(evaluationContext)
         assertThat(decision.type).isEqualTo(expected)
     }
 
     @ParameterizedTest
     @MethodSource("combinationTests")
     fun `multiple policies test`(algorithm: CombiningAlgorithm, policies: List<Kabac.Policy>, expected: Decision.Type) {
-        val decision = algorithm.process(evaluationContext, policies)
+        val decision = algorithm.combine(policies).evaluate(evaluationContext)
         assertThat(decision.type).isEqualTo(expected)
     }
 }

@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.kabac
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.Decision
-import no.nav.modiapersonoversikt.infrastructure.kabac.providers.AttributeProvider
+import no.nav.modiapersonoversikt.infrastructure.kabac.utils.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import org.assertj.core.api.Assertions.assertThat
@@ -33,7 +33,7 @@ internal class KabacTest {
 
     @Test
     internal fun `installing provider`() {
-        val kabac = Kabac()
+        val kabac = Kabac.Impl()
             .install(DummyProvider)
 
         val decision: Decision = kabac.evaluatePolicy { ctx ->
@@ -45,7 +45,7 @@ internal class KabacTest {
 
     @Test
     internal fun `missing attribute should cause error`() {
-        val kabac = Kabac()
+        val kabac = Kabac.Impl()
             .install(DummyDependentProvider)
 
         val evaluation = ThrowingCallable {
@@ -55,13 +55,13 @@ internal class KabacTest {
         }
 
         assertThatThrownBy(evaluation)
-            .isInstanceOf(Kabac.MissingAttributeException::class.java)
+            .isInstanceOf(Kabac.MissingAttributeProviderException::class.java)
             .hasMessage("Could not find provider for Key(dummy-provider)")
     }
 
     @Test
     internal fun `dependent provider should get its value from another provider`() {
-        val kabac = Kabac()
+        val kabac = Kabac.Impl()
             .install(DummyProvider)
             .install(DummyDependentProvider)
 
@@ -75,13 +75,13 @@ internal class KabacTest {
 
     @Test
     internal fun `providing attribute value directly should short-circuit provider chain even if it exists`() {
-        val kabac = Kabac()
+        val kabac = Kabac.Impl()
             .install(DummyProvider)
             .install(DummyDependentProvider)
 
         val decision: Decision = kabac.evaluatePolicy(
             attributes = listOf(
-                AttributeProvider(DummyProvider, "this is a longer value")
+                AttributeValue(DummyProvider, "this is a longer value")
             ),
             policy = { ctx ->
                 val value: Int = ctx.requireValue(DummyDependentProvider)
@@ -94,12 +94,12 @@ internal class KabacTest {
 
     @Test
     internal fun `providing attribute value directly should short-circuit provider chain`() {
-        val kabac = Kabac()
+        val kabac = Kabac.Impl()
             .install(DummyDependentProvider)
 
         val decision: Decision = kabac.evaluatePolicy(
             attributes = listOf(
-                AttributeProvider(DummyProvider, "this is a longer value")
+                AttributeValue(DummyProvider, "this is a longer value")
             ),
             policy = { ctx ->
                 val value: Int = ctx.requireValue(DummyDependentProvider)
@@ -112,7 +112,7 @@ internal class KabacTest {
 
     @Test
     internal fun `provider throwing error should bubble up`() {
-        val kabac = Kabac()
+        val kabac = Kabac.Impl()
             .install(ErrorThrowingProvider)
 
         val evaluation = ThrowingCallable {
@@ -128,7 +128,7 @@ internal class KabacTest {
 
     @Test
     internal fun `kabac bias should be applied to decision`() {
-        val kabac = Kabac(bias = Decision.Type.PERMIT)
+        val kabac = Kabac.Impl(bias = Decision.Type.PERMIT)
 
         val decision = kabac.evaluatePolicy {
             Decision.NotApplicable("Doesn't matter")
@@ -139,7 +139,7 @@ internal class KabacTest {
 
     @Test
     internal fun `policyevaluation bias should override kabac bias`() {
-        val kabac = Kabac(bias = Decision.Type.PERMIT)
+        val kabac = Kabac.Impl(bias = Decision.Type.PERMIT)
 
         val decision = kabac.evaluatePolicy(
             bias = Decision.Type.DENY,
@@ -153,18 +153,18 @@ internal class KabacTest {
 
     @Test
     internal fun `not_applicable cannot be set as bias`() {
-        assertThatThrownBy { Kabac(bias = Decision.Type.NOT_APPLICABLE) }
+        assertThatThrownBy { Kabac.Impl(bias = Decision.Type.NOT_APPLICABLE) }
             .isInstanceOf(UnsupportedOperationException::class.java)
             .hasMessage("Bias cannot be NOT_APPLICABLE")
     }
 
     @Test
     internal fun `supplied attributes override registered providers`() {
-        val kabac = Kabac()
+        val kabac = Kabac.Impl()
             .install(DummyProvider)
 
         val decision = kabac.evaluatePolicy(
-            attributes = listOf(AttributeProvider(DummyProvider, "overridden")),
+            attributes = listOf(AttributeValue(DummyProvider, "overridden")),
             policy = { ctx ->
                 Decision.Deny(ctx.requireValue(DummyProvider))
             }

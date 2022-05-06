@@ -4,17 +4,26 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 
 class EvaluationContext(providers: List<Kabac.AttributeProvider<*>>) {
     private val evaluationRegister = providers.associateBy { it.key }
+    private val cache = mutableMapOf<Key<*>, Any?>()
+    private val keystack = KeyStack()
 
     fun <TValue : Any> getValue(provider: Kabac.AttributeKey<TValue>): TValue? = getValue(provider.key)
     fun <TValue : Any> requireValue(provider: Kabac.AttributeKey<TValue>): TValue = requireValue(provider.key)
-    fun <TValue : Any> requireValue(key: Key<TValue>): TValue = requireNotNull(getValue(key)) {
-        "Value for $key cannot be null"
+    fun <TValue : Any> requireValue(key: Key<TValue>): TValue {
+        return getValue(key) ?: throw Kabac.MissingAttributeValueException("Value for $key cannot be null")
     }
-
     fun <TValue : Any> getValue(key: Key<TValue>): TValue? {
-        val provider = evaluationRegister[key]
-            ?: throw Kabac.MissingAttributeException("Could not find provider for $key")
+        return keystack.withCycleDetection(key) {
+            if (cache.containsKey(key)) {
+                cache[key] as TValue?
+            } else {
+                val provider = evaluationRegister[key]
+                    ?: throw Kabac.MissingAttributeProviderException("Could not find provider for $key")
 
-        return provider.provide(this) as TValue?
+                (provider.provide(this) as TValue?).also {
+                    cache[key] = it
+                }
+            }
+        }
     }
 }

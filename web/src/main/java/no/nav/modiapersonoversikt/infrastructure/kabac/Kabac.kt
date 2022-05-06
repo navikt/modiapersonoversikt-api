@@ -4,16 +4,7 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.utils.CombiningAlgorithm
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 
-class Kabac(private val bias: Decision.Type = Decision.Type.DENY) {
-    init {
-        if (bias == Decision.Type.NOT_APPLICABLE) {
-            throw UnsupportedOperationException("Bias cannot be NOT_APPLICABLE")
-        }
-    }
-
-    /**
-     * Kabac domain
-     */
+interface Kabac {
     interface AttributeKey<TValue : Any> {
         val key: Key<TValue>
     }
@@ -64,48 +55,70 @@ class Kabac(private val bias: Decision.Type = Decision.Type.DENY) {
 
         enum class Type { PERMIT, DENY, NOT_APPLICABLE }
         class Permit : Decision(Type.PERMIT)
-        class NotApplicable(message: String?) : Decision(Type.NOT_APPLICABLE, message)
+        class NotApplicable(message: String? = null) : Decision(Type.NOT_APPLICABLE, message)
         class Deny(message: String) : Decision(Type.DENY, message)
     }
 
-    class MissingAttributeException(message: String) : IllegalStateException(message)
+    class MissingAttributeProviderException(message: String) : IllegalStateException(message)
+    class MissingAttributeValueException(message: String) : IllegalStateException(message)
+    class CycleInPipUsageException(message: String) : IllegalStateException(message)
 
     fun interface Policy {
         fun evaluate(ctx: EvaluationContext): Decision
     }
 
-    /**
-     * Kabac root provider register
-     */
-    private val providerRegister = mutableMapOf<Key<*>, AttributeProvider<*>>()
-    fun <TValue : Any> install(provider: AttributeProvider<TValue>): Kabac {
-        providerRegister[provider.key] = provider
-        return this
-    }
-
-    /**
-     * Evaluation functions
-     */
+    val bias: Decision.Type
+    fun <TValue : Any> install(provider: AttributeProvider<TValue>): Kabac
     fun evaluatePolicy(
         bias: Decision.Type = this.bias,
         attributes: List<AttributeProvider<*>> = emptyList(),
         policy: Policy
-    ): Decision {
-        val ctx = EvaluationContext(providerRegister.values + attributes)
-        return policy
-            .evaluate(ctx)
-            .withBias(bias)
-    }
+    ): Decision
 
     fun evaluatePolicies(
-        combining: CombiningAlgorithm = CombiningAlgorithm.denyOverride,
+        combiner: CombiningAlgorithm = CombiningAlgorithm.denyOverride,
         bias: Decision.Type = this.bias,
         attributes: List<AttributeProvider<*>> = emptyList(),
         policies: List<Policy>
-    ): Decision {
-        val ctx = EvaluationContext(providerRegister.values + attributes)
-        return combining
-            .process(ctx, policies.toList())
-            .withBias(bias)
+    ): Decision
+
+    class Impl(override val bias: Decision.Type = Decision.Type.DENY) : Kabac {
+        init {
+            if (bias == Decision.Type.NOT_APPLICABLE) {
+                throw UnsupportedOperationException("Bias cannot be NOT_APPLICABLE")
+            }
+        }
+
+        /**
+         * Kabac root provider register
+         */
+        private val providerRegister = mutableMapOf<Key<*>, AttributeProvider<*>>()
+        override fun <TValue : Any> install(provider: AttributeProvider<TValue>): Kabac {
+            providerRegister[provider.key] = provider
+            return this
+        }
+        override fun evaluatePolicy(
+            bias: Decision.Type,
+            attributes: List<AttributeProvider<*>>,
+            policy: Policy
+        ): Decision {
+            val ctx = EvaluationContext(providerRegister.values + attributes)
+            return policy
+                .evaluate(ctx)
+                .withBias(bias)
+        }
+
+        override fun evaluatePolicies(
+            combiner: CombiningAlgorithm,
+            bias: Decision.Type,
+            attributes: List<AttributeProvider<*>>,
+            policies: List<Policy>
+        ): Decision {
+            return evaluatePolicy(
+                bias = bias,
+                attributes = attributes,
+                policy = combiner.combine(policies)
+            )
+        }
     }
 }
