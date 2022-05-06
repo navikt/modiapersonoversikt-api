@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.infrastructure.kabac.utils
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 
-class AttributeValue<T : Any>(override val key: Key<T>, private val value: T?) : Kabac.AttributeProvider<T> {
+data class AttributeValue<T : Any>(override val key: Key<T>, private val value: T?) : Kabac.AttributeProvider<T> {
     override fun provide(ctx: EvaluationContext): T? = value
 
     companion object {

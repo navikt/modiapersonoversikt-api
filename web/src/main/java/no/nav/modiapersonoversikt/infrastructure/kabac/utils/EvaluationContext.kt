@@ -26,4 +26,8 @@ class EvaluationContext(providers: List<Kabac.AttributeProvider<*>>) {
             }
         }
     }
+
+    companion object {
+        operator fun invoke(vararg providers: Kabac.AttributeProvider<*>) = EvaluationContext(providers.toList())
+    }
 }
