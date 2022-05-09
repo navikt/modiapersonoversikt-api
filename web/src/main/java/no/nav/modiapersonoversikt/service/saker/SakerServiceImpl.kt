@@ -2,10 +2,14 @@
 
 package no.nav.modiapersonoversikt.service.saker
 
+import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.saker.kilder.*
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.modiapersonoversikt.utils.UnleashProxySwitcher
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,8 +28,14 @@ class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
 
+    @Autowired
+    private lateinit var arenaSakVedtakService: SakVedtakPortType
+
+    @Autowired
+    private lateinit var unleashService: UnleashService
+
     private lateinit var safSaker: SafSaker
-    private lateinit var arenaSaker: ArenaSaker
+    private lateinit var arenaSaker: SakerKilde
     private lateinit var bidragSaker: BidragSaker
     private lateinit var generelleSaker: GenerelleSaker
     private lateinit var oppfolgingsSaker: OppfolgingsSaker
@@ -33,7 +43,12 @@ class SakerServiceImpl : SakerService {
     @PostConstruct
     fun setup() {
         safSaker = SafSaker(safService)
-        arenaSaker = ArenaSaker(arbeidOgAktivitet)
+        arenaSaker = UnleashProxySwitcher.createSwitcher(
+            featureToggle = Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE,
+            unleashService = unleashService,
+            ifEnabled = ArenaSakerV2(arenaSakVedtakService),
+            ifDisabled = ArenaSaker(arbeidOgAktivitet)
+        )
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
         oppfolgingsSaker = OppfolgingsSaker()
