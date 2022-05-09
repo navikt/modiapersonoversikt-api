@@ -6,7 +6,11 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 
 object TilgangTilBrukerMedKode6Policy : Kabac.Policy {
-    private val kode6Roller = setOf("0000-ga-strengt_fortrolig_adresse", "0000-ga-gosys_kode6")
+    private val kode6Roller = setOf(
+        "0000-ga-strengt_fortrolig_adresse",
+        "0000-ga-gosys_kode6",
+        "0000-ga-pensjon_kode6"
+    )
 
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
         val veilederRoller = ctx.getValue(VeiledersRollerPip) ?: emptySet()
