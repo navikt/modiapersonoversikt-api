@@ -52,7 +52,8 @@ interface Kabac {
         class Permit : Decision(Type.PERMIT)
         class NotApplicable(val message: String? = null) : Decision(Type.NOT_APPLICABLE) {
             override fun toString(): String {
-                return "NotApplicable($message)"
+                val msg = message?.let { "($it)" } ?: ""
+                return "NotApplicable$msg"
             }
         }
         class Deny(val message: String) : Decision(Type.DENY) {
