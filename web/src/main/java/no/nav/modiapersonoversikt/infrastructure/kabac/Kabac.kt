@@ -12,6 +12,11 @@ interface Kabac {
         fun provide(ctx: EvaluationContext): TValue?
     }
 
+    interface Policy {
+        val key: Key<Policy>
+        fun evaluate(ctx: EvaluationContext): Decision
+    }
+
     sealed class Decision(var type: Type) {
         fun isApplicable(): Boolean = when (this) {
             is Permit, is Deny -> true
@@ -60,10 +65,6 @@ interface Kabac {
     class MissingAttributeProviderException(message: String) : IllegalStateException(message)
     class MissingAttributeValueException(message: String) : IllegalStateException(message)
     class CycleInPipUsageException(message: String) : IllegalStateException(message)
-
-    interface Policy : AttributeKey<Policy> {
-        fun evaluate(ctx: EvaluationContext): Decision
-    }
 
     val bias: Decision.Type
     fun <TValue : Any> install(provider: AttributeProvider<TValue>): Kabac
