@@ -3,10 +3,12 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
+import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 
 @Suppress("FoldInitializerAndIfToElvis")
 object GeografiskTilgangPolicy : Kabac.Policy {
+    override val key = Key<Kabac.Policy>(GeografiskTilgangPolicy)
     val nasjonalTilgangRoller = setOf(
         "0000-ga-gosys_nasjonal",
         "0000-ga-gosys_utvidbar_til_nasjonal",

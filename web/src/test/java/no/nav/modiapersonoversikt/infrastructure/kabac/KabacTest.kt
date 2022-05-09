@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.kabac
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.Decision
+import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils.createTestPolicy
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
@@ -36,9 +37,11 @@ internal class KabacTest {
         val kabac = Kabac.Impl()
             .install(DummyProvider)
 
-        val decision: Decision = kabac.evaluatePolicy { ctx ->
-            Decision.Deny(ctx.requireValue(DummyProvider))
-        }
+        val decision: Decision = kabac.evaluatePolicy(
+            policy = createTestPolicy { ctx ->
+                Decision.Deny(ctx.requireValue(DummyProvider))
+            }
+        )
 
         assertThat(decision).isEqualTo(Decision.Deny("dummy value"))
     }
@@ -49,9 +52,11 @@ internal class KabacTest {
             .install(DummyDependentProvider)
 
         val evaluation = ThrowingCallable {
-            kabac.evaluatePolicy { ctx ->
-                Decision.Deny(ctx.requireValue(DummyProvider))
-            }
+            kabac.evaluatePolicy(
+                policy = createTestPolicy { ctx ->
+                    Decision.Deny(ctx.requireValue(DummyProvider))
+                }
+            )
         }
 
         assertThatThrownBy(evaluation)
@@ -65,10 +70,12 @@ internal class KabacTest {
             .install(DummyProvider)
             .install(DummyDependentProvider)
 
-        val decision: Decision = kabac.evaluatePolicy { ctx ->
-            val value: Int = ctx.requireValue(DummyDependentProvider)
-            Decision.Deny("Length of string was: $value")
-        }
+        val decision: Decision = kabac.evaluatePolicy(
+            policy = createTestPolicy { ctx ->
+                val value: Int = ctx.requireValue(DummyDependentProvider)
+                Decision.Deny("Length of string was: $value")
+            }
+        )
 
         assertThat(decision).isEqualTo(Decision.Deny("Length of string was: 11"))
     }
@@ -83,7 +90,7 @@ internal class KabacTest {
             attributes = listOf(
                 AttributeValue(DummyProvider, "this is a longer value")
             ),
-            policy = { ctx ->
+            policy = createTestPolicy { ctx ->
                 val value: Int = ctx.requireValue(DummyDependentProvider)
                 Decision.Deny("Length of string was: $value")
             }
@@ -101,7 +108,7 @@ internal class KabacTest {
             attributes = listOf(
                 AttributeValue(DummyProvider, "this is a longer value")
             ),
-            policy = { ctx ->
+            policy = createTestPolicy { ctx ->
                 val value: Int = ctx.requireValue(DummyDependentProvider)
                 Decision.Deny("Length of string was: $value")
             }
@@ -116,9 +123,11 @@ internal class KabacTest {
             .install(ErrorThrowingProvider)
 
         val evaluation = ThrowingCallable {
-            kabac.evaluatePolicy { ctx ->
-                Decision.Deny(ctx.requireValue(ErrorThrowingProvider))
-            }
+            kabac.evaluatePolicy(
+                policy = createTestPolicy { ctx ->
+                    Decision.Deny(ctx.requireValue(ErrorThrowingProvider))
+                }
+            )
         }
 
         assertThatThrownBy(evaluation)
@@ -130,9 +139,11 @@ internal class KabacTest {
     internal fun `kabac bias should be applied to decision`() {
         val kabac = Kabac.Impl(bias = Decision.Type.PERMIT)
 
-        val decision = kabac.evaluatePolicy {
-            Decision.NotApplicable("Doesn't matter")
-        }
+        val decision = kabac.evaluatePolicy(
+            policy = createTestPolicy {
+                Decision.NotApplicable("Doesn't matter")
+            }
+        )
 
         assertThat(decision).isEqualTo(Decision.Permit())
     }
@@ -143,7 +154,7 @@ internal class KabacTest {
 
         val decision = kabac.evaluatePolicy(
             bias = Decision.Type.DENY,
-            policy = {
+            policy = createTestPolicy {
                 Decision.NotApplicable("Doesn't matter")
             }
         )
@@ -165,7 +176,7 @@ internal class KabacTest {
 
         val decision = kabac.evaluatePolicy(
             attributes = listOf(AttributeValue(DummyProvider, "overridden")),
-            policy = { ctx ->
+            policy = createTestPolicy { ctx ->
                 Decision.Deny(ctx.requireValue(DummyProvider))
             }
         )

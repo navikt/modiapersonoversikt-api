@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.infrastructure.kabac.utils
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.Decision
+import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils.createTestPolicy
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Named
 import org.junit.jupiter.params.ParameterizedTest
@@ -12,9 +13,9 @@ internal class CombiningAlgorithmTest {
     private val evaluationContext = EvaluationContext(emptyList())
 
     companion object {
-        private val permitPolicy = Kabac.Policy { Decision.Permit() }.named("PERMIT")
-        private val denyPolicy = Kabac.Policy { Decision.Deny("Deny") }.named("DENY")
-        private val notApplicablePolicy = Kabac.Policy { Decision.NotApplicable("No applicable") }.named("NOT_APPLICABLE")
+        private val permitPolicy = createTestPolicy { Decision.Permit() }.named("PERMIT")
+        private val denyPolicy = createTestPolicy { Decision.Deny("Deny") }.named("DENY")
+        private val notApplicablePolicy = createTestPolicy { Decision.NotApplicable("No applicable") }.named("NOT_APPLICABLE")
 
         private val permitOverride = CombiningAlgorithm.permitOverride.named("PermitOverride")
         private val denyOverride = CombiningAlgorithm.denyOverride.named("DenyOverride")

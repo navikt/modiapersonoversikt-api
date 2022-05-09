@@ -2,10 +2,12 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
+import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersDiskresjonskodePip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 
 object TilgangTilBrukerMedKode6Policy : Kabac.Policy {
+    override val key = Key<Kabac.Policy>(TilgangTilBrukerMedKode6Policy)
     private val kode6Roller = setOf(
         "0000-ga-strengt_fortrolig_adresse",
         "0000-ga-gosys_kode6",

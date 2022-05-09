@@ -63,7 +63,7 @@ interface Kabac {
     class MissingAttributeValueException(message: String) : IllegalStateException(message)
     class CycleInPipUsageException(message: String) : IllegalStateException(message)
 
-    fun interface Policy {
+    interface Policy : AttributeKey<Policy> {
         fun evaluate(ctx: EvaluationContext): Decision
     }
 
@@ -103,9 +103,11 @@ interface Kabac {
             policy: Policy
         ): Decision {
             val ctx = EvaluationContext(providerRegister.values + attributes)
+            ctx.addToReport(policy.key.name).tab()
             return policy
                 .evaluate(ctx)
                 .withBias(bias)
+                .also { ctx.untab() }
         }
 
         override fun evaluatePolicies(

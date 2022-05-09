@@ -2,10 +2,12 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
+import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.HenvendelseEierPip
 
 internal object HenvendelseTilhorerBrukerPolicy : Kabac.Policy {
+    override val key = Key<Kabac.Policy>(HenvendelseTilhorerBrukerPolicy)
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
         val fnr = requireNotNull(ctx.getValue(CommonAttributes.FNR)) {
             "Kan ikke evaluere eierskap av henvendelse uten FNR"

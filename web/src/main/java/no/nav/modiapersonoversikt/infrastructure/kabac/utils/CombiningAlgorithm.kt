@@ -13,29 +13,52 @@ interface CombiningAlgorithm {
 }
 
 private class DecisionOverride(val overrideValue: Kabac.Decision.Type) : CombiningAlgorithm {
-    override fun combine(policies: List<Kabac.Policy>) = Kabac.Policy { ctx ->
-        var combined: Kabac.Decision = Kabac.Decision.NotApplicable("No applicable policy found")
-        for (policy in policies) {
-            val decision = policy.evaluate(ctx)
+    override fun combine(policies: List<Kabac.Policy>) = object : Kabac.Policy {
+        override val key = Key<Kabac.Policy>("Combining policies $overrideValue overrides")
 
-            combined = when (decision.type) {
-                overrideValue -> return@Policy decision
-                Kabac.Decision.Type.NOT_APPLICABLE -> combined
-                else -> decision
+        override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
+            var combined: Kabac.Decision = Kabac.Decision.NotApplicable("No applicable policy found")
+            for (policy in policies) {
+                ctx.addToReport(policy::class.java.simpleName).tab()
+                val decision = policy.evaluate(ctx)
+                ctx.addToReport("Decision: $decision")
+
+                combined = when (decision.type) {
+                    overrideValue -> {
+                        ctx.untab()
+                            .addToReport("Last decision matched overridevalue: $overrideValue")
+                            .addToReport("Further execution not needed")
+                        return decision
+                    }
+                    Kabac.Decision.Type.NOT_APPLICABLE -> combined
+                    else -> decision
+                }
+                ctx.untab()
             }
+            ctx.addToReport("Result: $combined")
+            return combined
         }
-        combined
     }
 }
 
 private class FirstApplicable : CombiningAlgorithm {
-    override fun combine(policies: List<Kabac.Policy>) = Kabac.Policy { ctx ->
-        for (policy in policies) {
-            val decision = policy.evaluate(ctx)
-            if (decision.isApplicable()) {
-                return@Policy decision
+    override fun combine(policies: List<Kabac.Policy>) = object : Kabac.Policy {
+        override val key = Key<Kabac.Policy>("Combining policies first applicable")
+        override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
+            for (policy in policies) {
+                ctx.addToReport(policy::class.java.simpleName).tab()
+                val decision = policy.evaluate(ctx)
+                ctx.addToReport("Decision: $decision")
+                if (decision.isApplicable()) {
+                    ctx.untab()
+                        .addToReport("Last decision was applicable: $decision")
+                        .addToReport("Further execution not needed")
+                    return decision
+                }
+                ctx.untab()
             }
+            ctx.addToReport("Result: No application policy found")
+            return Kabac.Decision.NotApplicable("No applicable policy found")
         }
-        Kabac.Decision.NotApplicable("No applicable policy found")
     }
 }

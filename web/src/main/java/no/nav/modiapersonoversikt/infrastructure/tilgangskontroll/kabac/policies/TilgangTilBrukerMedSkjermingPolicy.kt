@@ -2,10 +2,12 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
+import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersSkjermingPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 
 object TilgangTilBrukerMedSkjermingPolicy : Kabac.Policy {
+    override val key = Key<Kabac.Policy>(TilgangTilBrukerMedSkjermingPolicy)
     private val skjermingRoller = setOf("0000-ga-gosys_utvidet", "0000-ga-pensjon_utvidet")
 
     override fun evaluate(ctx: EvaluationContext): Kabac.Decision {

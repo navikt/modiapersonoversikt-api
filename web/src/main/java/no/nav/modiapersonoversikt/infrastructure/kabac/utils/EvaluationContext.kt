@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.infrastructure.kabac.utils
 
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 
-class EvaluationContext(providers: List<Kabac.AttributeProvider<*>>) {
+class EvaluationContext(providers: List<Kabac.AttributeProvider<*>>) : EvaluationReporter by EvaluationReporter.Impl() {
     private val evaluationRegister = providers.associateBy { it.key }
     private val cache = mutableMapOf<Key<*>, Any?>()
     private val keystack = KeyStack()
@@ -15,12 +15,18 @@ class EvaluationContext(providers: List<Kabac.AttributeProvider<*>>) {
     fun <TValue : Any> getValue(key: Key<TValue>): TValue? {
         return keystack.withCycleDetection(key) {
             if (cache.containsKey(key)) {
-                cache[key] as TValue?
+                val value = cache[key] as TValue?
+                addToReport("Requested $key, cache-hit: $value")
+                value
             } else {
                 val provider = evaluationRegister[key]
-                    ?: throw Kabac.MissingAttributeProviderException("Could not find provider for $key")
+                if (provider == null) {
+                    addToReport("Requested $key, no provider found")
+                    throw Kabac.MissingAttributeProviderException("Could not find provider for $key")
+                }
 
                 (provider.provide(this) as TValue?).also {
+                    addToReport("Requested $key, cache-miss: $it")
                     cache[key] = it
                 }
             }
