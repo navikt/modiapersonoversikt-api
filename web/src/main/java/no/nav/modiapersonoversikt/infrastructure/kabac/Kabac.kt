@@ -12,7 +12,7 @@ interface Kabac {
         fun provide(ctx: EvaluationContext): TValue?
     }
 
-    sealed class Decision(internal var type: Type, open val message: String? = null) {
+    sealed class Decision(var type: Type) {
         fun isApplicable(): Boolean = when (this) {
             is Permit, is Deny -> true
             is NotApplicable -> false
@@ -28,35 +28,33 @@ interface Kabac {
             }
             return this
         }
-
         override fun toString(): String {
-            val name = this.type.name.lowercase().replaceFirstChar { it.titlecase() }
-            val message = if (message == null) "" else "($message)"
-            return "$name$message"
+            return this.type.name.lowercase().replaceFirstChar { it.titlecase() }
         }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as Decision
-
-            if (type != other.type) return false
-            if (message != other.message) return false
-
-            return true
+            if (other is Decision) {
+                return type == other.type
+            }
+            return false
         }
 
         override fun hashCode(): Int {
-            var result = type.hashCode()
-            result = 31 * result + (message?.hashCode() ?: 0)
-            return result
+            return type.hashCode()
         }
 
         enum class Type { PERMIT, DENY, NOT_APPLICABLE }
         class Permit : Decision(Type.PERMIT)
-        class NotApplicable(message: String? = null) : Decision(Type.NOT_APPLICABLE, message)
-        class Deny(message: String) : Decision(Type.DENY, message)
+        class NotApplicable(val message: String? = null) : Decision(Type.NOT_APPLICABLE) {
+            override fun toString(): String {
+                return "NotApplicable($message)"
+            }
+        }
+        class Deny(val message: String) : Decision(Type.DENY) {
+            override fun toString(): String {
+                return "Deny($message)"
+            }
+        }
     }
 
     class MissingAttributeProviderException(message: String) : IllegalStateException(message)
@@ -69,17 +67,25 @@ interface Kabac {
 
     val bias: Decision.Type
     fun <TValue : Any> install(provider: AttributeProvider<TValue>): Kabac
+
+    fun createEvaluationContext(attributes: List<AttributeProvider<*>> = emptyList()): EvaluationContext
+    fun evaluatePolicies(
+        combiner: CombiningAlgorithm = CombiningAlgorithm.denyOverride,
+        bias: Decision.Type = this.bias,
+        attributes: List<AttributeProvider<*>> = emptyList(),
+        policies: List<Policy>
+    ): Decision
+
     fun evaluatePolicy(
         bias: Decision.Type = this.bias,
         attributes: List<AttributeProvider<*>> = emptyList(),
         policy: Policy
     ): Decision
 
-    fun evaluatePolicies(
-        combiner: CombiningAlgorithm = CombiningAlgorithm.denyOverride,
+    fun evaluatePolicyWithContext(
         bias: Decision.Type = this.bias,
-        attributes: List<AttributeProvider<*>> = emptyList(),
-        policies: List<Policy>
+        ctx: EvaluationContext,
+        policy: Policy
     ): Decision
 
     class Impl(override val bias: Decision.Type = Decision.Type.DENY) : Kabac {
@@ -97,17 +103,9 @@ interface Kabac {
             providerRegister[provider.key] = provider
             return this
         }
-        override fun evaluatePolicy(
-            bias: Decision.Type,
-            attributes: List<AttributeProvider<*>>,
-            policy: Policy
-        ): Decision {
-            val ctx = EvaluationContext(providerRegister.values + attributes)
-            ctx.addToReport(policy.key.name).tab()
-            return policy
-                .evaluate(ctx)
-                .withBias(bias)
-                .also { ctx.untab() }
+
+        override fun createEvaluationContext(attributes: List<AttributeProvider<*>>): EvaluationContext {
+            return EvaluationContext(providerRegister.values + attributes)
         }
 
         override fun evaluatePolicies(
@@ -121,6 +119,29 @@ interface Kabac {
                 attributes = attributes,
                 policy = combiner.combine(policies)
             )
+        }
+        override fun evaluatePolicy(
+            bias: Decision.Type,
+            attributes: List<AttributeProvider<*>>,
+            policy: Policy
+        ): Decision {
+            return evaluatePolicyWithContext(
+                bias = bias,
+                ctx = createEvaluationContext(attributes),
+                policy = policy
+            )
+        }
+
+        override fun evaluatePolicyWithContext(
+            bias: Decision.Type,
+            ctx: EvaluationContext,
+            policy: Policy
+        ): Decision {
+            ctx.addToReport(policy.key.name).tab()
+            return policy
+                .evaluate(ctx)
+                .withBias(bias)
+                .also { ctx.untab() }
         }
     }
 }

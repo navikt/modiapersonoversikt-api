@@ -10,7 +10,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 import org.junit.jupiter.api.Test
 
 internal class TilgangTilModiaPolicyTest {
-    private val policy = KabacTestUtils.PolicyTester(PublicPolicies.tilgangTilModia)
+    private val policy = KabacTestUtils.PolicyTester(TilgangTilModiaPolicy)
     private val ldap = mockk<LDAPService>()
     private val ident = NavIdent("Z999999")
 

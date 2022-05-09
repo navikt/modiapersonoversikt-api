@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
 internal class KanBrukeInternalPolicyTest {
-    private val policy = KabacTestUtils.PolicyTester(PublicPolicies.kanBrukeInternal)
+    private val policy = KabacTestUtils.PolicyTester(KanBrukeInternalPolicy)
 
     companion object {
         @JvmField

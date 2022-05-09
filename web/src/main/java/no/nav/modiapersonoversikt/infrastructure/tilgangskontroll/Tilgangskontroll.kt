@@ -9,7 +9,8 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.utils.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.rsbac.*
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.PublicPolicies
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerPolicy
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilModiaPolicy
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -73,7 +74,7 @@ class Policies {
 
         private val internalTilgangTilModia = Policy<TilgangskontrollContext>({ "Saksbehandler (${this.hentSaksbehandlerId()}) har ikke tilgang til modia" }) {
             kabac()
-                .evaluatePolicy(policy = PublicPolicies.tilgangTilModia)
+                .evaluatePolicy(policy = TilgangTilModiaPolicy)
                 .toDecisionEnum()
         }
 
@@ -114,7 +115,7 @@ class Policies {
             context.kabac()
                 .evaluatePolicy(
                     attributes = listOf(personAttribute),
-                    policy = PublicPolicies.tilgangTilBruker
+                    policy = TilgangTilBrukerPolicy
                 )
                 .toDecisionEnum()
         }

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 internal class TilgangTilBrukerPolicyTest {
-    private val policy = KabacTestUtils.PolicyTester(PublicPolicies.tilgangTilBruker)
+    private val policy = KabacTestUtils.PolicyTester(TilgangTilBrukerPolicy)
     private val ldap = mockk<LDAPService>()
     private val pdl = mockk<PdlOppslagService>()
     private val norg = mockk<NorgApi>()

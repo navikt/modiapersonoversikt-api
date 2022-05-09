@@ -15,7 +15,7 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl
 import org.junit.jupiter.api.Test
 
 internal class TilgangTilTemaPolicyTest {
-    private val policy = KabacTestUtils.PolicyTester(PublicPolicies.tilgangTilTema)
+    private val policy = KabacTestUtils.PolicyTester(TilgangTilTemaPolicy)
     private val nom = mockk<NomClient>()
     private val axsys = mockk<AxsysClient>()
     private val ident = NavIdent("Z999999")

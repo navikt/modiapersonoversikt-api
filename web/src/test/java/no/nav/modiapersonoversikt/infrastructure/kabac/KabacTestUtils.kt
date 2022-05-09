@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions.fail
 
 object KabacTestUtils {
     fun createTestPolicy(block: (ctx: EvaluationContext) -> Kabac.Decision) = object : Kabac.Policy {
-        override val key = Key<Kabac.Policy>("")
+        override val key = Key<Kabac.Policy>("test-policy")
         override fun evaluate(ctx: EvaluationContext) = block(ctx)
     }
 
@@ -22,7 +22,6 @@ object KabacTestUtils {
             } finally {
                 ctx.untab()
             }
-            val report = ctx.getReport()
             assertThat(decision::class).isEqualTo(Kabac.Decision.Permit::class)
             assertThat(decision).isEqualTo(Kabac.Decision.Permit())
         }
@@ -37,7 +36,6 @@ object KabacTestUtils {
             } finally {
                 ctx.untab()
             }
-            val report = ctx.getReport()
             assertThat(decision::class).isEqualTo(Kabac.Decision.Deny::class)
             return MessageAsserter(decision)
         }
@@ -56,7 +54,8 @@ object KabacTestUtils {
         class MessageAsserter(private val decision: Kabac.Decision) {
             fun withMessage(expectedMessage: String) {
                 val actualMessage = when (decision) {
-                    is Kabac.Decision.Deny, is Kabac.Decision.NotApplicable -> decision.message
+                    is Kabac.Decision.Deny -> decision.message
+                    is Kabac.Decision.NotApplicable -> decision.message
                     else -> null
                 }
                 assertThat(actualMessage).isEqualTo(expectedMessage)

@@ -15,7 +15,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 internal class HenvendelseTilhorerBrukerPolicyTest {
-    private val policy = KabacTestUtils.PolicyTester(PublicPolicies.henvendelseTilhorerBruker)
+    private val policy = KabacTestUtils.PolicyTester(HenvendelseTilhorerBrukerPolicy)
     private val henvendelseService = mockk<SfHenvendelseService>()
     private val kjedeId = "abba1001"
     private val fnr = "12345678910"

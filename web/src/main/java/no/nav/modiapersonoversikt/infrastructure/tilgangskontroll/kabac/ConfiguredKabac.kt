@@ -9,7 +9,7 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 
-class KabacTilgangskontroll(
+class ConfiguredKabac(
     pdl: PdlOppslagService,
     skjermingApi: SkjermedePersonerApi,
     norg: NorgApi,
