@@ -33,7 +33,8 @@ open class ArenaSakVedtakServiceConfig {
     open fun sakVedtakService(): SakVedtakPortType {
         val prod: SakVedtakPortType = createSakVedtakPortType()
         return MetricsFactory.createTimerProxyForWebService(
-            "SakVedtakPortType", prod,
+            "SakVedtakPortType",
+            prod,
             SakVedtakPortType::class.java
         )
     }
@@ -75,7 +76,8 @@ open class ArenaSakVedtakServiceConfig {
 
     private fun createSakVedtakPortType(): SakVedtakPortType {
         return Utils.withProperty(
-            "disable.ssl.cn.check", "true"
+            "disable.ssl.cn.check",
+            "true"
         ) {
             CXFClient(SakVedtakPortType::class.java)
                 .address(address)
