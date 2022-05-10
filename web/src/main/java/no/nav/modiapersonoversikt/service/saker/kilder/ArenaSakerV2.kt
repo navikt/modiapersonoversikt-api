@@ -2,14 +2,19 @@ package no.nav.modiapersonoversikt.service.saker.kilder
 
 import no.nav.arena.services.lib.sakvedtak.SaksInfoListe
 import no.nav.arena.services.sakvedtakservice.Bruker
+import no.nav.arena.services.sakvedtakservice.FaultFeilIInputMsg
+import no.nav.arena.services.sakvedtakservice.FaultGeneriskMsg
 import no.nav.arena.services.sakvedtakservice.HentSaksInfoListeRequestV2
 import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
 import no.nav.modiapersonoversikt.service.saker.Sak
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import org.joda.time.DateTime
+import org.slf4j.LoggerFactory
+import javax.naming.ServiceUnavailableException
 import javax.xml.ws.Holder
 
 internal class ArenaSakerV2(val arenaSakVedtakService: SakVedtakPortType) : SakerKilde {
+    private val log = LoggerFactory.getLogger(ArenaSakerV2::class.java)
     override val kildeNavn: String
         get() = "ARENA"
 
@@ -25,19 +30,31 @@ internal class ArenaSakerV2(val arenaSakVedtakService: SakVedtakPortType) : Sake
             .withBruker(Bruker().withBrukertypeKode("PERSON").withBrukerId(fnr))
             .withTema("OPP")
 
-        val saksInfoListe: Holder<SaksInfoListe> = Holder()
+        val saksInfoListe = SaksInfoListe()
+        val bruker = Holder(request.bruker)
+        val sak: Holder<SaksInfoListe> = Holder(saksInfoListe)
+        try {
+            arenaSakVedtakService.hentSaksInfoListeV2(
+                bruker,
+                request.saksId,
+                request.fomDato,
+                request.tomDato,
+                request.tema,
+                request.isLukket,
+                sak
+            )
+        } catch (e: FaultFeilIInputMsg) {
+            log.error("Feil input til hentSaksInfoV2. FaultInfo: ${e.faultInfo}", e)
+            throw ServiceUnavailableException(e.message);
+        } catch (e: FaultGeneriskMsg) {
+            log.error("Feil ved hentSaksInfoV2. FaultInfo: ${e.faultInfo}", e)
+            throw ServiceUnavailableException(e.message)
+        } catch(e: Exception) {
+            log.error("Ukjent ved under kall på hentSaksInfoV2: ${e.message} ${e.cause}", e)
+        }
 
-        arenaSakVedtakService.hentSaksInfoListeV2(
-            Holder(request.bruker),
-            request.saksId,
-            request.fomDato,
-            request.tomDato,
-            request.tema,
-            request.isLukket,
-            saksInfoListe
-        )
 
-        return saksInfoListe.value.saksInfo.firstOrNull()?.let(TIL_SAK)
+        return sak.value?.saksInfo?.firstOrNull()?.let(TIL_SAK)
     }
 
     companion object {
