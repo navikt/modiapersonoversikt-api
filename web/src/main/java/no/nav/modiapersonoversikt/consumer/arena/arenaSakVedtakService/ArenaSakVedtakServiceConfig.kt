@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration
 import java.util.*
 import javax.security.auth.callback.Callback
 import javax.security.auth.callback.CallbackHandler
+import javax.xml.datatype.DatatypeFactory
 import javax.xml.namespace.QName
 import javax.xml.ws.Holder
 
@@ -42,14 +43,13 @@ open class ArenaSakVedtakServiceConfig {
     @Bean
     open fun sakVedtakPortTypePing(sakVedtakPortType: SakVedtakPortType): Pingable {
         val dagensDato = LocalDate.now()
-        val xmlDato = null
-        val gregorianCalendar = GregorianCalendar()
-        gregorianCalendar.time = dagensDato.toDate()
+        val xmlDato = DatatypeFactory.newInstance().newXMLGregorianCalendar(dagensDato.toString())
         val hentSaksInfoListeRequestV2 = HentSaksInfoListeRequestV2()
             .withBruker(Bruker().withBrukertypeKode("PERSON").withBrukerId("10108000398"))
             .withFomDato(xmlDato)
             .withTomDato(xmlDato)
-        val saksInfoListe: Holder<SaksInfoListe> = Holder()
+        val saksInfoListe = SaksInfoListe()
+        val sak: Holder<SaksInfoListe> = Holder(saksInfoListe)
 
         val selftest = SelfTestCheck(
             String.format("SakVedtakService via %s", address),
@@ -63,7 +63,7 @@ open class ArenaSakVedtakServiceConfig {
                     hentSaksInfoListeRequestV2.tomDato,
                     hentSaksInfoListeRequestV2.tema,
                     hentSaksInfoListeRequestV2.isLukket,
-                    saksInfoListe
+                    sak
                 )
                 HealthCheckResult.healthy()
             } catch (e: Exception) {
