@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
@@ -19,6 +20,7 @@ open class TilgangskontrollConfig {
         ansattService: AnsattService,
         norgApi: NorgApi,
         pdlOppslagService: PdlOppslagService,
+        skjermedePersonerApi: SkjermedePersonerApi,
         sfHenvendelseService: SfHenvendelseService,
         unleashService: UnleashService
     ): Tilgangskontroll {
@@ -28,6 +30,7 @@ open class TilgangskontrollConfig {
             ansattService,
             norgApi,
             pdlOppslagService,
+            skjermedePersonerApi,
             sfHenvendelseService,
             unleashService
         )
