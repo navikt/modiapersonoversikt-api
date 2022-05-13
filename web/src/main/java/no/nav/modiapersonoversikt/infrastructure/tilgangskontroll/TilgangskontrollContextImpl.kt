@@ -1,9 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
-import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.EksternBrukerId
 import no.nav.common.types.identer.EnhetId
-import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient
@@ -14,6 +12,8 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.ConfiguredKabac
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
@@ -27,10 +27,11 @@ open class TilgangskontrollContextImpl(
     private val ansattService: AnsattService,
     private val norg: NorgApi,
     private val pdl: PdlOppslagService,
-    private val skjermingApi: SkjermedePersonerApi,
+    private val skjermedePersonerApi: SkjermedePersonerApi,
     private val sfHenvendelseService: SfHenvendelseService,
     private val unleashService: UnleashService
 ) : TilgangskontrollContext {
+    private val kabac: Kabac = ConfiguredKabac(pdl, skjermedePersonerApi, norg, ansattService, sfHenvendelseService, ldap)
     override fun checkAbac(request: AbacRequest): AbacResponse = abacClient.evaluate(request)
     override fun hentSaksbehandlerId(): Optional<NavIdent> = AuthContextUtils.getIdent()
         .map(String::uppercase)
@@ -105,22 +106,6 @@ open class TilgangskontrollContextImpl(
         return pdl.hentGeografiskTilknyttning(ident.get())
     }
 
-    override fun hentErBrukerSkjermet(ident: Fnr): Boolean {
-        return skjermingApi.erSkjermetPerson(ident.get())
-    }
-
-    override fun konverterTilFnr(ident: EksternBrukerId): Fnr {
-        return when (ident) {
-            is Fnr -> ident
-            is AktorId -> Fnr(
-                requireNotNull(pdl.hentFnr(ident.get())) {
-                    "Fant ikke FNR for aktørId: ${ident.get()}"
-                }
-            )
-            else -> throw IllegalStateException("Ikke støttet ekstern-ident type: ${ident.javaClass.simpleName}")
-        }
-    }
-
     private fun List<HentAdressebeskyttelse.Adressebeskyttelse>.finnStrengesteKode(): String? {
         return this
             .mapNotNull {
@@ -131,4 +116,6 @@ open class TilgangskontrollContextImpl(
                 }
             }.minOrNull()
     }
+
+    override fun kabac(): Kabac = kabac
 }
