@@ -23,6 +23,12 @@ interface PdlOppslagService {
         BEFORE
     }
 
+    enum class PdlSokeOmfang(val verdi: Boolean?) {
+        HISTORISK_OG_GJELDENDE(null),
+        HISTORISK(true),
+        GJELDENDE(false)
+    }
+
     enum class PdlFelt(val feltnavn: String, val rule: SokKriterieRule) {
         NAVN("fritekst.navn", FUZZY_MATCH),
         FORNAVN("person.navn.fornavn", FUZZY_MATCH),
@@ -38,7 +44,7 @@ interface PdlOppslagService {
         val felt: PdlFelt,
         val value: String?,
         val boost: Float? = null,
-        val searchHistorical: Boolean? = false
+        val searchHistorical: PdlSokeOmfang = PdlSokeOmfang.HISTORISK_OG_GJELDENDE
     ) {
         fun asCriterion() =
             if (value.isNullOrEmpty()) {
@@ -53,7 +59,7 @@ interface PdlOppslagService {
                         AFTER -> SokPerson.SearchRule(after = this.value, boost = boost)
                         BEFORE -> SokPerson.SearchRule(before = this.value, boost = boost)
                     },
-                    searchHistorical = searchHistorical
+                    searchHistorical = searchHistorical.verdi
                 )
             }
     }
