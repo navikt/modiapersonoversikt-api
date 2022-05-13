@@ -1,6 +1,8 @@
 package no.nav.modiapersonoversikt.rest.saker
 
 import com.expediagroup.graphql.types.GraphQLResponse
+import no.nav.common.types.identer.AktorId
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.saf.generated.Hentbrukerssaker
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -23,7 +25,7 @@ class SafDebugController @Autowired constructor(
     @GetMapping("/{ident}/fnr")
     fun hentSafSakerFnr(@PathVariable("ident") ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(ident))
+            .check(Policies.tilgangTilBruker(Fnr(ident)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Saker, AuditIdentifier.FNR to ident)) {
                 safService.hentSaker(ident)
             }
@@ -32,7 +34,7 @@ class SafDebugController @Autowired constructor(
     @GetMapping("/{ident}/aktorid")
     fun hentSafSakerAktorId(@PathVariable("ident") ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBrukerMedAktorId.with(ident))
+            .check(Policies.tilgangTilBruker(AktorId(ident)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Saker, AuditIdentifier.FNR to ident)) {
                 safService.hentSaker(ident)
             }

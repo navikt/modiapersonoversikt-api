@@ -1,13 +1,13 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
+import no.nav.common.types.identer.EnhetId;
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision;
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sakstema;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangTilTemaData;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
-import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,6 @@ import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modiapersonoversikt.legacy.sak.providerdomain.Feilmelding.*;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
@@ -41,9 +40,9 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     public boolean harEnhetTilgangTilTema(String temakode, String valgtEnhet) {
         if (isNotBlank(temakode)) {
             return tilgangskontroll
-                    .check(Policies.tilgangTilTema.with(new TilgangTilTemaData(valgtEnhet, temakode)))
+                    .check(Policies.tilgangTilTema(EnhetId.of(valgtEnhet), temakode))
                     .getDecision()
-                    .isPermit();
+                    .getType() == Decision.Type.PERMIT;
         }
         return true;
     }
@@ -53,8 +52,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
                 .forEach(sakstema -> sakstema.dokumentMetadata
                         .stream()
                         .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
-                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT))
-                        .collect(toList()));
+                        .forEach(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT))
+                );
     }
 
     private boolean erJournalfortPaAnnetTema(String temakode, DokumentMetadata dokumentMetadata) {

@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.KjedeIdTilgangData
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.HenvendelseDTO
@@ -37,7 +37,7 @@ class SfDialogController @Autowired constructor(
         @RequestParam(value = "enhet") enhet: String
     ): List<HenvendelseDTO> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 sfHenvendelseService.hentHenvendelser(EksternBruker.Fnr(fnr), enhet)
             }
@@ -59,7 +59,7 @@ class SfDialogController @Autowired constructor(
         @RequestBody request: OpprettOgSendMeldingRequest
     ) {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 val bruker = EksternBruker.Fnr(fnr)
                 when (request.type) {
@@ -102,7 +102,7 @@ class SfDialogController @Autowired constructor(
         @RequestBody request: SendPaEksisterendeRequest
     ) {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 val bruker = EksternBruker.Fnr(fnr)
                 val henvendelse = sfHenvendelseService.hentHenvendelse(kjedeId)
@@ -165,8 +165,8 @@ class SfDialogController @Autowired constructor(
             AuditIdentifier.SAK_TEMA to request.saksTema
         )
         tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .check(Policies.henvendelseTilhorerBruker(Fnr(fnr), kjedeId))
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Journalfor, *auditIdentifier)) {
                 // NB Denne controlleren er ikke ibruk per idag. Men dette må tittes nærmere på før en evt overgang.
                 sfHenvendelseService.journalforHenvendelse(
@@ -189,8 +189,8 @@ class SfDialogController @Autowired constructor(
             AuditIdentifier.TRAAD_ID to kjedeId
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .check(Policies.henvendelseTilhorerBruker(Fnr(fnr), kjedeId))
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Feilsendt, *auditIdentifier)) {
                 sfHenvendelseService.merkSomFeilsendt(kjedeId)
             }
@@ -207,8 +207,8 @@ class SfDialogController @Autowired constructor(
             AuditIdentifier.TRAAD_ID to kjedeId
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .check(Policies.henvendelseTilhorerBruker(Fnr(fnr), kjedeId))
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Sladding, *auditIdentifier)) {
                 sfHenvendelseService.sendTilSladding(kjedeId)
             }

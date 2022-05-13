@@ -3,11 +3,9 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 import io.mockk.*
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
-import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
-import no.nav.modiapersonoversikt.consumer.abac.Decision
-import no.nav.modiapersonoversikt.consumer.abac.Response
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toGetOppgaveResponseJsonDTO
@@ -32,8 +30,7 @@ class RestOppgaveBehandlingServiceImplTest {
     private val apiClient: OppgaveApi = mockk()
     private val systemApiClient: OppgaveApi = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
-    private val tilgangskontrollContext: TilgangskontrollContext = mockk()
-    private val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
+    private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
     private val ansattService: AnsattService = mockk()
     private val stsService: SystemUserTokenProvider = mockk()
     private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
@@ -284,9 +281,6 @@ class RestOppgaveBehandlingServiceImplTest {
                         )
                 )
             )
-            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
-                listOf(Response(Decision.Permit, null))
-            )
 
             val result: List<Oppgave> = withIdent("Z999999") {
                 oppgaveBehandlingService.finnTildelteOppgaverIGsak()
@@ -321,9 +315,6 @@ class RestOppgaveBehandlingServiceImplTest {
                             metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to "henvid")
                         )
                 )
-            )
-            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
-                listOf(Response(Decision.Permit, null))
             )
 
             val result: List<Oppgave> = withIdent("Z999999") {
@@ -365,9 +356,6 @@ class RestOppgaveBehandlingServiceImplTest {
                     oppgaver = oppgaveListe
                 )
             }
-            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
-                listOf(Response(Decision.Permit, null))
-            )
 
             val result: List<Oppgave> = withIdent("Z999999") {
                 oppgaveBehandlingService.finnTildelteOppgaverIGsak()
@@ -425,13 +413,10 @@ class RestOppgaveBehandlingServiceImplTest {
                     any()
                 )
             } returns henvendelseOppgave.toPutOppgaveResponseJsonDTO()
-
-            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
-                listOf(Response(Decision.Deny, null))
-            )
-
-            val result = withIdent("Z999999") {
-                oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+            val result = TilgangskontrollMock.withDecision(Decision.Deny("", Decision.NO_APPLICABLE_POLICY_FOUND)) {
+                withIdent("Z999999") {
+                    oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                }
             }
 
             assertThat(result).isEmpty()
@@ -519,9 +504,6 @@ class RestOppgaveBehandlingServiceImplTest {
                 )
             } returns oppgave.toPutOppgaveResponseJsonDTO()
 
-            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
-                listOf(Response(Decision.Permit, null))
-            )
             every { pdlOppslagService.hentAktorId(any()) } returns null
             every { pdlOppslagService.hentFnr(any()) } returns null
 
@@ -571,9 +553,6 @@ class RestOppgaveBehandlingServiceImplTest {
                             aktoerId = "00007063000250000"
                         )
                 )
-            )
-            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
-                listOf(Response(Decision.Permit, null))
             )
 
             val result: List<Oppgave> = withIdent("Z999999") {

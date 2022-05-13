@@ -15,13 +15,13 @@ private const val APPLICATION_PREFIX = "modiabrukerdialog."
 @RestController
 @RequestMapping("/rest/featuretoggle")
 class FeatureToggleController @Autowired constructor(
-    private val unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService,
+    private val unleashService: UnleashService,
     private val tilgangskontroll: Tilgangskontroll
 ) {
     @GetMapping("/{id}")
     fun hentMedId(@PathVariable("id") toggleId: String): Boolean =
         tilgangskontroll
-            .check(Policies.tilgangTilModia)
+            .check(Policies.tilgangTilModia())
             .get(Audit.skipAuditLog()) {
                 unleashService.isEnabled(sjekkPrefix(toggleId))
             }

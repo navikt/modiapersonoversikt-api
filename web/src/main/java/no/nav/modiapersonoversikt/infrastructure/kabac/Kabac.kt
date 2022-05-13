@@ -34,6 +34,7 @@ object Kabac {
     interface PolicyEnforcementPoint {
         val bias: Decision.Type
 
+        fun createEvaluationContext(vararg attributes: AttributeValue<*>): EvaluationContext = createEvaluationContext(attributes.toList())
         fun createEvaluationContext(attributes: List<AttributeValue<*>>): EvaluationContext
         fun evaluatePolicies(
             combiningAlgorithm: CombiningAlgorithm = CombiningAlgorithm.denyOverride,

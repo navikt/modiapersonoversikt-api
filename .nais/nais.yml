@@ -70,8 +70,6 @@ spec:
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
       value: "https://sts.adeo.no/SecurityTokenServiceProvider/"
-    - name: ABAC_PDP_ENDPOINT_URL
-      value: "https://abac-modia.intern.nav.no/application/authorize"
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: FELLES_KODEVERK_URL

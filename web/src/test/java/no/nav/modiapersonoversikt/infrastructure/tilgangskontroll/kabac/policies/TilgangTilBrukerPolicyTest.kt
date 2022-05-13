@@ -17,7 +17,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService

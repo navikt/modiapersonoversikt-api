@@ -4,7 +4,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 
 class BrukersDiskresjonskodePip(private val pdl: PdlOppslagService) : Kabac.PolicyInformationPoint<BrukersDiskresjonskodePip.Kode> {

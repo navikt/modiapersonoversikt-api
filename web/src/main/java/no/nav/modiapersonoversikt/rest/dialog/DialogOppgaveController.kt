@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.CREATE
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.Henvendelse
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -33,8 +33,8 @@ class DialogOppgaveController @Autowired constructor(
     @PostMapping("/v2/opprett")
     fun opprettOppgave(@RequestBody request: OpprettOppgaveRequestDTO): OpprettOppgaveResponseDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
+            .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
+            .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.behandlingskjedeId))
             .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingskjedeId)) {
                 oppgavebehandling.opprettOppgave(request.fromDTO()).toDTO()
             }
@@ -45,7 +45,7 @@ class DialogOppgaveController @Autowired constructor(
         @RequestBody request: OpprettSkjermetOppgaveDTO
     ): OpprettOppgaveResponseDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia)
+            .check(Policies.tilgangTilModia())
             .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                 oppgavebehandling.opprettSkjermetOppgave(request.fromDTO()).toDTO()
             }
@@ -54,7 +54,7 @@ class DialogOppgaveController @Autowired constructor(
     @GetMapping("/v2/tema")
     fun hentAlleTema(): List<OppgaveKodeverk.Tema> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia)
+            .check(Policies.tilgangTilModia())
             .get(Audit.skipAuditLog()) {
                 kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentAlleVerdier().toList()
             }

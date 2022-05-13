@@ -19,7 +19,7 @@ constructor(private val ldapService: LDAPService, private val tilgangskontroll: 
     @GetMapping("/roller")
     fun hentRollerForInnloggetVeileder(): Map<String, List<String>> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia)
+            .check(Policies.tilgangTilModia())
             .get(Audit.describe(READ, Saksbehandler.Roller)) {
                 val ident = AuthContextUtils.requireIdent()
                 mapOf("roller" to ldapService.hentRollerForVeileder(ident))

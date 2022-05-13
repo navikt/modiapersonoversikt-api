@@ -42,7 +42,7 @@ class PersonsokController @Autowired constructor(
     @PostMapping("/v2")
     fun sokPdl(@RequestBody personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia)
+            .check(Policies.tilgangTilModia())
             .get(auditDescriptor) {
                 handterFeil {
                     if (!personsokRequest.kontonummer.isNullOrBlank()) {

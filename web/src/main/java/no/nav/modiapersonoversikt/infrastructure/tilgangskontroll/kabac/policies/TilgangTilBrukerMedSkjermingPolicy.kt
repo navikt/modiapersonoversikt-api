@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersSkjermingPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 
@@ -20,7 +21,7 @@ object TilgangTilBrukerMedSkjermingPolicy : Kabac.Policy {
         val erSkjermet = ctx.getValue(BrukersSkjermingPip)
 
         return if (erSkjermet == true) {
-            Decision.Deny("Veileder har ikke tilgang til skjermet person")
+            Decision.Deny("Veileder har ikke tilgang til skjermet person", DenyCauseCode.FP3_EGEN_ANSATT)
         } else {
             Decision.NotApplicable()
         }

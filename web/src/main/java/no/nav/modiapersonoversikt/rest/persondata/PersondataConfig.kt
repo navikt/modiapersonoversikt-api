@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
@@ -20,7 +20,7 @@ open class PersondataConfig {
         norgApi: NorgApi,
         personV3: PersonV3,
         skjermedePersonerApi: SkjermedePersonerApi,
-        tilgangskontroll: Tilgangskontroll,
+        policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
         kodeverk: EnhetligKodeverk.Service
     ): PersondataService {
         return PersondataServiceImpl(
@@ -29,7 +29,7 @@ open class PersondataConfig {
             norgApi,
             personV3,
             skjermedePersonerApi,
-            tilgangskontroll,
+            policyEnforcementPoint,
             kodeverk
         )
     }

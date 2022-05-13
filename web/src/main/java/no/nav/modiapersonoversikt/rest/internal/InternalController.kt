@@ -31,8 +31,8 @@ class InternalController @Autowired constructor(
     @GetMapping("/tokens")
     fun hentSystembrukerToken(): Tokens {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .check(Policies.kanBrukeInternal)
+            .check(Policies.tilgangTilModia())
+            .check(Policies.kanBrukerInternal())
             .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Tokens)) {
                 Tokens(
                     user = AuthContextUtils.getToken().orElse("null"),
@@ -44,8 +44,8 @@ class InternalController @Autowired constructor(
     @GetMapping("/debug-person/{fnr}")
     fun pdlDebugPerson(@PathVariable("fnr") fnr: String): GraphQLResponse<DebugPersondata.Result> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .check(Policies.kanBrukeInternal)
+            .check(Policies.tilgangTilModia())
+            .check(Policies.kanBrukerInternal())
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnr)) {
                 runBlocking {
                     DebugPersondata(pdlClient).execute(DebugPersondata.Variables(fnr), systemTokenAuthHeader)
@@ -56,8 +56,8 @@ class InternalController @Autowired constructor(
     @PostMapping("/pdlsok")
     fun pdlPersonsok(@RequestBody criteria: List<SokPerson.Criterion>): GraphQLResponse<SokPerson.Result> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .check(Policies.kanBrukeInternal)
+            .check(Policies.tilgangTilModia())
+            .check(Policies.kanBrukerInternal())
             .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Pdlsok)) {
                 runBlocking {
                     val paging = SokPerson.Paging(pageNumber = 1, resultsPerPage = 30)

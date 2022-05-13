@@ -22,7 +22,7 @@ class OppgaveController @Autowired constructor(
     @GetMapping("/tildelt")
     fun finnTildelte() =
         tilgangkontroll
-            .check(Policies.tilgangTilModia)
+            .check(Policies.tilgangTilModia())
             .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
                 oppgaveBehandlingService.finnTildelteOppgaverIGsak()
                     .map { mapOppgave(it) }
@@ -31,7 +31,7 @@ class OppgaveController @Autowired constructor(
     @GetMapping("/tildelt/{fnr}")
     fun finnTildelte(@PathVariable("fnr") fnr: String): List<OppgaveDTO> =
         tilgangkontroll
-            .check(Policies.tilgangTilModia)
+            .check(Policies.tilgangTilModia())
             .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
                 oppgaveBehandlingService.finnTildelteOppgaverIGsak(fnr)
                     .map { mapOppgave(it) }
@@ -40,7 +40,7 @@ class OppgaveController @Autowired constructor(
     @GetMapping("/oppgavedata/{oppgaveId}")
     fun getOppgaveData(@PathVariable("oppgaveId") oppgaveId: String): OppgaveDTO =
         tilgangkontroll
-            .check(Policies.tilgangTilModia)
+            .check(Policies.tilgangTilModia())
             .get(Audit.describe(READ, Henvendelse.Oppgave.Metadata, AuditIdentifier.OPPGAVE_ID to oppgaveId)) {
                 mapOppgave(oppgaveBehandlingService.hentOppgave(oppgaveId))
             }
