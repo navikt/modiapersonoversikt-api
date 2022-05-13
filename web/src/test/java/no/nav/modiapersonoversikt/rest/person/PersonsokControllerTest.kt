@@ -205,7 +205,7 @@ class PersonsokControllerTest {
                 .copy(fornavn = "Fornavn", etternavn = "Etternavn")
                 .tilPdlKriterier(clock)
 
-            assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn"))
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = true))
         }
 
         @Test
@@ -217,8 +217,8 @@ class PersonsokControllerTest {
                 .copy(etternavn = "Etternavn")
                 .tilPdlKriterier(clock)
 
-            assertThat(bareFornavn).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn"))
-            assertThat(bareEtternavn).contains(PdlKriterie(PdlFelt.NAVN, "Etternavn"))
+            assertThat(bareFornavn).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn", searchHistorical = true))
+            assertThat(bareEtternavn).contains(PdlKriterie(PdlFelt.NAVN, "Etternavn", searchHistorical = true))
         }
 
         @Test

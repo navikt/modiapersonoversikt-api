@@ -37,7 +37,8 @@ interface PdlOppslagService {
     data class PdlKriterie(
         val felt: PdlFelt,
         val value: String?,
-        val boost: Float? = null
+        val boost: Float? = null,
+        val searchHistorical: Boolean? = false
     ) {
         fun asCriterion() =
             if (value.isNullOrEmpty()) {
@@ -51,7 +52,8 @@ interface PdlOppslagService {
                         FUZZY_MATCH -> SokPerson.SearchRule(fuzzy = this.value, boost = boost)
                         AFTER -> SokPerson.SearchRule(after = this.value, boost = boost)
                         BEFORE -> SokPerson.SearchRule(before = this.value, boost = boost)
-                    }
+                    },
+                    searchHistorical = searchHistorical
                 )
             }
     }

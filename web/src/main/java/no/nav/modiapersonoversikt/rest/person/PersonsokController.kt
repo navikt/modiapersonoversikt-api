@@ -376,9 +376,9 @@ fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): 
     }
 
     return listOf(
-        PdlKriterie(PdlFelt.NAVN, navn),
+        PdlKriterie(PdlFelt.NAVN, navn, searchHistorical = true),
         PdlKriterie(PdlFelt.ADRESSE, adresse),
-        PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID),
+        PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = true),
         PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra),
         PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil),
         PdlKriterie(PdlFelt.KJONN, kjonn)
