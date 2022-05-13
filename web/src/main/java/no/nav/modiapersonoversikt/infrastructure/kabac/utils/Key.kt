@@ -1,23 +1,21 @@
 package no.nav.modiapersonoversikt.infrastructure.kabac.utils
 
-class Key<T : Any>(val name: String) {
+import no.nav.modiapersonoversikt.infrastructure.kabac.AttributeValue
+
+class Key<TYPE>(val name: String) {
     init {
         if (name.isEmpty()) {
-            throw IllegalStateException("PointKey can't be blank")
+            throw IllegalStateException("Key name cannot be empty")
         }
     }
 
-    fun withValue(value: T?) = AttributeValue(this, value)
+    fun withValue(value: TYPE) = AttributeValue(this, value)
 
-    override fun toString(): String {
-        return "Key($name)"
-    }
-
+    override fun toString(): String = "Key($name)"
     override fun hashCode(): Int = name.hashCode()
-
     override fun equals(other: Any?): Boolean = name == other
 
     companion object {
-        operator fun <T : Any> invoke(v: Any): Key<T> = Key(v::class.java.simpleName)
+        operator fun <T> invoke(any: Any): Key<T> = Key(any::class.java.simpleName)
     }
 }

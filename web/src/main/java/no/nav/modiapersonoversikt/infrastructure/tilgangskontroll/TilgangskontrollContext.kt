@@ -23,5 +23,5 @@ interface TilgangskontrollContext {
     fun hentBrukersEnhet(ident: EksternBrukerId): EnhetId?
     fun hentDiskresjonskode(ident: EksternBrukerId): String?
 
-    fun kabac(): Kabac
+    fun kabac(): Kabac.PolicyEnforcementPoint
 }

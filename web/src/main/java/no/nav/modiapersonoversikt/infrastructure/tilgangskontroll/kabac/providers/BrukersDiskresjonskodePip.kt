@@ -2,12 +2,12 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provide
 
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 
-class BrukersDiskresjonskodePip(private val pdl: PdlOppslagService) : Kabac.AttributeProvider<BrukersDiskresjonskodePip.Kode> {
+class BrukersDiskresjonskodePip(private val pdl: PdlOppslagService) : Kabac.PolicyInformationPoint<BrukersDiskresjonskodePip.Kode> {
     enum class Kode { KODE6, KODE7 }
 
     override val key = Companion.key
@@ -16,7 +16,7 @@ class BrukersDiskresjonskodePip(private val pdl: PdlOppslagService) : Kabac.Attr
     }
 
     override fun provide(ctx: EvaluationContext): Kode? {
-        val fnr = ctx.requireValue(CommonAttributes.FNR)
+        val fnr = ctx.getValue(CommonAttributes.FNR)
         return pdl.hentAdressebeskyttelse(fnr.get()).finnStrengesteKode()
     }
 

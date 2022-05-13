@@ -1,8 +1,9 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac
 
+import no.nav.modiapersonoversikt.infrastructure.kabac.AttributeValue
+import no.nav.modiapersonoversikt.infrastructure.kabac.CombiningAlgorithm
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.AttributeValue
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.CombiningAlgorithm
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 
 interface Tilgangskontroll {
@@ -10,7 +11,7 @@ interface Tilgangskontroll {
 }
 interface TilgangskontrollInstance : Tilgangskontroll {
     fun <S> get(audit: Audit.AuditDescriptor<in S>, block: () -> S): S
-    fun getDecision(): Kabac.Decision
+    fun getDecision(): Decision
 }
 private typealias NoAccessHandler = (String) -> java.lang.RuntimeException
 
@@ -20,7 +21,7 @@ data class PolicyWithAttributes(
 )
 
 class TilgangskontrollKabac private constructor(
-    private val kabac: Kabac,
+    private val kabac: Kabac.PolicyEnforcementPoint,
     private val noAccessHandler: NoAccessHandler
 ) : TilgangskontrollInstance {
     private val policies = mutableListOf<PolicyWithAttributes>()
@@ -28,7 +29,7 @@ class TilgangskontrollKabac private constructor(
     private var bias = kabac.bias
 
     companion object {
-        operator fun invoke(kabac: Kabac, noAccessHandler: NoAccessHandler): Tilgangskontroll {
+        operator fun invoke(kabac: Kabac.PolicyEnforcementPoint, noAccessHandler: NoAccessHandler): Tilgangskontroll {
             return TilgangskontrollKabac(kabac, noAccessHandler)
         }
     }
@@ -40,21 +41,21 @@ class TilgangskontrollKabac private constructor(
 
     override fun <S> get(audit: Audit.AuditDescriptor<in S>, block: () -> S): S {
         return when (val decision = getDecision()) {
-            is Kabac.Decision.Permit -> runCatching(block)
+            is Decision.Permit -> runCatching(block)
                 .onSuccess(audit::log)
                 .onFailure(audit::failed)
                 .getOrThrow()
-            is Kabac.Decision.Deny -> {
+            is Decision.Deny -> {
                 audit.denied(decision.message)
                 throw noAccessHandler(decision.message)
             }
-            is Kabac.Decision.NotApplicable -> {
+            is Decision.NotApplicable -> {
                 throw noAccessHandler(decision.message ?: "No applicable policy found")
             }
         }
     }
 
-    override fun getDecision(): Kabac.Decision {
+    override fun getDecision(): Decision {
         val attributes = policies
             .flatMap { it.attributes }
             .distinctBy { it.key }

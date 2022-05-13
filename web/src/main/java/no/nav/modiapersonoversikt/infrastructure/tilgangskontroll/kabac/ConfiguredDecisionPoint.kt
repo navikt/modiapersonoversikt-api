@@ -4,19 +4,20 @@ import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
+import no.nav.modiapersonoversikt.infrastructure.kabac.impl.PolicyDecisionPointImpl
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 
-class ConfiguredKabac(
+class ConfiguredDecisionPoint(
     pdl: PdlOppslagService,
     skjermingApi: SkjermedePersonerApi,
     norg: NorgApi,
     ansattService: AnsattService,
     henvendelseService: SfHenvendelseService,
     ldap: LDAPService
-) : Kabac by Kabac.Impl() {
+) : Kabac.PolicyDecisionPoint by PolicyDecisionPointImpl() {
     init {
         install(AuthContextPip)
         install(NavIdentPip)
