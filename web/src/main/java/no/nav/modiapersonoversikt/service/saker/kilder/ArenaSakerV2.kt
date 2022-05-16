@@ -32,7 +32,7 @@ internal class ArenaSakerV2(val arenaSakVedtakService: SakVedtakPortType) : Sake
 
         val saksInfoListe = SaksInfoListe()
         val bruker = Holder(request.bruker)
-        val sak: Holder<SaksInfoListe> = Holder(saksInfoListe)
+        val saker: Holder<SaksInfoListe> = Holder(saksInfoListe)
         try {
             arenaSakVedtakService.hentSaksInfoListeV2(
                 bruker,
@@ -41,7 +41,7 @@ internal class ArenaSakerV2(val arenaSakVedtakService: SakVedtakPortType) : Sake
                 request.tomDato,
                 request.tema,
                 request.isLukket,
-                sak
+                saker
             )
         } catch (e: FaultFeilIInputMsg) {
             log.error("Feil input til hentSaksInfoV2. FaultInfo: ${e.faultInfo}", e)
@@ -54,7 +54,11 @@ internal class ArenaSakerV2(val arenaSakVedtakService: SakVedtakPortType) : Sake
         }
 
 
-        return sak.value?.saksInfo?.firstOrNull()?.let(TIL_SAK)
+        return saker
+            .value
+            .saksInfo
+            .firstOrNull()
+            ?.let(TIL_SAK)
     }
 
     companion object {

@@ -6,6 +6,9 @@ import com.nimbusds.jwt.PlainJWT
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import no.nav.arena.services.lib.sakvedtak.SaksInfo
+import no.nav.arena.services.lib.sakvedtak.SaksInfoListe
+import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
@@ -16,6 +19,8 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saker.Sak.*
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilFagsystemNavn
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilTemaNavn
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
@@ -31,8 +36,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import org.mockito.ArgumentMatchers.any
 import org.slf4j.MDC
 import java.time.LocalDateTime
+import javax.xml.datatype.DatatypeFactory
+import javax.xml.ws.Holder
 import kotlin.contracts.ExperimentalContracts
 import kotlin.streams.toList
 
@@ -46,6 +54,12 @@ class SakerServiceImplTest {
 
     @MockK
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
+
+    @MockK
+    private lateinit var arenaSakVedtakService: SakVedtakPortType
+
+    @MockK
+    private lateinit var unleashService: UnleashService
 
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
@@ -65,6 +79,21 @@ class SakerServiceImplTest {
     fun `transformerer response til saksliste`() {
         every { safService.hentSaker(any()) } returns createSaksliste()
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
+        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns false
+
+        val saksliste: List<Sak> = sakerService.hentSaker(FNR).saker
+
+        assertThat(saksliste[0].saksId, `is`(SakId_1))
+        assertThat(saksliste[3].fagsystemKode, `is`(""))
+        assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
+        assertThat(saksliste[saksliste.size - 1].temaKode, `is`("BID"))
+        assertThat(saksliste[saksliste.size - 1].fagsystemKode, `is`("BISYS"))
+    }
+
+    @Test
+    fun `transformerer response til saksliste med unleash true`() {
+        every { safService.hentSaker(any()) } returns createSaksliste()
+        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns true
 
         val saksliste: List<Sak> = sakerService.hentSaker(FNR).saker
 
@@ -79,6 +108,18 @@ class SakerServiceImplTest {
     @DisplayName("oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak")
     fun `oppretter ikke generell oppfolgingssak`() {
         every { safService.hentSaker(any()) } returns createOppfolgingSaksliste()
+        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns false
+        val saker = sakerService.hentSaker(FNR).saker.stream()
+            .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+        assertThat(saker.size, `is`(1))
+        assertThat(saker[0].sakstype, not(`is`(SAKSTYPE_GENERELL)))
+    }
+
+    @Test
+    @DisplayName("oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak med unleash true")
+    fun `oppretter ikke generell oppfolgingssak med unleash true`() {
+        every { safService.hentSaker(any()) } returns createOppfolgingSaksliste()
+        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns true
         val saker = sakerService.hentSaker(FNR).saker.stream()
             .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
@@ -88,6 +129,17 @@ class SakerServiceImplTest {
     @Test
     @DisplayName("oppretter ikke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak")
     fun `oppretter ikke generell oppfolgingssak dersom denne finnes allerede`() {
+        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns false
+        val saker =
+            sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+        assertThat(saker.size, `is`(1))
+        assertThat(saker[0].sakstype, `is`(SAKSTYPE_GENERELL))
+    }
+
+    @Test
+    @DisplayName("oppretter ikke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak med unleash true")
+    fun `oppretter ikke generell oppfolgingssak dersom denne finnes allerede med unleash true`() {
+        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns true
         val saker =
             sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
@@ -97,6 +149,7 @@ class SakerServiceImplTest {
     @Test
     fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i sak`() {
         every { safService.hentSaker(any()) } returns GraphQLResponse()
+        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns false
         val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse().withSakListe(
@@ -106,6 +159,32 @@ class SakerServiceImplTest {
                 .withEndringsInfo(EndringsInfo().withOpprettetDato(dato))
                 .withSakstypeKode(Sakstypekode().withKode("ARBEID"))
         )
+        val saker =
+            sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+        assertThat(saker.size, `is`(1))
+        assertThat(saker[0].saksIdVisning, `is`(saksId))
+        assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
+        assertThat(saker[0].fagsystemKode, `is`(FAGSYSTEMKODE_ARENA))
+        assertThat(saker[0].finnesIGsak, `is`(false))
+    }
+
+    @Test
+    fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i sak med unleash true`() {
+        every { safService.hentSaker(any()) } returns GraphQLResponse()
+        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns true
+        val saksId = "123456"
+        val dato = LocalDate.now().minusDays(1)
+        val xmlDato = DatatypeFactory.newInstance().newXMLGregorianCalendar(dato.toString())
+        val saksInfoListe = SaksInfoListe()
+            .withSaksInfo(
+                SaksInfo()
+                    .withSaksId(saksId)
+                    .withSakstypekode("ARBEID")
+                    .withSakOpprettet(xmlDato)
+                    .withTema(TEMAKODE_OPPFOLGING))
+        val sak = Holder(saksInfoListe)
+        arenaSakVedtakService.hentSaksInfoListeV2(any(), any(), any(), any(), any(), any(), sak)
+
         val saker =
             sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
