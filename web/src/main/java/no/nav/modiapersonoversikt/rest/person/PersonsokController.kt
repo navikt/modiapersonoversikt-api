@@ -376,12 +376,12 @@ fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): 
     }
 
     return listOf(
-        PdlKriterie(PdlFelt.NAVN, navn),
-        PdlKriterie(PdlFelt.ADRESSE, adresse),
-        PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID),
-        PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra),
-        PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil),
-        PdlKriterie(PdlFelt.KJONN, kjonn)
+        PdlKriterie(PdlFelt.NAVN, navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+        PdlKriterie(PdlFelt.ADRESSE, adresse, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+        PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE)
     )
 }
 
