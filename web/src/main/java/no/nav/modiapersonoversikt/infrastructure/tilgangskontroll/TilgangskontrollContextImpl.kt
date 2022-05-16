@@ -123,4 +123,5 @@ open class TilgangskontrollContextImpl(
     }
 
     override fun kabac(): Kabac.PolicyEnforcementPoint = kabac
+    override fun unleash(): UnleashService = unleashService
 }
