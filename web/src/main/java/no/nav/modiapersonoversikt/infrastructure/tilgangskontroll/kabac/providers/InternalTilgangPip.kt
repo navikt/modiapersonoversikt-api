@@ -3,10 +3,10 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provide
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 
-class InternalTilgangPip : Kabac.AttributeProvider<List<NavIdent>> {
+class InternalTilgangPip : Kabac.PolicyInformationPoint<List<NavIdent>> {
     private val identer: List<NavIdent> = EnvironmentUtils.getRequiredProperty("INTERNAL_TILGANG", "")
         .split(",")
         .map(String::trim)

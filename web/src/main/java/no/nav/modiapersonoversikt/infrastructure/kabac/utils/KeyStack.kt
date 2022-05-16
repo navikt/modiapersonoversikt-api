@@ -1,23 +1,20 @@
 package no.nav.modiapersonoversikt.infrastructure.kabac.utils
 
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
+import no.nav.modiapersonoversikt.infrastructure.kabac.KabacException
 
 internal class KeyStack {
-    private val keylock = LinkedHashSet<Key<*>>()
+    private val stack = LinkedHashSet<Key<*>>()
     fun <T> withCycleDetection(key: Key<*>, block: () -> T): T {
-        if (!keylock.add(key)) {
-            val cyclePrefix = keylock.joinToString(" -> ") { it.name }
+        if (!stack.add(key)) {
+            val cyclePrefix = stack.joinToString(" -> ") { it.name }
             val cycleSuffix = key.name
-            val cycle = "$cyclePrefix -> $cycleSuffix"
-            throw Kabac.CycleInPipUsageException("Cycle: $cycle")
+            throw KabacException.CyclicDependenciesException("Cycle: $cyclePrefix -> $cycleSuffix")
         }
 
         val result = block()
-
-        check(keylock.remove(key)) {
+        check(stack.remove(key)) {
             "Cyclic key error, expected $key to be removed but was not in stack"
         }
-        keylock.remove(key)
 
         return result
     }

@@ -1,8 +1,10 @@
 package no.nav.modiapersonoversikt.infrastructure.kabac.utils
 
+import no.nav.modiapersonoversikt.infrastructure.kabac.CombiningAlgorithm
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils.createTestPolicy
+import no.nav.modiapersonoversikt.infrastructure.kabac.impl.EvaluationContextImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Named
 import org.junit.jupiter.params.ParameterizedTest
@@ -10,7 +12,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
 internal class CombiningAlgorithmTest {
-    private val evaluationContext = EvaluationContext(emptyList())
+    private val evaluationContextImpl = EvaluationContextImpl(emptyList())
 
     companion object {
         private val permitPolicy = createTestPolicy { Decision.Permit() }.named("PERMIT")
@@ -97,14 +99,14 @@ internal class CombiningAlgorithmTest {
     @ParameterizedTest
     @MethodSource("singlePolicyTests")
     fun `single policy tests`(algorithm: CombiningAlgorithm, policies: List<Kabac.Policy>, expected: Decision.Type) {
-        val decision = algorithm.combine(policies).evaluate(evaluationContext)
+        val decision = algorithm.combine(policies).evaluate(evaluationContextImpl)
         assertThat(decision.type).isEqualTo(expected)
     }
 
     @ParameterizedTest
     @MethodSource("combinationTests")
     fun `multiple policies test`(algorithm: CombiningAlgorithm, policies: List<Kabac.Policy>, expected: Decision.Type) {
-        val decision = algorithm.combine(policies).evaluate(evaluationContext)
+        val decision = algorithm.combine(policies).evaluate(evaluationContextImpl)
         assertThat(decision.type).isEqualTo(expected)
     }
 }

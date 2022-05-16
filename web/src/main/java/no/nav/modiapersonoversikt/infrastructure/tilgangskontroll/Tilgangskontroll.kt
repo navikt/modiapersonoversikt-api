@@ -4,8 +4,8 @@ import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.EksternBrukerId
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.AttributeValue
+import no.nav.modiapersonoversikt.infrastructure.kabac.AttributeValue
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision.*
 import no.nav.modiapersonoversikt.infrastructure.rsbac.*
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
@@ -154,10 +154,10 @@ class Policies {
     }
 }
 
-private fun Kabac.Decision.toDecisionEnum(): DecisionEnums = when (this.type) {
-    Kabac.Decision.Type.PERMIT -> DecisionEnums.PERMIT
-    Kabac.Decision.Type.DENY -> DecisionEnums.DENY
-    Kabac.Decision.Type.NOT_APPLICABLE -> DecisionEnums.NOT_APPLICABLE
+private fun no.nav.modiapersonoversikt.infrastructure.kabac.Decision.toDecisionEnum(): DecisionEnums = when (this.type) {
+    Type.PERMIT -> DecisionEnums.PERMIT
+    Type.DENY -> DecisionEnums.DENY
+    Type.NOT_APPLICABLE -> DecisionEnums.NOT_APPLICABLE
 }
 
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)

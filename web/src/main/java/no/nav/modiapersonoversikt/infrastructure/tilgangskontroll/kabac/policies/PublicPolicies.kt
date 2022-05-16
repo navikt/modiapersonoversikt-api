@@ -4,8 +4,8 @@ import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.EksternBrukerId
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.infrastructure.kabac.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.PolicyWithAttributes
 

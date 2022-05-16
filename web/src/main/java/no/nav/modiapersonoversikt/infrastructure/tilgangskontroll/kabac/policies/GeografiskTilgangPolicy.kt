@@ -1,8 +1,9 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies
 
 import no.nav.common.types.identer.EnhetId
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 
@@ -21,31 +22,31 @@ object GeografiskTilgangPolicy : Kabac.Policy {
         "0000-ga-gosys_utvidbar_til_regional",
     )
 
-    override fun evaluate(ctx: EvaluationContext): Kabac.Decision {
-        val veilederRoller = ctx.getValue(VeiledersRollerPip) ?: emptySet()
+    override fun evaluate(ctx: EvaluationContext): Decision {
+        val veilederRoller = ctx.getValue(VeiledersRollerPip)
         if (nasjonalTilgangRoller.intersect(veilederRoller).isNotEmpty()) {
-            return Kabac.Decision.Permit()
+            return Decision.Permit()
         }
 
         val brukersEnhet: EnhetId? = ctx.getValue(BrukersEnhetPip)
         if (brukersEnhet == null) {
-            return Kabac.Decision.Permit()
+            return Decision.Permit()
         }
 
-        val veiledersEnheter: List<EnhetId> = ctx.getValue(VeiledersEnheterPip) ?: emptyList()
+        val veiledersEnheter: List<EnhetId> = ctx.getValue(VeiledersEnheterPip)
         if (veiledersEnheter.contains(brukersEnhet)) {
-            return Kabac.Decision.Permit()
+            return Decision.Permit()
         }
 
         if (regionalTilgangRoller.intersect(veilederRoller).isNotEmpty()) {
             val brukersRegion: EnhetId? = ctx.getValue(BrukersRegionEnhetPip)
-            val veiledersRegioner: List<EnhetId> = ctx.getValue(VeiledersRegionEnheterPip) ?: emptyList()
+            val veiledersRegioner: List<EnhetId> = ctx.getValue(VeiledersRegionEnheterPip)
 
             if (veiledersRegioner.contains(brukersRegion)) {
-                return Kabac.Decision.Permit()
+                return Decision.Permit()
             }
         }
 
-        return Kabac.Decision.Deny("Veileder har ikke tilgang til bruker basert på geografisk tilgang")
+        return Decision.Deny("Veileder har ikke tilgang til bruker basert på geografisk tilgang")
     }
 }

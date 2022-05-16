@@ -2,11 +2,11 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provide
 
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.EvaluationContext
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
 
-class BrukersSkjermingPip(private val skjermedePersonerApi: SkjermedePersonerApi) : Kabac.AttributeProvider<Boolean> {
+class BrukersSkjermingPip(private val skjermedePersonerApi: SkjermedePersonerApi) : Kabac.PolicyInformationPoint<Boolean> {
     override val key = Companion.key
 
     companion object : Kabac.AttributeKey<Boolean> {
@@ -14,7 +14,7 @@ class BrukersSkjermingPip(private val skjermedePersonerApi: SkjermedePersonerApi
     }
 
     override fun provide(ctx: EvaluationContext): Boolean {
-        val fnr = ctx.requireValue(CommonAttributes.FNR)
+        val fnr = ctx.getValue(CommonAttributes.FNR)
         return skjermedePersonerApi.erSkjermetPerson(fnr.get())
     }
 }
