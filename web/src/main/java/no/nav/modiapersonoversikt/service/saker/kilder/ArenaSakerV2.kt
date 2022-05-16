@@ -45,14 +45,13 @@ internal class ArenaSakerV2(val arenaSakVedtakService: SakVedtakPortType) : Sake
             )
         } catch (e: FaultFeilIInputMsg) {
             log.error("Feil input til hentSaksInfoV2. FaultInfo: ${e.faultInfo}", e)
-            throw ServiceUnavailableException(e.message);
+            throw ServiceUnavailableException(e.message)
         } catch (e: FaultGeneriskMsg) {
             log.error("Feil ved hentSaksInfoV2. FaultInfo: ${e.faultInfo}", e)
             throw ServiceUnavailableException(e.message)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             log.error("Ukjent ved under kall på hentSaksInfoV2: ${e.message} ${e.cause}", e)
         }
-
 
         return saker
             .value

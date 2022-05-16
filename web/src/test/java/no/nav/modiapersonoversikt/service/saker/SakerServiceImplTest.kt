@@ -181,7 +181,8 @@ class SakerServiceImplTest {
                     .withSaksId(saksId)
                     .withSakstypekode("ARBEID")
                     .withSakOpprettet(xmlDato)
-                    .withTema(TEMAKODE_OPPFOLGING))
+                    .withTema(TEMAKODE_OPPFOLGING)
+            )
         val sak = Holder(saksInfoListe)
         arenaSakVedtakService.hentSaksInfoListeV2(any(), any(), any(), any(), any(), any(), sak)
 
