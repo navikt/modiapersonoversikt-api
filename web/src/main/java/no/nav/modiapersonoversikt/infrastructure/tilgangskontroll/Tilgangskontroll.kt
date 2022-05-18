@@ -5,6 +5,8 @@ import no.nav.common.types.identer.EksternBrukerId
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.kabac.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision.Type
 import no.nav.modiapersonoversikt.infrastructure.rsbac.*
@@ -72,7 +74,7 @@ object Policies {
             },
             experiment = {
                 kabac()
-                    .evaluatePolicy(policy = TilgangTilModiaPolicy)
+                    .evaluatePolicyWithReport(policy = TilgangTilModiaPolicy)
                     .toDecisionEnum()
             }
         )
@@ -113,7 +115,7 @@ object Policies {
             else -> throw UnsupportedOperationException("Støtter ikke andre typer eksternID")
         }
         context.kabac()
-            .evaluatePolicy(
+            .evaluatePolicyWithReport(
                 attributes = listOf(personAttribute),
                 policy = TilgangTilBrukerPolicy
             )
@@ -141,7 +143,7 @@ object Policies {
                         tema = data.tema
                     )
                     context.kabac()
-                        .evaluatePolicy(policy = policy, attributes = attributes)
+                        .evaluatePolicyWithReport(policy = policy, attributes = attributes)
                         .toDecisionEnum()
                 }
             }
@@ -170,7 +172,7 @@ object Policies {
                 )
                 context
                     .kabac()
-                    .evaluatePolicy(policy = policy, attributes = attributes)
+                    .evaluatePolicyWithReport(policy = policy, attributes = attributes)
                     .toDecisionEnum()
             }
         )
@@ -194,7 +196,7 @@ object Policies {
             experiment = {
                 val (policy, attributes) = PublicPolicies.kanBrukerInternal()
                 kabac()
-                    .evaluatePolicy(policy = policy, attributes = attributes)
+                    .evaluatePolicyWithReport(policy = policy, attributes = attributes)
                     .toDecisionEnum()
             }
         )
@@ -247,10 +249,15 @@ object Policies {
     }
 }
 
-private fun no.nav.modiapersonoversikt.infrastructure.kabac.Decision.toDecisionEnum(): DecisionEnums = when (this.type) {
-    Type.PERMIT -> DecisionEnums.PERMIT
-    Type.DENY -> DecisionEnums.DENY
-    Type.NOT_APPLICABLE -> DecisionEnums.NOT_APPLICABLE
+private fun Pair<no.nav.modiapersonoversikt.infrastructure.kabac.Decision, String>.toDecisionEnum(): DecisionEnums {
+    val report = this.second
+    TjenestekallLogger.logger.info(TjenestekallLogger.format("policy-report: ${getCallId()}", report))
+
+    return when (this.first.type) {
+        Type.PERMIT -> DecisionEnums.PERMIT
+        Type.DENY -> DecisionEnums.DENY
+        Type.NOT_APPLICABLE -> DecisionEnums.NOT_APPLICABLE
+    }
 }
 
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
