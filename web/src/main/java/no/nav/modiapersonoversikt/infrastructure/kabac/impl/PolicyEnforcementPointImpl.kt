@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.infrastructure.kabac.impl
 
-import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
-import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.kabac.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.kabac.CombiningAlgorithm
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
@@ -68,8 +66,7 @@ class PolicyEnforcementPointImpl(
             .evaluate(ctx)
             .withBias(bias)
             .also { ctx.report("Result: $it").unindent() }
-        val report = ctx.getReport()
-        TjenestekallLogger.logger.info(TjenestekallLogger.format("policy-report: ${getCallId()}", report))
-        return Pair(decision, report)
+
+        return Pair(decision, ctx.getReport())
     }
 }
