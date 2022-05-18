@@ -4,12 +4,13 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersDiskresjonskodePip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 
 object TilgangTilBrukerMedKode7Policy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(TilgangTilBrukerMedKode7Policy)
-    private val kode7Roller = setOf(
+    private val kode7Roller = RolleListe(
         "0000-ga-fortrolig_adresse",
         "0000-ga-gosys_kode7",
         "0000-ga-pensjon_kode7"
@@ -18,7 +19,7 @@ object TilgangTilBrukerMedKode7Policy : Kabac.Policy {
     override fun evaluate(ctx: EvaluationContext): Decision {
         val veilederRoller = ctx.getValue(VeiledersRollerPip)
 
-        if (kode7Roller.intersect(veilederRoller).isNotEmpty()) {
+        if (kode7Roller.hasIntersection(veilederRoller)) {
             return Decision.Permit()
         }
         val diskresjonskode = ctx.getValue(BrukersDiskresjonskodePip)

@@ -87,9 +87,10 @@ object Scientist {
         fun runIntrospected(
             control: () -> T,
             experiment: () -> Any?,
-            dataFields: ((T, Try<Any?>) -> Map<String, Any?>)? = null
+            dataFields: ((T, Try<Any?>) -> Map<String, Any?>)? = null,
+            overrideRate: ExperimentRate? = null,
         ): Result<T> {
-            if (forceExperiment.get() == true || config.experimentRate.shouldRunExperiment()) {
+            if (forceExperiment.get() == true || (overrideRate?.shouldRunExperiment() ?: config.experimentRate.shouldRunExperiment())) {
                 val fields = mutableMapOf<String, Any?>()
                 val (controlResult, experimentResult) = ConcurrencyUtils.inParallel(
                     { measureTimeInMillies(control) },
@@ -141,12 +142,14 @@ object Scientist {
         fun run(
             control: () -> T,
             experiment: () -> Any?,
-            dataFields: ((T, Try<Any?>) -> Map<String, Any?>)? = null
+            dataFields: ((T, Try<Any?>) -> Map<String, Any?>)? = null,
+            overrideRate: ExperimentRate? = null,
         ): T =
             runIntrospected(
                 control = control,
                 experiment = experiment,
-                dataFields = dataFields
+                dataFields = dataFields,
+                overrideRate = overrideRate
             ).controlValue
     }
 

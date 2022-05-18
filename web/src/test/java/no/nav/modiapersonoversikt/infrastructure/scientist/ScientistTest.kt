@@ -71,6 +71,26 @@ internal class ScientistTest {
     }
 
     @Test
+    internal fun `experiment should respect experiment rate override`() {
+        var experimentsRun = 0
+        val experiment = Scientist.createExperiment<String>(
+            Scientist.Config(
+                name = "DummyExperiment",
+                experimentRate = Scientist.FixedValueRate(0.1),
+                reporter = { _, _ -> experimentsRun++ }
+            )
+        )
+        repeat(1000) {
+            experiment.run(
+                control = { "Hello" },
+                experiment = { "World" },
+                overrideRate = Scientist.FixedValueRate(0.7)
+            )
+        }
+        assertThat(experimentsRun).isCloseTo(700, offset(100))
+    }
+
+    @Test
     fun `experiment should serialize results and do deep comparision`() {
         val controlResult = listOf(
             Sak().withSaksId("123").withTemakode("DAG"),
