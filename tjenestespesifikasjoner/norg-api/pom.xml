@@ -59,7 +59,7 @@
                             <packageName>no.nav.modiapersonoversikt.legacy.api.domain.norg.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
-                            <apisToGenerate>Arbeidsfordeling,Enhet,Enhetskontaktinfo</apisToGenerate>
+                            <apisToGenerate>Arbeidsfordeling,Enhet,Enhetskontaktinfo,Organisering</apisToGenerate>
                             <configOptions>
                                 <useTags>true</useTags>
                                 <enumPropertyNaming>original</enumPropertyNaming>
