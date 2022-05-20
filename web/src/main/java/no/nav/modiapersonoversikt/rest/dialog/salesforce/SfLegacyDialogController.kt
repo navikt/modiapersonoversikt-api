@@ -17,7 +17,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -192,7 +191,7 @@ class SfLegacyDialogController(
                 fritekst = fortsettDialogRequest.fritekst
             )
 
-            if (unleash.isEnabled(Feature.SVAR_LUKKER_DIALOG) && fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
+            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
             if (fortsettDialogRequest.sak != null) {
