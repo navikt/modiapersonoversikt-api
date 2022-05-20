@@ -19,7 +19,7 @@ class EvaluationContextImpl(
         return keystack.withCycleDetection(key) {
             if (cache.containsKey(key)) {
                 val value = cache[key] as TValue
-                report("Requested $key, cache-hit: $value")
+                report("Requested $key, cache-hit")
                 value
             } else {
                 val provider = register[key]
