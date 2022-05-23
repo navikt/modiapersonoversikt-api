@@ -43,22 +43,6 @@ open class PdlOppslagServiceImpl constructor(
         }
     }
 
-    override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
-        if (fnrs.isEmpty()) {
-            return emptyMap()
-        }
-
-        return runBlocking {
-            HentNavnBolk(pdlClient).execute(HentNavnBolk.Variables(fnrs), systemTokenAuthorizationHeaders)
-        }
-            .data
-            ?.hentPersonBolk
-            ?.fold(mutableMapOf()) { acc, bolkResult ->
-                acc[bolkResult.ident] = bolkResult.person?.navn?.get(0)
-                acc
-            }
-    }
-
     override fun hentIdenter(fnr: String): HentIdenter.Identliste? = runBlocking {
         HentIdenter(pdlClient)
             .execute(HentIdenter.Variables(fnr), userTokenAuthorizationHeaders)
