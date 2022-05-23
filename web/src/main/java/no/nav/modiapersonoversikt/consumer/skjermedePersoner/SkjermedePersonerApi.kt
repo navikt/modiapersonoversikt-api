@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.consumer.skjermedePersoner
 
 import no.nav.common.health.HealthCheckUtils
 import no.nav.common.health.selftest.SelfTestCheck
+import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.UrlUtils
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.legacy.api.domain.skjermedePersonerPip.generated.apis.SkjermingPipApi
@@ -9,7 +10,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.skjermedePersonerPip.generat
 import okhttp3.OkHttpClient
 
 interface SkjermedePersonerApi : Pingable {
-    fun erSkjermetPerson(fnr: String): Boolean
+    fun erSkjermetPerson(fnr: Fnr): Boolean
 }
 
 class SkjermedePersonerApiImpl(
@@ -18,8 +19,8 @@ class SkjermedePersonerApiImpl(
 ) : SkjermedePersonerApi {
     val skjermingPipApi = SkjermingPipApi(url, client)
 
-    override fun erSkjermetPerson(fnr: String): Boolean {
-        return skjermingPipApi.isSkjermetPostUsingPOST(SkjermetDataRequestDTO(fnr))
+    override fun erSkjermetPerson(fnr: Fnr): Boolean {
+        return skjermingPipApi.isSkjermetPostUsingPOST(SkjermetDataRequestDTO(fnr.get()))
     }
 
     override fun ping() = SelfTestCheck(

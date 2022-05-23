@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.common.types.identer.EnhetId
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
@@ -49,7 +50,11 @@ class PersondataServiceImpl(
         val geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
         val adressebeskyttelse = persondataFletter.hentAdressebeskyttelse(persondata.adressebeskyttelse)
         val navEnhet = hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning)
-        val erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { skjermedePersonerApi.erSkjermetPerson(personIdent) }
+        val erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) {
+            skjermedePersonerApi.erSkjermetPerson(
+                Fnr(personIdent)
+            )
+        }
         val tilganger = PersondataResult
             .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
             .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
