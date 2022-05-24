@@ -43,7 +43,7 @@ class ArbeidsfordelingServiceImpl(
             val erEgenAnsatt = if (underkategori == "ANSOS_KNA") {
                 false
             } else {
-                brukerIdent?.get()?.let(skjermedePersonerApi::erSkjermetPerson)
+                brukerIdent?.let(skjermedePersonerApi::erSkjermetPerson)
             }
 
             norgApi.hentBehandlendeEnheter(
