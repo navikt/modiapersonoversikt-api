@@ -6,6 +6,7 @@ import com.nimbusds.jwt.PlainJWT
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.util.*
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
@@ -22,6 +23,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.net.URL
 
+@OptIn(KtorExperimentalAPI::class)
 internal class PdlOppslagServiceImplTest {
     val userToken = PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
 
@@ -61,7 +63,7 @@ internal class PdlOppslagServiceImplTest {
         }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(stsMock, client).hentNavnBolk(listOf("ident"))
+            PdlOppslagServiceImpl(stsMock, client).hentAdressebeskyttelse("ident")
         }
     }
 

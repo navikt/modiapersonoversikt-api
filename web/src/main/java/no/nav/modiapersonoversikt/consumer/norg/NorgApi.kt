@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.norg
 
-import com.github.benmanes.caffeine.cache.Caffeine
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.EnhetId
@@ -11,6 +10,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilkny
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetStatus
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.OppgaveBehandlerFilter
+import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.ArbeidsfordelingApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetApi
@@ -228,11 +228,10 @@ class NorgApiImpl(
         }
     }
 
-    private fun <KEY, VALUE> createNorgCache() = Caffeine
-        .newBuilder()
-        .maximumSize(2000)
-        .expireAfterWrite(cacheRetention)
-        .build<KEY, VALUE>()
+    private fun <KEY, VALUE> createNorgCache() = CacheUtils.createCache<KEY, VALUE>(
+        expireAfterWrite = cacheRetention,
+        maximumSize = 2000
+    )
 
     companion object {
         internal fun toInternalDomain(kontor: RsNavKontorDTO) = EnhetGeografiskTilknyttning(
