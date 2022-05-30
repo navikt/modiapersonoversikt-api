@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/rest/personsok")
@@ -122,6 +123,9 @@ private fun lagBostedsadresse(adr: List<SokPerson.Bostedsadresse>?): String? {
         return null
     }
     val adresse = adr.first()
+    if (adresse.gyldigTilOgMed != null && adresse.gyldigTilOgMed?.value?.isBefore(LocalDateTime.now()) == true) {
+        return null
+    }
     when {
         adresse.ukjentBosted != null -> {
             return adresse.ukjentBosted!!.bostedskommune
@@ -169,6 +173,9 @@ fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
         return null
     }
     val adresse = adr.first()
+    if (adresse.gyldigTilOgMed != null && adresse.gyldigTilOgMed?.value?.isBefore(LocalDateTime.now()) == true) {
+        return null
+    }
     when {
         adresse.postadresseIFrittFormat != null -> {
             return listOfNotNull(

@@ -1,0 +1,29 @@
+{
+  "bostedsadresse" : null,
+  "brukerinfo" : {
+    "ansvarligEnhet" : null,
+    "gjeldendePostadresseType" : null,
+    "midlertidigPostadresse" : null
+  },
+  "diskresjonskode" : null,
+  "ident" : {
+    "ident" : "12345678910",
+    "type" : {
+      "beskrivelse" : null,
+      "kodeRef" : "FNR"
+    }
+  },
+  "kjonn" : null,
+  "navn" : {
+    "etternavn" : "etternavn",
+    "fornavn" : "fornavn",
+    "mellomnavn" : "mellomnavn",
+    "sammensatt" : "fornavn mellomnavn etternavn"
+  },
+  "postadresse" : null,
+  "status" : null,
+  "utenlandskID" : [ "java.util.ArrayList", [ {
+    "identifikasjonsnummer" : "987654-987",
+    "utstederland" : "SWE"
+  } ] ]
+}

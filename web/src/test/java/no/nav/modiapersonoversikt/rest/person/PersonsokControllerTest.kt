@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.math.BigInteger
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneId
+import java.time.*
 import javax.xml.datatype.DatatypeFactory
 
 class PersonsokControllerTest {
@@ -156,6 +154,7 @@ class PersonsokControllerTest {
                     ),
                     kontaktadresse = listOf(
                         SokPerson.Kontaktadresse(
+                            gyldigTilOgMed = null,
                             vegadresse = SokPerson.Vegadresse(
                                 husbokstav = "Z",
                                 husnummer = "10",
@@ -174,6 +173,79 @@ class PersonsokControllerTest {
                     ),
                     bostedsadresse = listOf(
                         SokPerson.Bostedsadresse(
+                            gyldigTilOgMed = null,
+                            matrikkeladresse = SokPerson.Matrikkeladresse(
+                                bruksenhetsnummer = "123101",
+                                tilleggsnavn = "Supergården",
+                                postnummer = "1234",
+                                kommunenummer = "654321"
+                            ),
+                            vegadresse = null,
+                            utenlandskAdresse = null,
+                            ukjentBosted = null
+                        )
+                    )
+                )
+            )
+
+            snapshot.assertMatches(lagPersonResponse(person))
+        }
+
+        @Test
+        internal fun `should map pdl response without address`() {
+            val person = SokPerson.PersonSearchHit(
+                score = 1.0f,
+                person = SokPerson.Person(
+                    navn = listOf(
+                        SokPerson.Navn(
+                            fornavn = "fornavn",
+                            mellomnavn = "mellomnavn",
+                            etternavn = "etternavn",
+                            forkortetNavn = null,
+                            originaltNavn = null
+                        )
+                    ),
+                    kjoenn = listOf(
+                        SokPerson.Kjoenn(
+                            SokPerson.KjoennType.KVINNE
+                        )
+                    ),
+                    utenlandskIdentifikasjonsnummer = listOf(
+                        SokPerson.UtenlandskIdentifikasjonsnummer(
+                            identifikasjonsnummer = "987654-987",
+                            utstederland = "SWE",
+                            opphoert = false
+                        )
+                    ),
+                    folkeregisteridentifikator = listOf(
+                        SokPerson.Folkeregisteridentifikator(
+                            identifikasjonsnummer = "12345678910",
+                            status = "AKTIV",
+                            type = "FNR"
+                        )
+                    ),
+                    kontaktadresse = listOf(
+                        SokPerson.Kontaktadresse(
+                            gyldigTilOgMed = SokPerson.DateTime(LocalDateTime.of(2012, 6, 30, 12, 0)),
+                            vegadresse = SokPerson.Vegadresse(
+                                husbokstav = "Z",
+                                husnummer = "10",
+                                bruksenhetsnummer = null,
+                                adressenavn = "Supervegen",
+                                kommunenummer = "654321",
+                                postnummer = "1234",
+                                bydelsnummer = null,
+                                tilleggsnavn = null
+                            ),
+                            postboksadresse = null,
+                            postadresseIFrittFormat = null,
+                            utenlandskAdresse = null,
+                            utenlandskAdresseIFrittFormat = null
+                        )
+                    ),
+                    bostedsadresse = listOf(
+                        SokPerson.Bostedsadresse(
+                            gyldigTilOgMed = SokPerson.DateTime(LocalDateTime.of(2018, 6, 30, 12, 0)),
                             matrikkeladresse = SokPerson.Matrikkeladresse(
                                 bruksenhetsnummer = "123101",
                                 tilleggsnavn = "Supergården",
