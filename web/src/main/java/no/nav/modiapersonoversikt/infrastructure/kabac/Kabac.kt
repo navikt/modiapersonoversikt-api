@@ -24,7 +24,7 @@ object Kabac {
     }
 
     interface PolicyInformationPoint<TValue> : AttributeKey<TValue> {
-        fun provide(ctx: EvaluationContext): TValue?
+        fun provide(ctx: EvaluationContext): TValue
     }
     interface PolicyDecisionPoint {
         fun install(informationPoint: PolicyInformationPoint<*>): PolicyDecisionPoint

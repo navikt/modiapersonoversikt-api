@@ -8,7 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 object NavIdentPip : Kabac.PolicyInformationPoint<NavIdent> {
     override val key = Key<NavIdent>(NavIdentPip)
 
-    override fun provide(ctx: EvaluationContext): NavIdent? {
-        return ctx.getValue(AuthContextPip).navIdent.orElse(null)
+    override fun provide(ctx: EvaluationContext): NavIdent {
+        return ctx.getValue(AuthContextPip).requireNavIdent()
     }
 }

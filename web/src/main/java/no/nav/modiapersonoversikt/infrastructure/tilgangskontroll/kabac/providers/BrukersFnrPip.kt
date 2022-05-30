@@ -13,8 +13,11 @@ class BrukersFnrPip(private val pdl: PdlOppslagService) : Kabac.PolicyInformatio
         override val key = CommonAttributes.FNR
     }
 
-    override fun provide(ctx: EvaluationContext): Fnr? {
+    override fun provide(ctx: EvaluationContext): Fnr {
         val aktorId = ctx.getValue(CommonAttributes.AKTOR_ID)
-        return pdl.hentFnr(aktorId.get())?.let(::Fnr)
+        val fnr = checkNotNull(pdl.hentFnr(aktorId.get())) {
+            "Fant ikke fnr for $aktorId"
+        }
+        return Fnr(fnr)
     }
 }
