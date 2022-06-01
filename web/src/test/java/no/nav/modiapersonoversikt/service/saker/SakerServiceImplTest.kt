@@ -36,7 +36,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
-import org.mockito.ArgumentMatchers.any
 import org.slf4j.MDC
 import java.time.LocalDateTime
 import javax.xml.datatype.DatatypeFactory
@@ -175,19 +174,19 @@ class SakerServiceImplTest {
         val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
         val xmlDato = DatatypeFactory.newInstance().newXMLGregorianCalendar(dato.toString())
-        val saksInfoListe = SaksInfoListe()
-            .withSaksInfo(
+
+        every { arenaSakVedtakService.hentSaksInfoListeV2(any(), any(), any(), any(), any(), any(), any()) } answers {
+            val sakslisteholder = arg<Holder<SaksInfoListe>>(6)
+            sakslisteholder.value.withSaksInfo(
                 SaksInfo()
                     .withSaksId(saksId)
                     .withSakstypekode("ARBEID")
                     .withSakOpprettet(xmlDato)
                     .withTema(TEMAKODE_OPPFOLGING)
             )
-        val sak = Holder(saksInfoListe)
-        arenaSakVedtakService.hentSaksInfoListeV2(any(), any(), any(), any(), any(), any(), sak)
+        }
 
-        val saker =
-            sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+        val saker = sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].saksIdVisning, `is`(saksId))
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
