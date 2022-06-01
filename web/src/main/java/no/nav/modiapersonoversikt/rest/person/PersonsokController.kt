@@ -122,10 +122,11 @@ private fun lagBostedsadresse(adr: List<SokPerson.Bostedsadresse>?): String? {
     if (adr.isNullOrEmpty()) {
         return null
     }
-    val adresse = adr.first()
-    if (adresse.gyldigTilOgMed != null && adresse.gyldigTilOgMed?.value?.isBefore(LocalDateTime.now()) == true) {
-        return null
-    }
+    val adresse = adr
+        .filter { it.gyldigTilOgMed?.value?.isBefore(LocalDateTime.now()) != true }
+        .sortedByDescending { it.gyldigTilOgMed?.value }
+        .firstOrNull()
+        ?: return null
     when {
         adresse.ukjentBosted != null -> {
             return adresse.ukjentBosted!!.bostedskommune
@@ -172,10 +173,11 @@ fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
     if (adr.isNullOrEmpty()) {
         return null
     }
-    val adresse = adr.first()
-    if (adresse.gyldigTilOgMed != null && adresse.gyldigTilOgMed?.value?.isBefore(LocalDateTime.now()) == true) {
-        return null
-    }
+    val adresse = adr
+        .filter { it.gyldigTilOgMed?.value?.isBefore(LocalDateTime.now()) != true }
+        .sortedByDescending { it.gyldigTilOgMed?.value }
+        .firstOrNull()
+        ?: return null
     when {
         adresse.postadresseIFrittFormat != null -> {
             return listOfNotNull(

@@ -1,5 +1,5 @@
 {
-  "bostedsadresse" : null,
+  "bostedsadresse" : "123101 Kirkegården 1234 654321",
   "brukerinfo" : {
     "ansvarligEnhet" : null,
     "gjeldendePostadresseType" : null,
@@ -20,7 +20,7 @@
     "mellomnavn" : "mellomnavn",
     "sammensatt" : "fornavn mellomnavn etternavn"
   },
-  "postadresse" : null,
+  "postadresse" : "Klarevannveien 10 Z 1234 654321",
   "status" : null,
   "utenlandskID" : [ "java.util.ArrayList", [ {
     "identifikasjonsnummer" : "987654-987",

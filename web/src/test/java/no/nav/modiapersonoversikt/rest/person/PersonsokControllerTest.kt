@@ -192,7 +192,7 @@ class PersonsokControllerTest {
         }
 
         @Test
-        internal fun `should map pdl response without address`() {
+        internal fun `should map pdl response when address(es) is invalid and filter them out`() {
             val person = SokPerson.PersonSearchHit(
                 score = 1.0f,
                 person = SokPerson.Person(
@@ -241,6 +241,40 @@ class PersonsokControllerTest {
                             postadresseIFrittFormat = null,
                             utenlandskAdresse = null,
                             utenlandskAdresseIFrittFormat = null
+                        ),
+                        SokPerson.Kontaktadresse(
+                            gyldigTilOgMed = SokPerson.DateTime(LocalDateTime.of(2024, 6, 30, 12, 0)),
+                            vegadresse = SokPerson.Vegadresse(
+                                husbokstav = "Z",
+                                husnummer = "10",
+                                bruksenhetsnummer = null,
+                                adressenavn = "Klarevannveien",
+                                kommunenummer = "654321",
+                                postnummer = "1234",
+                                bydelsnummer = null,
+                                tilleggsnavn = null
+                            ),
+                            postboksadresse = null,
+                            postadresseIFrittFormat = null,
+                            utenlandskAdresse = null,
+                            utenlandskAdresseIFrittFormat = null
+                        ),
+                        SokPerson.Kontaktadresse(
+                            gyldigTilOgMed = null,
+                            vegadresse = SokPerson.Vegadresse(
+                                husbokstav = "Z",
+                                husnummer = "10",
+                                bruksenhetsnummer = null,
+                                adressenavn = "Testerveien",
+                                kommunenummer = "654321",
+                                postnummer = "1234",
+                                bydelsnummer = null,
+                                tilleggsnavn = null
+                            ),
+                            postboksadresse = null,
+                            postadresseIFrittFormat = null,
+                            utenlandskAdresse = null,
+                            utenlandskAdresseIFrittFormat = null
                         )
                     ),
                     bostedsadresse = listOf(
@@ -249,6 +283,30 @@ class PersonsokControllerTest {
                             matrikkeladresse = SokPerson.Matrikkeladresse(
                                 bruksenhetsnummer = "123101",
                                 tilleggsnavn = "Supergården",
+                                postnummer = "1234",
+                                kommunenummer = "654321"
+                            ),
+                            vegadresse = null,
+                            utenlandskAdresse = null,
+                            ukjentBosted = null
+                        ),
+                        SokPerson.Bostedsadresse(
+                            gyldigTilOgMed = null,
+                            matrikkeladresse = SokPerson.Matrikkeladresse(
+                                bruksenhetsnummer = "123101",
+                                tilleggsnavn = "Kokelikogården",
+                                postnummer = "1234",
+                                kommunenummer = "654321"
+                            ),
+                            vegadresse = null,
+                            utenlandskAdresse = null,
+                            ukjentBosted = null
+                        ),
+                        SokPerson.Bostedsadresse(
+                            gyldigTilOgMed = SokPerson.DateTime(LocalDateTime.of(2032, 6, 30, 12, 0)),
+                            matrikkeladresse = SokPerson.Matrikkeladresse(
+                                bruksenhetsnummer = "123101",
+                                tilleggsnavn = "Kirkegården",
                                 postnummer = "1234",
                                 kommunenummer = "654321"
                             ),
