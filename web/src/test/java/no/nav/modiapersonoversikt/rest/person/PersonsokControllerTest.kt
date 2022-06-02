@@ -154,6 +154,7 @@ class PersonsokControllerTest {
                     ),
                     kontaktadresse = listOf(
                         SokPerson.Kontaktadresse(
+                            gyldigFraOgMed = null,
                             gyldigTilOgMed = null,
                             vegadresse = SokPerson.Vegadresse(
                                 husbokstav = "Z",
@@ -173,6 +174,7 @@ class PersonsokControllerTest {
                     ),
                     bostedsadresse = listOf(
                         SokPerson.Bostedsadresse(
+                            gyldigFraOgMed = null,
                             gyldigTilOgMed = null,
                             matrikkeladresse = SokPerson.Matrikkeladresse(
                                 bruksenhetsnummer = "123101",
@@ -226,6 +228,7 @@ class PersonsokControllerTest {
                     ),
                     kontaktadresse = listOf(
                         SokPerson.Kontaktadresse(
+                            gyldigFraOgMed = SokPerson.DateTime(LocalDateTime.of(2008, 11, 20, 12, 0)),
                             gyldigTilOgMed = SokPerson.DateTime(LocalDateTime.of(2012, 6, 30, 12, 0)),
                             vegadresse = SokPerson.Vegadresse(
                                 husbokstav = "Z",
@@ -243,6 +246,7 @@ class PersonsokControllerTest {
                             utenlandskAdresseIFrittFormat = null
                         ),
                         SokPerson.Kontaktadresse(
+                            gyldigFraOgMed = SokPerson.DateTime(LocalDateTime.of(2013, 3, 22, 12, 0)),
                             gyldigTilOgMed = SokPerson.DateTime(LocalDateTime.of(2024, 6, 30, 12, 0)),
                             vegadresse = SokPerson.Vegadresse(
                                 husbokstav = "Z",
@@ -260,6 +264,7 @@ class PersonsokControllerTest {
                             utenlandskAdresseIFrittFormat = null
                         ),
                         SokPerson.Kontaktadresse(
+                            gyldigFraOgMed = SokPerson.DateTime(LocalDateTime.of(2018, 11, 20, 12, 0)),
                             gyldigTilOgMed = null,
                             vegadresse = SokPerson.Vegadresse(
                                 husbokstav = "Z",
@@ -279,6 +284,7 @@ class PersonsokControllerTest {
                     ),
                     bostedsadresse = listOf(
                         SokPerson.Bostedsadresse(
+                            gyldigFraOgMed = SokPerson.DateTime(LocalDateTime.of(2008, 11, 20, 12, 0)),
                             gyldigTilOgMed = SokPerson.DateTime(LocalDateTime.of(2018, 6, 30, 12, 0)),
                             matrikkeladresse = SokPerson.Matrikkeladresse(
                                 bruksenhetsnummer = "123101",
@@ -291,6 +297,7 @@ class PersonsokControllerTest {
                             ukjentBosted = null
                         ),
                         SokPerson.Bostedsadresse(
+                            gyldigFraOgMed = SokPerson.DateTime(LocalDateTime.of(2008, 11, 20, 12, 0)),
                             gyldigTilOgMed = null,
                             matrikkeladresse = SokPerson.Matrikkeladresse(
                                 bruksenhetsnummer = "123101",
@@ -303,6 +310,7 @@ class PersonsokControllerTest {
                             ukjentBosted = null
                         ),
                         SokPerson.Bostedsadresse(
+                            gyldigFraOgMed = SokPerson.DateTime(LocalDateTime.of(2018, 11, 20, 12, 0)),
                             gyldigTilOgMed = SokPerson.DateTime(LocalDateTime.of(2032, 6, 30, 12, 0)),
                             matrikkeladresse = SokPerson.Matrikkeladresse(
                                 bruksenhetsnummer = "123101",
