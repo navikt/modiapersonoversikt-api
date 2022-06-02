@@ -5,14 +5,14 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.SokKriterieRule.
 
 interface PdlOppslagService {
     fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit>
-    fun hentPerson(fnr: String): HentPerson.Person?
     fun hentPersondata(fnr: String): HentPersondata.Person?
     fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult>
     fun hentGeografiskTilknyttning(fnr: String): String?
     fun hentIdenter(fnr: String): HentIdenter.Identliste?
     fun hentAktorId(fnr: String): String?
     fun hentFnr(aktorid: String): String?
-    fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>?
+
+    fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse>
 
     enum class SokKriterieRule {
         EQUALS,
@@ -20,6 +20,12 @@ interface PdlOppslagService {
         FUZZY_MATCH,
         AFTER,
         BEFORE
+    }
+
+    enum class PdlSokeOmfang(val verdi: Boolean?) {
+        HISTORISK_OG_GJELDENDE(null),
+        HISTORISK(true),
+        GJELDENDE(false)
     }
 
     enum class PdlFelt(val feltnavn: String, val rule: SokKriterieRule) {
@@ -36,7 +42,8 @@ interface PdlOppslagService {
     data class PdlKriterie(
         val felt: PdlFelt,
         val value: String?,
-        val boost: Float? = null
+        val boost: Float? = null,
+        val searchHistorical: PdlSokeOmfang = PdlSokeOmfang.HISTORISK_OG_GJELDENDE
     ) {
         fun asCriterion() =
             if (value.isNullOrEmpty()) {
@@ -50,7 +57,8 @@ interface PdlOppslagService {
                         FUZZY_MATCH -> SokPerson.SearchRule(fuzzy = this.value, boost = boost)
                         AFTER -> SokPerson.SearchRule(after = this.value, boost = boost)
                         BEFORE -> SokPerson.SearchRule(before = this.value, boost = boost)
-                    }
+                    },
+                    searchHistorical = searchHistorical.verdi
                 )
             }
     }

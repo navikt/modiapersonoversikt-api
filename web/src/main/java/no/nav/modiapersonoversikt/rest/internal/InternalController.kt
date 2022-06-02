@@ -4,11 +4,13 @@ import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.modiapersonoversikt.consumer.pdl.generated.DebugPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
+import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
@@ -36,6 +38,18 @@ class InternalController @Autowired constructor(
                     user = AuthContextUtils.getToken().orElse("null"),
                     system = systemUserTokenProvider.systemUserToken
                 )
+            }
+    }
+
+    @GetMapping("/debug-person/{fnr}")
+    fun pdlDebugPerson(@PathVariable("fnr") fnr: String): GraphQLResponse<DebugPersondata.Result> {
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .check(Policies.kanBrukeInternal)
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnr)) {
+                runBlocking {
+                    DebugPersondata(pdlClient).execute(DebugPersondata.Variables(fnr), systemTokenAuthHeader)
+                }
             }
     }
 

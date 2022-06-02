@@ -12,6 +12,10 @@ class AuthContextExtension(var authcontext: AuthContext? = null) :
     var original: AuthContext? = null
     val threadlocal = AuthContextHolderThreadLocal.instance()
 
+    fun setContext(context: AuthContext) {
+        threadlocal.setContext(context)
+    }
+
     override fun beforeTestExecution(context: ExtensionContext) {
         original = threadlocal.context.orElse(null)
         threadlocal.setContext(authcontext)

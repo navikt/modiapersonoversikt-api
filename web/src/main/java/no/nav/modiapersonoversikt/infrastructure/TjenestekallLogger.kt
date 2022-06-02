@@ -14,13 +14,22 @@ object TjenestekallLogger {
 
     val logger: Logger = tjenestekallLogg
 
-    private fun format(header: String, fields: Map<String, Any?>): String {
+    fun format(header: String, fields: Map<String, Any?>): String {
         val sb = StringBuilder()
         sb.appendLine(header)
         sb.appendLine("------------------------------------------------------------------------------------")
         fields.forEach { (key, value) ->
             sb.appendLine("$key: $value")
         }
+        sb.appendLine("------------------------------------------------------------------------------------")
+        return sb.toString()
+    }
+
+    fun format(header: String, body: String): String {
+        val sb = StringBuilder()
+        sb.appendLine(header)
+        sb.appendLine("------------------------------------------------------------------------------------")
+        sb.appendLine(body)
         sb.appendLine("------------------------------------------------------------------------------------")
         return sb.toString()
     }

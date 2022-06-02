@@ -105,7 +105,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun hentNavn(data: Data): List<Persondata.Navn> {
-        return data.persondata.navn.map(::hentNavn)
+        return data.persondata.navn
+            .prioriterKildesystem()
+            .map(::hentNavn)
     }
 
     private fun hentNavn(navn: HentPersondata.Navn): Persondata.Navn {
@@ -953,6 +955,10 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun String?.isNotNullOrBlank() = !this.isNullOrBlank()
+
+    private fun List<HentPersondata.Navn>.prioriterKildesystem(): List<HentPersondata.Navn> {
+        return this.sortedBy { MasterPrioritet[it.metadata.master] }
+    }
 }
 
 fun <T> EnhetligKodeverk.Service.hentKodeBeskrivelse(

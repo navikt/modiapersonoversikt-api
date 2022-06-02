@@ -117,6 +117,7 @@ class SfHenvendelseServiceImpl(
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
             .map(::sorterMeldinger)
+            .map(::unikeJournalposter)
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
@@ -366,16 +367,16 @@ class SfHenvendelseServiceImpl(
         return { henvendelseDTO ->
             val journalforteTemaer = (henvendelseDTO.journalposter ?: emptyList())
                 .map { it.journalfortTema }
-            val harTilgangTilAlleJournalforteTema: Boolean = journalforteTemaer
-                .all { tema -> tematilganger.contains(tema) }
+            val harTilgangTilMinstEttAvJournalforteTema: Boolean = journalforteTemaer
+                .any { tema -> tematilganger.contains(tema) }
 
-            if (harTilgangTilAlleJournalforteTema) {
+            if (journalforteTemaer.isEmpty() || harTilgangTilMinstEttAvJournalforteTema) {
                 henvendelseDTO
             } else {
                 val ident = AuthContextUtils.getIdent().orElse("-")
                 logger.info(
                     """
-                    Ikke tilgang til tema. 
+                    Ikke tilgang til noen av temaene tema. 
                     Ident: $ident
                     Henvendelse: ${henvendelseDTO.kjedeId}
                     Journalførte: $journalforteTemaer
@@ -396,6 +397,12 @@ class SfHenvendelseServiceImpl(
     private fun sorterMeldinger(henvendelse: HenvendelseDTO): HenvendelseDTO {
         return henvendelse.copy(
             meldinger = henvendelse.meldinger?.sortedBy { it.sendtDato }
+        )
+    }
+
+    private fun unikeJournalposter(henvendelse: HenvendelseDTO): HenvendelseDTO {
+        return henvendelse.copy(
+            journalposter = henvendelse.journalposter?.distinctBy { Pair(it.journalfortTema, it.fagsakId) }
         )
     }
 

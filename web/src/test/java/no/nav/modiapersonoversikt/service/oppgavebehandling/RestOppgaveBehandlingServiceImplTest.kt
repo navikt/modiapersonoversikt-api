@@ -18,6 +18,8 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.*
@@ -50,6 +52,9 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @BeforeEach
     fun setupStandardMocker() {
+        val unleashMock = mockk<UnleashService>()
+        every { tilgangskontrollContext.unleash() } returns unleashMock
+        every { unleashMock.isEnabled(any<Feature>()) } returns true
         every { pdlOppslagService.hentAktorId(any()) } answers {
             val ident = this.args[0] as String
             "000${ident}000"

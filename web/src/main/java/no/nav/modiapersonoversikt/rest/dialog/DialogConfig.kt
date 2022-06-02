@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogMerkContr
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -28,13 +29,17 @@ open class DialogConfig {
     @Autowired
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
+    @Autowired
+    private lateinit var unleashService: UnleashService
+
     @Bean
     open fun dialogApi(): DialogApi {
         return SfLegacyDialogController(
             sfHenvendelseService,
             oppgaveBehandlingService,
             ldapService,
-            kodeverk
+            kodeverk,
+            unleashService
         )
     }
 

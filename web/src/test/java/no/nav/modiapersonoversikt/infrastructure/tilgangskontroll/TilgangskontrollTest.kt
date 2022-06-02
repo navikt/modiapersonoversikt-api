@@ -6,8 +6,11 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextRule
 import org.junit.Rule
 import org.junit.Test
@@ -91,14 +94,18 @@ class TilgangskontrollTest {
 }
 
 private fun mockContext(
-    saksbehandlerIdent: String = "Z999999",
+    saksbehandlerIdent: NavIdent = NavIdent("Z999999"),
     tematilganger: Set<String> = setOf(),
     abacTilgang: Decision = Decision.Permit,
     denyPolicy: String = "fp3_behandle_egen_ansatt"
 ): TilgangskontrollContext {
     val context: TilgangskontrollContext = mockk()
+    val unleashMock: UnleashService = mockk()
     every { context.hentSaksbehandlerId() } returns Optional.of(saksbehandlerIdent)
     every { context.hentTemagrupperForSaksbehandler(any()) } returns tematilganger
+    every { context.unleash() } returns unleashMock
+    every { unleashMock.isEnabled(any<String>()) } returns true
+    every { unleashMock.isEnabled(any<Feature>()) } returns true
     every { context.checkAbac(any()) } returns AbacResponse(
         listOf(
             Response(

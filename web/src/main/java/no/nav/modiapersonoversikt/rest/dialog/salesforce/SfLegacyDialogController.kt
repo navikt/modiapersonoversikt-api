@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -34,7 +35,8 @@ class SfLegacyDialogController(
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ldapService: LDAPService,
-    private val kodeverk: EnhetligKodeverk.Service
+    private val kodeverk: EnhetligKodeverk.Service,
+    private val unleash: UnleashService
 ) : DialogApi {
     private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
@@ -189,6 +191,9 @@ class SfLegacyDialogController(
                 fritekst = fortsettDialogRequest.fritekst
             )
 
+            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
+                sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
+            }
             if (fortsettDialogRequest.sak != null) {
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
@@ -288,14 +293,6 @@ class SfLegacyDialogController(
         val journalposter = henvendelse.journalposter?.map {
             tilJournalpostDTO(it)
         } ?: emptyList()
-        val journalpost = journalposter.firstOrNull()
-
-        val journalfortSaksid = journalpost?.journalfortSaksid
-        val journalfortTema = journalpost?.journalfortTema
-        val journalfortTemanavn = journalpost?.journalfortTemanavn
-        val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
-        val journalfortAv: Map<String, String>? = identMap[journalpost?.journalfortAv?.ident ?: ""]
-            ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn) }
 
         val kontorsperre: MarkeringDTO? = henvendelse.markeringer
             ?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
@@ -322,11 +319,6 @@ class SfLegacyDialogController(
                     "meldingstype" to meldingstypeFraSfTyper(henvendelse, melding),
                     "temagruppe" to henvendelse.gjeldendeTemagruppe,
                     "skrevetAvTekst" to skrevetAv,
-                    "journalfortAv" to journalfortAv,
-                    "journalfortDato" to journalfortDato,
-                    "journalfortTema" to journalfortTema,
-                    "journalfortTemanavn" to journalfortTemanavn,
-                    "journalfortSaksid" to journalfortSaksid,
                     "fritekst" to hentFritekstFraMelding(henvendelseErKassert, melding),
                     "lestDato" to melding.lestDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "status" to when {

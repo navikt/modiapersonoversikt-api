@@ -54,7 +54,7 @@ fun gittPerson(
     kontaktadresse: HentPersondata.Kontaktadresse = kontaktadresseData,
     oppholdsadresse: HentPersondata.Oppholdsadresse = oppholdsadresseData
 ) = HentPersondata.Person(
-    navn = listOf(gittHentPersondataNavn(navn)),
+    navn = gittHentPersondataNavn(navn),
     kjoenn = listOf(HentPersondata.Kjoenn(kjonn)),
     foedsel = listOf(HentPersondata.Foedsel(gittDato(fodselsdato))),
     adressebeskyttelse = listOf(
@@ -145,13 +145,26 @@ internal fun gittPersonnavn(navn: String): HentPersondata.Personnavn {
     )
 }
 
-internal fun gittHentPersondataNavn(navn: String): HentPersondata.Navn {
+internal fun gittHentPersondataNavn(navn: String): List<HentPersondata.Navn> {
     val persondataNavn = gittNavn(navn)
-    return HentPersondata.Navn(
+    val fregNavn = HentPersondata.Navn(
         fornavn = persondataNavn.fornavn,
         mellomnavn = persondataNavn.mellomnavn,
-        etternavn = persondataNavn.etternavn
+        etternavn = persondataNavn.etternavn,
+        metadata = HentPersondata.Metadata(
+            master = "Freg",
+            endringer = emptyList()
+        )
     )
+
+    val pdlNavn = fregNavn.copy(
+        fornavn = "PDL_${fregNavn.fornavn}",
+        metadata = fregNavn.metadata.copy(
+            master = "PDL"
+        )
+    )
+
+    return listOf(fregNavn, pdlNavn)
 }
 
 internal val tredjepartsPersoner = mapOf(
@@ -220,7 +233,8 @@ internal fun gittNavKontorEnhet(
                 )
             )
         )
-    )
+    ),
+    overordnetEnhet = null
 )
 
 internal fun gittEndring(
@@ -238,7 +252,8 @@ internal fun gittEndring(
 internal val metadata = HentPersondata.Metadata(
     endringer = listOf(
         gittEndring()
-    )
+    ),
+    master = "Freg"
 )
 
 internal val adresse = HentPersondata.Bostedsadresse(
