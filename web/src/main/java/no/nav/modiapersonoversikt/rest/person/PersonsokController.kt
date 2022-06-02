@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/rest/personsok")
@@ -121,7 +122,11 @@ private fun lagBostedsadresse(adr: List<SokPerson.Bostedsadresse>?): String? {
     if (adr.isNullOrEmpty()) {
         return null
     }
-    val adresse = adr.first()
+    val adresse = adr
+        .filter { it.harGyldigPeriode() }
+        .sortedByDescending { it.gyldigTilOgMed?.value }
+        .firstOrNull()
+        ?: return null
     when {
         adresse.ukjentBosted != null -> {
             return adresse.ukjentBosted!!.bostedskommune
@@ -168,7 +173,11 @@ fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
     if (adr.isNullOrEmpty()) {
         return null
     }
-    val adresse = adr.first()
+    val adresse = adr
+        .filter { it.harGyldigPeriode() }
+        .sortedByDescending { it.gyldigTilOgMed?.value }
+        .firstOrNull()
+        ?: return null
     when {
         adresse.postadresseIFrittFormat != null -> {
             return listOfNotNull(
@@ -295,6 +304,17 @@ private fun lagBostedsadresse(adr: StrukturertAdresse): String? =
         is PostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
         else -> null
     }
+
+private fun SokPerson.Kontaktadresse.harGyldigPeriode(): Boolean = harGyldigPeriode(gyldigFraOgMed, gyldigTilOgMed)
+private fun SokPerson.Bostedsadresse.harGyldigPeriode(): Boolean = harGyldigPeriode(gyldigFraOgMed, gyldigTilOgMed)
+
+private fun harGyldigPeriode(start: SokPerson.DateTime?, end: SokPerson.DateTime?): Boolean {
+    val startDate = start?.value ?: LocalDateTime.MIN
+    val endDate = end?.value ?: LocalDateTime.MAX
+    val now = LocalDateTime.now()
+
+    return startDate.isBefore(now) && now.isBefore(endDate)
+}
 
 data class PersonnavnDTO(
     val fornavn: String,
