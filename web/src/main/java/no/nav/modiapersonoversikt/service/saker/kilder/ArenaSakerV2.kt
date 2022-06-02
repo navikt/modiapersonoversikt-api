@@ -68,7 +68,7 @@ internal class ArenaSakerV2(val arenaSakVedtakService: SakVedtakPortType) : Sake
                 fagsystemKode = Sak.FAGSYSTEMKODE_ARENA
                 sakstype = Sak.SAKSTYPE_MED_FAGSAK
                 temaKode = arenaSak.tema
-                opprettetDato = DateTime(arenaSak.sakOpprettet)
+                opprettetDato = DateTime(arenaSak.sakOpprettet.toGregorianCalendar().time)
                 finnesIGsak = false
             }
         }
