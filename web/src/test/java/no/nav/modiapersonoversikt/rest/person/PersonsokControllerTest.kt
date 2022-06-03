@@ -272,11 +272,35 @@ class PersonsokControllerTest {
             assertThat(ukjent).contains(PdlKriterie(PdlFelt.KJONN, null, searchHistorical = PdlSokeOmfang.GJELDENDE))
         }
 
+        @Test
+        internal fun `mapper adresse til pdl-format`() {
+            val kriterier = requestV2
+                .copy(
+                    adresse = "Gatenavn 1 A 0100"
+                )
+                .tilPdlKriterier(clock)
+
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.ADRESSE, "Gatenavn 1 A 0100", searchHistorical = PdlSokeOmfang.GJELDENDE))
+        }
+
         val request = PersonsokRequest(
             null,
             null,
             null,
             null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        val requestV2 = PersonsokRequestV2(
             null,
             null,
             null,
