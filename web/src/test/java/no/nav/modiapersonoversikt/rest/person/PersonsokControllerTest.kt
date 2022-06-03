@@ -154,8 +154,6 @@ class PersonsokControllerTest {
                     ),
                     kontaktadresse = listOf(
                         SokPerson.Kontaktadresse(
-                            gyldigFraOgMed = null,
-                            gyldigTilOgMed = null,
                             vegadresse = SokPerson.Vegadresse(
                                 husbokstav = "Z",
                                 husnummer = "10",
@@ -174,8 +172,6 @@ class PersonsokControllerTest {
                     ),
                     bostedsadresse = listOf(
                         SokPerson.Bostedsadresse(
-                            gyldigFraOgMed = null,
-                            gyldigTilOgMed = null,
                             matrikkeladresse = SokPerson.Matrikkeladresse(
                                 bruksenhetsnummer = "123101",
                                 tilleggsnavn = "Supergården",
