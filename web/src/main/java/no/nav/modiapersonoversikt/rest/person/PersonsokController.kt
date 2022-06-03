@@ -56,6 +56,7 @@ class PersonsokController @Autowired constructor(
                 }
             }
     }
+
     @PostMapping("/v3")
     fun sokPdlV2(@RequestBody personsokRequestV2: PersonsokRequestV2): List<PersonSokResponsDTO> {
         return tilgangskontroll
