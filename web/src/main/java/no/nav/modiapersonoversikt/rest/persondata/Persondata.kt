@@ -49,7 +49,8 @@ object Persondata {
         val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val bostedAdresse: List<Adresse>,
-        val dodsdato: List<LocalDate>
+        val dodsdato: List<LocalDate>,
+        val digitalKontaktinformasjon: Dkif.DigitalKontaktinformasjonTredjepartsperson?
     )
 
     data class KodeBeskrivelse<T>(
@@ -195,7 +196,8 @@ object Persondata {
         val motpartsPersonNavn: Navn,
         val motpartsRolle: FullmaktsRolle,
         val omrade: List<KodeBeskrivelse<String>>,
-        val gyldighetsPeriode: GyldighetsPeriode?
+        val gyldighetsPeriode: GyldighetsPeriode?,
+        val digitalKontaktinformasjonTredjepartsperson: Dkif.DigitalKontaktinformasjonTredjepartsperson?
     )
 
     data class Telefon(

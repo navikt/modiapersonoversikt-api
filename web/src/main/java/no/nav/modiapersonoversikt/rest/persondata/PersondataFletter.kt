@@ -739,7 +739,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     else -> Persondata.FullmaktsRolle.UKJENT
                 },
                 omrade = hentOmrade(it.omraader),
-                gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed)
+                gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
+                digitalKontaktinformasjonTredjepartsperson = data.tredjepartsPerson.map { personer -> personer[it.motpartsPersonident]?.digitalKontaktinformasjon }.getOrNull()
             )
         }
     }

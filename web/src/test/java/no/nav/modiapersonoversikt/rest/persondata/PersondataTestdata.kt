@@ -122,7 +122,8 @@ internal fun gittTredjepartsperson(
     kjonn = emptyList(),
     adressebeskyttelse = listOf(Persondata.KodeBeskrivelse(adressebeskyttelse, adressebeskyttelse.toString())),
     bostedAdresse = emptyList(),
-    dodsdato = emptyList()
+    dodsdato = emptyList(),
+    digitalKontaktinformasjon = null
 )
 
 internal fun gittNavn(navn: String): Persondata.Navn {
@@ -315,6 +316,10 @@ internal val digitalKontaktinformasjon = Dkif.DigitalKontaktinformasjon(
     reservasjon = null,
     epostadresse = Dkif.Epostadresse(value = "test@test.no"),
     mobiltelefonnummer = Dkif.MobilTelefon(value = "90009900")
+)
+
+internal val kontaktinformasjonTredjepartsperson = mapOf<String?, Dkif.DigitalKontaktinformasjon>(
+    "1234678910" to digitalKontaktinformasjon
 )
 
 internal val sivilstandPerson = HentPersondata.Sivilstand(
