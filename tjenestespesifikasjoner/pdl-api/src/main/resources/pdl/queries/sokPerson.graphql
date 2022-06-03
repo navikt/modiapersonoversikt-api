@@ -28,8 +28,6 @@ query($paging: Paging, $criteria: [Criterion]) {
                     type
                 }
                 kontaktadresse {
-                    gyldigFraOgMed
-                    gyldigTilOgMed
                     postboksadresse {
                         postbokseier
                         postboks
@@ -70,8 +68,6 @@ query($paging: Paging, $criteria: [Criterion]) {
                     }
                 }
                 bostedsadresse {
-                    gyldigFraOgMed
-                    gyldigTilOgMed
                     vegadresse {
                         husnummer
                         husbokstav
