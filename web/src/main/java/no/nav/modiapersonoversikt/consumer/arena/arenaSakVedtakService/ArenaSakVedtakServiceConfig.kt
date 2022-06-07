@@ -69,7 +69,7 @@ open class ArenaSakVedtakServiceConfig {
                 )
                 HealthCheckResult.healthy()
             } catch (e: Exception) {
-                log.error("Ukjent ved under kall på hentSaksInfoV2: ${e.message} ${e.cause}", e)
+                log.error("Ukjent ved under kall på sakVedtakPortTypePing: ${e.message} ${e.cause}", e)
                 HealthCheckResult.unhealthy(e)
             }
         }
