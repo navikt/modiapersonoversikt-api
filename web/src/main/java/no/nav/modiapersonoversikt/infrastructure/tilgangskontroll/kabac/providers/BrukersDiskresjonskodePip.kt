@@ -7,12 +7,12 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 
-class BrukersDiskresjonskodePip(private val pdl: PdlOppslagService) : Kabac.PolicyInformationPoint<BrukersDiskresjonskodePip.Kode> {
+class BrukersDiskresjonskodePip(private val pdl: PdlOppslagService) : Kabac.PolicyInformationPoint<BrukersDiskresjonskodePip.Kode?> {
     enum class Kode { KODE6, KODE7 }
 
     override val key = Companion.key
-    companion object : Kabac.AttributeKey<Kode> {
-        override val key = Key<Kode>(BrukersDiskresjonskodePip::class.java.simpleName)
+    companion object : Kabac.AttributeKey<Kode?> {
+        override val key = Key<Kode?>(BrukersDiskresjonskodePip::class.java.simpleName)
     }
 
     override fun provide(ctx: EvaluationContext): Kode? {

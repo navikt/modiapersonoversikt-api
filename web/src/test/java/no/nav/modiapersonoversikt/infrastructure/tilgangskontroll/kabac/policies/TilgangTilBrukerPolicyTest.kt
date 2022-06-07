@@ -181,11 +181,11 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtBrukerIkkeErSkjermet() {
-        every { skjermedePersoner.erSkjermetPerson(fnr.get()) } returns false
+        every { skjermedePersoner.erSkjermetPerson(fnr) } returns false
     }
 
     private fun gittAtBrukerErSkjermet() {
-        every { skjermedePersoner.erSkjermetPerson(fnr.get()) } returns true
+        every { skjermedePersoner.erSkjermetPerson(fnr) } returns true
     }
 
     private fun gittAtBrukerHarKode6() {

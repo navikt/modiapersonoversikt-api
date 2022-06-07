@@ -13,8 +13,11 @@ class BrukersAktorIdPip(private val pdl: PdlOppslagService) : Kabac.PolicyInform
         override val key = CommonAttributes.AKTOR_ID
     }
 
-    override fun provide(ctx: EvaluationContext): AktorId? {
+    override fun provide(ctx: EvaluationContext): AktorId {
         val fnr = ctx.getValue(CommonAttributes.FNR)
-        return pdl.hentAktorId(fnr.get())?.let(::AktorId)
+        val aktorid = checkNotNull(pdl.hentAktorId(fnr.get())) {
+            "Fant ikke aktor id for $fnr"
+        }
+        return AktorId(aktorid)
     }
 }

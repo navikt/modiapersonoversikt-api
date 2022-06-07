@@ -170,3 +170,5 @@ spec:
       value: "dev-gcp"
     - name: SKJERMEDE_PERSONER_PIP_URL
       value: "https://skjermede-personer-pip.dev.intern.nav.no"
+    - name: ARENA_SAK_VEDTAK_URL
+      value: "https://arena-q1.adeo.no/arena_ws/services/ArenaSakVedtakService"

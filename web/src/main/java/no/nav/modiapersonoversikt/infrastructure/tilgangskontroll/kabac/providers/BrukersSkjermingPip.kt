@@ -15,6 +15,6 @@ class BrukersSkjermingPip(private val skjermedePersonerApi: SkjermedePersonerApi
 
     override fun provide(ctx: EvaluationContext): Boolean {
         val fnr = ctx.getValue(CommonAttributes.FNR)
-        return skjermedePersonerApi.erSkjermetPerson(fnr.get())
+        return skjermedePersonerApi.erSkjermetPerson(fnr)
     }
 }
