@@ -11,12 +11,14 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
+import no.nav.modiapersonoversikt.service.saker.kilder.ArenaSakerV2
 import no.nav.modiapersonoversikt.utils.Utils
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor
 import org.apache.wss4j.common.ext.WSPasswordCallback
 import org.apache.wss4j.dom.WSConstants
 import org.apache.wss4j.dom.handler.WSHandlerConstants
 import org.joda.time.LocalDate
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.util.*
@@ -28,6 +30,7 @@ import javax.xml.ws.Holder
 
 @Configuration
 open class ArenaSakVedtakServiceConfig {
+    private val log = LoggerFactory.getLogger(ArenaSakVedtakServiceConfig::class.java)
     val address: String = EnvironmentUtils.getRequiredProperty("ARENA_SAK_VEDTAK_URL")
 
     @Bean
@@ -67,6 +70,7 @@ open class ArenaSakVedtakServiceConfig {
                 )
                 HealthCheckResult.healthy()
             } catch (e: Exception) {
+                log.error("Ukjent ved under kall på hentSaksInfoV2: ${e.message} ${e.cause}", e)
                 HealthCheckResult.unhealthy(e)
             }
         }
