@@ -29,7 +29,7 @@ constructor(
     @GetMapping("/{enhetId}/ansatte")
     fun hentAnsattePaaEnhet(@PathVariable("enhetId") enhetId: String): List<Ansatt> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia())
+            .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
                 ansattService.ansatteForEnhet(
                     AnsattEnhet(
@@ -43,7 +43,7 @@ constructor(
     @GetMapping("/oppgavebehandlere/alle")
     fun hentAlleEnheterForOppgave(): List<NorgDomain.Enhet> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia())
+            .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Enhet.OppgaveBehandlere)) {
                 norgApi.hentEnheter(
                     enhetId = null,

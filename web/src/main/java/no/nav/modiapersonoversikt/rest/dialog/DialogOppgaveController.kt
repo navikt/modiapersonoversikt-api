@@ -45,7 +45,7 @@ class DialogOppgaveController @Autowired constructor(
         @RequestBody request: OpprettSkjermetOppgaveDTO
     ): OpprettOppgaveResponseDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia())
+            .check(Policies.tilgangTilModia)
             .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                 oppgavebehandling.opprettSkjermetOppgave(request.fromDTO()).toDTO()
             }
@@ -54,7 +54,7 @@ class DialogOppgaveController @Autowired constructor(
     @GetMapping("/v2/tema")
     fun hentAlleTema(): List<OppgaveKodeverk.Tema> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia())
+            .check(Policies.tilgangTilModia)
             .get(Audit.skipAuditLog()) {
                 kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentAlleVerdier().toList()
             }

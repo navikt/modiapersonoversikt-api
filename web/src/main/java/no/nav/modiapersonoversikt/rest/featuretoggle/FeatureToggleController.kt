@@ -21,7 +21,7 @@ class FeatureToggleController @Autowired constructor(
     @GetMapping("/{id}")
     fun hentMedId(@PathVariable("id") toggleId: String): Boolean =
         tilgangskontroll
-            .check(Policies.tilgangTilModia())
+            .check(Policies.tilgangTilModia)
             .get(Audit.skipAuditLog()) {
                 unleashService.isEnabled(sjekkPrefix(toggleId))
             }

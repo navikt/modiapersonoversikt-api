@@ -78,7 +78,7 @@ public class HodeController {
     @GetMapping("/me")
     public Me hentSaksbehandler(HttpServletRequest request) {
         return tilgangskontroll
-                .check(Policies.tilgangTilModia())
+                .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, NavnOgEnheter), () -> {
                     String ident = AuthContextUtils.requireIdent();
                     Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
@@ -97,7 +97,7 @@ public class HodeController {
     @GetMapping("/enheter")
     public Enheter hentEnheter() {
         return tilgangskontroll
-                .check(Policies.tilgangTilModia())
+                .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enheter), () -> {
                     String ident = AuthContextUtils.requireIdent();
                     List<Enhet> enheter = ansattService.hentEnhetsliste()
@@ -112,7 +112,7 @@ public class HodeController {
     @PostMapping("/velgenhet")
     public String settValgtEnhet(HttpServletResponse response, @RequestBody String enhetId) {
         return tilgangskontroll
-                .check(Policies.tilgangTilModia())
+                .check(Policies.tilgangTilModia)
                 .get(Audit.describe(UPDATE, ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
                     CookieUtil.setSaksbehandlersValgteEnhet(response, enhetId);
                     return enhetId;

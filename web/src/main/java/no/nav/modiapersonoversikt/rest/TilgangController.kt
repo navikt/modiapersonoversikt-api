@@ -35,7 +35,7 @@ class TilgangController @Autowired constructor(private val tilgangskontroll: Til
     @GetMapping
     fun harTilgang(): TilgangDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia())
+            .check(Policies.tilgangTilModia)
             .getDecision()
             .makeResponse()
     }

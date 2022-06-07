@@ -13,8 +13,8 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilTemaPolicy
 
 object Policies {
-    @JvmStatic
-    fun tilgangTilModia() = TilgangTilModiaPolicy.withAttributes()
+    @JvmField
+    val tilgangTilModia = TilgangTilModiaPolicy.withAttributes()
 
     @JvmStatic
     fun tilgangTilBruker(eksternBrukerId: EksternBrukerId) = TilgangTilBrukerPolicy.withAttributes(
@@ -32,7 +32,8 @@ object Policies {
         eksternBrukerId.toAttributeValue(),
         CommonAttributes.HENVENDELSE_KJEDE_ID.withValue(kjedeId)
     )
-    fun kanBrukerInternal() = KanBrukeInternalPolicy.withAttributes()
+
+    val kanBrukerInternal = KanBrukeInternalPolicy.withAttributes()
 
     private fun Kabac.Policy.withAttributes(vararg attributes: AttributeValue<*>) = PolicyWithAttributes(this, attributes.toList())
     private fun EksternBrukerId.toAttributeValue() = when (this) {

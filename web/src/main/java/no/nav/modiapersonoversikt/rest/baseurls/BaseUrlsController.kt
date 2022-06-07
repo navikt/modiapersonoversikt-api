@@ -17,7 +17,7 @@ constructor(private val tilgangskontroll: Tilgangskontroll) {
     @GetMapping
     fun hent(): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilModia())
+            .check(Policies.tilgangTilModia)
             .get(skipAuditLog()) {
                 mapOf("baseUrls" to getBaseUrls())
             }
