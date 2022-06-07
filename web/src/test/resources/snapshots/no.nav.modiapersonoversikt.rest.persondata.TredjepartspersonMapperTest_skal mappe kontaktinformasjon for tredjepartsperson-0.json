@@ -1,6 +1,4 @@
 {
-  "12345678910" : [ "no.nav.modiapersonoversikt.rest.persondata.Persondata$DigitalKontaktinformasjonTredjepartsperson", {
-    "mobiltelefonnummer" : "90009900",
-    "reservasjon" : null
-  } ]
+  "mobiltelefonnummer" : "90009900",
+  "reservasjon" : null
 }

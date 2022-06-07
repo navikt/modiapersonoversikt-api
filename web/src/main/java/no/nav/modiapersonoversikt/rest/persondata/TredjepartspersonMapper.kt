@@ -48,13 +48,11 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    fun flettKontaktinformasjonTredjepartsperson(krrMap: Map<String, Dkif.DigitalKontaktinformasjon>): Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson> {
-        return krrMap.mapValues { entry ->
-            Persondata.DigitalKontaktinformasjonTredjepartsperson(
-                mobiltelefonnummer = entry.value.mobiltelefonnummer?.value,
-                reservasjon = entry.value.reservasjon
-            )
-        }
+    fun tilKontaktinformasjonTredjepartsperson(krrInfo: Dkif.DigitalKontaktinformasjon): Persondata.DigitalKontaktinformasjonTredjepartsperson {
+        return Persondata.DigitalKontaktinformasjonTredjepartsperson(
+            mobiltelefonnummer = krrInfo.mobiltelefonnummer?.value,
+            reservasjon = krrInfo.reservasjon
+        )
     }
 
     private fun hentKjonn(person: HentTredjepartspersondata.Person?): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> {

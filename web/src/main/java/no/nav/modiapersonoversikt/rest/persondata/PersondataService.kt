@@ -62,7 +62,7 @@ class PersondataServiceImpl(
             persondata
                 .findKontaktinformasjonTredjepartspersoner()
                 .associateWith { dkif.hentDigitalKontaktinformasjon(it) }
-                .let { tredjepartspersonMapper.flettKontaktinformasjonTredjepartsperson(it) }
+                .mapValues { tredjepartspersonMapper.tilKontaktinformasjonTredjepartsperson(it.value) }
         }
         val kontaktinformasjonTredjepartspersonMap = kontaktinformasjonTredjepartsperson.getOrElse(emptyMap())
         val tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
