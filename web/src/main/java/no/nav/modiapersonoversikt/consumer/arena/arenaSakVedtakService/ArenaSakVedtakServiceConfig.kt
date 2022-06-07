@@ -11,7 +11,6 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
-import no.nav.modiapersonoversikt.service.saker.kilder.ArenaSakerV2
 import no.nav.modiapersonoversikt.utils.Utils
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor
 import org.apache.wss4j.common.ext.WSPasswordCallback
