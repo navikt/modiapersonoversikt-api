@@ -96,6 +96,13 @@ internal class TredjepartspersonMapperTest {
         )
     }
 
+    @Test
+    fun `skal mappe kontaktinformasjon for tredjepartsperson`() {
+        snapshot.assertMatches(
+            mapper.flettKontaktinformasjonTredjepartsperson(krrTredjepartspersonMap)
+        )
+    }
+
     private fun gittPerson(
         navn: String = "Harry Tester Testesen",
         adressebeskyttelse: AdressebeskyttelseGradering = AdressebeskyttelseGradering.UGRADERT,
@@ -180,5 +187,9 @@ internal class TredjepartspersonMapperTest {
         adresse.copy(
             ukjentBosted = HentTredjepartspersondata.UkjentBosted(bosted)
         )
+    )
+
+    private val krrTredjepartspersonMap = mapOf(
+        "12345678910" to digitalKontaktinformasjon
     )
 }

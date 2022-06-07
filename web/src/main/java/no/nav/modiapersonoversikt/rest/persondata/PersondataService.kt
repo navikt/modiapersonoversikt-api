@@ -58,17 +58,18 @@ class PersondataServiceImpl(
         val tilganger = PersondataResult
             .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
             .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
-        val kontaktinformasjonTredjepartsperson = PersondataResult.runCatching(InformasjonElement.DKIF) {
+        val kontaktinformasjonTredjepartsperson = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
             persondata
                 .findKontaktinformasjonTredjepartspersoner()
-                .map { dkif.hentDigitalKontaktinformasjon(it) }
-                .associateBy { it.personident }
-        }.getOrNull()
+                .associateWith { dkif.hentDigitalKontaktinformasjon(it) }
+                .let { tredjepartspersonMapper.flettKontaktinformasjonTredjepartsperson(it) }
+        }
+        val kontaktinformasjonTredjepartspersonMap = kontaktinformasjonTredjepartsperson.getOrElse(emptyMap())
         val tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
             persondata
                 .findTredjepartsPersoner()
                 .let { pdl.hentTredjepartspersondata(it) }
-                .mapNotNull { tredjepartspersonMapper.lagTredjepartsperson(it.ident, it.person, tilganger, kontaktinformasjonTredjepartsperson) }
+                .mapNotNull { tredjepartspersonMapper.lagTredjepartsperson(it.ident, it.person, tilganger, kontaktinformasjonTredjepartspersonMap[it.ident]) }
                 .associateBy { it.fnr }
         }
 
@@ -84,7 +85,8 @@ class PersondataServiceImpl(
                 navEnhet,
                 dkifData,
                 bankkonto,
-                tredjepartsPerson
+                tredjepartsPerson,
+                kontaktinformasjonTredjepartsperson
             )
         )
     }

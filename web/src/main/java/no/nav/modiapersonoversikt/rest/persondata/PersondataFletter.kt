@@ -33,7 +33,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<HentPersonResponse>,
-        val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
+        val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
+        val kontaktinformasjonTredjepartsperson: PersondataResult<Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson>>
     ) {
         private val ekstraDatapunker = listOf(
             geografiskeTilknytning,
@@ -41,7 +42,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             navEnhet,
             dkifData,
             bankkonto,
-            tredjepartsPerson
+            tredjepartsPerson,
+            kontaktinformasjonTredjepartsperson
         )
 
         fun feilendeSystemer(): List<String> {
@@ -726,9 +728,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentFullmakt(data: Data): List<Persondata.Fullmakt> {
         return data.persondata.fullmakt.map {
-            val navn = data.tredjepartsPerson
-                .map { personer -> personer[it.motpartsPersonident]?.navn }
-                .getOrNull()
+            val tredjepartsPerson = data.tredjepartsPerson.map { personer -> personer[it.motpartsPersonident] }.getOrNull()
+            val navn = tredjepartsPerson?.navn
 
             Persondata.Fullmakt(
                 motpartsPersonident = it.motpartsPersonident,
@@ -740,7 +741,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 },
                 omrade = hentOmrade(it.omraader),
                 gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
-                digitalKontaktinformasjonTredjepartsperson = data.tredjepartsPerson.map { personer -> personer[it.motpartsPersonident]?.digitalKontaktinformasjon }.getOrNull()
+                digitalKontaktinformasjonTredjepartsperson = tredjepartsPerson?.digitalKontaktinformasjon
             )
         }
     }

@@ -31,9 +31,4 @@ object Dkif {
         epostadresse = Epostadresse(value = ""),
         mobiltelefonnummer = MobilTelefon(value = "")
     )
-
-    data class DigitalKontaktinformasjonTredjepartsperson(
-        val reservasjon: String? = null,
-        val mobiltelefonnummer: String? = null
-    )
 }

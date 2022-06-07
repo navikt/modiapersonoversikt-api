@@ -12,7 +12,7 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
         ident: String,
         person: HentTredjepartspersondata.Person?,
         tilganger: PersondataService.Tilganger,
-        kontaktinformasjonTredjepartsperson: Map<String?, Dkif.DigitalKontaktinformasjon>?
+        kontaktinformasjonTredjepartsperson: Persondata.DigitalKontaktinformasjonTredjepartsperson?
     ): Persondata.TredjepartsPerson? {
         if (person == null) return null
         val fodselsdato = person.foedsel.mapNotNull { it.foedselsdato?.value }
@@ -44,22 +44,16 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
                 }
             },
             dodsdato = person.doedsfall.mapNotNull { it.doedsdato?.value },
-            digitalKontaktinformasjon = hentDigitalKontaktinformasjon(ident, kontaktinformasjonTredjepartsperson)
+            digitalKontaktinformasjon = kontaktinformasjonTredjepartsperson
         )
     }
 
-    private fun hentDigitalKontaktinformasjon(
-        ident: String,
-        kontaktinformasjonTredjepartsperson: Map<String?, Dkif.DigitalKontaktinformasjon>?
-    ): Dkif.DigitalKontaktinformasjonTredjepartsperson? {
-        val kontaktinfo = kontaktinformasjonTredjepartsperson?.get(ident)
-        return if (kontaktinfo != null) {
-            Dkif.DigitalKontaktinformasjonTredjepartsperson(
-                mobiltelefonnummer = kontaktinfo.mobiltelefonnummer?.value,
-                reservasjon = kontaktinfo.reservasjon
+    fun flettKontaktinformasjonTredjepartsperson(krrMap: Map<String, Dkif.DigitalKontaktinformasjon>): Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson> {
+        return krrMap.mapValues { entry ->
+            Persondata.DigitalKontaktinformasjonTredjepartsperson(
+                mobiltelefonnummer = entry.value.mobiltelefonnummer?.value,
+                reservasjon = entry.value.reservasjon
             )
-        } else {
-            null
         }
     }
 
