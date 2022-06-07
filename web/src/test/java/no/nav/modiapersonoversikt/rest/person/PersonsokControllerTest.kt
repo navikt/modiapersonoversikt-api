@@ -283,6 +283,17 @@ class PersonsokControllerTest {
             assertThat(kriterier).contains(PdlKriterie(PdlFelt.ADRESSE, "Gatenavn 1 A 0100", searchHistorical = PdlSokeOmfang.GJELDENDE))
         }
 
+        @Test
+        internal fun `mapper navn til pdl-format`() {
+            val kriterier = requestV2
+                .copy(
+                    navn = "Fornavn Etternavn"
+                )
+                .tilPdlKriterier(clock)
+
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
+        }
+
         val request = PersonsokRequest(
             null,
             null,
@@ -301,7 +312,6 @@ class PersonsokControllerTest {
         )
 
         val requestV2 = PersonsokRequestV2(
-            null,
             null,
             null,
             null,
