@@ -265,6 +265,10 @@
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>arenasakvedtakservice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
