@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.norg
 
-import com.github.benmanes.caffeine.cache.Caffeine
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.EnhetId
@@ -11,10 +10,12 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilkny
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetStatus
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.OppgaveBehandlerFilter
+import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.ArbeidsfordelingApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetskontaktinfoApi
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.OrganiseringApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.*
 import no.nav.modiapersonoversikt.utils.Retry
 import no.nav.modiapersonoversikt.utils.isNumeric
@@ -70,6 +71,7 @@ class NorgApiImpl(
     private var lastUpdateOfCache: LocalDateTime? = null
     private val navkontorCache = createNorgCache<String, Enhet>()
     private val gtCache = createNorgCache<String, List<EnhetGeografiskTilknyttning>>()
+    private val regionalkontorCache = createNorgCache<EnhetId, EnhetId>()
 
     private val retry = Retry(
         Retry.Config(
@@ -83,6 +85,7 @@ class NorgApiImpl(
     private val arbeidsfordelingApi = ArbeidsfordelingApi(url, httpClient)
     private val enhetApi = EnhetApi(url, httpClient)
     private val enhetKontaktInfoApi = EnhetskontaktinfoApi(url, httpClient)
+    private val organiseringApi = OrganiseringApi(url, httpClient)
 
     init {
         hentEnheterOgKontaktinformasjon()
@@ -141,7 +144,13 @@ class NorgApiImpl(
     }
 
     override fun hentRegionalEnhet(enhet: EnhetId): EnhetId? {
-        return cache[enhet]?.overordnetEnhet
+        return regionalkontorCache.get(enhet) { enhetId ->
+            organiseringApi.getAllOrganiseringerForEnhetUsingGET(enhetId.get())
+                .firstOrNull { it.orgType == "FYLKE" }
+                ?.organiserer
+                ?.nr
+                ?.let(::EnhetId)
+        }
     }
 
     override fun hentBehandlendeEnheter(
@@ -182,7 +191,7 @@ class NorgApiImpl(
     }
 
     override fun ping() = SelfTestCheck(
-        "NorgApi via $url (${cache.size}, ${gtCache.estimatedSize()}, ${navkontorCache.estimatedSize()})",
+        "NorgApi via $url (${cache.size}, ${gtCache.estimatedSize()}, ${navkontorCache.estimatedSize()}, ${regionalkontorCache.estimatedSize()})",
         false
     ) {
         val limit = LocalDateTime.now(clock).minus(cacheRetention).plus(cacheGraceperiod)
@@ -219,11 +228,10 @@ class NorgApiImpl(
         }
     }
 
-    private fun <KEY, VALUE> createNorgCache() = Caffeine
-        .newBuilder()
-        .maximumSize(2000)
-        .expireAfterWrite(cacheRetention)
-        .build<KEY, VALUE>()
+    private fun <KEY, VALUE> createNorgCache() = CacheUtils.createCache<KEY, VALUE>(
+        expireAfterWrite = cacheRetention,
+        maximumSize = 2000
+    )
 
     companion object {
         internal fun toInternalDomain(kontor: RsNavKontorDTO) = EnhetGeografiskTilknyttning(

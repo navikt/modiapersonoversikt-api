@@ -84,12 +84,12 @@ class ArbeidsfordelingServiceTest {
             when(persondataService.hentGeografiskTilknytning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
             when(persondataService.hentAdressebeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
 
-            when(egenAnsattService.erSkjermetPerson(anyString())).thenReturn(false);
+            when(egenAnsattService.erSkjermetPerson(any())).thenReturn(false);
         });
     }
 
     private void gitt_er_egen_ansatt() {
-        when(egenAnsattService.erSkjermetPerson(anyString())).thenReturn(true);
+        when(egenAnsattService.erSkjermetPerson(any())).thenReturn(true);
     }
 
     private void gitt_feil_ved_henting_av_geografisk_tilknytning() {
