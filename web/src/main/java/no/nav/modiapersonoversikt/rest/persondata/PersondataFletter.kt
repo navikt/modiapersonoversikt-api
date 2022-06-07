@@ -935,7 +935,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             } else {
                 val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
                 Persondata.ForelderBarnRelasjon(
-                    ident = tredjepartsPerson?.fnr ?: "",
+                    ident = tredjepartsPerson?.fnr,
                     rolle = rolle,
                     navn = tredjepartsPerson?.navn ?: emptyList(),
                     fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
