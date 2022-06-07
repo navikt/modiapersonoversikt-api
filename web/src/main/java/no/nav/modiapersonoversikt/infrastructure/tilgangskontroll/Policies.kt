@@ -33,7 +33,7 @@ object Policies {
         CommonAttributes.HENVENDELSE_KJEDE_ID.withValue(kjedeId)
     )
 
-    val kanBrukerInternal = KanBrukeInternalPolicy.withAttributes()
+    val kanBrukeInternal = KanBrukeInternalPolicy.withAttributes()
 
     private fun Kabac.Policy.withAttributes(vararg attributes: AttributeValue<*>) = PolicyWithAttributes(this, attributes.toList())
     private fun EksternBrukerId.toAttributeValue() = when (this) {
