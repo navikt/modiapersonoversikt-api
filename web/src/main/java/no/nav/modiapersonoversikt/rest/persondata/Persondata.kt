@@ -231,7 +231,7 @@ object Persondata {
     )
 
     data class ForelderBarnRelasjon(
-        val ident: String,
+        val ident: String?,
         val rolle: ForelderBarnRelasjonRolle,
         val navn: List<Navn>,
         val fodselsdato: List<LocalDate>,

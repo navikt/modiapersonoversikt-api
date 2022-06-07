@@ -64,10 +64,10 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 fnr = data.personIdent,
                 personIdent = data.personIdent,
                 navn = hentNavn(data),
-                kjonn = hentKjonn(data),
+                kjonn = hentKjonn(data.persondata.kjoenn),
                 fodselsdato = hentFodselsdato(data),
                 geografiskTilknytning = hentGeografiskTilknytning(data),
-                alder = hentAlder(data, clock),
+                alder = hentAlder(data.persondata.foedsel.firstOrNull()?.foedselsdato, clock),
                 dodsdato = hentDodsdato(data),
                 bostedAdresse = hentBostedAdresse(data),
                 kontaktAdresse = hentKontaktAdresse(data),
@@ -95,7 +95,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         null
                     }
                 ),
-                forelderBarnRelasjon = hentForelderBarnRelasjon(data)
+                forelderBarnRelasjon = hentForelderBarnRelasjon(data, clock)
             )
         )
     }
@@ -126,13 +126,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentKjonn(data: Data): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> {
-        return data.persondata.kjoenn.map { kjonn ->
-            when (kjonn.kjoenn) {
-                HentPersondata.KjoennType.MANN -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.M)
-                HentPersondata.KjoennType.KVINNE -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.K)
-                else -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.U)
-            }
+    private fun hentKjonn(data: List<HentPersondata.Kjoenn>): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> {
+        return data.map { hentKjonnFraType(it.kjoenn) }
+    }
+    private fun hentKjonnFraType(kjonntype: HentPersondata.KjoennType?): Persondata.KodeBeskrivelse<Persondata.Kjonn> {
+        return when (kjonntype) {
+            HentPersondata.KjoennType.MANN -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.M)
+            HentPersondata.KjoennType.KVINNE -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.K)
+            else -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.U)
         }
     }
 
@@ -909,29 +910,45 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun hentForelderBarnRelasjon(data: Data): List<Persondata.ForelderBarnRelasjon> {
+    private fun hentForelderBarnRelasjon(data: Data, clock: Clock): List<Persondata.ForelderBarnRelasjon> {
         return data.persondata.forelderBarnRelasjon.map { relasjon ->
-            val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
-            Persondata.ForelderBarnRelasjon(
-                ident = tredjepartsPerson?.fnr ?: "",
-                rolle = when (relasjon.relatertPersonsRolle) {
-                    HentPersondata.ForelderBarnRelasjonRolle.MOR -> Persondata.ForelderBarnRelasjonRolle.MOR
-                    HentPersondata.ForelderBarnRelasjonRolle.FAR -> Persondata.ForelderBarnRelasjonRolle.FAR
-                    HentPersondata.ForelderBarnRelasjonRolle.MEDMOR -> Persondata.ForelderBarnRelasjonRolle.MEDMOR
-                    HentPersondata.ForelderBarnRelasjonRolle.BARN -> Persondata.ForelderBarnRelasjonRolle.BARN
-                    else -> Persondata.ForelderBarnRelasjonRolle.UKJENT
-                },
-                navn = tredjepartsPerson?.navn ?: emptyList(),
-                fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
-                alder = tredjepartsPerson?.alder,
-                kjonn = tredjepartsPerson?.kjonn ?: emptyList(),
-                adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
-                harSammeAdresse = harSammeAdresse(
-                    personAdresse = hentBostedAdresse(data).firstOrNull(),
-                    tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull()
-                ),
-                dodsdato = tredjepartsPerson?.dodsdato ?: emptyList()
-            )
+            val rolle = when (relasjon.relatertPersonsRolle) {
+                HentPersondata.ForelderBarnRelasjonRolle.MOR -> Persondata.ForelderBarnRelasjonRolle.MOR
+                HentPersondata.ForelderBarnRelasjonRolle.FAR -> Persondata.ForelderBarnRelasjonRolle.FAR
+                HentPersondata.ForelderBarnRelasjonRolle.MEDMOR -> Persondata.ForelderBarnRelasjonRolle.MEDMOR
+                HentPersondata.ForelderBarnRelasjonRolle.BARN -> Persondata.ForelderBarnRelasjonRolle.BARN
+                else -> Persondata.ForelderBarnRelasjonRolle.UKJENT
+            }
+            if (relasjon.relatertPersonUtenFolkeregisteridentifikator != null) {
+                val tredjepartsPerson = requireNotNull(relasjon.relatertPersonUtenFolkeregisteridentifikator)
+                Persondata.ForelderBarnRelasjon(
+                    ident = null,
+                    rolle = rolle,
+                    navn = tredjepartsPerson.navn?.let { listOf(hentNavn(it)) } ?: emptyList(),
+                    fodselsdato = tredjepartsPerson.foedselsdato?.let { listOf(it.value) } ?: emptyList(),
+                    alder = hentAlder(tredjepartsPerson.foedselsdato, clock),
+                    kjonn = listOf(hentKjonnFraType(tredjepartsPerson.kjoenn)),
+                    adressebeskyttelse = emptyList(),
+                    harSammeAdresse = false,
+                    dodsdato = emptyList()
+                )
+            } else {
+                val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
+                Persondata.ForelderBarnRelasjon(
+                    ident = tredjepartsPerson?.fnr,
+                    rolle = rolle,
+                    navn = tredjepartsPerson?.navn ?: emptyList(),
+                    fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
+                    alder = tredjepartsPerson?.alder,
+                    kjonn = tredjepartsPerson?.kjonn ?: emptyList(),
+                    adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
+                    harSammeAdresse = harSammeAdresse(
+                        personAdresse = hentBostedAdresse(data).firstOrNull(),
+                        tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull()
+                    ),
+                    dodsdato = tredjepartsPerson?.dodsdato ?: emptyList()
+                )
+            }
         }.sortedBy { it.alder }
     }
 
@@ -947,8 +964,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             (personAdresse.linje3 == tredjepartsPersonAdresse.linje3)
     }
 
-    private fun hentAlder(data: Data, clock: Clock): Int? {
-        return data.persondata.foedsel.firstOrNull()?.foedselsdato
+    private fun hentAlder(foedselsdato: HentPersondata.Date?, clock: Clock): Int? {
+        return foedselsdato
             ?.let {
                 Period.between(it.value, LocalDate.now(clock)).years
             }
