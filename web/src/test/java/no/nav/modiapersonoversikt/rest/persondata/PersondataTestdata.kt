@@ -375,11 +375,27 @@ internal val foreldreansvarData = HentPersondata.Foreldreansvar(
 internal val forelderBarnRelasjonData = listOf(
     HentPersondata.ForelderBarnRelasjon(
         relatertPersonsIdent = "98765432100",
+        relatertPersonUtenFolkeregisteridentifikator = null,
         relatertPersonsRolle = HentPersondata.ForelderBarnRelasjonRolle.BARN
     ),
     HentPersondata.ForelderBarnRelasjon(
         relatertPersonsIdent = "11223344910",
+        relatertPersonUtenFolkeregisteridentifikator = null,
         relatertPersonsRolle = HentPersondata.ForelderBarnRelasjonRolle.BARN
+    ),
+    HentPersondata.ForelderBarnRelasjon(
+        relatertPersonsIdent = null,
+        relatertPersonUtenFolkeregisteridentifikator = HentPersondata.RelatertBiPerson(
+            navn = HentPersondata.Personnavn(
+                fornavn = "Tredjepart",
+                mellomnavn = "Relasjon",
+                etternavn = "Fra utlandet"
+            ),
+            foedselsdato = HentPersondata.Date(LocalDate.parse("2000-01-01")),
+            statsborgerskap = null,
+            kjoenn = HentPersondata.KjoennType.MANN
+        ),
+        relatertPersonsRolle = HentPersondata.ForelderBarnRelasjonRolle.MEDMOR
     )
 )
 

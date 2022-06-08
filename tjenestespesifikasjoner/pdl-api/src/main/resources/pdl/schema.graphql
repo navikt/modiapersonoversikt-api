@@ -395,6 +395,7 @@ type ForelderBarnRelasjon {
     relatertPersonsIdent: String
     relatertPersonsRolle: ForelderBarnRelasjonRolle!
     minRolleForPerson: ForelderBarnRelasjonRolle
+    relatertPersonUtenFolkeregisteridentifikator: RelatertBiPerson
 
     folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
