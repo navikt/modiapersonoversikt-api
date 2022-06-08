@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.kabac.AttributeValue
 import no.nav.modiapersonoversikt.infrastructure.kabac.CombiningAlgorithm
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
@@ -20,19 +22,13 @@ data class PolicyWithAttributes(
     val attributes: List<AttributeValue<*>>
 )
 
-class TilgangskontrollKabac private constructor(
+private class Instance(
     private val enforcementPoint: Kabac.PolicyEnforcementPoint,
-    private val noAccessHandler: NoAccessHandler
+    private val noAccessHandler: NoAccessHandler,
 ) : TilgangskontrollInstance {
     private val policies = mutableListOf<PolicyWithAttributes>()
     private var combiningAlgorithm = CombiningAlgorithm.denyOverride
     private var bias = enforcementPoint.bias
-
-    companion object {
-        operator fun invoke(kabac: Kabac.PolicyEnforcementPoint, noAccessHandler: NoAccessHandler): Tilgangskontroll {
-            return TilgangskontrollKabac(kabac, noAccessHandler)
-        }
-    }
 
     override fun check(policy: PolicyWithAttributes): TilgangskontrollInstance {
         this.policies.add(policy)
@@ -62,10 +58,22 @@ class TilgangskontrollKabac private constructor(
         val ctx = enforcementPoint.createEvaluationContext(attributes)
         val policy = combiningAlgorithm.combine(policies.map { it.policy })
 
-        return enforcementPoint.evaluatePolicyWithContext(
+        val (decision, report) = enforcementPoint.evaluatePolicyWithContextWithReport(
             bias = bias,
             ctx = ctx,
             policy = policy
         )
+        TjenestekallLogger.logger.info(TjenestekallLogger.format("policy-report: ${getCallId()}", report))
+
+        return decision
+    }
+}
+
+class TilgangskontrollKabac(
+    private val enforcementPoint: Kabac.PolicyEnforcementPoint,
+    private val noAccessHandler: NoAccessHandler
+) : Tilgangskontroll {
+    override fun check(policy: PolicyWithAttributes): TilgangskontrollInstance {
+        return Instance(enforcementPoint, noAccessHandler).check(policy)
     }
 }
