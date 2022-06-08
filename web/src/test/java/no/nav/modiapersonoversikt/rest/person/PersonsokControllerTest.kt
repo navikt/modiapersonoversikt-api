@@ -274,7 +274,7 @@ class PersonsokControllerTest {
 
         @Test
         internal fun `mapper adresse til pdl-format`() {
-            val kriterier = requestV2
+            val kriterier = requestV3
                 .copy(
                     adresse = "Gatenavn 1 A 0100"
                 )
@@ -285,7 +285,7 @@ class PersonsokControllerTest {
 
         @Test
         internal fun `mapper navn til pdl-format`() {
-            val kriterier = requestV2
+            val kriterier = requestV3
                 .copy(
                     navn = "Fornavn Etternavn"
                 )
@@ -311,7 +311,7 @@ class PersonsokControllerTest {
             null
         )
 
-        val requestV2 = PersonsokRequestV2(
+        val requestV3 = PersonsokRequestV3(
             null,
             null,
             null,

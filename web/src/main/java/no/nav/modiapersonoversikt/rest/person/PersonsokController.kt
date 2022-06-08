@@ -58,17 +58,17 @@ class PersonsokController @Autowired constructor(
     }
 
     @PostMapping("/v3")
-    fun sokPdlV2(@RequestBody personsokRequestV2: PersonsokRequestV2): List<PersonSokResponsDTO> {
+    fun sokPdlV3(@RequestBody personsokRequestV3: PersonsokRequestV3): List<PersonSokResponsDTO> {
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(auditDescriptor) {
                 handterFeil {
-                    if (!personsokRequestV2.kontonummer.isNullOrBlank()) {
-                        kontonummerSok(personsokRequestV2.kontonummer)
+                    if (!personsokRequestV3.kontonummer.isNullOrBlank()) {
+                        kontonummerSok(personsokRequestV3.kontonummer)
                             .mapNotNull(::lagPersonResponse)
                     } else {
                         pdlOppslagService
-                            .sokPerson(personsokRequestV2.tilPdlKriterier())
+                            .sokPerson(personsokRequestV3.tilPdlKriterier())
                             .mapNotNull(::lagPersonResponse)
                     }
                 }
@@ -403,7 +403,7 @@ fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): 
     )
 }
 
-data class PersonsokRequestV2(
+data class PersonsokRequestV3(
     val navn: String?,
     val kontonummer: String?,
     val utenlandskID: String?,
@@ -415,7 +415,7 @@ data class PersonsokRequestV2(
     val adresse: String?
 )
 
-fun PersonsokRequestV2.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
+fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
     val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
     val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
     val kjonn = when (this.kjonn) {
