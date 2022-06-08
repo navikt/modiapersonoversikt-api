@@ -1,12 +1,13 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.types.identer.AktorId
 import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
@@ -308,9 +309,9 @@ class RestOppgaveBehandlingServiceImpl(
                 erTilknyttetHenvendelse && harAktorId
             }
 
-        val aktorIdTilganger: Map<String?, DecisionEnums> = hentAktorIdTilgang(oppgaver)
+        val aktorIdTilganger: Map<String?, Decision.Type> = hentAktorIdTilgang(oppgaver)
         return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
-            .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
+            .filter { aktorIdTilganger[it.aktoerId] == Decision.Type.PERMIT }
             .fold(
                 transformSuccess = this::mapTilOppgave,
                 transformFailure = { it }
@@ -342,19 +343,19 @@ class RestOppgaveBehandlingServiceImpl(
         )
     }
 
-    private fun hentAktorIdTilgang(oppgaver: List<OppgaveJsonDTO>): Map<String?, DecisionEnums> {
+    private fun hentAktorIdTilgang(oppgaver: List<OppgaveJsonDTO>): Map<String?, Decision.Type> {
         val aktoerer = oppgaver.groupBy { it.aktoerId }
         return aktoerer
             .map { entry ->
                 val aktoerId = entry.key
                 val decision =
                     if (aktoerId.isNullOrEmpty()) {
-                        DecisionEnums.DENY
+                        Decision.Type.DENY
                     } else {
                         tilgangskontroll
-                            .check(Policies.tilgangTilBrukerMedAktorId.with(aktoerId))
+                            .check(Policies.tilgangTilBruker(AktorId(aktoerId)))
                             .getDecision()
-                            .value
+                            .type
                     }
                 Pair(aktoerId, decision)
             }

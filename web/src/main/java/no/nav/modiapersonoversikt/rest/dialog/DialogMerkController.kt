@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.Henvendelse
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
@@ -26,8 +26,8 @@ class DialogMerkController @Autowired constructor(
             AuditIdentifier.BEHANDLING_ID to request.behandlingsidListe.joinToString(", ")
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
+            .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
+            .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.behandlingsidListe.first()))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Feilsendt, *auditIdentifier)) {
                 dialogMerkApi.merkSomFeilsendt(request)
             }
@@ -40,8 +40,8 @@ class DialogMerkController @Autowired constructor(
             AuditIdentifier.BEHANDLING_ID to request.traadId
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.traadId))))
+            .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
+            .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.traadId))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Sladding, *auditIdentifier)) {
                 dialogMerkApi.sendTilSladding(request)
             }
@@ -55,8 +55,8 @@ class DialogMerkController @Autowired constructor(
             AuditIdentifier.OPPGAVE_ID to request.oppgaveId
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(request.fnr))
-            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.traadId))))
+            .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
+            .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.traadId))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Lukk, *auditIdentifier)) {
                 dialogMerkApi.lukkTraad(request)
             }
@@ -69,7 +69,7 @@ class DialogMerkController @Autowired constructor(
             AuditIdentifier.OPPGAVE_ID to request.oppgaveid
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(request.fnr))
+            .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
             .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, *auditIdentifier)) {
                 dialogMerkApi.avsluttGosysOppgave(request)
             }

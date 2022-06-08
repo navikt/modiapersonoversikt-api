@@ -61,7 +61,7 @@ constructor(
         @RequestParam("underkategori") underkategorikode: String?
     ): List<NorgDomain.Enhet> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Enhet.Foreslatte)) {
                 arbeidsfordeling.hentBehandlendeEnheter(
                     brukerIdent = Fnr.of(fnr),

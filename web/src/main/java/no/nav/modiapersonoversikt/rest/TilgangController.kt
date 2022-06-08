@@ -1,15 +1,14 @@
 package no.nav.modiapersonoversikt.rest
 
 import com.nimbusds.jwt.JWTClaimsSet
-import no.nav.modiapersonoversikt.consumer.abac.AbacClient
-import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
-import no.nav.modiapersonoversikt.consumer.abac.Decision
-import no.nav.modiapersonoversikt.consumer.abac.DenyCause
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.AbacPolicies
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -19,23 +18,25 @@ import java.util.*
 
 @RestController
 @RequestMapping("/rest/tilgang")
-class TilgangController @Autowired constructor(private val abacClient: AbacClient) {
+class TilgangController @Autowired constructor(private val tilgangskontroll: Tilgangskontroll) {
     val audit = Audit.describe<String>(Audit.Action.READ, AuditResources.Person.Tilgang) {
         listOf(AuditIdentifier.FNR to it)
     }
 
     @GetMapping("/{fnr}")
     fun harTilgang(@PathVariable("fnr") fnr: String): TilgangDTO {
-        return abacClient
-            .evaluate(AbacPolicies.tilgangTilBruker(fnr))
+        return tilgangskontroll
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .getDecision()
             .makeResponse()
             .logAudit(audit, fnr)
     }
 
     @GetMapping
     fun harTilgang(): TilgangDTO {
-        return abacClient
-            .evaluate(AbacPolicies.tilgangTilModia())
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .getDecision()
             .makeResponse()
     }
 
@@ -47,7 +48,7 @@ class TilgangController @Autowired constructor(private val abacClient: AbacClien
     }
 }
 
-class TilgangDTO(val harTilgang: Boolean, val ikkeTilgangArsak: DenyCause?)
+class TilgangDTO(val harTilgang: Boolean, val ikkeTilgangArsak: Decision.DenyCause?)
 class AuthIntropectionDTO(val expirationDate: Long) {
     companion object {
         val INVALID = AuthIntropectionDTO(-1)
@@ -69,10 +70,10 @@ internal fun JWTClaimsSet.getExpirationDate(): AuthIntropectionDTO {
     }
 }
 
-internal fun AbacResponse.makeResponse(): TilgangDTO {
-    if (this.getBiasedDecision(Decision.Deny) == Decision.Permit) {
-        return TilgangDTO(true, null)
+internal fun Decision.makeResponse(): TilgangDTO {
+    return when (val biased = this.withBias(Decision.Type.DENY)) {
+        is Decision.Permit -> TilgangDTO(true, null)
+        is Decision.Deny -> TilgangDTO(false, biased.cause)
+        is Decision.NotApplicable -> TilgangDTO(false, Decision.NO_APPLICABLE_POLICY_FOUND)
     }
-
-    return TilgangDTO(false, this.getCause())
 }

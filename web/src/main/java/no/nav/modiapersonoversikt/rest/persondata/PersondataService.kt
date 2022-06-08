@@ -7,7 +7,10 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
+import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode7Policy
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
@@ -36,7 +39,7 @@ class PersondataServiceImpl(
     private val norgApi: NorgApi,
     private val personV3: PersonV3,
     private val skjermedePersonerApi: SkjermedePersonerApi,
-    private val tilgangskontroll: Tilgangskontroll,
+    private val policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
     val persondataFletter = PersondataFletter(kodeverk)
@@ -159,8 +162,19 @@ class PersondataServiceImpl(
         ).toList()
     }
 
-    private fun hentTilganger() = PersondataService.Tilganger(
-        kode6 = tilgangskontroll.context().harSaksbehandlerRolle("0000-GA-Strengt_Fortrolig_Adresse"),
-        kode7 = tilgangskontroll.context().harSaksbehandlerRolle("0000-GA-Fortrolig_Adresse")
-    )
+    private fun hentTilganger(): PersondataService.Tilganger {
+        val ctx = policyEnforcementPoint.createEvaluationContext()
+        val tilgangKode6 = policyEnforcementPoint.evaluatePolicyWithContext(
+            ctx = ctx,
+            policy = TilgangTilBrukerMedKode6Policy
+        )
+        val tilgangKode7 = policyEnforcementPoint.evaluatePolicyWithContext(
+            ctx = ctx,
+            policy = TilgangTilBrukerMedKode7Policy
+        )
+        return PersondataService.Tilganger(
+            kode6 = tilgangKode6.type == Decision.Type.PERMIT,
+            kode7 = tilgangKode7.type == Decision.Type.PERMIT
+        )
+    }
 }

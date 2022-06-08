@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.saker
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -42,13 +43,11 @@ class SakerController @Autowired constructor(
     @GetMapping("/sakstema")
     fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet", required = false) enhet: String?): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
                 val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
                 val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
 
-                // TODO skal denne metoden ligge i tilgangskontrollService?
-                tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
                 saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
 
                 val resultat = ResultatWrapper(
@@ -68,7 +67,7 @@ class SakerController @Autowired constructor(
         @PathVariable("dokumentreferanse") dokumentreferanse: String
     ): ResponseEntity<Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, AuditResources.Person.Dokumenter, AuditIdentifier.FNR to fnr, AuditIdentifier.JOURNALPOST_ID to journalpostId, AuditIdentifier.DOKUMENT_REFERERANSE to dokumentreferanse)) {
                 val journalpostMetadata = hentDokumentMetadata(journalpostId, fnr)
                 val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(

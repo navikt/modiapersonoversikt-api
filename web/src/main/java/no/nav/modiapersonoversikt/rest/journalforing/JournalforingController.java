@@ -1,11 +1,12 @@
 package no.nav.modiapersonoversikt.rest.journalforing;
 
 import kotlin.Pair;
+import no.nav.common.types.identer.Fnr;
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.service.saker.Sak;
 import no.nav.modiapersonoversikt.service.saker.SakerService;
 import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.BehandlingsIdTilgangData;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person;
@@ -17,10 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static java.util.Arrays.asList;
 import static no.nav.modiapersonoversikt.rest.RestUtils.hentValgtEnhet;
-import static no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies.behandlingsIderTilhorerBruker;
-import static no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies.tilgangTilBruker;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.UPDATE;
 
@@ -43,15 +41,15 @@ public class JournalforingController {
     @GetMapping("/saker/")
     public SakerService.Resultat hentSaker(@PathVariable("fnr") String fnr) {
         return tilgangskontroll
-                .check(tilgangTilBruker.with(fnr))
+                .check(Policies.tilgangTilBruker(Fnr.of(fnr)))
                 .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () ->  journalforingApi.hentSaker(fnr));
     }
 
     @PostMapping("/{traadId}")
     public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody Sak sak, @RequestParam(value = "enhet", required = false) String enhet, HttpServletRequest request) {
         return tilgangskontroll
-                .check(tilgangTilBruker.with(fnr))
-                .check(behandlingsIderTilhorerBruker.with(new BehandlingsIdTilgangData(fnr, asList(traadId))))
+                .check(Policies.tilgangTilBruker(Fnr.of(fnr)))
+                .check(Policies.henvendelseTilhorerBruker(Fnr.of(fnr), traadId))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Journalfor, new Pair<>(AuditIdentifier.FNR, fnr), new Pair<>(AuditIdentifier.TRAAD_ID, traadId), new Pair<>(AuditIdentifier.SAK_ID, sak.saksId)), () -> {
                     String valgtEnhet = hentValgtEnhet(enhet, request);
                     try {

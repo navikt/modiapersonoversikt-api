@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.PleiepengerService
@@ -28,7 +29,7 @@ class YtelseController @Autowired constructor(
     @GetMapping("sykepenger/{fnr}")
     fun hentSykepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnr)) {
                 SykepengerUttrekk(sykepengerService).hent(fnr)
             }
@@ -37,7 +38,7 @@ class YtelseController @Autowired constructor(
     @GetMapping("foreldrepenger/{fnr}")
     fun hentForeldrepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnr)) {
                 ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
             }
@@ -46,7 +47,7 @@ class YtelseController @Autowired constructor(
     @GetMapping("pleiepenger/{fnr}")
     fun hentPleiepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnr)) {
                 PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
             }

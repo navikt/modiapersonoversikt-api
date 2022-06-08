@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
@@ -33,7 +34,7 @@ class KontaktinformasjonController @Autowired constructor(
     @GetMapping
     fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
                 val response = dkifExperiment.run(
                     control = {
