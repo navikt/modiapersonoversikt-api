@@ -57,6 +57,24 @@ class PersonsokController @Autowired constructor(
             }
     }
 
+    @PostMapping("/v3")
+    fun sokPdlV3(@RequestBody personsokRequestV3: PersonsokRequestV3): List<PersonSokResponsDTO> {
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(auditDescriptor) {
+                handterFeil {
+                    if (!personsokRequestV3.kontonummer.isNullOrBlank()) {
+                        kontonummerSok(personsokRequestV3.kontonummer)
+                            .mapNotNull(::lagPersonResponse)
+                    } else {
+                        pdlOppslagService
+                            .sokPerson(personsokRequestV3.tilPdlKriterier())
+                            .mapNotNull(::lagPersonResponse)
+                    }
+                }
+            }
+    }
+
     private fun kontonummerSok(kontonummer: String): List<Person> {
         val request = FinnPersonRequest()
             .apply {
@@ -378,6 +396,37 @@ fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): 
     return listOf(
         PdlKriterie(PdlFelt.NAVN, navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
         PdlKriterie(PdlFelt.ADRESSE, adresse, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+        PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE)
+    )
+}
+
+data class PersonsokRequestV3(
+    val navn: String?,
+    val kontonummer: String?,
+    val utenlandskID: String?,
+    val alderFra: Int?,
+    val alderTil: Int?,
+    val fodselsdatoFra: String?,
+    val fodselsdatoTil: String?,
+    val kjonn: String?,
+    val adresse: String?
+)
+
+fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
+    val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
+    val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
+    val kjonn = when (this.kjonn) {
+        "M" -> "MANN"
+        "K" -> "KVINNE"
+        else -> null
+    }
+
+    return listOf(
+        PdlKriterie(PdlFelt.NAVN, this.navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+        PdlKriterie(PdlFelt.ADRESSE, this.adresse, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
         PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
         PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
         PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
