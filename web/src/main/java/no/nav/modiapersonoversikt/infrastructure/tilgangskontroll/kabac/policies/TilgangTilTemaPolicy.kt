@@ -4,7 +4,8 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersTemaPip
 
 internal object TilgangTilTemaPolicy : Kabac.Policy {
@@ -19,7 +20,7 @@ internal object TilgangTilTemaPolicy : Kabac.Policy {
         return if (veilederTema.contains(tema)) {
             Decision.Permit()
         } else {
-            Decision.Deny("Veileder har ikke tilgang til $tema")
+            Decision.Deny("Veileder har ikke tilgang til $tema", DenyCauseCode.UNKNOWN)
         }
     }
 }

@@ -16,7 +16,7 @@ internal class CombiningAlgorithmTest {
 
     companion object {
         private val permitPolicy = createTestPolicy { Decision.Permit() }.named("PERMIT")
-        private val denyPolicy = createTestPolicy { Decision.Deny("Deny") }.named("DENY")
+        private val denyPolicy = createTestPolicy { Decision.Deny("Deny", Decision.NO_APPLICABLE_POLICY_FOUND) }.named("DENY")
         private val notApplicablePolicy = createTestPolicy { Decision.NotApplicable("No applicable") }.named("NOT_APPLICABLE")
 
         private val permitOverride = CombiningAlgorithm.permitOverride.named("PermitOverride")

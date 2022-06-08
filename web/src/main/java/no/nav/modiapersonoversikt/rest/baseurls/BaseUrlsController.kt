@@ -16,9 +16,11 @@ constructor(private val tilgangskontroll: Tilgangskontroll) {
 
     @GetMapping
     fun hent(): Map<String, Any?> {
-        return tilgangskontroll.check(Policies.tilgangTilModia).get(skipAuditLog()) {
-            mapOf("baseUrls" to getBaseUrls())
-        }
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(skipAuditLog()) {
+                mapOf("baseUrls" to getBaseUrls())
+            }
     }
 
     private fun getBaseUrls(): List<BaseUrl> {

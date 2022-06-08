@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 
@@ -18,7 +19,7 @@ internal object TilgangTilModiaPolicy : Kabac.Policy {
         return if (modiaRoller.hasIntersection(veilederRoller)) {
             Decision.Permit()
         } else {
-            Decision.Deny("Veileder har ikke tilgang til modia")
+            Decision.Deny("Veileder har ikke tilgang til modia", DenyCauseCode.AD_ROLLE)
         }
     }
 }

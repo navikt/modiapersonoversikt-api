@@ -39,7 +39,7 @@ class OppfolgingController @Autowired constructor(
     @GetMapping
     fun hent(@PathVariable("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fodselsnummer))
+            .check(Policies.tilgangTilBruker(Fnr(fodselsnummer)))
             .get(Audit.describe(READ, Person.Oppfolging, AuditIdentifier.FNR to fodselsnummer)) {
                 val oppfolging = service.hentOppfolgingsinfo(Fnr(fodselsnummer))
 
@@ -58,7 +58,7 @@ class OppfolgingController @Autowired constructor(
         @RequestParam("sluttDato") slutt: String?
     ): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fodselsnummer))
+            .check(Policies.tilgangTilBruker(Fnr(fodselsnummer)))
             .get(Audit.describe(READ, Person.YtelserOgKontrakter, AuditIdentifier.FNR to fodselsnummer)) {
                 val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(
                     lagOppfolgingskontraktRequest(fodselsnummer, start, slutt)

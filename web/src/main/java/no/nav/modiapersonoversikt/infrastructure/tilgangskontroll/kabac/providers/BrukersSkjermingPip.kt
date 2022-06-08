@@ -4,7 +4,7 @@ import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerAp
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 
 class BrukersSkjermingPip(private val skjermedePersonerApi: SkjermedePersonerApi) : Kabac.PolicyInformationPoint<Boolean> {
     override val key = Companion.key

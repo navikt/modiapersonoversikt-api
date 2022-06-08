@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersDiskresjonskodePip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
@@ -25,7 +26,7 @@ object TilgangTilBrukerMedKode6Policy : Kabac.Policy {
         val diskresjonskode = ctx.getValue(BrukersDiskresjonskodePip)
 
         return if (diskresjonskode == BrukersDiskresjonskodePip.Kode.KODE6) {
-            Decision.Deny("Veileder har ikke tilgang til kode6")
+            Decision.Deny("Veileder har ikke tilgang til kode6", DenyCauseCode.FP1_KODE6)
         } else {
             Decision.NotApplicable()
         }

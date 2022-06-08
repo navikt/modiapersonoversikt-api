@@ -8,7 +8,7 @@ import no.nav.common.client.nom.NomClient
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.NavIdentPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersTemaPip
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl

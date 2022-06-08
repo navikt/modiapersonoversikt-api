@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac
+package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.EnhetId
