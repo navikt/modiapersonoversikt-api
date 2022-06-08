@@ -37,9 +37,5 @@ public class Main {
         Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
         EnvironmentUtils.setProperty(LDAP.USERNAME, ldapUser.username, PUBLIC);
         EnvironmentUtils.setProperty(LDAP.PASSWORD, ldapUser.password, SECRET);
-
-        Credentials gosysUser = NaisUtils.getCredentials("gosys_user");
-        EnvironmentUtils.setProperty("SRV_KJERNEINFO_TJENESTEBUSS_USERNAME", gosysUser.username, PUBLIC);
-        EnvironmentUtils.setProperty("SRV_KJERNEINFO_TJENESTEBUSS_PASSWORD", gosysUser.password, SECRET);
     }
 }

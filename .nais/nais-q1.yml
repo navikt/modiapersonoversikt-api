@@ -46,8 +46,6 @@ spec:
         mountPath: /var/run/secrets/nais.io/service_user
       - kvPath: /serviceuser/data/dev/srvssolinux
         mountPath: /var/run/secrets/nais.io/srvssolinux
-      - kvPath: /serviceuser/data/dev/srvgosys
-        mountPath: /var/run/secrets/nais.io/gosys_user
       - kvPath: /apikey/appdynamics/dev
         mountPath: /var/run/secrets/nais.io/vault
   leaderElection: true
@@ -108,8 +106,6 @@ spec:
       value: "https://app-q1.adeo.no/veilarbportefoljeflatefs"
     - name: SERVER_AAREG_URL
       value: "https://modapp-q1.adeo.no/aareg-web"
-    - name: TJENESTEBUSS_URL
-      value: "https://tjenestebuss-q1.adeo.no/"
     - name: TJENESTER_URL
       value: "https://tjenester-q1.nav.no"
     - name: UNLEASH_API_URL
