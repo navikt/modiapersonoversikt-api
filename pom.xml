@@ -230,11 +230,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>arena-arbeid-og-aktivitet</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>arenasakvedtakservice</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>

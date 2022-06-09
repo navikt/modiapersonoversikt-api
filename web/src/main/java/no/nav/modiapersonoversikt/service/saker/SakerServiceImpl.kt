@@ -7,10 +7,6 @@ import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
-import no.nav.modiapersonoversikt.utils.UnleashProxySwitcher
-import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import javax.annotation.PostConstruct
@@ -26,13 +22,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var safService: SafService
 
     @Autowired
-    private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
-
-    @Autowired
     private lateinit var arenaSakVedtakService: SakVedtakPortType
-
-    @Autowired
-    private lateinit var unleashService: UnleashService
 
     private lateinit var safSaker: SafSaker
     private lateinit var arenaSaker: SakerKilde
@@ -43,12 +33,7 @@ class SakerServiceImpl : SakerService {
     @PostConstruct
     fun setup() {
         safSaker = SafSaker(safService)
-        arenaSaker = UnleashProxySwitcher.createSwitcher(
-            featureToggle = Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE,
-            unleashService = unleashService,
-            ifEnabled = ArenaSakerV2(arenaSakVedtakService),
-            ifDisabled = ArenaSaker(arbeidOgAktivitet)
-        )
+        arenaSaker = ArenaSakerV2(arenaSakVedtakService)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
         oppfolgingsSaker = OppfolgingsSaker()

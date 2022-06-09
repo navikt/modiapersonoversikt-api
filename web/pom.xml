@@ -255,10 +255,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>arena-arbeid-og-aktivitet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>arenasakvedtakservice</artifactId>
         </dependency>
         <dependency>
