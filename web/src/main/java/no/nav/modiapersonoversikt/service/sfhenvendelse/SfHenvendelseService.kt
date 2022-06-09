@@ -265,7 +265,7 @@ class SfHenvendelseServiceImpl(
     }
 
     enum class ApiFeilType {
-        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD, CHAT, DUPLIKAT_JOURNALPOST
+        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD, DUPLIKAT_JOURNALPOST
     }
 
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
@@ -307,14 +307,10 @@ class SfHenvendelseServiceImpl(
             if (henvendelse.kasseringsDato?.isAfter(now) == true && meldinger.any { it.fritekst == null }) {
                 feil.add(ApiFeil(ApiFeilType.FRITEKST, henvendelse.kjedeId))
             }
-            if (henvendelse.henvendelseType == HenvendelseDTO.HenvendelseType.CHAT) {
-                feil.add(ApiFeil(ApiFeilType.CHAT, henvendelse.kjedeId))
-            }
         }
         val kanJobbesMedIModia = henvendelser
             .filter { it.gjeldendeTemagruppe != null }
             .filter { it.meldinger.isNotNullOrEmpty() }
-            .filter { it.henvendelseType != HenvendelseDTO.HenvendelseType.CHAT }
 
         if (feil.isNotEmpty()) {
             val grupperteFeil = feil
