@@ -13,8 +13,6 @@ import static no.nav.common.utils.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.common.utils.EnvironmentUtils.Type.SECRET;
 import static no.nav.modiapersonoversikt.config.AppConstants.SYSTEMUSER_PASSWORD_PROPERTY;
 import static no.nav.modiapersonoversikt.config.AppConstants.SYSTEMUSER_USERNAME_PROPERTY;
-import static no.nav.modiapersonoversikt.consumer.arena.arbeidogaktivitet.ArbeidOgAktivitetConfig.KJERNEINFO_TJENESTEBUSS_PASSWORD;
-import static no.nav.modiapersonoversikt.consumer.arena.arbeidogaktivitet.ArbeidOgAktivitetConfig.KJERNEINFO_TJENESTEBUSS_USERNAME;
 
 @SpringBootApplication
 public class Main {
@@ -39,9 +37,5 @@ public class Main {
         Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
         EnvironmentUtils.setProperty(LDAP.USERNAME, ldapUser.username, PUBLIC);
         EnvironmentUtils.setProperty(LDAP.PASSWORD, ldapUser.password, SECRET);
-
-        Credentials gosysUser = NaisUtils.getCredentials("gosys_user");
-        EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_USERNAME, gosysUser.username, PUBLIC);
-        EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_PASSWORD, gosysUser.password, SECRET);
     }
 }

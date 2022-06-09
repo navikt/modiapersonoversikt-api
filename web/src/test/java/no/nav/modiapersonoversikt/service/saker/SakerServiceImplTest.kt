@@ -19,15 +19,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saker.Sak.*
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilFagsystemNavn
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilTemaNavn
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
-import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
-import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
-import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode
-import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
@@ -52,13 +44,7 @@ class SakerServiceImplTest {
     private lateinit var safService: SafService
 
     @MockK
-    private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
-
-    @MockK
     private lateinit var arenaSakVedtakService: SakVedtakPortType
-
-    @MockK
-    private lateinit var unleashService: UnleashService
 
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
@@ -68,7 +54,6 @@ class SakerServiceImplTest {
         EnvironmentUtils.setProperty("BISYS_BASEURL", "https://bisys-url", EnvironmentUtils.Type.PUBLIC)
         MockKAnnotations.init(this, relaxUnitFun = true)
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
-        every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { kodeverk.hentKodeverk<String, String>(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
 
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
@@ -77,22 +62,6 @@ class SakerServiceImplTest {
     @Test
     fun `transformerer response til saksliste`() {
         every { safService.hentSaker(any()) } returns createSaksliste()
-        every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
-        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns false
-
-        val saksliste: List<Sak> = sakerService.hentSaker(FNR).saker
-
-        assertThat(saksliste[0].saksId, `is`(SakId_1))
-        assertThat(saksliste[3].fagsystemKode, `is`(""))
-        assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
-        assertThat(saksliste[saksliste.size - 1].temaKode, `is`("BID"))
-        assertThat(saksliste[saksliste.size - 1].fagsystemKode, `is`("BISYS"))
-    }
-
-    @Test
-    fun `transformerer response til saksliste med unleash true`() {
-        every { safService.hentSaker(any()) } returns createSaksliste()
-        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns true
 
         val saksliste: List<Sak> = sakerService.hentSaker(FNR).saker
 
@@ -107,18 +76,6 @@ class SakerServiceImplTest {
     @DisplayName("oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak")
     fun `oppretter ikke generell oppfolgingssak`() {
         every { safService.hentSaker(any()) } returns createOppfolgingSaksliste()
-        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns false
-        val saker = sakerService.hentSaker(FNR).saker.stream()
-            .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
-        assertThat(saker.size, `is`(1))
-        assertThat(saker[0].sakstype, not(`is`(SAKSTYPE_GENERELL)))
-    }
-
-    @Test
-    @DisplayName("oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak med unleash true")
-    fun `oppretter ikke generell oppfolgingssak med unleash true`() {
-        every { safService.hentSaker(any()) } returns createOppfolgingSaksliste()
-        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns true
         val saker = sakerService.hentSaker(FNR).saker.stream()
             .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
@@ -128,17 +85,6 @@ class SakerServiceImplTest {
     @Test
     @DisplayName("oppretter ikke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak")
     fun `oppretter ikke generell oppfolgingssak dersom denne finnes allerede`() {
-        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns false
-        val saker =
-            sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
-        assertThat(saker.size, `is`(1))
-        assertThat(saker[0].sakstype, `is`(SAKSTYPE_GENERELL))
-    }
-
-    @Test
-    @DisplayName("oppretter ikke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak med unleash true")
-    fun `oppretter ikke generell oppfolgingssak dersom denne finnes allerede med unleash true`() {
-        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns true
         val saker =
             sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
@@ -148,29 +94,6 @@ class SakerServiceImplTest {
     @Test
     fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i sak`() {
         every { safService.hentSaker(any()) } returns GraphQLResponse()
-        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns false
-        val saksId = "123456"
-        val dato = LocalDate.now().minusDays(1)
-        every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse().withSakListe(
-            no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak()
-                .withFagomradeKode(Fagomradekode().withKode(TEMAKODE_OPPFOLGING))
-                .withSaksId(saksId)
-                .withEndringsInfo(EndringsInfo().withOpprettetDato(dato))
-                .withSakstypeKode(Sakstypekode().withKode("ARBEID"))
-        )
-        val saker =
-            sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
-        assertThat(saker.size, `is`(1))
-        assertThat(saker[0].saksIdVisning, `is`(saksId))
-        assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
-        assertThat(saker[0].fagsystemKode, `is`(FAGSYSTEMKODE_ARENA))
-        assertThat(saker[0].finnesIGsak, `is`(false))
-    }
-
-    @Test
-    fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i sak med unleash true`() {
-        every { safService.hentSaker(any()) } returns GraphQLResponse()
-        every { unleashService.isEnabled(Feature.BRUK_ARENA_SAK_VEDTAK_SERVICE) } returns true
         val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
         val xmlDato = DatatypeFactory.newInstance().newXMLGregorianCalendar(dato.toString())
