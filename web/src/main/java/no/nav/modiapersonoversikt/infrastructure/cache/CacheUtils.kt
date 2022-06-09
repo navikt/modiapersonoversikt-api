@@ -13,4 +13,7 @@ object CacheUtils {
         .expireAfterWrite(expireAfterWrite)
         .maximumSize(maximumSize)
         .build()
+
+    @JvmStatic
+    fun <KEY, VALUE> createDefaultCache() = createCache<KEY, VALUE>()
 }

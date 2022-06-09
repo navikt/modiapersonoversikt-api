@@ -11,6 +11,7 @@
     "linje3" : null,
     "sistEndret" : null
   } ] ],
+  "digitalKontaktinformasjon" : null,
   "dodsdato" : [ "java.util.ArrayList", [ ] ],
   "fnr" : "00000000000",
   "fodselsdato" : [ "java.util.ArrayList", [ ] ],

@@ -61,11 +61,18 @@ class PersondataServiceImpl(
         val tilganger = PersondataResult
             .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
             .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
+        val kontaktinformasjonTredjepartsperson = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
+            persondata
+                .findKontaktinformasjonTredjepartspersoner()
+                .associateWith { dkif.hentDigitalKontaktinformasjon(it) }
+                .mapValues { tredjepartspersonMapper.tilKontaktinformasjonTredjepartsperson(it.value) }
+        }
+        val kontaktinformasjonTredjepartspersonMap = kontaktinformasjonTredjepartsperson.getOrElse(emptyMap())
         val tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
             persondata
                 .findTredjepartsPersoner()
                 .let { pdl.hentTredjepartspersondata(it) }
-                .mapNotNull { tredjepartspersonMapper.lagTredjepartsperson(it.ident, it.person, tilganger) }
+                .mapNotNull { tredjepartspersonMapper.lagTredjepartsperson(it.ident, it.person, tilganger, kontaktinformasjonTredjepartspersonMap[it.ident]) }
                 .associateBy { it.fnr }
         }
 
@@ -81,7 +88,8 @@ class PersondataServiceImpl(
                 navEnhet,
                 dkifData,
                 bankkonto,
-                tredjepartsPerson
+                tredjepartsPerson,
+                kontaktinformasjonTredjepartsperson
             )
         )
     }
@@ -101,7 +109,8 @@ class PersondataServiceImpl(
             tredjepartspersonMapper.lagTredjepartsperson(
                 ident = it.ident,
                 person = it.person,
-                tilganger = PersondataService.Tilganger(false, false)
+                tilganger = PersondataService.Tilganger(false, false),
+                kontaktinformasjonTredjepartsperson = null
             )
         }.firstOrNull()?.adressebeskyttelse ?: emptyList()
     }
@@ -159,6 +168,12 @@ class PersondataServiceImpl(
             *this.sivilstand.mapNotNull { it.relatertVedSivilstand }.toTypedArray(),
             *this.forelderBarnRelasjon.mapNotNull { it.relatertPersonsIdent }.toTypedArray(),
             *this.kontaktinformasjonForDoedsbo.mapNotNull { it.personSomKontakt?.identifikasjonsnummer }.toTypedArray()
+        ).toList()
+    }
+
+    private fun HentPersondata.Person.findKontaktinformasjonTredjepartspersoner(): List<String> {
+        return setOf(
+            *this.fullmakt.map { it.motpartsPersonident }.toTypedArray(),
         ).toList()
     }
 

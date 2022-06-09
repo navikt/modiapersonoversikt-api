@@ -173,6 +173,10 @@
       }
     } ] ],
     "fullmakt" : [ "java.util.ArrayList", [ {
+      "digitalKontaktinformasjonTredjepartsperson" : {
+        "mobiltelefonnummer" : "90909090",
+        "reservasjon" : "false"
+      },
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2018-01-03",
         "gyldigTilOgMed" : "2018-10-03"
