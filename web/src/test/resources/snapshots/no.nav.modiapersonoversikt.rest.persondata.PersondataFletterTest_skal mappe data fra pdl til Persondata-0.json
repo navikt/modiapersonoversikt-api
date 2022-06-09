@@ -135,6 +135,23 @@
         "mellomnavn" : null
       } ] ],
       "rolle" : "BARN"
+    }, {
+      "adressebeskyttelse" : [ "kotlin.collections.EmptyList", [ ] ],
+      "alder" : 21,
+      "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
+      "fodselsdato" : [ "java.util.Collections$SingletonList", [ "2000-01-01" ] ],
+      "harSammeAdresse" : false,
+      "ident" : null,
+      "kjonn" : [ "java.util.Collections$SingletonList", [ {
+        "beskrivelse" : "Mann",
+        "kode" : "M"
+      } ] ],
+      "navn" : [ "java.util.Collections$SingletonList", [ {
+        "etternavn" : "Fra utlandet",
+        "fornavn" : "Tredjepart",
+        "mellomnavn" : "Relasjon"
+      } ] ],
+      "rolle" : "MEDMOR"
     } ] ],
     "foreldreansvar" : [ "java.util.ArrayList", [ {
       "ansvar" : "felles",

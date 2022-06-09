@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.utbetaling
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -25,7 +26,7 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
         @RequestParam("sluttDato") slutt: String?
     ): ResponseEntity<out Any> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, AuditIdentifier.FNR to fnr)) {
                 val startDato = lagRiktigDato(start)
                 val sluttDato = lagRiktigDato(slutt)

@@ -74,8 +74,6 @@ spec:
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
       value: "https://sts-q0.preprod.local/SecurityTokenServiceProvider/"
-    - name: ABAC_PDP_ENDPOINT_URL
-      value: "https://abac-modia-q0.dev.intern.nav.no/application/authorize"
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app-q0.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: FELLES_KODEVERK_URL
@@ -174,3 +172,5 @@ spec:
       value: "dev-gcp"
     - name: SKJERMEDE_PERSONER_PIP_URL
       value: "https://skjermede-personer-pip.dev.intern.nav.no"
+    - name: ARENA_SAK_VEDTAK_URL
+      value: "https://arena-q0.adeo.no/arena_ws/services/ArenaSakVedtakService"

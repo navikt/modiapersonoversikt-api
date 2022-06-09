@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import java.time.LocalDate
-import java.util.*
 
 private const val FNR = "10108000398"
 private const val EPOST = "test@testesen.com"

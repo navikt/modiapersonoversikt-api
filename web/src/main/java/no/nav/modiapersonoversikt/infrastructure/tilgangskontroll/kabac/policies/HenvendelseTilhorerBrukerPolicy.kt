@@ -4,7 +4,8 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.HenvendelseEierPip
 
 internal object HenvendelseTilhorerBrukerPolicy : Kabac.Policy {
@@ -18,7 +19,7 @@ internal object HenvendelseTilhorerBrukerPolicy : Kabac.Policy {
         return if (fnr == eier) {
             Decision.Permit()
         } else {
-            Decision.Deny("Bruker eier ikke henvendelsen")
+            Decision.Deny("Bruker eier ikke henvendelsen", DenyCauseCode.UNKNOWN)
         }
     }
 }

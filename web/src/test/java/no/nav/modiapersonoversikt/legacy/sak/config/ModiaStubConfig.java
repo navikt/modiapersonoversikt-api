@@ -1,8 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.sak.config;
 
-import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService;
@@ -43,7 +42,7 @@ public class ModiaStubConfig {
 
     @Bean
     public Tilgangskontroll tilgangskontroll() {
-        return TilgangskontrollMock.get();
+        return mock(Tilgangskontroll.class);
     }
 
     @Bean

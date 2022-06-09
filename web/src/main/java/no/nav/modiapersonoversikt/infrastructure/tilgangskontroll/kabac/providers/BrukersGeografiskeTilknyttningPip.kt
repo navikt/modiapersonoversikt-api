@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provide
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.CommonAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 
 class BrukersGeografiskeTilknyttningPip(private val pdl: PdlOppslagService) : Kabac.PolicyInformationPoint<String?> {

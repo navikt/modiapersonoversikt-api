@@ -37,11 +37,11 @@ internal class KabacTest {
 
         val decision: Decision = kabac.evaluatePolicy(
             policy = createTestPolicy { ctx ->
-                Decision.Deny(ctx.getValue(DummyProvider))
+                Decision.Deny(ctx.getValue(DummyProvider), Decision.NO_APPLICABLE_POLICY_FOUND)
             }
         )
 
-        assertThat(decision).isEqualTo(Decision.Deny("dummy value"))
+        assertThat(decision).isEqualTo(Decision.Deny("dummy value", Decision.NO_APPLICABLE_POLICY_FOUND))
     }
 
     @Test
@@ -51,7 +51,7 @@ internal class KabacTest {
         val evaluation = ThrowingCallable {
             kabac.evaluatePolicy(
                 policy = createTestPolicy { ctx ->
-                    Decision.Deny(ctx.getValue(DummyProvider))
+                    Decision.Deny(ctx.getValue(DummyProvider), Decision.NO_APPLICABLE_POLICY_FOUND)
                 }
             )
         }
@@ -68,11 +68,11 @@ internal class KabacTest {
         val decision: Decision = kabac.evaluatePolicy(
             policy = createTestPolicy { ctx ->
                 val value: Int = ctx.getValue(DummyDependentProvider)
-                Decision.Deny("Length of string was: $value")
+                Decision.Deny("Length of string was: $value", Decision.NO_APPLICABLE_POLICY_FOUND)
             }
         )
 
-        assertThat(decision).isEqualTo(Decision.Deny("Length of string was: 11"))
+        assertThat(decision).isEqualTo(Decision.Deny("Length of string was: 11", Decision.NO_APPLICABLE_POLICY_FOUND))
     }
 
     @Test
@@ -85,11 +85,11 @@ internal class KabacTest {
             ),
             policy = createTestPolicy { ctx ->
                 val value: Int = ctx.getValue(DummyDependentProvider)
-                Decision.Deny("Length of string was: $value")
+                Decision.Deny("Length of string was: $value", Decision.NO_APPLICABLE_POLICY_FOUND)
             }
         )
 
-        assertThat(decision).isEqualTo(Decision.Deny("Length of string was: 22"))
+        assertThat(decision).isEqualTo(Decision.Deny("Length of string was: 22", Decision.NO_APPLICABLE_POLICY_FOUND))
     }
 
     @Test
@@ -102,11 +102,11 @@ internal class KabacTest {
             ),
             policy = createTestPolicy { ctx ->
                 val value: Int = ctx.getValue(DummyDependentProvider)
-                Decision.Deny("Length of string was: $value")
+                Decision.Deny("Length of string was: $value", Decision.NO_APPLICABLE_POLICY_FOUND)
             }
         )
 
-        assertThat(decision).isEqualTo(Decision.Deny("Length of string was: 22"))
+        assertThat(decision).isEqualTo(Decision.Deny("Length of string was: 22", Decision.NO_APPLICABLE_POLICY_FOUND))
     }
 
     @Test
@@ -116,7 +116,7 @@ internal class KabacTest {
         val evaluation = ThrowingCallable {
             kabac.evaluatePolicy(
                 policy = createTestPolicy { ctx ->
-                    Decision.Deny(ctx.getValue(ErrorThrowingProvider))
+                    Decision.Deny(ctx.getValue(ErrorThrowingProvider), Decision.NO_APPLICABLE_POLICY_FOUND)
                 }
             )
         }
@@ -150,7 +150,7 @@ internal class KabacTest {
             }
         )
 
-        assertThat(decision).isEqualTo(Decision.Deny("No applicable policy found"))
+        assertThat(decision).isEqualTo(Decision.Deny("No applicable policy found", Decision.NO_APPLICABLE_POLICY_FOUND))
     }
 
     @Test
@@ -167,11 +167,11 @@ internal class KabacTest {
         val decision = kabac.evaluatePolicy(
             attributes = listOf(AttributeValue(DummyProvider, "overridden")),
             policy = createTestPolicy { ctx ->
-                Decision.Deny(ctx.getValue(DummyProvider))
+                Decision.Deny(ctx.getValue(DummyProvider), Decision.NO_APPLICABLE_POLICY_FOUND)
             }
         )
 
-        assertThat(decision).isEqualTo(Decision.Deny("overridden"))
+        assertThat(decision).isEqualTo(Decision.Deny("overridden", Decision.NO_APPLICABLE_POLICY_FOUND))
     }
 
     private fun createPEP(vararg pips: Kabac.PolicyInformationPoint<*>): Kabac.PolicyEnforcementPoint {

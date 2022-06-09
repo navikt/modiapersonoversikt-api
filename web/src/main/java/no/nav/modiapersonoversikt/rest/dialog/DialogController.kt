@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -24,7 +25,7 @@ class DialogController @Autowired constructor(
         @RequestParam(value = "enhet", required = false) enhet: String?
     ): List<TraadDTO> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 dialogapi.hentMeldinger(request, fnr, enhet)
             }
@@ -37,7 +38,7 @@ class DialogController @Autowired constructor(
         @RequestBody referatRequest: SendReferatRequest
     ): TraadDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 dialogapi.sendMelding(request, fnr, referatRequest)
             }
@@ -50,7 +51,7 @@ class DialogController @Autowired constructor(
         @RequestBody sporsmalsRequest: SendSporsmalRequest
     ): TraadDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 dialogapi.sendSporsmal(request, fnr, sporsmalsRequest)
             }
@@ -63,7 +64,7 @@ class DialogController @Autowired constructor(
         @RequestBody infomeldingRequest: InfomeldingRequest
     ): TraadDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 dialogapi.sendInfomelding(request, fnr, infomeldingRequest)
             }
@@ -81,7 +82,7 @@ class DialogController @Autowired constructor(
             AuditIdentifier.TRAAD_ID to opprettHenvendelseRequest.traadId
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
                 dialogapi.startFortsettDialog(request, fnr, ignorerConflict, opprettHenvendelseRequest)
             }
@@ -99,7 +100,7 @@ class DialogController @Autowired constructor(
             AuditIdentifier.OPPGAVE_ID to fortsettDialogRequest.oppgaveId
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
                 dialogapi.sendFortsettDialog(request, fnr, fortsettDialogRequest)
             }
@@ -118,7 +119,7 @@ class DialogController @Autowired constructor(
             }
         )
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, *auditIdentifier)) {
                 dialogapi.slaaSammenTraader(request, fnr, slaaSammenRequest)
             }

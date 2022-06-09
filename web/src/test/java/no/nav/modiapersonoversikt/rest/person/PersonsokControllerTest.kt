@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.math.BigInteger
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneId
+import java.time.*
 import javax.xml.datatype.DatatypeFactory
 
 class PersonsokControllerTest {
@@ -274,12 +272,46 @@ class PersonsokControllerTest {
             assertThat(ukjent).contains(PdlKriterie(PdlFelt.KJONN, null, searchHistorical = PdlSokeOmfang.GJELDENDE))
         }
 
+        @Test
+        internal fun `mapper adresse til pdl-format`() {
+            val kriterier = requestV3
+                .copy(
+                    adresse = "Gatenavn 1 A 0100"
+                )
+                .tilPdlKriterier(clock)
+
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.ADRESSE, "Gatenavn 1 A 0100", searchHistorical = PdlSokeOmfang.GJELDENDE))
+        }
+
+        @Test
+        internal fun `mapper navn til pdl-format`() {
+            val kriterier = requestV3
+                .copy(
+                    navn = "Fornavn Etternavn"
+                )
+                .tilPdlKriterier(clock)
+
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
+        }
+
         val request = PersonsokRequest(
             null,
             null,
             null,
             null,
             null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        val requestV3 = PersonsokRequestV3(
             null,
             null,
             null,
