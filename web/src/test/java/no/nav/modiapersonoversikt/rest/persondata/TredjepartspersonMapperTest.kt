@@ -36,21 +36,24 @@ internal class TredjepartspersonMapperTest {
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
-                person = person
+                person = person,
+                kontaktinformasjonTredjepartsperson = null
             )
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
-                person = person.copy(bostedsadresse = vegadresse())
+                person = person.copy(bostedsadresse = vegadresse()),
+                kontaktinformasjonTredjepartsperson = null
             )
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
-                person = person.copy(bostedsadresse = matrikkel())
+                person = person.copy(bostedsadresse = matrikkel()),
+                kontaktinformasjonTredjepartsperson = null
             )
         )
     }
@@ -65,7 +68,8 @@ internal class TredjepartspersonMapperTest {
                 person = gittPerson(
                     adressebeskyttelse = AdressebeskyttelseGradering.FORTROLIG,
                     bosted = ukjentBosted("Ett sted i Aremark")
-                )
+                ),
+                kontaktinformasjonTredjepartsperson = null
             )
         )
         snapshot.assertMatches(
@@ -75,7 +79,8 @@ internal class TredjepartspersonMapperTest {
                 person = gittPerson(
                     adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG,
                     bosted = ukjentBosted("Ett sted i Aremark")
-                )
+                ),
+                kontaktinformasjonTredjepartsperson = null
             )
         )
         snapshot.assertMatches(
@@ -85,8 +90,16 @@ internal class TredjepartspersonMapperTest {
                 person = gittPerson(
                     adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
                     bosted = ukjentBosted("Ett sted i Aremark")
-                )
+                ),
+                kontaktinformasjonTredjepartsperson = null
             )
+        )
+    }
+
+    @Test
+    fun `skal mappe kontaktinformasjon for tredjepartsperson`() {
+        snapshot.assertMatches(
+            mapper.tilKontaktinformasjonTredjepartsperson(digitalKontaktinformasjon)
         )
     }
 

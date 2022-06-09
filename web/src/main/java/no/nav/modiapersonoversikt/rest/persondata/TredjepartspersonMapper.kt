@@ -1,16 +1,18 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import java.time.LocalDate
 import java.time.Period
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
-class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
+class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
     fun lagTredjepartsperson(
         ident: String,
         person: HentTredjepartspersondata.Person?,
-        tilganger: PersondataService.Tilganger
+        tilganger: PersondataService.Tilganger,
+        kontaktinformasjonTredjepartsperson: Persondata.DigitalKontaktinformasjonTredjepartsperson?
     ): Persondata.TredjepartsPerson? {
         if (person == null) return null
         val fodselsdato = person.foedsel.mapNotNull { it.foedselsdato?.value }
@@ -41,7 +43,15 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             },
-            dodsdato = person.doedsfall.mapNotNull { it.doedsdato?.value }
+            dodsdato = person.doedsfall.mapNotNull { it.doedsdato?.value },
+            digitalKontaktinformasjon = kontaktinformasjonTredjepartsperson
+        )
+    }
+
+    fun tilKontaktinformasjonTredjepartsperson(krrInfo: Dkif.DigitalKontaktinformasjon): Persondata.DigitalKontaktinformasjonTredjepartsperson {
+        return Persondata.DigitalKontaktinformasjonTredjepartsperson(
+            mobiltelefonnummer = krrInfo.mobiltelefonnummer?.value,
+            reservasjon = krrInfo.reservasjon
         )
     }
 

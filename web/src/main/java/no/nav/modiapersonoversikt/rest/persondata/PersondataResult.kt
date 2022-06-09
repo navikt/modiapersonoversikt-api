@@ -6,6 +6,7 @@ sealed class PersondataResult<T>(val system: InformasjonElement) {
         PDL_TREDJEPARTSPERSONER,
         EGEN_ANSATT,
         DKIF,
+        DKIF_TREDJEPARTSPERSONER,
         BANKKONTO,
         VEILEDER_ROLLER,
         NORG_NAVKONTOR,

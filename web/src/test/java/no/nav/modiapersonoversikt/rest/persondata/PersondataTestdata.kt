@@ -19,7 +19,8 @@ fun gittData(
     navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?> = PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) { gittNavKontorEnhet() },
     dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
     bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
-    tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner }
+    tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
+    kontaktinformasjonTredjepartsperson: PersondataResult<Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson>> = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) { kontaktinformasjonTredjepartspersonMap }
 ) = PersondataFletter.Data(
     personIdent = personIdent,
     persondata = persondata,
@@ -28,7 +29,8 @@ fun gittData(
     navEnhet = navEnhet,
     dkifData = dkifData,
     bankkonto = bankkonto,
-    tredjepartsPerson = tredjepartsPerson
+    tredjepartsPerson = tredjepartsPerson,
+    kontaktinformasjonTredjepartsperson = kontaktinformasjonTredjepartsperson
 )
 
 fun gittPerson(
@@ -111,7 +113,8 @@ internal fun gittTredjepartsperson(
     fnr: String = "98765432100",
     navn: String = "Tredjepart Relasjon",
     alder: Int? = 20,
-    adressebeskyttelse: Persondata.AdresseBeskyttelse = Persondata.AdresseBeskyttelse.UGRADERT
+    adressebeskyttelse: Persondata.AdresseBeskyttelse = Persondata.AdresseBeskyttelse.UGRADERT,
+    digitalKontaktinformasjon: Persondata.DigitalKontaktinformasjonTredjepartsperson? = null
 ) = Persondata.TredjepartsPerson(
     fnr = fnr,
     navn = listOf(
@@ -122,7 +125,8 @@ internal fun gittTredjepartsperson(
     kjonn = emptyList(),
     adressebeskyttelse = listOf(Persondata.KodeBeskrivelse(adressebeskyttelse, adressebeskyttelse.toString())),
     bostedAdresse = emptyList(),
-    dodsdato = emptyList()
+    dodsdato = emptyList(),
+    digitalKontaktinformasjon = digitalKontaktinformasjon
 )
 
 internal fun gittNavn(navn: String): Persondata.Navn {
@@ -167,6 +171,15 @@ internal fun gittHentPersondataNavn(navn: String): List<HentPersondata.Navn> {
     return listOf(fregNavn, pdlNavn)
 }
 
+internal val kontaktinformasjonTredjepartsperson = Persondata.DigitalKontaktinformasjonTredjepartsperson(
+    mobiltelefonnummer = "90909090",
+    reservasjon = "false"
+)
+
+internal val kontaktinformasjonTredjepartspersonMap = mapOf(
+    "55555666000" to kontaktinformasjonTredjepartsperson
+)
+
 internal val tredjepartsPersoner = mapOf(
     "98765432100" to gittTredjepartsperson(
         navn = "Datteren Hans",
@@ -188,7 +201,8 @@ internal val tredjepartsPersoner = mapOf(
     ),
     "55555666000" to gittTredjepartsperson(
         fnr = "55555666000",
-        navn = "Person MedFullmakt"
+        navn = "Person MedFullmakt",
+        digitalKontaktinformasjon = kontaktinformasjonTredjepartsperson
     ),
     "55555111000" to gittTredjepartsperson(
         fnr = "55555111000",
