@@ -4,4 +4,5 @@ enum class Feature(val propertyKey: String) {
     SAMPLE_FEATURE("feature.samplerfeature"),
     BRUK_ARENA_SAK_VEDTAK_SERVICE("modiabrukerdialog.bruk_arenaSakVedtakService"),
     INTERNAL_ABAC_RATE("modiabrukerdialog.internal.abac.rate"),
+    BRUK_CHAT("modiabrukerdialog.bruk_chat")
 }

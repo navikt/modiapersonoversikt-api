@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -43,8 +44,11 @@ class SfLegacyDialogController(
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
         val bruker = EksternBruker.Fnr(fnr)
 
+        val skalBrukeChat = unleash.isEnabled(Feature.BRUK_CHAT)
         val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
+            .filter { it.henvendelseType != HenvendelseDTO.HenvendelseType.CHAT || skalBrukeChat }
         val dialogMappingContext = lagMappingContext(sfHenvendelser)
+
         return sfHenvendelser
             .map {
                 dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it)
@@ -391,9 +395,9 @@ class SfLegacyDialogController(
             }
             HenvendelseDTO.HenvendelseType.CHAT -> {
                 when (melding.fra.identType) {
-                    MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) Meldingstype.SPORSMAL_SKRIFTLIG else Meldingstype.SVAR_SBL_INNGAAENDE
-                    MeldingFraDTO.IdentType.NAVIDENT -> if (erForsteMelding) Meldingstype.SPORSMAL_MODIA_UTGAAENDE else Meldingstype.SVAR_SKRIFTLIG
-                    MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.SVAR_SKRIFTLIG
+                    MeldingFraDTO.IdentType.AKTORID -> Meldingstype.CHATMELDING_FRA_BRUKER
+                    MeldingFraDTO.IdentType.NAVIDENT -> Meldingstype.CHATMELDING_FRA_NAV
+                    MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.CHATMELDING_FRA_NAV
                 }
             }
         }
