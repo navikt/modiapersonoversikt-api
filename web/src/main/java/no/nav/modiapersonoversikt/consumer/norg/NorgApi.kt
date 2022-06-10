@@ -52,7 +52,7 @@ interface NorgApi : Pingable {
         oppgavetype: String?,
         fagomrade: String?,
         erEgenAnsatt: Boolean?,
-        diskresjonskode: String?
+        diskresjonskode: NorgDomain.DiskresjonsKode?
     ): List<Enhet>
 
     fun hentKontaktinfo(enhet: EnhetId): EnhetKontaktinformasjon
@@ -159,7 +159,7 @@ class NorgApiImpl(
         oppgavetype: String?,
         fagomrade: String?,
         erEgenAnsatt: Boolean?,
-        diskresjonskode: String?
+        diskresjonskode: NorgDomain.DiskresjonsKode?
     ): List<Enhet> {
         return arbeidsfordelingApi
             .runCatching {
@@ -171,7 +171,7 @@ class NorgApiImpl(
                         behandlingstema = behandling?.behandlingstema,
                         behandlingstype = behandling?.behandlingstype,
                         geografiskOmraade = geografiskTilknyttning ?: "",
-                        diskresjonskode = diskresjonskode,
+                        diskresjonskode = diskresjonskode?.name,
                         enhetNummer = null,
                         temagruppe = null,
                     )
