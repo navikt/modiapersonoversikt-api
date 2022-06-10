@@ -15,21 +15,28 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/rest/tilgang")
 class TilgangController @Autowired constructor(private val tilgangskontroll: Tilgangskontroll) {
-    val audit = Audit.describe<String>(Audit.Action.READ, AuditResources.Person.Tilgang) {
+    private val audit = Audit.describe<String>(Audit.Action.READ, AuditResources.Person.Tilgang) {
         listOf(AuditIdentifier.FNR to it)
+    }
+    private val enhetTrace = Audit.describe<String>(Audit.Action.READ, AuditResources.Person.EnhetTrace) {
+        listOf(AuditIdentifier.ENHET_ID to it)
     }
 
     @GetMapping("/{fnr}")
-    fun harTilgang(@PathVariable("fnr") fnr: String): TilgangDTO {
+    fun harTilgang(@PathVariable("fnr") fnr: String, request: HttpServletRequest): TilgangDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .getDecision()
             .makeResponse()
             .logAudit(audit, fnr)
+            .also {
+                enhetTrace.log(runCatching { RestUtils.hentValgtEnhet(null, request) }.getOrElse { "IKKE SATT" })
+            }
     }
 
     @GetMapping
@@ -55,10 +62,10 @@ class AuthIntropectionDTO(val expirationDate: Long) {
     }
 }
 
-private fun TilgangDTO.logAudit(audit: Audit.AuditDescriptor<String>, fnr: String): TilgangDTO {
+private fun <T> TilgangDTO.logAudit(audit: Audit.AuditDescriptor<T>, data: T): TilgangDTO {
     when (this.harTilgang) {
-        true -> audit.log(fnr)
-        else -> audit.denied("Ikke tilgang til $fnr, årsak: ${this.ikkeTilgangArsak}")
+        true -> audit.log(data)
+        else -> audit.denied("Ikke tilgang til $data, årsak: ${this.ikkeTilgangArsak}")
     }
     return this
 }
