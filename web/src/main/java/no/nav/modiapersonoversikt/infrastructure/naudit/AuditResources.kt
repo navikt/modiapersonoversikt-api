@@ -103,6 +103,8 @@ class AuditResources {
 
             @JvmField
             val Varsler = AuditResource("person.varsler")
+
+            val EnhetTrace = AuditResource("trace.enhet-bruk")
         }
     }
 
