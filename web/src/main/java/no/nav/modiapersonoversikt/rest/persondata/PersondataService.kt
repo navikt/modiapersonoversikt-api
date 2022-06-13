@@ -23,9 +23,6 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
-    fun hentGeografiskTilknytning(personIdent: String): String?
-    fun hentNavEnhet(personIdent: String): Persondata.Enhet?
-    fun hentAdressebeskyttelse(personIdent: String): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>
 
     data class Tilganger(
         val kode6: Boolean,
@@ -92,27 +89,6 @@ class PersondataServiceImpl(
                 kontaktinformasjonTredjepartsperson
             )
         )
-    }
-
-    override fun hentGeografiskTilknytning(personIdent: String): String? {
-        return PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }.getOrNull()
-    }
-
-    override fun hentNavEnhet(personIdent: String): Persondata.Enhet? {
-        val geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
-        val adressebeskyttelse = hentAdressebeskyttelse(personIdent)
-        return hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning).let { persondataFletter.hentNavEnhet(it) }
-    }
-
-    override fun hentAdressebeskyttelse(personIdent: String): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
-        return pdl.hentTredjepartspersondata(listOf(personIdent)).mapNotNull {
-            tredjepartspersonMapper.lagTredjepartsperson(
-                ident = it.ident,
-                person = it.person,
-                tilganger = PersondataService.Tilganger(false, false),
-                kontaktinformasjonTredjepartsperson = null
-            )
-        }.firstOrNull()?.adressebeskyttelse ?: emptyList()
     }
 
     private fun hentBankkonto(fnr: String): HentPersonResponse {
