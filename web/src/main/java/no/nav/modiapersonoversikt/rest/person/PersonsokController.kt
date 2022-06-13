@@ -39,24 +39,6 @@ class PersonsokController @Autowired constructor(
             )
         }
 
-    @PostMapping("/v2")
-    fun sokPdl(@RequestBody personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(auditDescriptor) {
-                handterFeil {
-                    if (!personsokRequest.kontonummer.isNullOrBlank()) {
-                        kontonummerSok(personsokRequest.kontonummer)
-                            .mapNotNull(::lagPersonResponse)
-                    } else {
-                        pdlOppslagService
-                            .sokPerson(personsokRequest.tilPdlKriterier())
-                            .mapNotNull(::lagPersonResponse)
-                    }
-                }
-            }
-    }
-
     @PostMapping("/v3")
     fun sokPdlV3(@RequestBody personsokRequestV3: PersonsokRequestV3): List<PersonSokResponsDTO> {
         return tilgangskontroll
@@ -364,44 +346,6 @@ private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: MidlertidigPostadre
 data class KodeverdiDTO(val kodeRef: String?, val beskrivelse: String?)
 
 private fun lagKodeverdi(fimKodeverdi: Kodeverdi) = KodeverdiDTO(fimKodeverdi.kodeRef, fimKodeverdi.value)
-
-data class PersonsokRequest(
-    val fornavn: String?,
-    val etternavn: String?,
-    val gatenavn: String?,
-    val kontonummer: String?,
-    val utenlandskID: String?,
-    val alderFra: Int?,
-    val alderTil: Int?,
-    val kommunenummer: String?,
-    val fodselsdatoFra: String?,
-    val fodselsdatoTil: String?,
-    val kjonn: String?,
-    val husnummer: Int?,
-    val husbokstav: String?,
-    val postnummer: String?
-)
-
-fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
-    val navn = listOfNotNull(this.fornavn, this.etternavn).joinToString(" ")
-    val adresse = listOfNotNull(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer, this.kommunenummer).joinToString(" ")
-    val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
-    val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
-    val kjonn = when (this.kjonn) {
-        "M" -> "MANN"
-        "K" -> "KVINNE"
-        else -> null
-    }
-
-    return listOf(
-        PdlKriterie(PdlFelt.NAVN, navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
-        PdlKriterie(PdlFelt.ADRESSE, adresse, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-        PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
-        PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-        PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-        PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE)
-    )
-}
 
 data class PersonsokRequestV3(
     val navn: String?,
