@@ -2,9 +2,10 @@ package no.nav.modiapersonoversikt.service.arbeidsfordeling;
 
 import no.nav.common.types.identer.Fnr;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse;
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi;
-import no.nav.modiapersonoversikt.rest.persondata.*;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService.ArbeidsfordelingException;
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.utils.PropertyRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,7 @@ class ArbeidsfordelingServiceTest {
     private static final String GEOGRAFISK_TILKNYTNING = "0219";
     private static final Fnr PERSON = Fnr.of("11111111111");
 
-    private PersondataService persondataService = mock(PersondataService.class);
+    private PdlOppslagService pdlOppslagService = mock(PdlOppslagService.class);
     private NorgApi norgApi = mock(NorgApi.class);
     private SkjermedePersonerApi egenAnsattService = mock(SkjermedePersonerApi.class);
     private ArbeidsfordelingService arbeidsfordelingService;
@@ -38,11 +39,11 @@ class ArbeidsfordelingServiceTest {
     @BeforeEach
     void setupMocks() {
         Mockito.reset(
-                persondataService,
+                pdlOppslagService,
                 norgApi,
                 egenAnsattService
         );
-        arbeidsfordelingService = new ArbeidsfordelingServiceImpl(norgApi, persondataService, egenAnsattService);
+        arbeidsfordelingService = new ArbeidsfordelingServiceImpl(norgApi, pdlOppslagService, egenAnsattService);
     }
 
     @Test
@@ -78,11 +79,13 @@ class ArbeidsfordelingServiceTest {
     }
 
     private void gitt_at_alt_fungerer() {
-        ArrayList<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> adressebeskyttelseMock = new ArrayList<>();
-        adressebeskyttelseMock.add(new Persondata.KodeBeskrivelse<>(Persondata.AdresseBeskyttelse.UGRADERT, "UGRADERT"));
+        ArrayList<HentAdressebeskyttelse.Adressebeskyttelse> adressebeskyttelseMock = new ArrayList<>();
+        adressebeskyttelseMock.add(new HentAdressebeskyttelse.Adressebeskyttelse(
+                HentAdressebeskyttelse.AdressebeskyttelseGradering.UGRADERT
+        ));
         sneaky(() -> {
-            when(persondataService.hentGeografiskTilknytning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
-            when(persondataService.hentAdressebeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
+            when(pdlOppslagService.hentGeografiskTilknyttning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
+            when(pdlOppslagService.hentAdressebeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
 
             when(egenAnsattService.erSkjermetPerson(any())).thenReturn(false);
         });
@@ -93,7 +96,7 @@ class ArbeidsfordelingServiceTest {
     }
 
     private void gitt_feil_ved_henting_av_geografisk_tilknytning() {
-        when(persondataService.hentGeografiskTilknytning(PERSON.get())).thenThrow(new RuntimeException());
+        when(pdlOppslagService.hentGeografiskTilknyttning(PERSON.get())).thenThrow(new RuntimeException());
     }
 
     private void gitt_feil_ved_henting_av_enheter() {

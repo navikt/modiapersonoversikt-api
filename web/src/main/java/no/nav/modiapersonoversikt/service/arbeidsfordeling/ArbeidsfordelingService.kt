@@ -5,8 +5,10 @@ import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse.AdressebeskyttelseGradering.*
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
-import no.nav.modiapersonoversikt.rest.persondata.PersondataService
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import org.slf4j.LoggerFactory
 
 interface ArbeidsfordelingService {
@@ -22,7 +24,7 @@ interface ArbeidsfordelingService {
 
 class ArbeidsfordelingServiceImpl(
     private val norgApi: NorgApi,
-    private val persondataService: PersondataService,
+    private val pdlOppslagService: PdlOppslagService,
     private val skjermedePersonerApi: SkjermedePersonerApi
 ) : ArbeidsfordelingService {
     val log = LoggerFactory.getLogger(ArbeidsfordelingService::class.java)
@@ -35,10 +37,10 @@ class ArbeidsfordelingServiceImpl(
     ): List<NorgDomain.Enhet> {
         return runCatching {
             val behandling: Behandling? = underkategori?.parseV2BehandlingString()
-            val geografiskTilknyttning = brukerIdent?.get()?.let(persondataService::hentGeografiskTilknytning)
+            val geografiskTilknyttning = brukerIdent?.get()?.let(pdlOppslagService::hentGeografiskTilknyttning)
             val diskresjonskode = brukerIdent?.get()
-                ?.let(persondataService::hentAdressebeskyttelse)
-                ?.let { if (it.isEmpty()) null else it.first().kode.name }
+                ?.let(pdlOppslagService::hentAdressebeskyttelse)
+                ?.let { if (it.isEmpty()) null else it.first().toNorgDiskresjonsKode() }
 
             val erEgenAnsatt = if (underkategori == "ANSOS_KNA") {
                 false
@@ -62,5 +64,13 @@ class ArbeidsfordelingServiceImpl(
                     it
                 )
             }
+    }
+}
+
+private fun HentAdressebeskyttelse.Adressebeskyttelse.toNorgDiskresjonsKode(): NorgDomain.DiskresjonsKode {
+    return when (this.gradering) {
+        STRENGT_FORTROLIG, STRENGT_FORTROLIG_UTLAND -> NorgDomain.DiskresjonsKode.SPSF
+        FORTROLIG -> NorgDomain.DiskresjonsKode.SPFO
+        UGRADERT, __UNKNOWN_VALUE -> NorgDomain.DiskresjonsKode.ANY
     }
 }
