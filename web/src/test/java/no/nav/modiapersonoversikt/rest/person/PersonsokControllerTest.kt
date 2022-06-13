@@ -198,44 +198,8 @@ class PersonsokControllerTest {
         )
 
         @Test
-        internal fun `samler navne-felt til ett felt`() {
-            val kriterier = request
-                .copy(fornavn = "Fornavn", etternavn = "Etternavn")
-                .tilPdlKriterier(clock)
-
-            assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
-        }
-
-        @Test
-        internal fun `filtrerer bort navne-felt som er null`() {
-            val bareFornavn = request
-                .copy(fornavn = "Fornavn")
-                .tilPdlKriterier(clock)
-            val bareEtternavn = request
-                .copy(etternavn = "Etternavn")
-                .tilPdlKriterier(clock)
-
-            assertThat(bareFornavn).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
-            assertThat(bareEtternavn).contains(PdlKriterie(PdlFelt.NAVN, "Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
-        }
-
-        @Test
-        internal fun `samler adresse-felt til ett felt`() {
-            val kriterier = request
-                .copy(
-                    gatenavn = "Gatenavn",
-                    husnummer = 1,
-                    husbokstav = "A",
-                    postnummer = "0100"
-                )
-                .tilPdlKriterier(clock)
-
-            assertThat(kriterier).contains(PdlKriterie(PdlFelt.ADRESSE, "Gatenavn 1 A 0100", searchHistorical = PdlSokeOmfang.GJELDENDE))
-        }
-
-        @Test
         internal fun `regner ut tidligste dato basert på alderFra`() {
-            val kriterier = request
+            val kriterier = requestV3
                 .copy(alderFra = 30)
                 .tilPdlKriterier(clock)
 
@@ -244,7 +208,7 @@ class PersonsokControllerTest {
 
         @Test
         internal fun `regner ut seneste dato basert på alderTil`() {
-            val kriterier = request
+            val kriterier = requestV3
                 .copy(alderTil = 32)
                 .tilPdlKriterier(clock)
 
@@ -253,19 +217,19 @@ class PersonsokControllerTest {
 
         @Test
         internal fun `mapper kjønn til pdl-format`() {
-            val mann = request
+            val mann = requestV3
                 .copy(kjonn = "M")
                 .tilPdlKriterier(clock)
 
             assertThat(mann).contains(PdlKriterie(PdlFelt.KJONN, "MANN", searchHistorical = PdlSokeOmfang.GJELDENDE))
 
-            val kvinne = request
+            val kvinne = requestV3
                 .copy(kjonn = "K")
                 .tilPdlKriterier(clock)
 
             assertThat(kvinne).contains(PdlKriterie(PdlFelt.KJONN, "KVINNE", searchHistorical = PdlSokeOmfang.GJELDENDE))
 
-            val ukjent = request
+            val ukjent = requestV3
                 .copy(kjonn = "U")
                 .tilPdlKriterier(clock)
 
@@ -293,23 +257,6 @@ class PersonsokControllerTest {
 
             assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
         }
-
-        val request = PersonsokRequest(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
 
         val requestV3 = PersonsokRequestV3(
             null,
