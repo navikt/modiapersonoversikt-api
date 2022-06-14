@@ -256,11 +256,13 @@ internal fun gittEndring(
         LocalDateTime.of(2020, 7, 1, 10, 0)
     ),
     registrertAv: String = "Folkeregisteret",
-    systemkilde: String = "FREG"
+    systemkilde: String = "FREG",
+    kilde: String = "Bruker"
 ) = HentPersondata.Endring(
     registrert = registrert,
     registrertAv = registrertAv,
-    systemkilde = systemkilde
+    systemkilde = systemkilde,
+    kilde = kilde
 )
 
 internal val metadata = HentPersondata.Metadata(
