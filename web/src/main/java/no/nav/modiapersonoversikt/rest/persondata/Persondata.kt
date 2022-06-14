@@ -97,7 +97,8 @@ object Persondata {
     data class SistEndret(
         val ident: String,
         val tidspunkt: LocalDateTime,
-        val system: String
+        val system: String,
+        val kilde: String
     )
 
     data class GyldighetsPeriode(

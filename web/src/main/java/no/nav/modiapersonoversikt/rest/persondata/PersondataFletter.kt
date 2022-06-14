@@ -359,7 +359,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 Persondata.SistEndret(
                     ident = it.registrertAv,
                     tidspunkt = it.registrert.value,
-                    system = it.systemkilde
+                    system = it.systemkilde,
+                    kilde = it.kilde
                 )
             }
     }
@@ -905,7 +906,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     .toGregorianCalendar()
                     .toZonedDateTime()
                     .toLocalDateTime(),
-                system = ""
+                system = "",
+                kilde = ""
             )
         } else {
             null
