@@ -50,6 +50,7 @@ fragment sistEndret on Metadata {
         registrert
         registrertAv
         systemkilde
+        kilde
     }
 }
 
