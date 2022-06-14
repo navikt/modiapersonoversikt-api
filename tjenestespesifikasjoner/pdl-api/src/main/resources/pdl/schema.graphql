@@ -396,7 +396,6 @@ type ForelderBarnRelasjon {
     relatertPersonsRolle: ForelderBarnRelasjonRolle!
     minRolleForPerson: ForelderBarnRelasjonRolle
     relatertPersonUtenFolkeregisteridentifikator: RelatertBiPerson
-
     folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }

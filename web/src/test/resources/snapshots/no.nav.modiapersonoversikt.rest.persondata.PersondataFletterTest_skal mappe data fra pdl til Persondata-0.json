@@ -38,6 +38,7 @@
       "linje3" : null,
       "sistEndret" : {
         "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
         "system" : "FREG",
         "tidspunkt" : "2020-07-01T10:00:00"
       }
@@ -51,6 +52,7 @@
       "linje3" : null,
       "sistEndret" : {
         "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
         "system" : "FREG",
         "tidspunkt" : "2020-07-01T10:00:00"
       }
@@ -92,6 +94,7 @@
       "registrert" : "2014-05-02",
       "sistEndret" : {
         "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
         "system" : "FREG",
         "tidspunkt" : "2020-07-01T10:00:00"
       },
@@ -205,6 +208,7 @@
       "linje3" : "1444 TestPoststed",
       "sistEndret" : {
         "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
         "system" : "FREG",
         "tidspunkt" : "2020-07-01T10:00:00"
       }
@@ -215,6 +219,7 @@
       "linje3" : "1444 TestPoststed",
       "sistEndret" : {
         "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
         "system" : "FREG",
         "tidspunkt" : "2020-07-01T10:00:00"
       }
@@ -272,6 +277,7 @@
       "linje3" : "1444 TestPoststed",
       "sistEndret" : {
         "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
         "system" : "FREG",
         "tidspunkt" : "2020-07-01T10:00:00"
       }
@@ -330,6 +336,7 @@
       },
       "sistEndret" : {
         "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
         "system" : "FREG",
         "tidspunkt" : "2020-07-01T10:00:00"
       }
