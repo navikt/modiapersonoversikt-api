@@ -28,9 +28,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     data class Data(
         val personIdent: String,
         val persondata: HentPersondata.Person,
-        val geografiskeTilknytning: PersondataResult<String?>,
+        val geografiskeTilknytning: PersondataResult<String?>?,
         val erEgenAnsatt: PersondataResult<Boolean>,
-        val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
+        val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>?,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<HentPersonResponse>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
@@ -103,7 +103,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun hentGeografiskTilknytning(data: Data): String? {
-        return data.geografiskeTilknytning.getOrNull()
+        return data.geografiskeTilknytning?.getOrNull()
     }
 
     private fun hentNavn(data: Data): List<Persondata.Navn> {
@@ -456,16 +456,16 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         gyldighetsPeriode = gyldighetsPeriode
     )
 
-    fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.Enhet? {
+    fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>?): Persondata.Enhet? {
         return navEnhet
-            .map {
+            ?.map {
                 if (it == null) {
                     null
                 } else {
                     Persondata.Enhet(it.enhet.enhetId, it.enhet.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
                 }
             }
-            .getOrNull()
+            ?.getOrNull()
     }
 
     private fun hentPublikumsmottak(publikumsmottak: List<NorgDomain.Publikumsmottak>): List<Persondata.Publikumsmottak> {

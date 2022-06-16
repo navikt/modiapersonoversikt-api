@@ -14,9 +14,31 @@ import java.time.LocalDateTime
 fun gittData(
     personIdent: String,
     persondata: HentPersondata.Person,
-    geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching(InformasjonElement.PDL_GT) { "0123" },
+    geografiskeTilknytning: PersondataResult<String?>? = PersondataResult.runCatching(InformasjonElement.PDL_GT) { "0123" },
     erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { false },
-    navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?> = PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) { gittNavKontorEnhet() },
+    navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>? = PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) { gittNavKontorEnhet() },
+    dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
+    bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
+    tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
+    kontaktinformasjonTredjepartsperson: PersondataResult<Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson>> = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) { kontaktinformasjonTredjepartspersonMap }
+) = PersondataFletter.Data(
+    personIdent = personIdent,
+    persondata = persondata,
+    geografiskeTilknytning = geografiskeTilknytning,
+    erEgenAnsatt = erEgenAnsatt,
+    navEnhet = navEnhet,
+    dkifData = dkifData,
+    bankkonto = bankkonto,
+    tredjepartsPerson = tredjepartsPerson,
+    kontaktinformasjonTredjepartsperson = kontaktinformasjonTredjepartsperson
+)
+
+fun gittDataDodPerson(
+    personIdent: String,
+    persondata: HentPersondata.Person,
+    geografiskeTilknytning: PersondataResult<String?>? = null,
+    erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { false },
+    navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>? = null,
     dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
     bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
     tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
@@ -40,7 +62,7 @@ fun gittPerson(
     fodselsdato: String = "2000-01-02",
     adressebeskyttelse: HentPersondata.AdressebeskyttelseGradering = HentPersondata.AdressebeskyttelseGradering.UGRADERT,
     statsborgerskap: HentPersondata.Statsborgerskap = statsborger,
-    dodsdato: String = "2010-01-02",
+    dodsdato: String? = null,
     folkeregisterpersonstatus: String = "bosatt",
     sivilstand: HentPersondata.Sivilstand = sivilstandPerson,
     sikkerhetstiltak: HentPersondata.Sikkerhetstiltak = sikkerhetstiltakData,
@@ -63,7 +85,7 @@ fun gittPerson(
         HentPersondata.Adressebeskyttelse(adressebeskyttelse)
     ),
     statsborgerskap = listOf(statsborgerskap),
-    doedsfall = listOf(HentPersondata.Doedsfall(gittDato(dodsdato))),
+    doedsfall = listOf(HentPersondata.Doedsfall(null)),
     folkeregisterpersonstatus = listOf(HentPersondata.Folkeregisterpersonstatus(folkeregisterpersonstatus)),
     sivilstand = listOf(sivilstand),
     sikkerhetstiltak = listOf(sikkerhetstiltak),

@@ -47,9 +47,10 @@ class PersondataServiceImpl(
             "Fant ikke person med personIdent $personIdent"
         }
 
-        val geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
+        val erDod = persondata.doedsfall.isNotEmpty()
+        val geografiskeTilknytning = if (!erDod) PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) } else null
         val adressebeskyttelse = persondataFletter.hentAdressebeskyttelse(persondata.adressebeskyttelse)
-        val navEnhet = hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning)
+        val navEnhet = if (geografiskeTilknytning != null) hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning) else null
         val erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) {
             skjermedePersonerApi.erSkjermetPerson(
                 Fnr(personIdent)

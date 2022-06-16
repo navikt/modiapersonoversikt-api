@@ -100,7 +100,7 @@
       },
       "skifteform" : "OFFENTLIG"
     } ] ],
-    "dodsdato" : [ "java.util.ArrayList", [ ] ],
+    "dodsdato" : [ "java.util.ArrayList", [ "2010-01-02" ] ],
     "erEgenAnsatt" : "NEI",
     "fnr" : "12345678910",
     "fodselsdato" : [ "java.util.ArrayList", [ "2000-01-02" ] ],
@@ -193,7 +193,7 @@
       "motpartsRolle" : "FULLMEKTIG",
       "omrade" : [ "java.util.ArrayList", [ ] ]
     } ] ],
-    "geografiskTilknytning" : "0123",
+    "geografiskTilknytning" : null,
     "kjonn" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Mann",
       "kode" : "M"
@@ -238,26 +238,7 @@
       "personident" : "12345678910",
       "reservasjon" : null
     },
-    "navEnhet" : {
-      "id" : "0123",
-      "navn" : "NAV Oslo",
-      "publikumsmottak" : [ "java.util.ArrayList", [ {
-        "apningstider" : [ "java.util.ArrayList", [ {
-          "apningstid" : "Stengt",
-          "ukedag" : "MANDAG"
-        }, {
-          "apningstid" : "10:00 - 15:00",
-          "ukedag" : "TIRSDAG"
-        } ] ],
-        "besoksadresse" : {
-          "gyldighetsPeriode" : null,
-          "linje1" : "Testgata 10",
-          "linje2" : "0110 Ingensteds",
-          "linje3" : null,
-          "sistEndret" : null
-        }
-      } ] ]
-    },
+    "navEnhet" : null,
     "navn" : [ "java.util.ArrayList", [ {
       "etternavn" : "McTestesen",
       "fornavn" : "PDL_Teste",
