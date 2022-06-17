@@ -377,9 +377,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             "personopplysninger-api" -> "personopplysninger-api"
             "srvperson-forvalter" -> "NAV"
             "IT00" -> "NAV"
-            "srvPdl-Web" -> "srvPdl-Web" // Må kanskje skrive noe annet her?
+            "srvPdl-Web" -> "srvPdl-Web"
             "BI00" -> "NAV"
-            "pdl-web" -> "pdl-web" // Må kanskje skrive noe annet her?
+            "pdl-web" -> "pdl-web"
             "SrvOppgRobotNOP" -> "NAV"
             else -> system
         }
