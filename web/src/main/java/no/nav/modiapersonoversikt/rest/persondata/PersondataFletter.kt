@@ -367,7 +367,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun mapOmSystemKildeFraEndringerMetadata(system: String): String {
-        return when(system) {
+        return when (system) {
             "FREG" -> "folkeregisteret"
             "BD03" -> "bruker"
             "srvpersonopplysnin" -> "srvpersonopplysning"
@@ -386,7 +386,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun mapOmKildeFraEndringerMetadata(kilde: String): String {
-        return when(kilde) {
+        return when (kilde) {
             "FREG" -> "folkeregisteret"
             "innbygger" -> "bruker"
             "KILDE_DSF" -> "DSF"
