@@ -356,7 +356,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata): Persondata.SistEndret? {
         return metadata.endringer.maxByOrNull { it.registrert.value }
             ?.let {
-                log.info("[PDL-KILDE] systemKilde: ${it.systemkilde} kilde: ${it.kilde}")
                 Persondata.SistEndret(
                     ident = it.registrertAv,
                     tidspunkt = it.registrert.value,
@@ -370,18 +369,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return when (system) {
             "FREG" -> "folkeregisteret"
             "BD03" -> "bruker"
-            "srvpersonopplysnin" -> "srvpersonopplysning"
+            "srvpersonopplysnin" -> "personopplysninger"
             "PP01" -> "NAV"
             "BD06" -> "NAV"
             "FS22" -> "NAV"
-            "personopplysninger-api" -> "personopplysninger-api"
+            "personopplysninger-api" -> "personopplysninger"
             "srvperson-forvalter" -> "NAV"
             "IT00" -> "NAV"
-            "srvPdl-Web" -> "srvPdl-Web"
+            "srvPdl-Web" -> "PDL"
             "BI00" -> "NAV"
-            "pdl-web" -> "pdl-web"
+            "pdl-web" -> "PDL"
             "SrvOppgRobotNOP" -> "NAV"
-            else -> system
+            else -> {
+                log.info("[PDL-KILDE] systemKilde: $system")
+                system
+            }
         }
     }
 
@@ -389,7 +391,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return when (kilde) {
             "FREG" -> "folkeregisteret"
             "innbygger" -> "bruker"
-            "KILDE_DSF" -> "DSF"
+            "KILDE_DSF" -> "det sentrale folkeregisteret"
             "Matrikkelen" -> "statens kartverk"
             "TPS" -> "TPS"
             "BRUKER SELV" -> "bruker"
@@ -404,7 +406,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             "person-forvalter" -> "NAV"
             "helse" -> "helse"
             "kripos" -> "kripos"
-            "KILDE_BRSV" -> "BRSV"
+            "KILDE_BRSV" -> "befolkningsregisteret for Svalbard"
             "nav" -> "NAV"
             "tips" -> "tips"
             "utenriksdepartementet" -> "utenriksdepartementet"
@@ -417,7 +419,10 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             "innloggetTjeneste" -> "innlogget tjeneste"
             "STATENS_KARTVERK" -> "statens kartverk"
             "skatteetaten" -> "skatteetaten"
-            else -> kilde
+            else -> {
+                log.info("[PDL-KILDE] Kilde: $kilde")
+                kilde
+            }
         }
     }
 
