@@ -356,14 +356,74 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata): Persondata.SistEndret? {
         return metadata.endringer.maxByOrNull { it.registrert.value }
             ?.let {
-                log.info("[PDL-KILDE] systemKilde: ${it.systemkilde} kilde: ${it.kilde}")
                 Persondata.SistEndret(
                     ident = it.registrertAv,
                     tidspunkt = it.registrert.value,
-                    system = it.systemkilde,
-                    kilde = it.kilde
+                    system = mapOmSystemKildeFraEndringerMetadata(it.systemkilde),
+                    kilde = mapOmKildeFraEndringerMetadata(it.kilde)
                 )
             }
+    }
+
+    private fun mapOmSystemKildeFraEndringerMetadata(system: String): String {
+        return when (system) {
+            "FREG" -> "folkeregisteret"
+            "BD03" -> "bruker"
+            "srvpersonopplysnin" -> "personopplysninger"
+            "PP01" -> "NAV"
+            "BD06" -> "NAV"
+            "FS22" -> "NAV"
+            "personopplysninger-api" -> "personopplysninger"
+            "srvperson-forvalter" -> "NAV"
+            "IT00" -> "NAV"
+            "srvPdl-Web" -> "PDL"
+            "BI00" -> "NAV"
+            "pdl-web" -> "PDL"
+            "SrvOppgRobotNOP" -> "NAV"
+            else -> {
+                log.info("[PDL-KILDE] systemKilde: $system")
+                system
+            }
+        }
+    }
+
+    private fun mapOmKildeFraEndringerMetadata(kilde: String): String {
+        return when (kilde) {
+            "FREG" -> "folkeregisteret"
+            "innbygger" -> "bruker"
+            "KILDE_DSF" -> "det sentrale folkeregisteret"
+            "Matrikkelen" -> "statens kartverk"
+            "TPS" -> "TPS"
+            "BRUKER SELV" -> "bruker"
+            "Bruker selv" -> "bruker"
+            "folkeregistermyndigheten" -> "folkeregistermyndigheten"
+            "utlendingsdirektoratet" -> "utlendingsdirektoratet"
+            "SKATTEETATEN" -> "skatteetaten"
+            "tingretten" -> "tingretten"
+            "saksbehandler" -> "saksbehandler"
+            "nordiskFolkeregister" -> "nordisk folkeregister"
+            "barnevernstjenesten" -> "barnevernstjenesten"
+            "person-forvalter" -> "NAV"
+            "helse" -> "helse"
+            "kripos" -> "kripos"
+            "KILDE_BRSV" -> "befolkningsregisteret for Svalbard"
+            "nav" -> "NAV"
+            "tips" -> "tips"
+            "utenriksdepartementet" -> "utenriksdepartementet"
+            "massebehandling" -> "massebehandling"
+            "broennoeysundregistrene" -> "brønnøysundregistrene"
+            "SrvOppgRobotNOP" -> "NAV"
+            "statensKartverk" -> "statens kartverk"
+            "utenriksstasjon" -> "utenriksstasjon"
+            "BROENNOEYSUNDREGISTRENE" -> "brønnøysundregistrene"
+            "innloggetTjeneste" -> "innlogget tjeneste"
+            "STATENS_KARTVERK" -> "statens kartverk"
+            "skatteetaten" -> "skatteetaten"
+            else -> {
+                log.info("[PDL-KILDE] Kilde: $kilde")
+                kilde
+            }
+        }
     }
 
     private fun lagAdresseFraMatrikkeladresse(
