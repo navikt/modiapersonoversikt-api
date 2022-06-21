@@ -17,8 +17,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -37,16 +35,13 @@ class SfLegacyDialogController(
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ldapService: LDAPService,
     private val kodeverk: EnhetligKodeverk.Service,
-    private val unleash: UnleashService
 ) : DialogApi {
     private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
         val bruker = EksternBruker.Fnr(fnr)
 
-        val skalBrukeChat = unleash.isEnabled(Feature.BRUK_CHAT)
         val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
-            .filter { it.henvendelseType != HenvendelseDTO.HenvendelseType.CHAT || skalBrukeChat }
         val dialogMappingContext = lagMappingContext(sfHenvendelser)
 
         return sfHenvendelser
