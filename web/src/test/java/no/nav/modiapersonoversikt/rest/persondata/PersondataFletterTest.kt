@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import org.junit.jupiter.api.BeforeEach
@@ -29,10 +30,26 @@ internal class PersondataFletterTest {
     internal fun `skal mappe data fra pdl til Persondata`() {
         snapshot.assertMatches(
             mapper.flettSammenData(
-                data = gittData(
+                data = testData.copy(
                     personIdent = fnr,
-                    persondata = gittPerson(fnr = fnr)
+                    persondata = testPerson,
                 ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
+            )
+        )
+    }
+
+    @Test
+    internal fun `skal mappe data fra pdl til Persondata når person er dod`() {
+        snapshot.assertMatches(
+            mapper.flettSammenData(
+                data = testData
+                    .copy(
+                        personIdent = fnr,
+                        persondata = testPerson.copy(doedsfall = listOf(HentPersondata.Doedsfall(gittDato("2010-01-02")))),
+                        geografiskeTilknytning = PersondataResult.NotRelevant(),
+                        navEnhet = PersondataResult.NotRelevant(),
+                    ),
                 clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
             )
         )

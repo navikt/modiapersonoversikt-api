@@ -47,7 +47,7 @@ class PersondataServiceImpl(
             "Fant ikke person med personIdent $personIdent"
         }
 
-        val geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
+        val geografiskeTilknytning = hentGeografiskTilknyttning(personIdent, persondata)
         val adressebeskyttelse = persondataFletter.hentAdressebeskyttelse(persondata.adressebeskyttelse)
         val navEnhet = hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning)
         val erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) {
@@ -58,22 +58,31 @@ class PersondataServiceImpl(
         val tilganger = PersondataResult
             .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
             .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
-        val kontaktinformasjonTredjepartsperson = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
-            persondata
-                .findKontaktinformasjonTredjepartspersoner()
-                .associateWith { dkif.hentDigitalKontaktinformasjon(it) }
-                .mapValues { tredjepartspersonMapper.tilKontaktinformasjonTredjepartsperson(it.value) }
-        }
+        val kontaktinformasjonTredjepartsperson =
+            PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
+                persondata
+                    .findKontaktinformasjonTredjepartspersoner()
+                    .associateWith { dkif.hentDigitalKontaktinformasjon(it) }
+                    .mapValues { tredjepartspersonMapper.tilKontaktinformasjonTredjepartsperson(it.value) }
+            }
         val kontaktinformasjonTredjepartspersonMap = kontaktinformasjonTredjepartsperson.getOrElse(emptyMap())
         val tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
             persondata
                 .findTredjepartsPersoner()
                 .let { pdl.hentTredjepartspersondata(it) }
-                .mapNotNull { tredjepartspersonMapper.lagTredjepartsperson(it.ident, it.person, tilganger, kontaktinformasjonTredjepartspersonMap[it.ident]) }
+                .mapNotNull {
+                    tredjepartspersonMapper.lagTredjepartsperson(
+                        it.ident,
+                        it.person,
+                        tilganger,
+                        kontaktinformasjonTredjepartspersonMap[it.ident]
+                    )
+                }
                 .associateBy { it.fnr }
         }
 
-        val dkifData = PersondataResult.runCatching(InformasjonElement.DKIF) { dkif.hentDigitalKontaktinformasjon(personIdent) }
+        val dkifData =
+            PersondataResult.runCatching(InformasjonElement.DKIF) { dkif.hentDigitalKontaktinformasjon(personIdent) }
         val bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { hentBankkonto(personIdent) }
 
         return persondataFletter.flettSammenData(
@@ -89,6 +98,17 @@ class PersondataServiceImpl(
                 kontaktinformasjonTredjepartsperson
             )
         )
+    }
+
+    private fun hentGeografiskTilknyttning(
+        personIdent: String,
+        persondata: HentPersondata.Person
+    ): PersondataResult<String?> {
+        return if (persondata.doedsfall.isNotEmpty()) {
+            PersondataResult.NotRelevant()
+        } else {
+            PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
+        }
     }
 
     private fun hentBankkonto(fnr: String): HentPersonResponse {
@@ -107,8 +127,11 @@ class PersondataServiceImpl(
         geografiskeTilknytning: PersondataResult<String?>
     ): PersondataResult<NorgDomain.EnhetKontaktinformasjon?> {
         val gt: String = geografiskeTilknytning
-            .map { it ?: "" }
-            .getOrElse("")
+            .fold(
+                onSuccess = { it ?: "" },
+                onNotRelevant = { null },
+                onFailure = { _, _ -> "" }
+            ) ?: return PersondataResult.NotRelevant()
 
         var diskresjonskode: NorgDomain.DiskresjonsKode? = null
         for (beskyttelse in adressebeskyttelse) {

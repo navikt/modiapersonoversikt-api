@@ -91,6 +91,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 kontaktOgReservasjon = hentKontaktOgReservasjon(data),
                 bankkonto = hentBankkonto(data).fold(
                     onSuccess = { it },
+                    onNotRelevant = { null },
                     onFailure = { system, cause ->
                         feilendeSystemer.add(system.name)
                         TjenestekallLogger.logger.error("Persondata feilet system: $system", cause)
