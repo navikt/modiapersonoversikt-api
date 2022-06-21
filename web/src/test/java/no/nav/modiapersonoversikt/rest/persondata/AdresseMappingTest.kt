@@ -29,7 +29,7 @@ internal class AdresseMappingTest {
 
     @Test
     internal fun `skal mappe vegadresse likt for person og tredjepartsperson`() {
-        val hovedperson = gittPerson().copy(
+        val hovedperson = testPerson.copy(
             bostedsadresse = adresse.copy(
                 vegadresse = HentPersondata.Vegadresse(
                     matrikkelId = HentPersondata.Long(1234L),
@@ -68,7 +68,7 @@ internal class AdresseMappingTest {
             .lagTredjepartsperson(barnFnr, tredjepartsPerson, PersondataService.Tilganger(true, true), kontaktinformasjonTredjepartsperson)
 
         val persondata = mapper.flettSammenData(
-            data = gittData(
+            data = testData.copy(
                 personIdent = "",
                 persondata = hovedperson,
                 tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
@@ -84,7 +84,7 @@ internal class AdresseMappingTest {
 
     @Test
     internal fun `skal mappe postboksadresse riktig`() {
-        val person = gittPerson().copy(
+        val person = testPerson.copy(
             kontaktadresse = kontaktadresseData.copy(
                 coAdressenavn = null,
                 vegadresse = null,
@@ -97,7 +97,7 @@ internal class AdresseMappingTest {
         )
 
         val persondata = mapper.flettSammenData(
-            data = gittData(
+            data = testData.copy(
                 personIdent = "",
                 persondata = person
             ),
