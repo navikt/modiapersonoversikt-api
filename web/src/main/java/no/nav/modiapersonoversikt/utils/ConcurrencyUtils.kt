@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.utils
 
+import kotlinx.coroutines.*
 import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import org.slf4j.MDC
@@ -19,7 +20,18 @@ object ConcurrencyUtils {
         return Pair(firstTask.get(), secondTask.get())
     }
 
-    private fun <T> makeThreadSwappable(fn: () -> T): () -> T {
+    fun <T> List<() -> T>.runInParallel(): List<T> {
+        val list = this.map { makeThreadSwappable(it) }
+        return runBlocking(Dispatchers.IO) {
+            list.map {
+                async {
+                    it()
+                }
+            }.awaitAll()
+        }
+    }
+
+    fun <T> makeThreadSwappable(fn: () -> T): () -> T {
         val mdc = MDC.getCopyOfContextMap()
         val context = AuthContextUtils.getContext()
         val requestAttributes: RequestAttributes? = RequestContextHolder.getRequestAttributes()

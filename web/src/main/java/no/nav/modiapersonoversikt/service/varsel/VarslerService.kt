@@ -1,11 +1,29 @@
-package no.nav.modiapersonoversikt.service.varsel;
+package no.nav.modiapersonoversikt.service.varsel
 
+import no.nav.common.types.identer.Fnr
+import java.time.ZonedDateTime
 
-import no.nav.modiapersonoversikt.service.varsel.domain.Varsel;
+interface VarslerService {
+    fun hentLegacyVarsler(fnr: Fnr): List<Varsel>
+    fun hentAlleVarsler(fnr: Fnr): List<UnifiedVarsel>
 
-import java.util.List;
-import java.util.Optional;
+    interface UnifiedVarsel
 
-public interface VarslerService {
-    Optional<List<Varsel>> hentAlleVarsler(String fnr);
+    data class VarselMelding(
+        val kanal: String?,
+        val innhold: String?,
+        val mottakerInformasjon: String?,
+        val utsendingsTidspunkt: ZonedDateTime?,
+        val feilbeskrivelse: String?,
+        val epostemne: String?,
+        val url: String?,
+        val erRevarsel: Boolean?,
+    )
+
+    data class Varsel(
+        val varselType: String?,
+        val mottattTidspunkt: ZonedDateTime?,
+        val meldingListe: List<VarselMelding>?,
+        val erRevarsling: Boolean,
+    ) : UnifiedVarsel
 }
