@@ -47,7 +47,6 @@ class VarslerServiceImplTest {
         assertThat(result.feil).hasSize(2)
     }
 
-
     @Test
     internal fun `skal hente varsler fra brukervarsel og brukernotifikasjon`() {
         every { brukervarselV1.hentVarselForBruker(any()) } returns WSHentVarselForBrukerResponse().withBrukervarsel(
@@ -67,7 +66,6 @@ class VarslerServiceImplTest {
         assertThat(varsler.varsler).hasSize(6)
         assertThat(varsler.feil).isEmpty()
     }
-
 
     private val event = Brukernotifikasjon.Event(
         fodselsnummer = "12345679810",
