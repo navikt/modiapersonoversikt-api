@@ -18,17 +18,34 @@ class VarslerServiceImpl(
 
     override fun hentLegacyVarsler(fnr: Fnr): List<VarslerService.Varsel> {
         return hentBrukervarsel(fnr)
+            .getOrElse {
+                log.error("Feilet ved uthenting a varsler.", it)
+                emptyList()
+            }
     }
 
-    override fun hentAlleVarsler(fnr: Fnr): List<VarslerService.UnifiedVarsel> {
-        val (varsel, notifikasjoner) = inParallel(
+    override fun hentAlleVarsler(fnr: Fnr): VarslerService.Result {
+        val (varsel: Result<List<VarslerService.Varsel>>, notifikasjoner: Result<List<Brukernotifikasjon.Event>>) = inParallel(
             { hentBrukervarsel(fnr) },
-            { brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr) }
+            { runCatching { brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr) } }
         )
-        return varsel + notifikasjoner
+
+        val feil = listOfNotNull(
+            varsel.exceptionOrNull()?.let { "Feil ved uthenting av varsler" },
+            notifikasjoner.exceptionOrNull()?.let { "Feil ved uthenting av notifikasjoner" },
+        )
+        val varsler = listOfNotNull(
+            varsel.getOrDefault(emptyList()),
+            notifikasjoner.getOrDefault(emptyList()),
+        ).flatten()
+
+        return VarslerService.Result(
+            feil = feil,
+            varsler = varsler
+        )
     }
 
-    private fun hentBrukervarsel(fnr: Fnr): List<VarslerService.Varsel> {
+    private fun hentBrukervarsel(fnr: Fnr): Result<List<VarslerService.Varsel>> {
         return brukervarselV1.runCatching {
             val request = WSHentVarselForBrukerRequest().withBruker(WSPerson().withIdent(fnr.get()))
             val response = hentVarselForBruker(request)
@@ -36,9 +53,6 @@ class VarslerServiceImpl(
                 .brukervarsel
                 .varselbestillingListe
                 .map(::tilVarsel)
-        }.getOrElse {
-            log.error("Feilet ved uthenting a varsler.", it)
-            emptyList()
         }
     }
 

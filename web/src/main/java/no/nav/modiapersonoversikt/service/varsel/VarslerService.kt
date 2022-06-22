@@ -5,10 +5,11 @@ import java.time.ZonedDateTime
 
 interface VarslerService {
     fun hentLegacyVarsler(fnr: Fnr): List<Varsel>
-    fun hentAlleVarsler(fnr: Fnr): List<UnifiedVarsel>
+    fun hentAlleVarsler(fnr: Fnr): Result
 
     interface UnifiedVarsel
 
+    data class Result(val feil: List<String>, val varsler: List<UnifiedVarsel>)
     data class VarselMelding(
         val kanal: String?,
         val innhold: String?,
