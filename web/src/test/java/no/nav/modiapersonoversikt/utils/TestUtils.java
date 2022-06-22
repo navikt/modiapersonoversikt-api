@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.utils;
 
+import javax.xml.soap.SOAPFault;
+
 public class TestUtils {
     public interface UnsafeRunneable {
         void call() throws Throwable;
