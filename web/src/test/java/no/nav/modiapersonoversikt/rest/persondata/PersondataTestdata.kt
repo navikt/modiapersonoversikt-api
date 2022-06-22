@@ -11,88 +11,6 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-fun gittData(
-    personIdent: String,
-    persondata: HentPersondata.Person,
-    geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching(InformasjonElement.PDL_GT) { "0123" },
-    erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { false },
-    navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?> = PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) { gittNavKontorEnhet() },
-    dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
-    bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
-    tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
-    kontaktinformasjonTredjepartsperson: PersondataResult<Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson>> = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) { kontaktinformasjonTredjepartspersonMap }
-) = PersondataFletter.Data(
-    personIdent = personIdent,
-    persondata = persondata,
-    geografiskeTilknytning = geografiskeTilknytning,
-    erEgenAnsatt = erEgenAnsatt,
-    navEnhet = navEnhet,
-    dkifData = dkifData,
-    bankkonto = bankkonto,
-    tredjepartsPerson = tredjepartsPerson,
-    kontaktinformasjonTredjepartsperson = kontaktinformasjonTredjepartsperson
-)
-
-fun gittPerson(
-    fnr: String = "12345678910",
-    navn: String = "Teste Ruud McTestesen",
-    kjonn: HentPersondata.KjoennType = HentPersondata.KjoennType.MANN,
-    fodselsdato: String = "2000-01-02",
-    adressebeskyttelse: HentPersondata.AdressebeskyttelseGradering = HentPersondata.AdressebeskyttelseGradering.UGRADERT,
-    statsborgerskap: HentPersondata.Statsborgerskap = statsborger,
-    dodsdato: String = "2010-01-02",
-    folkeregisterpersonstatus: String = "bosatt",
-    sivilstand: HentPersondata.Sivilstand = sivilstandPerson,
-    sikkerhetstiltak: HentPersondata.Sikkerhetstiltak = sikkerhetstiltakData,
-    dodsbo: HentPersondata.KontaktinformasjonForDoedsbo = kontaktinformasjonDodsbo,
-    tilrettelagtKommunikasjon: HentPersondata.TilrettelagtKommunikasjon = tilrettelagtKommunikasjonData,
-    fullmakt: HentPersondata.Fullmakt = fullmaktPerson,
-    telefonnummer: HentPersondata.Telefonnummer = HentPersondata.Telefonnummer("47", "90909090", 1, metadata),
-    vergemaalEllerFremtidsfullmakt: HentPersondata.VergemaalEllerFremtidsfullmakt = vergemal,
-    foreldreansvar: HentPersondata.Foreldreansvar = foreldreansvarData,
-    forelderBarnRelasjon: List<HentPersondata.ForelderBarnRelasjon> = forelderBarnRelasjonData,
-    deltBosted: HentPersondata.DeltBosted = deltBostedData,
-    bosted: HentPersondata.Bostedsadresse = bostedadresseData,
-    kontaktadresse: HentPersondata.Kontaktadresse = kontaktadresseData,
-    oppholdsadresse: HentPersondata.Oppholdsadresse = oppholdsadresseData
-) = HentPersondata.Person(
-    navn = gittHentPersondataNavn(navn),
-    kjoenn = listOf(HentPersondata.Kjoenn(kjonn)),
-    foedsel = listOf(HentPersondata.Foedsel(gittDato(fodselsdato))),
-    adressebeskyttelse = listOf(
-        HentPersondata.Adressebeskyttelse(adressebeskyttelse)
-    ),
-    statsborgerskap = listOf(statsborgerskap),
-    doedsfall = listOf(HentPersondata.Doedsfall(gittDato(dodsdato))),
-    folkeregisterpersonstatus = listOf(HentPersondata.Folkeregisterpersonstatus(folkeregisterpersonstatus)),
-    sivilstand = listOf(sivilstand),
-    sikkerhetstiltak = listOf(sikkerhetstiltak),
-    kontaktinformasjonForDoedsbo = listOf(dodsbo),
-    tilrettelagtKommunikasjon = listOf(tilrettelagtKommunikasjon),
-    fullmakt = listOf(fullmakt),
-    telefonnummer = listOf(telefonnummer),
-    vergemaalEllerFremtidsfullmakt = listOf(vergemaalEllerFremtidsfullmakt),
-    foreldreansvar = listOf(foreldreansvar),
-    forelderBarnRelasjon = forelderBarnRelasjon,
-    deltBosted = listOf(deltBosted),
-    bostedsadresse = listOf(
-        bosted,
-        bosted.copy(
-            gyldigFraOgMed = gittDateTime("2021-10-01T00:00:00"),
-            gyldigTilOgMed = null
-        )
-    ),
-    kontaktadresse = listOf(
-        kontaktadresse,
-        kontaktadresse.copy(
-            gyldigFraOgMed = null,
-            gyldigTilOgMed = null,
-            vegadresse = gittVegadresse(husnummer = "10")
-        )
-    ),
-    oppholdsadresse = listOf(oppholdsadresse)
-)
-
 fun gittKodeverk() = EnhetligKodeverk.Kodeverk(
     navn = "kodeverk",
     kodeverk = mapOf(
@@ -490,4 +408,54 @@ internal fun ukjentBosted(bosted: String) = listOf(
     adresse.copy(
         ukjentBosted = HentPersondata.UkjentBosted(bosted)
     )
+)
+
+internal val testPerson = HentPersondata.Person(
+    navn = gittHentPersondataNavn("Teste Ruud McTestesen"),
+    kjoenn = listOf(HentPersondata.Kjoenn(HentPersondata.KjoennType.MANN)),
+    foedsel = listOf(HentPersondata.Foedsel(gittDato("2000-01-02"))),
+    adressebeskyttelse = listOf(
+        HentPersondata.Adressebeskyttelse(HentPersondata.AdressebeskyttelseGradering.UGRADERT)
+    ),
+    statsborgerskap = listOf(statsborger),
+    doedsfall = emptyList(),
+    folkeregisterpersonstatus = listOf(HentPersondata.Folkeregisterpersonstatus("bosatt")),
+    sivilstand = listOf(sivilstandPerson),
+    sikkerhetstiltak = listOf(sikkerhetstiltakData),
+    kontaktinformasjonForDoedsbo = listOf(kontaktinformasjonDodsbo),
+    tilrettelagtKommunikasjon = listOf(tilrettelagtKommunikasjonData),
+    fullmakt = listOf(fullmaktPerson),
+    telefonnummer = listOf(HentPersondata.Telefonnummer("47", "90909090", 1, metadata)),
+    vergemaalEllerFremtidsfullmakt = listOf(vergemal),
+    foreldreansvar = listOf(foreldreansvarData),
+    forelderBarnRelasjon = forelderBarnRelasjonData,
+    deltBosted = listOf(deltBostedData),
+    bostedsadresse = listOf(
+        bostedadresseData,
+        bostedadresseData.copy(
+            gyldigFraOgMed = gittDateTime("2021-10-01T00:00:00"),
+            gyldigTilOgMed = null
+        )
+    ),
+    kontaktadresse = listOf(
+        kontaktadresseData,
+        kontaktadresseData.copy(
+            gyldigFraOgMed = null,
+            gyldigTilOgMed = null,
+            vegadresse = gittVegadresse(husnummer = "10")
+        )
+    ),
+    oppholdsadresse = listOf(oppholdsadresseData)
+)
+
+internal val testData = PersondataFletter.Data(
+    personIdent = "12345678910",
+    persondata = testPerson,
+    geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { "0123" },
+    erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { false },
+    navEnhet = PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) { gittNavKontorEnhet() },
+    dkifData = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
+    bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
+    tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
+    kontaktinformasjonTredjepartsperson = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) { kontaktinformasjonTredjepartspersonMap }
 )
