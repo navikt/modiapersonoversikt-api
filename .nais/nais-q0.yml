@@ -170,3 +170,5 @@ spec:
       value: "https://skjermede-personer-pip.dev.intern.nav.no"
     - name: ARENA_SAK_VEDTAK_URL
       value: "https://arena-q0.adeo.no/arena_ws/services/ArenaSakVedtakService"
+    - name: DITTNAV_EVENTER_MODIA_URL
+      value: "https://app-q0.adeo.no/dittnav-eventer-modia"
