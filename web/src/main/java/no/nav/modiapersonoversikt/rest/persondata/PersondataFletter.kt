@@ -373,16 +373,16 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return when (system) {
             "FREG" -> "folkeregisteret"
             "BD03" -> "bruker"
-            "srvpersonopplysnin" -> "personopplysninger"
+            "srvpersonopplysnin" -> "bruker"
             "PP01" -> "NAV"
             "BD06" -> "NAV"
             "FS22" -> "NAV"
-            "personopplysninger-api" -> "personopplysninger"
+            "personopplysninger-api" -> "bruker"
             "srvperson-forvalter" -> "NAV"
             "IT00" -> "NAV"
-            "srvPdl-Web" -> "PDL"
+            "srvPdl-Web" -> "NAV"
             "BI00" -> "NAV"
-            "pdl-web" -> "PDL"
+            "pdl-web" -> "NAV"
             "SrvOppgRobotNOP" -> "NAV"
             else -> {
                 log.info("[PDL-KILDE] systemKilde: $system")
