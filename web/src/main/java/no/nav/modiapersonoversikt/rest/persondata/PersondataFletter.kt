@@ -423,6 +423,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             "innloggetTjeneste" -> "innlogget tjeneste"
             "STATENS_KARTVERK" -> "statens kartverk"
             "skatteetaten" -> "skatteetaten"
+            "NAV" -> "NAV"
+            "matrikkelen" -> "statens kartverk"
+            "UTLENDINGSDIREKTORATET" -> "utlendingsdirektoratet"
             else -> {
                 log.info("[PDL-KILDE] Kilde: $kilde")
                 kilde
