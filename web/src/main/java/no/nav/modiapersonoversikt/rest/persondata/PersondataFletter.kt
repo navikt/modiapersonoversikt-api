@@ -357,9 +357,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata): Persondata.SistEndret? {
         return metadata.endringer.maxByOrNull { it.registrert.value }
             ?.let {
-                TjenestekallLogger.logger.info(
-                    "[PDL-KILDE] registrertAv: ${it.registrertAv} systemKilde: ${it.systemkilde} kilde: ${it.kilde}"
-                )
                 Persondata.SistEndret(
                     ident = it.registrertAv,
                     tidspunkt = it.registrert.value,
