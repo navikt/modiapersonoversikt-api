@@ -23,6 +23,6 @@ class BrukernotifikasjonService(
     }
 
     companion object {
-        val producerDenyList = listOf("sosialhjelp-dialog-api","sosialhjelp-dialog-api-dev")
+        val producerDenyList = listOf("sosialhjelp-dialog-api", "sosialhjelp-dialog-api-dev")
     }
 }
