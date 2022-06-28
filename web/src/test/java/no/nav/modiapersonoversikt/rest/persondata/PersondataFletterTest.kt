@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
-import kotlin.test.assertEquals
 
 internal class PersondataFletterTest {
     @JvmField
@@ -57,16 +56,21 @@ internal class PersondataFletterTest {
     }
 
     @Test
-    internal fun `skal mappe data fra pdl til Persondata når feilende systemer`() {
-        val data = testData.copy(
-            personIdent = fnr,
-            persondata = testPerson,
+    internal fun `skal filtrere ut egenAnsatt fra feiledeSystemer når veileder ikke har tilgang`() {
+        snapshot.assertMatches(
+            mapper.flettSammenData(
+                data = testData.copy(
+                    personIdent = fnr,
+                    persondata = testPerson,
+                    dkifData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
+                    erEgenAnsatt = PersondataResult.Failure(
+                        PersondataResult.InformasjonElement.EGEN_ANSATT,
+                        Throwable()
+                    ),
+                    harTilgangTilSkjermetPerson = false
+                ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
+            ).feilendeSystemer
         )
-        every { data.feilendeSystemer() } returns listOf(
-            PersondataResult.InformasjonElement.EGEN_ANSATT.name,
-            PersondataResult.InformasjonElement.PDL_GT.name
-        )
-        val feilendeSystemer = data.feilendeSystemer()
-        assertEquals(feilendeSystemer.size, 1)
     }
 }

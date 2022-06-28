@@ -56,7 +56,7 @@ class PersondataServiceImpl(
                 Fnr(personIdent)
             )
         }
-        val tilgangSkjermetPerson = PersondataResult
+        val harTilgangTilSkjermetPerson = PersondataResult
             .runCatching(InformasjonElement.VEILEDER_ROLLER) { harTilgangTilSkjermetPerson() }
             .getOrElse(false)
         val tilganger = PersondataResult
@@ -100,7 +100,7 @@ class PersondataServiceImpl(
                 bankkonto,
                 tredjepartsPerson,
                 kontaktinformasjonTredjepartsperson,
-                tilgangSkjermetPerson
+                harTilgangTilSkjermetPerson
             )
         )
     }

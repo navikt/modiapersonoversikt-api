@@ -35,7 +35,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val bankkonto: PersondataResult<HentPersonResponse>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
         val kontaktinformasjonTredjepartsperson: PersondataResult<Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson>>,
-        val tilgangSkjermetPerson: Boolean
+        val harTilgangTilSkjermetPerson: Boolean
     ) {
         private val ekstraDatapunker = listOf(
             geografiskeTilknytning,
@@ -55,7 +55,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 } else {
                     null
                 }
-            }.filter { !tilgangSkjermetPerson && it == InformasjonElement.EGEN_ANSATT.name }
+            }.filter { harTilgangTilSkjermetPerson || it != InformasjonElement.EGEN_ANSATT.name }
         }
     }
 
