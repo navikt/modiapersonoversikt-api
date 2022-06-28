@@ -457,5 +457,6 @@ internal val testData = PersondataFletter.Data(
     dkifData = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
     bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
     tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
-    kontaktinformasjonTredjepartsperson = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) { kontaktinformasjonTredjepartspersonMap }
+    kontaktinformasjonTredjepartsperson = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) { kontaktinformasjonTredjepartspersonMap },
+    tilgangSkjermetPerson = false
 )
