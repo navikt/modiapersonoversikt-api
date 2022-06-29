@@ -54,4 +54,42 @@ internal class PersondataFletterTest {
             )
         )
     }
+
+    @Test
+    internal fun `skal filtrere ut egenAnsatt fra feiledeSystemer når veileder ikke har tilgang`() {
+        snapshot.assertMatches(
+            mapper.flettSammenData(
+                data = testData.copy(
+                    personIdent = fnr,
+                    persondata = testPerson,
+                    dkifData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
+                    erEgenAnsatt = PersondataResult.Failure(
+                        PersondataResult.InformasjonElement.EGEN_ANSATT,
+                        Throwable()
+                    ),
+                    harTilgangTilSkjermetPerson = false
+                ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
+            ).feilendeSystemer
+        )
+    }
+
+    @Test
+    internal fun `skal ikke filtrere ut egenAnsatt fra feiledeSystemer når veileder har tilgang`() {
+        snapshot.assertMatches(
+            mapper.flettSammenData(
+                data = testData.copy(
+                    personIdent = fnr,
+                    persondata = testPerson,
+                    dkifData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
+                    erEgenAnsatt = PersondataResult.Failure(
+                        PersondataResult.InformasjonElement.EGEN_ANSATT,
+                        Throwable()
+                    ),
+                    harTilgangTilSkjermetPerson = true
+                ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
+            ).feilendeSystemer
+        )
+    }
 }

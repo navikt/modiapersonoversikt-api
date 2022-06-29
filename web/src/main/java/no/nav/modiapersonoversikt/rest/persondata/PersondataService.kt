@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode7Policy
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedSkjermingPolicy
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
@@ -55,6 +56,9 @@ class PersondataServiceImpl(
                 Fnr(personIdent)
             )
         }
+        val harTilgangTilSkjermetPerson = PersondataResult
+            .runCatching(InformasjonElement.VEILEDER_ROLLER) { harTilgangTilSkjermetPerson() }
+            .getOrElse(false)
         val tilganger = PersondataResult
             .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
             .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
@@ -95,7 +99,8 @@ class PersondataServiceImpl(
                 dkifData,
                 bankkonto,
                 tredjepartsPerson,
-                kontaktinformasjonTredjepartsperson
+                kontaktinformasjonTredjepartsperson,
+                harTilgangTilSkjermetPerson
             )
         )
     }
@@ -190,5 +195,14 @@ class PersondataServiceImpl(
             kode6 = tilgangKode6.type == Decision.Type.PERMIT,
             kode7 = tilgangKode7.type == Decision.Type.PERMIT
         )
+    }
+
+    private fun harTilgangTilSkjermetPerson(): Boolean {
+        val ctx = policyEnforcementPoint.createEvaluationContext()
+        val tilgangSkjermetPerson = policyEnforcementPoint.evaluatePolicyWithContext(
+            ctx = ctx,
+            policy = TilgangTilBrukerMedSkjermingPolicy
+        )
+        return tilgangSkjermetPerson.type == Decision.Type.PERMIT
     }
 }
