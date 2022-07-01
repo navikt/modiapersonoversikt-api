@@ -28,7 +28,7 @@ class BrukernotifikasjonClient(val baseUrl: String) : Brukernotifikasjon.Client 
                 Request
                     .Builder()
                     .get()
-                    .url("$baseUrl/fetch/${type.name.lowercase()}/aktive")
+                    .url("$baseUrl/fetch/${type.name.lowercase()}/all")
                     .header("Cookie", "ID_token=${AuthContextUtils.requireToken()}")
                     .header("fodselsnummer", fnr.get())
                     .build()
