@@ -7,7 +7,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
+  IMAGE: ghcr.io/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   CI: true
   TZ: Europe/Oslo
   Q1_TEST_BRANCH: 'refs/heads/fix/spring-version'
@@ -43,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
-          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+          docker login ghcr.io -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
       - name: Deploy to Q1 (Test branch)
