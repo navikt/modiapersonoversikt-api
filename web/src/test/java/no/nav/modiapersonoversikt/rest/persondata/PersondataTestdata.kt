@@ -343,7 +343,6 @@ internal fun gittVegadresse(
     bydelsnummer: String? = null,
     tilleggsnavn: String? = null,
     postnumme: String? = "1444"
-
 ) = HentPersondata.Vegadresse(
     matrikkelId = matrikkelId,
     husbokstav = husbokstav,
