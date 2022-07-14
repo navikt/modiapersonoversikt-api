@@ -5,11 +5,13 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 
-fun arbeidsdagerFraDatoJava(ukedager: Int, startDato: LocalDate): LocalDate {
-    val zone = ZoneId.systemDefault()
-    val date = Date.from(startDato.atStartOfDay(zone).toInstant())
-    val future = NorwegianDateUtil.addWorkingDaysToDate(date, ukedager)
-    return future.toInstant()
-        .atZone(zone)
-        .toLocalDate()
+object DateUtils {
+    fun arbeidsdagerFraDatoJava(ukedager: Int, startDato: LocalDate): LocalDate {
+        val zone = ZoneId.systemDefault()
+        val date = Date.from(startDato.atStartOfDay(zone).toInstant())
+        val future = NorwegianDateUtil.addWorkingDaysToDate(date, ukedager)
+        return future.toInstant()
+            .atZone(zone)
+            .toLocalDate()
+    }
 }
