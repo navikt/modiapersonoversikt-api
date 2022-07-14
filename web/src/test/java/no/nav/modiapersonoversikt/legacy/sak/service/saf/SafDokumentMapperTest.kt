@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.SLADDET
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Entitet.*
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafDokumentMapper.fraSafJournalpost
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INN
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INTERN
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_UT
@@ -39,7 +40,7 @@ private const val vedleggTittel = "Vedleggtittel"
 private const val aremarkFNR = "10108000398"
 private val dokumentStatus = Dokumentstatus.FERDIGSTILT
 
-internal class SafDokumentMapperKtTest {
+internal class SafDokumentMapperTest {
 
     @Test
     fun `dokumentMetadata mapper hele objektet`() {

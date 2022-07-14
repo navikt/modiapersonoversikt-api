@@ -4,22 +4,24 @@ import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import java.time.LocalDateTime
 
-fun fraSafJournalpost(journalpost: HentBrukersDokumenter.Journalpost): DokumentMetadata? {
-    val hovedDokument = fraSafDokumentInfo(getHoveddokumentet(journalpost)) ?: return null
-    return DokumentMetadata().apply {
-        retning = getRetning(journalpost)
-        dato = getDato(journalpost)
-        navn = journalpost.avsenderMottaker?.navn ?: "ukjent"
-        journalpostId = journalpost.journalpostId
-        hoveddokument = hovedDokument
-        vedlegg = getVedlegg(journalpost)
-        avsender = getAvsender(journalpost)
-        mottaker = getMottaker(journalpost)
-        tilhorendeSakid = journalpost.sak?.arkivsaksnummer // TODO denne er deprecated, men brukes per i dag.
-        tilhorendeFagsakId = journalpost.sak?.fagsakId
-        baksystem = baksystem.plus(Baksystem.SAF)
-        temakode = journalpost.tema?.name
-        temakodeVisning = journalpost.temanavn
+object SafDokumentMapper {
+    fun fraSafJournalpost(journalpost: HentBrukersDokumenter.Journalpost): DokumentMetadata? {
+        val hovedDokument = fraSafDokumentInfo(getHoveddokumentet(journalpost)) ?: return null
+        return DokumentMetadata().apply {
+            retning = getRetning(journalpost)
+            dato = getDato(journalpost)
+            navn = journalpost.avsenderMottaker?.navn ?: "ukjent"
+            journalpostId = journalpost.journalpostId
+            hoveddokument = hovedDokument
+            vedlegg = getVedlegg(journalpost)
+            avsender = getAvsender(journalpost)
+            mottaker = getMottaker(journalpost)
+            tilhorendeSakid = journalpost.sak?.arkivsaksnummer // TODO denne er deprecated, men brukes per i dag.
+            tilhorendeFagsakId = journalpost.sak?.fagsakId
+            baksystem = baksystem.plus(Baksystem.SAF)
+            temakode = journalpost.tema?.name
+            temakodeVisning = journalpost.temanavn
+        }
     }
 }
 private fun getAvsender(journalpost: HentBrukersDokumenter.Journalpost): Entitet =

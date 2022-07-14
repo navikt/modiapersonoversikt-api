@@ -15,7 +15,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.OpprettOppgaveReques
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OpprettOppgaveResponse
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OpprettSkjermetOppgaveRequest
 import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
-import no.nav.modiapersonoversikt.utils.arbeidsdagerFraDatoJava
+import no.nav.modiapersonoversikt.utils.DateUtils.arbeidsdagerFraDatoJava
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
