@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 
-object DateUtils {
+object ArbeidsdagerUtils {
     fun arbeidsdagerFraDatoJava(ukedager: Int, startDato: LocalDate): LocalDate {
         val zone = ZoneId.systemDefault()
         val date = Date.from(startDato.atStartOfDay(zone).toInstant())
