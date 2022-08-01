@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import io.mockk.*
+import kotlinx.coroutines.runBlocking
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.KodeverkApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GjelderDTO
@@ -55,7 +56,9 @@ internal class EnhetligKodeverkServiceImplTest {
         val landkode = service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")
         assertThat(landkode).isEqualTo("Norge")
 
-        service.prepopulerCache()
+        runBlocking {
+            service.prepopulerCache()
+        }
 
         val oppdatertLandkode = service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")
         assertThat(oppdatertLandkode).isEqualTo("Noreg")
@@ -70,7 +73,9 @@ internal class EnhetligKodeverkServiceImplTest {
         assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("Norge")
         every { providers.fellesKodeverk.hentKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
 
-        service.prepopulerCache()
+        runBlocking {
+            service.prepopulerCache()
+        }
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
         assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("Norge")

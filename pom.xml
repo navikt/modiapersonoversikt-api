@@ -33,6 +33,7 @@
 
         <!-- Tjenestespecs -->
         <tjenestespesifikasjoner.version>1.2020.06.16-14.51-3b45df54f90a</tjenestespesifikasjoner.version>
+        <modia-common-utils.version>1.2022.08.01-11.26-97308e41bb8d</modia-common-utils.version>
         <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
 
         <hamkrest.version>1.7.0.0</hamkrest.version>
@@ -278,6 +279,13 @@
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
+            </dependency>
+
+            <!--Modia common-->
+            <dependency>
+                <groupId>no.nav.personoversikt</groupId>
+                <artifactId>kotlin-utils</artifactId>
+                <version>${modia-common-utils.version}</version>
             </dependency>
 
             <!--Modig-->
