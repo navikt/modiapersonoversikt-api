@@ -91,18 +91,14 @@ class NorgApiImpl(
     private val organiseringApi = OrganiseringApi(url, httpClient)
 
     init {
-        runBlocking {
-            hentEnheterOgKontaktinformasjon()
-            scheduler.scheduleAtFixedRate(
-                delay = cacheRetention.toMillis(),
-                period = cacheRetention.toMillis(),
-                action = {
-                    runBlocking {
-                        hentEnheterOgKontaktinformasjon()
-                    }
-                }
-            )
-        }
+        hentEnheterOgKontaktinformasjon()
+        scheduler.scheduleAtFixedRate(
+            delay = cacheRetention.toMillis(),
+            period = cacheRetention.toMillis(),
+            action = {
+                hentEnheterOgKontaktinformasjon()
+            }
+        )
     }
 
     override fun hentGeografiskTilknyttning(enhet: EnhetId): List<EnhetGeografiskTilknyttning> {
@@ -218,22 +214,24 @@ class NorgApiImpl(
         }
     }
 
-    private suspend fun hentEnheterOgKontaktinformasjon() {
-        retry.run {
-            cache = enhetKontaktInfoApi
-                .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
-                    consumerId = AppConstants.SYSTEMUSER_USERNAME
-                )
-                .mapNotNull {
-                    try {
-                        toInternalDomain(it)
-                    } catch (e: Exception) {
-                        log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
-                        null
+    private fun hentEnheterOgKontaktinformasjon() {
+        runBlocking {
+            retry.run {
+                cache = enhetKontaktInfoApi
+                    .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
+                        consumerId = AppConstants.SYSTEMUSER_USERNAME
+                    )
+                    .mapNotNull {
+                        try {
+                            toInternalDomain(it)
+                        } catch (e: Exception) {
+                            log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
+                            null
+                        }
                     }
-                }
-                .associateBy { EnhetId(it.enhet.enhetId) }
-            lastUpdateOfCache = LocalDateTime.now(clock)
+                    .associateBy { EnhetId(it.enhet.enhetId) }
+                lastUpdateOfCache = LocalDateTime.now(clock)
+            }
         }
     }
 

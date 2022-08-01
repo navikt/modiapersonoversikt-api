@@ -33,17 +33,13 @@ class EnhetligKodeverkServiceImpl(
     )
 
     init {
-        runBlocking {
-            prepopulerCache()
-        }
+        prepopulerCache()
 
         scheduler.scheduleAtFixedRate(
             time = Date.from(hentScheduleDatoInstant()),
             period = cacheRetention.toMillis()
         ) {
-            runBlocking {
-                prepopulerCache()
-            }
+            prepopulerCache()
         }
     }
 
@@ -86,10 +82,12 @@ class EnhetligKodeverkServiceImpl(
         }
     }
 
-    internal suspend fun prepopulerCache() {
+    internal fun prepopulerCache() {
         KodeverkConfig.values().forEach { config ->
-            retry.run {
-                cache[config] = KodeverkCacheEntry(LocalDateTime.now(clock), config.hentKodeverk(providers))
+            runBlocking {
+                retry.run {
+                    cache[config] = KodeverkCacheEntry(LocalDateTime.now(clock), config.hentKodeverk(providers))
+                }
             }
         }
     }
