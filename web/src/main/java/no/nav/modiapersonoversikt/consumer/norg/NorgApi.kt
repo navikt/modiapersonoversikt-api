@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.norg
 
+import kotlinx.coroutines.runBlocking
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.EnhetId
@@ -17,8 +18,8 @@ import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetskontaktinfoApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.OrganiseringApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.*
-import no.nav.modiapersonoversikt.utils.Retry
 import no.nav.modiapersonoversikt.utils.isNumeric
+import no.nav.personoversikt.utils.Retry
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -27,6 +28,8 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 
 interface NorgApi : Pingable {
     companion object {
@@ -75,9 +78,9 @@ class NorgApiImpl(
 
     private val retry = Retry(
         Retry.Config(
-            initDelay = 30 * 1000,
+            initDelay = 30.seconds,
             growthFactor = 2.0,
-            delayLimit = 60 * 60 * 1000,
+            delayLimit = 1.hours,
             scheduler = scheduler
         )
     )
@@ -92,7 +95,9 @@ class NorgApiImpl(
         scheduler.scheduleAtFixedRate(
             delay = cacheRetention.toMillis(),
             period = cacheRetention.toMillis(),
-            action = { hentEnheterOgKontaktinformasjon() }
+            action = {
+                hentEnheterOgKontaktinformasjon()
+            }
         )
     }
 
@@ -210,21 +215,23 @@ class NorgApiImpl(
     }
 
     private fun hentEnheterOgKontaktinformasjon() {
-        retry.run {
-            cache = enhetKontaktInfoApi
-                .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
-                    consumerId = AppConstants.SYSTEMUSER_USERNAME
-                )
-                .mapNotNull {
-                    try {
-                        toInternalDomain(it)
-                    } catch (e: Exception) {
-                        log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
-                        null
+        runBlocking {
+            retry.run {
+                cache = enhetKontaktInfoApi
+                    .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
+                        consumerId = AppConstants.SYSTEMUSER_USERNAME
+                    )
+                    .mapNotNull {
+                        try {
+                            toInternalDomain(it)
+                        } catch (e: Exception) {
+                            log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
+                            null
+                        }
                     }
-                }
-                .associateBy { EnhetId(it.enhet.enhetId) }
-            lastUpdateOfCache = LocalDateTime.now(clock)
+                    .associateBy { EnhetId(it.enhet.enhetId) }
+                lastUpdateOfCache = LocalDateTime.now(clock)
+            }
         }
     }
 

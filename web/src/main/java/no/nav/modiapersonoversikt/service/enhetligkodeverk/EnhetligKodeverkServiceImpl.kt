@@ -1,13 +1,16 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
+import kotlinx.coroutines.runBlocking
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
-import no.nav.modiapersonoversikt.utils.Retry
+import no.nav.personoversikt.utils.Retry
 import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 
 class EnhetligKodeverkServiceImpl(
     private val providers: KodeverkProviders,
@@ -22,9 +25,9 @@ class EnhetligKodeverkServiceImpl(
     private val cacheGraceperiod = Duration.ofMinutes(15)
     private val retry = Retry(
         Retry.Config(
-            initDelay = 30 * 1000,
+            initDelay = 30.seconds,
             growthFactor = 2.0,
-            delayLimit = 60 * 60 * 1000,
+            delayLimit = 1.hours,
             scheduler = scheduler
         )
     )
@@ -81,8 +84,10 @@ class EnhetligKodeverkServiceImpl(
 
     internal fun prepopulerCache() {
         KodeverkConfig.values().forEach { config ->
-            retry.run {
-                cache[config] = KodeverkCacheEntry(LocalDateTime.now(clock), config.hentKodeverk(providers))
+            runBlocking {
+                retry.run {
+                    cache[config] = KodeverkCacheEntry(LocalDateTime.now(clock), config.hentKodeverk(providers))
+                }
             }
         }
     }
