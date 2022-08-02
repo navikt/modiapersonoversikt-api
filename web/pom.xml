@@ -244,6 +244,12 @@
             <version>3.2.2</version>
         </dependency>
 
+        <!--Modia common-->
+        <dependency>
+            <groupId>no.nav.personoversikt</groupId>
+            <artifactId>kotlin-utils</artifactId>
+        </dependency>
+
         <!-- tjenester -->
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
