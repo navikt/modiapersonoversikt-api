@@ -23,7 +23,7 @@
     <properties>
         <java.version>11</java.version>
         <jaxb.version>2.3.0</jaxb.version>
-        <common.version>2.2022.04.01_08.27-cbfeb0be0ee0</common.version>
+        <common.version>2.2022.08.08_12.01-3b1d8bafc694</common.version>
         <fluent-hc.version>4.2.4</fluent-hc.version>
         <kotlin.version>1.6.10</kotlin.version>
         <mockito.version>2.25.0</mockito.version>
