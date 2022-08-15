@@ -2,6 +2,12 @@
 
 Modia er en intern arbeidsflate som inneholder kjerneinformasjon om brukeren og som gir medarbeiderne i NAV oversikt over brukerens forhold til NAV.
 
+## Henvendelser
+
+Spørsmål knyttet til koden eller prosjektet kan rettes mot:
+
+[Team Personoversikt](https://github.com/navikt/info-team-personoversikt)
+
 ## Dokumentasjon
 
 Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.no/pages/viewpage.action?pageId=272512650
