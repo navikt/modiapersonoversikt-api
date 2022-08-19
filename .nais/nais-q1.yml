@@ -53,6 +53,16 @@ spec:
   azure:
     application:
       enabled: true
+      tenant: trygdeetaten.no
+      claims:
+        extra:
+          - "NAVident"
+  accessPolicy:
+    inbound:
+      rules:
+        - application: modiapersonoversikt-q1
+          namespace: personoversikt
+          cluster: dev-fss
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q1"

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 
 class JournalforingControllerTest {
 
-    private static final String SAKSBEHANDLERS_IDENT = "z999643";
+    private static final String SAKSBEHANDLERS_IDENT = "Z999643";
 
     @Test
     @DisplayName("Knytter til sak og returnerer 200 OK")
