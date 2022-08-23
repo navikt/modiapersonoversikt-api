@@ -22,9 +22,12 @@ public class FilterRegistrationConfig {
     private static final String modiaClientId = EnvironmentUtils.getRequiredProperty("MODIA_CLIENT_ID");
     private static final String modiaRefreshUrl = EnvironmentUtils.getRequiredProperty("MODIA_REFRESH_URL");
 
+    private static final String azureAdClientId = EnvironmentUtils.getRequiredProperty("AZURE_APP_CLIENT_ID");
+    private static final String azureAdDiscoveryUrl = EnvironmentUtils.getRequiredProperty("AZURE_APP_WELL_KNOWN_URL");
+
     @Bean
-    public OidcAuthenticator openAmModiaAuthConfig() {
-        OidcAuthenticatorConfig config = new OidcAuthenticatorConfig()
+    public List<OidcAuthenticator> authConfig() {
+        OidcAuthenticatorConfig openamConfig = new OidcAuthenticatorConfig()
                 .withClientId(modiaClientId)
                 .withDiscoveryUrl(issoDiscoveryUrl)
                 .withIdTokenCookieName("modia_ID_token")
@@ -32,7 +35,12 @@ public class FilterRegistrationConfig {
                 .withRefreshUrl(modiaRefreshUrl)
                 .withRefreshTokenCookieName("modia_refresh_token");
 
-        return OidcAuthenticator.fromConfig(config);
+        OidcAuthenticatorConfig azureAdConfig = new OidcAuthenticatorConfig()
+                .withClientId(azureAdClientId)
+                .withDiscoveryUrl(azureAdDiscoveryUrl)
+                .withUserRole(UserRole.INTERN);
+
+        return OidcAuthenticator.fromConfigs(azureAdConfig, openamConfig);
     }
 
     @Bean

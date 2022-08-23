@@ -53,6 +53,16 @@ spec:
   azure:
     application:
       enabled: true
+      tenant: nav.no
+      claims:
+        extra:
+          - "NAVident"
+  accessPolicy:
+    inbound:
+      rules:
+        - application: modiapersonoversikt
+          namespace: personoversikt
+          cluster: prod-fss
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "p"
