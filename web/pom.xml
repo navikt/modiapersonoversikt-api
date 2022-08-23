@@ -221,6 +221,11 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>kontoregister-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kodeverk-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -281,15 +286,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>person-v3-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>organisasjonv4-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>behandle-person-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>

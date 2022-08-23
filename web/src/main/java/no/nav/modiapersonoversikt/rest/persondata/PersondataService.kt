@@ -2,6 +2,9 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.apis.KontoregisterV1Api
+import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.HentKontoDTO
+import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.KontoinformasjonDTO
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
@@ -15,12 +18,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
@@ -35,8 +32,8 @@ class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
     private val dkif: Dkif.Service,
     private val norgApi: NorgApi,
-    private val personV3: PersonV3,
     private val skjermedePersonerApi: SkjermedePersonerApi,
+    private val kontoregisterV1Api: KontoregisterV1Api,
     private val policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
@@ -119,14 +116,12 @@ class PersondataServiceImpl(
         return PersondataResult.of(geografiskeTilknytning)
     }
 
-    private fun hentBankkonto(fnr: String): HentPersonResponse {
-        return personV3.hentPerson(
-            HentPersonRequest()
-                .withAktoer(PersonIdent().withIdent(NorskIdent().withIdent(fnr)))
-                .withInformasjonsbehov(
-                    Informasjonsbehov.BANKKONTO,
-                    Informasjonsbehov.SPORINGSINFORMASJON
-                )
+    private fun hentBankkonto(fnr: String): KontoinformasjonDTO {
+        return kontoregisterV1Api.hentKonto(
+            HentKontoDTO(
+                kontohaver = fnr,
+                medHistorikk = false
+            )
         )
     }
 

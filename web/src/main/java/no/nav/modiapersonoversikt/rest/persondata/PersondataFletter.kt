@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.KontoinformasjonDTO
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
@@ -10,11 +11,6 @@ import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bankkonto
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoNorge
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Clock
@@ -32,7 +28,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val erEgenAnsatt: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
-        val bankkonto: PersondataResult<HentPersonResponse>,
+        val bankkonto: PersondataResult<KontoinformasjonDTO>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
         val kontaktinformasjonTredjepartsperson: PersondataResult<Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson>>,
         val harTilgangTilSkjermetPerson: Boolean
@@ -926,57 +922,28 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun hentBankkonto(data: Data): PersondataResult<Persondata.Bankkonto?> {
-        return data.bankkonto
-            .map(InformasjonElement.BANKKONTO) {
-                if (it.person is Bruker) {
-                    when (val bankkonto = (it.person as Bruker).bankkonto) {
-                        is BankkontoNorge -> Persondata.Bankkonto(
-                            kontonummer = bankkonto.bankkonto.bankkontonummer,
-                            banknavn = bankkonto.bankkonto.banknavn,
-                            sistEndret = hentSistEndretBankkonto(bankkonto)
-                        )
-                        is BankkontoUtland -> Persondata.Bankkonto(
-                            kontonummer = bankkonto.bankkontoUtland.bankkontonummer,
-                            banknavn = bankkonto.bankkontoUtland.banknavn,
-                            sistEndret = hentSistEndretBankkonto(bankkonto),
-                            bankkode = bankkonto.bankkontoUtland.bankkode,
-                            swift = bankkonto.bankkontoUtland.swift,
-                            landkode = kodeverk.hentKodeBeskrivelse(
-                                Kodeverk.LAND,
-                                bankkonto.bankkontoUtland.landkode.value
-                            ),
-                            adresse = Persondata.Adresse(
-                                linje1 = bankkonto.bankkontoUtland.bankadresse.adresselinje1 ?: "Ukjent adresse",
-                                linje2 = bankkonto.bankkontoUtland.bankadresse.adresselinje2,
-                                linje3 = bankkonto.bankkontoUtland.bankadresse.adresselinje3,
-                                sistEndret = null
-                            ),
-                            valuta = kodeverk.hentKodeBeskrivelse(
-                                Kodeverk.VALUTA,
-                                bankkonto.bankkontoUtland.valuta.value
-                            )
-                        )
-                        else -> null
-                    }
-                } else {
-                    null
-                }
+        return data.bankkonto.map { dto ->
+            dto.aktivKonto?.let {
+                Persondata.Bankkonto(
+                    kontonummer = it.kontonummer,
+                    banknavn = it.utenlandskKontoInfo?.banknavn,
+                    sistEndret = null, // Informasjon finnes ikke i API
+                    bankkode = it.utenlandskKontoInfo?.bankkode,
+                    swift = it.utenlandskKontoInfo?.swiftBicKode,
+                    landkode = it.utenlandskKontoInfo?.bankLandkode?.let { landkode ->
+                        kodeverk.hentKodeBeskrivelse(Kodeverk.LAND, landkode)
+                    },
+                    adresse = Persondata.Adresse(
+                        linje1 = it.utenlandskKontoInfo?.bankadresse1 ?: "Ukjent adresse",
+                        linje2 = it.utenlandskKontoInfo?.bankadresse2,
+                        linje3 = it.utenlandskKontoInfo?.bankadresse3,
+                        sistEndret = null
+                    ),
+                    valuta = it.utenlandskKontoInfo?.valutakode?.let { valutakode ->
+                        kodeverk.hentKodeBeskrivelse(Kodeverk.VALUTA, valutakode)
+                    },
+                )
             }
-    }
-
-    private fun hentSistEndretBankkonto(bankkonto: Bankkonto): Persondata.SistEndret? {
-        return if (bankkonto.endretAv != null && bankkonto.endringstidspunkt != null) {
-            Persondata.SistEndret(
-                ident = bankkonto.endretAv,
-                tidspunkt = bankkonto.endringstidspunkt
-                    .toGregorianCalendar()
-                    .toZonedDateTime()
-                    .toLocalDateTime(),
-                system = "",
-                kilde = ""
-            )
-        } else {
-            null
         }
     }
 
