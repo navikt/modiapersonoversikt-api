@@ -4,6 +4,7 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
@@ -18,6 +19,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/rest/utbetaling/{fnr}")
 class UtbetalingController @Autowired constructor(private val service: UtbetalingService, private val tilgangskontroll: Tilgangskontroll) {
+    val mappingExperiment = Scientist.createExperiment<List<Map<String, Any?>>>(
+        Scientist.Config(
+            name = "UtbetalingMapper",
+            experimentRate = Scientist.FixedValueRate(1.0)
+        )
+    )
 
     @GetMapping
     fun hent(
@@ -34,15 +41,20 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
                 if (startDato == null || sluttDato == null) {
                     ResponseEntity("queryparam ?startDato=yyyy-MM-dd&sluttDato=yyyy-MM-dd må være satt", HttpStatus.BAD_REQUEST)
                 } else {
-                    val utbetalinger = service.hentWSUtbetalinger(
+                    val wsUtbetalinger = service.hentWSUtbetalinger(
                         fnr,
                         startDato,
                         sluttDato
                     )
 
+                    val utbetalinger = mappingExperiment.run(
+                        control = { hentUtbetalinger(wsUtbetalinger) },
+                        experiment = { UtbetalingMapper.hentUtbetalinger(wsUtbetalinger) }
+                    )
+
                     ResponseEntity(
                         mapOf(
-                            "utbetalinger" to hentUtbetalinger(utbetalinger),
+                            "utbetalinger" to utbetalinger,
                             "periode" to mapOf(
                                 "startDato" to startDato.toString(DATOFORMAT),
                                 "sluttDato" to sluttDato.toString(DATOFORMAT)
