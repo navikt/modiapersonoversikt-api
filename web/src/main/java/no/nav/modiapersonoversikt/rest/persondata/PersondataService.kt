@@ -130,6 +130,20 @@ class PersondataServiceImpl(
         )
     }
 
+    fun erGyldigGT(gt: String?): Boolean {
+        return if (gt != null) {
+            when (gt) {
+                "0301" -> false
+                "4601" -> false
+                "5001" -> false
+                "1103" -> false
+                else -> true
+            }
+        } else {
+            false
+        }
+    }
+
     private fun hentNavEnhetFraNorg(
         adressebeskyttelse: List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>,
         geografiskeTilknytning: PersondataResult<String?>
@@ -154,14 +168,18 @@ class PersondataServiceImpl(
                 break
             }
         }
-        return PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) {
-            norgApi
-                .finnNavKontor(gt, diskresjonskode)
-                ?.enhetId
-        }
-            .map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
-                it?.let { enhetId -> norgApi.hentKontaktinfo(EnhetId(enhetId)) }
+        return if (erGyldigGT(gt)) {
+            PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) {
+                norgApi
+                    .finnNavKontor(gt, diskresjonskode)
+                    ?.enhetId
             }
+                .map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
+                    it?.let { enhetId -> norgApi.hentKontaktinfo(EnhetId(enhetId)) }
+                }
+        } else {
+            PersondataResult.NotRelevant()
+        }
     }
 
     private fun HentPersondata.Person.findTredjepartsPersoner(): List<String> {
