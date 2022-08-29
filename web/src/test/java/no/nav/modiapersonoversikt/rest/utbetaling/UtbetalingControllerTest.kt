@@ -5,6 +5,8 @@ import io.mockk.mockk
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingService
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -32,6 +34,9 @@ internal class UtbetalingControllerTest {
 
     @Test
     fun `Kaster feil ved mangel på dato`() {
-        assertEquals(400, controller.hent(FNR, null, null).statusCode.value())
+        val exception = assertFailsWith<ResponseStatusException> {
+            controller.hent(FNR, null, null)
+        }
+        assertEquals(HttpStatus.BAD_REQUEST, exception.status)
     }
 }
