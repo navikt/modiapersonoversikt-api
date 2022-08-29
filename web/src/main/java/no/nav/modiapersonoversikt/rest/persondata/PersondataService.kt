@@ -130,17 +130,12 @@ class PersondataServiceImpl(
         )
     }
 
+    val GT_SOM_BURDE_HA_BYDEL = listOf("0301", "4601", "5001", "1103")
     fun erGyldigGT(gt: String?): Boolean {
-        return if (gt != null) {
-            when (gt) {
-                "0301" -> false
-                "4601" -> false
-                "5001" -> false
-                "1103" -> false
-                else -> true
-            }
-        } else {
-            false
+        return when {
+            gt == null -> false
+            GT_SOM_BURDE_HA_BYDEL.contains(gt) -> false
+            else -> true
         }
     }
 
