@@ -626,9 +626,13 @@ enum Kanal {
     # Forsendelsen inneholder en komplett chatdialog (inngående og utgående meldinger) mellom en bruker og en veileder i NAV.
     NAV_NO_CHAT
 
-    # Brevet er sendt til virksomhet som taushetsbelagt digital post.
+    # Brevet er sendt via digital post til virksomhet.
     # * Brukes for utgående journalposter.
-    DPVT
+    DPV
+
+    # Brevet er sendt via digital post til virksomhet som sensitiv post.
+    # * Brukes for utgående journalposter.
+    DPVS
 
     # Forsendelsen har ingen kjent kanal.
     UKJENT
