@@ -77,6 +77,7 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
                 "erUtbetaltTilOrganisasjon" to (it.utbetaltTil is WSOrganisasjon),
                 "erUtbetaltTilSamhandler" to (it.utbetaltTil is WSSamhandler),
                 "nettobeløp" to it.utbetalingNettobeloep,
+                "nettobelop" to it.utbetalingNettobeloep,
                 "melding" to it.utbetalingsmelding?.trim(),
                 "metode" to it.utbetalingsmetode?.trim(),
                 "status" to it.utbetalingsstatus?.trim(),
@@ -98,6 +99,7 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
                 "skattsum" to it.skattsum,
                 "periode" to it.ytelsesperiode?.let { ytelsesperiode -> hentYtelsesperiode(ytelsesperiode) },
                 "nettobeløp" to it.ytelseNettobeloep,
+                "nettobelop" to it.ytelseNettobeloep,
                 "bilagsnummer" to it.bilagsnummer?.trim(),
                 "arbeidsgiver" to it.refundertForOrg?.let { orgnr -> hentArbeidsgiver(orgnr) }
             )
@@ -109,9 +111,11 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
             mapOf(
                 "ytelseskomponenttype" to it.ytelseskomponenttype?.trim(),
                 "satsbeløp" to it.satsbeloep,
+                "satsbelop" to it.satsbeloep,
                 "satstype" to it.satstype?.trim(),
                 "satsantall" to it.satsantall,
-                "ytelseskomponentbeløp" to it.ytelseskomponentbeloep
+                "ytelseskomponentbeløp" to it.ytelseskomponentbeloep,
+                "ytelseskomponentbelop" to it.ytelseskomponentbeloep,
             )
         }
     }
@@ -121,6 +125,7 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
             mapOf(
                 "trekktype" to it.trekktype?.trim(),
                 "trekkbeløp" to it.trekkbeloep,
+                "trekkbelop" to it.trekkbeloep,
                 "kreditor" to it.kreditor?.trim()
             )
         }
@@ -129,7 +134,8 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
     private fun hentSkattListe(skatt: List<WSSkatt>): List<Map<String, Any?>> {
         return skatt.map {
             mapOf(
-                "skattebeløp" to it.skattebeloep
+                "skattebeløp" to it.skattebeloep,
+                "skattebelop" to it.skattebeloep,
             )
         }
     }
@@ -141,7 +147,7 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
         )
     }
 
-    private fun hentArbeidsgiver(it: WSAktoer): Map<String, String> {
+    private fun hentArbeidsgiver(it: WSAktoer): Map<String, String?> {
         return mapOf(
             "orgnr" to it.aktoerId,
             "navn" to it.navn
