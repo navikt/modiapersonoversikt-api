@@ -8,7 +8,6 @@ class UtbetalingDTO(
     val erUtbetaltTilPerson: Boolean,
     val erUtbetaltTilOrganisasjon: Boolean,
     val erUtbetaltTilSamhandler: Boolean,
-    val nettobeløp: Double,
     val nettobelop: Double,
     val melding: String?,
     val metode: String,
@@ -26,7 +25,6 @@ class YtelseDTO(
     val skattListe: List<SkattDTO>,
     val skattsum: Double,
     val periode: YtelsePeriodeDTO,
-    val nettobeløp: Double,
     val nettobelop: Double,
     val bilagsnummer: String?,
     val arbeidsgiver: ArbeidgiverDTO?,
@@ -34,21 +32,17 @@ class YtelseDTO(
 
 class YtelseKomponentDTO(
     val ytelseskomponenttype: String,
-    val satsbeløp: Double?,
     val satsbelop: Double?,
     val satstype: String?,
     val satsantall: Double?,
-    val ytelseskomponentbeløp: Double,
     val ytelseskomponentbelop: Double,
 )
 class TrekkDTO(
     val trekktype: String,
-    val trekkbeløp: Double,
     val trekkbelop: Double,
     val kreditor: String?,
 )
 class SkattDTO(
-    val skattebeløp: Double,
     val skattebelop: Double,
 )
 class YtelsePeriodeDTO(
