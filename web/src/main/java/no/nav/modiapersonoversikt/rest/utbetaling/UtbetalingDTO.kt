@@ -57,5 +57,5 @@ class YtelsePeriodeDTO(
 )
 class ArbeidgiverDTO(
     val orgnr: String,
-    val navn: String,
+    val navn: String?,
 )
