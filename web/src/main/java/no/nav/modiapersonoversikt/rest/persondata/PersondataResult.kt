@@ -56,7 +56,7 @@ sealed class PersondataResult<T>(val system: InformasjonElement) {
         return when (this) {
             is Failure<*> -> this as PersondataResult<S>
             is NotRelevant<*> -> this as PersondataResult<S>
-            is Success<T> -> block(this.value as PersondataResult<T>)
+            is Success<T> -> block(this)
         }
     }
 
