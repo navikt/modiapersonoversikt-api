@@ -42,15 +42,17 @@ internal class PersondataServiceImplTest {
                 person = null
             )
         )
-        every { norgApi
-            .finnNavKontor(any(), any())
-            ?.enhetId
+        every {
+            norgApi
+                .finnNavKontor(any(), any())
+                ?.enhetId
         } returns ugyldigGT
 
         every { norgApi.hentKontaktinfo(EnhetId(ugyldigGT)) } returns gittNavKontorEnhet()
         val navEnhet = persondataServiceImpl.hentNavEnhetFraNorg(
             adressebeskyttelse = persondataServiceImpl.persondataFletter.hentAdressebeskyttelse(
-                testPerson.adressebeskyttelse),
+                testPerson.adressebeskyttelse
+            ),
             geografiskeTilknytning = persondataServiceImpl.hentGeografiskTilknyttning(fnr, testPerson)
         ).getOrNull()
 
@@ -71,21 +73,20 @@ internal class PersondataServiceImplTest {
                 person = null
             )
         )
-        every { norgApi
-            .finnNavKontor(any(), any())
-            ?.enhetId
+        every {
+            norgApi
+                .finnNavKontor(any(), any())
+                ?.enhetId
         } returns "0123"
         every { norgApi.hentKontaktinfo(EnhetId("0123")) } returns gittNavKontorEnhet()
 
         val navEnhet = persondataServiceImpl.hentNavEnhetFraNorg(
             adressebeskyttelse = persondataServiceImpl.persondataFletter.hentAdressebeskyttelse(
-                testPerson.adressebeskyttelse),
+                testPerson.adressebeskyttelse
+            ),
             geografiskeTilknytning = persondataServiceImpl.hentGeografiskTilknyttning(fnr, testPerson)
         ).getOrNull()
 
         assertEquals("0123", navEnhet?.enhet?.enhetId)
     }
-
-
-
 }
