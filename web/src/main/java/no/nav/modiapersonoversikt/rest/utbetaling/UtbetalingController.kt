@@ -28,6 +28,7 @@ class UtbetalingController @Autowired constructor(
         val startDato: String,
         val sluttDato: String
     )
+
     @GetMapping
     fun hent(
         @PathVariable("fnr") fnr: String,
