@@ -29,7 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UtbetalingServiceImplTest {
+public class WSUtbetalingServiceImplTest {
     public static final int NUMBER_OF_DAYS_TO_SHOW = 30;
 
     public static final String FNR = "12345";
@@ -37,7 +37,7 @@ public class UtbetalingServiceImplTest {
     private UtbetalingV1 utbetalingV1;
 
     @InjectMocks
-    private UtbetalingServiceImpl utbetalingService = new UtbetalingServiceImpl();
+    private WSUtbetalingServiceImpl utbetalingService = new WSUtbetalingServiceImpl();
 
     @Test
     public void generererKorrektPeriode() {
@@ -56,7 +56,7 @@ public class UtbetalingServiceImplTest {
 
     @Test
     public void hentUtbetalingerReturnererKorrekteHovedytelser() {
-        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        WSUtbetalingServiceImpl spyService = spy(utbetalingService);
         LocalDate fom = now().minusYears(1);
         LocalDate tom = now();
 
@@ -68,7 +68,7 @@ public class UtbetalingServiceImplTest {
 
     @Test(expected = RuntimeException.class)
     public void haandtererIkkeGyldigPeriodeFeilFraTjenesten() throws HentUtbetalingsinformasjonPeriodeIkkeGyldig, HentUtbetalingsinformasjonPersonIkkeFunnet, HentUtbetalingsinformasjonIkkeTilgang {
-        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        WSUtbetalingServiceImpl spyService = spy(utbetalingService);
         LocalDate fom = LocalDate.now().withDayOfYear(1);
         LocalDate tom = LocalDate.now().withDayOfYear(2);
         WSHentUtbetalingsinformasjonRequest request = new WSHentUtbetalingsinformasjonRequest();
@@ -80,7 +80,7 @@ public class UtbetalingServiceImplTest {
 
     @Test
     public void finnerUtbetalingerMedPosteringsdatoUtenforSokeperioden() {
-        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        WSUtbetalingServiceImpl spyService = spy(utbetalingService);
         DateTime posteringsdato = DateTime.now().minusDays(2 * NUMBER_OF_DAYS_TO_SHOW);
         DateTime utbetalingsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         LocalDate startdato = new LocalDate(posteringsdato.plusDays(10));
@@ -97,7 +97,7 @@ public class UtbetalingServiceImplTest {
 
     @Test
     public void utelaterUtbetalingerMedPosteringsdatoInnenforOgMedUtbetalingsdatoUtenforSokeperioden() {
-        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        WSUtbetalingServiceImpl spyService = spy(utbetalingService);
 
         DateTime posteringsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         DateTime utbetalingsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW).minusDays(15);
@@ -116,7 +116,7 @@ public class UtbetalingServiceImplTest {
 
     @Test
     public void returnererUtbetalingerMedPosteringsdatoInnenforSokeperiodenOgUtenUtbetalingsdato() {
-        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        WSUtbetalingServiceImpl spyService = spy(utbetalingService);
 
         DateTime posteringsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         LocalDate startdato = new LocalDate(posteringsdato.minusDays(2));
@@ -134,7 +134,7 @@ public class UtbetalingServiceImplTest {
 
     @Test
     public void returnererUtbetalingerMedForfallsdatoInnenforSokeperiodenOgUtenUtbetalingsdato() {
-        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        WSUtbetalingServiceImpl spyService = spy(utbetalingService);
 
         DateTime forfallsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         LocalDate startdato = new LocalDate(forfallsdato.minusDays(2));
@@ -153,7 +153,7 @@ public class UtbetalingServiceImplTest {
 
     @Test
     public void finnerRiktigAntallUtbetalingerMedUtbetalingsdatoISokeperioden() {
-        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        WSUtbetalingServiceImpl spyService = spy(utbetalingService);
         DateTime nedreGrense = DateTime.now().minusDays(3 * NUMBER_OF_DAYS_TO_SHOW);
         DateTime utbetalingsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         DateTime ovreGrense = DateTime.now().minusDays(3);
