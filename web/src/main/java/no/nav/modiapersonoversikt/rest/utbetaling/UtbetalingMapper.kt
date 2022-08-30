@@ -14,7 +14,6 @@ object UtbetalingMapper {
                 erUtbetaltTilPerson = (utbetaling.utbetaltTil is WSPerson),
                 erUtbetaltTilOrganisasjon = (utbetaling.utbetaltTil is WSOrganisasjon),
                 erUtbetaltTilSamhandler = (utbetaling.utbetaltTil is WSSamhandler),
-                nettobeløp = utbetaling.utbetalingNettobeloep,
                 nettobelop = utbetaling.utbetalingNettobeloep,
                 melding = utbetaling.utbetalingsmelding?.trim(),
                 metode = utbetaling.utbetalingsmetode.trim(),
@@ -35,7 +34,6 @@ object UtbetalingMapper {
             skattListe = ytelse.skattListe?.map(::hentSkattListe) ?: emptyList(),
             skattsum = ytelse.skattsum,
             periode = hentYtelsesperiode(ytelse.ytelsesperiode),
-            nettobeløp = ytelse.ytelseNettobeloep,
             nettobelop = ytelse.ytelseNettobeloep,
             bilagsnummer = ytelse.bilagsnummer?.trim(),
             arbeidsgiver = ytelse.refundertForOrg?.let { orgnr -> hentArbeidsgiver(orgnr) }
@@ -45,11 +43,9 @@ object UtbetalingMapper {
     private fun hentYtelsekomponentListe(ytelseskomponent: WSYtelseskomponent): YtelseKomponentDTO {
         return YtelseKomponentDTO(
             ytelseskomponenttype = ytelseskomponent.ytelseskomponenttype.trim(),
-            satsbeløp = ytelseskomponent.satsbeloep,
             satsbelop = ytelseskomponent.satsbeloep,
             satstype = ytelseskomponent.satstype?.trim(),
             satsantall = ytelseskomponent.satsantall,
-            ytelseskomponentbeløp = ytelseskomponent.ytelseskomponentbeloep,
             ytelseskomponentbelop = ytelseskomponent.ytelseskomponentbeloep,
         )
     }
@@ -57,7 +53,6 @@ object UtbetalingMapper {
     private fun hentTrekkListe(trekk: WSTrekk): TrekkDTO {
         return TrekkDTO(
             trekktype = trekk.trekktype.trim(),
-            trekkbeløp = trekk.trekkbeloep,
             trekkbelop = trekk.trekkbeloep,
             kreditor = trekk.kreditor?.trim(),
         )
@@ -65,7 +60,6 @@ object UtbetalingMapper {
 
     private fun hentSkattListe(skatt: WSSkatt): SkattDTO {
         return SkattDTO(
-            skattebeløp = skatt.skattebeloep,
             skattebelop = skatt.skattebeloep,
         )
     }
