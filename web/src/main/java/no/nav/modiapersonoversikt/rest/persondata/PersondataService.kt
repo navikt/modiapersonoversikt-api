@@ -105,7 +105,7 @@ class PersondataServiceImpl(
         )
     }
 
-    private fun hentGeografiskTilknyttning(
+    fun hentGeografiskTilknyttning(
         personIdent: String,
         persondata: HentPersondata.Person
     ): PersondataResult<String?> {
@@ -136,7 +136,7 @@ class PersondataServiceImpl(
         }
     }
 
-    private fun hentNavEnhetFraNorg(
+    fun hentNavEnhetFraNorg(
         adressebeskyttelse: List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>,
         geografiskeTilknytning: PersondataResult<String?>
     ): PersondataResult<NorgDomain.EnhetKontaktinformasjon?> {
