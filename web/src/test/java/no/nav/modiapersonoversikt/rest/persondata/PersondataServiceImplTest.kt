@@ -12,17 +12,8 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bankkonto
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 
 internal class PersondataServiceImplTest {
     val pdl: PdlOppslagService = mockk()
