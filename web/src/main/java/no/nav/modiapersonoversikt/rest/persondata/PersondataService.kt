@@ -44,11 +44,12 @@ class PersondataServiceImpl(
     val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
 
     override fun hentPerson(personIdent: String): Persondata.Data {
-        val persondata = requireNotNull(pdl.hentPersondata(personIdent)) {
+        val persondataResult = pdl.hentPersondata(personIdent)
+        val persondata = requireNotNull(persondataResult?.hentPerson) {
             "Fant ikke person med personIdent $personIdent"
         }
 
-        val geografiskeTilknytning = hentGeografiskTilknyttning(personIdent, persondata)
+        val geografiskeTilknytning = hentGeografiskTilknyttning(persondataResult)
         val adressebeskyttelse = persondataFletter.hentAdressebeskyttelse(persondata.adressebeskyttelse)
         val navEnhet = hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning)
         val erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) {
@@ -105,15 +106,17 @@ class PersondataServiceImpl(
         )
     }
 
-    private fun hentGeografiskTilknyttning(
-        personIdent: String,
-        persondata: HentPersondata.Person
-    ): PersondataResult<String?> {
-        return if (persondata.doedsfall.isNotEmpty()) {
-            PersondataResult.NotRelevant()
-        } else {
-            PersondataResult.runCatching(InformasjonElement.PDL_GT) { pdl.hentGeografiskTilknyttning(personIdent) }
+    private fun hentGeografiskTilknyttning(persondata: HentPersondata.Result?): PersondataResult<String?> {
+        val personDodsfall = persondata?.hentPerson?.doedsfall ?: emptyList()
+        if (personDodsfall.isNotEmpty()) {
+            return PersondataResult.NotRelevant()
         }
+
+        val geografiskeTilknytning = persondata
+            ?.hentGeografiskTilknytning
+            ?.run { gtBydel ?: gtKommune ?: gtLand }
+
+        return PersondataResult.of(geografiskeTilknytning)
     }
 
     private fun hentBankkonto(fnr: String): HentPersonResponse {
