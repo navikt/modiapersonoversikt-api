@@ -51,6 +51,14 @@ sealed class PersondataResult<T>(val system: InformasjonElement) {
         }
     }
 
+    fun <S> flatMap(block: (t: PersondataResult<T>) -> PersondataResult<S>): PersondataResult<S> {
+        return when (this) {
+            is Failure<*> -> this as PersondataResult<S>
+            is NotRelevant<*> -> this as PersondataResult<S>
+            is Success<T> -> block(this.value as PersondataResult<T>)
+        }
+    }
+
     class Success<T>(name: InformasjonElement, val value: T) : PersondataResult<T>(name)
     class Failure<T>(name: InformasjonElement, val exception: Throwable) : PersondataResult<T>(name)
     class NotRelevant<T> : PersondataResult<T>(InformasjonElement.NOT_RELEVANT)

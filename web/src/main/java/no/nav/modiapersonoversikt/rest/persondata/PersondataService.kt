@@ -141,6 +141,13 @@ class PersondataServiceImpl(
         geografiskeTilknytning: PersondataResult<String?>
     ): PersondataResult<NorgDomain.EnhetKontaktinformasjon?> {
         val gt: String = geografiskeTilknytning
+            .flatMap {
+                if (erGyldigGT(it.getOrNull())) {
+                    it
+                } else {
+                    PersondataResult.NotRelevant()
+                }
+            }
             .fold(
                 onSuccess = { it ?: "" },
                 onNotRelevant = { null },
@@ -160,18 +167,14 @@ class PersondataServiceImpl(
                 break
             }
         }
-        return if (erGyldigGT(gt)) {
-            PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) {
-                norgApi
-                    .finnNavKontor(gt, diskresjonskode)
-                    ?.enhetId
-            }
-                .map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
-                    it?.let { enhetId -> norgApi.hentKontaktinfo(EnhetId(enhetId)) }
-                }
-        } else {
-            PersondataResult.NotRelevant()
+        return PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) {
+            norgApi
+                .finnNavKontor(gt, diskresjonskode)
+                ?.enhetId
         }
+            .map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
+                it?.let { enhetId -> norgApi.hentKontaktinfo(EnhetId(enhetId)) }
+            }
     }
 
     private fun HentPersondata.Person.findTredjepartsPersoner(): List<String> {
