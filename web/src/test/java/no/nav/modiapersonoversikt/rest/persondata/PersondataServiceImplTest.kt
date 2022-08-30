@@ -3,10 +3,8 @@ package no.nav.modiapersonoversikt.rest.persondata
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.EnhetId
-import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -30,23 +28,7 @@ internal class PersondataServiceImplTest {
 
     @Test
     internal fun `skal filtrere vekk ugyldig gt`() {
-        every { skjermedePersonerApi.erSkjermetPerson(Fnr(fnr)) } returns false
-        every { dkif.hentDigitalKontaktinformasjon(fnr) } returns digitalKontaktinformasjon
-        every { personV3.hentPerson(any()) } returns utenlandskBankkonto
-        every { kodeverk.hentKodeverk<String, String>(any()) } returns gittKodeverk()
-        every { pdl.hentPersondata(fnr) } returns testPerson
         every { pdl.hentGeografiskTilknyttning(fnr) } returns ugyldigGT
-        every { pdl.hentTredjepartspersondata(any()) } returns listOf(
-            HentTredjepartspersondata.HentPersonBolkResult(
-                ident = fnr,
-                person = null
-            )
-        )
-        every {
-            norgApi
-                .finnNavKontor(any(), any())
-                ?.enhetId
-        } returns ugyldigGT
 
         every { norgApi.hentKontaktinfo(EnhetId(ugyldigGT)) } returns gittNavKontorEnhet()
         val navEnhet = persondataServiceImpl.hentNavEnhetFraNorg(
@@ -61,18 +43,7 @@ internal class PersondataServiceImplTest {
 
     @Test
     internal fun `skal gi navEnhet`() {
-        every { skjermedePersonerApi.erSkjermetPerson(Fnr(fnr)) } returns false
-        every { dkif.hentDigitalKontaktinformasjon(fnr) } returns digitalKontaktinformasjon
-        every { personV3.hentPerson(any()) } returns utenlandskBankkonto
-        every { kodeverk.hentKodeverk<String, String>(any()) } returns gittKodeverk()
-        every { pdl.hentPersondata(fnr) } returns testPerson
         every { pdl.hentGeografiskTilknyttning(fnr) } returns "0123"
-        every { pdl.hentTredjepartspersondata(any()) } returns listOf(
-            HentTredjepartspersondata.HentPersonBolkResult(
-                ident = fnr,
-                person = null
-            )
-        )
         every {
             norgApi
                 .finnNavKontor(any(), any())
