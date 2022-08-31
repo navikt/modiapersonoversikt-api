@@ -136,6 +136,8 @@ spec:
       value: "https://arena-q0.adeo.no/ail_ws/Oppfoelging_v1"
     - name: EREG_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/ereg/"
+    - name: KONTOREGISTER_REST_URL
+      value: "https://sokos-kontoregister-person.dev.intern.nav.no/kontoregister/api/kontoregister"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: "https://app-q0.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
