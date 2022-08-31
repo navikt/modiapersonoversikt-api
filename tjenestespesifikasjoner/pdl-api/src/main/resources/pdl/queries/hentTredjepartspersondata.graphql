@@ -1,4 +1,4 @@
-query($identer: [ID!]!){
+query hentTredjepartspersondata($identer: [ID!]!){
     hentPersonBolk(identer: $identer) {
         ident
         person {

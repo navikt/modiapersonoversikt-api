@@ -13,7 +13,7 @@ import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.consumer.saf.generated.Hentbrukerssaker
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saker.Sak.*
@@ -222,76 +222,76 @@ class SakerServiceImplTest {
         const val FagsystemSakId_3 = "33"
         const val SakId_4 = "4"
 
-        fun earlierDateTimeWithOffSet(offset: Long) = Hentbrukerssaker.DateTime(
+        fun earlierDateTimeWithOffSet(offset: Long) = HentBrukersSaker.DateTime(
             LocalDateTime.now().minusDays(offset)
         )
 
-        fun createSaksliste(): GraphQLResponse<Hentbrukerssaker.Result> {
+        fun createSaksliste(): GraphQLResponse<HentBrukersSaker.Result> {
             return GraphQLResponse(
-                data = Hentbrukerssaker.Result(
+                data = HentBrukersSaker.Result(
                     saker = listOf(
-                        Hentbrukerssaker.Sak(
+                        HentBrukersSaker.Sak(
                             arkivsaksnummer = SakId_1,
                             arkivsaksystem = null,
                             datoOpprettet = earlierDateTimeWithOffSet(4),
                             fagsakId = FagsystemSakId_1,
                             fagsaksystem = "IT01",
-                            sakstype = Hentbrukerssaker.Sakstype.FAGSAK,
+                            sakstype = HentBrukersSaker.Sakstype.FAGSAK,
                             tema = null
                         ),
-                        Hentbrukerssaker.Sak(
+                        HentBrukersSaker.Sak(
                             arkivsaksnummer = SakId_2,
                             arkivsaksystem = null,
                             datoOpprettet = earlierDateTimeWithOffSet(3),
                             fagsaksystem = "IT01",
                             fagsakId = FagsystemSakId_2,
-                            sakstype = Hentbrukerssaker.Sakstype.FAGSAK,
+                            sakstype = HentBrukersSaker.Sakstype.FAGSAK,
                             tema = null
                         ),
-                        Hentbrukerssaker.Sak(
+                        HentBrukersSaker.Sak(
                             arkivsaksnummer = SakId_3,
                             arkivsaksystem = null,
                             datoOpprettet = earlierDateTimeWithOffSet(5),
                             fagsaksystem = "IT01",
                             fagsakId = FagsystemSakId_3,
-                            sakstype = Hentbrukerssaker.Sakstype.FAGSAK,
+                            sakstype = HentBrukersSaker.Sakstype.FAGSAK,
                             tema = null
                         ),
-                        Hentbrukerssaker.Sak(
+                        HentBrukersSaker.Sak(
                             arkivsaksnummer = SakId_4,
                             arkivsaksystem = null,
                             datoOpprettet = earlierDateTimeWithOffSet(5),
                             fagsaksystem = null,
                             fagsakId = null,
-                            sakstype = Hentbrukerssaker.Sakstype.GENERELL_SAK,
-                            tema = Hentbrukerssaker.Tema.STO
+                            sakstype = HentBrukersSaker.Sakstype.GENERELL_SAK,
+                            tema = HentBrukersSaker.Tema.STO
                         )
                     )
                 )
             )
         }
 
-        fun createOppfolgingSaksliste(): GraphQLResponse<Hentbrukerssaker.Result> {
+        fun createOppfolgingSaksliste(): GraphQLResponse<HentBrukersSaker.Result> {
             return GraphQLResponse(
-                data = Hentbrukerssaker.Result(
+                data = HentBrukersSaker.Result(
                     saker = listOf(
-                        Hentbrukerssaker.Sak(
+                        HentBrukersSaker.Sak(
                             arkivsaksnummer = "4",
                             arkivsaksystem = null,
                             datoOpprettet = earlierDateTimeWithOffSet(0),
                             fagsaksystem = "AO01",
                             fagsakId = "44",
-                            sakstype = Hentbrukerssaker.Sakstype.FAGSAK,
-                            tema = Hentbrukerssaker.Tema.OPP
+                            sakstype = HentBrukersSaker.Sakstype.FAGSAK,
+                            tema = HentBrukersSaker.Tema.OPP
                         ),
-                        Hentbrukerssaker.Sak(
+                        HentBrukersSaker.Sak(
                             arkivsaksnummer = "5",
                             arkivsaksystem = null,
                             datoOpprettet = earlierDateTimeWithOffSet(3),
                             fagsaksystem = "FS22",
                             fagsakId = null,
-                            sakstype = Hentbrukerssaker.Sakstype.GENERELL_SAK,
-                            tema = Hentbrukerssaker.Tema.OPP
+                            sakstype = HentBrukersSaker.Sakstype.GENERELL_SAK,
+                            tema = HentBrukersSaker.Tema.OPP
                         )
                     )
                 )

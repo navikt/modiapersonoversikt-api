@@ -1,4 +1,4 @@
-query($ident: ID!){
+query hentIdenter($ident: ID!){
     hentIdenter(ident: $ident, historikk: true) {
         identer {
             ident

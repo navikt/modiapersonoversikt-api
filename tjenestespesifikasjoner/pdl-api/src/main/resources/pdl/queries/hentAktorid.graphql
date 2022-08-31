@@ -1,4 +1,4 @@
-query($ident: ID!, $grupper: [IdentGruppe!]!){
+query hentAktorid($ident: ID!, $grupper: [IdentGruppe!]!){
     hentIdenter(ident: $ident, grupper: $grupper, historikk: false) {
         identer {
             ident
