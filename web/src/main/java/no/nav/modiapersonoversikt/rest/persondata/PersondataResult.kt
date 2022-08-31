@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 sealed class PersondataResult<T>(val system: InformasjonElement) {
     enum class InformasjonElement {
         NOT_RELEVANT,
+        PROVIDED_VALUE,
         PDL_GT,
         PDL_TREDJEPARTSPERSONER,
         EGEN_ANSATT,
@@ -64,5 +65,8 @@ sealed class PersondataResult<T>(val system: InformasjonElement) {
                 Failure(system, e)
             }
         }
+
+        @JvmStatic
+        fun <T> of(value: T): PersondataResult<T> = Success(InformasjonElement.PROVIDED_VALUE, value)
     }
 }

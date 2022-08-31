@@ -67,6 +67,12 @@ fragment biPerson on RelatertBiPerson {
 }
 
 query($ident: ID!){
+    hentGeografiskTilknytning(ident: $ident) {
+        gtType
+        gtKommune
+        gtBydel
+        gtLand
+    }
     hentPerson(ident: $ident) {
         navn {
             fornavn
