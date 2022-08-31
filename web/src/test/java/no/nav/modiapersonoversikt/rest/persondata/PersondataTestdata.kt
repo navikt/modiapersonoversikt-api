@@ -1,14 +1,12 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.KontoDTO
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.KontoinformasjonDTO
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.UtenlandskKontoInfoDTO
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -202,19 +200,16 @@ internal val adresse = HentPersondata.Bostedsadresse(
     ukjentBosted = null
 )
 
-internal val utenlandskBankkonto = KontoinformasjonDTO(
-    aktivKonto = KontoDTO(
-        kontohaver = "",
-        kontonummer = "123",
-        utenlandskKontoInfo = UtenlandskKontoInfoDTO(
-            bankLandkode = "ESP",
-            valutakode = "NOK",
-            swiftBicKode = "ASD123",
-            bankadresse1 = "Utenlandsk bankkontoadresse"
-        ),
-        gyldigFom = "2020-01-01T10:00:00",
-        opprettetAv = ""
-    )
+internal val utenlandskBankkonto = KontonummerService.Konto(
+    kontonummer = "123",
+    banknavn = null,
+    sistEndret = null,
+    swift = "ASD123",
+    adresse = KontonummerService.Adresse(
+        linje1 = "Utenlandsk bankkontoadresse"
+    ),
+    landkode = "ESP",
+    valutakode = "NOK"
 )
 
 internal val kontaktinformasjonDodsbo = HentPersondata.KontaktinformasjonForDoedsbo(

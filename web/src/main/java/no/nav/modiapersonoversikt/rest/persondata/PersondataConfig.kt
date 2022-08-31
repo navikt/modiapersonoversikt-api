@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.apis.KontoregisterV1Api
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -19,7 +19,7 @@ open class PersondataConfig {
         @Qualifier("DkifSoap") dkif: Dkif.Service,
         norgApi: NorgApi,
         skjermedePersonerApi: SkjermedePersonerApi,
-        kontoregisterV1Api: KontoregisterV1Api,
+        kontonummerService: KontonummerService,
         policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
         kodeverk: EnhetligKodeverk.Service
     ): PersondataService {
@@ -28,7 +28,7 @@ open class PersondataConfig {
             dkif,
             norgApi,
             skjermedePersonerApi,
-            kontoregisterV1Api,
+            kontonummerService,
             policyEnforcementPoint,
             kodeverk
         )

@@ -2,9 +2,6 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.apis.KontoregisterV1Api
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.HentKontoDTO
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.KontoinformasjonDTO
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
@@ -17,6 +14,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedSkjermingPolicy
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 
 interface PersondataService {
@@ -33,7 +31,7 @@ class PersondataServiceImpl(
     private val dkif: Dkif.Service,
     private val norgApi: NorgApi,
     private val skjermedePersonerApi: SkjermedePersonerApi,
-    private val kontoregisterV1Api: KontoregisterV1Api,
+    private val kontonummerService: KontonummerService,
     private val policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
@@ -85,7 +83,9 @@ class PersondataServiceImpl(
 
         val dkifData =
             PersondataResult.runCatching(InformasjonElement.DKIF) { dkif.hentDigitalKontaktinformasjon(personIdent) }
-        val bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { hentBankkonto(personIdent) }
+        val bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) {
+            kontonummerService.hentKontonummer(Fnr(personIdent))
+        }
 
         return persondataFletter.flettSammenData(
             PersondataFletter.Data(
@@ -114,15 +114,6 @@ class PersondataServiceImpl(
             ?.run { gtBydel ?: gtKommune ?: gtLand }
 
         return PersondataResult.of(geografiskeTilknytning)
-    }
-
-    private fun hentBankkonto(fnr: String): KontoinformasjonDTO {
-        return kontoregisterV1Api.hentKonto(
-            HentKontoDTO(
-                kontohaver = fnr,
-                medHistorikk = false
-            )
-        )
     }
 
     val GT_SOM_BURDE_HA_BYDEL = listOf("0301", "4601", "5001", "1103")
