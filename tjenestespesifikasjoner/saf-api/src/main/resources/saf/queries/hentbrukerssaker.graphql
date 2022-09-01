@@ -1,4 +1,4 @@
-query($brukerId: BrukerIdInput!) {
+query hentBrukersSaker($brukerId: BrukerIdInput!) {
     saker(brukerId: $brukerId) {
         arkivsaksnummer
         arkivsaksystem

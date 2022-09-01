@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.saker.kilder
 
-import no.nav.modiapersonoversikt.consumer.saf.generated.Hentbrukerssaker
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saker.Sak
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
@@ -23,8 +23,8 @@ class SafSaker(private val service: SafService) : SakerKilde {
                     temaKode = it.tema?.name ?: ""
                     fagsystemKode = it.fagsaksystem ?: ""
                     sakstype = when (it.sakstype) {
-                        Hentbrukerssaker.Sakstype.FAGSAK -> "MFS"
-                        Hentbrukerssaker.Sakstype.GENERELL_SAK -> "GEN"
+                        HentBrukersSaker.Sakstype.FAGSAK -> "MFS"
+                        HentBrukersSaker.Sakstype.GENERELL_SAK -> "GEN"
                         else -> throw IllegalStateException("Ukjent sakstype: ${it.sakstype}")
                     }
                 }

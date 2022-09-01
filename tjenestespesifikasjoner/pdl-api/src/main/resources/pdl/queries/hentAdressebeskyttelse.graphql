@@ -1,4 +1,4 @@
-query($ident: ID!){
+query hentAdressebeskyttelse($ident: ID!){
     hentPerson(ident: $ident) {
         adressebeskyttelse {
             gradering

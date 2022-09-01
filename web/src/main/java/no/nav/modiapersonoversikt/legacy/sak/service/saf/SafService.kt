@@ -8,7 +8,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter.Journalposttype
-import no.nav.modiapersonoversikt.consumer.saf.generated.Hentbrukerssaker
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem
@@ -30,7 +30,7 @@ interface SafService {
         variantFormat: Dokument.Variantformat
     ): TjenesteResultatWrapper
 
-    fun hentSaker(ident: String): GraphQLResponse<Hentbrukerssaker.Result>
+    fun hentSaker(ident: String): GraphQLResponse<HentBrukersSaker.Result>
 }
 
 private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
@@ -83,24 +83,24 @@ class SafServiceImpl : SafService {
         }
     }
 
-    override fun hentSaker(ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
+    override fun hentSaker(ident: String): GraphQLResponse<HentBrukersSaker.Result> {
         val variables = if (ident.length == 11) {
-            Hentbrukerssaker.Variables(
-                Hentbrukerssaker.BrukerIdInput(
+            HentBrukersSaker.Variables(
+                HentBrukersSaker.BrukerIdInput(
                     id = ident,
-                    type = Hentbrukerssaker.BrukerIdType.FNR
+                    type = HentBrukersSaker.BrukerIdType.FNR
                 )
             )
         } else {
-            Hentbrukerssaker.Variables(
-                Hentbrukerssaker.BrukerIdInput(
+            HentBrukersSaker.Variables(
+                HentBrukersSaker.BrukerIdInput(
                     id = ident,
-                    type = Hentbrukerssaker.BrukerIdType.AKTOERID
+                    type = HentBrukersSaker.BrukerIdType.AKTOERID
                 )
             )
         }
         return runBlocking {
-            Hentbrukerssaker(graphQLClient)
+            HentBrukersSaker(graphQLClient)
                 .execute(variables, userTokenAuthorizationHeaders)
         }
     }
