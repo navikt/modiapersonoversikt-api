@@ -130,11 +130,27 @@ class PersondataServiceImpl(
         )
     }
 
-    private fun hentNavEnhetFraNorg(
+    val GT_SOM_BURDE_HA_BYDEL = listOf("0301", "4601", "5001", "1103")
+    fun erGyldigGT(gt: String?): Boolean {
+        return when {
+            gt == null -> false
+            GT_SOM_BURDE_HA_BYDEL.contains(gt) -> false
+            else -> true
+        }
+    }
+
+    fun hentNavEnhetFraNorg(
         adressebeskyttelse: List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>,
         geografiskeTilknytning: PersondataResult<String?>
     ): PersondataResult<NorgDomain.EnhetKontaktinformasjon?> {
         val gt: String = geografiskeTilknytning
+            .flatMap {
+                if (erGyldigGT(it.getOrNull())) {
+                    it
+                } else {
+                    PersondataResult.NotRelevant()
+                }
+            }
             .fold(
                 onSuccess = { it ?: "" },
                 onNotRelevant = { null },
