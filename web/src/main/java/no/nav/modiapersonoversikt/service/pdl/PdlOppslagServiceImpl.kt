@@ -15,7 +15,6 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import java.net.URL
-import kotlin.collections.set
 
 @KtorExperimentalAPI
 open class PdlOppslagServiceImpl constructor(
@@ -24,11 +23,10 @@ open class PdlOppslagServiceImpl constructor(
 ) : PdlOppslagService {
     constructor(stsService: SystemUserTokenProvider) : this(stsService, createClient())
 
-    override fun hentPersondata(fnr: String): HentPersondata.Person? = runBlocking {
+    override fun hentPersondata(fnr: String): HentPersondata.Result? = runBlocking {
         HentPersondata(pdlClient)
             .execute(HentPersondata.Variables(fnr), userTokenAuthorizationHeaders)
             .data
-            ?.hentPerson
     }
 
     override fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult> = runBlocking {
