@@ -68,6 +68,8 @@ spec:
       value: "q1"
     - name: APP_VERSION
       value: "{{ version }}"
+    - name: GCP_CLUSTER
+      value: "dev-gcp"
     - name: MODIA_CLIENT_ID
       value: "modialogin-q1"
     - name: MODIA_REFRESH_URL
@@ -136,8 +138,6 @@ spec:
       value: "https://modapp-q1.adeo.no/ereg/"
     - name: KONTOREGISTER_REST_URL
       value: "https://sokos-kontoregister-person.dev.intern.nav.no/kontoregister/api/kontoregister"
-    - name: KONTOREGISTER_CLUSTER
-      value: "dev-gcp"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: "https://app-q1.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
@@ -176,8 +176,6 @@ spec:
       value: "dev-fss"
     - name: NOM_URL
       value: "https://nom-api.dev.intern.nav.no"
-    - name: SKJERMEDE_PERSONER_PIP_CLUSTER
-      value: "dev-gcp"
     - name: SKJERMEDE_PERSONER_PIP_URL
       value: "https://skjermede-personer-pip.dev.intern.nav.no"
     - name: ARENA_SAK_VEDTAK_URL

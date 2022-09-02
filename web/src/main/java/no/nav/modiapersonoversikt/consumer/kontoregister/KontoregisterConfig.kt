@@ -14,11 +14,12 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class KontoregisterConfig {
-    val kontoregisterCluster = EnvironmentUtils.getRequiredProperty("KONTOREGISTER_CLUSTER")
+    val cluster = EnvironmentUtils.getRequiredProperty("GCP_CLUSTER")
+    val url = EnvironmentUtils.getRequiredProperty("KONTOREGISTER_REST_URL")
 
     @Bean
     open fun kontoregisterApi(tokenClient: ServiceToServiceTokenProvider) = KontoregisterV1Api(
-        basePath = EnvironmentUtils.getRequiredProperty("KONTOREGISTER_REST_URL"),
+        basePath = url,
         httpClient = RestClient.baseClient().newBuilder()
             .addInterceptor(
                 LoggingInterceptor("Kontoregister") { request ->
@@ -29,7 +30,7 @@ open class KontoregisterConfig {
             )
             .addInterceptor(
                 AuthorizationInterceptor {
-                    tokenClient.getServiceToken("sokos-kontoregister-person", "okonomi", kontoregisterCluster)
+                    tokenClient.getServiceToken("sokos-kontoregister-person", "okonomi", cluster)
                 }
             )
             .build()
