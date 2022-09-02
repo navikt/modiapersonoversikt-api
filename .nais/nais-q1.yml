@@ -121,7 +121,7 @@ spec:
     - name: UTBETALING_V1_ENDPOINTURL
       value: "https://wasapp-q1.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1"
     - name: VEILARBOPPFOLGINGAPI_URL
-      value: "https://veilarboppfolging-q1.nais.preprod.local/veilarboppfolging/api"
+      value: "https://veilarboppfolging.dev.intern.nav.no/veilarboppfolging/api"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
       value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
     - name: DKIF_REST_URL
