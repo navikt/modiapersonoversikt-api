@@ -17,7 +17,7 @@ internal class PersondataServiceImplTest {
         norgApi = norgApi,
         pdl = mockk(),
         dkif = mockk(),
-        personV3 = mockk(),
+        kontonummerService = mockk(),
         skjermedePersonerApi = mockk(),
         policyEnforcementPoint = mockk(),
         kodeverk = mockk()
