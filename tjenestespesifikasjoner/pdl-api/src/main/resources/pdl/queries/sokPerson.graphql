@@ -1,4 +1,4 @@
-query($paging: Paging, $criteria: [Criterion]) {
+query sokPerson($paging: Paging, $criteria: [Criterion]) {
     sokPerson(paging: $paging, criteria: $criteria) {
         hits {
             score

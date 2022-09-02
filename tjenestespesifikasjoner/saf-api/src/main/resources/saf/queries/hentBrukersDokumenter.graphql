@@ -1,4 +1,4 @@
-query($brukerId: BrukerIdInput!) {
+query hentBrukersDokumenter($brukerId: BrukerIdInput!) {
     dokumentoversiktBruker(
         brukerId: $brukerId,
         journalstatuser: [JOURNALFOERT, FERDIGSTILT, EKSPEDERT],

@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.rest.saker
 import com.expediagroup.graphql.types.GraphQLResponse
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.saf.generated.Hentbrukerssaker
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -23,7 +23,7 @@ class SafDebugController @Autowired constructor(
     private val safService: SafService
 ) {
     @GetMapping("/{ident}/fnr")
-    fun hentSafSakerFnr(@PathVariable("ident") ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
+    fun hentSafSakerFnr(@PathVariable("ident") ident: String): GraphQLResponse<HentBrukersSaker.Result> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(ident)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Saker, AuditIdentifier.FNR to ident)) {
@@ -32,7 +32,7 @@ class SafDebugController @Autowired constructor(
     }
 
     @GetMapping("/{ident}/aktorid")
-    fun hentSafSakerAktorId(@PathVariable("ident") ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
+    fun hentSafSakerAktorId(@PathVariable("ident") ident: String): GraphQLResponse<HentBrukersSaker.Result> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(AktorId(ident)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Saker, AuditIdentifier.FNR to ident)) {
