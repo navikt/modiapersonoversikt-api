@@ -78,5 +78,7 @@ class VarslerServiceImplTest {
         tekst = "Dette er en tekst",
         link = "http://dummy.io/",
         aktiv = true,
+        eksternVarslingSendt = false,
+        eksternVarslingKanaler = emptyList()
     )
 }
