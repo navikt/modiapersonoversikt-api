@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.config
 
 import no.nav.common.cxf.StsConfig
 import no.nav.common.sts.NaisSystemUserTokenProvider
-import no.nav.common.sts.ServiceToServiceTokenProvider
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.common.sts.utils.AzureAdServiceTokenProviderBuilder
+import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -35,8 +35,8 @@ open class TokenExchangeProviderConfig {
     )
 
     @Bean
-    open fun serviceToServiceTokenProvider(): ServiceToServiceTokenProvider = AzureAdServiceTokenProviderBuilder
+    open fun machineToMachineTokenProvider(): MachineToMachineTokenClient = AzureAdTokenClientBuilder
         .builder()
-        .withEnvironmentDefaults()
-        .build()
+        .withNaisDefaults()
+        .buildMachineToMachineTokenClient()
 }

@@ -1,11 +1,13 @@
 package no.nav.modiapersonoversikt.consumer.skjermedePersoner
 
 import no.nav.common.rest.client.RestClient
-import no.nav.common.sts.ServiceToServiceTokenProvider
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
+import no.nav.modiapersonoversikt.utils.DownstreamApi
+import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -13,11 +15,15 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class SkjermedePersonerConfig {
-    val cluster = EnvironmentUtils.getRequiredProperty("GCP_CLUSTER")
+    val scope = DownstreamApi(
+        application = "skjermede-personer-pip",
+        namespace = "nom",
+        cluster = EnvironmentUtils.getRequiredProperty("GCP_CLUSTER")
+    )
     val url = EnvironmentUtils.getRequiredProperty("SKJERMEDE_PERSONER_PIP_URL")
 
     @Autowired
-    lateinit var tokenProvider: ServiceToServiceTokenProvider
+    lateinit var tokenProvider: MachineToMachineTokenClient
 
     @Bean
     open fun skjermedePersoner(): SkjermedePersonerApi {
@@ -32,12 +38,7 @@ open class SkjermedePersonerConfig {
             )
             .addInterceptor(
                 AuthorizationInterceptor {
-                    tokenProvider
-                        .getServiceToken(
-                            "skjermede-personer-pip",
-                            "nom",
-                            cluster
-                        )
+                    tokenProvider.createMachineToMachineToken(scope)
                 }
             )
             .build()
