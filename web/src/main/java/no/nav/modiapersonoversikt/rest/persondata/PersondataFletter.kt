@@ -204,19 +204,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
             when {
-                adresse.coAdressenavn.isNotNullOrBlank() && adresse.vegadresse != null -> {
-                    kombinerCoAdressenavnOgVegadresse(
-                        coAdressenavn = adresse.coAdressenavn!!,
-                        vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode
-                    )
-                }
-                adresse.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
-                    linje1 = adresse.coAdressenavn!!,
-                    sistEndret = sisteEndring,
-                    gyldighetsPeriode = gyldighetsPeriode
-                )
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(
                     adresse = adresse.vegadresse!!,
                     sisteEndring = sisteEndring,
@@ -253,8 +240,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     )
                     null
                 }
-            }
-        }.sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
+            }?.copy(coAdresse = adresse.coAdressenavn)
+        }
+            .sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
     }
 
     private fun hentOppholdsAdresse(data: Data): List<Persondata.Adresse> {
@@ -262,21 +250,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
             when {
-                adresse.coAdressenavn.isNotNullOrBlank() && adresse.vegadresse != null -> {
-                    kombinerCoAdressenavnOgVegadresse(
-                        coAdressenavn = adresse.coAdressenavn!!,
-                        vegadresse = lagAdresseFraVegadresse(
-                            adresse = adresse.vegadresse!!
-                        ),
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode
-                    )
-                }
-                adresse.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
-                    linje1 = adresse.coAdressenavn!!,
-                    sistEndret = sisteEndring,
-                    gyldighetsPeriode = gyldighetsPeriode
-                )
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(
                     adresse = adresse.vegadresse!!,
                     sisteEndring = sisteEndring,
@@ -303,22 +276,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     )
                     null
                 }
-            }
+            }?.copy(coAdresse = adresse.coAdressenavn)
         }
     }
-
-    private fun kombinerCoAdressenavnOgVegadresse(
-        coAdressenavn: String,
-        vegadresse: Persondata.Adresse,
-        sisteEndring: Persondata.SistEndret?,
-        gyldighetsPeriode: Persondata.GyldighetsPeriode? = null
-    ) = Persondata.Adresse(
-        linje1 = coAdressenavn,
-        linje2 = vegadresse.linje1,
-        linje3 = vegadresse.linje2,
-        sistEndret = sisteEndring,
-        gyldighetsPeriode = gyldighetsPeriode
-    )
 
     private fun lagAdresseFraPostadresseIFrittFormat(
         adresse: HentPersondata.PostadresseIFrittFormat,
@@ -708,16 +668,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     it.vegadresse != null -> lagAdresseFraVegadresse(it.vegadresse!!)
                     it.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(it.matrikkeladresse!!)
                     it.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(it.utenlandskAdresse!!)
-                    it.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
-                        linje1 = it.coAdressenavn!!,
-                        sistEndret = null
-                    )
                     it.ukjentBosted != null -> Persondata.Adresse(
                         linje1 = it.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
                         sistEndret = null
                     )
                     else -> null
-                }
+                }?.copy(coAdresse = it.coAdressenavn)
             )
         }
     }

@@ -5,6 +5,7 @@
   } ] ],
   "alder" : null,
   "bostedAdresse" : [ "java.util.ArrayList", [ {
+    "coAdresse" : null,
     "gyldighetsPeriode" : null,
     "linje1" : "Gutua 13 A 01654A",
     "linje2" : "1234 1234",
