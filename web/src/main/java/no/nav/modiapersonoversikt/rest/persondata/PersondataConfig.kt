@@ -5,8 +5,8 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,8 +18,8 @@ open class PersondataConfig {
         pdl: PdlOppslagService,
         @Qualifier("DkifSoap") dkif: Dkif.Service,
         norgApi: NorgApi,
-        personV3: PersonV3,
         skjermedePersonerApi: SkjermedePersonerApi,
+        kontonummerService: KontonummerService,
         policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
         kodeverk: EnhetligKodeverk.Service
     ): PersondataService {
@@ -27,8 +27,8 @@ open class PersondataConfig {
             pdl,
             dkif,
             norgApi,
-            personV3,
             skjermedePersonerApi,
+            kontonummerService,
             policyEnforcementPoint,
             kodeverk
         )

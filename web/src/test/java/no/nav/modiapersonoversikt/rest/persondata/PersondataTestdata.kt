@@ -6,8 +6,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
+import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -201,28 +200,17 @@ internal val adresse = HentPersondata.Bostedsadresse(
     ukjentBosted = null
 )
 
-internal val utenlandskBankkonto = HentPersonResponse()
-    .withPerson(
-        Bruker()
-            .withBankkonto(
-                BankkontoUtland()
-                    .withBankkontoUtland(
-                        BankkontonummerUtland()
-                            .withBankkontonummer("123")
-                            .withLandkode(
-                                Landkoder().withValue("ESP")
-                            )
-                            .withBankadresse(
-                                UstrukturertAdresse()
-                                    .withAdresselinje1("Utenlandsk bankkontoadresse")
-                            )
-                            .withSwift("ASD123")
-                            .withValuta(
-                                Valutaer().withValue("NOK")
-                            )
-                    )
-            )
-    )
+internal val utenlandskBankkonto = KontonummerService.Konto(
+    kontonummer = "123",
+    banknavn = null,
+    sistEndret = null,
+    swift = "ASD123",
+    adresse = KontonummerService.Adresse(
+        linje1 = "Utenlandsk bankkontoadresse"
+    ),
+    landkode = "ESP",
+    valutakode = "NOK"
+)
 
 internal val kontaktinformasjonDodsbo = HentPersondata.KontaktinformasjonForDoedsbo(
     skifteform = HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG,

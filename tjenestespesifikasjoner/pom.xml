@@ -34,6 +34,7 @@
         <module>pdl-api</module>
         <module>saf-api</module>
         <module>dkif-api</module>
+        <module>kontoregister-api</module>
         <module>kodeverk-api</module>
         <module>norg-api</module>
         <module>skjermede-personer-pip-api</module>
