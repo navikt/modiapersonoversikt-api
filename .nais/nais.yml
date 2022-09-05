@@ -68,6 +68,8 @@ spec:
       value: "p"
     - name: APP_VERSION
       value: "{{ version }}"
+    - name: ONPREM_CLUSTER_NAME
+      value: "prod-fss"
     - name: GCP_CLUSTER
       value: "prod-gcp"
     - name: MODIA_CLIENT_ID
