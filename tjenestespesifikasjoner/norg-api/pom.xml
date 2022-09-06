@@ -56,7 +56,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/norg/openapi-fixed.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
-                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.norg.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.consumer.norg.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <apisToGenerate>Arbeidsfordeling,Enhet,Enhetskontaktinfo,Organisering</apisToGenerate>
