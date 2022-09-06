@@ -8,6 +8,7 @@
     "alder" : 21,
     "bankkonto" : {
       "adresse" : {
+        "coAdresse" : null,
         "gyldighetsPeriode" : null,
         "linje1" : "Utenlandsk bankkontoadresse",
         "linje2" : null,
@@ -29,6 +30,7 @@
       }
     },
     "bostedAdresse" : [ "java.util.Arrays$ArrayList", [ {
+      "coAdresse" : null,
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-10-01",
         "gyldigTilOgMed" : null
@@ -43,6 +45,7 @@
         "tidspunkt" : "2020-07-01T10:00:00"
       }
     }, {
+      "coAdresse" : null,
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",
         "gyldigTilOgMed" : "2021-02-02"
@@ -59,6 +62,7 @@
     } ] ],
     "deltBosted" : [ "java.util.ArrayList", [ {
       "adresse" : {
+        "coAdresse" : null,
         "gyldighetsPeriode" : null,
         "linje1" : "Vegadressestien 3",
         "linje2" : "1444 TestPoststed",
@@ -85,6 +89,7 @@
         }
       },
       "adresse" : {
+        "coAdresse" : null,
         "gyldighetsPeriode" : null,
         "linje1" : "Gateveien",
         "linje2" : "9988 Poststed",
@@ -199,13 +204,14 @@
       "kode" : "M"
     } ] ],
     "kontaktAdresse" : [ "java.util.Arrays$ArrayList", [ {
+      "coAdresse" : "C/O Adressenavn",
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",
         "gyldigTilOgMed" : "2021-02-02"
       },
-      "linje1" : "C/O Adressenavn",
-      "linje2" : "Vegadressestien 3",
-      "linje3" : "1444 TestPoststed",
+      "linje1" : "Vegadressestien 3",
+      "linje2" : "1444 TestPoststed",
+      "linje3" : null,
       "sistEndret" : {
         "ident" : "Folkeregisteret",
         "kilde" : "Bruker",
@@ -213,10 +219,11 @@
         "tidspunkt" : "2020-07-01T10:00:00"
       }
     }, {
+      "coAdresse" : "C/O Adressenavn",
       "gyldighetsPeriode" : null,
-      "linje1" : "C/O Adressenavn",
-      "linje2" : "Vegadressestien 10",
-      "linje3" : "1444 TestPoststed",
+      "linje1" : "Vegadressestien 10",
+      "linje2" : "1444 TestPoststed",
+      "linje3" : null,
       "sistEndret" : {
         "ident" : "Folkeregisteret",
         "kilde" : "Bruker",
@@ -250,6 +257,7 @@
           "ukedag" : "TIRSDAG"
         } ] ],
         "besoksadresse" : {
+          "coAdresse" : null,
           "gyldighetsPeriode" : null,
           "linje1" : "Testgata 10",
           "linje2" : "0110 Ingensteds",
@@ -268,13 +276,14 @@
       "mellomnavn" : "Ruud"
     } ] ],
     "oppholdsAdresse" : [ "java.util.ArrayList", [ {
+      "coAdresse" : "Kari Hansen",
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",
         "gyldigTilOgMed" : "2021-02-02"
       },
-      "linje1" : "Kari Hansen",
-      "linje2" : "Vegadressestien 3",
-      "linje3" : "1444 TestPoststed",
+      "linje1" : "Vegadressestien 3",
+      "linje2" : "1444 TestPoststed",
+      "linje3" : null,
       "sistEndret" : {
         "ident" : "Folkeregisteret",
         "kilde" : "Bruker",

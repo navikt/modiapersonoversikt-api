@@ -5,6 +5,7 @@
   } ] ],
   "alder" : null,
   "bostedAdresse" : [ "java.util.ArrayList", [ {
+    "coAdresse" : null,
     "gyldighetsPeriode" : null,
     "linje1" : "Ett sted i Aremark",
     "linje2" : null,
