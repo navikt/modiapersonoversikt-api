@@ -5,7 +5,7 @@ import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.HenvendelseDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 
 class HenvendelseEierPip(private val henvendelseService: SfHenvendelseService) : Kabac.PolicyInformationPoint<Fnr> {

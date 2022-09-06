@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.kontonummer
 
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.apis.KontoregisterV1Api
+import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.UnleashProxySwitcher

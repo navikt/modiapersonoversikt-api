@@ -6,8 +6,8 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.KodeverkApi
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.TemagruppeDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.KodeverkApi
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.TemagruppeDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 
 object SfHenvendelseKodeverk {

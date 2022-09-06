@@ -50,7 +50,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/kodeverk/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
-                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.kodeverk.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.consumer.kodeverk.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <configOptions>

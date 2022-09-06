@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.service.kontonummer
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.apis.KontoregisterV1Api
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.HentKontoDTO
-import no.nav.modiapersonoversikt.api.domain.kontoregister.generated.models.KontoDTO
+import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
+import no.nav.modiapersonoversikt.consumer.kontoregister.generated.models.HentKontoDTO
+import no.nav.modiapersonoversikt.consumer.kontoregister.generated.models.KontoDTO
 
 class KontonummerRegisterService(
     private val kontoregister: KontoregisterV1Api

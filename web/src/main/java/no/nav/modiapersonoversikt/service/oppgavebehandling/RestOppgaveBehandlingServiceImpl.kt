@@ -10,10 +10,10 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.GetOppgaverResponseJsonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgaveJsonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.PostOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT

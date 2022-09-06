@@ -9,9 +9,9 @@ import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.*
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.infrastructure.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty

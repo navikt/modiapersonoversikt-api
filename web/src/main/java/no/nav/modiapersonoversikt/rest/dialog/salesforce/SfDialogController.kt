@@ -7,8 +7,8 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.HenvendelseDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.SamtalereferatRequestDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.SamtalereferatRequestDTO
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker

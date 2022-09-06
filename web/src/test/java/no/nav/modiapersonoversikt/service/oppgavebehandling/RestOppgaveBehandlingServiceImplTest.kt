@@ -6,8 +6,8 @@ import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.*
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toGetOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPostOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveResponseJsonDTO

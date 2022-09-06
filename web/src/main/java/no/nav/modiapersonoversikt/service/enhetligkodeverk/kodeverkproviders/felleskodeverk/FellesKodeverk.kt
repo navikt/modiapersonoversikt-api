@@ -6,8 +6,8 @@ import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.domain.kodeverk.generated.apis.KodeverkApi
-import no.nav.modiapersonoversikt.legacy.api.domain.kodeverk.generated.models.GetKodeverkKoderBetydningerResponseDTO
+import no.nav.modiapersonoversikt.consumer.kodeverk.generated.apis.KodeverkApi
+import no.nav.modiapersonoversikt.consumer.kodeverk.generated.models.GetKodeverkKoderBetydningerResponseDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 
 object FellesKodeverk {

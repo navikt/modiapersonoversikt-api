@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.consumer.norg
 
 import com.fasterxml.jackson.core.type.TypeReference
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.infrastructure.Serializer
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.RsAdresseDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.RsEnhetInkludertKontaktinformasjonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.RsPostboksadresseDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.RsStedsadresseDTO
+import no.nav.modiapersonoversikt.consumer.norg.generated.infrastructure.Serializer
+import no.nav.modiapersonoversikt.consumer.norg.generated.models.RsAdresseDTO
+import no.nav.modiapersonoversikt.consumer.norg.generated.models.RsEnhetInkludertKontaktinformasjonDTO
+import no.nav.modiapersonoversikt.consumer.norg.generated.models.RsPostboksadresseDTO
+import no.nav.modiapersonoversikt.consumer.norg.generated.models.RsStedsadresseDTO
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 

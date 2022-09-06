@@ -8,10 +8,10 @@ import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.KodeverkApi
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GjelderDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.KodeverkkombinasjonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgavetypeDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.KodeverkApi
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.GjelderDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.KodeverkkombinasjonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgavetypeDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 
 object OppgaveKodeverk {

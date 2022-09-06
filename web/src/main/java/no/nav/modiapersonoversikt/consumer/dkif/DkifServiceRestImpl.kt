@@ -14,8 +14,8 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
-import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.apis.DigitalKontaktinformasjonApi
-import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.apis.PingApi
+import no.nav.modiapersonoversikt.consumer.dkif.generated.apis.DigitalKontaktinformasjonApi
+import no.nav.modiapersonoversikt.consumer.dkif.generated.apis.PingApi
 import okhttp3.OkHttpClient
 
 class DkifServiceRestImpl(
