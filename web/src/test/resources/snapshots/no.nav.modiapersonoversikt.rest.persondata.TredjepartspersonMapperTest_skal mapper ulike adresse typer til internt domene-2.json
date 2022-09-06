@@ -5,6 +5,7 @@
   } ] ],
   "alder" : null,
   "bostedAdresse" : [ "java.util.ArrayList", [ {
+    "coAdresse" : null,
     "gyldighetsPeriode" : null,
     "linje1" : "000001 Gutu Gard",
     "linje2" : "1234 Skauen",

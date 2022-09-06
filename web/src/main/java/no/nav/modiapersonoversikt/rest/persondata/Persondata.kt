@@ -107,6 +107,7 @@ object Persondata {
     )
 
     data class Adresse constructor(
+        val coAdresse: String? = null,
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null,
@@ -114,12 +115,14 @@ object Persondata {
         val gyldighetsPeriode: GyldighetsPeriode? = null
     ) {
         constructor(
+            coAdresse: String? = null,
             linje1: List<String?>,
             linje2: List<String?>? = null,
             linje3: List<String?>? = null,
             sistEndret: SistEndret?,
             gyldighetsPeriode: GyldighetsPeriode? = null
         ) : this(
+            coAdresse,
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
             linje3?.filterNotNull()?.joinToString(" "),
