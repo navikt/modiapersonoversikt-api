@@ -8,5 +8,6 @@ enum class DenyCauseCode : Decision.DenyCause {
     FP3_EGEN_ANSATT,
     FP4_GEOGRAFISK,
     AD_ROLLE,
+    INGEN_ENHETER,
     UNKNOWN;
 }
