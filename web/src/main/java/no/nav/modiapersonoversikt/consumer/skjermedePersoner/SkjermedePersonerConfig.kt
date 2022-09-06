@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class SkjermedePersonerConfig {
-    var url = EnvironmentUtils.getRequiredProperty("SKJERMEDE_PERSONER_PIP_URL")
+    val cluster = EnvironmentUtils.getRequiredProperty("GCP_CLUSTER")
+    val url = EnvironmentUtils.getRequiredProperty("SKJERMEDE_PERSONER_PIP_URL")
 
     @Autowired
     lateinit var tokenProvider: ServiceToServiceTokenProvider
@@ -35,8 +36,7 @@ open class SkjermedePersonerConfig {
                         .getServiceToken(
                             "skjermede-personer-pip",
                             "nom",
-                            EnvironmentUtils
-                                .getRequiredProperty("SKJERMEDE_PERSONER_PIP_CLUSTER")
+                            cluster
                         )
                 }
             )

@@ -14,13 +14,8 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedSkjermingPolicy
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
@@ -35,8 +30,8 @@ class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
     private val dkif: Dkif.Service,
     private val norgApi: NorgApi,
-    private val personV3: PersonV3,
     private val skjermedePersonerApi: SkjermedePersonerApi,
+    private val kontonummerService: KontonummerService,
     private val policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
@@ -88,7 +83,9 @@ class PersondataServiceImpl(
 
         val dkifData =
             PersondataResult.runCatching(InformasjonElement.DKIF) { dkif.hentDigitalKontaktinformasjon(personIdent) }
-        val bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { hentBankkonto(personIdent) }
+        val bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) {
+            kontonummerService.hentKontonummer(Fnr(personIdent))
+        }
 
         return persondataFletter.flettSammenData(
             PersondataFletter.Data(
@@ -117,17 +114,6 @@ class PersondataServiceImpl(
             ?.run { gtBydel ?: gtKommune ?: gtLand }
 
         return PersondataResult.of(geografiskeTilknytning)
-    }
-
-    private fun hentBankkonto(fnr: String): HentPersonResponse {
-        return personV3.hentPerson(
-            HentPersonRequest()
-                .withAktoer(PersonIdent().withIdent(NorskIdent().withIdent(fnr)))
-                .withInformasjonsbehov(
-                    Informasjonsbehov.BANKKONTO,
-                    Informasjonsbehov.SPORINGSINFORMASJON
-                )
-        )
     }
 
     val GT_SOM_BURDE_HA_BYDEL = listOf("0301", "4601", "5001", "1103")

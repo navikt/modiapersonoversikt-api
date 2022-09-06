@@ -68,6 +68,8 @@ spec:
       value: "p"
     - name: APP_VERSION
       value: "{{ version }}"
+    - name: GCP_CLUSTER
+      value: "prod-gcp"
     - name: MODIA_CLIENT_ID
       value: "modialogin-p"
     - name: MODIA_REFRESH_URL
@@ -132,6 +134,8 @@ spec:
       value: "https://arena.adeo.no/ail_ws/Oppfoelging_v1"
     - name: EREG_ENDPOINTURL
       value: "https://modapp.adeo.no/ereg/"
+    - name: KONTOREGISTER_REST_URL
+      value: "https://sokos-kontoregister-person.intern.nav.no/kontoregister/api/kontoregister"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: "https://app.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
@@ -170,8 +174,6 @@ spec:
       value: "prod-fss"
     - name: NOM_URL
       value: "https://nom-api.intern.nav.no"
-    - name: SKJERMEDE_PERSONER_PIP_CLUSTER
-      value: "prod-gcp"
     - name: SKJERMEDE_PERSONER_PIP_URL
       value: "https://skjermede-personer-pip.intern.nav.no"
     - name: ARENA_SAK_VEDTAK_URL
