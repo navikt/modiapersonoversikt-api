@@ -70,6 +70,10 @@
             <groupId>no.nav.common</groupId>
             <artifactId>client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>token-client</artifactId>
+        </dependency>
 
 
         <!-- Spring -->
