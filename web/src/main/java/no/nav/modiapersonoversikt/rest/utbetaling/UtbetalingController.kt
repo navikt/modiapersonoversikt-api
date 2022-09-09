@@ -29,7 +29,7 @@ class UtbetalingController @Autowired constructor(
     val mappingExperiment = Scientist.createExperiment<List<UtbetalingDomain.Utbetaling>>(
         Scientist.Config(
             name = "UtbetalingRest",
-            experimentRate = Scientist.FixedValueRate(0.1)
+            experimentRate = Scientist.FixedValueRate(0.0)
         )
     )
 
