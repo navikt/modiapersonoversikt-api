@@ -21,7 +21,7 @@ public class UtbetalingServiceConfig {
     }
 
     @Bean
-    public UtbetalingService utbetalingService(UtbetaldataV1Api apiClient) {
+    public UtbetalingService restUtbetalingService(UtbetaldataV1Api apiClient) {
         return new UtbetalingServiceImpl(apiClient);
     }
 }
