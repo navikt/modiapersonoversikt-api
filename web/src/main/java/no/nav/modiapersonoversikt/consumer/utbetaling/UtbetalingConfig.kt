@@ -14,7 +14,7 @@ open class UtbetalingConfig {
     private val cluster = EnvironmentUtils.getRequiredProperty("ONPREM_CLUSTER_NAME")
 
     @Bean
-    open fun utbetalingV1(tokenClient: ServiceToServiceTokenProvider) = UtbetaldataV1Api(
+    open fun utbetalingV1Api(tokenClient: ServiceToServiceTokenProvider) = UtbetaldataV1Api(
         basePath = basePath,
         httpClient = RestClient.baseClient().newBuilder()
             .addInterceptor(
