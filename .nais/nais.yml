@@ -68,6 +68,8 @@ spec:
       value: "p"
     - name: APP_VERSION
       value: "{{ version }}"
+    - name: ONPREM_CLUSTER_NAME
+      value: "prod-fss"
     - name: GCP_CLUSTER
       value: "prod-gcp"
     - name: MODIA_CLIENT_ID
@@ -122,6 +124,8 @@ spec:
       value: "https://unleash.nais.io/api/"
     - name: UTBETALING_V1_ENDPOINTURL
       value: "https://wasapp.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1"
+    - name: REST_UTBETALING_V1_ENDPOINTURL
+      value: "https://sokos-utbetaldata.intern.nav.no/utbetaldata/api"
     - name: VEILARBOPPFOLGINGAPI_URL
       value: "https://veilarboppfolging.intern.nav.no/veilarboppfolging/api"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL

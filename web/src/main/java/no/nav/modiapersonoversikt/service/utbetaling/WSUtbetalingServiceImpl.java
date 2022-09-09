@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 import static no.nav.modiapersonoversikt.service.utbetaling.domain.util.DateUtils.leggTilEkstraDagerPaaStartdato;
 import static no.nav.modiapersonoversikt.service.utbetaling.domain.util.UtbetalingUtils.finnUtbetalingerISokeperioden;
 
-public class UtbetalingServiceImpl implements UtbetalingService {
+public class WSUtbetalingServiceImpl implements WSUtbetalingService {
 
     @Autowired
     private UtbetalingV1 utbetalingV1;

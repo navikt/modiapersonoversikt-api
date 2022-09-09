@@ -8,10 +8,12 @@ import Manuelle_fikser_for_api_main.ChangeUtils.addResponse
 import Manuelle_fikser_for_api_main.ChangeUtils.changeFile
 import Manuelle_fikser_for_api_main.ChangeUtils.forDefinition
 import Manuelle_fikser_for_api_main.ChangeUtils.forEndpoint
+import Manuelle_fikser_for_api_main.ChangeUtils.forParameter
 import Manuelle_fikser_for_api_main.ChangeUtils.forProperty
 import Manuelle_fikser_for_api_main.ChangeUtils.getTyped
 import Manuelle_fikser_for_api_main.ChangeUtils.objectOf
 import Manuelle_fikser_for_api_main.ChangeUtils.removeProperty
+import Manuelle_fikser_for_api_main.ChangeUtils.renameProperty
 import Manuelle_fikser_for_api_main.ChangeUtils.setRequired
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -74,6 +76,20 @@ changeFile(
     }
 }
 
+changeFile(
+    from = YamlSource("utbetaling-api/src/main/resources/utbetaling/openapi.yaml"),
+    to = YamlSource("utbetaling-api/src/main/resources/utbetaling/openapi-fixed.yaml")
+) {
+    forEndpoint("post", "/v1/hent-utbetalingsinformasjon/intern") {
+        forParameter("nav-call-id") {
+            put("schema", mapOf("type" to "string"))
+        }
+    }
+    forDefinition("Aktoer") {
+        renameProperty(from = "ident", to = "aktoerId")
+    }
+}
+
 /**
  * Må ligge i samme fil pga bug med kotlin-scripts sin @file:Import funksjon
  * Når det blir løst kan dette flytte ut til egen fil
@@ -132,6 +148,24 @@ object ChangeUtils {
     }
     fun Json.forProperty(name: String, block: Json.() -> Unit) {
         block(this.getTyped<Json>("properties").getTyped(name))
+    }
+    fun Json.renameProperty(from: String, to: String) {
+        val properties = this.getTyped<Json>("properties")
+        properties[to] = checkNotNull(properties[from])
+        properties.remove(from)
+
+        val requiredList = this.getTyped<MutableList<String>?>("required") ?: mutableListOf()
+        if (requiredList.contains(from)) {
+            requiredList.add(to)
+            requiredList.remove(from)
+        }
+    }
+    fun Json.forParameter(name: String, block: Json.() -> Unit) {
+        block(
+            checkNotNull(
+                this.getTyped<List<Json>>("parameters").find { it["name"] == name }
+            ) { "Could not get parameter $name" }
+        )
     }
     fun Json.removeProperty(vararg names: String) {
         if (this.has("properties")) {

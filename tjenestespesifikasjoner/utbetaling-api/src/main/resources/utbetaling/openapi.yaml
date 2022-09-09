@@ -1,0 +1,405 @@
+openapi: 3.0.1
+info:
+  title: SOKOS Utbetaldata API
+  description: Tjenestespesifikasjon for SOKOS Utbetaldata<p>Du når oss på Slack kanalen [\#tøb](https://nav-it.slack.com/archives/CKZADNFBP).
+  version: 1.0.0
+servers:
+  - url: /utbetaldata/api
+tags:
+  - name: utbetaldata.v1
+paths:
+  /v1/hent-utbetalingsinformasjon/intern:
+    post:
+      tags:
+        - utbetaldata.v1
+      summary: Hent utbetalingsinformasjon (intern)
+      operationId: hent-utbetalingsinformasjon-intern
+      parameters:
+        - in: header
+          name: nav-call-id
+          required: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Utbetalingsoppslag'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Liste over utbetalinger for den angitte id i den angitte periode.
+                items:
+                  $ref: '#/components/schemas/Utbetaling'
+        401:
+          description: Uautorisert
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Unauthorized'
+        404:
+          description: Ingen utbetalinger funnet
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Ingen utbetalinger funnet'
+        406:
+          description: Ugyldig input
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Ugyldig input'
+        500:
+          description: Intern server feil
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Noe gikk galt'
+
+  /v1/hent-utbetalingsinformasjon/ekstern:
+    post:
+      tags:
+        - utbetaldata.v1
+      summary: Hent utbetalingsinformasjon (ekstern)
+      operationId: hent-utbetalingsinformasjon-ekstern
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Utbetalingsoppslag'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Liste over utbetalinger for den angitte id i den angitte
+                  periode.
+                items:
+                  $ref: '#/components/schemas/Utbetaling'
+        401:
+          description: Tilgang nektet
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Unauthorized'
+        403:
+          description: Uautorisert
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Forbidden'
+        404:
+          description: Ingen utbetalinger funnet
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Ingen utbetalinger funnet'
+        406:
+          description: Ugyldig input
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Ugyldig input'
+        500:
+          description: Intern server feil
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Noe gikk galt'
+
+components:
+  schemas:
+    Utbetalingsoppslag:
+      required:
+        - ident
+        - rolle
+        - periode
+        - periodetype
+      type: object
+      properties:
+        ident:
+          type: string
+          example: "21081165646"
+          description: |
+            Unik id for identen det søkes utbetalinger for, enten fnr eller dnr.
+        rolle:
+          type: string
+          enum:
+            - RETTIGHETSHAVER
+            - UTBETALT_TIL
+          example: 'RETTIGHETSHAVER'
+          description: Angir om det spørres etter rettighetshaver eller utbetalingsmottaker (utbetalt til).
+        periode:
+          $ref: '#/components/schemas/Periode'
+        periodetype:
+          type: string
+          enum:
+            - UTBETALINGSPERIODE
+            - YTELSESPERIODE
+          example: 'UTBETALINGSPERIODE'
+          description: Angir om det er en utbetalingsperiode eller ytelsesperiode som det søkes etter.
+
+    Utbetaling:
+      type: object
+      description: Informasjon om en utbetaling som er gjort.
+      required:
+        - posteringsdato
+        - utbetaltTil
+        - utbetalingNettobeloep
+        - utbetalingsmetode
+        - utbetalingsstatus
+        - ytelseListe
+      properties:
+        posteringsdato:
+          type: string
+          format: date
+          description: Datoen utbetalingen ble postert i NAVs registre og sendt til bank.
+        utbetaltTil:
+          allOf:
+            - $ref: '#/components/schemas/Aktoer'
+          description: |
+            Hvilken aktør som har mottatt utbetalingen.
+            Ved feks barnetillegg eller verge vil dette gå til den som er myndiggjort for vedkommende,
+            eller ved sykepenger tilbakebetalt til arbeidsgiver vil dette være arbeidsgiver.
+        utbetalingNettobeloep:
+          type: number
+          format: double
+          example: 999.5
+          description: Beløpet som er utbetalt til utbetalingsmottaker.
+        utbetalingsmelding:
+          type: string
+          description: Prioritert rekkefølge, plukker de tre høyest prioriterte bilagsmeldingene.
+        utbetalingsdato:
+          type: string
+          format: date
+          description: Datoen utbetalingen ble effektuert i bank.
+        forfallsdato:
+          type: string
+          format: date
+          description: Datoen angitt fra NAV til bank at utbetalingen skal skje.
+        utbetaltTilKonto:
+          allOf:
+            - $ref: '#/components/schemas/Bankkonto'
+          description: Konto beløpet er utbetalt til.
+        utbetalingsmetode:
+          type: string
+          description: Metoden benyttet for utbetaling, feks Bankkontooverføring, utbetalingskort eller lignende.
+        utbetalingsstatus:
+          type: string
+          description: Status for utbetalingen.
+        ytelseListe:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ytelse'
+          description: Liste over ytelsene som utbetalingen dekker for den angitte perioden.
+
+    Ytelse:
+      type: object
+      description: Informasjon om en ytelse det er gitt utbetaling for.
+      required:
+        - ytelsesperiode
+        - ytelseskomponentersum
+        - trekksum
+        - skattsum
+        - ytelseNettobeloep
+        - rettighetshaver
+      properties:
+        ytelsestype:
+          type: string
+          description: Hva slags ytelse det gis utbetaling for. Se kodeverk for gyldige verdier.
+        ytelsesperiode:
+          allOf:
+            - $ref: '#/components/schemas/Periode'
+          description: Perioden ytelsen utbetales for.
+        ytelseskomponentListe:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ytelsekomponent'
+          description: Liste over alle delytelser/ytelseskomponenter som ytelsen består av.
+        ytelseskomponentersum:
+          type: number
+          format: double
+          example: 111.22
+          description: Summen av alle ytelseskomponenter (delytelser) som ytelsen består av.
+        trekkListe:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trekk'
+          description: Liste over alle trekk som er trukket fra ytelsen
+        trekksum:
+          type: number
+          format: double
+          example: 1000
+          description: Summen av alle trekk som er gjort for ytelsen
+        skattListe:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skatt'
+          description: Hvilke skattetrekk som er gjort før utbetaling av ytelsen.
+        skattsum:
+          type: number
+          format: double
+          example: 1000.50
+          description: Summen av alle skattetrekk for ytelsen.
+        ytelseNettobeloep:
+          type: number
+          format: double
+          example: 1999
+          description: |
+            Nettobeløpet som blir utbetalt til bruker for en gitt ytelse.
+            YtelseNettobeloep = sumYtelsekomponenter - sumTrekk - sumSkatt
+        bilagsnummer:
+          type: string
+          description: |
+            Bilagsnummeret knyttet til ytelsesutbetalingen i økonomisystemene.
+            UR: Bilagsnummer
+            A-betal: utbetalingsbilagsnummer
+        rettighetshaver:
+          allOf:
+            - $ref: '#/components/schemas/Aktoer'
+          description: Hvem som har rettigheten for ytelsen.
+        refundertForOrg:
+          allOf:
+            - $ref: '#/components/schemas/Aktoer'
+          description: |
+            Organisasjonen det er refundert for.
+            Angis dersom utbetalingsmottaker er en samlemottaker for flere organisasjoner.
+
+    Periode:
+      type: object
+      description: En periode angir et tidsintervall med fra-og-med og til-og-med.
+      required: [fom, tom]
+      properties:
+        fom:
+          type: string
+          format: date
+          description: Fra og med dato
+        tom:
+          type: string
+          format: date
+          description: Til og med dato
+
+    Aktoer:
+      type: object
+      description: En aktør er en person, organisasjon eller samhandler som NAV forholder seg til.
+      required:
+        - aktoertype
+        - ident
+      properties:
+        aktoertype:
+          type: string
+          enum:
+            - PERSON
+            - ORGANISASJON
+            - SAMHANDLER
+        ident:
+          type: string
+          description: NAVs interne identifikator for en aktør.
+        navn:
+          type: string
+          description: Navnet til en aktør for tilhørende aktoerId.
+
+    Bankkonto:
+      type: object
+      description: |
+        Bankkonto er informasjon om en konto tilhørende en aktør.
+        En bankkonto kan være av forskjellige typer, feks. norsk Bankkonto, SWIFT/IBAN eller lignende
+      required:
+        - kontonummer
+        - kontotype
+      properties:
+        kontonummer:
+          type: string
+          description: Nummeret til en bankkonto.
+        kontotype:
+          type: string
+          description: Typen bankkonto som kontonummeret tilhører. Kan f.eks. være norsk bankkonto eller en IBAN/SWIFT.
+
+    Ytelsekomponent:
+      type: object
+      description: En delytelse av ytelsen. F.eks. Grunnpensjon eller særtillegg for en Alderspensjon.
+      required:
+        - ytelseskomponenttype
+        - ytelseskomponentbeloep
+      properties:
+        ytelseskomponenttype:
+          type: string
+          description: Hva slags delytelse/ytelseskomponent dette er.
+        satsbeloep:
+          type: number
+          format: double
+          example: 999
+          description: Satsbeløp for en gitt sats pr enhet. Feks dagpenger er x kr/dag.
+        satstype:
+          type: string
+          description: Hvilken sats satsantallet og satsbeløpet gjelder for.
+        satsantall:
+          type: number
+          format: integer
+          example: 2
+          description: Antall enheter det gis satsbeløpet for
+        ytelseskomponentbeloep:
+          type: number
+          format: double
+          example: 42
+          description: |
+            Beløpet berettiget for delytelsen.
+            Dersom delytelsen er satsstyrt vil beløpet være satsantall * satsbeløp.
+
+    Skatt:
+      type: object
+      description: Informasjon om skattetrekket som gjøres for utbetalingen av ytelsen.
+      required:
+        - skattebeloep
+      properties:
+        skattebeloep:
+          type: number
+          format: double
+          example: 99.9
+          description: Beløpet som trekkes i skatt for ytelsen.
+
+    Trekk:
+      type: object
+      description: |
+        Informasjon om øvrige trekk som gjøres på en ytelse før utbetaling.<br />
+        Merk! Skattetrekk kommer i eget objekt. <br />
+        Merk! Flere trekk kan forekomme av samme type
+      required:
+        - trekkbeloep
+        - trekktype
+      properties:
+        trekktype:
+          type: string
+          description: Angir hva slags trekk som blir trukket.
+        trekkbeloep:
+          type: number
+          format: double
+          example: 100
+          description: Beløpet som blir trukket fra utbetalingen av ytelsen.
+        kreditor:
+          type: string
+          description: Hvem som krever trekket trukket
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
