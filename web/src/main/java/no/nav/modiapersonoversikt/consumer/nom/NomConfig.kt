@@ -6,9 +6,11 @@ import no.nav.common.client.nom.NomClientImpl
 import no.nav.common.client.nom.VeilederNavn
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.rest.client.RestClient
-import no.nav.common.sts.ServiceToServiceTokenProvider
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.utils.DownstreamApi
+import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -16,18 +18,23 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class NomConfig {
+    val scope = DownstreamApi(
+        application = "nom-api",
+        namespace = "nom",
+        cluster = "prod-gcp"
+    )
     val url: String = EnvironmentUtils.getRequiredProperty("NOM_URL")
     val httpClient: OkHttpClient = RestClient.baseClient()
 
     @Autowired
-    lateinit var tokenProvider: ServiceToServiceTokenProvider
+    lateinit var tokenProvider: MachineToMachineTokenClient
 
     @Bean
     open fun nom(): NomClient {
         if (EnvironmentUtils.isDevelopment().orElse(false)) {
             return DevNomClient()
         }
-        val tokenSupplier = { tokenProvider.getServiceToken("nom-api", "nom", "prod-gcp") }
+        val tokenSupplier = { tokenProvider.createMachineToMachineToken(scope) }
         return CachedNomClient(NomClientImpl(url, tokenSupplier, httpClient))
     }
 }
