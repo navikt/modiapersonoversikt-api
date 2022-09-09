@@ -13,6 +13,7 @@ import Manuelle_fikser_for_api_main.ChangeUtils.forProperty
 import Manuelle_fikser_for_api_main.ChangeUtils.getTyped
 import Manuelle_fikser_for_api_main.ChangeUtils.objectOf
 import Manuelle_fikser_for_api_main.ChangeUtils.removeProperty
+import Manuelle_fikser_for_api_main.ChangeUtils.renameProperty
 import Manuelle_fikser_for_api_main.ChangeUtils.setRequired
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -84,6 +85,9 @@ changeFile(
             put("schema", mapOf("type" to "string"))
         }
     }
+    forDefinition("Aktoer") {
+        renameProperty(from = "ident", to = "aktoerId")
+    }
 }
 
 /**
@@ -144,6 +148,17 @@ object ChangeUtils {
     }
     fun Json.forProperty(name: String, block: Json.() -> Unit) {
         block(this.getTyped<Json>("properties").getTyped(name))
+    }
+    fun Json.renameProperty(from: String, to: String) {
+        val properties = this.getTyped<Json>("properties")
+        properties[to] = checkNotNull(properties[from])
+        properties.remove(from)
+
+        val requiredList = this.getTyped<MutableList<String>?>("required") ?: mutableListOf()
+        if (requiredList.contains(from)) {
+            requiredList.add(to)
+            requiredList.remove(from)
+        }
     }
     fun Json.forParameter(name: String, block: Json.() -> Unit) {
         block(

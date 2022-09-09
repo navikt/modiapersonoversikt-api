@@ -102,7 +102,7 @@ class UtbetalingServiceImpl(val utbetaldataV1Api: UtbetaldataV1Api) : Utbetaling
 
     private fun hentArbeidsgiver(aktor: RsAktoer): UtbetalingDomain.Arbeidgiver {
         return UtbetalingDomain.Arbeidgiver(
-            orgnr = aktor.ident,
+            orgnr = aktor.aktoerId,
             navn = aktor.navn,
         )
     }
