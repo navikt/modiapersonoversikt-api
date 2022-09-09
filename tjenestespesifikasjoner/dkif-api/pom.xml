@@ -50,7 +50,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/dkif/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
-                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.consumer.dkif.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <configOptions>

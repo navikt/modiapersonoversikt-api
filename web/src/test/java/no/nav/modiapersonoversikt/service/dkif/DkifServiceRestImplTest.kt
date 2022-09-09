@@ -6,8 +6,8 @@ import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceRestImpl
+import no.nav.modiapersonoversikt.consumer.dkif.generated.infrastructure.ServerException
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.infrastructure.ServerException
 import no.nav.modiapersonoversikt.testutils.TestEnvironmentExtension
 import no.nav.modiapersonoversikt.utils.WireMockUtils
 import no.nav.modiapersonoversikt.utils.WireMockUtils.getWithBody

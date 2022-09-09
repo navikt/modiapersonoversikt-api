@@ -2,11 +2,11 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import io.mockk.*
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.KodeverkApi
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GjelderDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.KodeverkkombinasjonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgavetypeDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.TemaDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.KodeverkApi
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.GjelderDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.KodeverkkombinasjonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgavetypeDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.TemaDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.utils.MutableClock

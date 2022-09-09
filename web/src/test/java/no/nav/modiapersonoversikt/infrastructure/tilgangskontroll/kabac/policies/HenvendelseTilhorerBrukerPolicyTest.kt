@@ -3,12 +3,12 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingFraDTO
 import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.HenvendelseEierPip
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.HenvendelseDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingFraDTO
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
