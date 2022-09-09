@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.utbetaling
 
 object UtbetalingDomain {
-    class Utbetaling(
+    data class Utbetaling(
         val posteringsdato: String,
         val utbetalingsdato: String?,
         val forfallsdato: String?,
@@ -17,7 +17,7 @@ object UtbetalingDomain {
         val ytelser: List<Ytelse>,
     )
 
-    class Ytelse(
+    data class Ytelse(
         val type: String?,
         val ytelseskomponentListe: List<YtelseKomponent>,
         val ytelseskomponentersum: Double,
@@ -31,7 +31,7 @@ object UtbetalingDomain {
         val arbeidsgiver: Arbeidgiver?,
     )
 
-    class YtelseKomponent(
+    data class YtelseKomponent(
         val ytelseskomponenttype: String,
         val satsbelop: Double?,
         val satstype: String?,
@@ -39,22 +39,22 @@ object UtbetalingDomain {
         val ytelseskomponentbelop: Double,
     )
 
-    class Trekk(
+    data class Trekk(
         val trekktype: String,
         val trekkbelop: Double,
         val kreditor: String?,
     )
 
-    class Skatt(
+    data class Skatt(
         val skattebelop: Double,
     )
 
-    class YtelsePeriode(
+    data class YtelsePeriode(
         val start: String,
         val slutt: String,
     )
 
-    class Arbeidgiver(
+    data class Arbeidgiver(
         val orgnr: String,
         val navn: String?,
     )

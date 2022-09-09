@@ -72,7 +72,8 @@ class UtbetalingController @Autowired constructor(
                         },
                         experiment = {
                             restService.hentUtbetalinger(Fnr(fnr), startDato.toJavaTime(), sluttDato.toJavaTime())
-                        }
+                        },
+                        dataFields = ::utbetalingSammenligning
                     )
                     UtbetalingerResponseDTO(
                         utbetalinger = utbetalinger,
@@ -83,5 +84,42 @@ class UtbetalingController @Autowired constructor(
                     )
                 }
             }
+    }
+
+    fun utbetalingSammenligning(
+        wsUtbetalinger: List<UtbetalingDomain.Utbetaling>,
+        anyTry: Scientist.UtilityClasses.Try<Any?>
+    ): Map<String, Any?> {
+        if (anyTry.isFailure) return emptyMap()
+        val restUtbetalinger = anyTry.getOrThrow() as List<UtbetalingDomain.Utbetaling>
+
+        val transformerteWsUtbetalinger = wsUtbetalinger.map { utbetaling ->
+            utbetaling.copy(
+                ytelser = utbetaling.ytelser.map { ytelse ->
+                    ytelse.copy(
+                        ytelseskomponentListe = ytelse.ytelseskomponentListe.map { ytelsekomponent ->
+                            ytelsekomponent.copy(
+                                satsantall = ytelsekomponent.satsantall ?: 0.0 // Rest fyller inn 0.0 istedet for null
+                            )
+                        },
+
+                        // SOAP endepunktet kan returnere -0.0, dette er fikset i nye rest-endepunkter
+                        trekksum = if (ytelse.trekksum == -0.0) 0.0 else ytelse.trekksum,
+                        skattsum = if (ytelse.skattsum == -0.0) 0.0 else ytelse.skattsum,
+
+                        // SOAP returnerer dummy-objekt ved manglende arbeidsgiver. Dette feltet blir null i rest-apiet
+                        arbeidsgiver = if (ytelse.arbeidsgiver?.orgnr == "000000000") null else ytelse.arbeidsgiver
+                    )
+                }
+            )
+        }
+
+        val (ok, controlJson, experimentJson) = Scientist.compareAndSerialize(transformerteWsUtbetalinger, restUtbetalinger)
+        // Overskriver standard scientist felter etter å ha gjort en sammenligning med de kjente endringene i apiet
+        return mapOf(
+            "ok" to ok,
+            "control" to controlJson,
+            "experiment" to experimentJson,
+        )
     }
 }
