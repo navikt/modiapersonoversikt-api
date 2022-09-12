@@ -11,11 +11,11 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toGetOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPostOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveResponseJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.*

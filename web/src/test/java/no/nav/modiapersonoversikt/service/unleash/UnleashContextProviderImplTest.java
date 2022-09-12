@@ -4,7 +4,7 @@ import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
 import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
+import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;

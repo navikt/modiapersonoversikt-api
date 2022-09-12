@@ -4,9 +4,9 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
+import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

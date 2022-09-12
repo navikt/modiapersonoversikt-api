@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.utils.http;
+package no.nav.modiapersonoversikt.testutils;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;

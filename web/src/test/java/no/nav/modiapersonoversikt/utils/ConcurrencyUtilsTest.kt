@@ -5,7 +5,7 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
+import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Percentage.withPercentage
 import org.junit.jupiter.api.Test
