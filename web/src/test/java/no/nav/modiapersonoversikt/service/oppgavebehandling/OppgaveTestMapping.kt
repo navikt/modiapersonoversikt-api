@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.api.domain.oppgave
 
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.*
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveMappingHelpers
 
 public fun OppgaveJsonDTO.toPostOppgaveResponseJsonDTO(): PostOppgaveResponseJsonDTO =

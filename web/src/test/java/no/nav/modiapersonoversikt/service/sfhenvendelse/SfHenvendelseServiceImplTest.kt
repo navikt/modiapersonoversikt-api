@@ -9,11 +9,11 @@ import no.nav.common.auth.context.UserRole
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseBehandlingApi
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseInfoApi
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.JournalApi
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.NyHenvendelseApi
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.HenvendelseBehandlingApi
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.HenvendelseInfoApi
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.JournalApi
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.NyHenvendelseApi
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension

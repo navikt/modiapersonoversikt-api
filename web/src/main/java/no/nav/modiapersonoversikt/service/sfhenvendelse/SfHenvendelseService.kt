@@ -5,13 +5,13 @@ import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.infrastructure.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.*
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty

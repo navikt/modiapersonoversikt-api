@@ -5,10 +5,10 @@ import no.nav.common.health.HealthCheckUtils
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.UrlUtils
+import no.nav.modiapersonoversikt.consumer.skjermedePersonerPip.generated.apis.SkjermingPipApi
+import no.nav.modiapersonoversikt.consumer.skjermedePersonerPip.generated.models.SkjermetDataRequestDTO
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
-import no.nav.modiapersonoversikt.legacy.api.domain.skjermedePersonerPip.generated.apis.SkjermingPipApi
-import no.nav.modiapersonoversikt.legacy.api.domain.skjermedePersonerPip.generated.models.SkjermetDataRequestDTO
 import okhttp3.OkHttpClient
 
 interface SkjermedePersonerApi : Pingable {

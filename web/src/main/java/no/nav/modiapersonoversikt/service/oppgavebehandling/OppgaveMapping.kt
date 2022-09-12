@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.PutOppgaveRequestJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.PutOppgaveResponseJsonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.GetOppgaveResponseJsonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgaveJsonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.PutOppgaveRequestJsonDTO
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.PutOppgaveResponseJsonDTO
 
 public fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = OppgaveJsonDTO(
     tildeltEnhetsnr = this.tildeltEnhetsnr,

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.*
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 
 object OppgaveMappingHelpers {
     fun requiredOppgaveId(value: Long?): Long {

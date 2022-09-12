@@ -3,8 +3,8 @@ package no.nav.modiapersonoversikt.rest.dialog.salesforce
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.RestUtils
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
@@ -359,7 +359,7 @@ class SfLegacyDialogController(
 
     private fun hentFritekstFraMelding(
         erKassert: Boolean,
-        melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO
+        melding: no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO
     ): String {
         if (erKassert) {
             return "Innholdet i denne henvendelsen er slettet av NAV."
@@ -369,7 +369,7 @@ class SfLegacyDialogController(
 
     private fun meldingstypeFraSfTyper(
         henvendelse: HenvendelseDTO,
-        melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO
+        melding: no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO
     ): Meldingstype {
         val erForsteMelding = henvendelse.meldinger?.firstOrNull() == melding
         return when (henvendelse.henvendelseType) {
