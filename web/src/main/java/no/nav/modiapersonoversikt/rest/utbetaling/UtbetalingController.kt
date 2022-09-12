@@ -9,6 +9,8 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagRiktigDato
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingDomain
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingService
 import no.nav.modiapersonoversikt.service.utbetaling.WSUtbetalingMapper
@@ -24,12 +26,13 @@ import org.springframework.web.server.ResponseStatusException
 class UtbetalingController @Autowired constructor(
     private val service: WSUtbetalingService,
     private val restService: UtbetalingService,
+    private val unleash: UnleashService,
     private val tilgangskontroll: Tilgangskontroll,
 ) {
     val mappingExperiment = Scientist.createExperiment<List<UtbetalingDomain.Utbetaling>>(
         Scientist.Config(
             name = "UtbetalingRest",
-            experimentRate = Scientist.FixedValueRate(0.0)
+            experimentRate = Scientist.UnleashRate(unleash, Feature.REST_UTBETALING_EXPERIMENT_RATE)
         )
     )
 
