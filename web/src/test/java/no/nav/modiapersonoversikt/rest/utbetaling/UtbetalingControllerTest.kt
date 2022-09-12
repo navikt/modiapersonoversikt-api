@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.rest.utbetaling
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingService
 import no.nav.modiapersonoversikt.service.utbetaling.WSUtbetalingService
 import org.junit.jupiter.api.Test
@@ -20,8 +21,9 @@ internal class UtbetalingControllerTest {
 
     private val service: WSUtbetalingService = mockk()
     private val restService: UtbetalingService = mockk()
+    private val unleash: UnleashService = mockk()
 
-    private val controller: UtbetalingController = UtbetalingController(service, restService, TilgangskontrollMock.get())
+    private val controller: UtbetalingController = UtbetalingController(service, restService, unleash, TilgangskontrollMock.get())
 
     @Test
     fun `Kaster ApplicationException`() {
