@@ -1,11 +1,13 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies
 
+import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 
 internal object TilgangTilModiaPolicy : Kabac.Policy {
@@ -15,11 +17,14 @@ internal object TilgangTilModiaPolicy : Kabac.Policy {
 
     override fun evaluate(ctx: EvaluationContext): Decision {
         val veilederRoller = ctx.getValue(VeiledersRollerPip)
+        val veiledersEnheter: List<EnhetId> by lazy { ctx.getValue(VeiledersEnheterPip) }
 
-        return if (modiaRoller.hasIntersection(veilederRoller)) {
-            Decision.Permit()
-        } else {
+        return if (modiaRoller.intersect(veilederRoller).isEmpty()) {
             Decision.Deny("Veileder har ikke tilgang til modia", DenyCauseCode.AD_ROLLE)
+        } else if (veiledersEnheter.isEmpty()) {
+            Decision.Deny("Veileder har ikke tilgang til noen enheter", DenyCauseCode.INGEN_ENHETER)
+        } else {
+            Decision.Permit()
         }
     }
 }
