@@ -5,7 +5,7 @@ import no.nav.modiapersonoversikt.legacy.sak.SakBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
+import no.nav.modiapersonoversikt.service.saf.SafService;
 import no.nav.modiapersonoversikt.legacy.sak.utils.Konstanter;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import org.joda.time.DateTime;

@@ -15,7 +15,7 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.Res
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.SaksoversiktService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
+import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.rest.RestUtils
 import no.nav.modiapersonoversikt.service.saker.SakerService
 import org.joda.time.DateTime

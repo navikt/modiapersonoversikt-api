@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.legacy.sak.service;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
+import no.nav.modiapersonoversikt.service.saf.SafService;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
 import org.slf4j.Logger;

@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.saker.kilder
 
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
+import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saker.Sak
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import org.joda.time.DateTime

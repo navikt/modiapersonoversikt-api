@@ -2,9 +2,6 @@ package no.nav.modiapersonoversikt.legacy.sak.config
 
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -18,10 +15,5 @@ open class SakServiceConfig {
     @Bean
     open fun sakstemaService(): SakstemaService {
         return SakstemaService()
-    }
-
-    @Bean
-    open fun safService(unleashService: UnleashService): SafService {
-        return SafServiceImpl()
     }
 }
