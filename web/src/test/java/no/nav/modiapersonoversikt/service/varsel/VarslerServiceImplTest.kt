@@ -1,16 +1,14 @@
-package no.nav.modiapersonoversikt.legacy.varsel.service
+package no.nav.modiapersonoversikt.service.varsel
 
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
-import no.nav.modiapersonoversikt.service.varsel.VarslerService
-import no.nav.modiapersonoversikt.service.varsel.VarslerServiceImpl
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSBrukervarsel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarselbestilling
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerResponse
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.Instant
@@ -32,7 +30,7 @@ class VarslerServiceImplTest {
         every { soapfault.faultString } returns ""
         every { brukervarselV1.hentVarselForBruker(any()) } throws SOAPFaultException(soapfault)
         val varsler = varselService.hentLegacyVarsler(Fnr("12345678910"))
-        assertThat(varsler).isEmpty()
+        Assertions.assertThat(varsler).isEmpty()
     }
 
     @Test
@@ -43,8 +41,8 @@ class VarslerServiceImplTest {
 
         val result = varselService.hentAlleVarsler(Fnr("12345678910"))
 
-        assertThat(result.varsler).isEmpty()
-        assertThat(result.feil).hasSize(2)
+        Assertions.assertThat(result.varsler).isEmpty()
+        Assertions.assertThat(result.feil).hasSize(2)
     }
 
     @Test
@@ -63,8 +61,8 @@ class VarslerServiceImplTest {
         )
 
         val varsler = varselService.hentAlleVarsler(Fnr("12345678910"))
-        assertThat(varsler.varsler).hasSize(6)
-        assertThat(varsler.feil).isEmpty()
+        Assertions.assertThat(varsler.varsler).hasSize(6)
+        Assertions.assertThat(varsler.feil).isEmpty()
     }
 
     private val event = Brukernotifikasjon.Event(
