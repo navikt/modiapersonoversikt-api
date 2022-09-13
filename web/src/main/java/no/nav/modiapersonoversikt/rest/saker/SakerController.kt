@@ -13,7 +13,6 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantform
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
-import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.SaksoversiktService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.rest.RestUtils
@@ -31,7 +30,6 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/rest/saker/{fnr}")
 class SakerController @Autowired constructor(
-    private val saksoversiktService: SaksoversiktService,
     private val sakstemaService: SakstemaService,
     private val sakerService: SakerService,
     private val tilgangskontrollService: TilgangskontrollService,
@@ -45,8 +43,6 @@ class SakerController @Autowired constructor(
             .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
                 val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
                 val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
-
-                saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
 
                 val resultat = ResultatWrapper(
                     mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(enhet, request)),

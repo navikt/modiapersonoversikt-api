@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.legacy.sak.service;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 
+import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
 import no.nav.modiapersonoversikt.service.saf.SafService;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
@@ -82,7 +83,7 @@ public class SakstemaService {
                 })
                 .collect(toList());
 
-        return new ResultatWrapper<>(sakstema, feilendeBaksystemer);
+        return new ResultatWrapper<>(FilterUtils.fjernGamleDokumenter(sakstema), feilendeBaksystemer);
     }
 
     private List<Sakstema> grupperSykepengerOgSykemelding(List<Sakstema> sakstema) {
