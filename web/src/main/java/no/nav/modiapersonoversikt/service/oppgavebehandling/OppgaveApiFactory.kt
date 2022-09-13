@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
-import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
 
 object OppgaveApiFactory {
     fun createClient(tokenProvider: () -> String): OppgaveApi {

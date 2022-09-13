@@ -1,16 +1,13 @@
-package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon
+package no.nav.modiapersonoversikt.consumer.ereg
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
 import no.nav.modiapersonoversikt.config.AppConstants
-import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
-import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonServiceImpl
-import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonV1ClientImpl
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.testutils.TestEnvironmentRule
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.core.Is.`is`
+import org.hamcrest.MatcherAssert
+import org.hamcrest.core.Is
 import org.junit.Rule
 import org.junit.Test
 
@@ -34,34 +31,34 @@ class OrganisasjonServiceImplTest {
     fun `håndterer 200 statusCode med data`() {
         withMockServer(statusCode = 200, body = gyldigRespons) { service ->
             val nokkelInfo = service.hentNoekkelinfo(ORG_NR)
-            assertThat(nokkelInfo.isPresent, `is`(true))
-            assertThat(nokkelInfo.get().navn, `is`("NAV IT"))
+            MatcherAssert.assertThat(nokkelInfo.isPresent, Is.`is`(true))
+            MatcherAssert.assertThat(nokkelInfo.get().navn, Is.`is`("NAV IT"))
         }
     }
 
     @Test
     fun `håndterer ukjent json uten alvorlig feil`() {
         withMockServer(statusCode = 200, body = "{\"json\": true}") { service ->
-            assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, `is`(true))
+            MatcherAssert.assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, Is.`is`(true))
         }
     }
 
     @Test
     fun `håndterer status coder utenfor 200-299 rangen`() {
         withMockServer(statusCode = 404, body = gyldigRespons) { service ->
-            assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, `is`(true))
+            MatcherAssert.assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, Is.`is`(true))
         }
 
         withMockServer(statusCode = 500) { service ->
-            assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, `is`(true))
+            MatcherAssert.assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, Is.`is`(true))
         }
     }
 
     internal fun withMockServer(statusCode: Int = 200, body: String? = null, test: (OrganisasjonService) -> Unit) {
-        stubFor(
-            get(anyUrl())
+        WireMock.stubFor(
+            WireMock.get(WireMock.anyUrl())
                 .willReturn(
-                    aResponse()
+                    WireMock.aResponse()
                         .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
                         .withBody(body)
@@ -72,11 +69,11 @@ class OrganisasjonServiceImplTest {
         val service = OrganisasjonServiceImpl(client)
         test(service)
 
-        verify(
-            getRequestedFor(urlEqualTo("/api/v1/organisasjon/$ORG_NR/noekkelinfo"))
+        WireMock.verify(
+            WireMock.getRequestedFor(WireMock.urlEqualTo("/api/v1/organisasjon/$ORG_NR/noekkelinfo"))
                 .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
-                .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, matching(AppConstants.SYSTEMUSER_USERNAME))
-                .withHeader("accept", matching("application/json"))
+                .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, WireMock.matching(AppConstants.SYSTEMUSER_USERNAME))
+                .withHeader("accept", WireMock.matching("application/json"))
         )
     }
 }

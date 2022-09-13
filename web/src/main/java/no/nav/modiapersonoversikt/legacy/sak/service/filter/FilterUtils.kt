@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.filter
 
-import no.nav.common.utils.EnvironmentUtils
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sakstema

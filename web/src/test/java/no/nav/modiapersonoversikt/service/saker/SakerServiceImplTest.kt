@@ -14,8 +14,8 @@ import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
-import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saker.Sak.*
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilFagsystemNavn
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl.Companion.leggTilTemaNavn

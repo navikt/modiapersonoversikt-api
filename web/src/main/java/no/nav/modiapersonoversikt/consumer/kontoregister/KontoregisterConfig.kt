@@ -5,8 +5,8 @@ import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.ServiceToServiceTokenProvider
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
 import no.nav.modiapersonoversikt.config.InDevCondition
+import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable

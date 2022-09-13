@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils;
+package no.nav.modiapersonoversikt.utils;
 
 import no.nav.modiapersonoversikt.utils.DateUtils;
 import org.joda.time.DateTime;

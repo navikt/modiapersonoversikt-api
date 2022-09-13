@@ -124,9 +124,9 @@ object SafDokumentMapper {
             null -> null
             else -> throw RuntimeException(
                 "Ugyldig tekst for mapping til variantformat. Tekst: ${
-                    getVariant(
-                        dokumentInfo
-                    )?.variantformat
+                getVariant(
+                    dokumentInfo
+                )?.variantformat
                 }"
             )
         }

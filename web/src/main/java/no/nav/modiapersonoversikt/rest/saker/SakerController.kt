@@ -14,8 +14,8 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantform
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
-import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.rest.RestUtils
+import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saker.SakerService
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired

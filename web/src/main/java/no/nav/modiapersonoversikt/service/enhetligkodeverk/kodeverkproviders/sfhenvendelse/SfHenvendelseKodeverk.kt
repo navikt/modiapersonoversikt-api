@@ -3,11 +3,11 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.sf
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.KodeverkApi
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.TemagruppeDTO
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.KodeverkApi
-import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.TemagruppeDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 
 object SfHenvendelseKodeverk {
