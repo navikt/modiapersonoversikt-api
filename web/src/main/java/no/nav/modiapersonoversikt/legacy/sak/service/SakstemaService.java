@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.legacy.sak.service;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class SakstemaService {
     private static final Logger LOG = LoggerFactory.getLogger(SakstemaService.class);
 
     @Autowired
-    private DokumentMetadataService dokumentMetadataService;
+    private SafService safService;
 
     @Autowired
     private SakOgBehandlingService sakOgBehandlingService;
@@ -32,7 +33,7 @@ public class SakstemaService {
     private EnhetligKodeverk.Service kodeverk;
 
     public ResultatWrapper<List<Sakstema>> hentSakstema(List<Sak> saker, String fnr) {
-        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(fnr);
+        ResultatWrapper<List<DokumentMetadata>> wrapper = safService.hentJournalposter(fnr);
 
         try {
             Map<String, List<Behandlingskjede>> behandlingskjeder = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);

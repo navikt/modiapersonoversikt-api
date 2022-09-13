@@ -12,7 +12,6 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
-import no.nav.modiapersonoversikt.legacy.sak.service.DokumentMetadataService
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.SaksoversiktService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
@@ -36,7 +35,6 @@ class SakerController @Autowired constructor(
     private val sakstemaService: SakstemaService,
     private val sakerService: SakerService,
     private val tilgangskontrollService: TilgangskontrollService,
-    private val dokumentMetadataService: DokumentMetadataService,
     private val safService: SafService,
     val tilgangskontroll: Tilgangskontroll
 ) {
@@ -214,8 +212,8 @@ class SakerController @Autowired constructor(
     }
 
     private fun hentDokumentMetadata(journalpostId: String, fnr: String): DokumentMetadata {
-        return dokumentMetadataService.hentDokumentMetadata(fnr).resultat
-            .first { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
+        return safService.hentJournalposter(fnr).resultat
+            .firstOrNull { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
             ?: throw RuntimeException("Fant ikke metadata om journalpostId $journalpostId. Dette bør ikke skje.")
     }
 
