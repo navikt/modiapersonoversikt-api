@@ -47,7 +47,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/kontoregister/openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/kontoregister/openapi.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
                             <packageName>no.nav.modiapersonoversikt.consumer.kontoregister.generated</packageName>
