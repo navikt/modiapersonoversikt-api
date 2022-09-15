@@ -8,13 +8,13 @@ import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
 import no.nav.modiapersonoversikt.service.saf.SafService;
 import no.nav.modiapersonoversikt.legacy.sak.utils.Konstanter;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -173,9 +173,7 @@ public class SakstemaServiceTest {
             put("RESTERENDE_TEMA", new HashSet(asList("DAG")));
         }};
 
-        Map sakOgBehandlingResults = new HashMap<>();
-        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
-        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+        when(sakOgBehandlingService.hentAlleSaker(any())).thenReturn(sakFraSakOgBehandling("DAG"));
 
         ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(emptyList(), FNR);
 
@@ -191,9 +189,7 @@ public class SakstemaServiceTest {
         set.add("DAG");
         gruppertTema.put("RESTERENDE_TEMA", set);
 
-        Map sakOgBehandlingResults = new HashMap<>();
-        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
-        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+        when(sakOgBehandlingService.hentAlleSaker(any())).thenReturn(sakFraSakOgBehandling("DAG"));
 
         ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(emptyList(), FNR);
 
@@ -210,27 +206,21 @@ public class SakstemaServiceTest {
             put("RESTERENDE_TEMA", new HashSet(asList("FOR", "DAG")));
         }};
 
-        Map sakOgBehandlingResults = new HashMap<>();
-        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
-        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+        when(sakOgBehandlingService.hentAlleSaker(any())).thenReturn(sakFraSakOgBehandling("DAG"));
 
         ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(emptyList(), FNR);
 
         assertThat(listResultatWrapper.resultat.size(), is(2));
     }
 
-    private no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak sakFraSakOgBehandling() {
-        return SakBuilder.create()
-                .withBehandlingskjede(BehandlingskjedeBuilder.create()
-                        .withSisteBehandlingAvslutningsstatus(FilterUtils.OPPRETTET)
-                        .withSisteBehandlingstype(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE)
-                        .withSisteBehandlingsstatus(FilterUtils.OPPRETTET)
-                        .withBehandlingsListeRef("henvendelsesId")
-                        .withSisteBehandlingREF("henvendelsesId")
-                        .withStart(new DateTime().minusDays(1))
-                        .withSlutt(null)
-                        .build())
-                .build();
+    private List<SakOgBehandlingService.Behandlingskjede> sakFraSakOgBehandling(String tema) {
+        return asList(
+                new SakOgBehandlingService.Behandlingskjede(
+                        tema,
+                        SakOgBehandlingService.BehandlingsStatus.UNDER_BEHANDLING,
+                        LocalDateTime.now().minusDays(1)
+                )
+        );
     }
 
     @Test
@@ -302,8 +292,8 @@ public class SakstemaServiceTest {
         );
 
         Map sakOgBehandlingResults = new HashMap<>();
-
-        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+        when(sakOgBehandlingService.hentAlleSaker(any())).thenReturn(sakFraSakOgBehandling("SYM"));
+//        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
 
         ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(saker, FNR);
 

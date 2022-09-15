@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
+import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Behandlingskjede;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sak;
 
@@ -16,7 +16,7 @@ public class SakstemaGrupperer {
     public static Set<String> hentAlleTema(
             List<Sak> saker,
             List<DokumentMetadata> dokumentMetadata,
-            Map<String, List<Behandlingskjede>> behandlingskjeder
+            Map<String, List<SakOgBehandlingService.Behandlingskjede>> behandlingskjeder
     ) {
         Stream<String> sakerTema = saker.stream().map(Sak::getTemakode);
 

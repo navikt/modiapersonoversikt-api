@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.sak.providerdomain;
 
+import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingService;
+
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -9,7 +11,7 @@ public class Sakstema {
     public String temakode;
     public String temanavn;
     public boolean erGruppert;
-    public List<Behandlingskjede> behandlingskjeder = emptyList();
+    public List<SakOgBehandlingService.Behandlingskjede> behandlingskjeder = emptyList();
     public List<DokumentMetadata> dokumentMetadata = emptyList();
     public List<Sak> tilhorendeSaker = emptyList();
     public List<Integer> feilkoder = emptyList();
@@ -41,7 +43,7 @@ public class Sakstema {
         return this;
     }
 
-    public Sakstema withBehandlingskjeder(final List<Behandlingskjede> behandlingskjeder) {
+    public Sakstema withBehandlingskjeder(final List<SakOgBehandlingService.Behandlingskjede> behandlingskjeder) {
         this.behandlingskjeder = behandlingskjeder;
         return this;
     }

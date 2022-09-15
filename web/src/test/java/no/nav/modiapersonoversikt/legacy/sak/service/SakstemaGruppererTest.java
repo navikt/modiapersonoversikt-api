@@ -1,24 +1,22 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
 import kotlin.Pair;
+import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Behandlingskjede;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sak;
 import no.nav.modiapersonoversikt.legacy.sak.utils.Konstanter;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.hamcrest.core.IsEqual.equalTo;
 
 public class SakstemaGruppererTest {
 
@@ -46,7 +44,7 @@ public class SakstemaGruppererTest {
         assertThat(temakoder.size(), is(5));
     }
 
-    private static List<Sak> lagSaker(String ...temakoder) {
+    private static List<Sak> lagSaker(String... temakoder) {
         return Stream.of(temakoder)
                 .map(temakode -> new Sak().withTemakode(temakode))
                 .collect(Collectors.toList());
@@ -69,9 +67,9 @@ public class SakstemaGruppererTest {
         return Stream.concat(henvendelseDokument, joarkDokument).collect(Collectors.toList());
     }
 
-    private static Map<String, List<Behandlingskjede>> lagBehandlingskjeder(String ...temakoder) {
+    private static Map<String, List<SakOgBehandlingService.Behandlingskjede>> lagBehandlingskjeder(String... temakoder) {
         return Stream.of(temakoder)
-                .map(temakode -> new Pair<String, List<Behandlingskjede>>(temakode, emptyList()))
+                .map(temakode -> new Pair<String, List<SakOgBehandlingService.Behandlingskjede>>(temakode, emptyList()))
                 .collect(Collectors.toMap(Pair::component1, Pair::component2));
     }
 }

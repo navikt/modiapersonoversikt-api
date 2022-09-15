@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.saker
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -109,7 +110,7 @@ class SakerController @Autowired constructor(
         )
     }
 
-    private fun hentBehandlingskjeder(behandlingskjeder: List<Behandlingskjede>): List<Map<String, Any?>> {
+    private fun hentBehandlingskjeder(behandlingskjeder: List<SakOgBehandlingService.Behandlingskjede>): List<Map<String, Any?>> {
         return behandlingskjeder.map {
             mapOf(
                 "status" to it.status,

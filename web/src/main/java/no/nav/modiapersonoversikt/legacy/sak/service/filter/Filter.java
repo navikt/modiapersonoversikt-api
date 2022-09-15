@@ -33,9 +33,8 @@ public class Filter {
     }
 
     public static List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger) {
-        Stream<Behandling> lovligeBehandlinger = behandlinger.stream().filter(HAR_LOVLIG_BEHANDLINGSTYPE);
-
-        return lovligeBehandlinger
+        return behandlinger.stream()
+                .filter(HAR_LOVLIG_BEHANDLINGSTYPE)
                 .filter(HAR_LOVLIG_BEHANDLINGSSTATUS)
                 .filter(HAR_LOVLIG_PREFIX)
                 .filter(SISTEBEHANDLING_ER_IKKE_ELDRE_ENN_1_MAANED)

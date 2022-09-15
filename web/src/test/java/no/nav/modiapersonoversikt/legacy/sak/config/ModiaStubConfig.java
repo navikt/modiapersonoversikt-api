@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.legacy.sak.config;
 
+import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.service.saker.SakerService;
-import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;

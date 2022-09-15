@@ -1,8 +1,9 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
+import no.nav.common.types.identer.Fnr;
+
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
-
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
 import no.nav.modiapersonoversikt.service.saf.SafService;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
@@ -12,11 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingService;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
 import static no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem.HENVENDELSE;
 
 @SuppressWarnings("squid:S1166") // Either log or rethrow
@@ -37,7 +39,11 @@ public class SakstemaService {
         ResultatWrapper<List<DokumentMetadata>> wrapper = safService.hentJournalposter(fnr);
 
         try {
-            Map<String, List<Behandlingskjede>> behandlingskjeder = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);
+            Map<String, List<SakOgBehandlingService.Behandlingskjede>> behandlingskjeder = sakOgBehandlingService.hentAlleSaker(Fnr.of(fnr))
+                    .stream()
+                    .collect(Collectors.groupingBy(
+                            SakOgBehandlingService.Behandlingskjede::getTema
+                    ));
             Set<String> temakoder = SakstemaGrupperer.hentAlleTema(saker, wrapper.resultat, behandlingskjeder);
 
             return opprettSakstemaresultat(saker, wrapper, temakoder, behandlingskjeder);
@@ -52,7 +58,7 @@ public class SakstemaService {
             List<Sak> saker,
             ResultatWrapper<List<DokumentMetadata>> wrapper,
             Set<String> temakoder,
-            Map<String, List<Behandlingskjede>> behandlingskjeder
+            Map<String, List<SakOgBehandlingService.Behandlingskjede>> behandlingskjeder
     ) {
         return opprettSakstemaForEnTemagruppe(temakoder, saker, wrapper.resultat, behandlingskjeder)
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
@@ -61,7 +67,7 @@ public class SakstemaService {
     protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(
             Set<String> temakoder,
             List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata,
-            Map<String, List<Behandlingskjede>> behandlingskjeder) {
+            Map<String, List<SakOgBehandlingService.Behandlingskjede>> behandlingskjeder) {
 
         Set<Baksystem> feilendeBaksystemer = new HashSet<>();
 
@@ -85,49 +91,6 @@ public class SakstemaService {
 
         return new ResultatWrapper<>(FilterUtils.fjernGamleDokumenter(sakstema), feilendeBaksystemer);
     }
-
-    private List<Sakstema> grupperSykepengerOgSykemelding(List<Sakstema> sakstema) {
-        List<Sakstema> listeKopi = new ArrayList<>(sakstema);
-
-        Optional<Sakstema> maybeSykepenger = listeKopi.stream().filter(st -> st.temakode.equals("SYK")).findFirst();
-        Optional<Sakstema> maybeSykemelding = listeKopi.stream().filter(st -> st.temakode.equals("SYM")).findFirst();
-        if (maybeSykepenger.isPresent() && maybeSykemelding.isPresent()) {
-            Sakstema sykepenger = maybeSykepenger.get();
-            Sakstema sykemelding = maybeSykemelding.get();
-            if (sykepenger.erGruppert && sykemelding.erGruppert) {
-                return flettSykepengerOgSykemelding(listeKopi, sykepenger, sykemelding, true);
-            } else if (sykepenger.erIkkeTomtTema() && sykemelding.erIkkeTomtTema()) {
-                return flettSykepengerOgSykemelding(listeKopi, sykepenger, sykemelding, false);
-            }
-        }
-        return sakstema;
-    }
-
-    private List<Sakstema> flettSykepengerOgSykemelding(List<Sakstema> sakstema, Sakstema sykepenger, Sakstema sykemelding, boolean harOppfolging) {
-        sakstema.remove(sykepenger);
-        sakstema.remove(sykemelding);
-
-        List<Behandlingskjede> behandlingskjeder = concat(sykemelding.behandlingskjeder.stream(), sykepenger.behandlingskjeder.stream()).collect(toList());
-        List<DokumentMetadata> dokumentMetadata = concat(sykemelding.dokumentMetadata.stream(), sykepenger.dokumentMetadata.stream()).collect(toList());
-        List<Sak> tilhorendeSaker = concat(sykemelding.tilhorendeSaker.stream(), sykepenger.tilhorendeSaker.stream()).collect(toList());
-        List<Integer> feilkoder = concat(sykemelding.feilkoder.stream(), sykepenger.feilkoder.stream()).collect(toList());
-
-        String temanavn = harOppfolging ? "Sykmelding, sykepenger og oppfølging" : "Sykmelding og sykepenger";
-
-        sakstema.add(
-                new Sakstema()
-                        .withBehandlingskjeder(behandlingskjeder)
-                        .withDokumentMetadata(dokumentMetadata)
-                        .withErGruppert(harOppfolging)
-                        .withTemakode("SYK_SYM")
-                        .withTemanavn(temanavn)
-                        .withTilhorendeSaker(tilhorendeSaker)
-                        .withFeilkoder(feilkoder)
-        );
-
-        return sakstema;
-    }
-
     private List<DokumentMetadata> tilhorendeDokumentMetadata(List<DokumentMetadata> alleDokumentMetadata, String temakode, List<Sak> tilhorendeSaker) {
         return alleDokumentMetadata
                 .stream()

@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.config;
 
+import no.nav.modiapersonoversikt.legacy.sak.SakServiceConfig;
 import no.nav.modiapersonoversikt.legacy.sak.mock.KodeverkMock;
 import no.nav.modiapersonoversikt.service.saf.SafConfig;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
         ModiaStubConfig.class,
-        SaksoversiktServiceConfig.class,
         SakServiceConfig.class,
         SafConfig.class,
         KodeverkMock.class
