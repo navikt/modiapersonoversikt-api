@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.api.utils;
+package no.nav.modiapersonoversikt.commondomain;
 
 
 import no.nav.modiapersonoversikt.commondomain.TemagruppeTemaMapping;

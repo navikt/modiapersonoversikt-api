@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest;
 
 import no.nav.modiapersonoversikt.service.saker.Sak;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
+import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingApi;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingController;
 import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;

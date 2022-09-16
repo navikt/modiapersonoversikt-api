@@ -1,11 +1,9 @@
-package no.nav.modiapersonoversikt.legacy.varsel.service
+package no.nav.modiapersonoversikt.service.varsel
 
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
-import no.nav.modiapersonoversikt.service.varsel.VarslerService
-import no.nav.modiapersonoversikt.service.varsel.VarslerServiceImpl
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSBrukervarsel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarselbestilling
