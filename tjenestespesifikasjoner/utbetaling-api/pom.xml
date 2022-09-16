@@ -47,7 +47,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/utbetaling/openapi-fixed.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/utbetaling/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
                             <packageName>no.nav.modiapersonoversikt.api.domain.utbetaling.generated</packageName>

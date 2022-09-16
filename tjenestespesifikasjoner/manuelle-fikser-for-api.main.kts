@@ -76,20 +76,6 @@ changeFile(
     }
 }
 
-changeFile(
-    from = YamlSource("utbetaling-api/src/main/resources/utbetaling/openapi.yaml"),
-    to = YamlSource("utbetaling-api/src/main/resources/utbetaling/openapi-fixed.yaml")
-) {
-    forEndpoint("post", "/v1/hent-utbetalingsinformasjon/intern") {
-        forParameter("nav-call-id") {
-            put("schema", mapOf("type" to "string"))
-        }
-    }
-    forDefinition("Aktoer") {
-        renameProperty(from = "ident", to = "aktoerId")
-    }
-}
-
 /**
  * Må ligge i samme fil pga bug med kotlin-scripts sin @file:Import funksjon
  * Når det blir løst kan dette flytte ut til egen fil
