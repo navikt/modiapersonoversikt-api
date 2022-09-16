@@ -1,23 +1,29 @@
 package no.nav.modiapersonoversikt.rest.saker
 
+import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.sakogbehandling.SakOgBehandlingService
+import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
+import no.nav.modiapersonoversikt.commondomain.sak.Feilmelding
+import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
+import no.nav.modiapersonoversikt.commondomain.sak.TjenesteResultatWrapper
+import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.sak.domain.widget.ModiaSakstema
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
-import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
-import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
 import no.nav.modiapersonoversikt.rest.RestUtils
+import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.saf.SafService
-import no.nav.modiapersonoversikt.service.saker.SakerService
+import no.nav.modiapersonoversikt.service.saf.domain.Dokument
+import no.nav.modiapersonoversikt.service.saf.domain.Dokument.Variantformat
+import no.nav.modiapersonoversikt.service.saf.domain.Dokument.Variantformat.ARKIV
+import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
+import no.nav.modiapersonoversikt.service.sakstema.SakstemaService
+import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
+import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
+import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -33,7 +39,6 @@ import javax.servlet.http.HttpServletRequest
 class SakerController @Autowired constructor(
     private val sakstemaService: SakstemaService,
     private val sakerService: SakerService,
-    private val tilgangskontrollService: TilgangskontrollService,
     private val safService: SafService,
     val tilgangskontroll: Tilgangskontroll
 ) {
@@ -45,10 +50,11 @@ class SakerController @Autowired constructor(
                 val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
                 val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
 
-                val resultat = ResultatWrapper(
-                    mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(enhet, request)),
-                    collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
-                )
+                val resultat =
+                    ResultatWrapper(
+                        mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(enhet, request)),
+                        collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
+                    )
 
                 byggSakstemaResultat(resultat)
             }
@@ -65,12 +71,7 @@ class SakerController @Autowired constructor(
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, AuditResources.Person.Dokumenter, AuditIdentifier.FNR to fnr, AuditIdentifier.JOURNALPOST_ID to journalpostId, AuditIdentifier.DOKUMENT_REFERERANSE to dokumentreferanse)) {
                 val journalpostMetadata = hentDokumentMetadata(journalpostId, fnr)
-                val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(
-                    request,
-                    journalpostMetadata,
-                    fnr,
-                    journalpostMetadata.temakode
-                )
+                val tilgangskontrollResult = harTilgangTilDokument(fnr, journalpostMetadata)
 
                 // TODO erstatt tilgangsstyring
                 if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
@@ -87,13 +88,30 @@ class SakerController @Autowired constructor(
             }
     }
 
+    private fun harTilgangTilDokument(fnr: String, dokument: DokumentMetadata): TjenesteResultatWrapper {
+        return if (!dokument.isErJournalfort) {
+            TjenesteResultatWrapper(
+                Feilmelding.IKKE_JOURNALFORT,
+                mapOf(
+                    "fnr" to fnr
+                )
+            )
+        } else if (dokument.feilWrapper.inneholderFeil) {
+            TjenesteResultatWrapper(
+                dokument.feilWrapper.feilmelding
+            )
+        } else {
+            TjenesteResultatWrapper(true)
+        }
+    }
+
     private fun finnVariantformat(journalpostMetadata: DokumentMetadata, dokumentreferanse: String): Variantformat =
         journalpostMetadata.vedlegg.plus(journalpostMetadata.hoveddokument)
             .find { dok -> dok.dokumentreferanse == dokumentreferanse }
             ?.variantformat
             ?: ARKIV
 
-    private fun byggSakstemaResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {
+    private fun byggSakstemaResultat(resultat: ResultatWrapper<List<SakstemaDTO>>): Map<String, Any?> {
         return mapOf(
             "resultat" to resultat.resultat.map {
                 mapOf(
@@ -110,7 +128,7 @@ class SakerController @Autowired constructor(
         )
     }
 
-    private fun hentBehandlingskjeder(behandlingskjeder: List<SakOgBehandlingService.Behandlingskjede>): List<Map<String, Any?>> {
+    private fun hentBehandlingskjeder(behandlingskjeder: List<Behandlingskjede>): List<Map<String, Any?>> {
         return behandlingskjeder.map {
             mapOf(
                 "status" to it.status,
@@ -137,7 +155,7 @@ class SakerController @Autowired constructor(
                     "baksystem" to it.baksystem,
                     "temakode" to it.temakode,
                     "temakodeVisning" to it.temakodeVisning,
-                    "ettersending" to it.isEttersending,
+                    "ettersending" to false,
                     "erJournalført" to it.isErJournalfort,
                     "feil" to mapOf(
                         "inneholderFeil" to it.feilWrapper?.inneholderFeil,
@@ -195,7 +213,7 @@ class SakerController @Autowired constructor(
         )
     }
 
-    private fun mapTilModiaSakstema(sakstemaList: List<Sakstema>, valgtEnhet: String): List<ModiaSakstema> {
+    private fun mapTilModiaSakstema(sakstemaList: List<Sakstema>, valgtEnhet: String): List<SakstemaDTO> {
         return sakstemaList.map { sakstema -> createModiaSakstema(sakstema, valgtEnhet) }
     }
 
@@ -203,9 +221,19 @@ class SakerController @Autowired constructor(
         return sakerWrapper.feilendeSystemer.union(sakstemaWrapper.feilendeSystemer)
     }
 
-    private fun createModiaSakstema(sakstema: Sakstema, valgtEnhet: String): ModiaSakstema {
-        return ModiaSakstema(sakstema)
-            .withTilgang(tilgangskontrollService.harEnhetTilgangTilTema(sakstema.temakode, valgtEnhet))
+    private fun createModiaSakstema(sakstema: Sakstema, valgtEnhet: String): SakstemaDTO {
+        return SakstemaDTO(
+            temakode = sakstema.temakode,
+            temanavn = sakstema.temanavn,
+            erGruppert = sakstema.erGruppert,
+            behandlingskjeder = sakstema.behandlingskjeder,
+            dokumentMetadata = sakstema.dokumentMetadata,
+            tilhorendeSaker = sakstema.tilhorendeSaker,
+            feilkoder = sakstema.feilkoder,
+            harTilgang = tilgangskontroll
+                .check(Policies.tilgangTilTema(EnhetId(valgtEnhet), sakstema.temakode))
+                .getDecision().type == Decision.Type.PERMIT
+        )
     }
 
     private fun hentDokumentMetadata(journalpostId: String, fnr: String): DokumentMetadata {
@@ -243,4 +271,15 @@ class SakerController @Autowired constructor(
     }
 
     private fun unikId(): String = UUID.randomUUID().toString()
+
+    data class SakstemaDTO(
+        val temakode: String,
+        val temanavn: String,
+        val erGruppert: Boolean,
+        val behandlingskjeder: List<Behandlingskjede>,
+        val dokumentMetadata: List<DokumentMetadata>,
+        val tilhorendeSaker: List<Sak>,
+        val feilkoder: List<Int>,
+        val harTilgang: Boolean
+    )
 }

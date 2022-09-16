@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.rest.dialog.apis
 
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
-import no.nav.modiapersonoversikt.service.saker.Sak
+import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import java.time.OffsetDateTime
 import java.util.HashMap
 import javax.servlet.http.HttpServletRequest
@@ -69,7 +69,6 @@ interface DialogApi {
     }
 }
 
-data class BehandlingsId(val behandlingsId: String)
 data class TraadDTO(
     val traadId: String,
     val meldinger: List<MeldingDTO>,
@@ -93,14 +92,14 @@ data class SendReferatRequest(
 data class SendSporsmalRequest(
     val enhet: String?,
     val fritekst: String,
-    val sak: Sak,
+    val sak: JournalforingSak,
     val erOppgaveTilknyttetAnsatt: Boolean
 )
 
 data class InfomeldingRequest(
     val enhet: String?,
     val fritekst: String,
-    val sak: Sak
+    val sak: JournalforingSak
 )
 
 data class FortsettDialogRequest(
@@ -108,7 +107,7 @@ data class FortsettDialogRequest(
     val traadId: String,
     val behandlingsId: String,
     val fritekst: String,
-    val sak: Sak?,
+    val sak: JournalforingSak?,
     val erOppgaveTilknyttetAnsatt: Boolean,
     val meldingstype: Meldingstype,
     val oppgaveId: String?

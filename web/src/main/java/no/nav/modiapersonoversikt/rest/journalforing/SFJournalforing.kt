@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.journalforing
 
-import no.nav.modiapersonoversikt.service.saker.Sak
-import no.nav.modiapersonoversikt.service.saker.SakerService
+import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
+import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -13,7 +13,7 @@ class SFJournalforing @Autowired constructor(
         return sakerService.hentSaker(fnr)
     }
 
-    override fun knyttTilSak(fnr: String, traadId: String, sak: Sak, enhet: String) {
+    override fun knyttTilSak(fnr: String, traadId: String, sak: JournalforingSak, enhet: String) {
         sfHenvendelseService.journalforHenvendelse(
             enhet = enhet,
             kjedeId = traadId,

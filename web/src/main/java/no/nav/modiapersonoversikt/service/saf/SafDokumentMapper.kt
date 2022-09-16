@@ -1,7 +1,11 @@
 package no.nav.modiapersonoversikt.service.saf
 
+import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
+import no.nav.modiapersonoversikt.commondomain.sak.Entitet
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
+import no.nav.modiapersonoversikt.service.saf.domain.Dokument
+import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
+import no.nav.modiapersonoversikt.service.saf.domain.Kommunikasjonsretning
 import java.time.LocalDateTime
 
 object SafDokumentMapper {

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure.scientist
 
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sak
+import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.assertj.core.data.Offset.offset
 import org.assertj.core.data.Percentage
