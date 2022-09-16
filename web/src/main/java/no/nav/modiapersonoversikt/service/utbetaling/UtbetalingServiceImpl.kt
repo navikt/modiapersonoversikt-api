@@ -6,6 +6,7 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.UtbetaldataV2Api
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.AktoerDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.PeriodeDTO
+import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingsoppslagDTO
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingUtils.leggTilEkstraDagerPaaStartdato
 import java.time.LocalDate
@@ -18,7 +19,11 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelseD
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelsekomponentDTO as RsYtelseKomponent
 
 class UtbetalingServiceImpl(val UtbetaldataV2Api: UtbetaldataV2Api) : UtbetalingService {
-    override fun hentUtbetalinger(fnr: Fnr, startDato: LocalDate, sluttDato: LocalDate): List<UtbetalingDomain.Utbetaling> {
+    override fun hentUtbetalinger(
+        fnr: Fnr,
+        startDato: LocalDate,
+        sluttDato: LocalDate
+    ): List<UtbetalingDomain.Utbetaling> {
         val utbetalinger = UtbetaldataV2Api.hentUtbetalingsinformasjonIntern(
             utbetalingsoppslagDTO = UtbetalingsoppslagDTO(
                 ident = fnr.get(),
@@ -30,8 +35,26 @@ class UtbetalingServiceImpl(val UtbetaldataV2Api: UtbetaldataV2Api) : Utbetaling
                 periodetype = UtbetalingsoppslagDTO.Periodetype.UTBETALINGSPERIODE
             )
         )
-        return utbetalinger.map(::mapTilDTO)
+
+        return utbetalinger
+            .filter(finnUtbetalingerISokeperioden(startDato, sluttDato))
+            .map(::mapTilDTO)
     }
+
+    private fun finnUtbetalingerISokeperioden(start: LocalDate, slutt: LocalDate) =
+        { utbetaling: UtbetalingDTO ->
+            val dato = listOfNotNull(
+                utbetaling.utbetalingsdato,
+                utbetaling.forfallsdato,
+                utbetaling.posteringsdato,
+            ).firstOrNull()
+
+            if (dato == null) {
+                false
+            } else {
+                dato in start..slutt
+            }
+        }
 
     private fun mapTilDTO(utbetaling: RsUtbetaling): UtbetalingDomain.Utbetaling {
         return UtbetalingDomain.Utbetaling(
