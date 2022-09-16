@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.utbetaling;
 
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.UtbetaldataV1Api;
+import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.UtbetaldataV2Api;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,7 +21,7 @@ public class UtbetalingServiceConfig {
     }
 
     @Bean
-    public UtbetalingService restUtbetalingService(UtbetaldataV1Api apiClient) {
+    public UtbetalingService restUtbetalingService(UtbetaldataV2Api apiClient) {
         return new UtbetalingServiceImpl(apiClient);
     }
 }
