@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.Utbetalda
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.AktoerDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.PeriodeDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingsoppslagDTO
+import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingUtils.leggTilEkstraDagerPaaStartdato
 import java.time.LocalDate
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.AktoerDTO as RsAktoer
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.PeriodeDTO as RsPeriode
@@ -23,7 +24,7 @@ class UtbetalingServiceImpl(val utbetaldataV1Api: UtbetaldataV1Api) : Utbetaling
                 ident = fnr.get(),
                 rolle = UtbetalingsoppslagDTO.Rolle.UTBETALT_TIL,
                 periode = PeriodeDTO(
-                    fom = startDato,
+                    fom = leggTilEkstraDagerPaaStartdato(startDato),
                     tom = sluttDato
                 ),
                 periodetype = UtbetalingsoppslagDTO.Periodetype.UTBETALINGSPERIODE
