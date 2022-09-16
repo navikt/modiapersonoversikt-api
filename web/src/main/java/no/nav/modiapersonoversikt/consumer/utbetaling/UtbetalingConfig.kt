@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.consumer.utbetaling
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.UtbetaldataV1Api
+import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.UtbetaldataV2Api
 import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
@@ -20,7 +20,7 @@ open class UtbetalingConfig {
     )
 
     @Bean
-    open fun utbetalingV1Api(tokenClient: MachineToMachineTokenClient) = UtbetaldataV1Api(
+    open fun utbetalingV2Api(tokenClient: MachineToMachineTokenClient) = UtbetaldataV2Api(
         basePath = basePath,
         httpClient = RestClient.baseClient().newBuilder()
             .addInterceptor(
@@ -31,7 +31,7 @@ open class UtbetalingConfig {
                 }
             )
             .addInterceptor(
-                LoggingInterceptor("UtbetaldataV1") { request ->
+                LoggingInterceptor("UtbetaldataV2") { request ->
                     requireNotNull(request.header("nav-call-id")) {
                         "Kall uten \"nav-call-id\" er ikke lov"
                     }

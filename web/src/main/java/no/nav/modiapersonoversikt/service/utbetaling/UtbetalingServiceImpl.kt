@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.service.utbetaling
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.UtbetaldataV1Api
+import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.UtbetaldataV2Api
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.AktoerDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.PeriodeDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingsoppslagDTO
@@ -17,9 +17,9 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.Utbetal
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelseDTO as RsYtelse
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelsekomponentDTO as RsYtelseKomponent
 
-class UtbetalingServiceImpl(val utbetaldataV1Api: UtbetaldataV1Api) : UtbetalingService {
+class UtbetalingServiceImpl(val UtbetaldataV2Api: UtbetaldataV2Api) : UtbetalingService {
     override fun hentUtbetalinger(fnr: Fnr, startDato: LocalDate, sluttDato: LocalDate): List<UtbetalingDomain.Utbetaling> {
-        val utbetalinger = utbetaldataV1Api.hentUtbetalingsinformasjonIntern(
+        val utbetalinger = UtbetaldataV2Api.hentUtbetalingsinformasjonIntern(
             utbetalingsoppslagDTO = UtbetalingsoppslagDTO(
                 ident = fnr.get(),
                 rolle = UtbetalingsoppslagDTO.Rolle.UTBETALT_TIL,
@@ -72,7 +72,7 @@ class UtbetalingServiceImpl(val utbetaldataV1Api: UtbetaldataV1Api) : Utbetaling
             ytelseskomponenttype = ytelseskomponent.ytelseskomponenttype.trim(),
             satsbelop = ytelseskomponent.satsbeloep,
             satstype = ytelseskomponent.satstype?.trim(),
-            satsantall = ytelseskomponent.satsantall?.toDouble(),
+            satsantall = ytelseskomponent.satsantall,
             ytelseskomponentbelop = ytelseskomponent.ytelseskomponentbeloep,
         )
     }
@@ -103,7 +103,7 @@ class UtbetalingServiceImpl(val utbetaldataV1Api: UtbetaldataV1Api) : Utbetaling
 
     private fun hentArbeidsgiver(aktor: RsAktoer): UtbetalingDomain.Arbeidgiver {
         return UtbetalingDomain.Arbeidgiver(
-            orgnr = aktor.aktoerId,
+            orgnr = aktor.ident,
             navn = aktor.navn,
         )
     }
