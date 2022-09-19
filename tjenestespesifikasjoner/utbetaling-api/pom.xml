@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kontoregister-api</artifactId>
+    <artifactId>utbetaling-api</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -47,10 +47,10 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/kontoregister/openapi.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/utbetaling/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
-                            <packageName>no.nav.modiapersonoversikt.consumer.kontoregister.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.api.domain.utbetaling.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <configOptions>

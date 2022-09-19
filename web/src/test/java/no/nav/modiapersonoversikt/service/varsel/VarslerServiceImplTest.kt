@@ -8,7 +8,7 @@ import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSBrukervarsel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarselbestilling
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerResponse
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.Instant
@@ -30,7 +30,7 @@ class VarslerServiceImplTest {
         every { soapfault.faultString } returns ""
         every { brukervarselV1.hentVarselForBruker(any()) } throws SOAPFaultException(soapfault)
         val varsler = varselService.hentLegacyVarsler(Fnr("12345678910"))
-        Assertions.assertThat(varsler).isEmpty()
+        assertThat(varsler).isEmpty()
     }
 
     @Test
@@ -41,8 +41,8 @@ class VarslerServiceImplTest {
 
         val result = varselService.hentAlleVarsler(Fnr("12345678910"))
 
-        Assertions.assertThat(result.varsler).isEmpty()
-        Assertions.assertThat(result.feil).hasSize(2)
+        assertThat(result.varsler).isEmpty()
+        assertThat(result.feil).hasSize(2)
     }
 
     @Test
@@ -61,8 +61,8 @@ class VarslerServiceImplTest {
         )
 
         val varsler = varselService.hentAlleVarsler(Fnr("12345678910"))
-        Assertions.assertThat(varsler.varsler).hasSize(6)
-        Assertions.assertThat(varsler.feil).isEmpty()
+        assertThat(varsler.varsler).hasSize(6)
+        assertThat(varsler.feil).isEmpty()
     }
 
     private val event = Brukernotifikasjon.Event(

@@ -5,7 +5,7 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 
-public interface UtbetalingService {
+public interface WSUtbetalingService {
     List<WSUtbetaling> hentWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato);
 
     void ping();

@@ -70,6 +70,10 @@
             <groupId>no.nav.common</groupId>
             <artifactId>client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>token-client</artifactId>
+        </dependency>
 
 
         <!-- Spring -->
@@ -217,6 +221,11 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dkif-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>utbetaling-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

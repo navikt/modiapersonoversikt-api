@@ -42,6 +42,7 @@ internal class TilgangTilBrukerPolicyTest {
     internal fun `permit om veileder har nasjonal tilgang`() {
         gittAtBrukerIkkeHarAdressebeskyttelse()
         gittAtBrukerIkkeErSkjermet()
+        gittAtVeilederHarTilgangTilEnhet(EnhetId("0202"))
         gittAtVeilederHarRoller("0000-ga-bd06_modiagenerelltilgang", "0000-ga-gosys_nasjonal")
 
         policy.assertPermit(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
@@ -52,6 +53,7 @@ internal class TilgangTilBrukerPolicyTest {
         gittAtBrukerIkkeHarAdressebeskyttelse()
         gittAtBrukerIkkeErSkjermet()
         gittAtBrukerHarEnhet(null)
+        gittAtVeilederHarTilgangTilEnhet(EnhetId("0202"))
         gittAtVeilederHarRoller("0000-ga-bd06_modiagenerelltilgang")
 
         policy.assertPermit(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
@@ -63,6 +65,7 @@ internal class TilgangTilBrukerPolicyTest {
         gittAtBrukerIkkeHarAdressebeskyttelse()
         gittAtBrukerIkkeErSkjermet()
         gittAtBrukerHarEnhet(null)
+        gittAtVeilederHarTilgangTilEnhet(EnhetId("0202"))
         gittAtVeilederHarRoller("0000-ga-bd06_modiagenerelltilgang")
 
         policy.assertPermit(*fellesPipTjenester(), CommonAttributes.AKTOR_ID.withValue(aktorId))
@@ -129,6 +132,7 @@ internal class TilgangTilBrukerPolicyTest {
         gittAtBrukerIkkeHarAdressebeskyttelse()
         gittAtBrukerErSkjermet()
         gittAtBrukerHarEnhet(null)
+        gittAtVeilederHarTilgangTilEnhet(EnhetId("0202"))
         gittAtVeilederHarRoller("0000-ga-bd06_modiagenerelltilgang")
 
         policy
@@ -145,6 +149,7 @@ internal class TilgangTilBrukerPolicyTest {
         gittAtBrukerHarKode6()
         gittAtBrukerIkkeErSkjermet()
         gittAtBrukerHarEnhet(null)
+        gittAtVeilederHarTilgangTilEnhet(EnhetId("0202"))
         gittAtVeilederHarRoller("0000-ga-bd06_modiagenerelltilgang")
 
         policy
@@ -161,6 +166,7 @@ internal class TilgangTilBrukerPolicyTest {
         gittAtBrukerHarKode7()
         gittAtBrukerIkkeErSkjermet()
         gittAtBrukerHarEnhet(null)
+        gittAtVeilederHarTilgangTilEnhet(EnhetId("0202"))
         gittAtVeilederHarRoller("0000-ga-bd06_modiagenerelltilgang")
 
         policy

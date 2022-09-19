@@ -3,7 +3,9 @@ package no.nav.modiapersonoversikt.rest.utbetaling
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingService
+import no.nav.modiapersonoversikt.service.utbetaling.WSUtbetalingService
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -17,13 +19,16 @@ private const val FEIL_DATO_FORMAT = "234-14-7"
 
 internal class UtbetalingControllerTest {
 
-    private val service: UtbetalingService = mockk()
+    private val service: WSUtbetalingService = mockk()
+    private val restService: UtbetalingService = mockk()
+    private val unleash: UnleashService = mockk()
 
-    private val controller: UtbetalingController = UtbetalingController(service, TilgangskontrollMock.get())
+    private val controller: UtbetalingController = UtbetalingController(service, restService, unleash, TilgangskontrollMock.get())
 
     @Test
     fun `Kaster ApplicationException`() {
         every { service.hentWSUtbetalinger(any(), any(), any()) } throws RuntimeException("")
+        every { restService.hentUtbetalinger(any(), any(), any()) } returns emptyList()
         assertFailsWith<RuntimeException> { controller.hent(FNR, DATO_START, DATO_SLUTT) }
     }
 

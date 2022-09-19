@@ -2,10 +2,12 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.NavIdentPip
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 import org.junit.jupiter.api.Test
 
@@ -19,6 +21,7 @@ internal class TilgangTilModiaPolicyTest {
         every { ldap.hentRollerForVeileder(ident) } returns listOf("0000-ga-bd06_modiagenerelltilgang")
         policy.assertPermit(
             NavIdentPip.key.withValue(ident),
+            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
             VeiledersRollerPip(ldap),
         )
     }
@@ -28,6 +31,7 @@ internal class TilgangTilModiaPolicyTest {
         every { ldap.hentRollerForVeileder(ident) } returns listOf("0000-ga-modia-oppfolging")
         policy.assertPermit(
             NavIdentPip.key.withValue(ident),
+            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
             VeiledersRollerPip(ldap),
         )
     }
@@ -37,6 +41,7 @@ internal class TilgangTilModiaPolicyTest {
         every { ldap.hentRollerForVeileder(ident) } returns listOf("0000-ga-syfo-sensitiv")
         policy.assertPermit(
             NavIdentPip.key.withValue(ident),
+            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
             VeiledersRollerPip(ldap),
         )
     }
@@ -46,6 +51,7 @@ internal class TilgangTilModiaPolicyTest {
         every { ldap.hentRollerForVeileder(ident) } returns listOf("annen-rolle")
         policy.assertDeny(
             NavIdentPip.key.withValue(ident),
+            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
             VeiledersRollerPip(ldap),
         ).withMessage("Veileder har ikke tilgang til modia")
     }
@@ -55,7 +61,18 @@ internal class TilgangTilModiaPolicyTest {
         every { ldap.hentRollerForVeileder(ident) } returns emptyList()
         policy.assertDeny(
             NavIdentPip.key.withValue(ident),
+            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
             VeiledersRollerPip(ldap),
         ).withMessage("Veileder har ikke tilgang til modia")
+    }
+
+    @Test
+    internal fun `deny om ingen enheter`() {
+        every { ldap.hentRollerForVeileder(ident) } returns listOf("0000-ga-syfo-sensitiv")
+        policy.assertDeny(
+            NavIdentPip.key.withValue(ident),
+            VeiledersEnheterPip.key.withValue(emptyList()),
+            VeiledersRollerPip(ldap),
+        ).withMessage("Veileder har ikke tilgang til noen enheter")
     }
 }

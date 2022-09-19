@@ -1,0 +1,357 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Kontoregister-person sitt System-API
+  description: System-API er tiltenkt systemer som benytter "Maskin til maskin uten sluttbruker"-token
+  contact:
+    name: PO Utbetaling
+    url: https://nav-it.slack.com/archives/CKZADNFBP
+basePath: /api/system
+tags:
+  - name: kontoregister.v1
+schemes:
+  - https
+  - http
+paths:
+  /v1/hent-konto:
+    post:
+      tags:
+        - kontoregister.v1
+      summary: Slår opp kontoinformasjon i Kontoregisteret.
+      operationId: hentKonto
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: hentKonto
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/HentKonto'
+        - name: nav-call-id
+          in: header
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Kontoinformasjon'
+        '400':
+          description: Ugyldig request, oppfyller ikke swagger-kontrakt
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '401':
+          description: Ingen tilgang
+        '406':
+          description: Valideringsfeil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '500':
+          description: Annen feil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+      security:
+        - Bearer: [ ]
+  /v1/oppdater-konto:
+    post:
+      tags:
+        - kontoregister.v1
+      summary: Oppdaterer konto for en kontohaver.
+      operationId: oppdaterKonto
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: oppdaterKonto
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OppdaterKonto'
+        - name: nav-call-id
+          in: header
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Ugyldig request, oppfyller ikke swagger-kontrakt
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '406':
+          description: Valideringsfeil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '500':
+          description: Annen feil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+      security:
+        - Bearer: [ ]
+  /v1/slett-konto:
+    post:
+      tags:
+        - kontoregister.v1
+      summary: Sletter aktiv konto og flytter den til historikk
+      operationId: slettKonto
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: slettKonto
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SlettKonto'
+        - name: nav-call-id
+          in: header
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Ugyldig request, oppfyller ikke swagger-kontrakt
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '406':
+          description: Valideringsfeil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '500':
+          description: Annen feil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+      security:
+        - Bearer: [ ]
+  /v1/hent-landkoder:
+    get:
+      tags:
+        - kontoregister.v1
+      summary: Henter alle landkoder i Kontoregisteret.
+      operationId: hentLandkoder
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Landkoder'
+        '400':
+          description: Ugyldig request, oppfyller ikke swagger-kontrakt
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '500':
+          description: Annen feil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+  /v1/hent-valutakoder:
+    get:
+      tags:
+        - kontoregister.v1
+      summary: Henter alle valutakoder i Kontoregisteret.
+      operationId: hentValutakoder
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Valutakoder'
+        '400':
+          description: Ugyldig request, oppfyller ikke swagger-kontrakt
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '500':
+          description: Annen feil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+securityDefinitions:
+  Bearer:
+    description: |-
+      Dette api'et krever "maskin til maskin uten sluttbruker" sikkerhetsmekanisme.
+      OIDC-token (JWT via OAuth2.0).
+       Følgende format må brukes i input-feltet "Value" under: <strong>"Bearer {token}"</strong>.
+       Eksempel på verdi i input-felt: <strong>Bearer eYdmifml0ejugm</strong>
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  HentKonto:
+    type: object
+    required:
+      - kontohaver
+    properties:
+      kontohaver:
+        $ref: '#/definitions/Kontohaver'
+      medHistorikk:
+        type: boolean
+        example: false
+        description: Valgfri parameter for å få med liste av alle historiske kontoer. Default false.
+  SlettKonto:
+    type: object
+    required:
+      - kontohaver
+      - bestiller
+    properties:
+      kontohaver:
+        $ref: '#/definitions/Kontohaver'
+      bestiller:
+        $ref: '#/definitions/OpprettetAv'
+  OppdaterKonto:
+    type: object
+    required:
+      - kontohaver
+      - kontonummer
+      - opprettetAv
+    properties:
+      kontohaver:
+        $ref: '#/definitions/Kontohaver'
+      kontonummer:
+        $ref: '#/definitions/Kontonummer'
+      opprettetAv:
+        $ref: '#/definitions/OpprettetAv'
+      utenlandskKonto:
+        $ref: '#/definitions/UtenlandskKontoInfo'
+  Kontoinformasjon:
+    type: object
+    properties:
+      aktivKonto:
+        $ref: '#/definitions/Konto'
+      kontohistorikk:
+        type: array
+        items:
+          $ref: '#/definitions/Konto'
+  Konto:
+    type: object
+    required:
+      - kontohaver
+      - kontonummer
+      - gyldigFom
+      - opprettetAv
+    properties:
+      kontohaver:
+        $ref: '#/definitions/Kontohaver'
+      kontonummer:
+        $ref: '#/definitions/Kontonummer'
+      utenlandskKontoInfo:
+        $ref: '#/definitions/UtenlandskKontoInfo'
+      gyldigFom:
+        type: string
+        description: Gyldig fra og med dato
+        example: '2020-01-01T10:00:00'
+      gyldigTom:
+        type: string
+        description: Gyldig til og med dato
+        example: '2020-01-01T10:00:00'
+      endretAv:
+        type: string
+      opprettetAv:
+        type: string
+  UtenlandskKontoInfo:
+    type: object
+    x-nullable: true
+    required:
+      - bankLandkode
+      - valutakode
+    properties:
+      banknavn:
+        type: string
+        x-nullable: true
+      bankkode:
+        type: string
+        x-nullable: true
+        description: Bankkode brukes i noen land som ikke har IBAN. Koden er forskjellig fra land til land, og bør brukes sammen med swiftBicKode.
+        example: 'CC123456789'
+      bankLandkode:
+        type: string
+        description: Bankens landkode ihht ISO 3166-1 alfa-2 (https://no.wikipedia.org/wiki/ISO_3166-1_alfa-2)
+        example: 'SE'
+      valutakode:
+        type: string
+        description: Hvilken valuta man ønsker utbetalingen i. Vil være ihht ISO 4217 (https://no.wikipedia.org/wiki/ISO_4217)
+        example: 'SEK'
+      swiftBicKode:
+        type: string
+        x-nullable: true
+        description: BIC/SWIFT er et internasjonalt system som brukes for å identifisere banker. Du får oppgitt BIC av banken din. BIC/SWIFT-koden består av 8 eller 11 bokstaver.
+        example: SHEDNO22
+      bankadresse1:
+        type: string
+        x-nullable: true
+        description: Benyttes når man bruker bankkode
+      bankadresse2:
+        type: string
+        x-nullable: true
+        description: Benyttes når man bruker bankkode
+      bankadresse3:
+        type: string
+        x-nullable: true
+        description: Benyttes når man bruker bankkode
+  Kontohaver:
+    type: string
+    description: Ident for eier av konto.
+    example: '12312312311'
+  EndretAv:
+    type: string
+    description: Bruker som har bestilt endring
+  OpprettetAv:
+    type: string
+    description: Bruker som har opprettet kontoinnslag
+  Kontonummer:
+    type: string
+    description: Kontonummeret
+  Feilmelding:
+    type: object
+    required:
+      - feilmelding
+    properties:
+      feilmelding:
+        type: string
+        description: Informasjon om hva som gikk galt
+        example: 'person ikke funnet i kontoregister'
+  Landkoder:
+    type: array
+    items:
+      $ref: '#/definitions/Landkode'
+  Landkode:
+    type: object
+    properties:
+      landkode:
+        type: string
+        example: SE
+      land:
+        type: string
+        example: Sverige
+      kreverIban:
+        type: boolean
+        example: true
+      ibanLengde:
+        type: integer
+        x-nullable: true
+        example: 24
+      kreverBankkode:
+        type: boolean
+        example: true
+      bankkodeLengde:
+        type: integer
+        x-nullable: true
+        example: 16
+  Valutakoder:
+    type: array
+    items:
+      $ref: '#/definitions/Valutakode'
+  Valutakode:
+    type: object
+    properties:
+      valutakode:
+        type: string
+        example: 'NOK'
+      valuta:
+        type: string
+        example: 'Norsk krone'

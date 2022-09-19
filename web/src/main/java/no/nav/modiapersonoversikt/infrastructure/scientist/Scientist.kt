@@ -155,7 +155,7 @@ object Scientist {
 
     fun <T : Any?> createExperiment(config: Config) = Experiment<T>(config)
 
-    private fun compareAndSerialize(controlValue: Any?, experimentValue: Any?): Triple<Boolean, String, String> {
+    fun compareAndSerialize(controlValue: Any?, experimentValue: Any?): Triple<Boolean, String, String> {
         val (controlJson, controlTree) = process(controlValue)
         val (experimentJson, experimentTree) = process(experimentValue)
         return Triple(
