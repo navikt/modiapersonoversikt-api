@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain;
+package no.nav.modiapersonoversikt.commondomain;
 
 import no.nav.modiapersonoversikt.commondomain.Periode;
 import org.joda.time.LocalDate;

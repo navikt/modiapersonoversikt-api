@@ -38,6 +38,7 @@ class UtbetalingServiceImpl(val UtbetaldataV2Api: UtbetaldataV2Api) : Utbetaling
 
         return utbetalinger
             .filter(finnUtbetalingerISokeperioden(startDato, sluttDato))
+            .sortedBy { it.posteringsdato }
             .map(::mapTilDTO)
     }
 
