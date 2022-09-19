@@ -222,17 +222,24 @@ class SakerController @Autowired constructor(
     }
 
     private fun createModiaSakstema(sakstema: Sakstema, valgtEnhet: String): SakstemaDTO {
+        val harTilgang = tilgangskontroll
+            .check(Policies.tilgangTilTema(EnhetId(valgtEnhet), sakstema.temakode))
+            .getDecision().type == Decision.Type.PERMIT
+        var dokumenterMetadata = sakstema.dokumentMetadata
+        if (!harTilgang) {
+            dokumenterMetadata = dokumenterMetadata.map {
+                it.withFeilWrapper(Feilmelding.SIKKERHETSBEGRENSNING)
+            }
+        }
         return SakstemaDTO(
             temakode = sakstema.temakode,
             temanavn = sakstema.temanavn,
             erGruppert = sakstema.erGruppert,
             behandlingskjeder = sakstema.behandlingskjeder,
-            dokumentMetadata = sakstema.dokumentMetadata,
+            dokumentMetadata = dokumenterMetadata,
             tilhorendeSaker = sakstema.tilhorendeSaker,
             feilkoder = sakstema.feilkoder,
-            harTilgang = tilgangskontroll
-                .check(Policies.tilgangTilTema(EnhetId(valgtEnhet), sakstema.temakode))
-                .getDecision().type == Decision.Type.PERMIT
+            harTilgang = harTilgang
         )
     }
 

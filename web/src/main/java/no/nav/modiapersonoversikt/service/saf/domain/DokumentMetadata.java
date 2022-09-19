@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.saf.domain;
 import no.nav.modiapersonoversikt.commondomain.sak.Entitet;
 import no.nav.modiapersonoversikt.commondomain.sak.FeilWrapper;
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem;
+import no.nav.modiapersonoversikt.commondomain.sak.Feilmelding;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -27,7 +28,7 @@ public class DokumentMetadata {
     private String temakode;
     private String temakodeVisning;
     private final boolean erJournalfort = TRUE;
-    private final FeilWrapper feilWrapper = new FeilWrapper();
+    private FeilWrapper feilWrapper = new FeilWrapper();
 
     public Set<Baksystem> getBaksystem() {
         return baksystem;
@@ -168,6 +169,11 @@ public class DokumentMetadata {
 
     public void setTemakodeVisning(String temakodeVisning) {
         this.temakodeVisning = temakodeVisning;
+    }
+
+    public DokumentMetadata withFeilWrapper(final Feilmelding feilmelding) {
+        this.feilWrapper = new FeilWrapper(feilmelding);
+        return this;
     }
 
     public FeilWrapper getFeilWrapper() {
