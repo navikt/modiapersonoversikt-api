@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf
+package no.nav.modiapersonoversikt.service.saf
 
 import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
@@ -16,7 +16,7 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafDokumentMapper.fraSafJournalpost
+import no.nav.modiapersonoversikt.service.saf.SafDokumentMapper.fraSafJournalpost
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory

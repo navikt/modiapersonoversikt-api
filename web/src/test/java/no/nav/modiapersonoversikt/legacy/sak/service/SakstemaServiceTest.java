@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.legacy.sak.SakBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.FilterUtils;
+import no.nav.modiapersonoversikt.service.saf.SafService;
 import no.nav.modiapersonoversikt.legacy.sak.utils.Konstanter;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import org.joda.time.DateTime;
@@ -41,7 +42,7 @@ public class SakstemaServiceTest {
     private EnhetligKodeverk.Service kodeverk;
 
     @Mock
-    private DokumentMetadataService dokumentMetadataService;
+    private SafService safService;
 
     @InjectMocks
     private SakstemaService sakstemaService = new SakstemaService();
@@ -166,7 +167,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void sakFraSakogBehandlingUtenTilhoerendeSakstemaOppretterEgetSakstema() {
-        when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
+        when(safService.hentJournalposter(anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
 
         Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put("RESTERENDE_TEMA", new HashSet(asList("DAG")));
@@ -184,7 +185,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void sakFraSakogBehandlingMedTilhoerendeSakstemaOppretterIkkeEgetSakstema() {
-        when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE))));
+        when(safService.hentJournalposter(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE))));
         Map<String, Set<String>> gruppertTema = new HashMap<>();
         Set set = new HashSet<>();
         set.add("DAG");
@@ -203,7 +204,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void forskjelligTemakodeSakOgBehandlingOgAnnet() {
-        when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE))));
+        when(safService.hentJournalposter(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE))));
 
         Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put("RESTERENDE_TEMA", new HashSet(asList("FOR", "DAG")));
@@ -270,7 +271,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void slaarIkkeSammenSykepengerOgSykemeldingForModia() {
-        when(dokumentMetadataService.hentDokumentMetadata(anyString()))
+        when(safService.hentJournalposter(anyString()))
                 .thenReturn(
                         new ResultatWrapper<>(
                                 asList(

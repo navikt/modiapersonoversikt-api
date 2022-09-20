@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf
+package no.nav.modiapersonoversikt.service.saf
 
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -8,10 +8,10 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.SLADDET
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Entitet.*
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafDokumentMapper.fraSafJournalpost
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INN
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INTERN
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_UT
+import no.nav.modiapersonoversikt.service.saf.SafDokumentMapper.fraSafJournalpost
+import no.nav.modiapersonoversikt.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INN
+import no.nav.modiapersonoversikt.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INTERN
+import no.nav.modiapersonoversikt.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_UT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test

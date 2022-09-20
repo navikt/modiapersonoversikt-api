@@ -1,8 +1,13 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.filter
 
+import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem
+import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sakstema
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede
 import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 object FilterUtils {
     const val OPPRETTET = "opprettet"
@@ -45,5 +50,24 @@ object FilterUtils {
             )
         }
         return erAvsluttet
+    }
+
+    val PROD_SETTING_DATO: LocalDateTime by lazy {
+        LocalDate
+            .parse(getRequiredProperty("SAKSOVERSIKT_PRODSETTNINGSDATO"))
+            .atStartOfDay()
+    }
+
+    @JvmStatic
+    fun fjernGamleDokumenter(saker: List<Sakstema>): List<Sakstema> {
+        return saker.map { sak ->
+            val filtrerteDokument = sak.dokumentMetadata.filter { dokument ->
+                val erFraSaf = dokument.baksystem.size == 1 && dokument.baksystem.contains(Baksystem.SAF)
+                val erFraForProdsetting: Boolean by lazy { dokument.dato.isBefore(PROD_SETTING_DATO) }
+
+                (erFraSaf && erFraForProdsetting).not()
+            }
+            sak.withDokumentMetadata(filtrerteDokument)
+        }
     }
 }
