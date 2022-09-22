@@ -107,7 +107,7 @@ class UtbetalingController @Autowired constructor(
                                     satsantall = ytelsekomponent.satsantall
                                         ?: 0.0 // Rest fyller inn 0.0 istedet for null
                                 )
-                            },
+                            }.sortedBy { it.ytelseskomponentbelop },
 
                             // SOAP endepunktet kan returnere -0.0, dette er fikset i nye rest-endepunkter
                             trekksum = if (ytelse.trekksum == -0.0) 0.0 else ytelse.trekksum,
@@ -119,8 +119,20 @@ class UtbetalingController @Autowired constructor(
                     }
                 )
             }
-
-        val (ok, controlJson, experimentJson) = Scientist.compareAndSerialize(transformerteWsUtbetalinger, restUtbetalinger)
+        // Sorterer mest mulig på samme måte for å få sammenligningen til å gi "ok: true"
+        // Ikke noe vi er avhengig av ved ett frem tidig bytte
+        val transformerteRestUtbetalinger = restUtbetalinger
+            .sortedBy { it.posteringsdato }
+            .map { utbetaling ->
+                utbetaling.copy(
+                    ytelser = utbetaling.ytelser.map { ytelse ->
+                        ytelse.copy(
+                            ytelseskomponentListe = ytelse.ytelseskomponentListe.sortedBy { it.ytelseskomponentbelop }
+                        )
+                    }
+                )
+            }
+        val (ok, controlJson, experimentJson) = Scientist.compareAndSerialize(transformerteWsUtbetalinger, transformerteRestUtbetalinger)
         // Overskriver standard scientist felter etter å ha gjort en sammenligning med de kjente endringene i apiet
         return mapOf(
             "ok" to ok,
