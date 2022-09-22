@@ -97,7 +97,7 @@ class UtbetalingController @Autowired constructor(
         val restUtbetalinger = anyTry.getOrThrow() as List<UtbetalingDomain.Utbetaling>
 
         val transformerteWsUtbetalinger = wsUtbetalinger
-            .sortedBy { it.posteringsdato }
+            .sortedWith(compareBy({ it.posteringsdato }, { it.nettobelop }))
             .map { utbetaling ->
                 utbetaling.copy(
                     ytelser = utbetaling.ytelser.map { ytelse ->
@@ -122,7 +122,7 @@ class UtbetalingController @Autowired constructor(
         // Sorterer mest mulig på samme måte for å få sammenligningen til å gi "ok: true"
         // Ikke noe vi er avhengig av ved ett frem tidig bytte
         val transformerteRestUtbetalinger = restUtbetalinger
-            .sortedBy { it.posteringsdato }
+            .sortedWith(compareBy({ it.posteringsdato }, { it.nettobelop }))
             .map { utbetaling ->
                 utbetaling.copy(
                     ytelser = utbetaling.ytelser.map { ytelse ->
