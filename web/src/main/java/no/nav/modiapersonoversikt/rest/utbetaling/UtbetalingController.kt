@@ -108,6 +108,11 @@ class UtbetalingController @Autowired constructor(
                                         ?: 0.0 // Rest fyller inn 0.0 istedet for null
                                 )
                             }.sortedBy { it.ytelseskomponentbelop },
+                            trekkListe = ytelse.trekkListe.map { trekk ->
+                                trekk.copy(
+                                    trekkbelop = if (trekk.trekkbelop == -0.0) 0.0 else trekk.trekkbelop
+                                )
+                            },
 
                             // SOAP endepunktet kan returnere -0.0, dette er fikset i nye rest-endepunkter
                             trekksum = if (ytelse.trekksum == -0.0) 0.0 else ytelse.trekksum,
