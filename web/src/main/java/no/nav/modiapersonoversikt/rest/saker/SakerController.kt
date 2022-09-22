@@ -12,12 +12,10 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
-import no.nav.modiapersonoversikt.legacy.sak.service.DokumentMetadataService
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
-import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.SaksoversiktService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.rest.RestUtils
+import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saker.SakerService
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,11 +30,9 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/rest/saker/{fnr}")
 class SakerController @Autowired constructor(
-    private val saksoversiktService: SaksoversiktService,
     private val sakstemaService: SakstemaService,
     private val sakerService: SakerService,
     private val tilgangskontrollService: TilgangskontrollService,
-    private val dokumentMetadataService: DokumentMetadataService,
     private val safService: SafService,
     val tilgangskontroll: Tilgangskontroll
 ) {
@@ -47,8 +43,6 @@ class SakerController @Autowired constructor(
             .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
                 val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
                 val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
-
-                saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
 
                 val resultat = ResultatWrapper(
                     mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(enhet, request)),
@@ -214,8 +208,8 @@ class SakerController @Autowired constructor(
     }
 
     private fun hentDokumentMetadata(journalpostId: String, fnr: String): DokumentMetadata {
-        return dokumentMetadataService.hentDokumentMetadata(fnr).resultat
-            .first { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
+        return safService.hentJournalposter(fnr).resultat
+            .firstOrNull { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
             ?: throw RuntimeException("Fant ikke metadata om journalpostId $journalpostId. Dette bør ikke skje.")
     }
 

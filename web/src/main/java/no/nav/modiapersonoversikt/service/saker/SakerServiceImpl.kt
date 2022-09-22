@@ -3,9 +3,9 @@
 package no.nav.modiapersonoversikt.service.saker
 
 import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
+import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saker.kilder.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
