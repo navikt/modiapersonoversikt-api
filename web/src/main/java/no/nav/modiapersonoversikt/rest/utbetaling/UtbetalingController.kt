@@ -121,7 +121,7 @@ class UtbetalingController @Autowired constructor(
                             // SOAP returnerer dummy-objekt ved manglende arbeidsgiver. Dette feltet blir null i rest-apiet
                             arbeidsgiver = if (ytelse.arbeidsgiver?.orgnr == "000000000") null else ytelse.arbeidsgiver
                         )
-                    }
+                    }.sortedWith(compareBy({ it.ytelseskomponentersum }, { it.periode?.start }))
                 )
             }
         // Sorterer mest mulig på samme måte for å få sammenligningen til å gi "ok: true"
@@ -134,7 +134,7 @@ class UtbetalingController @Autowired constructor(
                         ytelse.copy(
                             ytelseskomponentListe = ytelse.ytelseskomponentListe.sortedBy { it.ytelseskomponentbelop }
                         )
-                    }
+                    }.sortedWith(compareBy({ it.ytelseskomponentersum }, { it.periode?.start }))
                 )
             }
         val (ok, controlJson, experimentJson) = Scientist.compareAndSerialize(transformerteWsUtbetalinger, transformerteRestUtbetalinger)
