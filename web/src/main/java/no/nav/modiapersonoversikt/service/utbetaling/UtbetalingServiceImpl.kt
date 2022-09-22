@@ -27,7 +27,7 @@ class UtbetalingServiceImpl(val UtbetaldataV2Api: UtbetaldataV2Api) : Utbetaling
         val utbetalinger = UtbetaldataV2Api.hentUtbetalingsinformasjonIntern(
             utbetalingsoppslagDTO = UtbetalingsoppslagDTO(
                 ident = fnr.get(),
-                rolle = UtbetalingsoppslagDTO.Rolle.UTBETALT_TIL,
+                rolle = UtbetalingsoppslagDTO.Rolle.RETTIGHETSHAVER,
                 periode = PeriodeDTO(
                     fom = leggTilEkstraDagerPaaStartdato(startDato),
                     tom = sluttDato
