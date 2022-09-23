@@ -1,6 +1,8 @@
 package no.nav.modiapersonoversikt.infrastructure.naudit
 
+import net.logstash.logback.marker.Markers
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.DENY_REASON
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.FAIL_REASON
 import org.slf4j.LoggerFactory
@@ -91,6 +93,7 @@ class Audit {
             return WithDataDescriptor(action, resourceType, extractIdentifiers)
         }
 
+        private val auditMarker = Markers.appendEntries(mapOf(TjenestekallLogger.LOGTYPE to "audit"))
         private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<Pair<AuditIdentifier, String?>>) {
             val subject = AuthContextUtils.getIdent()
             val logline = listOfNotNull(
@@ -105,7 +108,7 @@ class Audit {
             )
                 .joinToString(" ")
 
-            tjenestekallLogg.info(logline)
+            tjenestekallLogg.info(auditMarker, logline)
             cefLogger.log(CEFEvent(action, resourceType, subject.orElse("-"), identifiers))
         }
     }
