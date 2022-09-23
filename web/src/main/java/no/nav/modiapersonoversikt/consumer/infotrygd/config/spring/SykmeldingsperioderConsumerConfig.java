@@ -56,7 +56,7 @@ public class SykmeldingsperioderConsumerConfig {
     }
 
     @Bean
-    public UtbetalingerService utbetalingerService() {
+    public UtbetalingerService sykmeldingUtbetalingerService() {
         return new UtbetalingerServiceImpl();
     }
 }
