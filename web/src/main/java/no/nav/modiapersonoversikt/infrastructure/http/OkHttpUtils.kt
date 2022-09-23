@@ -92,11 +92,15 @@ class LoggingInterceptor(
             .onFailure { exception ->
                 log.error("$name-response-error (ID: $callId / $requestId)", exception)
                 TjenestekallLogger.error(
-                    "$name-response-error: $callId ($requestId))",
-                    mapOf(
-                        "exception" to exception,
+                    header = "$name-response-error: $callId ($requestId))",
+                    fields = mapOf(
+                        "exception" to exception.message,
                         "time" to timer.measure()
-                    )
+                    ),
+                    tags = mapOf(
+                        "time" to timer.measure()
+                    ),
+                    throwable = exception
                 )
             }
             .getOrThrow()
@@ -105,20 +109,26 @@ class LoggingInterceptor(
 
         if (response.code() in 200..299) {
             TjenestekallLogger.info(
-                "$name-response: $callId ($requestId)",
-                mapOf(
+                header = "$name-response: $callId ($requestId)",
+                fields = mapOf(
                     "status" to "${response.code()} ${response.message()}",
                     "time" to timer.measure(),
                     "body" to responseBody
+                ),
+                tags = mapOf(
+                    "time" to timer.measure(),
                 )
             )
         } else {
             TjenestekallLogger.error(
-                "$name-response-error: $callId ($requestId)",
-                mapOf(
+                header = "$name-response-error: $callId ($requestId)",
+                fields = mapOf(
                     "status" to "${response.code()} ${response.message()}",
                     "time" to timer.measure(),
                     "body" to responseBody
+                ),
+                tags = mapOf(
+                    "time" to timer.measure(),
                 )
             )
         }
