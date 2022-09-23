@@ -90,10 +90,11 @@ class UtbetalingController @Autowired constructor(
     }
 
     fun utbetalingSammenligning(
+        markers: Scientist.Markers,
         wsUtbetalinger: List<UtbetalingDomain.Utbetaling>,
         anyTry: Scientist.UtilityClasses.Try<Any?>
-    ): Map<String, Any?> {
-        if (anyTry.isFailure) return emptyMap()
+    ) {
+        if (anyTry.isFailure) return
         val restUtbetalinger = anyTry.getOrThrow() as List<UtbetalingDomain.Utbetaling>
 
         val transformerteWsUtbetalinger = wsUtbetalinger
@@ -138,11 +139,10 @@ class UtbetalingController @Autowired constructor(
                 )
             }
         val (ok, controlJson, experimentJson) = Scientist.compareAndSerialize(transformerteWsUtbetalinger, transformerteRestUtbetalinger)
+
         // Overskriver standard scientist felter etter å ha gjort en sammenligning med de kjente endringene i apiet
-        return mapOf(
-            "ok" to ok,
-            "control" to controlJson,
-            "experiment" to experimentJson,
-        )
+        markers.fieldAndTag("ok", ok)
+        markers.field("control", controlJson)
+        markers.field("experiment", experimentJson)
     }
 }

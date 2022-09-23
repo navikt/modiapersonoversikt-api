@@ -81,7 +81,11 @@ class LoggingGraphqlClient(
             response
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot $name (ID: $callId)", exception)
-            TjenestekallLogger.error("$name-response: $callId ($requestId)", mapOf("exception" to exception))
+            TjenestekallLogger.error(
+                header = "$name-response: $callId ($requestId)",
+                fields = mapOf("exception" to exception.message),
+                throwable = exception
+            )
             val error = GraphQLError("Feilet ved oppslag mot $name (ID: $callId)")
             GraphQLResponse(errors = listOf(error))
         }

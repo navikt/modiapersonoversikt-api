@@ -13,7 +13,7 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(1.0),
-                reporter = { header, fields ->
+                reporter = { header, fields, tags, _ ->
                     assertThat(header).contains("[SCIENCE] DummyExperiment")
                 }
             )
@@ -26,8 +26,9 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(1.0),
-                reporter = { header, fields ->
+                reporter = { header, fields, tags, _ ->
                     assertThat(fields).containsEntry("ok", true)
+                    assertThat(tags).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
                     assertThat(fields).containsKey("experiment")
                 }
@@ -41,12 +42,15 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(1.0),
-                reporter = { header, fields ->
+                reporter = { header, fields, tags, _ ->
                     assertThat(fields).containsEntry("ok", false)
+                    assertThat(tags).containsEntry("ok", false)
                     assertThat(fields).containsKey("control")
                     assertThat(fields).containsKey("controlTime")
+                    assertThat(tags).containsKey("controlTime")
                     assertThat(fields).containsKey("experiment")
                     assertThat(fields).containsKey("experimentTime")
+                    assertThat(tags).containsKey("experimentTime")
                     assertThat((fields["control"] as String)).isEqualTo("\"Hello\"")
                     assertThat((fields["experiment"] as String)).isEqualTo("\"World\"")
                 }
@@ -61,7 +65,7 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(0.7),
-                reporter = { _, _ -> experimentsRun++ }
+                reporter = { _, _, _, _ -> experimentsRun++ }
             )
         )
         repeat(1000) {
@@ -77,7 +81,7 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(0.1),
-                reporter = { _, _ -> experimentsRun++ }
+                reporter = { _, _, _, _ -> experimentsRun++ }
             )
         )
         repeat(1000) {
@@ -106,12 +110,15 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(1.0),
-                reporter = { header, fields ->
+                reporter = { header, fields, tags, _ ->
                     assertThat(fields).containsEntry("ok", true)
+                    assertThat(tags).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
                     assertThat(fields).containsKey("controlTime")
+                    assertThat(tags).containsKey("controlTime")
                     assertThat(fields).containsKey("experiment")
                     assertThat(fields).containsKey("experimentTime")
+                    assertThat(tags).containsKey("experimentTime")
                 }
             )
         ).run({ controlResult }, { experimentResult })
@@ -141,12 +148,15 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(1.0),
-                reporter = { header, fields ->
+                reporter = { header, fields, tags, _ ->
                     assertThat(fields).containsEntry("ok", true)
+                    assertThat(tags).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
                     assertThat(fields).containsKey("controlTime")
+                    assertThat(tags).containsKey("controlTime")
                     assertThat(fields).containsKey("experiment")
                     assertThat(fields).containsKey("experimentTime")
+                    assertThat(tags).containsKey("experimentTime")
                 }
             )
         ).run({ controlResult }, { experimentResult })
@@ -158,22 +168,23 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(1.0),
-                reporter = { header, fields ->
+                reporter = { header, fields, tags, _ ->
                     assertThat(fields).containsEntry("ok", true)
+                    assertThat(tags).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
                     assertThat(fields).containsKey("experiment")
                     assertThat(fields).containsKey("control-extra")
                     assertThat(fields).containsKey("experiment-extra")
+                    assertThat(tags).containsKey("tag-extra")
                 }
             )
         ).runIntrospected(
             control = { "Hello, World" },
             experiment = { "Hello, World" },
-            dataFields = { control, triedExperiment ->
-                mapOf(
-                    "control-extra" to 1,
-                    "experiment-extra" to "value"
-                )
+            dataFields = { markers, control, triedExperiment ->
+                markers.field("control-extra", 1)
+                markers.field("experiment-extra", "value")
+                markers.tag("tag-extra", "value")
             }
         )
     }
@@ -185,7 +196,7 @@ internal class ScientistTest {
             Scientist.Config(
                 name = "DummyExperiment",
                 experimentRate = Scientist.FixedValueRate(1.0),
-                reporter = { _, _ ->
+                reporter = { _, _, _, _ ->
                     val endTime = System.currentTimeMillis()
                     assertThat(endTime - startTime).isCloseTo(2000, Percentage.withPercentage(15.0))
                 }

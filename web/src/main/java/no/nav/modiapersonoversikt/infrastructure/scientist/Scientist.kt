@@ -10,12 +10,12 @@ import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils
 import kotlin.random.Random
 
-typealias Reporter = (header: String, fields: Map<String, Any?>) -> Unit
+typealias Reporter = (header: String, fields: Map<String, Any?>, tags: Map<String, Any?>, exception: Throwable?) -> Unit
 
 object Scientist {
 
     internal val forceExperiment: ThreadLocal<Boolean?> = ThreadLocal()
-    private val defaultReporter: Reporter = { header, fields -> TjenestekallLogger.info(header, fields) }
+    private val defaultReporter: Reporter = { header, fields, tags, throwable -> TjenestekallLogger.raw(TjenestekallLogger.Level.INFO, header, fields, tags, throwable) }
 
     object UtilityClasses {
         data class TimedValue<T>(val value: T, val time: Long)
@@ -83,47 +83,69 @@ object Scientist {
         val experimentException: Throwable? = null
     )
 
+    /**
+     * Fields blir en del av `message` i kibana, mens Tags havner som egne søkbare attributter
+     * F.eks kan man hente opp alt fra scientist vha spørringen `+x_logtype:scientist`
+     */
+    class Markers {
+        val fields = mutableMapOf<String, Any?>()
+        val tags = mutableMapOf<String, Any?>(
+            TjenestekallLogger.LOGTYPE to "scientist"
+        )
+
+        fun field(name: String, value: Any?) {
+            fields[name] = value
+        }
+        fun tag(name: String, value: Any?) {
+            tags[name] = value
+        }
+        fun fieldAndTag(name: String, value: Any?) {
+            fields[name] = value
+            tags[name] = value
+        }
+    }
+
     class Experiment<T> internal constructor(private val config: Config) {
         fun runIntrospected(
             control: () -> T,
             experiment: () -> Any?,
-            dataFields: ((T, Try<Any?>) -> Map<String, Any?>)? = null,
+            dataFields: ((Markers, T, Try<Any?>) -> Unit)? = null,
             overrideRate: ExperimentRate? = null,
         ): Result<T> {
             if (forceExperiment.get() == true || (overrideRate?.shouldRunExperiment() ?: config.experimentRate.shouldRunExperiment())) {
-                val fields = mutableMapOf<String, Any?>()
+                val markers = Markers()
                 val (controlResult, experimentResult) = ConcurrencyUtils.inParallel(
                     { measureTimeInMillies(control) },
                     { measureTimeInMillies { Try.of(experiment) } }
                 )
 
                 if (experimentResult.value.isFailure) {
-                    fields["ok"] = false
+                    markers.fieldAndTag("ok", false)
                     if (config.logAndCompareValues) {
-                        fields["control"] = controlResult.value
+                        markers.field("control", controlResult.value)
                     }
-                    fields["controlTime"] = controlResult.time
-                    fields["experimentTime"] = experimentResult.time
-                    fields["exception"] = experimentResult.value.exceptionOrNull()
+                    markers.fieldAndTag("controlTime", controlResult.time)
+                    markers.fieldAndTag("experimentTime", experimentResult.time)
+                    markers.field("exception", experimentResult.value.exceptionOrNull()?.message)
                 } else {
                     if (config.logAndCompareValues) {
                         val controlValue = controlResult.value
                         val experimentValue = experimentResult.value.getOrThrow()
                         val (ok, controlJson, experimentJson) = compareAndSerialize(controlValue, experimentValue)
-                        fields["ok"] = ok
-                        fields["control"] = controlJson
-                        fields["experiment"] = experimentJson
+                        markers.fieldAndTag("ok", ok)
+                        markers.field("control", controlJson)
+                        markers.field("experiment", experimentJson)
                     } else {
-                        fields["ok"] = true
+                        markers.fieldAndTag("ok", true)
                     }
-                    fields["controlTime"] = controlResult.time
-                    fields["experimentTime"] = experimentResult.time
+                    markers.fieldAndTag("controlTime", controlResult.time)
+                    markers.fieldAndTag("experimentTime", experimentResult.time)
                 }
                 if (dataFields != null) {
-                    fields.putAll(dataFields(controlResult.value, experimentResult.value))
+                    dataFields(markers, controlResult.value, experimentResult.value)
                 }
 
-                config.reporter("[SCIENCE] ${config.name}", fields)
+                config.reporter("[SCIENCE] ${config.name}", markers.fields, markers.tags, experimentResult.value.exceptionOrNull())
 
                 return Result(
                     experimentRun = true,
@@ -142,7 +164,7 @@ object Scientist {
         fun run(
             control: () -> T,
             experiment: () -> Any?,
-            dataFields: ((T, Try<Any?>) -> Map<String, Any?>)? = null,
+            dataFields: ((Markers, T, Try<Any?>) -> Unit)? = null,
             overrideRate: ExperimentRate? = null,
         ): T =
             runIntrospected(
