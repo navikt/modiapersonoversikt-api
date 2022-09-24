@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJodaTime
 import no.nav.modiapersonoversikt.utils.UnleashProxySwitcher
+import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.time.LocalDate
@@ -17,12 +18,13 @@ open class UtbetalingServiceConfig {
     @Bean
     open fun utbetalingerService(
         unleashService: UnleashService,
-        apiClient: UtbetaldataV2Api,
+        restClient: UtbetaldataV2Api,
+        soapClient: UtbetalingV1,
     ): UtbetalingService = UnleashProxySwitcher.createSwitcher(
         featureToggle = Feature.REST_UTBETALING_SWITCHER,
         unleashService = unleashService,
-        ifEnabled = UtbetalingServiceImpl(apiClient),
-        ifDisabled = asUtbetalingService(WSUtbetalingServiceImpl())
+        ifEnabled = UtbetalingServiceImpl(restClient),
+        ifDisabled = asUtbetalingService(WSUtbetalingServiceImpl(soapClient))
     )
 
     private fun asUtbetalingService(service: WSUtbetalingService) = object : UtbetalingService {
