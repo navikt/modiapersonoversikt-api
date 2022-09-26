@@ -87,8 +87,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 vergemal = hentVergemal(data),
                 tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                 telefonnummer = hentTelefonnummer(data),
-                kontaktOgReservasjon = hentKontaktOgReservasjon(data),
-                kontaktInformasjon = hentReservasjon(data),
+                kontaktInformasjon = hantKontaktinformasjon(data),
                 bankkonto = hentBankkonto(data).fold(
                     onSuccess = { it },
                     onNotRelevant = { null },
@@ -908,11 +907,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun hentKontaktOgReservasjon(data: Data): Dkif.DigitalKontaktinformasjon? {
-        return data.dkifData.getOrNull()
-    }
-
-    private fun hentReservasjon(data: Data): Persondata.KontaktInformasjon {
+    private fun hantKontaktinformasjon(data: Data): Persondata.KontaktInformasjon {
         val dkif = data.dkifData.getOrNull()
         val oppfolging = data.oppfolging.getOrNull()
         return Persondata.KontaktInformasjon(

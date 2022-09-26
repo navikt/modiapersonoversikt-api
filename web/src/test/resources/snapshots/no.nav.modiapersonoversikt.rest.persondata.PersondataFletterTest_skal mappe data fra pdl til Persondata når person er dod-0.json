@@ -245,20 +245,6 @@
         "value" : "90009900"
       }
     },
-    "kontaktOgReservasjon" : {
-      "epostadresse" : {
-        "sistOppdatert" : null,
-        "sistVerifisert" : null,
-        "value" : "test@test.no"
-      },
-      "mobiltelefonnummer" : {
-        "sistOppdatert" : null,
-        "sistVerifisert" : null,
-        "value" : "90009900"
-      },
-      "personident" : "12345678910",
-      "reservasjon" : null
-    },
     "navEnhet" : null,
     "navn" : [ "java.util.ArrayList", [ {
       "etternavn" : "McTestesen",

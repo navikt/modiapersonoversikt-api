@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -36,7 +35,6 @@ object Persondata {
         val vergemal: List<Verge>,
         val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon,
         val telefonnummer: List<Telefon>,
-        val kontaktOgReservasjon: Dkif.DigitalKontaktinformasjon?,
         val kontaktInformasjon: KontaktInformasjon,
         val bankkonto: Bankkonto?,
         val forelderBarnRelasjon: List<ForelderBarnRelasjon>
