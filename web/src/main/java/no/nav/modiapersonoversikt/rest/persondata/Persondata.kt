@@ -37,6 +37,7 @@ object Persondata {
         val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon,
         val telefonnummer: List<Telefon>,
         val kontaktOgReservasjon: Dkif.DigitalKontaktinformasjon?,
+        val kontaktInformasjon: KontaktInformasjon,
         val bankkonto: Bankkonto?,
         val forelderBarnRelasjon: List<ForelderBarnRelasjon>
     )
@@ -240,6 +241,19 @@ object Persondata {
         val gyldighetsPeriode: GyldighetsPeriode?,
         val adresse: Adresse?
     )
+
+    data class KontaktInformasjon(
+        val erManuell: Boolean?,
+        val erReservert: Boolean?,
+        val epost: Verdi?,
+        val mobil: Verdi?,
+    ) {
+        data class Verdi(
+            val value: String?,
+            val sistOppdatert: LocalDate?,
+            val sistVerifisert: LocalDate?,
+        )
+    }
 
     data class ForelderBarnRelasjon(
         val ident: String?,

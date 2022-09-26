@@ -19,6 +19,7 @@ internal class PersondataServiceImplTest {
         dkif = mockk(),
         kontonummerService = mockk(),
         skjermedePersonerApi = mockk(),
+        oppfolgingService = mockk(),
         policyEnforcementPoint = mockk(),
         kodeverk = mockk()
     )
