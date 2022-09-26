@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -20,6 +21,7 @@ open class PersondataConfig {
         norgApi: NorgApi,
         skjermedePersonerApi: SkjermedePersonerApi,
         kontonummerService: KontonummerService,
+        oppfolgingConfig: ArbeidsrettetOppfolging.Service,
         policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
         kodeverk: EnhetligKodeverk.Service
     ): PersondataService {
@@ -29,6 +31,7 @@ open class PersondataConfig {
             norgApi,
             skjermedePersonerApi,
             kontonummerService,
+            oppfolgingConfig,
             policyEnforcementPoint,
             kodeverk
         )

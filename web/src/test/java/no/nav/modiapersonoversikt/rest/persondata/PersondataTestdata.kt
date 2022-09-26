@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -239,6 +240,11 @@ internal val digitalKontaktinformasjon = Dkif.DigitalKontaktinformasjon(
     mobiltelefonnummer = Dkif.MobilTelefon(value = "90009900")
 )
 
+internal val arbeidsrettetOppfolgingStatus = ArbeidsrettetOppfolging.Status(
+    underOppfolging = true,
+    erManuell = true
+)
+
 internal val sivilstandPerson = HentPersondata.Sivilstand(
     type = HentPersondata.Sivilstandstype.GIFT,
     gyldigFraOgMed = gittDato("2015-09-09"),
@@ -442,6 +448,7 @@ internal val testData = PersondataFletter.Data(
     erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { false },
     navEnhet = PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) { gittNavKontorEnhet() },
     dkifData = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
+    oppfolging = PersondataResult.runCatching(InformasjonElement.OPPFOLGING) { arbeidsrettetOppfolgingStatus },
     bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
     tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
     kontaktinformasjonTredjepartsperson = PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) { kontaktinformasjonTredjepartspersonMap },
