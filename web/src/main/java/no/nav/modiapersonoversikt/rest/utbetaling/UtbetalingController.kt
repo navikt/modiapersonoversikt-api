@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingDomain
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
@@ -30,8 +31,10 @@ class UtbetalingController @Autowired constructor(
     @GetMapping
     fun hent(
         @PathVariable("fnr") fnr: String,
-        @RequestParam("startDato") start: LocalDate,
-        @RequestParam("sluttDato") slutt: LocalDate
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("startDato")
+        start: LocalDate,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("sluttDato")
+        slutt: LocalDate
     ): UtbetalingerResponseDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
