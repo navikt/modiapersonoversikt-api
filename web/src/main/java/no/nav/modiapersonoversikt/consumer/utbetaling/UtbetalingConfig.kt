@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class UtbetalingConfig {
-    private val basePath = EnvironmentUtils.getRequiredProperty("REST_UTBETALING_V1_ENDPOINTURL")
+    private val basePath = EnvironmentUtils.getRequiredProperty("REST_UTBETALING_ENDPOINTURL")
     private val scope = DownstreamApi(
         application = "sokos-utbetaldata",
         namespace = "okonomi",
