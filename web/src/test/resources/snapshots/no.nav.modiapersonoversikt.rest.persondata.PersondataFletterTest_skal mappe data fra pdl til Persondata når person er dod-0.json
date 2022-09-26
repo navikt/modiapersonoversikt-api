@@ -231,6 +231,20 @@
         "tidspunkt" : "2020-07-01T10:00:00"
       }
     } ] ],
+    "kontaktInformasjon" : {
+      "epost" : {
+        "sistOppdatert" : null,
+        "sistVerifisert" : null,
+        "value" : "test@test.no"
+      },
+      "erManuell" : true,
+      "erReservert" : null,
+      "mobil" : {
+        "sistOppdatert" : null,
+        "sistVerifisert" : null,
+        "value" : "90009900"
+      }
+    },
     "kontaktOgReservasjon" : {
       "epostadresse" : {
         "sistOppdatert" : null,

@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
@@ -32,6 +33,7 @@ class PersondataServiceImpl(
     private val norgApi: NorgApi,
     private val skjermedePersonerApi: SkjermedePersonerApi,
     private val kontonummerService: KontonummerService,
+    private val oppfolgingService: ArbeidsrettetOppfolging.Service,
     private val policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
@@ -86,6 +88,9 @@ class PersondataServiceImpl(
         val bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) {
             kontonummerService.hentKontonummer(Fnr(personIdent))
         }
+        val oppfolging = PersondataResult.runCatching(InformasjonElement.OPPFOLGING) {
+            oppfolgingService.hentOppfolgingStatus(Fnr(personIdent))
+        }
 
         return persondataFletter.flettSammenData(
             PersondataFletter.Data(
@@ -96,6 +101,7 @@ class PersondataServiceImpl(
                 navEnhet,
                 dkifData,
                 bankkonto,
+                oppfolging,
                 tredjepartsPerson,
                 kontaktinformasjonTredjepartsperson,
                 harTilgangTilSkjermetPerson

@@ -6,15 +6,18 @@ import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
 object ArbeidsrettetOppfolging {
     interface Service {
         fun hentOppfolgingsinfo(fodselsnummer: Fnr): Info
+        fun hentOppfolgingStatus(fodselsnummer: Fnr): Status
         fun ping()
     }
 
     data class Status(
-        val underOppfolging: Boolean
+        val underOppfolging: Boolean,
+        val erManuell: Boolean,
     )
 
     data class Info(
-        @JvmField val erUnderOppfolging: Boolean,
+        val erUnderOppfolging: Boolean,
+        val erManuell: Boolean,
         val veileder: Saksbehandler?,
         val oppfolgingsenhet: Enhet?
     )

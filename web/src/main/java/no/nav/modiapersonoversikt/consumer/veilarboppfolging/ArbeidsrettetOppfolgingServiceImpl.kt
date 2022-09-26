@@ -43,6 +43,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         }
         return ArbeidsrettetOppfolging.Info(
             oppfolgingstatus.underOppfolging,
+            oppfolgingstatus.erManuell,
             enhetOgVeileder?.veilederId?.let { ldapService.hentVeileder(NavIdent(it)) },
             enhetOgVeileder?.oppfolgingsenhet?.let {
                 ArbeidsrettetOppfolging.Enhet(
@@ -50,6 +51,13 @@ open class ArbeidsrettetOppfolgingServiceImpl(
                     it.navn
                 )
             }
+        )
+    }
+
+    override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
+        return client.fetchJson(
+            url = "$url/underoppfolging?fnr=${fodselsnummer.get()}",
+            type = ArbeidsrettetOppfolging.Status::class
         )
     }
 
@@ -63,13 +71,6 @@ open class ArbeidsrettetOppfolgingServiceImpl(
             .execute()
             .body()
             ?.string()
-    }
-
-    private fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
-        return client.fetchJson(
-            url = "$url/oppfolging?fnr=${fodselsnummer.get()}",
-            type = ArbeidsrettetOppfolging.Status::class
-        )
     }
 
     private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder {

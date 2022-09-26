@@ -10,6 +10,7 @@ sealed class PersondataResult<T>(val system: InformasjonElement) {
         DKIF,
         DKIF_TREDJEPARTSPERSONER,
         BANKKONTO,
+        OPPFOLGING,
         VEILEDER_ROLLER,
         NORG_NAVKONTOR,
         NORG_KONTAKTINFORMASJON,

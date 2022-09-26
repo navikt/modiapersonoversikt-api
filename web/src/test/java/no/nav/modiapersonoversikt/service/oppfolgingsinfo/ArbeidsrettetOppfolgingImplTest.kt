@@ -33,8 +33,7 @@ class ArbeidsrettetOppfolgingImplTest {
     @Language("json")
     private val statusUnderOppfolgingResponse = """
         {
-            "fnr": "$fnr",
-            "kanVarsles": true,
+            "erManuell": true,
             "underOppfolging": true
         }
     """.trimIndent()
@@ -42,8 +41,7 @@ class ArbeidsrettetOppfolgingImplTest {
     @Language("json")
     private val statusIkkeUnderOppfolgingResponse = """
         {
-            "fnr": "$fnr",
-            "kanVarsles": true,
+            "erManuell": true,
             "underOppfolging": false
         }
     """.trimIndent()
@@ -66,7 +64,7 @@ class ArbeidsrettetOppfolgingImplTest {
             stub = arrayOf(
                 getWithBody(
                     statusCode = 200,
-                    url = urlMatching("/oppfolging\\?fnr.*"),
+                    url = urlMatching("/underoppfolging\\?fnr.*"),
                     body = statusUnderOppfolgingResponse
                 ),
                 getWithBody(statusCode = 200, url = urlMatching("/person/$fnr/oppfolgingsstatus"), body = dataResponse),
@@ -105,7 +103,7 @@ class ArbeidsrettetOppfolgingImplTest {
             stub = arrayOf(
                 getWithBody(
                     statusCode = 200,
-                    url = urlMatching("/oppfolging\\?fnr.*"),
+                    url = urlMatching("/underoppfolging\\?fnr.*"),
                     body = statusIkkeUnderOppfolgingResponse
                 ),
                 getWithBody(statusCode = 200, url = urlMatching("/person/$fnr/oppfolgingsstatus"), body = dataResponse),
