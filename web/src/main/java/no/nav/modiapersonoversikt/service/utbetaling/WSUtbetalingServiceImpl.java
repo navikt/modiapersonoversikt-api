@@ -8,7 +8,6 @@ import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
 import org.joda.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -19,8 +18,11 @@ import static no.nav.modiapersonoversikt.utils.ConvertionUtils.toJodaTime;
 
 public class WSUtbetalingServiceImpl implements WSUtbetalingService {
 
-    @Autowired
-    private UtbetalingV1 utbetalingV1;
+    private final UtbetalingV1 utbetalingV1;
+
+    public WSUtbetalingServiceImpl(UtbetalingV1 utbetalingV1) {
+        this.utbetalingV1 = utbetalingV1;
+    }
 
     @Override
     public List<WSUtbetaling> hentWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
