@@ -35,12 +35,12 @@ public class FilterRegistrationConfig {
                 .withRefreshUrl(modiaRefreshUrl)
                 .withRefreshTokenCookieName("modia_refresh_token");
 
-        OidcAuthenticatorConfig azureAdConfig = new OidcAuthenticatorConfig()
-                .withClientId(azureAdClientId)
-                .withDiscoveryUrl(azureAdDiscoveryUrl)
-                .withUserRole(UserRole.INTERN);
+//        OidcAuthenticatorConfig azureAdConfig = new OidcAuthenticatorConfig()
+//                .withClientId(azureAdClientId)
+//                .withDiscoveryUrl(azureAdDiscoveryUrl)
+//                .withUserRole(UserRole.INTERN);
 
-        return OidcAuthenticator.fromConfigs(azureAdConfig, openamConfig);
+        return OidcAuthenticator.fromConfigs(openamConfig);
     }
 
     @Bean
