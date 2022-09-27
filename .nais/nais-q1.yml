@@ -122,9 +122,7 @@ spec:
       value: "https://tjenester-q1.nav.no"
     - name: UNLEASH_API_URL
       value: "https://unleash.nais.io/api/"
-    - name: UTBETALING_V1_ENDPOINTURL
-      value: "https://wasapp-q1.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1"
-    - name: REST_UTBETALING_V1_ENDPOINTURL
+    - name: REST_UTBETALING_ENDPOINTURL
       value: "https://sokos-utbetaldata.dev.intern.nav.no/utbetaldata/api"
     - name: VEILARBOPPFOLGINGAPI_URL
       value: "https://veilarboppfolging.dev.intern.nav.no/veilarboppfolging/api"
