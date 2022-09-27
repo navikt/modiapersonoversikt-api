@@ -18,13 +18,13 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.Utbetal
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelseDTO as RsYtelse
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelsekomponentDTO as RsYtelseKomponent
 
-class UtbetalingServiceImpl(val UtbetaldataV2Api: UtbetaldataV2Api) : UtbetalingService {
+open class UtbetalingServiceImpl(val utbetaldataV2Api: UtbetaldataV2Api) : UtbetalingService {
     override fun hentUtbetalinger(
         fnr: Fnr,
         startDato: LocalDate,
         sluttDato: LocalDate
     ): List<UtbetalingDomain.Utbetaling> {
-        val utbetalinger = UtbetaldataV2Api.hentUtbetalingsinformasjonIntern(
+        val utbetalinger = utbetaldataV2Api.hentUtbetalingsinformasjonIntern(
             utbetalingsoppslagDTO = UtbetalingsoppslagDTO(
                 ident = fnr.get(),
                 rolle = UtbetalingsoppslagDTO.Rolle.RETTIGHETSHAVER,
