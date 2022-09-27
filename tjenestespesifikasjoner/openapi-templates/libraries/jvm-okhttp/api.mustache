@@ -19,7 +19,7 @@ import {{packageName}}.infrastructure.collectionDelimiter
 import okhttp3.OkHttpClient
 
 {{#operations}}
-{{#nonPublicApi}}internal {{/nonPublicApi}}class {{classname}}(val client: ApiClient) {
+{{#nonPublicApi}}internal {{/nonPublicApi}}open class {{classname}}(val client: ApiClient) {
     constructor(basePath: kotlin.String, httpClient: OkHttpClient = OkHttpClient()): this(ApiClient(basePath, httpClient))
 
     {{#operation}}
