@@ -67,7 +67,7 @@
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
-        <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
+        <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingerService)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
         <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
