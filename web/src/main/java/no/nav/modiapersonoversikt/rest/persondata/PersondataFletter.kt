@@ -176,7 +176,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(
                     adresse = adresse.vegadresse!!,
                     sisteEndring = sisteEndring,
-                    gyldighetsPeriode = gyldighetsPeriode
+                    gyldighetsPeriode = gyldighetsPeriode,
                 )
 
                 adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(
@@ -208,7 +208,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     )
                     null
                 }
-            }
+            }?.copy(angittFlyttedato = adresse.angittFlyttedato?.value)
         }.sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
     }
 

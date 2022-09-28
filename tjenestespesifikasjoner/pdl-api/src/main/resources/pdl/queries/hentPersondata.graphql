@@ -231,6 +231,7 @@ query hentPersondata($ident: ID!){
             }
         }
         bostedsadresse {
+            angittFlyttedato
             gyldigFraOgMed
             gyldigTilOgMed
             metadata {

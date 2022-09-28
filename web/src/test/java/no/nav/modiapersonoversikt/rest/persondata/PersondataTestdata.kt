@@ -198,7 +198,8 @@ internal val adresse = HentPersondata.Bostedsadresse(
     vegadresse = null,
     matrikkeladresse = null,
     utenlandskAdresse = null,
-    ukjentBosted = null
+    ukjentBosted = null,
+    angittFlyttedato = null,
 )
 
 internal val utenlandskBankkonto = KontonummerService.Konto(
@@ -390,7 +391,8 @@ internal val bostedadresseData = HentPersondata.Bostedsadresse(
     utenlandskAdresse = null,
     ukjentBosted = null,
     folkeregistermetadata = null,
-    matrikkeladresse = null
+    matrikkeladresse = null,
+    angittFlyttedato = null,
 )
 
 internal fun gittDato(dato: String) = HentPersondata.Date(LocalDate.parse(dato))

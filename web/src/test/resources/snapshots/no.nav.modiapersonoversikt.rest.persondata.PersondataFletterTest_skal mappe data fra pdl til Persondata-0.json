@@ -8,6 +8,7 @@
     "alder" : 21,
     "bankkonto" : {
       "adresse" : {
+        "angittFlyttedato" : null,
         "coAdresse" : null,
         "gyldighetsPeriode" : null,
         "linje1" : "Utenlandsk bankkontoadresse",
@@ -30,6 +31,7 @@
       }
     },
     "bostedAdresse" : [ "java.util.Arrays$ArrayList", [ {
+      "angittFlyttedato" : null,
       "coAdresse" : null,
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-10-01",
@@ -45,6 +47,7 @@
         "tidspunkt" : "2020-07-01T10:00:00"
       }
     }, {
+      "angittFlyttedato" : null,
       "coAdresse" : null,
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",
@@ -62,6 +65,7 @@
     } ] ],
     "deltBosted" : [ "java.util.ArrayList", [ {
       "adresse" : {
+        "angittFlyttedato" : null,
         "coAdresse" : null,
         "gyldighetsPeriode" : null,
         "linje1" : "Vegadressestien 3",
@@ -89,6 +93,7 @@
         }
       },
       "adresse" : {
+        "angittFlyttedato" : null,
         "coAdresse" : null,
         "gyldighetsPeriode" : null,
         "linje1" : "Gateveien",
@@ -204,6 +209,7 @@
       "kode" : "M"
     } ] ],
     "kontaktAdresse" : [ "java.util.Arrays$ArrayList", [ {
+      "angittFlyttedato" : null,
       "coAdresse" : "C/O Adressenavn",
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",
@@ -219,6 +225,7 @@
         "tidspunkt" : "2020-07-01T10:00:00"
       }
     }, {
+      "angittFlyttedato" : null,
       "coAdresse" : "C/O Adressenavn",
       "gyldighetsPeriode" : null,
       "linje1" : "Vegadressestien 10",
@@ -257,6 +264,7 @@
           "ukedag" : "TIRSDAG"
         } ] ],
         "besoksadresse" : {
+          "angittFlyttedato" : null,
           "coAdresse" : null,
           "gyldighetsPeriode" : null,
           "linje1" : "Testgata 10",
@@ -276,6 +284,7 @@
       "mellomnavn" : "Ruud"
     } ] ],
     "oppholdsAdresse" : [ "java.util.ArrayList", [ {
+      "angittFlyttedato" : null,
       "coAdresse" : "Kari Hansen",
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",
