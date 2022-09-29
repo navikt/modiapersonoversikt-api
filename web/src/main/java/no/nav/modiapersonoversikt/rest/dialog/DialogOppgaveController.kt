@@ -119,7 +119,6 @@ data class OpprettOppgaveRequestDTO(
     val beskrivelse: String,
     val temaKode: String,
     val underkategoriKode: String?,
-    val brukerid: String,
     val oppgaveTypeKode: String,
     val prioritetKode: String
 )
@@ -130,7 +129,6 @@ data class OpprettSkjermetOppgaveDTO(
     val beskrivelse: String,
     val temaKode: String,
     val underkategoriKode: String?,
-    val brukerid: String,
     val oppgaveTypeKode: String,
     val prioritetKode: String
 )

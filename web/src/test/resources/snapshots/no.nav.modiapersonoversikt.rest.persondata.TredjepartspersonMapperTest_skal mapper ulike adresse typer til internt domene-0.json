@@ -5,6 +5,7 @@
   } ] ],
   "alder" : null,
   "bostedAdresse" : [ "java.util.ArrayList", [ {
+    "angittFlyttedato" : null,
     "coAdresse" : null,
     "gyldighetsPeriode" : null,
     "linje1" : "Ett sted i Aremark",

@@ -110,6 +110,7 @@ object Persondata {
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null,
+        val angittFlyttedato: LocalDate? = null,
         val sistEndret: SistEndret?,
         val gyldighetsPeriode: GyldighetsPeriode? = null
     ) {
@@ -118,6 +119,7 @@ object Persondata {
             linje1: List<String?>,
             linje2: List<String?>? = null,
             linje3: List<String?>? = null,
+            angittFlyttedato: LocalDate? = null,
             sistEndret: SistEndret?,
             gyldighetsPeriode: GyldighetsPeriode? = null
         ) : this(
@@ -125,6 +127,7 @@ object Persondata {
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
             linje3?.filterNotNull()?.joinToString(" "),
+            angittFlyttedato,
             sistEndret,
             gyldighetsPeriode
         )
