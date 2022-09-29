@@ -83,7 +83,8 @@ class ArbeidsrettetOppfolgingImplTest {
                 UnsafeSupplier {
                     ArbeidsrettetOppfolgingServiceImpl(
                         apiUrl = url,
-                        ldapService = ldapService
+                        ldapService = ldapService,
+                        mockk()
                     ).hentOppfolgingsinfo(Fnr(fnr))
                 }
             )
@@ -122,7 +123,8 @@ class ArbeidsrettetOppfolgingImplTest {
                 UnsafeSupplier {
                     ArbeidsrettetOppfolgingServiceImpl(
                         apiUrl = url,
-                        ldapService = ldapService
+                        ldapService = ldapService,
+                        mockk()
                     ).hentOppfolgingsinfo(Fnr(fnr))
                 }
             )

@@ -5,6 +5,7 @@ import no.nav.common.sts.NaisSystemUserTokenProvider
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
+import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -39,4 +40,10 @@ open class TokenExchangeProviderConfig {
         .builder()
         .withNaisDefaults()
         .buildMachineToMachineTokenClient()
+
+    @Bean
+    open fun oboflowTokenProvider(): OnBehalfOfTokenClient = AzureAdTokenClientBuilder
+        .builder()
+        .withNaisDefaults()
+        .buildOnBehalfOfTokenClient()
 }
