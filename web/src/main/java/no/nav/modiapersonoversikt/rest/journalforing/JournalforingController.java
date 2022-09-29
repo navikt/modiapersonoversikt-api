@@ -4,9 +4,8 @@ import kotlin.Pair;
 import no.nav.common.types.identer.Fnr;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
-import no.nav.modiapersonoversikt.service.saker.Sak;
-import no.nav.modiapersonoversikt.service.saker.SakerService;
-import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;
+import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak;
+import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person;
@@ -46,7 +45,7 @@ public class JournalforingController {
     }
 
     @PostMapping("/{traadId}")
-    public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody Sak sak, @RequestParam(value = "enhet", required = false) String enhet, HttpServletRequest request) {
+    public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody JournalforingSak sak, @RequestParam(value = "enhet", required = false) String enhet, HttpServletRequest request) {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr.of(fnr)))
                 .check(Policies.henvendelseTilhorerBruker(Fnr.of(fnr), traadId))
@@ -54,7 +53,7 @@ public class JournalforingController {
                     String valgtEnhet = hentValgtEnhet(enhet, request);
                     try {
                         journalforingApi.knyttTilSak(fnr, traadId, sak, valgtEnhet);
-                    } catch (EnhetIkkeSatt exception) {
+                    } catch (JournalforingApi.EnhetIkkeSatt exception) {
                         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FEILMELDING_UTEN_ENHET, exception);
                     } catch (Exception exception) {
                         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ukjent feil", exception);

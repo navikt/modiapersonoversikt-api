@@ -1,10 +1,9 @@
 package no.nav.modiapersonoversikt.rest;
 
-import no.nav.modiapersonoversikt.service.saker.Sak;
+import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak;
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingApi;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingController;
-import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ class JournalforingControllerTest {
         JournalforingController journalforingController = new JournalforingController(mock(JournalforingApi.class), TilgangskontrollMock.get());
 
         ResponseEntity<Void> response = AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
+                journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null, mockHttpRequest())
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -48,7 +47,7 @@ class JournalforingControllerTest {
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                        journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
+                        journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null, mockHttpRequest())
                 )
         );
 
@@ -59,12 +58,12 @@ class JournalforingControllerTest {
     @DisplayName("Forespørsler uten enhet kaster 500 Internal Server Error med message satt i body")
     void journalforingUtenEnhetKasterFeil() {
         JournalforingApi mock = mock(JournalforingApi.class);
-        doThrow(EnhetIkkeSatt.class).when(mock).knyttTilSak(any(), any(), any(), any());
+        doThrow(JournalforingApi.EnhetIkkeSatt.class).when(mock).knyttTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                        journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
+                        journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null, mockHttpRequest())
                 )
         );
 
