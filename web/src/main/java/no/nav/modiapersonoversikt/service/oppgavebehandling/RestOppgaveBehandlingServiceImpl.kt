@@ -152,6 +152,7 @@ class RestOppgaveBehandlingServiceImpl(
         )
     }
 
+    @Deprecated("Deprecated in Java")
     override fun finnTildelteOppgaverIGsak(): MutableList<Oppgave> {
         val ident: String = AuthContextUtils.requireIdent()
         val correlationId = correlationId()
