@@ -16,9 +16,9 @@ public class UnleashServiceImpl implements UnleashService {
 
     private static final Logger log = getLogger(UnleashServiceImpl.class);
 
-    private Unleash defaultUnleash;
-    private ToggleFetcher toggleFetcher;
-    private ConsumerPingable pingDelegate;
+    private final Unleash defaultUnleash;
+    private final ToggleFetcher toggleFetcher;
+    private final ConsumerPingable pingDelegate;
 
     String api;
 

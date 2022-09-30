@@ -36,8 +36,7 @@ public abstract class CacheTest {
 
         @Override
         public boolean matches(Object o) {
-            if (o instanceof String) {
-                String key = (String) o;
+            if (o instanceof String key) {
                 return Arrays.stream(mustContain).allMatch(key::contains);
             } else {
                 return false;

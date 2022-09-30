@@ -692,8 +692,8 @@ class RestOppgaveBehandlingServiceImplTest {
         val ferdig = withIdent("Z999999") { oppgaveBehandlingService.oppgaveErFerdigstilt("1234") }
         val ikkeferdig = withIdent("Z999999") { oppgaveBehandlingService.oppgaveErFerdigstilt("1234") }
 
-        assertThat(ferdig).isTrue()
-        assertThat(ikkeferdig).isFalse()
+        assertThat(ferdig).isTrue
+        assertThat(ikkeferdig).isFalse
 
         verifySequence {
             apiClient.hentOppgave(any(), 1234)

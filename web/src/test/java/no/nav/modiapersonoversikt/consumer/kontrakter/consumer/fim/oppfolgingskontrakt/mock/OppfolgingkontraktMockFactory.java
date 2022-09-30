@@ -37,7 +37,7 @@ public final class OppfolgingkontraktMockFactory {
             return filterByDates(createOppfoelgingskontrakterDonald(), fra, til);
         }
 
-        return Arrays.asList(createOppfoelgingskontrakt());
+        return List.of(createOppfoelgingskontrakt());
     }
 
     private static List<WSSYFOkontrakt> filterByDates(List<WSSYFOkontrakt> oppfoelgingskontrakterDonald, Date fra, Date til) {
@@ -93,7 +93,7 @@ public final class OppfolgingkontraktMockFactory {
                 createSYFOPunkt(DateUtils.getDate(2012, 8, 1), true, "Registrert", "26-ukers sykmelding: Dialogmøte 2")
         ));
 
-        return Arrays.asList(kontrakt1);
+        return List.of(kontrakt1);
     }
 
     public static WSOppfoelgingskontrakt createOppfoelgingskontrakt() {

@@ -148,7 +148,7 @@ open class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : 
         return chain.proceed(builder.build())
     }
 }
-class XCorrelationIdInterceptor() : HeadersInterceptor({
+class XCorrelationIdInterceptor : HeadersInterceptor({
     mapOf("X-Correlation-ID" to getCallId())
 })
 class AuthorizationInterceptor(val tokenProvider: () -> String) : HeadersInterceptor({

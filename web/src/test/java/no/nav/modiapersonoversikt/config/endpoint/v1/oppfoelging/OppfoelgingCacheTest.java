@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -36,7 +37,7 @@ class OppfoelgingCacheTest extends CacheTest {
         reset(unwrapped);
 
         OppfolgingskontraktResponse response1 = new OppfolgingskontraktResponse();
-        response1.setSyfoPunkter(Arrays.asList(new SYFOPunkt()));
+        response1.setSyfoPunkter(List.of(new SYFOPunkt()));
         OppfolgingskontraktResponse response2 = new OppfolgingskontraktResponse();
         response2.setSyfoPunkter(Arrays.asList(new SYFOPunkt(), new SYFOPunkt()));
 

@@ -24,7 +24,7 @@ class UnleashServiceImplTest {
     @Mock
     private Unleash unleash;
 
-    private String api = "www.unleashurl.com";
+    private final String api = "www.unleashurl.com";
     private UnleashService unleashService;
 
     @BeforeEach

@@ -88,7 +88,7 @@ class ArbeidsrettetOppfolgingImplTest {
                 }
             )
 
-            assertThat(oppfolgingsinfo.erUnderOppfolging).isTrue()
+            assertThat(oppfolgingsinfo.erUnderOppfolging).isTrue
             assertThat(oppfolgingsinfo.veileder?.ident).isEqualTo("ident")
             assertThat(oppfolgingsinfo.veileder?.fornavn).isEqualTo("fornavn")
             assertThat(oppfolgingsinfo.veileder?.etternavn).isEqualTo("etternavn")
@@ -128,7 +128,7 @@ class ArbeidsrettetOppfolgingImplTest {
             )
 
             verify { ldapService wasNot Called }
-            assertThat(oppfolgingsinfo.erUnderOppfolging).isFalse()
+            assertThat(oppfolgingsinfo.erUnderOppfolging).isFalse
             assertThat(oppfolgingsinfo.veileder).isNull()
             assertThat(oppfolgingsinfo.oppfolgingsenhet).isNull()
         }

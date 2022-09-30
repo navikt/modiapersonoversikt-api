@@ -96,7 +96,7 @@ internal class EnhetligKodeverkServiceImplTest {
 
         EnhetligKodeverkServiceImpl(providers, timer)
 
-        assertThat(dateSlot.isCaptured).isTrue()
+        assertThat(dateSlot.isCaptured).isTrue
         assertThat(dateSlot.captured).hasHourOfDay(1)
 
         val forventetDato = if (dateSlot.captured.toInstant().isBefore(Instant.now())) {
@@ -106,7 +106,7 @@ internal class EnhetligKodeverkServiceImplTest {
         }
         assertThat(dateSlot.captured).hasDayOfMonth(forventetDato)
 
-        assertThat(periodeSlot.isCaptured).isTrue()
+        assertThat(periodeSlot.isCaptured).isTrue
         assertThat(periodeSlot.captured).isEqualTo(24 * 3600 * 1000)
     }
 
@@ -125,7 +125,7 @@ internal class EnhetligKodeverkServiceImplTest {
         clock.plusDays(1).plusHours(1)
 
         val result = service.ping().check.checkHealth()
-        assertThat(result.isUnhealthy).isTrue()
+        assertThat(result.isUnhealthy).isTrue
         assertThat(result.errorMessage).hasValueSatisfying { errorMessage ->
             assertThat(errorMessage).contains(kodeverk.navn)
             assertThat(errorMessage).contains("SF_TEMAGRUPPER")

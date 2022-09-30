@@ -22,7 +22,7 @@ public class PleiepengerMapper extends Mapper {
     private static final String ORGNUMMER_MANGLER = "000000000";
     private static final String KONTONUMMER_MANGLER = "0";
     private static final String HAR_REFUSJON = "J";
-    private VedtaksMapper vedtakMapper = new VedtaksMapper();
+    private final VedtaksMapper vedtakMapper = new VedtaksMapper();
 
     public PleiepengerMapper() {
         registrerRequestMapper();

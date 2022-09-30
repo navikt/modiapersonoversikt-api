@@ -22,7 +22,7 @@ import static java.util.Optional.ofNullable;
  * Vår standardimplementasjonen av den eksterne tjenesten for foreldrepenger.
  */
 public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
-    private static Audit.AuditDescriptor<FimPerson> auditLogger = Audit.describe(
+    private static final Audit.AuditDescriptor<FimPerson> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Foreldrepenger,
             (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(FimPerson::getIdent).orElse("--")))

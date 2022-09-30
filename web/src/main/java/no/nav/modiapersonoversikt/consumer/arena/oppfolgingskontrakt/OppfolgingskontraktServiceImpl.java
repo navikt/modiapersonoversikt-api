@@ -21,7 +21,7 @@ import static java.util.Optional.ofNullable;
  * Vår standardimplementasjonen av den eksterne tjenesten for oppfolgingskontraker.
  */
 public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktService {
-    private static Audit.AuditDescriptor<WSHentOppfoelgingskontraktListeRequest> auditLogger = Audit.describe(
+    private static final Audit.AuditDescriptor<WSHentOppfoelgingskontraktListeRequest> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Kontrakter,
             (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(WSHentOppfoelgingskontraktListeRequest::getPersonidentifikator).orElse("--")))
@@ -29,7 +29,7 @@ public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktServic
 
     private OppfoelgingPortType oppfolgingskontraktService = null;
     private OppfolgingskontraktMapper mapper = null;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public OppfolgingskontraktResponse hentOppfolgingskontrakter(OppfolgingskontraktRequest request) {

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * Mapperklasse
  */
 public class ForeldrepengerMapper {
-    private static Logger logger = LoggerFactory.getLogger(ForeldrepengerMapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(ForeldrepengerMapper.class);
     private static ForeldrepengerMapper instance = null;
 
     private ForeldrepengerMapper() {

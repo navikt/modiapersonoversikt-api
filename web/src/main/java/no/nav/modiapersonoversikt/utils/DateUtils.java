@@ -17,7 +17,7 @@ import java.util.GregorianCalendar;
  *
  */
 public class DateUtils {
-    private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
 
     public static boolean datoInside(XMLGregorianCalendar datoKravMottatt, Date cutFrom, Date cutTo) {

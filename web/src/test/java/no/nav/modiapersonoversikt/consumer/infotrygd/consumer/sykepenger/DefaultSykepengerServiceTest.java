@@ -23,8 +23,8 @@ public class DefaultSykepengerServiceTest {
     private static FimHentSykepengerListeResponse rawResponse;
     private static SykepengerMockFactory mockFactory;
     private static SykepengerMapper mapper;
-    private static LocalDate from = LocalDate.now().minusMonths(2);
-    private static LocalDate to = LocalDate.now();
+    private static final LocalDate from = LocalDate.now().minusMonths(2);
+    private static final LocalDate to = LocalDate.now();
 
     private SykepengerServiceBi service;
     @Mock

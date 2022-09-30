@@ -13,8 +13,8 @@ import static org.mockito.Mockito.when;
 
 class ByEnhetStrategyTest {
 
-    private ByEnhetStrategy byEnhetStrategy = new ByEnhetStrategy();
-    private UnleashContext context = mock(UnleashContext.class);
+    private final ByEnhetStrategy byEnhetStrategy = new ByEnhetStrategy();
+    private final UnleashContext context = mock(UnleashContext.class);
 
     @Test
     void enhetTest() {

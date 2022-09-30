@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.legacy.api.domain.oppgave
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveMappingHelpers
 
-public fun OppgaveJsonDTO.toPostOppgaveResponseJsonDTO(): PostOppgaveResponseJsonDTO =
+fun OppgaveJsonDTO.toPostOppgaveResponseJsonDTO(): PostOppgaveResponseJsonDTO =
     PostOppgaveResponseJsonDTO(
         tildeltEnhetsnr = this.tildeltEnhetsnr,
         oppgavetype = this.oppgavetype,
@@ -41,7 +41,7 @@ public fun OppgaveJsonDTO.toPostOppgaveResponseJsonDTO(): PostOppgaveResponseJso
         OppgaveMappingHelpers.convertEnumToPostResp(this.prioritet)
     )
 
-public fun OppgaveJsonDTO.toGetOppgaveResponseJsonDTO(): GetOppgaveResponseJsonDTO =
+fun OppgaveJsonDTO.toGetOppgaveResponseJsonDTO(): GetOppgaveResponseJsonDTO =
     GetOppgaveResponseJsonDTO(
         tildeltEnhetsnr = this.tildeltEnhetsnr,
         oppgavetype = this.oppgavetype,
@@ -79,7 +79,7 @@ public fun OppgaveJsonDTO.toGetOppgaveResponseJsonDTO(): GetOppgaveResponseJsonD
         OppgaveMappingHelpers.convertEnumToGetResp(this.prioritet)
     )
 
-public fun OppgaveJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
+fun OppgaveJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
     PutOppgaveResponseJsonDTO(
         tildeltEnhetsnr = this.tildeltEnhetsnr,
         oppgavetype = this.oppgavetype,
@@ -117,7 +117,7 @@ public fun OppgaveJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonD
         OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet)
     )
 
-public fun PutOppgaveRequestJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
+fun PutOppgaveRequestJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
     PutOppgaveResponseJsonDTO(
         tildeltEnhetsnr = this.tildeltEnhetsnr,
         oppgavetype = this.oppgavetype,
