@@ -69,7 +69,7 @@ class DialogOppgaveController @Autowired constructor(
         return arbeidsdagerFraDatoJava(dagerFrist, LocalDate.now())
     }
 
-    fun OpprettOppgaveRequestDTO.fromDTO(): OpprettOppgaveRequest = OpprettOppgaveRequest(
+    private fun OpprettOppgaveRequestDTO.fromDTO(): OpprettOppgaveRequest = OpprettOppgaveRequest(
         fnr = fnr,
         behandlesAvApplikasjon = "FS22",
         beskrivelse = beskrivelse,
@@ -89,7 +89,7 @@ class DialogOppgaveController @Autowired constructor(
 
     )
 
-    fun OpprettSkjermetOppgaveDTO.fromDTO(): OpprettSkjermetOppgaveRequest = OpprettSkjermetOppgaveRequest(
+    private fun OpprettSkjermetOppgaveDTO.fromDTO(): OpprettSkjermetOppgaveRequest = OpprettSkjermetOppgaveRequest(
         fnr = fnr,
         behandlesAvApplikasjon = "FS22",
         beskrivelse = beskrivelse,
@@ -103,7 +103,7 @@ class DialogOppgaveController @Autowired constructor(
         oppgaveFrist = kalkulerFrist(temaKode, oppgaveTypeKode)
     )
 
-    fun OpprettOppgaveResponse.toDTO(): OpprettOppgaveResponseDTO = OpprettOppgaveResponseDTO(
+    private fun OpprettOppgaveResponse.toDTO(): OpprettOppgaveResponseDTO = OpprettOppgaveResponseDTO(
         id = id
     )
 }

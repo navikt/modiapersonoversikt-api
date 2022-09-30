@@ -40,7 +40,7 @@ class ByEnvironmentStrategyTest {
 
     private void assertEnvironment(String actualEnvironment, String toggleParameter, boolean expectedStatus){
         setTemporaryProperty(ENVIRONMENT_PROPERTY, actualEnvironment, () -> {
-            HashMap<String, String > params = new HashMap<String, String>() {{
+            HashMap<String, String > params = new HashMap<>() {{
                 put("miljø", toggleParameter);
             }};
             assertThat(strategy.isEnabled(params), is(expectedStatus));

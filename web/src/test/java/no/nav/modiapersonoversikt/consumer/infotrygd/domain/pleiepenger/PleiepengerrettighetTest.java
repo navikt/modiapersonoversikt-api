@@ -55,7 +55,7 @@ public class PleiepengerrettighetTest {
     private static Pleiepengeperiode lagPleiepengeperiode(Vedtak vedtak) {
         return new Pleiepengeperiode()
                 .withArbeidskategori(ARBEIDSKATEGORI)
-                .withFraOgMed(vedtak.getPeriode().fraOgMed)
+                .withFraOgMed(vedtak.getPeriode().fraOgMed())
                 .withVedtakListe(singletonList(vedtak));
     }
 

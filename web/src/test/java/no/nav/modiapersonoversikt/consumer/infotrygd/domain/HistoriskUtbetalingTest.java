@@ -30,7 +30,7 @@ public class HistoriskUtbetalingTest {
         historiskUtbetaling.setNettobelop(HISTORTISK_UTBETALING_NETTOBELOP);
         historiskUtbetaling.setSkattetrekk(HISTORTISK_UTBETALING_SKATTETREKK);
         historiskUtbetaling.setUtbetalingsdato(UTBETALINGSDATO);
-        historiskUtbetaling.setTrekk(new ArrayList<Kreditortrekk>());
+        historiskUtbetaling.setTrekk(new ArrayList<>());
         historiskUtbetaling.getTrekk().add(new Kreditortrekk(HISTORTISK_UTBETALING_KREDITORTREKK_NAVN, HISTORTISK_UTBETALING_KREDITORTREKK_BELOP));
         historiskUtbetaling.setArbeidsgiverNavn(ARBEIDSGIVER_NAVN);
         historiskUtbetaling.setArbeidsgiverOrgNr(ARBEIDSGIVER_ORGNR);

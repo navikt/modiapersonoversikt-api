@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class AxsysConfig {
-    val url: String = EnvironmentUtils.getRequiredProperty("AXSYS_URL")
-    val scope = DownstreamApi(
+    private val url: String = EnvironmentUtils.getRequiredProperty("AXSYS_URL")
+    private val scope = DownstreamApi(
         application = "axsys",
         namespace = "org",
         cluster = EnvironmentUtils.getRequiredProperty("AXSYS_CLUSTER")
     )
-    val httpClient: OkHttpClient = RestClient.baseClient()
+    private val httpClient: OkHttpClient = RestClient.baseClient()
 
     @Autowired
     lateinit var tokenProvider: MachineToMachineTokenClient

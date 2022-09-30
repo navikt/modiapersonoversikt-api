@@ -21,7 +21,7 @@ object TilgangTilBrukerMedSkjermingPolicy : Kabac.Policy {
         }
         val erSkjermet = ctx.getValue(BrukersSkjermingPip)
 
-        return if (erSkjermet == true) {
+        return if (erSkjermet) {
             Decision.Deny("Veileder har ikke tilgang til skjermet person", DenyCauseCode.FP3_EGEN_ANSATT)
         } else {
             Decision.NotApplicable()

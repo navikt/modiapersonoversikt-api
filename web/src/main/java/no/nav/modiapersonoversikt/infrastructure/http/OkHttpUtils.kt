@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.infrastructure.http
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.joda.JodaModule
@@ -17,7 +18,7 @@ import org.slf4j.MDC
 import java.util.*
 
 object OkHttpUtils {
-    val objectMapper = jacksonObjectMapper()
+    val objectMapper: ObjectMapper = jacksonObjectMapper()
         .registerModule(JodaModule())
         .registerModule(JavaTimeModule())
         .registerModule(Jdk8Module())

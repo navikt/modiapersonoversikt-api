@@ -18,7 +18,7 @@ interface OrganisasjonV1Client {
     fun hentNokkelInfo(orgnummer: String): OrganisasjonResponse?
 }
 
-class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequiredProperty("EREG_ENDPOINTURL")) :
+class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredProperty("EREG_ENDPOINTURL")) :
     OrganisasjonV1Client {
     private val url = baseUrl + "api/v1/organisasjon/"
     private val log = LoggerFactory.getLogger(OrganisasjonV1ClientImpl::class.java)
@@ -53,12 +53,12 @@ class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequire
                 "body" to body
             )
 
-            if (response.code() in 200..299 && body != null) {
+            return if (response.code() in 200..299 && body != null) {
                 TjenestekallLogger.info("Ereg hent orgnavn-response: $uuid", tjenestekallInfo)
-                return objectMapper.readValue(body)
+                objectMapper.readValue(body)
             } else {
                 TjenestekallLogger.error("Ereg hent orgnavn-response-error: $uuid", tjenestekallInfo)
-                return null
+                null
             }
         } catch (exception: Exception) {
             log.error("Feilet ved GET kall mot ereg  (ID: $uuid)", exception)

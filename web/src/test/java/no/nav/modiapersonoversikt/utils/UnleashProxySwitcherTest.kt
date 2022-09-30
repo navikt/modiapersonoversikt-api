@@ -30,7 +30,7 @@ internal class UnleashProxySwitcherTest {
         )
 
         assertDoesNotThrow {
-            proxy.equals("anything")
+            assertNotNull(proxy.equals("anything"))
         }
     }
 
@@ -50,8 +50,7 @@ internal class UnleashProxySwitcherTest {
             .build()
 
         val unleash = DefaultUnleash(unleashConfig)
-        val unleashService = UnleashServiceImpl(null, unleash, null)
-        return unleashService
+        return UnleashServiceImpl(null, unleash, null)
     }
 
     private fun createInstances(): Pair<Dummy, Dummy> {

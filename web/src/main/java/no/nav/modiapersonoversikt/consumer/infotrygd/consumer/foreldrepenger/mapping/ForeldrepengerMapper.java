@@ -278,7 +278,7 @@ public class ForeldrepengerMapper {
                     .newInstance()
                     .newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
         } catch (DatatypeConfigurationException e) {
-            logger.warn("DatatypeConfigurationException", e.getMessage());
+            logger.warn("DatatypeConfigurationException", e);
             throw new RuntimeException("Could not map to XMLGregorianCalendar", e);
         }
     }

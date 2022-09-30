@@ -47,7 +47,7 @@ internal class SykepengerUttrekkTest {
 
         val sykmeldingsperiode = unwrapResponse()
 
-        assertEquals(STANS, sykmeldingsperiode.get("stansårsak"))
+        assertEquals(STANS, sykmeldingsperiode["stansårsak"])
     }
 
     @Test
@@ -56,12 +56,12 @@ internal class SykepengerUttrekkTest {
 
         val sykmeldingsperiode = unwrapResponse()
 
-        assertEquals("2000-02-01", sykmeldingsperiode.get("sykmeldtFom"))
+        assertEquals("2000-02-01", sykmeldingsperiode["sykmeldtFom"])
     }
 
     private fun unwrapResponse(): Map<String, Any?> {
         val response = uttrekk.hent(FNR)
-        val perioderListe = response.get("sykepenger") as List<*>
+        val perioderListe = response["sykepenger"] as List<*>
         return perioderListe[0] as Map<String, Any?>
     }
 

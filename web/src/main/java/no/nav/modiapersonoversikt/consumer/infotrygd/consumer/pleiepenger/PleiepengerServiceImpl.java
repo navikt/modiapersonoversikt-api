@@ -71,12 +71,12 @@ public class PleiepengerServiceImpl implements PleiepengerService {
     }
 
     private PleiepengerListeResponse handterSikkerhetsbegresning(HentPleiepengerettighetSikkerhetsbegrensning e) {
-        logger.warn("HentPleiepengerListeSikkerhetsbegrensning ved kall på hentPleiepengerListe", e.getMessage());
+        logger.warn("HentPleiepengerListeSikkerhetsbegrensning ved kall på hentPleiepengerListe", e);
         throw new RuntimeException(e.getMessage(), e);
     }
 
     private PleiepengerListeResponse handterUgyldigIdent(HentPleiepengerettighetUgyldigIdentNr e) {
-        logger.warn("Ugyldig identnummer ved kall på hentPleiepengerListe", e.getMessage());
+        logger.warn("Ugyldig identnummer ved kall på hentPleiepengerListe", e);
         throw new RuntimeException("Ugyldig identnummer ved kall på hentPleiepengerListe", e);
     }
 

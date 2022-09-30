@@ -13,9 +13,9 @@ import java.time.LocalDate
 
 private const val FNR = "10108000398"
 private const val EPOST = "test@testesen.com"
-private val MOBILTELEFON = "12345678"
-private val SIST_OPPDATERT = LocalDate.of(2012, 12, 27)
+private const val MOBILTELEFON = "12345678"
 private const val RESERVASJON = "Reservert"
+private val SIST_OPPDATERT = LocalDate.of(2012, 12, 27)
 
 class KontaktinformasjonControllerTest {
 
@@ -46,8 +46,8 @@ class KontaktinformasjonControllerTest {
     @Test
     fun `Henter informasjon fra Digital Kontaktinformasjon registeret`() {
         val response = controller.hentKontaktinformasjon(FNR)
-        val epost = response["epost"] as Map<String, String>
-        val mobiltelefon = response["mobiltelefon"] as Map<String, String>
+        val epost = response["epost"] as Map<String, Any?>
+        val mobiltelefon = response["mobiltelefon"] as Map<String, Any?>
 
         assertAll(
             "Henter epost",

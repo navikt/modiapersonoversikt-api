@@ -30,8 +30,8 @@ object Scientist {
             val isFailure: Boolean = value is Failure
 
             companion object {
-                fun <T> success(value: T): Try<T> = Try(value)
-                fun <T> failure(exception: Throwable): Try<T> = Try(Failure(exception))
+                private fun <T> success(value: T): Try<T> = Try(value)
+                private fun <T> failure(exception: Throwable): Try<T> = Try(Failure(exception))
                 fun <T> of(block: () -> T): Try<T> = try {
                     success(block())
                 } catch (e: Throwable) {
@@ -64,7 +64,7 @@ object Scientist {
             return Random.nextDouble() < rate
         }
     }
-    class UnleashRate(private val unleash: UnleashService, val feature: Feature) : ExperimentRate {
+    class UnleashRate(private val unleash: UnleashService, private val feature: Feature) : ExperimentRate {
         override fun shouldRunExperiment(): Boolean {
             return unleash.isEnabled(feature)
         }

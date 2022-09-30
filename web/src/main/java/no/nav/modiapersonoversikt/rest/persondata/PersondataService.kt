@@ -37,8 +37,8 @@ class PersondataServiceImpl(
     private val policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
-    val persondataFletter = PersondataFletter(kodeverk)
-    val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
+    private val persondataFletter = PersondataFletter(kodeverk)
+    private val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
 
     override fun hentPerson(personIdent: String): Persondata.Data {
         val persondataResult = pdl.hentPersondata(personIdent)
@@ -122,11 +122,11 @@ class PersondataServiceImpl(
         return PersondataResult.of(geografiskeTilknytning)
     }
 
-    val GT_SOM_BURDE_HA_BYDEL = listOf("0301", "4601", "5001", "1103")
-    fun erGyldigGT(gt: String?): Boolean {
+    private val gtSomBurdeHaByDel = listOf("0301", "4601", "5001", "1103")
+    private fun erGyldigGT(gt: String?): Boolean {
         return when {
             gt == null -> false
-            GT_SOM_BURDE_HA_BYDEL.contains(gt) -> false
+            gtSomBurdeHaByDel.contains(gt) -> false
             else -> true
         }
     }

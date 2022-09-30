@@ -35,7 +35,6 @@ public class KreditortrekkTest {
         kreditortrekk2.setBelop(BELOP);
         Object emptyObject = new Object();
 
-        assert(kreditortrekk.equals(kreditortrekk));
         assertNotEquals(kreditortrekk, kreditortrekk2);
         assertNotEquals(null, kreditortrekk);
         kreditortrekk2.setKreditorsNavn(KREDITORSNAVN);

@@ -11,7 +11,7 @@ public class TjenesteResultatWrapper {
     public Optional<Object> result;
     public Feilmelding feilmelding;
     public Integer statuskode;
-    public Map ekstraFeilInfo;
+    public Map<Object, Object> ekstraFeilInfo;
 
     public TjenesteResultatWrapper(Object pdfSomBytes) {
         this.result = ofNullable(pdfSomBytes);
@@ -25,11 +25,11 @@ public class TjenesteResultatWrapper {
         this(feilmelding, statuskode, new HashMap<>());
     }
 
-    public TjenesteResultatWrapper(Feilmelding feilmelding, Map ekstraFeilInfo ) {
+    public TjenesteResultatWrapper(Feilmelding feilmelding, Map<Object, Object> ekstraFeilInfo ) {
         this(feilmelding, null, ekstraFeilInfo);
     }
 
-    public TjenesteResultatWrapper(Feilmelding feilmelding, Integer statuskode, Map ekstraFeilInfo) {
+    public TjenesteResultatWrapper(Feilmelding feilmelding, Integer statuskode, Map<Object, Object> ekstraFeilInfo) {
         this.feilmelding = feilmelding;
         this.ekstraFeilInfo = ekstraFeilInfo;
         this.statuskode = statuskode;

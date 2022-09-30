@@ -498,7 +498,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         gyldighetsPeriode = gyldighetsPeriode
     )
 
-    fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.Enhet? {
+    private fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.Enhet? {
         return navEnhet
             .map {
                 if (it == null) {

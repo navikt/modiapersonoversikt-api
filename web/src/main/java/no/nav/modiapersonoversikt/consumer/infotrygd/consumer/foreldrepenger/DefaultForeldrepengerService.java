@@ -42,7 +42,7 @@ public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
                 auditLogger.log(rawResponse.getForeldrepengerettighet().getForelder());
             }
         } catch (HentForeldrepengerettighetSikkerhetsbegrensning ex) {
-            logger.warn("HentForeldrepengerListeSikkerhetsbegrensning ved kall på hentForeldrepengerListe", ex.getMessage());
+            logger.warn("HentForeldrepengerListeSikkerhetsbegrensning ved kall på hentForeldrepengerListe", ex);
             auditLogger.denied("Årsak: " + ex.getMessage());
             throw new RuntimeException(ex.getMessage(), ex);
         }
