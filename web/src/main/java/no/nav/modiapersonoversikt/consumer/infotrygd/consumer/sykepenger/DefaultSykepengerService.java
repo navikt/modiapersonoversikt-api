@@ -42,7 +42,7 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
                 auditLogger.log(rawResponse.getSykmeldingsperiodeListe().get(0).getSykmeldt());
             }
         } catch (HentSykepengerListeSikkerhetsbegrensning ex) {
-            logger.warn("HentSykepengerListeSikkerhetsbegrensning ved kall på hentSykepengerListe", ex.getMessage());
+            logger.warn("HentSykepengerListeSikkerhetsbegrensning ved kall på hentSykepengerListe", ex);
             auditLogger.denied("Årsak: " + ex.getMessage());
             throw new RuntimeException(ex.getMessage(), ex);
         }

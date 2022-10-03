@@ -147,7 +147,7 @@ public class Foreldrepengeperiode implements Serializable {
 
     public List<HistoriskUtbetaling> getHistoriskeUtbetalinger() {
         if (historiskeUtbetalinger == null) {
-            historiskeUtbetalinger = new ArrayList<HistoriskUtbetaling>();
+            historiskeUtbetalinger = new ArrayList<>();
         }
         return this.historiskeUtbetalinger;
     }

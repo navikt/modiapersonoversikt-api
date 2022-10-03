@@ -41,7 +41,7 @@ public class YtelseskontraktServiceImpl implements YtelseskontraktService {
                 auditLogger.log(rawRequest);
             }
         } catch (HentYtelseskontraktListeSikkerhetsbegrensning hentYtelseskontraktBegrensning) {
-            logger.warn("HentYtelseskontraktListeSikkerhetsbegrensning ved kall på hentYtelseskontraktListe", hentYtelseskontraktBegrensning.getMessage());
+            logger.warn("HentYtelseskontraktListeSikkerhetsbegrensning ved kall på hentYtelseskontraktListe", hentYtelseskontraktBegrensning);
             auditLogger.denied("Årsak: " + hentYtelseskontraktBegrensning.getMessage());
             throw new RuntimeException(hentYtelseskontraktBegrensning.getMessage(), hentYtelseskontraktBegrensning);
         }

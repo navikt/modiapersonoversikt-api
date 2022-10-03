@@ -12,14 +12,14 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 @Suppress("FoldInitializerAndIfToElvis")
 object GeografiskTilgangPolicy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(GeografiskTilgangPolicy)
-    val nasjonalTilgangRoller = RolleListe(
+    private val nasjonalTilgangRoller = RolleListe(
         "0000-ga-gosys_nasjonal",
         "0000-ga-gosys_utvidbar_til_nasjonal",
         "0000-ga-pensjon_nasjonal_u_logg",
         "0000-ga-pensjon_nasjonal_m_logg"
     )
 
-    val regionalTilgangRoller = RolleListe(
+    private val regionalTilgangRoller = RolleListe(
         "0000-ga-gosys_regional",
         "0000-ga-gosys_utvidbar_til_regional",
     )

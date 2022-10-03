@@ -28,7 +28,7 @@ internal class DkifServiceRestImplTest {
         )
     )
 
-    private val TEST_SUBJECT = AuthContext(
+    private val testSubject = AuthContext(
         UserRole.INTERN,
         PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
     )
@@ -67,7 +67,7 @@ internal class DkifServiceRestImplTest {
             stub = getWithBody(statusCode = 200, body = dkifJsonResponse),
             verify = { }
         ) { url ->
-            AuthContextUtils.withContext(TEST_SUBJECT) {
+            AuthContextUtils.withContext(testSubject) {
                 val dkifRestService = DkifServiceRestImpl(url)
                 val response = dkifRestService.hentDigitalKontaktinformasjon("06073000250")
                 MatcherAssert.assertThat(response.personident, Is.`is`("06073000250"))
@@ -83,7 +83,7 @@ internal class DkifServiceRestImplTest {
             stub = getWithBody(statusCode = 200, body = dkifJsonResponse),
             verify = { }
         ) { url ->
-            AuthContextUtils.withContext(TEST_SUBJECT) {
+            AuthContextUtils.withContext(testSubject) {
                 val dkifRestService = DkifServiceRestImpl(url)
                 val response = dkifRestService.hentDigitalKontaktinformasjon("10108000123")
                 MatcherAssert.assertThat(response.personident, IsNull())
@@ -100,7 +100,7 @@ internal class DkifServiceRestImplTest {
             stub = getWithBody(statusCode = 500, body = null),
             verify = { }
         ) { url ->
-            AuthContextUtils.withContext(TEST_SUBJECT) {
+            AuthContextUtils.withContext(testSubject) {
                 assertThrows<ServerException> {
                     val dkifRestService = DkifServiceRestImpl(url)
                     dkifRestService.hentDigitalKontaktinformasjon("10108000123")

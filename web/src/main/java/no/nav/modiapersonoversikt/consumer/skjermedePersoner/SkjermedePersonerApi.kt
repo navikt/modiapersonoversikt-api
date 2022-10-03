@@ -20,7 +20,7 @@ class SkjermedePersonerApiImpl(
     private val client: OkHttpClient,
     private val cache: Cache<Fnr, Boolean> = CacheUtils.createCache(),
 ) : SkjermedePersonerApi {
-    val skjermingPipApi = SkjermingPipApi(url, client)
+    private val skjermingPipApi = SkjermingPipApi(url, client)
 
     override fun erSkjermetPerson(fnr: Fnr): Boolean {
         return requireNotNull(

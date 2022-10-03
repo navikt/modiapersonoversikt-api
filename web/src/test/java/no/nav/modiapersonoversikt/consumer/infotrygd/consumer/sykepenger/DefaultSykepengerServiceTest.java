@@ -21,7 +21,6 @@ public class DefaultSykepengerServiceTest {
     private static final String IDENT = "11223344556";
     private static SykepengerRequest request;
     private static FimHentSykepengerListeResponse rawResponse;
-    private static SykepengerMockFactory mockFactory;
     private static SykepengerMapper mapper;
     private static final LocalDate from = LocalDate.now().minusMonths(2);
     private static final LocalDate to = LocalDate.now();
@@ -33,14 +32,13 @@ public class DefaultSykepengerServiceTest {
     @BeforeClass
     public static void setUpOnce() {
         mapper = SykepengerMapper.getInstance();
-        mockFactory = new SykepengerMockFactory();
         request = new SykepengerRequest(from, IDENT, to);
         rawResponse = SykepengerMockFactory.createFimHentSykepengerResponse();
     }
 
     @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this).close();
         service = new DefaultSykepengerService();
         ((DefaultSykepengerService)service).setMapper(mapper);
         ((DefaultSykepengerService)service).setSykepengerService(portType);

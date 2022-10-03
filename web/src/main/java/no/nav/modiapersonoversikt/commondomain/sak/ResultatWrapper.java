@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ResultatWrapper<T> {
-    public T resultat;
-    public Set<Baksystem> feilendeSystemer;
+    public final T resultat;
+    public final Set<Baksystem> feilendeSystemer;
 
     public ResultatWrapper(T resultat) {
         this.resultat = resultat;

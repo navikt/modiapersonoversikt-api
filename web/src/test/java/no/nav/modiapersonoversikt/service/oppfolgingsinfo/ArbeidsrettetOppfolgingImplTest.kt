@@ -25,7 +25,8 @@ import org.junit.jupiter.api.Test
 
 class ArbeidsrettetOppfolgingImplTest {
     val fnr = "12345678910"
-    private val TEST_SUBJECT = AuthContext(
+
+    private val testSubject = AuthContext(
         UserRole.INTERN,
         PlainJWT(JWTClaimsSet.Builder().subject("Z123456").build())
     )
@@ -79,7 +80,7 @@ class ArbeidsrettetOppfolgingImplTest {
             )
 
             val oppfolgingsinfo: ArbeidsrettetOppfolging.Info = AuthContextUtils.withContext(
-                TEST_SUBJECT,
+                testSubject,
                 UnsafeSupplier {
                     ArbeidsrettetOppfolgingServiceImpl(
                         apiUrl = url,
@@ -118,7 +119,7 @@ class ArbeidsrettetOppfolgingImplTest {
             )
 
             val oppfolgingsinfo: ArbeidsrettetOppfolging.Info = AuthContextUtils.withContext(
-                TEST_SUBJECT,
+                testSubject,
                 UnsafeSupplier {
                     ArbeidsrettetOppfolgingServiceImpl(
                         apiUrl = url,

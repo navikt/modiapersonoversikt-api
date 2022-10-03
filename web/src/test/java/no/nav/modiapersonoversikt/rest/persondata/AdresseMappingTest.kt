@@ -65,7 +65,7 @@ internal class AdresseMappingTest {
 
         val barnFnr = "98765432100"
         val tredjepartsPersonData = TredjepartspersonMapper(kodeverk)
-            .lagTredjepartsperson(barnFnr, tredjepartsPerson, PersondataService.Tilganger(true, true), kontaktinformasjonTredjepartsperson)
+            .lagTredjepartsperson(barnFnr, tredjepartsPerson, PersondataService.Tilganger(kode6 = true, kode7 = true), kontaktinformasjonTredjepartsperson)
 
         val persondata = mapper.flettSammenData(
             data = testData.copy(

@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse.AdressebeskyttelseGradering.*
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 interface ArbeidsfordelingService {
@@ -27,7 +28,7 @@ class ArbeidsfordelingServiceImpl(
     private val pdlOppslagService: PdlOppslagService,
     private val skjermedePersonerApi: SkjermedePersonerApi
 ) : ArbeidsfordelingService {
-    val log = LoggerFactory.getLogger(ArbeidsfordelingService::class.java)
+    val log: Logger = LoggerFactory.getLogger(ArbeidsfordelingService::class.java)
 
     override fun hentBehandlendeEnheter(
         fagomrade: String?,

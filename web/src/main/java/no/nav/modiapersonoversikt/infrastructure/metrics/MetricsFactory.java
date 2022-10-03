@@ -9,7 +9,7 @@ public class MetricsFactory {
 
     public static <T> T createTimerProxyInstance(String name, T object, Class<T> type) {
         ClassLoader classLoader = TimerProxy.class.getClassLoader();
-        Class[] classes = {type};
+        var classes = new Class[]{type};
         TimerProxy timerProxy = new TimerProxy(name, object);
 
         return (T) newProxyInstance(classLoader, classes, timerProxy);

@@ -28,7 +28,7 @@ public class HistoriskUtbetaling extends Utbetaling {
         this.skattetrekk = other.skattetrekk;
         this.trekk = other.trekk == null ? null :
                 other.trekk.stream()
-                        .map(trekk -> new Kreditortrekk(trekk))
+                        .map(Kreditortrekk::new)
                         .collect(toList());
         this.arbeidsgiverNavn = other.arbeidsgiverNavn;
         this.arbeidsgiverOrgNr = other.arbeidsgiverOrgNr;

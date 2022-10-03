@@ -99,8 +99,7 @@ public class PleiepengerMapper extends Mapper {
     }
 
     private void registrerVedtakMapper() {
-        registerMapper(WSVedtak.class, Vedtak.class, (vedtak) ->
-                vedtakMapper.map(vedtak));
+        registerMapper(WSVedtak.class, Vedtak.class, vedtakMapper::map);
     }
 
 }

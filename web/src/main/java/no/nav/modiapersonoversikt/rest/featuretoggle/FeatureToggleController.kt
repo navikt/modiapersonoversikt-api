@@ -26,7 +26,7 @@ class FeatureToggleController @Autowired constructor(
                 unleashService.isEnabled(sjekkPrefix(toggleId))
             }
 
-    fun sjekkPrefix(propertyKey: String): String {
+    private fun sjekkPrefix(propertyKey: String): String {
         return if (propertyKey.contains(".")) propertyKey else APPLICATION_PREFIX + propertyKey
     }
 }

@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.testutils
 
 import no.nav.common.auth.context.AuthContext
+import no.nav.common.auth.context.AuthContextHolder
 import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
@@ -9,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtensionContext
 class AuthContextExtension(var authcontext: AuthContext? = null) :
     BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
-    var original: AuthContext? = null
-    val threadlocal = AuthContextHolderThreadLocal.instance()
+    private var original: AuthContext? = null
+    private val threadlocal: AuthContextHolder = AuthContextHolderThreadLocal.instance()
 
     fun setContext(context: AuthContext) {
         threadlocal.setContext(context)

@@ -12,11 +12,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class TokenExchangeProviderConfig {
     companion object {
-        @JvmField
-        val SOAP_STS_URL_PROPERTY = "SECURITYTOKENSERVICE_URL"
-
-        @JvmField
-        val REST_STS_URL_PROPERTY = "SECURITY_TOKEN_SERVICE_DISCOVERY_URL"
+        const val SOAP_STS_URL_PROPERTY = "SECURITYTOKENSERVICE_URL"
+        const val REST_STS_URL_PROPERTY = "SECURITY_TOKEN_SERVICE_DISCOVERY_URL"
     }
 
     @Bean

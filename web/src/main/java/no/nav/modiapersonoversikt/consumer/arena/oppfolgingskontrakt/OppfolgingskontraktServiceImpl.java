@@ -41,7 +41,7 @@ public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktServic
                 auditLogger.log(rawRequest);
             }
         } catch (HentOppfoelgingskontraktListeSikkerhetsbegrensning hentOppfoelgingskontraktBegrensning) {
-            logger.warn("HentOppfoelgingskontraktListeSikkerhetsbegrensning ved kall på hentOppfoelgingskontraktListe", hentOppfoelgingskontraktBegrensning.getMessage());
+            logger.warn("HentOppfoelgingskontraktListeSikkerhetsbegrensning ved kall på hentOppfoelgingskontraktListe", hentOppfoelgingskontraktBegrensning);
             auditLogger.denied("Årsak: " + hentOppfoelgingskontraktBegrensning.getMessage());
             throw new RuntimeException(hentOppfoelgingskontraktBegrensning.getMessage(), hentOppfoelgingskontraktBegrensning);
         }

@@ -288,9 +288,7 @@ public class SykepengerMapper {
         if (sanksjon != null) {
             utbetalingPaaVent.setSanksjon(map(sanksjon));
         }
-        if (sykmeldt.isPresent()) {
-            utbetalingPaaVent.setSykmeldt(map(sykmeldt.get()));
-        }
+        sykmeldt.ifPresent(fimsykPeriode -> utbetalingPaaVent.setSykmeldt(map(fimsykPeriode)));
 
         return utbetalingPaaVent;
     }
