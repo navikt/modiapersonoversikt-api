@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
+import no.nav.modiapersonoversikt.testutils.WebMvcTestUtils.getJson
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.ResultActions
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
 private val norgapiMock = mockk<NorgApi>()
 private val arbeidsfordelingMock = mockk<ArbeidsfordelingService>()
@@ -57,7 +55,7 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
             )
         )
 
-        getJson("/rest/enheter/1234/ansatte")
+        mockMvc.getJson("/rest/enheter/1234/ansatte")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
@@ -74,18 +72,10 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
                 oppgavebehandler = false
             )
         )
-        getJson("/rest/enheter/oppgavebehandlere/alle")
+        mockMvc.getJson("/rest/enheter/oppgavebehandlere/alle")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
             }
-    }
-
-    private fun getJson(url: String): ResultActions {
-        return mockMvc.perform(
-            MockMvcRequestBuilders.get(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-        )
     }
 }
