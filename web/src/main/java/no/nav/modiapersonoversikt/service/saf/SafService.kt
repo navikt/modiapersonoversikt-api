@@ -6,17 +6,17 @@ import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
+import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
+import no.nav.modiapersonoversikt.commondomain.sak.TjenesteResultatWrapper
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter.Journalposttype
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.*
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
 import no.nav.modiapersonoversikt.service.saf.SafDokumentMapper.fraSafJournalpost
+import no.nav.modiapersonoversikt.service.saf.domain.Dokument
+import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory
@@ -76,9 +76,15 @@ class SafServiceImpl : SafService {
                     .journalposter
                     .filterNotNull()
                     .mapNotNull { fraSafJournalpost(it) }
-                ResultatWrapper(data, emptySet())
+                ResultatWrapper(
+                    data,
+                    emptySet()
+                )
             } else {
-                ResultatWrapper(emptyList(), setOf(Baksystem.SAF))
+                ResultatWrapper(
+                    emptyList(),
+                    setOf(Baksystem.SAF)
+                )
             }
         }
     }
@@ -115,7 +121,9 @@ class SafServiceImpl : SafService {
             Request.Builder().url(url).build()
         ).execute()
         return when (response.code()) {
-            200 -> TjenesteResultatWrapper(response.body()?.bytes())
+            200 -> TjenesteResultatWrapper(
+                response.body()?.bytes()
+            )
             else -> handterDokumentFeilKoder(response.code())
         }
     }
@@ -140,6 +148,9 @@ class SafServiceImpl : SafService {
             401 -> LOG.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
             404 -> LOG.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
         }
-        return TjenesteResultatWrapper(null, statuskode)
+        return TjenesteResultatWrapper(
+            null,
+            statuskode
+        )
     }
 }

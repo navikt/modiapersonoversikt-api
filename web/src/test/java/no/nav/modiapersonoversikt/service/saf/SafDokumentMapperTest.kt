@@ -2,16 +2,17 @@ package no.nav.modiapersonoversikt.service.saf
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
+import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
+import no.nav.modiapersonoversikt.commondomain.sak.Entitet.*
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter.*
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.SLADDET
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Entitet.*
 import no.nav.modiapersonoversikt.service.saf.SafDokumentMapper.fraSafJournalpost
 import no.nav.modiapersonoversikt.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INN
 import no.nav.modiapersonoversikt.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INTERN
 import no.nav.modiapersonoversikt.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_UT
+import no.nav.modiapersonoversikt.service.saf.domain.Dokument
+import no.nav.modiapersonoversikt.service.saf.domain.Dokument.Variantformat.ARKIV
+import no.nav.modiapersonoversikt.service.saf.domain.Dokument.Variantformat.SLADDET
+import no.nav.modiapersonoversikt.service.saf.domain.Kommunikasjonsretning
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -507,8 +508,8 @@ private fun lagJournalpost(): Journalpost {
     )
 }
 
-private fun lagSak(): HentBrukersDokumenter.Sak {
-    return HentBrukersDokumenter.Sak(
+private fun lagSak(): Sak {
+    return Sak(
         arkivsaksnummer = arkivsaknummer,
         fagsakId = fagsakId,
         fagsaksystem = fagsakSystem
