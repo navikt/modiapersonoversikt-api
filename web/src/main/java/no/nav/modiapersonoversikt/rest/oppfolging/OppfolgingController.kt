@@ -10,7 +10,7 @@ import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Vedtak
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
-import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
+import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
@@ -138,7 +138,7 @@ private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>
     }
 }
 
-private fun hentVeileder(veileder: Saksbehandler?): Map<String, Any?>? {
+private fun hentVeileder(veileder: Veileder?): Map<String, Any?>? {
     return veileder?.let {
         mapOf(
             "ident" to it.ident,

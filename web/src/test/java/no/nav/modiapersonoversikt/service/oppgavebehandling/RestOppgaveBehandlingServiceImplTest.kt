@@ -2,6 +2,8 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import io.mockk.*
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.types.identer.NavIdent
+import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
@@ -76,7 +78,7 @@ class RestOppgaveBehandlingServiceImplTest {
         @Test
         fun `skal opprette oppgave`() {
             every { apiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
-            every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
 
             val response: OpprettOppgaveResponse = withIdent("Z999999") {
                 oppgaveBehandlingService.opprettOppgave(
@@ -123,7 +125,7 @@ class RestOppgaveBehandlingServiceImplTest {
         @Test
         fun `skal opprette skjermet oppgave`() {
             every { systemApiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
-            every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
 
             val response = withIdent("Z999999") {
                 oppgaveBehandlingService.opprettSkjermetOppgave(
@@ -585,7 +587,7 @@ class RestOppgaveBehandlingServiceImplTest {
         fun `skal ferdigstille oppgave uten beskrivelse`() {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
-            every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
 
             withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaveIGsak(
@@ -603,7 +605,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
-                            ident = "Z999999",
+                            ident = NavIdent("Z999999"),
                             navn = "Fornavn Etternavn",
                             enhet = "4110",
                             tekst = "Oppgaven er ferdigstilt i Modia. "
@@ -618,7 +620,7 @@ class RestOppgaveBehandlingServiceImplTest {
         fun `skal ferdigstille oppgave med beskrivelse`() {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
-            every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
 
             withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaveIGsak(
@@ -637,7 +639,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
-                            ident = "Z999999",
+                            ident = NavIdent("Z999999"),
                             navn = "Fornavn Etternavn",
                             enhet = "4110",
                             tekst = "Oppgaven er ferdigstilt i Modia. ny beskrivelse"
@@ -652,7 +654,7 @@ class RestOppgaveBehandlingServiceImplTest {
         fun `skal ferdigstille oppgaver`() {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
-            every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
 
             withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaverIGsak(
@@ -670,7 +672,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
-                            ident = "Z999999",
+                            ident = NavIdent("Z999999"),
                             navn = "Fornavn Etternavn",
                             enhet = "4110",
                             tekst = "Oppgaven er ferdigstilt i Modia. "
@@ -705,7 +707,7 @@ class RestOppgaveBehandlingServiceImplTest {
         return AuthContextTestUtils.withIdent(ident, fn)
     }
 
-    private fun OppgaveJsonDTO.nybeskrivelse(ident: String, navn: String, enhet: String, tekst: String): String {
+    private fun OppgaveJsonDTO.nybeskrivelse(ident: NavIdent, navn: String, enhet: String, tekst: String): String {
         return Utils.leggTilBeskrivelse(
             this.beskrivelse,
             Utils.beskrivelseInnslag(ident, navn, enhet, tekst, fixedClock)

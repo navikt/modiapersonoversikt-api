@@ -13,7 +13,7 @@ import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
-import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
+import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolgingServiceImpl
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
@@ -72,7 +72,7 @@ class ArbeidsrettetOppfolgingImplTest {
             verify = {}
         ) { url ->
             val ldapService = mockk<LDAPService>()
-            every { ldapService.hentVeileder(eq(NavIdent("Z999999"))) } returns Saksbehandler(
+            every { ldapService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(
                 "fornavn",
                 "etternavn",
                 "ident"
@@ -111,7 +111,7 @@ class ArbeidsrettetOppfolgingImplTest {
             verify = {}
         ) { url ->
             val ldapService = mockk<LDAPService>()
-            every { ldapService.hentVeileder(eq(NavIdent("Z999999"))) } returns Saksbehandler(
+            every { ldapService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(
                 "fornavn",
                 "etternavn",
                 "ident"

@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.consumer.ldap
 import no.nav.common.metrics.Event
 import no.nav.common.metrics.InfluxClient
 import no.nav.common.types.identer.NavIdent
+import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.ldap.LDAP.parseADRolle
 import org.slf4j.LoggerFactory
 import javax.naming.directory.SearchControls
@@ -13,11 +14,11 @@ open class LDAPServiceImpl(private val contextProvider: LDAPContextProvider) : L
     private val influxClient = InfluxClient()
     private val log = LoggerFactory.getLogger(LDAPServiceImpl::class.java)
 
-    override fun hentVeileder(ident: NavIdent): Saksbehandler {
+    override fun hentVeileder(ident: NavIdent): Veileder {
         val result = search(ident).firstOrNull()
-            ?: return Saksbehandler("", "", ident.get())
+            ?: return Veileder("", "", ident.get())
 
-        return Saksbehandler(
+        return Veileder(
             result.attributes.get("givenname").get() as String,
             result.attributes.get("sn").get() as String,
             ident.get()
