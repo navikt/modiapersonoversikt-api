@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.commondomain.Veileder
 import javax.naming.ldap.LdapContext
 
 interface LDAPService {
-    fun hentVeileder(ident: NavIdent): Veileder
     fun hentRollerForVeileder(ident: NavIdent): List<String>
 }
 
