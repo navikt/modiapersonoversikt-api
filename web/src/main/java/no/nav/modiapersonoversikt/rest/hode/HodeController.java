@@ -120,8 +120,8 @@ public class HodeController {
     }
 
     private Pair<String, String> hentSaksbehandlerNavn() {
-        Saksbehandler saksbehandler = AuthContextUtils.getIdent()
-                .map(ldapService::hentSaksbehandler)
+        Saksbehandler saksbehandler = AuthContextUtils.getNavIdent()
+                .map(ldapService::hentVeileder)
                 .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
         return new Pair<>(saksbehandler.getFornavn(), saksbehandler.getEtternavn());
     }

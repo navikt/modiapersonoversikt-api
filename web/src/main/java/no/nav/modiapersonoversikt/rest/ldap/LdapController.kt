@@ -21,7 +21,7 @@ constructor(private val ldapService: LDAPService, private val tilgangskontroll: 
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Saksbehandler.Roller)) {
-                val ident = AuthContextUtils.requireIdent()
+                val ident = AuthContextUtils.requireNavIdent()
                 mapOf("roller" to ldapService.hentRollerForVeileder(ident))
             }
     }
