@@ -9,6 +9,7 @@ import no.nav.common.client.nom.VeilederNavn
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.fn.UnsafeSupplier
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
@@ -18,7 +19,8 @@ import org.junit.jupiter.api.extension.RegisterExtension
 internal class AnsattServiceImplTest {
     val nomClient: NomClient = mockk()
     val axsys: AxsysClient = mockk()
-    val ansattServiceImpl: AnsattServiceImpl = AnsattServiceImpl(axsys, nomClient)
+    val ldap: LDAPService = mockk()
+    val ansattServiceImpl: AnsattServiceImpl = AnsattServiceImpl(axsys, nomClient, ldap)
 
     @JvmField
     @RegisterExtension
