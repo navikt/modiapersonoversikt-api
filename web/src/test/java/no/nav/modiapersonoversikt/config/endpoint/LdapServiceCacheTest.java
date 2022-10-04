@@ -20,7 +20,7 @@ public class LdapServiceCacheTest extends CacheTest {
 
     @Test
     void cacheSetupMedRiktigKeyGenerator() {
-        ldapService.hentVeileder(NavIdent.of("Z999999"));
+        ldapService.hentRollerForVeileder(NavIdent.of("Z999999"));
 
         assertThat(getNativeCache().estimatedSize(), is(1L));
         assertThat(getKey(), is(generatedByMethodAwareKeyGenerator()));
@@ -29,7 +29,6 @@ public class LdapServiceCacheTest extends CacheTest {
     @Test
     void cacheKeysSkalVareUnikeForUlikeMetoder() {
         verifyUniqueAndStableCacheKeys(
-                () -> ldapService.hentVeileder(NavIdent.of("Z999999")),
                 () -> ldapService.hentRollerForVeileder(NavIdent.of("Z999999"))
         );
     }

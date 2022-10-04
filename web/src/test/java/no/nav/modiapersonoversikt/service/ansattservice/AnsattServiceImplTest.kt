@@ -46,7 +46,7 @@ internal class AnsattServiceImplTest {
     fun `skal kunne hente navn ansatt`() {
         every { nomClient.finnNavn(NavIdent("111")) } returns lagNavAnsatt("Kalle", "Karlsson", "111")
 
-        val navn = ansattServiceImpl.hentVeileder(NavIdent("111"))
+        val navn = ansattServiceImpl.hentVeileder(NavIdent("111")).navn
 
         snapshot.assertMatches(navn)
     }

@@ -3,8 +3,8 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 import io.mockk.*
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.types.identer.NavIdent
-import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
+import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision

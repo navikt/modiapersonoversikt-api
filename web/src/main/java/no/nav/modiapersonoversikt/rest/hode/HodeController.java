@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.rest.hode;
 
 import kotlin.Pair;
 import no.nav.common.types.identer.EnhetId;
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
@@ -30,10 +29,6 @@ import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*;
 @RestController
 @RequestMapping("/rest/hode")
 public class HodeController {
-
-    @Autowired
-    private LDAPService ldapService;
-
     @Autowired
     private AnsattService ansattService;
 
@@ -121,7 +116,7 @@ public class HodeController {
 
     private Veileder hentSaksbehandlerNavn() {
         return AuthContextUtils.getNavIdent()
-                .map(ldapService::hentVeileder)
+                .map(ansattService::hentVeileder)
                 .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
     }
 }
