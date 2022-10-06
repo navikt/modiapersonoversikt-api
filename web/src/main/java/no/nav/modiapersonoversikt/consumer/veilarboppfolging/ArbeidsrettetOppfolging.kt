@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
+import no.nav.modiapersonoversikt.commondomain.Veileder
 
 object ArbeidsrettetOppfolging {
     interface Service {
@@ -18,7 +18,7 @@ object ArbeidsrettetOppfolging {
     data class Info(
         val erUnderOppfolging: Boolean,
         val erManuell: Boolean,
-        val veileder: Saksbehandler?,
+        val veileder: Veileder?,
         val oppfolgingsenhet: Enhet?
     )
 

@@ -54,7 +54,7 @@ public class PleiepengeperiodeTest {
 
         Vedtak vedtak = pleiepengeperiode.getAktueltVedtak().get();
 
-        assertThat(vedtak.getPeriode().fraOgMed, is(TODAY));
+        assertThat(vedtak.getPeriode().fraOgMed(), is(TODAY));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class PleiepengeperiodeTest {
 
         Vedtak vedtak = pleiepengeperiode.getAktueltVedtak().get();
 
-        assertThat(vedtak.getPeriode().tilOgMed, is(TODAY));
+        assertThat(vedtak.getPeriode().tilOgMed(), is(TODAY));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class PleiepengeperiodeTest {
 
         Vedtak vedtak = pleiepengeperiode.getAktueltVedtak().get();
 
-        assertThat(vedtak.getPeriode().tilOgMed, is(TODAY));
+        assertThat(vedtak.getPeriode().tilOgMed(), is(TODAY));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class PleiepengeperiodeTest {
 
         Vedtak vedtak = pleiepengeperiode.getAktueltVedtak().get();
 
-        assertThat(vedtak.getPeriode().fraOgMed, is(TODAY.plusDays(31)));
+        assertThat(vedtak.getPeriode().fraOgMed(), is(TODAY.plusDays(31)));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class PleiepengeperiodeTest {
 
         Vedtak vedtak = pleiepengeperiode.getAktueltVedtak().get();
 
-        assertThat(vedtak.getPeriode().tilOgMed, is(TODAY.minusDays(3)));
+        assertThat(vedtak.getPeriode().tilOgMed(), is(TODAY.minusDays(3)));
     }
 
 }

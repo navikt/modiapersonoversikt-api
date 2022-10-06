@@ -40,7 +40,7 @@ private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredPrope
 private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
 
 class SafServiceImpl : SafService {
-    private val LOG = LoggerFactory.getLogger(SafService::class.java)
+    private val log = LoggerFactory.getLogger(SafService::class.java)
     private val client: OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(HeadersInterceptor(this::httpHeaders))
         .addInterceptor(
@@ -144,9 +144,9 @@ class SafServiceImpl : SafService {
 
     private fun handterDokumentFeilKoder(statuskode: Int): TjenesteResultatWrapper {
         when (statuskode) {
-            400 -> LOG.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
-            401 -> LOG.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
-            404 -> LOG.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
+            400 -> log.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
+            401 -> log.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
+            404 -> log.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
         }
         return TjenesteResultatWrapper(
             null,

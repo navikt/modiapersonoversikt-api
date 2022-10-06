@@ -13,7 +13,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 internal class SfHenvendelseServiceIntegrationTest {
-    private val TEST_SUBJECT = AuthContext(
+    private val testSubject = AuthContext(
         UserRole.INTERN,
         PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
     )
@@ -28,7 +28,7 @@ internal class SfHenvendelseServiceIntegrationTest {
             verify = {}
         ) { url ->
             Utils.withProperty("SF_HENVENDELSE_URL", url) {
-                AuthContextUtils.withContext(TEST_SUBJECT) {
+                AuthContextUtils.withContext(testSubject) {
                     val api = SfHenvendelseApiFactory.createHenvendelseInfoApi()
                     val result = api.henvendelseinfoHenvendelselisteGet("aktorid", "coorId")
                     assertThat(result).hasSize(1)

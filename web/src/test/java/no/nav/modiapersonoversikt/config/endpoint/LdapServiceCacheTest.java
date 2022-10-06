@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.config.endpoint;
 
+import no.nav.common.types.identer.NavIdent;
 import no.nav.modiapersonoversikt.config.endpoint.util.CacheTest;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class LdapServiceCacheTest extends CacheTest {
 
     @Test
     void cacheSetupMedRiktigKeyGenerator() {
-        ldapService.hentSaksbehandler("Z999999");
+        ldapService.hentRollerForVeileder(NavIdent.of("Z999999"));
 
         assertThat(getNativeCache().estimatedSize(), is(1L));
         assertThat(getKey(), is(generatedByMethodAwareKeyGenerator()));
@@ -28,8 +29,7 @@ public class LdapServiceCacheTest extends CacheTest {
     @Test
     void cacheKeysSkalVareUnikeForUlikeMetoder() {
         verifyUniqueAndStableCacheKeys(
-                () -> ldapService.hentSaksbehandler("Z999999"),
-                () -> ldapService.hentRollerForVeileder("Z999999")
+                () -> ldapService.hentRollerForVeileder(NavIdent.of("Z999999"))
         );
     }
 }

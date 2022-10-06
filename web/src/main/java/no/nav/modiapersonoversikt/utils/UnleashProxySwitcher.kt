@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 internal class UnleashHandler<T : Any>(
     val type: KClass<T>,
     val feature: Feature,
-    val unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService,
+    val unleashService: UnleashService,
     val ifEnabled: T,
     val ifDisabled: T
 ) : InvocationHandler {
@@ -39,7 +39,7 @@ internal class UnleashHandler<T : Any>(
 object UnleashProxySwitcher {
     inline fun <reified T : Any> createSwitcher(
         featureToggle: Feature,
-        unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService,
+        unleashService: UnleashService,
         ifEnabled: T,
         ifDisabled: T
     ): T {

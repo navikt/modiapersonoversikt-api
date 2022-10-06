@@ -4,10 +4,10 @@ import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
+import static java.util.Objects.requireNonNullElse;
+import static java.util.Objects.requireNonNullElseGet;
 
 /**
  * Genererer Oppfoelgingskontrakt-objekter for testformål.
@@ -37,7 +37,7 @@ public final class OppfolgingkontraktMockFactory {
             return filterByDates(createOppfoelgingskontrakterDonald(), fra, til);
         }
 
-        return Arrays.asList(createOppfoelgingskontrakt());
+        return List.of(createOppfoelgingskontrakt());
     }
 
     private static List<WSSYFOkontrakt> filterByDates(List<WSSYFOkontrakt> oppfoelgingskontrakterDonald, Date fra, Date til) {
@@ -93,7 +93,7 @@ public final class OppfolgingkontraktMockFactory {
                 createSYFOPunkt(DateUtils.getDate(2012, 8, 1), true, "Registrert", "26-ukers sykmelding: Dialogmøte 2")
         ));
 
-        return Arrays.asList(kontrakt1);
+        return List.of(kontrakt1);
     }
 
     public static WSOppfoelgingskontrakt createOppfoelgingskontrakt() {
@@ -109,11 +109,7 @@ public final class OppfolgingkontraktMockFactory {
 
     public static WSSYFOkontrakt createSYFOkontrakt(Date sykmeldtFra, String status, WSBruker bruker, WSSYFOPunkt... syfopunkter) {
         WSSYFOkontrakt kontrakt = new WSSYFOkontrakt();
-        if (sykmeldtFra == null) {
-            kontrakt.setSykmeldtFra(DateUtils.convertDateToXmlGregorianCalendar(SYKMELDT_FRA));
-        } else {
-            kontrakt.setSykmeldtFra(DateUtils.convertDateToXmlGregorianCalendar(sykmeldtFra));
-        }
+        kontrakt.setSykmeldtFra(DateUtils.convertDateToXmlGregorianCalendar(requireNonNullElse(sykmeldtFra, SYKMELDT_FRA)));
 
         if (syfopunkter == null) {
             kontrakt.getHarSYFOPunkt().add(createSYFOPunkt(DateUtils.getRandomDate(), true));
@@ -124,11 +120,7 @@ public final class OppfolgingkontraktMockFactory {
 
         kontrakt.setStatus(status);
 
-        if (bruker == null) {
-            kontrakt.setGjelderBruker(createBruker());
-        } else {
-            kontrakt.setGjelderBruker(bruker);
-        }
+        kontrakt.setGjelderBruker(requireNonNullElseGet(bruker, OppfolgingkontraktMockFactory::createBruker));
         return kontrakt;
     }
 
@@ -152,46 +144,23 @@ public final class OppfolgingkontraktMockFactory {
 
     private static WSVedtak createVedtak(String status, Date fra, Date til, Date datoKravMottatt) {
         WSVedtak vedtak = new WSVedtak();
-        if (status == null) {
-            vedtak.setStatus(YtelseskontraktMockFactory.YTELSESSTATUS_AKTIV);
-        } else {
-            vedtak.setStatus(status);
-        }
-
+        vedtak.setStatus(requireNonNullElse(status, YtelseskontraktMockFactory.YTELSESSTATUS_AKTIV));
         if (fra == null) {
             vedtak.setVedtaksperiode(createPeriode());
         } else {
             vedtak.setVedtaksperiode(createPeriode(fra, til));
         }
-
-        if (datoKravMottatt == null) {
-            vedtak.setOmYtelse(createYtelseskontrakt(null, null, DATO_KRAV_MOTTATT));
-        } else {
-            vedtak.setOmYtelse(createYtelseskontrakt(null, null, datoKravMottatt));
-        }
+        vedtak.setOmYtelse(createYtelseskontrakt(null, null, requireNonNullElse(datoKravMottatt, DATO_KRAV_MOTTATT)));
         return vedtak;
     }
 
     private static WSYtelseskontrakt createYtelseskontrakt(String status, String type, Date datoKravMottat) {
         WSYtelseskontrakt kontrakt = new WSYtelseskontrakt();
 
-        if (datoKravMottat == null) {
-            kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(DATO_KRAV_MOTTATT));
-        } else {
-            kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(datoKravMottat));
-        }
+        kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(requireNonNullElse(datoKravMottat, DATO_KRAV_MOTTATT)));
+        kontrakt.setStatus(requireNonNullElse(status, YTELSESKONTRAKT_STATUS));
+        kontrakt.setYtelsestype(requireNonNullElse(type, YTELSESTYPE));
 
-        if (status == null) {
-            kontrakt.setStatus(YTELSESKONTRAKT_STATUS);
-        } else {
-            kontrakt.setStatus(status);
-        }
-
-        if (type == null) {
-            kontrakt.setYtelsestype(YTELSESTYPE);
-        } else {
-            kontrakt.setYtelsestype(type);
-        }
         return kontrakt;
     }
 

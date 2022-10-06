@@ -18,13 +18,13 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class NomConfig {
-    val scope = DownstreamApi(
+    private val scope = DownstreamApi(
         application = "nom-api",
         namespace = "nom",
         cluster = "prod-gcp"
     )
-    val url: String = EnvironmentUtils.getRequiredProperty("NOM_URL")
-    val httpClient: OkHttpClient = RestClient.baseClient()
+    private val url: String = EnvironmentUtils.getRequiredProperty("NOM_URL")
+    private val httpClient: OkHttpClient = RestClient.baseClient()
 
     @Autowired
     lateinit var tokenProvider: MachineToMachineTokenClient

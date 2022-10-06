@@ -9,11 +9,11 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 
 internal class PersondataServiceImplTest {
-    val ugyldigGT = "0301"
-    val gyldigGT = "030101"
+    private val ugyldigGT = "0301"
+    private val gyldigGT = "030101"
 
-    val norgApi: NorgApi = mockk()
-    val persondataServiceImpl = PersondataServiceImpl(
+    private val norgApi: NorgApi = mockk()
+    private val persondataServiceImpl = PersondataServiceImpl(
         norgApi = norgApi,
         pdl = mockk(),
         dkif = mockk(),

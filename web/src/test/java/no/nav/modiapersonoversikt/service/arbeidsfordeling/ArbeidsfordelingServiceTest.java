@@ -31,9 +31,9 @@ class ArbeidsfordelingServiceTest {
     private static final String GEOGRAFISK_TILKNYTNING = "0219";
     private static final Fnr PERSON = Fnr.of("11111111111");
 
-    private PdlOppslagService pdlOppslagService = mock(PdlOppslagService.class);
-    private NorgApi norgApi = mock(NorgApi.class);
-    private SkjermedePersonerApi egenAnsattService = mock(SkjermedePersonerApi.class);
+    private final PdlOppslagService pdlOppslagService = mock(PdlOppslagService.class);
+    private final NorgApi norgApi = mock(NorgApi.class);
+    private final SkjermedePersonerApi egenAnsattService = mock(SkjermedePersonerApi.class);
     private ArbeidsfordelingService arbeidsfordelingService;
 
     @BeforeEach

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.RegisterExtension
 import java.math.BigInteger
 import java.time.*
 import javax.xml.datatype.DatatypeFactory
+import javax.xml.datatype.XMLGregorianCalendar
 
 class PersonsokControllerTest {
     @Nested
@@ -19,7 +20,7 @@ class PersonsokControllerTest {
         @RegisterExtension
         val snapshot = SnapshotExtension()
 
-        val FIXED_DATE = DatatypeFactory
+        private val fixedDate: XMLGregorianCalendar = DatatypeFactory
             .newInstance()
             .newXMLGregorianCalendarDate(2020, 10, 12, 0)
 
@@ -105,8 +106,8 @@ class PersonsokControllerTest {
                         }
                     }
                     postleveringsPeriode = Gyldighetsperiode().apply {
-                        fom = FIXED_DATE
-                        tom = FIXED_DATE
+                        fom = fixedDate
+                        tom = fixedDate
                     }
                 }
                 harAnsvarligEnhet = AnsvarligEnhet().apply {
@@ -192,7 +193,7 @@ class PersonsokControllerTest {
 
     @Nested
     inner class PdlKriterierMapper {
-        val clock = Clock.fixed(
+        private val clock: Clock = Clock.fixed(
             Instant.parse("2020-12-02T12:00:00.00Z"),
             ZoneId.systemDefault()
         )
@@ -258,7 +259,7 @@ class PersonsokControllerTest {
             assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
         }
 
-        val requestV3 = PersonsokRequestV3(
+        private val requestV3 = PersonsokRequestV3(
             null,
             null,
             null,

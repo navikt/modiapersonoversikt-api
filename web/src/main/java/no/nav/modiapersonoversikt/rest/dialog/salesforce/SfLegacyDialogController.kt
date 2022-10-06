@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
-import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
+import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
@@ -33,7 +34,7 @@ private val REFERAT_TYPER = listOf(
 class SfLegacyDialogController(
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
-    private val ldapService: LDAPService,
+    private val ansattService: AnsattService,
     private val kodeverk: EnhetligKodeverk.Service,
 ) : DialogApi {
     private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
@@ -240,7 +241,7 @@ class SfLegacyDialogController(
                     traad.kjedeId,
                     traad.gjeldendeTemagruppe?.let { Temagruppe.valueOf(it) },
                     enhet,
-                    ignorerConflict ?: false
+                    ignorerConflict
                 )?.oppgaveId
             } catch (e: OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler) {
                 throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
@@ -257,7 +258,7 @@ class SfLegacyDialogController(
 
     data class DialogMappingContext(
         val temakodeMap: Map<String, String>,
-        val identMap: Map<String, Saksbehandler>
+        val identMap: Map<String, Veileder>
     )
 
     private fun lagMappingContext(henvendelser: List<HenvendelseDTO>): DialogMappingContext {
@@ -278,10 +279,10 @@ class SfLegacyDialogController(
 
         val identMap = identer.associateWith { ident ->
             runCatching {
-                ldapService.hentSaksbehandler(ident)
+                ansattService.hentVeileder(NavIdent(ident))
             }.recover {
                 logger.error("Fant ikke saksbehandler for $ident", it)
-                Saksbehandler("-", "-", ident)
+                Veileder("-", "-", ident)
             }.getOrThrow()
         }
 

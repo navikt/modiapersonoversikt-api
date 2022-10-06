@@ -135,7 +135,7 @@ public class SakstemaService {
     }
 
     private static Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
-        return dm -> tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dm.getTilhorendeSakid());
+        return dm -> tilhorendeSaker.stream().map(Sak::getSaksId).toList().contains(dm.getTilhorendeSakid());
     }
 
     private static Predicate<DokumentMetadata> tilhorendeFraHenvendelse(String temakode) {

@@ -15,12 +15,12 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class SkjermedePersonerConfig {
-    val scope = DownstreamApi(
+    private val scope = DownstreamApi(
         application = "skjermede-personer-pip",
         namespace = "nom",
         cluster = EnvironmentUtils.getRequiredProperty("GCP_CLUSTER")
     )
-    val url = EnvironmentUtils.getRequiredProperty("SKJERMEDE_PERSONER_PIP_URL")
+    private val url: String = EnvironmentUtils.getRequiredProperty("SKJERMEDE_PERSONER_PIP_URL")
 
     @Autowired
     lateinit var tokenProvider: MachineToMachineTokenClient

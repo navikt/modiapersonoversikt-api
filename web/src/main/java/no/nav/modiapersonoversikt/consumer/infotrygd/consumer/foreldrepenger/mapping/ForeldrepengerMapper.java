@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * Mapperklasse
  */
 public class ForeldrepengerMapper {
-    private static Logger logger = LoggerFactory.getLogger(ForeldrepengerMapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(ForeldrepengerMapper.class);
     private static ForeldrepengerMapper instance = null;
 
     private ForeldrepengerMapper() {
@@ -278,7 +278,7 @@ public class ForeldrepengerMapper {
                     .newInstance()
                     .newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
         } catch (DatatypeConfigurationException e) {
-            logger.warn("DatatypeConfigurationException", e.getMessage());
+            logger.warn("DatatypeConfigurationException", e);
             throw new RuntimeException("Could not map to XMLGregorianCalendar", e);
         }
     }

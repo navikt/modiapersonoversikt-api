@@ -6,8 +6,8 @@ import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.beans.factory.annotation.Autowired
 
 class SFJournalforing @Autowired constructor(
-    val sakerService: SakerService,
-    val sfHenvendelseService: SfHenvendelseService
+    private val sakerService: SakerService,
+    private val sfHenvendelseService: SfHenvendelseService
 ) : JournalforingApi {
     override fun hentSaker(fnr: String): SakerService.Resultat {
         return sakerService.hentSaker(fnr)

@@ -90,23 +90,23 @@ object OppgaveKodeverk {
         }.sortedBy { it.tekst }.associateBy { it.kode }
     }
 
-    internal fun hentPrioriteter(oppgaveKodeverk: KodeverkkombinasjonDTO): List<Prioritet> {
+    private fun hentPrioriteter(oppgaveKodeverk: KodeverkkombinasjonDTO): List<Prioritet> {
         return OppgaveOverstyring.overstyrtKodeverk.tema[oppgaveKodeverk.tema.tema]?.prioriteter
             ?: OppgaveOverstyring.overstyrtKodeverk.prioriteter
     }
 
-    internal fun hentUnderkategorier(gjelderverdier: List<GjelderDTO>?): List<Underkategori> {
-        return gjelderverdier?.map {
+    private fun hentUnderkategorier(gjelderverdier: List<GjelderDTO>?): List<Underkategori> {
+        return gjelderverdier?.map { gjelder ->
             Underkategori(
-                kode = listOf(it.behandlingstema, it.behandlingstype).joinToString(":") { it ?: "" },
-                tekst = listOfNotNull(it.behandlingstemaTerm, it.behandlingstypeTerm).joinToString(" - "),
+                kode = listOf(gjelder.behandlingstema, gjelder.behandlingstype).joinToString(":") { it ?: "" },
+                tekst = listOfNotNull(gjelder.behandlingstemaTerm, gjelder.behandlingstypeTerm).joinToString(" - "),
                 erGyldig = true
             )
         }?.sortedBy { it.tekst }
             ?: emptyList()
     }
 
-    internal fun hentOppgavetyper(oppgavetyper: List<OppgavetypeDTO>, tema: String): List<Oppgavetype> {
+    private fun hentOppgavetyper(oppgavetyper: List<OppgavetypeDTO>, tema: String): List<Oppgavetype> {
         return oppgavetyper.filter { OppgaveOverstyring.godkjenteOppgavetyper.contains(it.oppgavetype) }.map {
             Oppgavetype(
                 kode = it.oppgavetype,
@@ -116,7 +116,7 @@ object OppgaveKodeverk {
         }.sortedBy { it.tekst }
     }
 
-    internal fun hentFrist(tema: String, oppgavetype: String): Int {
+    private fun hentFrist(tema: String, oppgavetype: String): Int {
         return OppgaveOverstyring.overstyrtKodeverk.tema[tema]?.oppgavetyper?.get(oppgavetype)?.frist
             ?: OppgaveOverstyring.overstyrtKodeverk.frist
     }

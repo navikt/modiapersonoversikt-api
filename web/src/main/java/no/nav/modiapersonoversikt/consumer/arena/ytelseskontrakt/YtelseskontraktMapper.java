@@ -22,7 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class YtelseskontraktMapper {
-    private static Logger logger = LoggerFactory.getLogger(YtelseskontraktMapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(YtelseskontraktMapper.class);
     private static YtelseskontraktMapper instance = null;
 
     private YtelseskontraktMapper() {

@@ -90,7 +90,7 @@ public class ForeldrepengerettighetTest {
     @Test
     public void ingenPerioder() {
         Foreldrepengerettighet foreldrepengerettighet = new Foreldrepengerettighet();
-        foreldrepengerettighet.setPeriode(new ArrayList<Foreldrepengeperiode>());
+        foreldrepengerettighet.setPeriode(new ArrayList<>());
 
         assertThat(foreldrepengerettighet.getPeriode().size(), equalTo(0));
     }

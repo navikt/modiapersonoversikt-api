@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 private const val APPLICATION_PREFIX = "modiabrukerdialog."
@@ -26,7 +27,18 @@ class FeatureToggleController @Autowired constructor(
                 unleashService.isEnabled(sjekkPrefix(toggleId))
             }
 
-    fun sjekkPrefix(propertyKey: String): String {
+    @GetMapping
+    fun hentToggles(@RequestParam(value = "id", required = false) ids: Set<String>?): Map<String, Boolean> {
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.skipAuditLog()) {
+                (ids ?: emptySet()).associateWith {
+                    unleashService.isEnabled(sjekkPrefix(it))
+                }
+            }
+    }
+
+    private fun sjekkPrefix(propertyKey: String): String {
         return if (propertyKey.contains(".")) propertyKey else APPLICATION_PREFIX + propertyKey
     }
 }

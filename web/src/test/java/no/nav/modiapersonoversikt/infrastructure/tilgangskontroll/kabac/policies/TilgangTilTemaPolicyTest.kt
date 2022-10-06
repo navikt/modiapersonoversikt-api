@@ -7,6 +7,7 @@ import no.nav.common.client.axsys.AxsysEnhet
 import no.nav.common.client.nom.NomClient
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.NavIdentPip
@@ -18,6 +19,7 @@ internal class TilgangTilTemaPolicyTest {
     private val policy = KabacTestUtils.PolicyTester(TilgangTilTemaPolicy)
     private val nom = mockk<NomClient>()
     private val axsys = mockk<AxsysClient>()
+    private val ldap = mockk<LDAPService>()
     private val ident = NavIdent("Z999999")
     private val axsysEnhet = AxsysEnhet().setEnhetId(EnhetId("0100")).setTemaer(listOf("DAG", "AAP"))
 
@@ -26,7 +28,7 @@ internal class TilgangTilTemaPolicyTest {
         every { axsys.hentTilganger(ident) } returns listOf(axsysEnhet)
         policy.assertPermit(
             NavIdentPip.key.withValue(ident),
-            VeiledersTemaPip(AnsattServiceImpl(axsys, nom)),
+            VeiledersTemaPip(AnsattServiceImpl(axsys, nom, ldap)),
             CommonAttributes.ENHET.withValue(EnhetId("0100")),
             CommonAttributes.TEMA.withValue("DAG"),
         )
@@ -37,7 +39,7 @@ internal class TilgangTilTemaPolicyTest {
         every { axsys.hentTilganger(ident) } returns listOf(axsysEnhet)
         policy.assertDeny(
             NavIdentPip.key.withValue(ident),
-            VeiledersTemaPip(AnsattServiceImpl(axsys, nom)),
+            VeiledersTemaPip(AnsattServiceImpl(axsys, nom, ldap)),
             CommonAttributes.ENHET.withValue(EnhetId("0100")),
             CommonAttributes.TEMA.withValue("SYM"),
         )
