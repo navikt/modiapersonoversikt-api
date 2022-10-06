@@ -21,8 +21,16 @@ class SfLegacyDialogMerkController(
     }
 
     override fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void> {
-        sfHenvendelseService.sendTilSladding(request.traadId)
+        if (request.arsak !== null) {
+            sfHenvendelseService.sendTilSladding(request.traadId, request.arsak, request.meldingId)
+        } else {
+            sfHenvendelseService.sendTilSladding(request.traadId)
+        }
         return ResponseEntity(HttpStatus.OK)
+    }
+
+    override fun hentSladdeArsaker(kjedeId: String): List<String> {
+        return sfHenvendelseService.hentSladdeArsaker(kjedeId)
     }
 
     override fun lukkTraad(request: LukkTraadRequest): ResponseEntity<Void> {

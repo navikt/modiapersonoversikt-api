@@ -631,6 +631,13 @@ components:
         kjedeId:
           type: "string"
           example: "a0J3N000004dUBJUA2"
+        meldingId:
+          type: "array"
+          items:
+            type: "string"
+          example:
+          - "Feil bruker"
+          - "Innehold sensitiv informasjon"
       required:
       - "aarsak"
       - "kjedeId"
