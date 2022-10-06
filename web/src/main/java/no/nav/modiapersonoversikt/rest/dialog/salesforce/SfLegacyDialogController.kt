@@ -277,14 +277,7 @@ class SfLegacyDialogController(
             }
             .distinct()
 
-        val identMap = identer.associateWith { ident ->
-            runCatching {
-                ansattService.hentVeileder(NavIdent(ident))
-            }.recover {
-                logger.error("Fant ikke saksbehandler for $ident", it)
-                Veileder("-", "-", ident)
-            }.getOrThrow()
-        }
+        val identMap = identer.associateWith { ident -> ansattService.hentVeileder(NavIdent(ident)) }
 
         return DialogMappingContext(temakodeMap, identMap)
     }

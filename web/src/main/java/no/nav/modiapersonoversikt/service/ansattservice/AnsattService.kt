@@ -43,12 +43,16 @@ class AnsattServiceImpl @Autowired constructor(
     }
 
     override fun hentVeileder(ident: NavIdent): Veileder {
-        val veileder = nomClient.finnNavn(ident)
-        return Veileder(
-            ident = veileder.navIdent.get(),
-            fornavn = veileder.fornavn,
-            etternavn = veileder.etternavn,
-        )
+        return nomClient
+            .runCatching { finnNavn(ident) }
+            .map {
+                Veileder(
+                    ident = it.navIdent.get(),
+                    fornavn = it.fornavn,
+                    etternavn = it.etternavn,
+                )
+            }
+            .getOrDefault(Veileder("", "", ident.get()))
     }
 
     override fun hentVeilederRoller(ident: NavIdent): RolleListe {
