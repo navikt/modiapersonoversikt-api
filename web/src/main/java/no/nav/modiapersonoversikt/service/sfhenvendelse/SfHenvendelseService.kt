@@ -66,7 +66,6 @@ private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.jav
 class SfHenvendelseServiceImpl(
     private val henvendelseBehandlingApi: HenvendelseBehandlingApi = SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
     private val henvendelseInfoApi: HenvendelseInfoApi = SfHenvendelseApiFactory.createHenvendelseInfoApi(),
-    private val henvendelseJournalApi: JournalApi = SfHenvendelseApiFactory.createHenvendelseJournalApi(),
     private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
     private val pdlOppslagService: PdlOppslagService,
     private val norgApi: NorgApi,
@@ -88,7 +87,6 @@ class SfHenvendelseServiceImpl(
     ) : this(
         SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
         SfHenvendelseApiFactory.createHenvendelseInfoApi(),
-        SfHenvendelseApiFactory.createHenvendelseJournalApi(),
         SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
         pdlOppslagService,
         norgApi,
@@ -142,7 +140,7 @@ class SfHenvendelseServiceImpl(
         } else {
             null
         }
-        henvendelseJournalApi
+        henvendelseBehandlingApi
             .henvendelseJournalPost(
                 getCallId(),
                 JournalRequestDTO(
@@ -507,6 +505,5 @@ object SfHenvendelseApiFactory {
 
     fun createHenvendelseBehandlingApi() = HenvendelseBehandlingApi(url(), client)
     fun createHenvendelseInfoApi() = HenvendelseInfoApi(url(), client)
-    fun createHenvendelseJournalApi() = JournalApi(url(), client)
     fun createHenvendelseOpprettApi() = NyHenvendelseApi(url(), client)
 }

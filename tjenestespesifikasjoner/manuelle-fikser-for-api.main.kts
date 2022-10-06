@@ -56,9 +56,6 @@ changeFile(
      */
     forDefinition("Henvendelse") {
         setRequired("gjeldendeTemagruppe", false)
-        forProperty("henvendelseType") {
-            getTyped<MutableList<String>>("enum").add("CHAT")
-        }
     }
     forDefinition("Markering") {
         setRequired("markertDato", false)
@@ -66,13 +63,6 @@ changeFile(
     }
     forDefinition("Journalpost") {
         setRequired("journalforerNavIdent", false)
-    }
-
-    /**
-     * Regresjon i API fra innføring av IdentType.System
-     */
-    forDefinition("MeldingFra") {
-        setRequired("identType", true)
     }
 }
 
