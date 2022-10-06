@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
       - uses: nbadal/action-ktlint-setup@v1
         with:
           ktlint_version: '0.46.1'
@@ -37,8 +37,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mvn -P ci -B test --settings .github/maven-settings.xml
-      - name: Publish Docker image
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == env.Q1_TEST_BRANCH
+      - name: Publish Dev Image
+        if: github.ref == 'refs/heads/dev' || github.ref == env.Q1_TEST_BRANCH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
+          docker login ghcr.io -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+          docker build --tag ${IMAGE} --build-arg image_version=17 .
+          docker push ${IMAGE}
+      - name: Publish Prod image
+        if: github.ref == 'refs/heads/master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

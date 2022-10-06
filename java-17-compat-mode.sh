@@ -6,6 +6,7 @@
 # http://mail-archives.apache.org/mod_mbox/tomcat-users/201809.mbox/%3C6416c4e0-4c85-d76b-a201-6643a0a6421c@apache.org%3E
 export JAVA_OPTS="${JAVA_OPTS} --add-opens=java.base/java.lang=ALL-UNNAMED"
 export JAVA_OPTS="${JAVA_OPTS} --add-opens=java.base/java.io=ALL-UNNAMED"
+export JAVA_OPTS="${JAVA_OPTS} --add-opens=java.base/java.util=ALL-UNNAMED"
 export JAVA_OPTS="${JAVA_OPTS} --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
 
 if [ "$NAIS_CLUSTER_NAME" = "dev-fss" ] || [ "$NAIS_CLUSTER_NAME" = "dev-sbs" ]; then

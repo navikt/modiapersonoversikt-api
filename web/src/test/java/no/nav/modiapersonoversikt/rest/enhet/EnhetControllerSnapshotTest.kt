@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.enhet
 
-import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
@@ -22,6 +22,10 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
+private val norgapiMock = mockk<NorgApi>()
+private val arbeidsfordelingMock = mockk<ArbeidsfordelingService>()
+private val ansattServiceMock = mockk<AnsattService>()
+
 @WebMvcTest(EnhetController::class)
 @ExtendWith(SnapshotExtension::class)
 internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
@@ -29,23 +33,23 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     open class TestConfig {
         @Bean
         open fun tilgangskontroll(): Tilgangskontroll = TilgangskontrollMock.get()
+
+        @Bean
+        open fun norgapi(): NorgApi = norgapiMock
+
+        @Bean
+        open fun arbeidsfordeling() = arbeidsfordelingMock
+
+        @Bean
+        open fun ansattService() = ansattServiceMock
     }
-
-    @MockkBean
-    lateinit var norgapi: NorgApi
-
-    @MockkBean
-    lateinit var arbeidsfordeling: ArbeidsfordelingService
-
-    @MockkBean
-    lateinit var ansattService: AnsattService
 
     @Autowired
     lateinit var mockMvc: MockMvc
 
     @Test
     internal fun `hent ansatte gitt enhetid`() {
-        every { ansattService.ansatteForEnhet(any()) } returns listOf(
+        every { ansattServiceMock.ansatteForEnhet(any()) } returns listOf(
             Ansatt(
                 "fornavn",
                 "etternavn",
@@ -62,7 +66,7 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
 
     @Test
     internal fun `hent alle enheter`() {
-        every { norgapi.hentEnheter(any(), any(), any()) } returns listOf(
+        every { norgapiMock.hentEnheter(any(), any(), any()) } returns listOf(
             NorgDomain.Enhet(
                 "1234",
                 "NAV Test",

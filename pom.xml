@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.5</version>
+        <version>2.6.6</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -21,51 +21,83 @@
     </modules>
 
     <properties>
-        <java.version>11</java.version>
-        <jaxb.version>2.3.0</jaxb.version>
-        <common.version>2.2022.09.02_11.04-2530dd139a0a</common.version>
-        <fluent-hc.version>4.2.4</fluent-hc.version>
-        <kotlin.version>1.6.10</kotlin.version>
-        <mockito.version>2.25.0</mockito.version>
-        <mockito-kotlin.version>2.2.0</mockito-kotlin.version>
-        <mockk-version>1.12.3</mockk-version>
-        <spotify.logging.version>2.2.2</spotify.logging.version>
+        <java.version>17</java.version>
+        <kotlin.version>1.7.10</kotlin.version>
+        <mockk.version>1.13.2</mockk.version>
 
-        <!-- Tjenestespecs -->
-        <tjenestespesifikasjoner.version>1.2020.06.16-14.51-3b45df54f90a</tjenestespesifikasjoner.version>
+        <common.version>2.2022.09.15_07.46-e4fa96eb6813</common.version>
         <modia-common-utils.version>1.2022.08.01-11.26-97308e41bb8d</modia-common-utils.version>
+        <tjenestespesifikasjoner.version>1.2020.06.16-14.51-3b45df54f90a</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
-
-        <hamkrest.version>1.7.0.0</hamkrest.version>
-        <slf4j.version>1.7.21</slf4j.version>
-        <orika.version>1.5.1</orika.version>
-        <!-- må være med for å tvinge spring-boot til riktig versjon av byte-buddy som brukes av mockito -->
-        <byte-buddy.version>1.9.7</byte-buddy.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- overskriver no.nav.common.bom for å sikre at vi har riktige versjoner i henhold til spring-boot -->
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>5.3.18</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.6.5</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>no.nav.common</groupId>
+                <artifactId>nais</artifactId>
+                <version>${common.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.common</groupId>
-                <artifactId>bom</artifactId>
+                <artifactId>rest</artifactId>
                 <version>${common.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>cxf</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>client</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>types</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>test</artifactId>
+                <version>${common.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>job</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>metrics</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>util</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>health</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>token-client</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>sts</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>auth</artifactId>
+                <version>${common.version}</version>
             </dependency>
 
             <dependency>
@@ -85,121 +117,8 @@
                 <artifactId>nocommons</artifactId>
                 <version>0.6</version>
             </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>modia-felleskomponenter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>tilgangskontroll</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
-            <!--Kontrakter-->
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>kontrakter-domain</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>kontrakter-consumer</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>personsok-consumer</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!--Kjerneinfo-->
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>kjerneinfo-common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>kjerneinfo-consumer</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>kjerneinfo-domain</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!--Sykmeldingsperioder-->
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sykmeldingsperioder-consumer</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>dkif-consumer</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!--Kodeverk-->
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>kodeverk-consumer</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!--Dialogarena tjenestespesifikasjon-->
+            <!--Tjenestespesifikasjon-->
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
@@ -217,11 +136,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>dkif-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
                 <exclusions>
@@ -233,24 +147,9 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>arbeidsfordeling-v1-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
-
-
-            <!--Dialogarena-->
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>dialogarena-behandlingsinformasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-
-            <!--Virksomhetstjenester-->
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
@@ -268,11 +167,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>behandle-person-v1-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
@@ -282,18 +176,6 @@
                 <groupId>no.nav.personoversikt</groupId>
                 <artifactId>kotlin-utils</artifactId>
                 <version>${modia-common-utils.version}</version>
-            </dependency>
-
-            <!--Modig-->
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>modig-embedded</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-content-no-enonic</artifactId>
-                <version>${project.version}</version>
             </dependency>
 
             <!-- Kotlin -->
@@ -320,25 +202,15 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-inline</artifactId>
-                <version>${mockito.version}</version>
+                <!-- should match mockito-core version -->
+                <version>4.0.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>io.mockk</groupId>
-                <artifactId>mockk</artifactId>
-                <version>${mockk-version}</version>
+                <artifactId>mockk-jvm</artifactId>
+                <version>${mockk.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.ninja-squad</groupId>
-                <artifactId>springmockk</artifactId>
-                <version>2.0.3</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.natpryce</groupId>
-                <artifactId>hamkrest</artifactId>
-                <version>${hamkrest.version}</version>
             </dependency>
 
             <!-- kjerneinfo/personsok -->
@@ -348,9 +220,10 @@
                 <version>${org.jvnet.jaxb2_commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>ma.glasnost.orika</groupId>
-                <artifactId>orika-core</artifactId>
-                <version>${orika.version}</version>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock-standalone</artifactId>
+                <version>2.27.2</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -379,7 +252,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>11</jvmTarget>
+                    <jvmTarget>17</jvmTarget>
                 </configuration>
             </plugin>
         </plugins>
