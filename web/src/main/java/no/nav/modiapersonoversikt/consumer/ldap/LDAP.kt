@@ -5,26 +5,7 @@ import no.nav.common.utils.EnvironmentUtils
 import javax.naming.ldap.LdapContext
 
 interface LDAPService {
-    fun hentVeileder(ident: NavIdent): Saksbehandler
     fun hentRollerForVeileder(ident: NavIdent): List<String>
-
-    @Deprecated(
-        message = "Bruk hentVeileder(NavIdent)",
-        replaceWith = ReplaceWith(
-            expression = "hentVeileder(NavIdent(ident))",
-            imports = ["no.nav.common.types.identer.NavIdent"]
-        )
-    )
-    fun hentSaksbehandler(ident: String): Saksbehandler = hentVeileder(NavIdent(ident))
-
-    @Deprecated(
-        message = "Bruk hentRollerForVeileder(NavIdent)",
-        replaceWith = ReplaceWith(
-            expression = "hentRollerForVeileder(NavIdent(ident))",
-            imports = ["no.nav.common.types.identer.NavIdent"]
-        )
-    )
-    fun hentRollerForVeileder(ident: String): List<String> = hentRollerForVeileder(NavIdent(ident))
 }
 
 interface LDAPContextProvider {

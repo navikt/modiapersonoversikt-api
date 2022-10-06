@@ -2,11 +2,10 @@ package no.nav.modiapersonoversikt.rest.hode;
 
 import kotlin.Pair;
 import no.nav.common.types.identer.EnhetId;
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
-import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler;
+import no.nav.modiapersonoversikt.commondomain.Veileder;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
@@ -30,10 +29,6 @@ import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*;
 @RestController
 @RequestMapping("/rest/hode")
 public class HodeController {
-
-    @Autowired
-    private LDAPService ldapService;
-
     @Autowired
     private AnsattService ansattService;
 
@@ -68,7 +63,7 @@ public class HodeController {
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, NavnOgEnheter), () -> {
                     String ident = AuthContextUtils.requireIdent();
-                    Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
+                    Veileder veileder = hentSaksbehandlerNavn();
                     String enhetId = hentValgtEnhet(null, request);
                     String enhetNavn = norgApi
                             .hentEnheter(EnhetId.of(enhetId), NorgDomain.OppgaveBehandlerFilter.UFILTRERT, NorgApi.getIKKE_NEDLAGT())
@@ -77,7 +72,7 @@ public class HodeController {
                             .map(NorgDomain.Enhet::getEnhetNavn)
                             .orElse("[Ukjent enhetId: " + enhetId + "]");
 
-                    return new Me(ident, saksbehandler.getFirst(), saksbehandler.getSecond(), enhetId, enhetNavn);
+                    return new Me(ident, veileder.getFornavn(), veileder.getEtternavn(), enhetId, enhetNavn);
                 });
     }
 
@@ -106,10 +101,9 @@ public class HodeController {
                 });
     }
 
-    private Pair<String, String> hentSaksbehandlerNavn() {
-        Saksbehandler saksbehandler = AuthContextUtils.getNavIdent()
-                .map(ldapService::hentVeileder)
+    private Veileder hentSaksbehandlerNavn() {
+        return AuthContextUtils.getNavIdent()
+                .map(ansattService::hentVeileder)
                 .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
-        return new Pair<>(saksbehandler.getFornavn(), saksbehandler.getEtternavn());
     }
 }

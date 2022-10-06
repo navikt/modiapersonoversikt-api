@@ -4,7 +4,10 @@ import no.nav.common.client.axsys.AxsysClient
 import no.nav.common.client.nom.NomClient
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
+import no.nav.modiapersonoversikt.commondomain.Veileder
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
 import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet
 import org.slf4j.LoggerFactory
@@ -14,14 +17,16 @@ import kotlin.Exception
 interface AnsattService {
     fun hentEnhetsliste(): List<AnsattEnhet>
     fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet>
-    fun hentAnsattNavn(ident: String): String
+    fun hentVeileder(ident: NavIdent): Veileder
+    fun hentVeilederRoller(ident: NavIdent): RolleListe
     fun hentAnsattFagomrader(ident: String, enhet: String): Set<String>
     fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt>
 }
 
 class AnsattServiceImpl @Autowired constructor(
     private val axsys: AxsysClient,
-    private val nomClient: NomClient
+    private val nomClient: NomClient,
+    private val ldap: LDAPService,
 ) : AnsattService {
     private val log = LoggerFactory.getLogger(AnsattServiceImpl::class.java)
 
@@ -37,9 +42,17 @@ class AnsattServiceImpl @Autowired constructor(
             .map { AnsattEnhet(it.enhetId.get(), it.navn) }
     }
 
-    override fun hentAnsattNavn(ident: String): String {
-        val veilederNavn = nomClient.finnNavn(NavIdent(ident))
-        return "${veilederNavn.fornavn} ${veilederNavn.etternavn}"
+    override fun hentVeileder(ident: NavIdent): Veileder {
+        val veileder = nomClient.finnNavn(ident)
+        return Veileder(
+            ident = veileder.navIdent.get(),
+            fornavn = veileder.fornavn,
+            etternavn = veileder.etternavn,
+        )
+    }
+
+    override fun hentVeilederRoller(ident: NavIdent): RolleListe {
+        return RolleListe(ldap.hentRollerForVeileder(ident))
     }
 
     override fun hentAnsattFagomrader(ident: String, enhet: String): Set<String> {

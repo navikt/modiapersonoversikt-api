@@ -26,16 +26,6 @@ class LDAPTest {
     )
 
     @Test
-    fun `henter veileder`() {
-        val ldap = LDAPServiceImpl(createLDAPContext())
-        val veileder = ldap.hentVeileder(NavIdent("123"))
-
-        assertThat(veileder.ident).isEqualTo("123")
-        assertThat(veileder.fornavn).isEqualTo("Fornavn")
-        assertThat(veileder.etternavn).isEqualTo("Etternavn")
-    }
-
-    @Test
     fun `henter veileders roller`() {
         val ldap = LDAPServiceImpl(
             createLDAPContext(

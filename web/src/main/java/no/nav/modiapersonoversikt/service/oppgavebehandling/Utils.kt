@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Temagruppe.*
 import java.time.Clock
@@ -26,7 +27,7 @@ object Utils {
     }
 
     fun beskrivelseInnslag(
-        ident: String,
+        ident: NavIdent,
         navn: String,
         enhet: String?,
         innhold: String?,
@@ -36,7 +37,7 @@ object Utils {
             "--- %s %s (%s, %s) ---\n%s",
             DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(LocalDateTime.now(clock)),
             navn,
-            ident,
+            ident.get(),
             enhet,
             innhold
         )

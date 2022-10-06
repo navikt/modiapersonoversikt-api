@@ -28,6 +28,9 @@ object AuthContextUtils {
     fun getContext(): Optional<AuthContext> = authContextHolder.context
 
     @JvmStatic
+    fun requireNavIdent(): NavIdent = authContextHolder.requireNavIdent()
+
+    @JvmStatic
     fun requireIdent(): String = authContextHolder.requireNavIdent().get()
 
     @JvmStatic

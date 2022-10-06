@@ -1,6 +1,6 @@
-package no.nav.modiapersonoversikt.consumer.ldap
+package no.nav.modiapersonoversikt.commondomain
 
-data class Saksbehandler(
+data class Veileder(
     val fornavn: String,
     val etternavn: String,
     val ident: String
