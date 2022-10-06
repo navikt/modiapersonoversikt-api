@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.consumer.ldap
 
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.commondomain.Veileder
 import javax.naming.ldap.LdapContext
 
 interface LDAPService {

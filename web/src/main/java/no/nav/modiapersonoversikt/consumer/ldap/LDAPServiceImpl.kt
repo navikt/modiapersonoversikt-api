@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.consumer.ldap
 import no.nav.common.metrics.Event
 import no.nav.common.metrics.InfluxClient
 import no.nav.common.types.identer.NavIdent
-import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.ldap.LDAP.parseADRolle
 import org.slf4j.LoggerFactory
 import javax.naming.directory.SearchControls
