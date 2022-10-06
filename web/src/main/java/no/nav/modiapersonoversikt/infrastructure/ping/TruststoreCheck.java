@@ -9,7 +9,7 @@ import no.nav.common.utils.SslUtils;
 import java.util.Optional;
 
 public class TruststoreCheck implements HealthCheck {
-    private static TruststoreCheck INSTANCE = new TruststoreCheck();
+    private static final TruststoreCheck INSTANCE = new TruststoreCheck();
 
     @Override
     public HealthCheckResult checkHealth() {

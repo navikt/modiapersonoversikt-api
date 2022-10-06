@@ -39,19 +39,19 @@ object Filter {
             .toList()
     }
 
-    fun erLovligBehandling(wsBehandlingskjede: Behandlingskjede) = ::harLovligStatusPaBehandling
+    private fun erLovligBehandling(wsBehandlingskjede: Behandlingskjede) = ::harLovligStatusPaBehandling
         .and(::harLovligBehandlingstypeEllerAvsluttetKvittering)
         .and(::harLovligPrefix)
         .invoke(wsBehandlingskjede)
 
-    fun harLovligStatusPaBehandling(kjede: Behandlingskjede): Boolean {
+    private fun harLovligStatusPaBehandling(kjede: Behandlingskjede): Boolean {
         return when (val status = kjede.sisteBehandlingsstatus.value) {
             null -> false
             FilterUtils.OPPRETTET -> !erKvitteringstype(kjede.sisteBehandlingstype.value)
             else -> status == FilterUtils.AVSLUTTET
         }
     }
-    fun harLovligBehandlingstypeEllerAvsluttetKvittering(kjede: Behandlingskjede): Boolean {
+    private fun harLovligBehandlingstypeEllerAvsluttetKvittering(kjede: Behandlingskjede): Boolean {
         val type = kjede.sisteBehandlingstype.value
         return erFerdigsUnder1MndSidanEllerInnsendtSoknad(type, kjede) || lovligMenUtgaatStatusEllerUnderBehandling(
             type,
@@ -98,28 +98,28 @@ object Filter {
     }
 
     // filterer ut ulovlige sakstema basert på blacklist
-    fun harLovligSakstema(wsSak: Sak) = wsSak.sakstema.value !in ulovligeSakstema
+    private fun harLovligSakstema(wsSak: Sak) = wsSak.sakstema.value !in ulovligeSakstema
 
     // sak uten behandlinger skal ikke vises (sak med dokumenter skal)
-    fun harBehandlinger(wsSak: Sak) = wsSak.behandlingskjede.isNotNullOrEmpty()
+    private fun harBehandlinger(wsSak: Sak) = wsSak.behandlingskjede.isNotNullOrEmpty()
 
     // vil retunere alle behandlinger om en i kjeden er lovlig
-    fun harMinstEnLovligBehandling(wsSak: Sak) = wsSak.behandlingskjede.any(::erLovligBehandling)
+    private fun harMinstEnLovligBehandling(wsSak: Sak) = wsSak.behandlingskjede.any(::erLovligBehandling)
 
     // Er ikke alle behandlingstyper (XXyyyy) som skal taes med
-    fun harLovligBehandlingstype(behandling: Behandling) = behandling.behandlingsType in lovligeBehandlingstyper
+    private fun harLovligBehandlingstype(behandling: Behandling) = behandling.behandlingsType in lovligeBehandlingstyper
 
     // alle statuser utenom avbrutt er tillatt
-    fun harLovligBehandlingsstatus(behandling: Behandling) = behandling.behandlingsStatus != BehandlingsStatus.AVBRUTT
+    private fun harLovligBehandlingsstatus(behandling: Behandling) = behandling.behandlingsStatus != BehandlingsStatus.AVBRUTT
 
     // prefix er to første tall av sisteBehandlingREF, og 17 er ulovlig av uviss grunn
-    fun harLovligPrefix(behandling: Behandling) = behandling.prefix != ULOVLIG_PREFIX
+    private fun harLovligPrefix(behandling: Behandling) = behandling.prefix != ULOVLIG_PREFIX
 
     // Prefix uviss grunn til at 17 er forbudt
-    fun harLovligPrefix(kjede: Behandlingskjede) = kjede.sisteBehandlingREF.startsWith(ULOVLIG_PREFIX).not()
+    private fun harLovligPrefix(kjede: Behandlingskjede) = kjede.sisteBehandlingREF.startsWith(ULOVLIG_PREFIX).not()
 
     // filterning av behandlingskjeder mappet til behandling som er ferdig/avsluttet og er over 1 måned sidan den blie avslutta
-    fun sisteBehandlingErIkkeEldreEnn1Maned(behandling: Behandling): Boolean {
+    private fun sisteBehandlingErIkkeEldreEnn1Maned(behandling: Behandling): Boolean {
         return if (behandling.behandlingsStatus == BehandlingsStatus.FERDIG_BEHANDLET) {
             val behandlingDato = behandling.behandlingDato
             val nowMinus1Mnd = DateTime.now().minusMonths(1)

@@ -37,9 +37,7 @@ public class Pleiepengerrettighet implements Serializable {
     }
 
     public Optional<Pleiepengeperiode> getSistePleiepengeperiode() {
-        return perioder.stream()
-                .sorted(comparing(Pleiepengeperiode::getFraOgMed).reversed())
-                .findFirst();
+        return perioder.stream().max(comparing(Pleiepengeperiode::getFraOgMed));
     }
 
     public List<Arbeidsforhold> getAlleArbeidsforhold() {

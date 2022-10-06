@@ -13,8 +13,8 @@ import static org.mockito.Mockito.when;
 
 class ByEnhetStrategyTest {
 
-    private ByEnhetStrategy byEnhetStrategy = new ByEnhetStrategy();
-    private UnleashContext context = mock(UnleashContext.class);
+    private final ByEnhetStrategy byEnhetStrategy = new ByEnhetStrategy();
+    private final UnleashContext context = mock(UnleashContext.class);
 
     @Test
     void enhetTest() {
@@ -35,7 +35,7 @@ class ByEnhetStrategyTest {
 
     @Test
     void kallMedIngenContextGirFalse() {
-        HashMap<String, String> parameters = new HashMap<String, String>() {{
+        HashMap<String, String> parameters = new HashMap<>() {{
             put(ENHETER, "0118");
         }};
 
@@ -55,14 +55,14 @@ class ByEnhetStrategyTest {
     }
 
     private void addEnhetToContextProperties(String enheter) {
-        HashMap<String, String> props = new HashMap<String, String>() {{
+        HashMap<String, String> props = new HashMap<>() {{
             put(ENHETER, enheter);
         }};
         when(context.getProperties()).thenReturn(props);
     }
 
     private void assertEnhet(String parameter, boolean expected) {
-        HashMap<String, String> params = new HashMap<String, String>() {{
+        HashMap<String, String> params = new HashMap<>() {{
             put("valgtEnhet", parameter);
         }};
         assertThat(byEnhetStrategy.isEnabled(params, context), is(expected));

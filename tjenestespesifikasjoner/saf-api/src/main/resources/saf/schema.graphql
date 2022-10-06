@@ -518,7 +518,7 @@ enum Journalstatus {
     # * Tilsvarer statusen **JOURNALFOERT** for inngående dokumenter.
     FERDIGSTILT
 
-    # Dokumentet er sendt til bruker. Statusen benyttes også når dokumentet er tilgjengeliggjort for bruker på DittNAV, og bruker er varslet.
+    # Dokumentet er sendt til bruker. Statusen benyttes også når dokumentet er tilgjengeliggjort for bruker på Nav.no, og bruker er varslet.
     # * Statusen kan forekomme for utgående dokumenter og notater.
     EKSPEDERT
 

@@ -25,7 +25,8 @@ import org.junit.jupiter.api.Test
 
 class ArbeidsrettetOppfolgingImplTest {
     val fnr = "12345678910"
-    private val TEST_SUBJECT = AuthContext(
+
+    private val testSubject = AuthContext(
         UserRole.INTERN,
         PlainJWT(JWTClaimsSet.Builder().subject("Z123456").build())
     )
@@ -79,7 +80,7 @@ class ArbeidsrettetOppfolgingImplTest {
             )
 
             val oppfolgingsinfo: ArbeidsrettetOppfolging.Info = AuthContextUtils.withContext(
-                TEST_SUBJECT,
+                testSubject,
                 UnsafeSupplier {
                     ArbeidsrettetOppfolgingServiceImpl(
                         apiUrl = url,
@@ -88,7 +89,7 @@ class ArbeidsrettetOppfolgingImplTest {
                 }
             )
 
-            assertThat(oppfolgingsinfo.erUnderOppfolging).isTrue()
+            assertThat(oppfolgingsinfo.erUnderOppfolging).isTrue
             assertThat(oppfolgingsinfo.veileder?.ident).isEqualTo("ident")
             assertThat(oppfolgingsinfo.veileder?.fornavn).isEqualTo("fornavn")
             assertThat(oppfolgingsinfo.veileder?.etternavn).isEqualTo("etternavn")
@@ -118,7 +119,7 @@ class ArbeidsrettetOppfolgingImplTest {
             )
 
             val oppfolgingsinfo: ArbeidsrettetOppfolging.Info = AuthContextUtils.withContext(
-                TEST_SUBJECT,
+                testSubject,
                 UnsafeSupplier {
                     ArbeidsrettetOppfolgingServiceImpl(
                         apiUrl = url,
@@ -128,7 +129,7 @@ class ArbeidsrettetOppfolgingImplTest {
             )
 
             verify { ldapService wasNot Called }
-            assertThat(oppfolgingsinfo.erUnderOppfolging).isFalse()
+            assertThat(oppfolgingsinfo.erUnderOppfolging).isFalse
             assertThat(oppfolgingsinfo.veileder).isNull()
             assertThat(oppfolgingsinfo.oppfolgingsenhet).isNull()
         }

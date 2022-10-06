@@ -45,8 +45,8 @@ public class VedtaksMapperTest {
 
         Periode periode = mapper.map(wsPeriode);
 
-        assertSameDate(periode.fraOgMed, FOM_DATO);
-        assertSameDate(periode.tilOgMed, TOM_DATO);
+        assertSameDate(periode.fraOgMed(), FOM_DATO);
+        assertSameDate(periode.tilOgMed(), TOM_DATO);
     }
 
     @Test

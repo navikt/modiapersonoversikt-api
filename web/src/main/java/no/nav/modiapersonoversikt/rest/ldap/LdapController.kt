@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.ldap
 
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
@@ -22,7 +23,7 @@ constructor(private val ldapService: LDAPService, private val tilgangskontroll: 
             .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Saksbehandler.Roller)) {
                 val ident = AuthContextUtils.requireIdent()
-                mapOf("roller" to ldapService.hentRollerForVeileder(ident))
+                mapOf("roller" to ldapService.hentRollerForVeileder(NavIdent(ident)))
             }
     }
 }

@@ -36,16 +36,16 @@ public class ForeldrepengerMapperTest {
 
     public static final LocalDate TERMINDATO = new LocalDate(2013, 2, 15);
     public static final LocalDate OMSORGSOVERTAKELSESDATO = new LocalDate(2013, 2, 14);
-    private LocalDate fomDate = new LocalDate(2013, 2, 13);
-    private XMLGregorianCalendar fomXMLDate = DateUtils.convertDateToXmlGregorianCalendar(fomDate.toDate());
-    private LocalDate tomDate = new LocalDate(2014, 2, 13);
-    private LocalDate IDDATE = new LocalDate(2015, 2, 13);
-    private XMLGregorianCalendar tomXMLDate = DateUtils.convertDateToXmlGregorianCalendar(tomDate.toDate());
-    private double nettoBelop = 10000.99;
-    private String refusjonstypeKode = "Etterbetalt";
-    private String termKontant = "Kontant";
-    private double dagSats = 250.33;
-    private String kreditorNavn = "Kreditor";
+    private final LocalDate fomDate = new LocalDate(2013, 2, 13);
+    private final XMLGregorianCalendar fomXMLDate = DateUtils.convertDateToXmlGregorianCalendar(fomDate.toDate());
+    private final LocalDate tomDate = new LocalDate(2014, 2, 13);
+    private final LocalDate IDDATE = new LocalDate(2015, 2, 13);
+    private final XMLGregorianCalendar tomXMLDate = DateUtils.convertDateToXmlGregorianCalendar(tomDate.toDate());
+    private final double nettoBelop = 10000.99;
+    private final String refusjonstypeKode = "Etterbetalt";
+    private final String termKontant = "Kontant";
+    private final double dagSats = 250.33;
+    private final String kreditorNavn = "Kreditor";
 
     private ForeldrepengerMapper mapper;
 
@@ -318,23 +318,21 @@ public class ForeldrepengerMapperTest {
 			foreldrepengerettighet.setSlutt(maksdatoXMLdate);
 		}
 
-        if (foreldrepengerettighet instanceof FimAdopsjon) {
+        if (foreldrepengerettighet instanceof FimAdopsjon adopsjon) {
             FimForeldrepengetype foreldrepengertype = new FimForeldrepengetype();
             foreldrepengertype.setKode("Foreldrepengetype");
             foreldrepengertype.setTermnavn("Adopsjon");
             foreldrepengerettighet.setForeldrepengetype(foreldrepengertype);
 
-            FimAdopsjon adopsjon = (FimAdopsjon) foreldrepengerettighet;
             XMLGregorianCalendar omsorgsovertakelseXMLDate = DateUtils.convertDateToXmlGregorianCalendar(OMSORGSOVERTAKELSESDATO.toDate());
             adopsjon.setOmsorgsovertakelse(omsorgsovertakelseXMLDate);
             return adopsjon;
-        } else if (foreldrepengerettighet instanceof FimFoedsel) {
+        } else if (foreldrepengerettighet instanceof FimFoedsel foedsel) {
             FimForeldrepengetype foreldrepengertype = new FimForeldrepengetype();
             foreldrepengertype.setKode("Foreldrepengetype");
             foreldrepengertype.setTermnavn("Foedsel");
             foreldrepengerettighet.setForeldrepengetype(foreldrepengertype);
 
-            FimFoedsel foedsel = (FimFoedsel) foreldrepengerettighet;
             XMLGregorianCalendar terminXMLDate = DateUtils.convertDateToXmlGregorianCalendar(TERMINDATO.toDate());
             foedsel.setTermin(terminXMLDate);
             return foedsel;

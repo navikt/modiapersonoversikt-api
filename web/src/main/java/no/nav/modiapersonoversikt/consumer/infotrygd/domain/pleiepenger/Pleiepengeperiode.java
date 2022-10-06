@@ -26,12 +26,12 @@ public class Pleiepengeperiode implements Serializable {
 
     private Stream<Vedtak> getSorterteVedtak() {
         return vedtakListe.stream()
-                .sorted(comparing((Vedtak vedtak) -> vedtak.getPeriode().tilOgMed).reversed());
+                .sorted(comparing((Vedtak vedtak) -> vedtak.getPeriode().tilOgMed()).reversed());
     }
 
     public Stream<Vedtak> getVedtakFOMInnevaerende() {
         return vedtakListe.stream()
-                .sorted(comparing((Vedtak vedtak) -> vedtak.getPeriode().tilOgMed))
+                .sorted(comparing((Vedtak vedtak) -> vedtak.getPeriode().tilOgMed()))
                 .filter(vedtak -> vedtak.getPeriode().erGjeldendeEllerSenere());
     }
 
@@ -44,8 +44,7 @@ public class Pleiepengeperiode implements Serializable {
 
     public Optional<Vedtak> getNyesteVedtak() {
         return vedtakListe.stream()
-                .sorted(comparing((Vedtak vedtak) -> vedtak.getPeriode().tilOgMed).reversed())
-                .findFirst();
+                .max(comparing((Vedtak vedtak) -> vedtak.getPeriode().tilOgMed()));
     }
 
     public LocalDate getFraOgMed() {

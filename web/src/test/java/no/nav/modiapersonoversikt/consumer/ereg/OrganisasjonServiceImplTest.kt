@@ -25,12 +25,12 @@ class OrganisasjonServiceImplTest {
     )
 
     private val gyldigRespons = "{\"organisasjonsnummer\": \"orgnr\", \"navn\": { \"navnelinje2\": \"NAV\", \"navnelinje5\": \"IT\" }}"
-    private val ORG_NR = "000000000"
+    private val orgNr = "000000000"
 
     @Test
     fun `håndterer 200 statusCode med data`() {
         withMockServer(statusCode = 200, body = gyldigRespons) { service ->
-            val nokkelInfo = service.hentNoekkelinfo(ORG_NR)
+            val nokkelInfo = service.hentNoekkelinfo(orgNr)
             MatcherAssert.assertThat(nokkelInfo.isPresent, Is.`is`(true))
             MatcherAssert.assertThat(nokkelInfo.get().navn, Is.`is`("NAV IT"))
         }
@@ -39,22 +39,22 @@ class OrganisasjonServiceImplTest {
     @Test
     fun `håndterer ukjent json uten alvorlig feil`() {
         withMockServer(statusCode = 200, body = "{\"json\": true}") { service ->
-            MatcherAssert.assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, Is.`is`(true))
+            MatcherAssert.assertThat(service.hentNoekkelinfo(orgNr).isEmpty, Is.`is`(true))
         }
     }
 
     @Test
     fun `håndterer status coder utenfor 200-299 rangen`() {
         withMockServer(statusCode = 404, body = gyldigRespons) { service ->
-            MatcherAssert.assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, Is.`is`(true))
+            MatcherAssert.assertThat(service.hentNoekkelinfo(orgNr).isEmpty, Is.`is`(true))
         }
 
         withMockServer(statusCode = 500) { service ->
-            MatcherAssert.assertThat(service.hentNoekkelinfo(ORG_NR).isEmpty, Is.`is`(true))
+            MatcherAssert.assertThat(service.hentNoekkelinfo(orgNr).isEmpty, Is.`is`(true))
         }
     }
 
-    internal fun withMockServer(statusCode: Int = 200, body: String? = null, test: (OrganisasjonService) -> Unit) {
+    private fun withMockServer(statusCode: Int = 200, body: String? = null, test: (OrganisasjonService) -> Unit) {
         WireMock.stubFor(
             WireMock.get(WireMock.anyUrl())
                 .willReturn(
@@ -70,7 +70,7 @@ class OrganisasjonServiceImplTest {
         test(service)
 
         WireMock.verify(
-            WireMock.getRequestedFor(WireMock.urlEqualTo("/api/v1/organisasjon/$ORG_NR/noekkelinfo"))
+            WireMock.getRequestedFor(WireMock.urlEqualTo("/api/v1/organisasjon/$orgNr/noekkelinfo"))
                 .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
                 .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, WireMock.matching(AppConstants.SYSTEMUSER_USERNAME))
                 .withHeader("accept", WireMock.matching("application/json"))

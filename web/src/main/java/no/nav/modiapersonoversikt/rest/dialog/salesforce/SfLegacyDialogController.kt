@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.ldap.Saksbehandler
@@ -240,7 +241,7 @@ class SfLegacyDialogController(
                     traad.kjedeId,
                     traad.gjeldendeTemagruppe?.let { Temagruppe.valueOf(it) },
                     enhet,
-                    ignorerConflict ?: false
+                    ignorerConflict
                 )?.oppgaveId
             } catch (e: OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler) {
                 throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
@@ -278,7 +279,7 @@ class SfLegacyDialogController(
 
         val identMap = identer.associateWith { ident ->
             runCatching {
-                ldapService.hentSaksbehandler(ident)
+                ldapService.hentVeileder(NavIdent(ident))
             }.recover {
                 logger.error("Fant ikke saksbehandler for $ident", it)
                 Saksbehandler("-", "-", ident)

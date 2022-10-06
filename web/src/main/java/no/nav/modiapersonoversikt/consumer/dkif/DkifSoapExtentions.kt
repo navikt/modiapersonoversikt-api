@@ -5,7 +5,7 @@ import java.time.LocalDate
 import javax.xml.datatype.XMLGregorianCalendar
 
 object DkifSoapExtentions {
-    fun WSHentDigitalKontaktinformasjonResponse.fromDTO() = Dkif.DigitalKontaktinformasjon(
+    private fun WSHentDigitalKontaktinformasjonResponse.fromDTO() = Dkif.DigitalKontaktinformasjon(
         personident = this.digitalKontaktinformasjon.personident,
         reservasjon = this.digitalKontaktinformasjon.reservasjon,
         mobiltelefonnummer = this.getMobilnummer(),

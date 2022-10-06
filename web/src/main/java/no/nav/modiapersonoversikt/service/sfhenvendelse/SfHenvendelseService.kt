@@ -113,11 +113,13 @@ class SfHenvendelseServiceImpl(
         return henvendelseInfoApi
             .henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())
             .let { loggFeilSomErSpesialHandtert(bruker, it) }
+            .asSequence()
             .filter(kontorsperreTilgang(enhetOgGTListe))
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
             .map(::sorterMeldinger)
             .map(::unikeJournalposter)
+            .toList()
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {

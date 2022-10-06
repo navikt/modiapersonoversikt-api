@@ -47,11 +47,9 @@ public class YtelseskontraktRequest implements Serializable {
             return true;
         }
 
-        if (!(o instanceof YtelseskontraktRequest)) {
+        if (!(o instanceof YtelseskontraktRequest that)) {
             return false;
         }
-
-        YtelseskontraktRequest that = (YtelseskontraktRequest) o;
 
         if (fodselsnummerNotEquals(that)) {
             return false;
@@ -59,11 +57,7 @@ public class YtelseskontraktRequest implements Serializable {
         if (fromNotEquals(that)) {
             return false;
         }
-        if (toNotEquals(that)) {
-            return false;
-        }
-
-        return true;
+        return !toNotEquals(that);
     }
 
     @Override
@@ -89,40 +83,25 @@ public class YtelseskontraktRequest implements Serializable {
 
     private boolean toNotEquals(YtelseskontraktRequest that) {
         if (to != null) {
-            if (!to.equals(that.to)) {
-                return true;
-            }
+            return !to.equals(that.to);
         } else {
-            if (that.to != null) {
-                return true;
-            }
+            return that.to != null;
         }
-        return false;
     }
 
     private boolean fromNotEquals(YtelseskontraktRequest that) {
         if (from != null) {
-            if (!from.equals(that.from)) {
-                return true;
-            }
+            return !from.equals(that.from);
         } else {
-            if (that.from != null) {
-                return true;
-            }
+            return that.from != null;
         }
-        return false;
     }
 
     private boolean fodselsnummerNotEquals(YtelseskontraktRequest that) {
         if (fodselsnummer != null) {
-            if (!fodselsnummer.equals(that.fodselsnummer)) {
-                return true;
-            }
+            return !fodselsnummer.equals(that.fodselsnummer);
         } else {
-            if (that.fodselsnummer != null) {
-                return true;
-            }
+            return that.fodselsnummer != null;
         }
-        return false;
     }
 }

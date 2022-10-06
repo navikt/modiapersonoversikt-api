@@ -14,8 +14,8 @@ object FilterUtils {
     const val AVBRUTT = "avbrutt"
     const val AVSLUTTET = "avsluttet"
     const val SEND_SOKNAD_KVITTERINGSTYPE = "ae0002"
-    const val DOKUMENTINNSENDING_KVITTERINGSTYPE = "ae0001"
-    const val BEHANDLINGSTATUS_AVSLUTTET = "avsluttet"
+    private const val DOKUMENTINNSENDING_KVITTERINGSTYPE = "ae0001"
+    private const val BEHANDLINGSTATUS_AVSLUTTET = "avsluttet"
 
     private val LOGGER = LoggerFactory.getLogger(FilterUtils::class.java)
 
@@ -52,7 +52,7 @@ object FilterUtils {
         return erAvsluttet
     }
 
-    val PROD_SETTING_DATO: LocalDateTime by lazy {
+    private val PROD_SETTING_DATO: LocalDateTime by lazy {
         LocalDate
             .parse(getRequiredProperty("SAKSOVERSIKT_PRODSETTNINGSDATO"))
             .atStartOfDay()

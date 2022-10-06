@@ -40,7 +40,7 @@ internal class PleiepengerUttrekkTest {
         every { pleiepengerV1.hentPleiepengerettighet(any()) } returns WSHentPleiepengerettighetResponse()
 
         val response = uttrekk.hent(FNR)
-        val pleiepenger = response.get("pleiepenger")
+        val pleiepenger = response["pleiepenger"]
 
         assertNull(pleiepenger)
     }
@@ -50,10 +50,10 @@ internal class PleiepengerUttrekkTest {
         every { pleiepengerV1.hentPleiepengerettighet(any()) } returns mockResponse()
 
         val response = uttrekk.hent(FNR)
-        val pleiepengerListe = response.get("pleiepenger") as List<*>
+        val pleiepengerListe = response["pleiepenger"] as List<*>
         val pleiepenger = pleiepengerListe[0] as Map<String, Any?>
 
-        assertEquals(BARNETS_FNR, pleiepenger.get("barnet"))
+        assertEquals(BARNETS_FNR, pleiepenger["barnet"])
     }
 
     private fun mockResponse() = WSHentPleiepengerettighetResponse()

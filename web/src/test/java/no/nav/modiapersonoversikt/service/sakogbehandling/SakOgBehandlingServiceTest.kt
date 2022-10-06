@@ -9,9 +9,9 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SakOgBehandlingServiceTest {
-    val sakOgBehandling: SakOgBehandlingV1 = mockk()
-    val pdlOppslagService: PdlOppslagService = mockk()
-    val sakOgBehandlingService = SakOgBehandlingService(sakOgBehandling, pdlOppslagService)
+    private val sakOgBehandling: SakOgBehandlingV1 = mockk()
+    private val pdlOppslagService: PdlOppslagService = mockk()
+    private val sakOgBehandlingService = SakOgBehandlingService(sakOgBehandling, pdlOppslagService)
 
     @Test
     internal fun `tre ws-saker skal gi liste med tre elementer`() {

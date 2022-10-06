@@ -71,12 +71,12 @@ public class SakstemaServiceTest {
         Sak sak = new Sak()
                 .withSaksId("123")
                 .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
                 .withTemakode(Konstanter.OPPFOLGING)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         Set<String> temakoder = new HashSet<>(List.of(Konstanter.DAGPENGER, Konstanter.OPPFOLGING));
         ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(temakoder, List.of(sak, oppfolinging), new ArrayList<>(), emptyMap());
@@ -91,7 +91,7 @@ public class SakstemaServiceTest {
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
                 .withTemakode(Konstanter.OPPFOLGING)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         Set<String> temakoder = new HashSet<>(List.of(Konstanter.OPPFOLGING));
         ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(temakoder, List.of(oppfolinging), List.of(
@@ -114,12 +114,12 @@ public class SakstemaServiceTest {
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
                 .withTemakode(Konstanter.OPPFOLGING)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         Sak sak = new Sak()
                 .withSaksId("123")
                 .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         HashSet<String> temakoder = new HashSet<>(List.of(Konstanter.DAGPENGER, Konstanter.OPPFOLGING));
         ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(temakoder, List.of(oppfolinging, sak), List.of(
@@ -144,12 +144,12 @@ public class SakstemaServiceTest {
         Sak sak = new Sak()
                 .withSaksId("123")
                 .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         Sak sak2 = new Sak()
                 .withSaksId("1234")
                 .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         HashSet<String> temakoder = new HashSet<>(List.of(Konstanter.DAGPENGER, Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER));
         ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(temakoder, List.of(sak2, sak), List.of(
@@ -224,17 +224,17 @@ public class SakstemaServiceTest {
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
                 .withTemakode(Konstanter.OPPFOLGING)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         Sak sak = new Sak()
                 .withSaksId("123")
                 .withTemakode(Konstanter.DAGPENGER)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         Sak sak2 = new Sak()
                 .withSaksId("122")
                 .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
-                .withAvsluttet(null);
+                .withAvsluttet(Optional.empty());
 
         HashSet<String> temakoder = new HashSet<>(List.of(Konstanter.DAGPENGER, Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER));
         ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(temakoder, List.of(oppfolinging, sak, sak2), List.of(

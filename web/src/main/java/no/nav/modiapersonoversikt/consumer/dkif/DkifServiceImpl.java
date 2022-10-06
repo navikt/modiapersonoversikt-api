@@ -10,6 +10,7 @@ import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSKon
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSMobiltelefonnummer;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonRequest;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +27,9 @@ public class DkifServiceImpl implements Dkif.Service {
         this.cache = CacheUtils.createDefaultCache();
     }
 
+    @NotNull
     @Override
-    public Dkif.DigitalKontaktinformasjon hentDigitalKontaktinformasjon(String ident) {
+    public Dkif.DigitalKontaktinformasjon hentDigitalKontaktinformasjon(@NotNull String ident) {
         return Objects.requireNonNull(cache.get(new Fnr(ident), this::hentKontaktinfoFraApi));
     }
 
@@ -41,7 +43,7 @@ public class DkifServiceImpl implements Dkif.Service {
             logger.info("Kunne ikke hente kontaktinformasjon fra dkif, ", e);
             return DkifSoapExtentions.responseFromDTO(lagTomDigitalKontaktinformasjonResponse());
         } catch (Exception e) {
-            logger.error("Feil ved henting fra dkif, ", e.getMessage());
+            logger.error("Feil ved henting fra dkif, ", e);
             throw new RuntimeException("Feil ved henting fra dkif ", e);
         }
     }

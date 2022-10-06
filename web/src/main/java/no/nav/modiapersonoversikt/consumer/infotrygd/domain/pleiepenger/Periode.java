@@ -3,15 +3,7 @@ package no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Periode implements Serializable {
-
-    public final LocalDate fraOgMed;
-    public final LocalDate tilOgMed;
-
-    public Periode(LocalDate fraOgMed, LocalDate tilOgMed) {
-        this.fraOgMed = fraOgMed;
-        this.tilOgMed = tilOgMed;
-    }
+public record Periode(LocalDate fraOgMed, LocalDate tilOgMed) implements Serializable {
 
     public boolean erGjeldende() {
         LocalDate today = LocalDate.now();

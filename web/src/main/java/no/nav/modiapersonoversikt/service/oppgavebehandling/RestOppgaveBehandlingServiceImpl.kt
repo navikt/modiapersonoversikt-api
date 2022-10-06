@@ -138,7 +138,7 @@ class RestOppgaveBehandlingServiceImpl(
             return
         } else if (tvungenTilordning) {
             tjenestekallLogg.warn("[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}")
-        } else if (oppgave.tilordnetRessurs != null && oppgave.tilordnetRessurs != ident) {
+        } else if (oppgave.tilordnetRessurs != null) {
             throw AlleredeTildeltAnnenSaksbehandler("Oppgaven er allerede tildelt ${oppgave.tilordnetRessurs}. Vil du overstyre dette?")
         }
 
@@ -380,5 +380,5 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun correlationId() = getCallId()
     private fun stripTemakode(prioritet: String) = prioritet.substringBefore("_")
-    private fun String?.coerceBlankToNull() = if (this == null || this.isBlank()) null else this
+    private fun String?.coerceBlankToNull() = if (this.isNullOrBlank()) null else this
 }
