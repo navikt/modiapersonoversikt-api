@@ -73,7 +73,7 @@ internal class SfHenvendelseServiceImplTest {
 
         val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")
         assertThat(henvendelser).hasSize(1)
-        assertThat(henvendelser[0].kontorsperre).isFalse()
+        assertThat(henvendelser[0].kontorsperre).isFalse
     }
 
     @Test

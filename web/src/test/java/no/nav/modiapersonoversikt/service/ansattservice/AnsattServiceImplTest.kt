@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
 internal class AnsattServiceImplTest {
-    val nomClient: NomClient = mockk()
-    val axsys: AxsysClient = mockk()
-    val ldap: LDAPService = mockk()
-    val ansattServiceImpl: AnsattServiceImpl = AnsattServiceImpl(axsys, nomClient, ldap)
+    private val nomClient: NomClient = mockk()
+    private val axsys: AxsysClient = mockk()
+    private val ldap: LDAPService = mockk()
+    private val ansattServiceImpl: AnsattServiceImpl = AnsattServiceImpl(axsys, nomClient, ldap)
 
     @JvmField
     @RegisterExtension
@@ -87,7 +87,7 @@ internal class AnsattServiceImplTest {
         snapshot.assertMatches(ansatteListe)
     }
 
-    fun lagNavAnsatt(fornavn: String, etternavn: String, id: String): VeilederNavn {
+    private fun lagNavAnsatt(fornavn: String, etternavn: String, id: String): VeilederNavn {
         return VeilederNavn()
             .setFornavn(fornavn)
             .setEtternavn(etternavn)
@@ -95,7 +95,7 @@ internal class AnsattServiceImplTest {
             .setVisningsNavn("$fornavn $etternavn")
     }
 
-    fun lagNavEnhet(enhetsId: String, enhetsNavn: String, temaer: List<String>? = null): AxsysEnhet {
+    private fun lagNavEnhet(enhetsId: String, enhetsNavn: String, temaer: List<String>? = null): AxsysEnhet {
         return AxsysEnhet()
             .setEnhetId(EnhetId(enhetsId))
             .setNavn(enhetsNavn)

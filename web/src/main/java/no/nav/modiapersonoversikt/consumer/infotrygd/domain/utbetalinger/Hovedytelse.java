@@ -26,7 +26,7 @@ public class Hovedytelse {
         this.type = other.type;
         this.historiskUtbetalinger = other.historiskUtbetalinger == null ? null :
                 other.historiskUtbetalinger.stream()
-                        .map(utbetaling -> new HistoriskUtbetaling(utbetaling))
+                        .map(HistoriskUtbetaling::new)
                         .collect(toList());
     }
 

@@ -24,7 +24,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 
 public class PleiepengerServiceImpl implements PleiepengerService {
-    private static Audit.AuditDescriptor<WSPerson> auditLogger = Audit.describe(
+    private static final Audit.AuditDescriptor<WSPerson> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Pleiepenger,
             (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(WSPerson::getIdent).orElse("--")))
@@ -71,12 +71,12 @@ public class PleiepengerServiceImpl implements PleiepengerService {
     }
 
     private PleiepengerListeResponse handterSikkerhetsbegresning(HentPleiepengerettighetSikkerhetsbegrensning e) {
-        logger.warn("HentPleiepengerListeSikkerhetsbegrensning ved kall på hentPleiepengerListe", e.getMessage());
+        logger.warn("HentPleiepengerListeSikkerhetsbegrensning ved kall på hentPleiepengerListe", e);
         throw new RuntimeException(e.getMessage(), e);
     }
 
     private PleiepengerListeResponse handterUgyldigIdent(HentPleiepengerettighetUgyldigIdentNr e) {
-        logger.warn("Ugyldig identnummer ved kall på hentPleiepengerListe", e.getMessage());
+        logger.warn("Ugyldig identnummer ved kall på hentPleiepengerListe", e);
         throw new RuntimeException("Ugyldig identnummer ved kall på hentPleiepengerListe", e);
     }
 

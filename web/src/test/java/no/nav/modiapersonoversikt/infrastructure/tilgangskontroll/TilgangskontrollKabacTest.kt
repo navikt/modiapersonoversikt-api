@@ -45,7 +45,7 @@ internal class TilgangskontrollKabacTest {
         }
     }
 
-    suspend fun <T> inParallell(times: Int, task: () -> T): List<T> {
+    private suspend fun <T> inParallell(times: Int, task: () -> T): List<T> {
         return coroutineScope {
             buildList {
                 repeat(times) {

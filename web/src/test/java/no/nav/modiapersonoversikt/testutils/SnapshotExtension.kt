@@ -16,7 +16,7 @@ import kotlin.test.fail
 
 class SnapshotExtension(
     path: String = "src/test/resources/snapshots",
-    val debug: Boolean = false
+    private val debug: Boolean = false
 ) : ParameterResolver, BeforeTestExecutionCallback, AfterTestExecutionCallback {
     private val path: String
     private var name: String? = null

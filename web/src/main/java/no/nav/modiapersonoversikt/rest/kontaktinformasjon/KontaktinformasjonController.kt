@@ -24,7 +24,7 @@ class KontaktinformasjonController @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll
 ) {
 
-    val dkifExperiment = Scientist.createExperiment<Dkif.DigitalKontaktinformasjon>(
+    private val dkifExperiment = Scientist.createExperiment<Dkif.DigitalKontaktinformasjon>(
         Scientist.Config(
             name = "dkif",
             experimentRate = Scientist.FixedValueRate(0.0)

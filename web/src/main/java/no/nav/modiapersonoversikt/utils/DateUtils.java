@@ -17,7 +17,7 @@ import java.util.GregorianCalendar;
  *
  */
 public class DateUtils {
-    private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
 
     public static boolean datoInside(XMLGregorianCalendar datoKravMottatt, Date cutFrom, Date cutTo) {
@@ -40,7 +40,7 @@ public class DateUtils {
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
         } catch (DatatypeConfigurationException e) {
-            logger.warn("DatatypeConfigurationException", e.getMessage());
+            logger.warn("DatatypeConfigurationException", e);
             throw new RuntimeException("Klarer ikke å lage dato", e);
         }
     }
@@ -50,13 +50,13 @@ public class DateUtils {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(), date.getHourOfDay(), date.getMinuteOfHour(), date.getSecondOfMinute(),
                     date.getMillisOfSecond(), 0);
         } catch (DatatypeConfigurationException e) {
-            logger.warn("DatatypeConfigurationException", e.getMessage());
+            logger.warn("DatatypeConfigurationException", e);
             throw new RuntimeException("Klarer ikke å lage dato", e);
         }
     }
 
     /**
-     * @return A random date in "sort of a" 3 month interval
+     * @return A random date in "sort of" 3-month interval
      */
     public static Date getRandomDate() {
         DateTime end = DateTime.now().plusDays(25);

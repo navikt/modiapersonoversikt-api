@@ -22,7 +22,7 @@ import static java.util.Optional.ofNullable;
  * Vår standardimplementasjonen av den eksterne tjenesten for foreldrepenger.
  */
 public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
-    private static Audit.AuditDescriptor<FimPerson> auditLogger = Audit.describe(
+    private static final Audit.AuditDescriptor<FimPerson> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Foreldrepenger,
             (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(FimPerson::getIdent).orElse("--")))
@@ -42,7 +42,7 @@ public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
                 auditLogger.log(rawResponse.getForeldrepengerettighet().getForelder());
             }
         } catch (HentForeldrepengerettighetSikkerhetsbegrensning ex) {
-            logger.warn("HentForeldrepengerListeSikkerhetsbegrensning ved kall på hentForeldrepengerListe", ex.getMessage());
+            logger.warn("HentForeldrepengerListeSikkerhetsbegrensning ved kall på hentForeldrepengerListe", ex);
             auditLogger.denied("Årsak: " + ex.getMessage());
             throw new RuntimeException(ex.getMessage(), ex);
         }

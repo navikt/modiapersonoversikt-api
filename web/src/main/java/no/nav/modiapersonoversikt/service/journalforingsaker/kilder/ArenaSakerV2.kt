@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 import javax.naming.ServiceUnavailableException
 import javax.xml.ws.Holder
 
-internal class ArenaSakerV2(val arenaSakVedtakService: SakVedtakPortType) : SakerKilde {
+internal class ArenaSakerV2(private val arenaSakVedtakService: SakVedtakPortType) : SakerKilde {
     private val log = LoggerFactory.getLogger(ArenaSakerV2::class.java)
     override val kildeNavn: String
         get() = "ARENA"

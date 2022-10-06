@@ -33,7 +33,6 @@ import java.time.LocalDateTime
 import javax.xml.datatype.DatatypeFactory
 import javax.xml.ws.Holder
 import kotlin.contracts.ExperimentalContracts
-import kotlin.streams.toList
 
 @ExperimentalContracts
 class SakerServiceImplTest {
@@ -213,14 +212,14 @@ class SakerServiceImplTest {
 
         const val FNR = "fnr"
         const val SakId_1 = "1"
-        const val FagsystemSakId_1 = "11"
-        const val SakId_2 = "2"
-        const val FagsystemSakId_2 = "22"
-        const val SakId_3 = "3"
-        const val FagsystemSakId_3 = "33"
-        const val SakId_4 = "4"
+        private const val FagsystemSakId_1 = "11"
+        private const val SakId_2 = "2"
+        private const val FagsystemSakId_2 = "22"
+        private const val SakId_3 = "3"
+        private const val FagsystemSakId_3 = "33"
+        private const val SakId_4 = "4"
 
-        fun earlierDateTimeWithOffSet(offset: Long) = HentBrukersSaker.DateTime(
+        private fun earlierDateTimeWithOffSet(offset: Long) = HentBrukersSaker.DateTime(
             LocalDateTime.now().minusDays(offset)
         )
 

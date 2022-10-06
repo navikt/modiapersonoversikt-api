@@ -18,7 +18,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -36,8 +35,7 @@ public abstract class CacheTest {
 
         @Override
         public boolean matches(Object o) {
-            if (o instanceof String) {
-                String key = (String) o;
+            if (o instanceof String key) {
                 return Arrays.stream(mustContain).allMatch(key::contains);
             } else {
                 return false;
@@ -46,7 +44,7 @@ public abstract class CacheTest {
 
         @Override
         public void describeTo(Description description) {
-            description.appendValue("key did not include \"" + Arrays.stream(mustContain).collect(Collectors.joining(", ")) + "\"");
+            description.appendValue("key did not include \"" + String.join(", ", mustContain) + "\"");
         }
     }
 

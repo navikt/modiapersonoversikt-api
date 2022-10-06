@@ -15,7 +15,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 class UnleashServiceImplTest {
 
@@ -24,12 +24,12 @@ class UnleashServiceImplTest {
     @Mock
     private Unleash unleash;
 
-    private String api = "www.unleashurl.com";
+    private final String api = "www.unleashurl.com";
     private UnleashService unleashService;
 
     @BeforeEach
-    void init() {
-        initMocks(this);
+    void init() throws Exception {
+        openMocks(this).close();
         unleashService = new UnleashServiceImpl(toggleFetcher, unleash, api);
     }
 

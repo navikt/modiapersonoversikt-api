@@ -9,8 +9,8 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.ceil
 
 object Utils {
-    const val DEFAULT_ENHET = "4100"
-    const val STORD_ENHET = "4842"
+    private const val DEFAULT_ENHET = "4100"
+    private const val STORD_ENHET = "4842"
     const val KONTAKT_NAV = "KNA"
     const val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
 
@@ -22,7 +22,7 @@ object Utils {
         } else if (listOf(ARBD, HELSE, FMLI, FDAG, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND, OVRG).contains(temagruppe)) {
             DEFAULT_ENHET
         } else {
-            valgtEnhet ?: throw IllegalStateException("Kunne ikke utlede endretAvEnhet gitt $temagruppe og $valgtEnhet")
+            valgtEnhet ?: throw IllegalStateException("Kunne ikke utlede endretAvEnhet gitt $temagruppe og ingen enhet")
         }
     }
 
@@ -55,7 +55,7 @@ object Utils {
      * Maks 50 om man bruker userToken mot oppgave.
      * En liten off-by-one bug i oppgave gjør at vi per nå må sette den til 49
      */
-    val OPPGAVE_MAX_LIMIT: Long = 49
+    const val OPPGAVE_MAX_LIMIT: Long = 49
     fun <RESPONSE, DATA> paginering(
         total: (response: RESPONSE) -> Long,
         data: (response: RESPONSE) -> List<DATA>,

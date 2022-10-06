@@ -65,7 +65,7 @@ public class MDCOutHandler implements SOAPHandler<SOAPMessageContext> {
 
     @Override
     public Set<QName> getHeaders() {
-        return new HashSet<QName>() {
+        return new HashSet<>() {
             {
                 add(CALLID_QNAME);
             }

@@ -10,9 +10,6 @@ import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toGetOppgaveResponseJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPostOppgaveResponseJsonDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
@@ -694,8 +691,8 @@ class RestOppgaveBehandlingServiceImplTest {
         val ferdig = withIdent("Z999999") { oppgaveBehandlingService.oppgaveErFerdigstilt("1234") }
         val ikkeferdig = withIdent("Z999999") { oppgaveBehandlingService.oppgaveErFerdigstilt("1234") }
 
-        assertThat(ferdig).isTrue()
-        assertThat(ikkeferdig).isFalse()
+        assertThat(ferdig).isTrue
+        assertThat(ikkeferdig).isFalse
 
         verifySequence {
             apiClient.hentOppgave(any(), 1234)

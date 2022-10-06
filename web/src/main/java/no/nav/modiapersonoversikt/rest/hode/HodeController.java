@@ -51,23 +51,10 @@ public class HodeController {
         }
     }
 
-    static class Enhet {
-        public final String enhetId, navn;
-
-        public Enhet(String enhetId, String navn) {
-            this.enhetId = enhetId;
-            this.navn = navn;
-        }
+    record Enhet(String enhetId, String navn) {
     }
 
-    class Enheter {
-        public final String ident;
-        public final List<Enhet> enhetliste;
-
-        public Enheter(String ident, List<Enhet> enhetliste) {
-            this.ident = ident;
-            this.enhetliste = enhetliste;
-        }
+    record Enheter(String ident, List<Enhet> enhetliste) {
     }
 
     @GetMapping("/me")

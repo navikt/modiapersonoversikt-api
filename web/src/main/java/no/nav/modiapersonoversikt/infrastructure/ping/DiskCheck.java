@@ -7,7 +7,7 @@ import no.nav.common.health.selftest.SelfTestCheck;
 import java.io.File;
 
 public class DiskCheck implements HealthCheck {
-    private static DiskCheck INSTANCE = new DiskCheck();
+    private static final DiskCheck INSTANCE = new DiskCheck();
     private static final long LIMIT = 300_000_000L;
     private static final File DISK = new File(".").getAbsoluteFile();
 
