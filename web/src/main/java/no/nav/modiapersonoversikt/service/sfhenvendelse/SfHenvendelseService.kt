@@ -259,7 +259,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun sendTilSladding(kjedeId: String, arsak: String, meldingId: List<String>?) {
-        henvendelseBehandlingApi.henvendelseSladdingPostRequestConfig(
+        henvendelseBehandlingApi.henvendelseSladdingPost(
             xCorrelationID = getCallId(),
             sladdeRequestDTO = SladdeRequestDTO(
                 kjedeId = kjedeId,
