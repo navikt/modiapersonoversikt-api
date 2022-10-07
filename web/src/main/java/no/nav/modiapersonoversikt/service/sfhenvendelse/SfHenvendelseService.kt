@@ -56,7 +56,11 @@ interface SfHenvendelseService {
     fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean
     fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
     fun merkSomFeilsendt(kjedeId: String)
+
+    @Deprecated("Skal sende med årsak")
     fun sendTilSladding(kjedeId: String)
+    fun sendTilSladding(kjedeId: String, arsak: String, meldingId: List<String>?)
+    fun hentSladdeArsaker(kjedeId: String): List<String>
     fun lukkTraad(kjedeId: String)
 
     fun ping()
@@ -66,7 +70,6 @@ private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.jav
 class SfHenvendelseServiceImpl(
     private val henvendelseBehandlingApi: HenvendelseBehandlingApi = SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
     private val henvendelseInfoApi: HenvendelseInfoApi = SfHenvendelseApiFactory.createHenvendelseInfoApi(),
-    private val henvendelseJournalApi: JournalApi = SfHenvendelseApiFactory.createHenvendelseJournalApi(),
     private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
     private val pdlOppslagService: PdlOppslagService,
     private val norgApi: NorgApi,
@@ -88,7 +91,6 @@ class SfHenvendelseServiceImpl(
     ) : this(
         SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
         SfHenvendelseApiFactory.createHenvendelseInfoApi(),
-        SfHenvendelseApiFactory.createHenvendelseJournalApi(),
         SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
         pdlOppslagService,
         norgApi,
@@ -142,7 +144,7 @@ class SfHenvendelseServiceImpl(
         } else {
             null
         }
-        henvendelseJournalApi
+        henvendelseBehandlingApi
             .henvendelseJournalPost(
                 getCallId(),
                 JournalRequestDTO(
@@ -246,6 +248,7 @@ class SfHenvendelseServiceImpl(
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
     }
 
+    @Deprecated("Skal sende med årsak")
     override fun sendTilSladding(kjedeId: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId.fixKjedeId(),
@@ -253,6 +256,25 @@ class SfHenvendelseServiceImpl(
                 .set(HenvendelseDTO::sladding).to(true)
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
+    }
+
+    override fun sendTilSladding(kjedeId: String, arsak: String, meldingId: List<String>?) {
+        henvendelseBehandlingApi.henvendelseSladdingPost(
+            xCorrelationID = getCallId(),
+            sladdeRequestDTO = SladdeRequestDTO(
+                kjedeId = kjedeId,
+                aarsak = arsak,
+                // TODO sende med liste over meldingsIder bare SF er klare
+                // meldingId = meldingId
+            )
+        )
+    }
+
+    override fun hentSladdeArsaker(kjedeId: String): List<String> {
+        return henvendelseBehandlingApi.henvendelseSladdingAarsakerKjedeIdGet(
+            xCorrelationID = getCallId(),
+            kjedeId = kjedeId
+        )
     }
 
     override fun lukkTraad(kjedeId: String) {
@@ -507,6 +529,5 @@ object SfHenvendelseApiFactory {
 
     fun createHenvendelseBehandlingApi() = HenvendelseBehandlingApi(url(), client)
     fun createHenvendelseInfoApi() = HenvendelseInfoApi(url(), client)
-    fun createHenvendelseJournalApi() = JournalApi(url(), client)
     fun createHenvendelseOpprettApi() = NyHenvendelseApi(url(), client)
 }

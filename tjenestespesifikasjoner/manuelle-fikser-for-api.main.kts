@@ -56,9 +56,6 @@ changeFile(
      */
     forDefinition("Henvendelse") {
         setRequired("gjeldendeTemagruppe", false)
-        forProperty("henvendelseType") {
-            getTyped<MutableList<String>>("enum").add("CHAT")
-        }
     }
     forDefinition("Markering") {
         setRequired("markertDato", false)
@@ -69,11 +66,19 @@ changeFile(
     }
 
     /**
-     * Regresjon i API fra innføring av IdentType.System
+     * Når SF har laget api for innsending av meldingsIDer kan denne fjernes
      */
-    forDefinition("MeldingFra") {
-        setRequired("identType", true)
-    }
+//    forDefinition("SladdeRequest") {
+//        this.getTyped<Json>("properties").put(
+//            "meldingId", mapOf(
+//                "type" to "array",
+//                "items" to mapOf(
+//                    "type" to "string"
+//                ),
+//                "example" to arrayOf("Feil bruker", "Innehold sensitiv informasjon")
+//            )
+//        )
+//    }
 }
 
 /**

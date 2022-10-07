@@ -39,10 +39,81 @@
         ]
       }
     },
+    "/henvendelse/sladding/aarsaker/{kjedeId}": {
+      "get": {
+        "tags": ["Henvendelse Behandling"],
+        "description": "Returnerer gyldige sladdeårsaker for en meldingskjede",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": ["Ikke statlig dialog", "Sikkerhetshendelse"]
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/X-Correlation-ID"
+          },
+          {
+            "name": "kjedeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID til kjeden som har meldinger som skal sladdes"
+          }
+        ]
+      }
+    },
+    "/henvendelse/sladding": {
+      "post": {
+        "tags": ["Henvendelse Behandling"],
+        "description": "Registrerer den gitte meldingen for sladding med den definerte årsakskoden",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SladdeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/X-Correlation-ID"
+          }
+        ]
+      }
+    },
     "/henvendelse/journal": {
       "post": {
-        "tags": ["Journal"],
-        "description": "Endepunkt for igangsettelse av journalføring mot JOARK. Referanse til fagsak i overenstemmelse med påkrevd input til [Dokarkiv API](https://dokarkiv-q2.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST). Ved blank/null som saksId vil journalposten opprettes som generell sak på tema.",
+        "tags": ["Henvendelse Behandling"],
+        "description": "Endepunkt for igangsettelse av journalføring mot JOARK. Referanse til fagsak i overenstemmelse med påkrevd input til [Dokarkiv API](https://dokarkiv-q2.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST). Ved blank/null som saksId (og fagsaksystem) vil journalposten opprettes som generell sak på tema.",
         "requestBody": {
           "required": true,
           "description": "JSON request med metadata for journalpost",
@@ -578,7 +649,8 @@
             "description": "NAV enhet til avsender hvis identType = NAVIDENT",
             "example": "4100"
           }
-        }
+        },
+        "required": ["identType"]
       },
       "Melding": {
         "type": "object",
@@ -605,18 +677,23 @@
             "enum": ["TELEFON", "OPPMOTE", "DIGITAL"],
             "example": "DIGITAL"
           },
+          "meldingsId": {
+            "type": "string",
+            "description": "Unik id for meldingen i kjeden",
+            "example": "a0J3N000004dUBJUA2"
+          },
           "fra": {
             "$ref": "#/components/schemas/MeldingFra"
           }
         },
-        "required": ["sendtDato", "fra"]
+        "required": ["sendtDato", "fra", "meldingsId"]
       },
       "Henvendelse": {
         "type": "object",
         "properties": {
           "henvendelseType": {
             "type": "string",
-            "enum": ["SAMTALEREFERAT", "MELDINGSKJEDE"]
+            "enum": ["SAMTALEREFERAT", "MELDINGSKJEDE", "CHAT"]
           },
           "fnr": {
             "type": "string",
@@ -718,6 +795,20 @@
           }
         },
         "required": ["navn", "kode"]
+      },
+      "SladdeRequest": {
+        "type": "object",
+        "properties": {
+          "aarsak": {
+            "type": "string",
+            "example": "Sikkerhetshendelse"
+          },
+          "kjedeId": {
+            "type": "string",
+            "example": "a0J3N000004dUBJUA2"
+          }
+        },
+        "required": ["aarsak", "kjedeId"]
       },
       "Error": {
         "type": "object",

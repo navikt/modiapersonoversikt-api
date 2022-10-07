@@ -11,7 +11,6 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.HenvendelseBehandlingApi
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.HenvendelseInfoApi
-import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.JournalApi
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.NyHenvendelseApi
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
@@ -23,6 +22,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.util.*
 
 internal class SfHenvendelseServiceImplTest {
     companion object {
@@ -38,7 +38,6 @@ internal class SfHenvendelseServiceImplTest {
 
     private val henvendelseBehandlingApi: HenvendelseBehandlingApi = mockk()
     private val henvendelseInfoApi: HenvendelseInfoApi = mockk()
-    private val henvendelseJournalApi: JournalApi = mockk()
     private val henvendelseOpprettApi: NyHenvendelseApi = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
     private val norgApi: NorgApi = mockk()
@@ -48,7 +47,6 @@ internal class SfHenvendelseServiceImplTest {
         SfHenvendelseServiceImpl(
             henvendelseBehandlingApi,
             henvendelseInfoApi,
-            henvendelseJournalApi,
             henvendelseOpprettApi,
             pdlOppslagService,
             norgApi,
@@ -149,6 +147,7 @@ internal class SfHenvendelseServiceImplTest {
             dummyHenvendelse.copy(
                 meldinger = listOf(
                     MeldingDTO(
+                        meldingsId = UUID.randomUUID().toString(),
                         fritekst = "Andre melding",
                         sendtDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
                         fra = MeldingFraDTO(
@@ -157,6 +156,7 @@ internal class SfHenvendelseServiceImplTest {
                         )
                     ),
                     MeldingDTO(
+                        meldingsId = UUID.randomUUID().toString(),
                         fritekst = "Første melding",
                         sendtDato = OffsetDateTime.of(2021, 2, 1, 12, 37, 37, 0, ZoneOffset.UTC),
                         fra = MeldingFraDTO(
@@ -190,6 +190,7 @@ internal class SfHenvendelseServiceImplTest {
         journalposter = null,
         meldinger = listOf(
             MeldingDTO(
+                meldingsId = UUID.randomUUID().toString(),
                 fritekst = "Melding innhold",
                 sendtDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
                 fra = MeldingFraDTO(
