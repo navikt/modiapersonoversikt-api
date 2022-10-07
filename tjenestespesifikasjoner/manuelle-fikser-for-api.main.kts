@@ -68,17 +68,17 @@ changeFile(
     /**
      * Når SF har laget api for innsending av meldingsIDer kan denne fjernes
      */
-    forDefinition("SladdeRequest") {
-        this.getTyped<Json>("properties").put(
-            "meldingId", mapOf(
-                "type" to "array",
-                "items" to mapOf(
-                    "type" to "string"
-                ),
-                "example" to arrayOf("Feil bruker", "Innehold sensitiv informasjon")
-            )
-        )
-    }
+//    forDefinition("SladdeRequest") {
+//        this.getTyped<Json>("properties").put(
+//            "meldingId", mapOf(
+//                "type" to "array",
+//                "items" to mapOf(
+//                    "type" to "string"
+//                ),
+//                "example" to arrayOf("Feil bruker", "Innehold sensitiv informasjon")
+//            )
+//        )
+//    }
 }
 
 /**

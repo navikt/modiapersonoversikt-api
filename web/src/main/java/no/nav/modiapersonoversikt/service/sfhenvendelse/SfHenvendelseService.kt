@@ -264,7 +264,8 @@ class SfHenvendelseServiceImpl(
             sladdeRequestDTO = SladdeRequestDTO(
                 kjedeId = kjedeId,
                 aarsak = arsak,
-                meldingId = meldingId
+                // TODO sende med liste over meldingsIder bare SF er klare
+                // meldingId = meldingId
             )
         )
     }
