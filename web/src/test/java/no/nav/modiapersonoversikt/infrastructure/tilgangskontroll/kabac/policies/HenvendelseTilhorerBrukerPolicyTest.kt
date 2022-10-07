@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.util.*
 
 internal class HenvendelseTilhorerBrukerPolicyTest {
     private val policy = KabacTestUtils.PolicyTester(HenvendelseTilhorerBrukerPolicy)
@@ -56,6 +57,7 @@ internal class HenvendelseTilhorerBrukerPolicyTest {
         journalposter = null,
         meldinger = listOf(
             MeldingDTO(
+                meldingsId = UUID.randomUUID().toString(),
                 fritekst = "Melding innhold",
                 sendtDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
                 fra = MeldingFraDTO(
