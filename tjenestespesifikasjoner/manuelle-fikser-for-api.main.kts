@@ -64,6 +64,9 @@ changeFile(
     forDefinition("Journalpost") {
         setRequired("journalforerNavIdent", false)
     }
+    forDefinition("Melding") {
+        setRequired("meldingsId", false)
+    }
 
     /**
      * Når SF har laget api for innsending av meldingsIDer kan denne fjernes

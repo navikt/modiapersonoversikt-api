@@ -532,7 +532,6 @@ components:
       required:
       - "sendtDato"
       - "fra"
-      - "meldingsId"
     Henvendelse:
       type: "object"
       properties:
