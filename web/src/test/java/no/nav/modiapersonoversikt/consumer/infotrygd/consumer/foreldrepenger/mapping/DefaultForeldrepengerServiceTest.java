@@ -41,12 +41,11 @@ public class DefaultForeldrepengerServiceTest {
     }
 
     @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this).close();
         service = new DefaultForeldrepengerService();
         ((DefaultForeldrepengerService)service).setMapper(mapper);
         ((DefaultForeldrepengerService)service).setForeldrepengerService(portType);
-
     }
 
     @Test(expected = RuntimeException.class)

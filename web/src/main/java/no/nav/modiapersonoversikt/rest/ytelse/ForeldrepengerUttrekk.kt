@@ -36,7 +36,7 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
         )
     }
 
-    fun hentFraInfotrygd(foreldrepenger: Foreldrepengerettighet): Map<String, Any?> {
+    private fun hentFraInfotrygd(foreldrepenger: Foreldrepengerettighet): Map<String, Any?> {
         return foreldrepenger.let {
             mapOf(
                 "forelder" to it.forelder?.ident,

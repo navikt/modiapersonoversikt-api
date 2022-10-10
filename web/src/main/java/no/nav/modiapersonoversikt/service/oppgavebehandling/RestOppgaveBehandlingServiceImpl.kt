@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.types.identer.AktorId
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
@@ -47,7 +48,7 @@ class RestOppgaveBehandlingServiceImpl(
 ) : OppgaveBehandlingService {
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val ident: String = AuthContextUtils.requireIdent()
+        val ident: NavIdent = AuthContextUtils.requireNavIdent()
         val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
         val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
@@ -62,7 +63,7 @@ class RestOppgaveBehandlingServiceImpl(
                 tilordnetRessurs = request.ansvarligIdent.coerceBlankToNull(),
                 beskrivelse = beskrivelseInnslag(
                     ident = ident,
-                    navn = ansattService.hentAnsattNavn(ident),
+                    navn = ansattService.hentVeileder(ident).navn,
                     enhet = request.opprettetavenhetsnummer,
                     innhold = request.beskrivelse,
                     clock = clock
@@ -85,7 +86,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettSkjermetOppgave(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val ident: String = AuthContextUtils.requireIdent()
+        val ident: NavIdent = AuthContextUtils.requireNavIdent()
         val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
         val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
@@ -98,7 +99,7 @@ class RestOppgaveBehandlingServiceImpl(
                 behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
                 beskrivelse = beskrivelseInnslag(
                     ident = ident,
-                    navn = ansattService.hentAnsattNavn(ident),
+                    navn = ansattService.hentVeileder(ident).navn,
                     enhet = request.opprettetavenhetsnummer,
                     innhold = request.beskrivelse,
                     clock = clock
@@ -138,7 +139,7 @@ class RestOppgaveBehandlingServiceImpl(
             return
         } else if (tvungenTilordning) {
             tjenestekallLogg.warn("[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}")
-        } else if (oppgave.tilordnetRessurs != null && oppgave.tilordnetRessurs != ident) {
+        } else if (oppgave.tilordnetRessurs != null) {
             throw AlleredeTildeltAnnenSaksbehandler("Oppgaven er allerede tildelt ${oppgave.tilordnetRessurs}. Vil du overstyre dette?")
         }
 
@@ -152,6 +153,7 @@ class RestOppgaveBehandlingServiceImpl(
         )
     }
 
+    @Deprecated("Deprecated in Java")
     override fun finnTildelteOppgaverIGsak(): MutableList<Oppgave> {
         val ident: String = AuthContextUtils.requireIdent()
         val correlationId = correlationId()
@@ -210,7 +212,7 @@ class RestOppgaveBehandlingServiceImpl(
         beskrivelse: String?
     ) {
         requireNotNull(oppgaveId)
-        val ident: String = AuthContextUtils.requireIdent()
+        val ident: NavIdent = AuthContextUtils.requireNavIdent()
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
 
         apiClient.endreOppgave(
@@ -222,7 +224,7 @@ class RestOppgaveBehandlingServiceImpl(
                     oppgave.beskrivelse,
                     beskrivelseInnslag(
                         ident = ident,
-                        navn = ansattService.hentAnsattNavn(ident),
+                        navn = ansattService.hentVeileder(ident).navn,
                         enhet = saksbehandlersValgteEnhet,
                         innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
                         clock = clock
@@ -379,5 +381,5 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun correlationId() = getCallId()
     private fun stripTemakode(prioritet: String) = prioritet.substringBefore("_")
-    private fun String?.coerceBlankToNull() = if (this == null || this.isBlank()) null else this
+    private fun String?.coerceBlankToNull() = if (this.isNullOrBlank()) null else this
 }

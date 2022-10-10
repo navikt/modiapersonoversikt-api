@@ -20,7 +20,7 @@ import static java.util.Collections.singletonList;
  * Vår standardimplementasjonen av den eksterne tjenesten for ytelseskontrakter.
  */
 public class YtelseskontraktServiceImpl implements YtelseskontraktService {
-    private static Audit.AuditDescriptor<FimHentYtelseskontraktListeRequest> auditLogger = Audit.describe(
+    private static final Audit.AuditDescriptor<FimHentYtelseskontraktListeRequest> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Ytelser,
             (ytelse) -> singletonList(new Pair<>(AuditIdentifier.FNR, ytelse.getPersonidentifikator()))
@@ -28,7 +28,7 @@ public class YtelseskontraktServiceImpl implements YtelseskontraktService {
 
     private YtelseskontraktV3 ytelseskontraktService = null;
     private YtelseskontraktMapper mapper = null;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public YtelseskontraktResponse hentYtelseskontrakter(YtelseskontraktRequest request) {
@@ -41,7 +41,7 @@ public class YtelseskontraktServiceImpl implements YtelseskontraktService {
                 auditLogger.log(rawRequest);
             }
         } catch (HentYtelseskontraktListeSikkerhetsbegrensning hentYtelseskontraktBegrensning) {
-            logger.warn("HentYtelseskontraktListeSikkerhetsbegrensning ved kall på hentYtelseskontraktListe", hentYtelseskontraktBegrensning.getMessage());
+            logger.warn("HentYtelseskontraktListeSikkerhetsbegrensning ved kall på hentYtelseskontraktListe", hentYtelseskontraktBegrensning);
             auditLogger.denied("Årsak: " + hentYtelseskontraktBegrensning.getMessage());
             throw new RuntimeException(hentYtelseskontraktBegrensning.getMessage(), hentYtelseskontraktBegrensning);
         }

@@ -13,8 +13,8 @@
     <artifactId>pdl-api</artifactId>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <graphql-kotlin.version>3.6.8</graphql-kotlin.version>
     </properties>
 

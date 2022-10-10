@@ -7,6 +7,7 @@ interface DialogMerkApi {
     fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void>
     fun avsluttGosysOppgave(request: AvsluttGosysOppgaveRequest): ResponseEntity<Void>
     fun lukkTraad(request: LukkTraadRequest): ResponseEntity<Void>
+    fun hentSladdeArsaker(kjedeId: String): List<String>
 }
 
 data class MerkSomFeilsendtRequest(
@@ -16,7 +17,14 @@ data class MerkSomFeilsendtRequest(
 
 data class SendTilSladdingRequest(
     val fnr: String,
-    val traadId: String
+    val traadId: String,
+    val arsak: String?,
+    val meldingId: List<String>?,
+)
+
+data class HentSladdeArsakerRequest(
+    val fnr: String,
+    val traadId: String,
 )
 
 data class AvsluttGosysOppgaveRequest(

@@ -32,7 +32,7 @@ internal class TilgangTilBrukerPolicyTest {
     private val nom = mockk<NomClient>()
     private val axsys = mockk<AxsysClient>()
     private val skjermedePersoner = mockk<SkjermedePersonerApi>()
-    private val ansattService = AnsattServiceImpl(axsys, nom)
+    private val ansattService = AnsattServiceImpl(axsys, nom, ldap)
 
     private val ident = NavIdent("Z999999")
     private val fnr = Fnr("10108000398")
@@ -267,7 +267,7 @@ internal class TilgangTilBrukerPolicyTest {
             BrukersDiskresjonskodePip(pdl),
             BrukersSkjermingPip(skjermedePersoner),
             BrukersRegionEnhetPip(norg),
-            VeiledersRollerPip(ldap),
+            VeiledersRollerPip(ansattService),
             VeiledersEnheterPip(ansattService),
             VeiledersRegionEnheterPip(norg)
         )

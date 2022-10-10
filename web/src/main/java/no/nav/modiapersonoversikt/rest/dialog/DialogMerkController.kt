@@ -47,6 +47,15 @@ class DialogMerkController @Autowired constructor(
             }
     }
 
+    @GetMapping("/sladdearsaker/{kjedeid}")
+    fun hentSladdeArsaker(@PathVariable("kjedeid") kjedeId: String): List<String> {
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.describe(READ, Henvendelse.Merk.SladdeArsaker, AuditIdentifier.TRAAD_ID to kjedeId)) {
+                dialogMerkApi.hentSladdeArsaker(kjedeId)
+            }
+    }
+
     @PostMapping("/lukk-traad")
     fun lukkTraad(@RequestBody request: LukkTraadRequest): ResponseEntity<Void> {
         val auditIdentifier = arrayOf(

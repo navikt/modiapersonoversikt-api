@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.is;
 
 class IsNotProdStrategyTest {
 
-    IsNotProdStrategy strategy = new IsNotProdStrategy();
+    final IsNotProdStrategy strategy = new IsNotProdStrategy();
     private final String ENVIRONMENT_PROPERTY = "APP_ENVIRONMENT_NAME";
 
     @Test

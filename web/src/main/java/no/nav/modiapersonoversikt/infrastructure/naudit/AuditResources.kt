@@ -53,6 +53,7 @@ class AuditResources {
                 companion object {
                     val Feilsendt = AuditResource("person.henvendelse.merk.feilsendt")
                     val Sladding = AuditResource("person.henvendelse.merk.sladding")
+                    val SladdeArsaker = AuditResource("person.henvendelse.merk.sladding.arsaker")
                     val Lukk = AuditResource("person.henvendelse.merk.lukk")
                 }
             }

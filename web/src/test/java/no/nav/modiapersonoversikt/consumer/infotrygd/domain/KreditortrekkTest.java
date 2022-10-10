@@ -3,8 +3,7 @@ package no.nav.modiapersonoversikt.consumer.infotrygd.domain;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class KreditortrekkTest {
 
@@ -36,13 +35,12 @@ public class KreditortrekkTest {
         kreditortrekk2.setBelop(BELOP);
         Object emptyObject = new Object();
 
-        assert(kreditortrekk.equals(kreditortrekk));
-        assertFalse(kreditortrekk.equals(kreditortrekk2));
-        assertFalse(kreditortrekk.equals(null));
+        assertNotEquals(kreditortrekk, kreditortrekk2);
+        assertNotEquals(null, kreditortrekk);
         kreditortrekk2.setKreditorsNavn(KREDITORSNAVN);
         assert(kreditortrekk.equals(kreditortrekk2));
         kreditortrekk2.setBelop(BELOP-1);
-        assertFalse(kreditortrekk.equals(kreditortrekk2));
-        assertFalse(kreditortrekk.equals(emptyObject));
+        assertNotEquals(kreditortrekk, kreditortrekk2);
+        assertNotEquals(kreditortrekk, emptyObject);
     }
 }

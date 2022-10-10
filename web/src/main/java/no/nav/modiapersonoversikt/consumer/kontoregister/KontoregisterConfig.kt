@@ -18,13 +18,12 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class KontoregisterConfig {
-    val scope = DownstreamApi(
+    private val scope = DownstreamApi(
         application = "sokos-kontoregister-person",
         namespace = "okonomi",
         cluster = EnvironmentUtils.getRequiredProperty("GCP_CLUSTER")
     )
-    val url = EnvironmentUtils.getRequiredProperty("KONTOREGISTER_REST_URL")
-    val isProd = EnvironmentUtils.isProduction()
+    private val url: String = EnvironmentUtils.getRequiredProperty("KONTOREGISTER_REST_URL")
 
     @Bean
     open fun kontoregisterApi(tokenClient: MachineToMachineTokenClient) = KontoregisterV1Api(

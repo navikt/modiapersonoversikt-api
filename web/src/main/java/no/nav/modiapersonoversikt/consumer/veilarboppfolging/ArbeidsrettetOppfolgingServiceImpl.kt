@@ -3,12 +3,12 @@ package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.inRange
 import okhttp3.OkHttpClient
@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
 
 open class ArbeidsrettetOppfolgingServiceImpl(
     apiUrl: String,
-    private val ldapService: LDAPService,
+    private val ansattService: AnsattService,
     private val oboTokenProvider: BoundedOnBehalfOfTokenClient,
 ) : ArbeidsrettetOppfolging.Service {
     private val url = apiUrl.removeSuffix("/")
@@ -46,7 +46,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         return ArbeidsrettetOppfolging.Info(
             oppfolgingstatus.underOppfolging,
             oppfolgingstatus.erManuell,
-            enhetOgVeileder?.veilederId?.let { ldapService.hentVeileder(NavIdent(it)) },
+            enhetOgVeileder?.veilederId?.let { ansattService.hentVeileder(NavIdent(it)) },
             enhetOgVeileder?.oppfolgingsenhet?.let {
                 ArbeidsrettetOppfolging.Enhet(
                     it.enhetId,

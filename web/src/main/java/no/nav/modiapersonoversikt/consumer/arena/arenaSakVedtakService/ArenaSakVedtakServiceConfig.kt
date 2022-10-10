@@ -92,7 +92,7 @@ open class ArenaSakVedtakServiceConfig {
         }
     }
 
-    private fun getSecurityProps(): Map<String, Any>? {
+    private fun getSecurityProps(): Map<String, Any> {
         val user: String = EnvironmentUtils.getRequiredProperty(
             "service_user.username",
             AppConstants.SYSTEMUSER_USERNAME_PROPERTY

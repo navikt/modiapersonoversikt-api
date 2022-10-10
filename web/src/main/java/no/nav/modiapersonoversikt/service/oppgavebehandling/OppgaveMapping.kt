@@ -5,7 +5,7 @@ import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgaveJsonD
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.PutOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.PutOppgaveResponseJsonDTO
 
-public fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = OppgaveJsonDTO(
+fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = OppgaveJsonDTO(
     tildeltEnhetsnr = this.tildeltEnhetsnr,
     oppgavetype = this.oppgavetype,
     versjon = this.versjon,
@@ -42,7 +42,7 @@ public fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = Oppgav
     OppgaveMappingHelpers.convertEnumToJson(this.prioritet)
 )
 
-public fun PutOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = OppgaveJsonDTO(
+fun PutOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = OppgaveJsonDTO(
     tildeltEnhetsnr = this.tildeltEnhetsnr,
     oppgavetype = this.oppgavetype,
     versjon = this.versjon,
@@ -79,7 +79,7 @@ public fun PutOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = Oppgav
     OppgaveMappingHelpers.convertEnumToJson(this.prioritet)
 )
 
-public fun OppgaveJsonDTO.toPutOppgaveRequestJsonDTO(): PutOppgaveRequestJsonDTO =
+fun OppgaveJsonDTO.toPutOppgaveRequestJsonDTO(): PutOppgaveRequestJsonDTO =
     PutOppgaveRequestJsonDTO(
         tildeltEnhetsnr = this.tildeltEnhetsnr,
         oppgavetype = this.oppgavetype,

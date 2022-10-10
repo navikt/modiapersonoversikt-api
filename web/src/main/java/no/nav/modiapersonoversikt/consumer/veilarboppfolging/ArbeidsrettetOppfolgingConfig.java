@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.consumer.veilarboppfolging;
 
 import no.nav.common.token_client.client.OnBehalfOfTokenClient;
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.ping.ConsumerPingable;
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.utils.DownstreamApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +18,10 @@ public class ArbeidsrettetOppfolgingConfig {
 
     @Bean
     public ArbeidsrettetOppfolging.Service oppfolgingsApi(
-            LDAPService ldapService,
+            AnsattService ansattService,
             OnBehalfOfTokenClient onBehalfOfTokenClient
     ) {
-        return new ArbeidsrettetOppfolgingServiceImpl(api, ldapService, bindTo(onBehalfOfTokenClient, scope));
+        return new ArbeidsrettetOppfolgingServiceImpl(api, ansattService, bindTo(onBehalfOfTokenClient, scope));
     }
 
     @Bean

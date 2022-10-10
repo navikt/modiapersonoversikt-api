@@ -23,7 +23,7 @@ import static java.util.Optional.ofNullable;
  * Vår standardimplementasjonen av den eksterne tjenesten for sykmeldingsperioder.
  */
 public class DefaultSykepengerService implements SykepengerServiceBi {
-    private static Audit.AuditDescriptor<FimsykBruker> auditLogger = Audit.describe(
+    private static final Audit.AuditDescriptor<FimsykBruker> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Sykepenger,
             (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(FimsykBruker::getIdent).orElse("--")))
@@ -42,7 +42,7 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
                 auditLogger.log(rawResponse.getSykmeldingsperiodeListe().get(0).getSykmeldt());
             }
         } catch (HentSykepengerListeSikkerhetsbegrensning ex) {
-            logger.warn("HentSykepengerListeSikkerhetsbegrensning ved kall på hentSykepengerListe", ex.getMessage());
+            logger.warn("HentSykepengerListeSikkerhetsbegrensning ved kall på hentSykepengerListe", ex);
             auditLogger.denied("Årsak: " + ex.getMessage());
             throw new RuntimeException(ex.getMessage(), ex);
         }

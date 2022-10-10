@@ -18,7 +18,7 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.Utbetal
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelseDTO as RsYtelse
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelsekomponentDTO as RsYtelseKomponent
 
-open class UtbetalingServiceImpl(val utbetaldataV2Api: UtbetaldataV2Api) : UtbetalingService {
+open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api) : UtbetalingService {
     override fun hentUtbetalinger(
         fnr: Fnr,
         startDato: LocalDate,

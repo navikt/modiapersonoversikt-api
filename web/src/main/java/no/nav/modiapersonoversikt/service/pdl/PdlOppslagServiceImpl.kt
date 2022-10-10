@@ -93,7 +93,7 @@ open class PdlOppslagServiceImpl constructor(
             ?: emptyList()
     }
 
-    fun hentAktivIdent(ident: String, gruppe: IdentGruppe): String? = runBlocking {
+    private fun hentAktivIdent(ident: String, gruppe: IdentGruppe): String? = runBlocking {
         HentAktorid(pdlClient)
             .execute(HentAktorid.Variables(ident, listOf(gruppe)), userTokenAuthorizationHeaders)
             .data

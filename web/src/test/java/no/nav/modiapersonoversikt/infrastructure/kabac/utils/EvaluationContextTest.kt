@@ -9,10 +9,10 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 internal class EvaluationContextTest {
-    val dummyKey = Key<String>("dummy")
-    val nullableKey = Key<String?>("dummy")
-    val dummyProvider = AttributeValue(dummyKey, "dummy-value")
-    val nullProvider = AttributeValue(nullableKey, null)
+    private val dummyKey = Key<String>("dummy")
+    private val nullableKey = Key<String?>("dummy")
+    private val dummyProvider = AttributeValue(dummyKey, "dummy-value")
+    private val nullProvider = AttributeValue(nullableKey, null)
 
     @Test
     internal fun `get value based on providerkey`() {

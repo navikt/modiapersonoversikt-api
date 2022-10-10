@@ -4,7 +4,7 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
-class TestEnvironmentExtension(val testEnvironment: Map<String, String?>) :
+class TestEnvironmentExtension(private val testEnvironment: Map<String, String?>) :
     BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
     private val originalEnvironment: Map<String, String?> = testEnvironment.keys.associateWith(System::getProperty)

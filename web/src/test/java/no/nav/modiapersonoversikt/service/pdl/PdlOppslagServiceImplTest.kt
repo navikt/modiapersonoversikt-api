@@ -25,7 +25,7 @@ import java.net.URL
 
 @OptIn(KtorExperimentalAPI::class)
 internal class PdlOppslagServiceImplTest {
-    val userToken = PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
+    private val userToken = PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
 
     @Rule
     @JvmField
@@ -35,8 +35,8 @@ internal class PdlOppslagServiceImplTest {
             userToken
         )
     )
-    val systemuserToken = "RND-STS-TOKEN"
-    val stsMock: SystemUserTokenProvider = mockk()
+    private val systemuserToken = "RND-STS-TOKEN"
+    private val stsMock: SystemUserTokenProvider = mockk()
 
     @Before
     fun before() {
@@ -67,21 +67,21 @@ internal class PdlOppslagServiceImplTest {
         }
     }
 
-    fun verifyUserTokenHeaders(request: HttpRequestData) {
+    private fun verifyUserTokenHeaders(request: HttpRequestData) {
         assertNotNull(request.headers[RestConstants.NAV_CALL_ID_HEADER], "NAV_CALL_ID_HEADER missing")
         assertEquals("Bearer $systemuserToken", request.headers[RestConstants.NAV_CONSUMER_TOKEN_HEADER])
         assertEquals("Bearer ${userToken.serialize()}", request.headers[RestConstants.AUTHORIZATION])
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }
 
-    fun verifySystemuserTokenHeaders(request: HttpRequestData) {
+    private fun verifySystemuserTokenHeaders(request: HttpRequestData) {
         assertNotNull(request.headers[RestConstants.NAV_CALL_ID_HEADER], "NAV_CALL_ID_HEADER missing")
         assertEquals("Bearer $systemuserToken", request.headers[RestConstants.NAV_CONSUMER_TOKEN_HEADER])
         assertEquals("Bearer $systemuserToken", request.headers[RestConstants.AUTHORIZATION])
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }
 
-    fun createMockGraphQLClient(handler: MockRequestHandleScope.(request: HttpRequestData) -> HttpResponseData): GraphQLClient<*> {
+    private fun createMockGraphQLClient(handler: MockRequestHandleScope.(request: HttpRequestData) -> HttpResponseData): GraphQLClient<*> {
         return GraphQLClient(
             url = URL("http://dummy.no"),
             engineFactory = MockEngine,

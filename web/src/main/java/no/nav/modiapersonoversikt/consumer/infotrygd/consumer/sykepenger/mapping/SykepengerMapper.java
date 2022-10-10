@@ -27,7 +27,7 @@ import static java.util.Optional.ofNullable;
  * Mapperklasse som benytter SykepengerFIMMapper for custom mapping.
  */
 public class SykepengerMapper {
-    private static Logger logger = LoggerFactory.getLogger(SykepengerMapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(SykepengerMapper.class);
     private static SykepengerMapper instance = null;
 
     private SykepengerMapper() {
@@ -288,9 +288,7 @@ public class SykepengerMapper {
         if (sanksjon != null) {
             utbetalingPaaVent.setSanksjon(map(sanksjon));
         }
-        if (sykmeldt.isPresent()) {
-            utbetalingPaaVent.setSykmeldt(map(sykmeldt.get()));
-        }
+        sykmeldt.ifPresent(fimsykPeriode -> utbetalingPaaVent.setSykmeldt(map(fimsykPeriode)));
 
         return utbetalingPaaVent;
     }

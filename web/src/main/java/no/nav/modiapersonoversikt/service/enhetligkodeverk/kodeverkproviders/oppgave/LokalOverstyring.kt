@@ -20,7 +20,7 @@ object LokalOverstyring {
     class KodeverkBuilder {
         var frist by Delegates.notNull<Int>()
         var prioriteter: Prioriteter = mutableListOf()
-        var temaMap: MutableMap<String, Tema> = mutableMapOf()
+        private var temaMap: MutableMap<String, Tema> = mutableMapOf()
 
         fun tema(navn: String, block: TemaBuilder.() -> Unit) {
             temaMap[navn] = TemaBuilder(navn).apply(block).build()
@@ -35,7 +35,7 @@ object LokalOverstyring {
 
     class TemaBuilder(val navn: String) {
         var prioriteter: Prioriteter? = null
-        var oppgavetyperMap: MutableMap<String, Oppgavetype> = mutableMapOf()
+        private var oppgavetyperMap: MutableMap<String, Oppgavetype> = mutableMapOf()
 
         fun oppgavetype(navn: String, frist: Frist) {
             oppgavetyperMap[navn] = Oppgavetype(frist)

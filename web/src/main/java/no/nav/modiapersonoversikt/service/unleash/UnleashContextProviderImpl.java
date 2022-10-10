@@ -14,7 +14,7 @@ import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnhetStrat
 
 public class UnleashContextProviderImpl implements UnleashContextProvider {
 
-    private AnsattService ansattService;
+    private final AnsattService ansattService;
 
     @Autowired
     public UnleashContextProviderImpl(AnsattService ansattService) {

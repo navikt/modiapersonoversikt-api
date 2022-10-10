@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
@@ -16,16 +15,16 @@ public class TransformersTest {
     @Test
     public void mapperBehandlingskjedeTilBehandling() {
         List<Behandling> collect = Stream.of(
-                BehandlingskjedeBuilder.create()
-                        .withSisteBehandlingstype("type")
-                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
-                        .withSlutt(new DateTime())
-                        .withStart(new DateTime().minusDays(1))
-                        .withSisteBehandlingREF("hovedskjemakodeverkref")
-                .build()
-        )
+                        BehandlingskjedeBuilder.create()
+                                .withSisteBehandlingstype("type")
+                                .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
+                                .withSlutt(new DateTime())
+                                .withStart(new DateTime().minusDays(1))
+                                .withSisteBehandlingREF("hovedskjemakodeverkref")
+                                .build()
+                )
                 .map(Transformers::tilBehandling)
-                .collect(Collectors.toList());
+                .toList();
 
         assertThat(collect.size(), equalTo(1));
         assertThat(collect.get(0).behandlingsId, equalTo("hovedskjemakodeverkref"));
@@ -43,7 +42,7 @@ public class TransformersTest {
                         .withSisteBehandlingREF("hovedskjemakodeverkref")
                         .build())
                 .map(Transformers::tilBehandling)
-                .collect(Collectors.toList());
+                .toList();
 
         assertThat(collect.size(), equalTo(1));
         assertThat(collect.get(0).behandlingsStatus, equalTo(BehandlingsStatus.AVBRUTT));
@@ -60,7 +59,7 @@ public class TransformersTest {
                         .withSisteBehandlingREF("hovedskjemakodeverkref")
                         .build())
                 .map(Transformers::tilBehandling)
-                .collect(Collectors.toList());
+                .toList();
 
         assertThat(collect.size(), equalTo(1));
         assertThat(collect.get(0).behandlingsStatus, equalTo(BehandlingsStatus.UNDER_BEHANDLING));

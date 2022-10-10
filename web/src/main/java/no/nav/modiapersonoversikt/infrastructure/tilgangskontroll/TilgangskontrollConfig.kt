@@ -43,7 +43,7 @@ open class TilgangskontrollConfig {
             install(BrukersRegionEnhetPip(norg))
             install(VeiledersEnheterPip(ansattService))
             install(VeiledersRegionEnheterPip(norg))
-            install(VeiledersRollerPip(ldap))
+            install(VeiledersRollerPip(ansattService))
             install(VeiledersTemaPip(ansattService))
             install(HenvendelseEierPip(henvendelseService))
             install(InternalTilgangPip())

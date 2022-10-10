@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toList;
 
 abstract class Mapper {
 
-    private HashMap<Class<?>, Function<Object, Object>> mappers = new HashMap<>();
+    private final HashMap<Class<?>, Function<Object, Object>> mappers = new HashMap<>();
 
     Mapper() {
         registrerCommonMappers();

@@ -6,6 +6,7 @@
     "opprettetDato": "2021-08-28T16:49:23.000+0200",
     "meldinger": [
       {
+        "meldingsId": "random1",
         "sendtDato": "2021-08-28T16:49:23.000+0200",
         "lestDato": null,
         "kanal": "DIGITAL",

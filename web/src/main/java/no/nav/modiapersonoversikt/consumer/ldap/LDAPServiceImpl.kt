@@ -13,17 +13,6 @@ open class LDAPServiceImpl(private val contextProvider: LDAPContextProvider) : L
     private val influxClient = InfluxClient()
     private val log = LoggerFactory.getLogger(LDAPServiceImpl::class.java)
 
-    override fun hentVeileder(ident: NavIdent): Saksbehandler {
-        val result = search(ident).firstOrNull()
-            ?: return Saksbehandler("", "", ident.get())
-
-        return Saksbehandler(
-            result.attributes.get("givenname").get() as String,
-            result.attributes.get("sn").get() as String,
-            ident.get()
-        )
-    }
-
     override fun hentRollerForVeileder(ident: NavIdent): List<String> {
         val result = search(ident).firstOrNull() ?: return emptyList()
         val memberof = result.attributes.get("memberof").all.toList()

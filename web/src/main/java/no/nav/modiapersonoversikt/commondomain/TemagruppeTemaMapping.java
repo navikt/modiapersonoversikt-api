@@ -9,7 +9,7 @@ import static java.util.Collections.singletonList;
 public class TemagruppeTemaMapping {
     public static final Temagruppe TEMA_UTEN_TEMAGRUPPE = Temagruppe.OVRG;
 
-    public static final Map<String, String> TEMA_TEMAGRUPPE_MAPPING = new HashMap<String, String>() {
+    public static final Map<String, String> TEMA_TEMAGRUPPE_MAPPING = new HashMap<>() {
         {
             put("AAP", Temagruppe.ARBD.name());
             put("DAG", Temagruppe.ARBD.name());
@@ -66,7 +66,7 @@ public class TemagruppeTemaMapping {
         }
     };
 
-    public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
+    public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<>() {
         {
             put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
             put(Temagruppe.HELSE.name(), emptyList());

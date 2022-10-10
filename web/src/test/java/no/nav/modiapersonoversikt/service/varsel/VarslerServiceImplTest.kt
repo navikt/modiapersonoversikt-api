@@ -18,12 +18,11 @@ import javax.xml.soap.SOAPFault
 import javax.xml.ws.soap.SOAPFaultException
 
 class VarslerServiceImplTest {
-    val clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
-    val brukervarselV1 = mockk<BrukervarselV1>()
-    val brukernotifikasjonService = mockk<Brukernotifikasjon.Service>()
-    val soapfault = mockk<SOAPFault>()
-
-    val varselService: VarslerService = VarslerServiceImpl(brukervarselV1, brukernotifikasjonService)
+    private val clock: Clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
+    private val brukervarselV1 = mockk<BrukervarselV1>()
+    private val brukernotifikasjonService = mockk<Brukernotifikasjon.Service>()
+    private val soapfault = mockk<SOAPFault>()
+    private val varselService: VarslerService = VarslerServiceImpl(brukervarselV1, brukernotifikasjonService)
 
     @Test
     internal fun `skal ikke tryne hele verden om det skjer soap faults`() {

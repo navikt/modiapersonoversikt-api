@@ -43,10 +43,10 @@ internal class ForeldrepengerUttrekkTest {
         every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } returns mockResponse()
 
         val response = uttrekk.hent(FNR)
-        val foreldrepengerListe = response.get("foreldrepenger") as List<*>
+        val foreldrepengerListe = response["foreldrepenger"] as List<*>
         val foreldrepenger = foreldrepengerListe[0] as Map<String, Any?>
 
-        assertEquals(10, foreldrepenger.get("antallBarn"))
+        assertEquals(10, foreldrepenger["antallBarn"])
     }
 
     @Test
@@ -54,10 +54,10 @@ internal class ForeldrepengerUttrekkTest {
         every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } returns mockResponse()
 
         val response = uttrekk.hent(FNR)
-        val foreldrepengerListe = response.get("foreldrepenger") as List<*>
+        val foreldrepengerListe = response["foreldrepenger"] as List<*>
         val foreldrepenger = foreldrepengerListe[0] as Map<String, Any?>
 
-        assertEquals("2000-02-01", foreldrepenger.get("barnetsFødselsdato"))
+        assertEquals("2000-02-01", foreldrepenger["barnetsFødselsdato"])
     }
 
     private fun createXMLGregorianCalendar() = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2000, 2, 1, 1)

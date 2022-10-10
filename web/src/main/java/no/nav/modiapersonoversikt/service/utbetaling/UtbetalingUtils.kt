@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.service.utbetaling
 import java.time.LocalDate
 
 object UtbetalingUtils {
-    val EKSTRA_SOKEPERIODE: Long = 20
+    private const val EKSTRA_SOKEPERIODE: Long = 20
 
     @JvmStatic
     fun leggTilEkstraDagerPaaStartdato(dato: LocalDate): LocalDate {
