@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.RestUtils
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
@@ -38,6 +39,12 @@ class SfLegacyDialogController(
     private val kodeverk: EnhetligKodeverk.Service,
 ) : DialogApi {
     private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
+    private val experiment = Scientist.createExperiment<List<TraadDTO>>(
+        Scientist.Config(
+            name = "TraadDTO",
+            experimentRate = Scientist.FixedValueRate(0.5)
+        )
+    )
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
         val bruker = EksternBruker.Fnr(fnr)
@@ -45,10 +52,10 @@ class SfLegacyDialogController(
         val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
         val dialogMappingContext = lagMappingContext(sfHenvendelser)
 
-        return sfHenvendelser
-            .map {
-                dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it)
-            }
+        return experiment.run(
+            control = { sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it) } },
+            experiment = { sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormatV2(it) } },
+        )
     }
 
     override fun sendMelding(request: HttpServletRequest, fnr: String, referatRequest: SendReferatRequest): TraadDTO {
@@ -256,10 +263,14 @@ class SfLegacyDialogController(
         return nyesteMelding?.fra?.identType == MeldingFraDTO.IdentType.AKTORID
     }
 
-    data class DialogMappingContext(
+    class DialogMappingContext(
         val temakodeMap: Map<String, String>,
         val identMap: Map<String, Veileder>
-    )
+    ) {
+        fun getVeileder(ident: String?): Veileder? {
+            return identMap[ident ?: ""]
+        }
+    }
 
     private fun lagMappingContext(henvendelser: List<HenvendelseDTO>): DialogMappingContext {
         val temakodeMap = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).asMap()
@@ -334,6 +345,60 @@ class SfLegacyDialogController(
             meldinger = meldinger,
             journalposter = journalposter
         )
+    }
+
+    private fun DialogMappingContext.mapSfHenvendelserTilLegacyFormatV2(henvendelse: HenvendelseDTO): TraadDTOV2 {
+        val journalposter = henvendelse.journalposter
+            ?.map { tilJournalpostDTO(it) }
+            ?: emptyList()
+
+        val kontorsperre: MarkeringDTO? = henvendelse.markeringer.getForType(MarkeringDTO.Markeringstype.KONTORSPERRE)
+        val kontorsperretEnhet: String? = kontorsperre?.kontorsperreGT ?: kontorsperre?.kontorsperreEnhet
+        val kontorsperretAv = getVeileder(kontorsperre?.markertAv)
+
+        val markertSomFeilsendt = henvendelse.markeringer.getForType(MarkeringDTO.Markeringstype.FEILSENDT)
+        val markertSomFeilsendtAv = getVeileder(markertSomFeilsendt?.markertAv)
+
+        val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
+        val meldinger: List<MeldingDTOV2> = (henvendelse.meldinger ?: emptyList()).map { melding ->
+            val skrevetAv = when (melding.fra.identType) {
+                MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(melding.fra.ident)
+                    ?.let { "${it.navn} (${it.ident})" }
+                    ?: "Ukjent"
+                MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
+            }
+            val status = when {
+                melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
+                melding.lestDato != null -> Status.LEST_AV_BRUKER
+                else -> Status.IKKE_LEST_AV_BRUKER
+            }
+
+            MeldingDTOV2(
+                id = "${henvendelse.kjedeId}---${(melding.hashCode())}",
+                meldingstype = meldingstypeFraSfTyper(henvendelse, melding),
+                temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe), // TODO error in api-spec
+                skrevetAvTekst = skrevetAv,
+                fritekst = hentFritekstFraMelding(henvendelseErKassert, melding),
+                lestDato = melding.lestDato,
+                status = status,
+                opprettetDato = melding.sendtDato,
+                avsluttetDato = henvendelse.avsluttetDato,
+                ferdigstiltDato = melding.sendtDato,
+                kontorsperretEnhet = kontorsperretEnhet,
+                kontorsperretAv = kontorsperretAv,
+                sendtTilSladding = (henvendelse.sladding ?: false),
+                markertSomFeilsendtAv = markertSomFeilsendtAv
+            )
+        }
+        return TraadDTOV2(
+            traadId = henvendelse.kjedeId,
+            meldinger = meldinger,
+            journalposter = journalposter
+        )
+    }
+
+    private fun List<MarkeringDTO>?.getForType(type: MarkeringDTO.Markeringstype): MarkeringDTO? {
+        return this?.find { it.markeringstype == type }
     }
 
     private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) = DialogApi.Journalpost(

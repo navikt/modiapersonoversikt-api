@@ -1,7 +1,9 @@
 package no.nav.modiapersonoversikt.rest.dialog.apis
 
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
+import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
+import no.nav.modiapersonoversikt.rest.dialog.domain.Status
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import java.time.OffsetDateTime
 import java.util.HashMap
@@ -75,6 +77,28 @@ data class TraadDTO(
     val journalposter: List<DialogApi.Journalpost>
 )
 class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map)
+
+data class TraadDTOV2(
+    val traadId: String,
+    val meldinger: List<MeldingDTOV2>,
+    val journalposter: List<DialogApi.Journalpost>
+)
+data class MeldingDTOV2(
+    val id: String,
+    val meldingstype: Meldingstype,
+    val temagruppe: String,
+    val skrevetAvTekst: String,
+    val fritekst: String,
+    val lestDato: OffsetDateTime?,
+    val status: Status,
+    val opprettetDato: OffsetDateTime,
+    val avsluttetDato: OffsetDateTime?,
+    val ferdigstiltDato: OffsetDateTime,
+    val kontorsperretEnhet: String?,
+    val kontorsperretAv: Veileder?,
+    val sendtTilSladding: Boolean,
+    val markertSomFeilsendtAv: Veileder?,
+)
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?)
 
 data class OpprettHenvendelseRequest(
