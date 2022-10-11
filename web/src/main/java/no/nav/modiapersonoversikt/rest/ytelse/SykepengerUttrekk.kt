@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.sykepenger.Gradering
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.sykepenger.Sykmelding
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.sykepenger.Sykmeldingsperiode
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
-import no.nav.modiapersonoversikt.rest.lagPeriode
 import org.joda.time.LocalDate
 
 class SykepengerUttrekk constructor(private val sykepengerService: SykepengerServiceBi) {
