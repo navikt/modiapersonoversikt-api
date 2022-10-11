@@ -7,6 +7,7 @@ import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.fn.UnsafeRunnable
 import no.nav.common.utils.fn.UnsafeSupplier
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import java.util.*
 
 object AuthContextUtils {
@@ -35,6 +36,15 @@ object AuthContextUtils {
 
     @JvmStatic
     fun requireToken(): String = authContextHolder.requireIdTokenString()
+
+    @JvmStatic
+    fun requireOboTokenIfPresent(oboTokenProvider: BoundedOnBehalfOfTokenClient): String {
+        val authheader = AuthHeaderCapture.header.get()
+        if (authheader != null) {
+            return oboTokenProvider.exchangeOnBehalfOfToken(authheader)
+        }
+        return requireToken()
+    }
 
     @JvmStatic
     fun requireClaims(): JWTClaimsSet = authContextHolder.requireIdTokenClaims()

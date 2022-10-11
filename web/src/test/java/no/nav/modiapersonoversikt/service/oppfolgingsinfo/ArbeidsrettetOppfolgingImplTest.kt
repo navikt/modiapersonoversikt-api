@@ -84,7 +84,8 @@ class ArbeidsrettetOppfolgingImplTest {
                 UnsafeSupplier {
                     ArbeidsrettetOppfolgingServiceImpl(
                         apiUrl = url,
-                        ansattService = ansattService
+                        ansattService = ansattService,
+                        mockk()
                     ).hentOppfolgingsinfo(Fnr(fnr))
                 }
             )
@@ -123,7 +124,8 @@ class ArbeidsrettetOppfolgingImplTest {
                 UnsafeSupplier {
                     ArbeidsrettetOppfolgingServiceImpl(
                         apiUrl = url,
-                        ansattService = ansattService
+                        ansattService = ansattService,
+                        mockk()
                     ).hentOppfolgingsinfo(Fnr(fnr))
                 }
             )

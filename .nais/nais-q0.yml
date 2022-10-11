@@ -126,6 +126,8 @@ spec:
       value: "https://sokos-utbetaldata.dev.intern.nav.no/utbetaldata/api"
     - name: VEILARBOPPFOLGINGAPI_URL
       value: "https://veilarboppfolging.dev.intern.nav.no/veilarboppfolging/api"
+    - name: VEILARBOPPFOLGINGAPI_SCOPE
+      value: "dev-fss:pto:veilarboppfolging"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
       value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
     - name: DKIF_REST_URL

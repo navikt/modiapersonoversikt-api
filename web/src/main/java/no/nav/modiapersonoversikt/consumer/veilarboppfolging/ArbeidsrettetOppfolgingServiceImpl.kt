@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.inRange
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -17,6 +18,7 @@ import kotlin.reflect.KClass
 open class ArbeidsrettetOppfolgingServiceImpl(
     apiUrl: String,
     private val ansattService: AnsattService,
+    private val oboTokenProvider: BoundedOnBehalfOfTokenClient,
 ) : ArbeidsrettetOppfolging.Service {
     private val url = apiUrl.removeSuffix("/")
     private val client = RestClient.baseClient().newBuilder()
@@ -30,7 +32,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         )
         .addInterceptor(
             AuthorizationInterceptor {
-                AuthContextUtils.requireToken()
+                AuthContextUtils.requireOboTokenIfPresent(oboTokenProvider)
             }
         )
         .build()
