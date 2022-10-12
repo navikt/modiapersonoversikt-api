@@ -18,7 +18,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
-import no.nav.modiapersonoversikt.rest.lagRiktigDato
+import org.joda.time.IllegalFieldValueException
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -171,4 +173,12 @@ private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?,
     request.from = lagRiktigDato(start)
     request.to = lagRiktigDato(slutt)
     return request
+}
+
+private fun lagRiktigDato(dato: String?): LocalDate? = dato?.let {
+    try {
+        LocalDate.parse(dato, DateTimeFormat.forPattern(DATOFORMAT))
+    } catch (exception: IllegalFieldValueException) {
+        throw RuntimeException(exception.message)
+    }
 }

@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Pleiepen
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Pleiepengerrettighet
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Vedtak
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
-import no.nav.modiapersonoversikt.rest.lagPleiepengePeriode
 import java.time.format.DateTimeFormatter
 
 class PleiepengerUttrekk constructor(
