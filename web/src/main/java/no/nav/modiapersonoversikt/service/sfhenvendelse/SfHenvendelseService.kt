@@ -14,6 +14,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
@@ -510,6 +511,7 @@ fun String.fixKjedeId(): String {
 
 object SfHenvendelseApiFactory {
     fun url(): String = getRequiredProperty("SF_HENVENDELSE_URL")
+    fun downstreamApi(): DownstreamApi = DownstreamApi.parse(getRequiredProperty("SF_HENVENDELSE_SCOPE"))
     private val client = createClient {
         AuthContextUtils.requireToken()
     }
