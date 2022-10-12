@@ -315,7 +315,7 @@ class SfHenvendelseServiceImpl(
             if (journalposter.any { it.journalforerNavIdent == null }) {
                 feil.add(ApiFeil(ApiFeilType.JOURNALFORENDE_IDENT, henvendelse.kjedeId))
             }
-            val unikeJournalposter = journalposter.distinctBy { Pair(it.journalfortTema, it.fagsakId) }
+            val unikeJournalposter = journalposter.distinctBy { Pair(it.journalfortTema, it.journalpostId) }
             if (unikeJournalposter.size != journalposter.size) {
                 feil.add(ApiFeil(ApiFeilType.DUPLIKAT_JOURNALPOST, henvendelse.kjedeId))
             }
