@@ -11,10 +11,10 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
-import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.infrastructure.RestConstants.ALLE_TEMA_HEADERVERDI
 import no.nav.modiapersonoversikt.testutils.AuthContextRule
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.TestUtils
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -36,11 +36,11 @@ internal class PdlOppslagServiceImplTest {
         )
     )
     private val systemuserToken = "RND-STS-TOKEN"
-    private val stsMock: SystemUserTokenProvider = mockk()
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
 
     @Before
     fun before() {
-        every { stsMock.systemUserToken } returns systemuserToken
+        every { machineToMachineTokenClient.createMachineToMachineToken() } returns systemuserToken
     }
 
     @Test
@@ -51,7 +51,7 @@ internal class PdlOppslagServiceImplTest {
         }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(stsMock, client).hentIdenter("ident")
+            PdlOppslagServiceImpl(machineToMachineTokenClient, client).hentIdenter("ident")
         }
     }
 
@@ -63,7 +63,7 @@ internal class PdlOppslagServiceImplTest {
         }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(stsMock, client).hentAdressebeskyttelse("ident")
+            PdlOppslagServiceImpl(machineToMachineTokenClient, client).hentAdressebeskyttelse("ident")
         }
     }
 

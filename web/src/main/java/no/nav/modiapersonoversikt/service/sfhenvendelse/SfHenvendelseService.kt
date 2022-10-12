@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
 import no.nav.common.rest.client.RestClient
-import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
@@ -14,6 +13,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
 import okhttp3.OkHttpClient
@@ -75,12 +75,12 @@ class SfHenvendelseServiceImpl(
     private val pdlOppslagService: PdlOppslagService,
     private val norgApi: NorgApi,
     private val ansattService: AnsattService,
-    private val stsService: SystemUserTokenProvider
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient
 ) : SfHenvendelseService {
     private val adminKodeverkApiForPing = KodeverkApi(
         SfHenvendelseApiFactory.url(),
         SfHenvendelseApiFactory.createClient {
-            stsService.systemUserToken
+            machineToMachineTokenClient.createMachineToMachineToken()
         }
     )
 
@@ -88,7 +88,7 @@ class SfHenvendelseServiceImpl(
         pdlOppslagService: PdlOppslagService,
         norgApi: NorgApi,
         ansattService: AnsattService,
-        stsService: SystemUserTokenProvider
+        machineToMachineTokenClient: BoundedMachineToMachineTokenClient
     ) : this(
         SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
         SfHenvendelseApiFactory.createHenvendelseInfoApi(),
@@ -96,7 +96,7 @@ class SfHenvendelseServiceImpl(
         pdlOppslagService,
         norgApi,
         ansattService,
-        stsService
+        machineToMachineTokenClient
     )
 
     override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {

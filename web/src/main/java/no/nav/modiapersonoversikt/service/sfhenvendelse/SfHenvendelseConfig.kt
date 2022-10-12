@@ -1,10 +1,11 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
-import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.infrastructure.ping.ConsumerPingable
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.utils.bindTo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -15,13 +16,13 @@ open class SfHenvendelseConfig {
         pdlOppslagService: PdlOppslagService,
         norgApi: NorgApi,
         ansattService: AnsattService,
-        systemUserTokenProvider: SystemUserTokenProvider
+        machineToMachineTokenClient: MachineToMachineTokenClient
     ): SfHenvendelseService {
         return SfHenvendelseServiceImpl(
             pdlOppslagService,
             norgApi,
             ansattService,
-            systemUserTokenProvider
+            machineToMachineTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi())
         )
     }
 
