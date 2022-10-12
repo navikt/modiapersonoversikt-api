@@ -9,7 +9,6 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Foeds
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Foreldrepengeperiode
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Foreldrepengerettighet
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
-import no.nav.modiapersonoversikt.rest.lagPeriode
 import org.joda.time.LocalDate
 
 class ForeldrepengerUttrekk constructor(private val forelderpengerService: ForeldrepengerServiceBi) {
