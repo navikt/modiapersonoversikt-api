@@ -154,6 +154,8 @@ spec:
       value: "https://sf-henvendelse.intern.nav.no/api"
     - name: PDL_API_URL
       value: "https://pdl-api.nais.adeo.no/graphql"
+    - name: PDL_SCOPE
+      value: "prod-fss:pdl:pdl-api"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
