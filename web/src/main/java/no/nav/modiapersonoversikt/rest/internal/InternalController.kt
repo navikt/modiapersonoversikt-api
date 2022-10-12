@@ -4,7 +4,6 @@ import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.token_client.client.MachineToMachineTokenClient
-import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
@@ -13,8 +12,8 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl
-import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -28,7 +27,6 @@ class InternalController @Autowired constructor(
 ) {
     data class Tokens(val user: String, val system: String?)
     private val pdlClient = PdlOppslagServiceImpl.createClient()
-    private val pdlScope = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("PDL_SCOPE"))
 
     @GetMapping("/tokens")
     fun hentSystembrukerToken(@RequestParam(value = "scope", required = false) scope: String?): Tokens {
@@ -57,7 +55,7 @@ class InternalController @Autowired constructor(
     }
 
     private val systemTokenAuthHeader: HeadersBuilder = {
-        val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken(pdlScope)
+        val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken(PdlOppslagServiceConfig.downstreamApi)
 
         header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + systemuserToken)
         header(RestConstants.AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + systemuserToken)
