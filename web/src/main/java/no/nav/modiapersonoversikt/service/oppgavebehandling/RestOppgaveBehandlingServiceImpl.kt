@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling
@@ -25,6 +25,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskriv
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
+import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.slf4j.LoggerFactory
 import java.time.Clock
 import java.time.LocalDate
@@ -37,12 +38,12 @@ class RestOppgaveBehandlingServiceImpl(
     private val pdlOppslagService: PdlOppslagService,
     private val ansattService: AnsattService,
     private val tilgangskontroll: Tilgangskontroll,
-    private val stsService: SystemUserTokenProvider,
+    private val machineToMachineTokenClient: MachineToMachineTokenClient,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
         AuthContextUtils.requireToken()
     },
     private val systemApiClient: OppgaveApi = OppgaveApiFactory.createClient {
-        stsService.systemUserToken
+        machineToMachineTokenClient.createMachineToMachineToken(OppgaveApiFactory.downstreamApi)
     },
     private val clock: Clock = Clock.systemDefaultZone()
 ) : OppgaveBehandlingService {

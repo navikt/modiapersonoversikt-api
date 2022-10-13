@@ -4,7 +4,6 @@ import com.expediagroup.graphql.client.GraphQLClient
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAktorid.IdentGruppe
@@ -14,14 +13,15 @@ import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import java.net.URL
 
 @KtorExperimentalAPI
 open class PdlOppslagServiceImpl constructor(
-    private val stsService: SystemUserTokenProvider,
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val pdlClient: GraphQLClient<*>
 ) : PdlOppslagService {
-    constructor(stsService: SystemUserTokenProvider) : this(stsService, createClient())
+    constructor(machineToMachineTokenClient: BoundedMachineToMachineTokenClient) : this(machineToMachineTokenClient, createClient())
 
     override fun hentPersondata(fnr: String): HentPersondata.Result? = runBlocking {
         HentPersondata(pdlClient)
@@ -104,7 +104,7 @@ open class PdlOppslagServiceImpl constructor(
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
-        val systemuserToken: String = stsService.systemUserToken
+        val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken()
         val userToken: String = AuthContextUtils.requireToken()
 
         header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
@@ -113,7 +113,7 @@ open class PdlOppslagServiceImpl constructor(
     }
 
     private val systemTokenAuthorizationHeaders: HeadersBuilder = {
-        val systemuserToken: String = stsService.systemUserToken
+        val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken()
 
         header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)

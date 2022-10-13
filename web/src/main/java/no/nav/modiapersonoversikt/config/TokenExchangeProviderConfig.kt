@@ -1,8 +1,6 @@
 package no.nav.modiapersonoversikt.config
 
 import no.nav.common.cxf.StsConfig
-import no.nav.common.sts.NaisSystemUserTokenProvider
-import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
@@ -24,13 +22,6 @@ open class TokenExchangeProviderConfig {
         .username(AppConstants.SYSTEMUSER_USERNAME)
         .password(AppConstants.SYSTEMUSER_PASSWORD)
         .build()
-
-    @Bean
-    open fun systemUserTokenProvider(): SystemUserTokenProvider = NaisSystemUserTokenProvider(
-        EnvironmentUtils.getRequiredProperty(REST_STS_URL_PROPERTY),
-        AppConstants.SYSTEMUSER_USERNAME,
-        AppConstants.SYSTEMUSER_PASSWORD
-    )
 
     @Bean
     open fun machineToMachineTokenProvider(): MachineToMachineTokenClient = AzureAdTokenClientBuilder
