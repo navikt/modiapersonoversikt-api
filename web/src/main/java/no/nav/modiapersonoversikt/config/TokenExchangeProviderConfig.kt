@@ -12,22 +12,17 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class TokenExchangeProviderConfig {
-    companion object {
-        const val SOAP_STS_URL_PROPERTY = "SECURITYTOKENSERVICE_URL"
-        const val REST_STS_URL_PROPERTY = "SECURITY_TOKEN_SERVICE_DISCOVERY_URL"
-    }
-
     @Bean
     open fun stsConfig(): StsConfig = StsConfig
         .builder()
-        .url(EnvironmentUtils.getRequiredProperty(SOAP_STS_URL_PROPERTY))
+        .url(EnvironmentUtils.getRequiredProperty("SECURITYTOKENSERVICE_URL"))
         .username(AppConstants.SYSTEMUSER_USERNAME)
         .password(AppConstants.SYSTEMUSER_PASSWORD)
         .build()
 
     @Bean
     open fun systemUserTokenProvider(): SystemUserTokenProvider = NaisSystemUserTokenProvider(
-        EnvironmentUtils.getRequiredProperty(REST_STS_URL_PROPERTY),
+        EnvironmentUtils.getRequiredProperty("SECURITY_TOKEN_SERVICE_DISCOVERY_URL"),
         AppConstants.SYSTEMUSER_USERNAME,
         AppConstants.SYSTEMUSER_PASSWORD
     )
