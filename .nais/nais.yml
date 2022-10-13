@@ -81,7 +81,7 @@ spec:
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
-      value: "https://sts.adeo.no/SecurityTokenServiceProvider/"
+      value: "https://security-token-service.nais.adeo.no/"
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: FELLES_KODEVERK_URL
