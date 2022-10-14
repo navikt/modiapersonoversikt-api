@@ -78,10 +78,8 @@ spec:
       value: "https://app-q1.adeo.no/modialogin/api/refresh"
     - name: ISSO_DISCOVERY_URL
       value: "https://isso-q.adeo.no/isso/oauth2/.well-known/openid-configuration"
-    - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
-      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
-      value: "https://sts-q1.preprod.local/SecurityTokenServiceProvider/"
+      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/ws/samltoken"
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app-q1.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: FELLES_KODEVERK_URL
