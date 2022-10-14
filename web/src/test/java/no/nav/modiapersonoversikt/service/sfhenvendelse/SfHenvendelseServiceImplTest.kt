@@ -6,7 +6,6 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
-import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.HenvendelseBehandlingApi
@@ -16,6 +15,7 @@ import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.Utils.withProperty
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -41,7 +41,7 @@ internal class SfHenvendelseServiceImplTest {
     private val henvendelseOpprettApi: NyHenvendelseApi = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
     private val norgApi: NorgApi = mockk()
-    private val stsService: SystemUserTokenProvider = mockk()
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
     private val ansattService: AnsattService = mockk()
     private val sfHenvendelseServiceImpl = withProperty("SF_HENVENDELSE_URL", "http://dummy.io") {
         SfHenvendelseServiceImpl(
@@ -51,7 +51,7 @@ internal class SfHenvendelseServiceImplTest {
             pdlOppslagService,
             norgApi,
             ansattService,
-            stsService
+            machineToMachineTokenClient
         )
     }
 

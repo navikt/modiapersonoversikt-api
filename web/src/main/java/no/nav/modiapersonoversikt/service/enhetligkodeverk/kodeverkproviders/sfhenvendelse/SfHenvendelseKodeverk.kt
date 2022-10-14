@@ -1,20 +1,20 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.sfhenvendelse
 
 import no.nav.common.rest.client.RestClient
-import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.common.utils.EnvironmentUtils
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.KodeverkApi
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.TemagruppeDTO
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory
+import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 
 object SfHenvendelseKodeverk {
-
     class Provider(
-        private val systemUserTokenProvider: SystemUserTokenProvider,
-        private val sfHenvendelseKodeverk: KodeverkApi = createKodeverkApi(systemUserTokenProvider)
+        private val machineToMachineTokenClient: MachineToMachineTokenClient,
+        private val sfHenvendelseKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient)
     ) : EnhetligKodeverk.KodeverkProvider<String, String> {
 
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, String> {
@@ -31,8 +31,8 @@ object SfHenvendelseKodeverk {
         }
     }
 
-    internal fun createKodeverkApi(systemUserTokenProvider: SystemUserTokenProvider): KodeverkApi {
-        val url = EnvironmentUtils.getRequiredProperty("SF_HENVENDELSE_URL")
+    internal fun createKodeverkApi(machineToMachineTokenClient: MachineToMachineTokenClient): KodeverkApi {
+        val downstreamApi = SfHenvendelseApiFactory.downstreamApi()
         val client = RestClient.baseClient().newBuilder()
             .addInterceptor(
                 LoggingInterceptor("SF-Henvendelse-Kodeverk") { request ->
@@ -43,11 +43,11 @@ object SfHenvendelseKodeverk {
             )
             .addInterceptor(
                 AuthorizationInterceptor {
-                    systemUserTokenProvider.systemUserToken
+                    machineToMachineTokenClient.createMachineToMachineToken(downstreamApi)
                 }
             )
             .build()
 
-        return KodeverkApi(url, client)
+        return KodeverkApi(SfHenvendelseApiFactory.url(), client)
     }
 }

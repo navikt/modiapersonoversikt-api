@@ -2,8 +2,7 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.op
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.common.rest.client.RestClient
-import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.common.utils.EnvironmentUtils
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.KodeverkApi
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.GjelderDTO
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.KodeverkkombinasjonDTO
@@ -13,12 +12,14 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveApiFactory
+import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 
 object OppgaveKodeverk {
 
     class Provider(
-        private val systemUserTokenProvider: SystemUserTokenProvider,
-        val oppgaveKodeverk: KodeverkApi = createKodeverkApi(systemUserTokenProvider)
+        private val machineToMachineTokenClient: MachineToMachineTokenClient,
+        val oppgaveKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient)
     ) : EnhetligKodeverk.KodeverkProvider<String, Tema> {
 
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, Tema> {
@@ -57,8 +58,7 @@ object OppgaveKodeverk {
         val erGyldig: Boolean
     )
 
-    fun createKodeverkApi(systemUserTokenProvider: SystemUserTokenProvider): KodeverkApi {
-        val url = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
+    fun createKodeverkApi(machineToMachineTokenClient: MachineToMachineTokenClient): KodeverkApi {
         val client = RestClient.baseClient().newBuilder()
             .addInterceptor(XCorrelationIdInterceptor())
             .addInterceptor(
@@ -70,12 +70,12 @@ object OppgaveKodeverk {
             )
             .addInterceptor(
                 AuthorizationInterceptor {
-                    systemUserTokenProvider.systemUserToken
+                    machineToMachineTokenClient.createMachineToMachineToken(OppgaveApiFactory.downstreamApi)
                 }
             )
             .build()
 
-        return KodeverkApi(url, client)
+        return KodeverkApi(OppgaveApiFactory.url, client)
     }
 
     internal fun parseTilKodeverk(respons: List<KodeverkkombinasjonDTO>): Map<String, Tema> {

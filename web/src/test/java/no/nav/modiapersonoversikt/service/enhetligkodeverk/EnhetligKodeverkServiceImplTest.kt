@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import io.mockk.*
-import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.KodeverkApi
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.GjelderDTO
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.KodeverkkombinasjonDTO
@@ -135,8 +135,8 @@ internal class EnhetligKodeverkServiceImplTest {
     @Test
     internal fun `skal overstyre oppgavekodeverk på frister og prioriteter`() {
         val oppgaveApi: KodeverkApi = mockk()
-        val systemUserTokenProvider: SystemUserTokenProvider = mockk()
-        val provider = OppgaveKodeverk.Provider(systemUserTokenProvider, oppgaveApi)
+        val machineToMachineTokenClient: MachineToMachineTokenClient = mockk()
+        val provider = OppgaveKodeverk.Provider(machineToMachineTokenClient, oppgaveApi)
         every { provider.oppgaveKodeverk.hentInterntKodeverk(any()) } returns listOf(
             KodeverkkombinasjonDTO(
                 tema = TemaDTO(
