@@ -42,7 +42,7 @@ class SfLegacyDialogController(
     private val experiment = Scientist.createExperiment<List<TraadDTO>>(
         Scientist.Config(
             name = "TraadDTO",
-            experimentRate = Scientist.FixedValueRate(0.5)
+            experimentRate = Scientist.FixedValueRate(0.1)
         )
     )
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
@@ -293,6 +293,7 @@ class SfLegacyDialogController(
         return DialogMappingContext(temakodeMap, identMap)
     }
 
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern(DATO_TID_FORMAT)
     private fun DialogMappingContext.mapSfHenvendelserTilLegacyFormat(henvendelse: HenvendelseDTO): TraadDTO {
         val journalposter = henvendelse.journalposter?.map {
             tilJournalpostDTO(it)
@@ -324,15 +325,15 @@ class SfLegacyDialogController(
                     "temagruppe" to henvendelse.gjeldendeTemagruppe,
                     "skrevetAvTekst" to skrevetAv,
                     "fritekst" to hentFritekstFraMelding(henvendelseErKassert, melding),
-                    "lestDato" to melding.lestDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
+                    "lestDato" to melding.lestDato?.format(dateTimeFormatter),
                     "status" to when {
                         melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
                         melding.lestDato != null -> Status.LEST_AV_BRUKER
                         else -> Status.IKKE_LEST_AV_BRUKER
                     },
-                    "opprettetDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
-                    "avsluttetDato" to henvendelse.avsluttetDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
-                    "ferdigstiltDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
+                    "opprettetDato" to melding.sendtDato.format(dateTimeFormatter),
+                    "avsluttetDato" to henvendelse.avsluttetDato?.format(dateTimeFormatter),
+                    "ferdigstiltDato" to melding.sendtDato.format(dateTimeFormatter),
                     "kontorsperretEnhet" to kontorsperretEnhet,
                     "kontorsperretAv" to kontorsperretAv,
                     "sendtTilSladding" to (henvendelse.sladding ?: false),
