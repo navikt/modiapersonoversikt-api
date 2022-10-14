@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ma
 
 import no.nav.modiapersonoversikt.commondomain.Periode;
 import no.nav.modiapersonoversikt.utils.DateUtils;
-import no.nav.modiapersonoversikt.testutils.SnapshotRule;
+import no.nav.personoversikt.test.snapshot.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ForeldrepengerMockFactory;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;

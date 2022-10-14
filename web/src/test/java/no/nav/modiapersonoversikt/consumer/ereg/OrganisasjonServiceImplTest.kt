@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
-import no.nav.modiapersonoversikt.testutils.TestEnvironmentRule
+import no.nav.personoversikt.test.testenvironment.TestEnvironmentRule
 import org.hamcrest.MatcherAssert
 import org.hamcrest.core.Is
 import org.junit.Rule

@@ -258,6 +258,16 @@
             <groupId>no.nav.personoversikt</groupId>
             <artifactId>kotlin-utils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.personoversikt</groupId>
+            <artifactId>typeanalyzer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.personoversikt</groupId>
+            <artifactId>test-utils</artifactId>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- tjenester -->
         <dependency>
