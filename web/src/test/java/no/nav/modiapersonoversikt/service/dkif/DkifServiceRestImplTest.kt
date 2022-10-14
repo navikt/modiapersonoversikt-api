@@ -9,10 +9,10 @@ import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceRestImpl
 import no.nav.modiapersonoversikt.consumer.dkif.generated.infrastructure.ServerException
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.testutils.TestEnvironmentExtension
 import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
+import no.nav.personoversikt.test.testenvironment.TestEnvironmentExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
