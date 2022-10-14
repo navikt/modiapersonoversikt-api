@@ -12,7 +12,7 @@ import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
-import no.nav.modiapersonoversikt.testutils.SnapshotExtension
+import no.nav.personoversikt.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 

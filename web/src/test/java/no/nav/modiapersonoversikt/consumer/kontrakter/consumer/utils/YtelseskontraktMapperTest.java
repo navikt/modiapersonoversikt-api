@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils;
 
 import no.nav.modiapersonoversikt.utils.DateUtils;
-import no.nav.modiapersonoversikt.testutils.SnapshotRule;
+import no.nav.personoversikt.test.snapshot.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktMapper;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest;

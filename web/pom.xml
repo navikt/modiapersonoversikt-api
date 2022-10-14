@@ -258,6 +258,16 @@
             <groupId>no.nav.personoversikt</groupId>
             <artifactId>kotlin-utils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.personoversikt</groupId>
+            <artifactId>typeanalyzer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.personoversikt</groupId>
+            <artifactId>test-utils</artifactId>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- tjenester -->
         <dependency>
@@ -320,7 +330,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock-standalone</artifactId>
+            <artifactId>wiremock-jre8</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

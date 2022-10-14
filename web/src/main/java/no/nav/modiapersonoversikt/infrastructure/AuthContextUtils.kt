@@ -59,6 +59,9 @@ object AuthContextUtils {
     fun <T> withContext(authContext: AuthContext?, block: UnsafeSupplier<T>): T = authContextHolder.withContext(authContext, block)
 
     @JvmStatic
+    fun <T> withContext(authContext: AuthContext?, block: () -> T): T = authContextHolder.withContext(authContext, UnsafeSupplier { block() })
+
+    @JvmStatic
     fun getTokenType(): TokenType {
         val claims = requireClaims()
         return when (claims.getStringClaim(AAD_NAV_IDENT_CLAIM)) {
