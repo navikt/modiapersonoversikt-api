@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.dkif
 
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import no.nav.common.auth.context.AuthContext
@@ -8,30 +9,35 @@ import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.dkif.DkifServiceRestImpl
 import no.nav.modiapersonoversikt.consumer.dkif.generated.infrastructure.ServerException
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.utils.WireMockUtils
-import no.nav.modiapersonoversikt.utils.WireMockUtils.getWithBody
+import no.nav.modiapersonoversikt.utils.WireMockUtils.get
+import no.nav.modiapersonoversikt.utils.WireMockUtils.json
+import no.nav.modiapersonoversikt.utils.WireMockUtils.status
 import no.nav.personoversikt.test.testenvironment.TestEnvironmentExtension
-import org.hamcrest.MatcherAssert
-import org.hamcrest.core.Is
-import org.hamcrest.core.IsNull
+import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.RegisterExtension
 
 internal class DkifServiceRestImplTest {
-    @RegisterExtension
-    @JvmField
-    val testEnvironmentExtension = TestEnvironmentExtension(
-        mapOf(
-            AppConstants.SYSTEMUSER_USERNAME_PROPERTY to "username"
+    companion object {
+        @JvmField
+        @RegisterExtension
+        val testEnvironmentExtension = TestEnvironmentExtension(
+            mapOf(
+                AppConstants.SYSTEMUSER_USERNAME_PROPERTY to "username"
+            )
         )
-    )
 
-    private val testSubject = AuthContext(
-        UserRole.INTERN,
-        PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
-    )
+        @JvmField
+        @RegisterExtension
+        val wiremock = WireMockExtension.newInstance().build()
+
+        private val testSubject = AuthContext(
+            UserRole.INTERN,
+            PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
+        )
+    }
 
     @Language("json")
     private val dkifJsonResponse = """
@@ -63,48 +69,48 @@ internal class DkifServiceRestImplTest {
 
     @Test
     fun `hent kontaktinformasjon fra DkifRestApi`() {
-        WireMockUtils.withMockGateway(
-            stub = getWithBody(statusCode = 200, body = dkifJsonResponse),
-            verify = { }
-        ) { url ->
-            AuthContextUtils.withContext(testSubject) {
-                val dkifRestService = DkifServiceRestImpl(url)
-                val response = dkifRestService.hentDigitalKontaktinformasjon("06073000250")
-                MatcherAssert.assertThat(response.personident, Is.`is`("06073000250"))
-                MatcherAssert.assertThat(response.epostadresse?.value, Is.`is`("noreply@nav.no"))
-                MatcherAssert.assertThat(response.mobiltelefonnummer?.value, Is.`is`("11111111"))
-            }
+        wiremock.get {
+            status(200)
+            json(dkifJsonResponse)
         }
+        val dkifRestService = DkifServiceRestImpl("http://localhost:${wiremock.port}")
+
+        val response = AuthContextUtils.withContext(testSubject) {
+            dkifRestService.hentDigitalKontaktinformasjon("06073000250")
+        }
+
+        assertThat(response.personident).isEqualTo("06073000250")
+        assertThat(response.epostadresse?.value).isEqualTo("noreply@nav.no")
+        assertThat(response.mobiltelefonnummer?.value).isEqualTo("11111111")
     }
 
     @Test
     fun `trigg feil ved henting av kontaktinformasjon fra DkifRestApi`() {
-        WireMockUtils.withMockGateway(
-            stub = getWithBody(statusCode = 200, body = dkifJsonResponse),
-            verify = { }
-        ) { url ->
-            AuthContextUtils.withContext(testSubject) {
-                val dkifRestService = DkifServiceRestImpl(url)
-                val response = dkifRestService.hentDigitalKontaktinformasjon("10108000123")
-                MatcherAssert.assertThat(response.personident, IsNull())
-                MatcherAssert.assertThat(response.reservasjon, Is.`is`(""))
-                MatcherAssert.assertThat(response.mobiltelefonnummer?.value, Is.`is`(""))
-                MatcherAssert.assertThat(response.epostadresse?.value, Is.`is`(""))
-            }
+        wiremock.get {
+            status(200)
+            json(dkifJsonResponse)
         }
+
+        val dkifRestService = DkifServiceRestImpl("http://localhost:${wiremock.port}")
+        val response = AuthContextUtils.withContext(testSubject) {
+            dkifRestService.hentDigitalKontaktinformasjon("10108000123")
+        }
+        assertThat(response.personident).isNull()
+        assertThat(response.reservasjon).isEqualTo("")
+        assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
+        assertThat(response.epostadresse?.value).isEqualTo("")
     }
 
     @Test
     fun `trigg server-feil ved henting av kontaktinformasjon fra DkifRestApi`() {
-        WireMockUtils.withMockGateway(
-            stub = getWithBody(statusCode = 500, body = null),
-            verify = { }
-        ) { url ->
+        wiremock.get {
+            status(500)
+        }
+        val dkifRestService = DkifServiceRestImpl("http://localhost:${wiremock.port}")
+
+        assertThrows<ServerException> {
             AuthContextUtils.withContext(testSubject) {
-                assertThrows<ServerException> {
-                    val dkifRestService = DkifServiceRestImpl(url)
-                    dkifRestService.hentDigitalKontaktinformasjon("10108000123")
-                }
+                dkifRestService.hentDigitalKontaktinformasjon("10108000123")
             }
         }
     }
