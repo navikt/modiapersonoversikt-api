@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling
@@ -24,8 +23,9 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGi
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
-import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.slf4j.LoggerFactory
 import java.time.Clock
 import java.time.LocalDate
@@ -38,12 +38,13 @@ class RestOppgaveBehandlingServiceImpl(
     private val pdlOppslagService: PdlOppslagService,
     private val ansattService: AnsattService,
     private val tilgangskontroll: Tilgangskontroll,
-    private val machineToMachineTokenClient: MachineToMachineTokenClient,
+    private val oboTokenClient: BoundedOnBehalfOfTokenClient,
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
-        AuthContextUtils.requireToken()
+        AuthContextUtils.requireOboTokenIfPresent(oboTokenClient)
     },
     private val systemApiClient: OppgaveApi = OppgaveApiFactory.createClient {
-        machineToMachineTokenClient.createMachineToMachineToken(OppgaveApiFactory.downstreamApi)
+        machineToMachineTokenClient.createMachineToMachineToken()
     },
     private val clock: Clock = Clock.systemDefaultZone()
 ) : OppgaveBehandlingService {
