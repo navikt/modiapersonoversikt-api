@@ -19,8 +19,8 @@
     </cache:advice>
     <cache:advice id="pdlAdvice" key-generator="userkeygenerator">
         <cache:caching cache="pdlCache">
-            <cache:cacheable method="sok*"/>
-            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="sok*" unless="#result == null"/>
+            <cache:cacheable method="hent*" unless="#result == null"/>
         </cache:caching>
     </cache:advice>
     <cache:advice id="pesysServiceAdvice" key-generator="userkeygenerator">
