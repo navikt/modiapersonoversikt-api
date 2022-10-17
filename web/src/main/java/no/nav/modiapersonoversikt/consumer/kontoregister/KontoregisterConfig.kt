@@ -4,7 +4,7 @@ import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
-import no.nav.common.utils.EnvironmentUtils
+import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.InDevCondition
 import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
@@ -18,12 +18,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class KontoregisterConfig {
-    private val scope = DownstreamApi(
-        application = "sokos-kontoregister-person",
-        namespace = "okonomi",
-        cluster = EnvironmentUtils.getRequiredProperty("GCP_CLUSTER")
-    )
-    private val url: String = EnvironmentUtils.getRequiredProperty("KONTOREGISTER_REST_URL")
+    private val scope = DownstreamApi.parse(getRequiredProperty("KONTOREGISTER_SCOPE"))
+    private val url: String = getRequiredProperty("KONTOREGISTER_REST_URL")
 
     @Bean
     open fun kontoregisterApi(tokenClient: MachineToMachineTokenClient) = KontoregisterV1Api(

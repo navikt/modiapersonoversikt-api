@@ -14,6 +14,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl
+import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -36,7 +37,9 @@ class InternalController @Autowired constructor(
             .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Tokens)) {
                 Tokens(
                     user = AuthContextUtils.getToken().orElse("null"),
-                    system = scope?.let(machineToMachineTokenClient::createMachineToMachineToken)
+                    system = scope?.let {
+                        machineToMachineTokenClient.createMachineToMachineToken(DownstreamApi.parse(it))
+                    }
                 )
             }
     }

@@ -122,6 +122,8 @@ spec:
       value: "https://unleash.nais.io/api/"
     - name: REST_UTBETALING_ENDPOINTURL
       value: "https://sokos-utbetaldata.intern.nav.no/utbetaldata/api"
+    - name: UTBETALING_SCOPE
+      value: "prod-fss:okonomi:sokos-utbetaldata"
     - name: VEILARBOPPFOLGINGAPI_URL
       value: "https://veilarboppfolging.intern.nav.no/veilarboppfolging/api"
     - name: VEILARBOPPFOLGINGAPI_SCOPE
@@ -138,6 +140,8 @@ spec:
       value: "https://modapp.adeo.no/ereg/"
     - name: KONTOREGISTER_REST_URL
       value: "https://sokos-kontoregister-person.intern.nav.no/kontoregister/api/kontoregister"
+    - name: KONTOREGISTER_SCOPE
+      value: "prod-gcp:okonomi:sokos-kontoregister-person"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: "https://app.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
@@ -182,8 +186,12 @@ spec:
       value: "prod-fss:org:axsys"
     - name: NOM_URL
       value: "https://nom-api.intern.nav.no"
+    - name: NOM_SCOPE
+      value: "prod-gcp:nom:nom-api"
     - name: SKJERMEDE_PERSONER_PIP_URL
       value: "https://skjermede-personer-pip.intern.nav.no"
+    - name: SKJERMEDE_PERSONER_SCOPE
+      value: "prod-gcp:nom:skjermede-personer-pip"
     - name: ARENA_SAK_VEDTAK_URL
       value: "https://arena.adeo.no/arena_ws/services/ArenaSakVedtakService"
     - name: DITTNAV_EVENTER_MODIA_URL

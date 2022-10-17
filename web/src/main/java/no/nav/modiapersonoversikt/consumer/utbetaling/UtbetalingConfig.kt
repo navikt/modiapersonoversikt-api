@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.consumer.utbetaling
 
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
-import no.nav.common.utils.EnvironmentUtils
+import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.apis.UtbetaldataV2Api
 import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.utils.DownstreamApi
@@ -12,12 +12,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class UtbetalingConfig {
-    private val basePath = EnvironmentUtils.getRequiredProperty("REST_UTBETALING_ENDPOINTURL")
-    private val scope = DownstreamApi(
-        application = "sokos-utbetaldata",
-        namespace = "okonomi",
-        cluster = EnvironmentUtils.getRequiredProperty("ONPREM_CLUSTER_NAME")
-    )
+    private val basePath = getRequiredProperty("REST_UTBETALING_ENDPOINTURL")
+    private val scope = DownstreamApi.parse(getRequiredProperty("UTBETALING_SCOPE"))
 
     @Bean
     open fun utbetalingV2Api(tokenClient: MachineToMachineTokenClient) = UtbetaldataV2Api(
