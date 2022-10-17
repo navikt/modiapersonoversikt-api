@@ -198,3 +198,7 @@ spec:
       value: "https://arena-q0.adeo.no/arena_ws/services/ArenaSakVedtakService"
     - name: DITTNAV_EVENTER_MODIA_URL
       value: "https://app-q0.adeo.no/dittnav-eventer-modia"
+    - name: DITTNAV_EVENTER_HANDLER_URL
+      value: "https://person.dev.nav.no/dittnav-event-handler"
+    - name: DITTNAV_EVENTER_HANDLER_SCOPE
+      value: "dev-gcp:min-side:dittnav-event-handler"
