@@ -169,7 +169,7 @@ spec:
     - name: OPPGAVE_BASEURL
       value: "https://oppgave.nais.preprod.local/"
     - name: OPPGAVE_SCOPE
-      value: "dev-fss:oppgavehandtering:oppgave"
+      value: "dev-fss:oppgavehandtering:oppgave-q1"
     - name: NORG2_BASEURL
       value: "https://app-q1.adeo.no/norg2"
     - name: PREFETCH_NORG_ANSATTLISTE_SCHEDULE
