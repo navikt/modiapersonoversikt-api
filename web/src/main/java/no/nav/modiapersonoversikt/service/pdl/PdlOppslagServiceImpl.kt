@@ -4,6 +4,7 @@ import com.expediagroup.graphql.client.GraphQLClient
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
+import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAktorid.IdentGruppe
@@ -14,14 +15,21 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import java.net.URL
 
 @KtorExperimentalAPI
 open class PdlOppslagServiceImpl constructor(
+    private val stsService: SystemUserTokenProvider,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
+    private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val pdlClient: GraphQLClient<*>
 ) : PdlOppslagService {
-    constructor(machineToMachineTokenClient: BoundedMachineToMachineTokenClient) : this(machineToMachineTokenClient, createClient())
+    constructor(
+        stsService: SystemUserTokenProvider,
+        machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
+        oboTokenClient: BoundedOnBehalfOfTokenClient
+    ) : this(stsService, machineToMachineTokenClient, oboTokenClient, createClient())
 
     override fun hentPersondata(fnr: String): HentPersondata.Result? = runBlocking {
         HentPersondata(pdlClient)
@@ -104,18 +112,21 @@ open class PdlOppslagServiceImpl constructor(
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
-        val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken()
-        val userToken: String = AuthContextUtils.requireToken()
+        when (val azureToken = AuthContextUtils.azureAdUserToken()) {
+            null -> {
+                header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + stsService.systemUserToken)
+                header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + AuthContextUtils.requireToken())
+            }
+            else -> {
+                header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + oboTokenClient.exchangeOnBehalfOfToken(azureToken))
+            }
+        }
 
-        header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
-        header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + userToken)
         header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
     }
 
     private val systemTokenAuthorizationHeaders: HeadersBuilder = {
         val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken()
-
-        header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
         header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
     }

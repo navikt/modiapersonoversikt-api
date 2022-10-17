@@ -11,10 +11,12 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
+import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.infrastructure.RestConstants.ALLE_TEMA_HEADERVERDI
 import no.nav.modiapersonoversikt.testutils.AuthContextRule
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.TestUtils
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -36,11 +38,15 @@ internal class PdlOppslagServiceImplTest {
         )
     )
     private val systemuserToken = "RND-STS-TOKEN"
+    private val stsClient: SystemUserTokenProvider = mockk()
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
+    private val oboTokenProvider: BoundedOnBehalfOfTokenClient = mockk()
 
     @Before
     fun before() {
+        every { stsClient.systemUserToken } returns systemuserToken
         every { machineToMachineTokenClient.createMachineToMachineToken() } returns systemuserToken
+        every { oboTokenProvider.exchangeOnBehalfOfToken(any()) } returns userToken.serialize()
     }
 
     @Test
@@ -51,7 +57,7 @@ internal class PdlOppslagServiceImplTest {
         }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(machineToMachineTokenClient, client).hentIdenter("ident")
+            PdlOppslagServiceImpl(stsClient, machineToMachineTokenClient, oboTokenProvider, client).hentIdenter("ident")
         }
     }
 
@@ -63,7 +69,7 @@ internal class PdlOppslagServiceImplTest {
         }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(machineToMachineTokenClient, client).hentAdressebeskyttelse("ident")
+            PdlOppslagServiceImpl(stsClient, machineToMachineTokenClient, oboTokenProvider, client).hentAdressebeskyttelse("ident")
         }
     }
 
@@ -76,7 +82,6 @@ internal class PdlOppslagServiceImplTest {
 
     private fun verifySystemuserTokenHeaders(request: HttpRequestData) {
         assertNotNull(request.headers[RestConstants.NAV_CALL_ID_HEADER], "NAV_CALL_ID_HEADER missing")
-        assertEquals("Bearer $systemuserToken", request.headers[RestConstants.NAV_CONSUMER_TOKEN_HEADER])
         assertEquals("Bearer $systemuserToken", request.headers[RestConstants.AUTHORIZATION])
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }
