@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,7 +27,6 @@ class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInte
                     .Builder()
                     .get()
                     .url("$baseUrl/fetch/${type.name.lowercase()}/all")
-                    .header("Cookie", "ID_token=${AuthContextUtils.requireToken()}")
                     .header("fodselsnummer", fnr.get())
                     .build()
             )
