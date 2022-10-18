@@ -1,12 +1,15 @@
 package no.nav.modiapersonoversikt.service.pdl;
 
 import no.nav.modiapersonoversikt.config.endpoint.util.CacheTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +22,10 @@ class PdlOppslagServiceCacheTest extends CacheTest {
 
     PdlOppslagServiceCacheTest() {
         super(AKTOR_CACHE);
+    }
+    @BeforeEach
+    void clearMocks() {
+        Mockito.reset(pdlOppslagService);
     }
 
     @Test
@@ -43,5 +50,14 @@ class PdlOppslagServiceCacheTest extends CacheTest {
         assertThat(fnr3, is("456"));
         assertThat(gt1, is(gt2));
         assertThat(getKey(), is(generatedByUserKeyGenerator()));
+    }
+
+    @Test
+    void should_not_cache_null_values() {
+        when(pdlOppslagService.hentAktorId(any())).thenReturn(null);
+
+        pdlOppslagService.hentAktorId("123");
+
+        assertThat(getKey(), nullValue());
     }
 }
