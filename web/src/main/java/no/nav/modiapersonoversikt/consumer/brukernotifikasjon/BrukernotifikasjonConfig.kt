@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class BrukernotifikasjonConfig {
     private val dittnavEventerModiaUrl: String = getRequiredProperty("DITTNAV_EVENTER_MODIA_URL")
-    private val dittnavEventHandlerUrl: String = getRequiredProperty("DITTNAV_EVENTER_HANDLER_URL")
-    private val downstreamApi: DownstreamApi = DownstreamApi.parse(getRequiredProperty("DITTNAV_EVENTER_HANDLER_SCOPE"))
+    private val tmsEventApiUrl: String = getRequiredProperty("TMS_EVENT_API_URL")
+    private val tmsEventApiApi: DownstreamApi = DownstreamApi.parse(getRequiredProperty("TMS_EVENT_API_SCOPE"))
 
     private class TokenawareSwitcher(
         val openAmClient: Brukernotifikasjon.Client,
@@ -34,7 +34,7 @@ open class BrukernotifikasjonConfig {
         BrukernotifikasjonService(
             TokenawareSwitcher(
                 openAmClient = BrukernotifikasjonClient(
-                    baseUrl = dittnavEventerModiaUrl,
+                    baseUrl = "$dittnavEventerModiaUrl/fetch",
                     authInterceptor = HeadersInterceptor {
                         mapOf(
                             "Cookie" to "ID_token=${AuthContextUtils.requireToken()}"
@@ -42,10 +42,10 @@ open class BrukernotifikasjonConfig {
                     }
                 ),
                 azureAdClient = BrukernotifikasjonClient(
-                    baseUrl = dittnavEventHandlerUrl,
+                    baseUrl = tmsEventApiUrl,
                     authInterceptor = HeadersInterceptor {
                         val azureAdToken = AuthContextUtils.requireAzureAdUserToken()
-                        val oboToken = oboTokenProvider.exchangeOnBehalfOfToken(downstreamApi, azureAdToken)
+                        val oboToken = oboTokenProvider.exchangeOnBehalfOfToken(tmsEventApiApi, azureAdToken)
                         mapOf("Authorization" to "Bearer $oboToken")
                     }
                 )

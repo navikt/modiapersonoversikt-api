@@ -26,7 +26,7 @@ class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInte
                 Request
                     .Builder()
                     .get()
-                    .url("$baseUrl/fetch/${type.name.lowercase()}/all")
+                    .url("$baseUrl/${type.name.lowercase()}/all")
                     .header("fodselsnummer", fnr.get())
                     .build()
             )
