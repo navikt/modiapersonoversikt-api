@@ -124,6 +124,8 @@ spec:
       value: "https://unleash.nais.io/api/"
     - name: REST_UTBETALING_ENDPOINTURL
       value: "https://sokos-utbetaldata.intern.nav.no/utbetaldata/api"
+    - name: UTBETALING_SCOPE
+      value: "prod-fss:okonomi:sokos-utbetaldata"
     - name: VEILARBOPPFOLGINGAPI_URL
       value: "https://veilarboppfolging.intern.nav.no/veilarboppfolging/api"
     - name: VEILARBOPPFOLGINGAPI_SCOPE
@@ -140,6 +142,8 @@ spec:
       value: "https://modapp.adeo.no/ereg/"
     - name: KONTOREGISTER_REST_URL
       value: "https://sokos-kontoregister-person.intern.nav.no/kontoregister/api/kontoregister"
+    - name: KONTOREGISTER_SCOPE
+      value: "prod-gcp:okonomi:sokos-kontoregister-person"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: "https://app.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
@@ -152,12 +156,18 @@ spec:
       value: "https://arena.adeo.no/ail_ws/Ytelseskontrakt_v3"
     - name: SF_HENVENDELSE_URL
       value: "https://sf-henvendelse.intern.nav.no/api"
+    - name: SF_HENVENDELSE_SCOPE
+      value: "prod-fss:teamcrm:sf-henvendelse"
     - name: PDL_API_URL
       value: "https://pdl-api.nais.adeo.no/graphql"
+    - name: PDL_SCOPE
+      value: "prod-fss:pdl:pdl-api"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
       value: "https://oppgave.nais.adeo.no/"
+    - name: OPPGAVE_SCOPE
+      value: "prod-fss:oppgavehandtering:oppgave"
     - name: NORG2_BASEURL
       value: "https://app.adeo.no/norg2"
     - name: PREFETCH_NORG_ANSATTLISTE_SCHEDULE
@@ -174,12 +184,16 @@ spec:
       value: "enabled"
     - name: AXSYS_URL
       value: "https://axsys.nais.adeo.no"
-    - name: AXSYS_CLUSTER
-      value: "prod-fss"
+    - name: AXSYS_SCOPE
+      value: "prod-fss:org:axsys"
     - name: NOM_URL
       value: "https://nom-api.intern.nav.no"
+    - name: NOM_SCOPE
+      value: "prod-gcp:nom:nom-api"
     - name: SKJERMEDE_PERSONER_PIP_URL
       value: "https://skjermede-personer-pip.intern.nav.no"
+    - name: SKJERMEDE_PERSONER_SCOPE
+      value: "prod-gcp:nom:skjermede-personer-pip"
     - name: ARENA_SAK_VEDTAK_URL
       value: "https://arena.adeo.no/arena_ws/services/ArenaSakVedtakService"
     - name: DITTNAV_EVENTER_MODIA_URL

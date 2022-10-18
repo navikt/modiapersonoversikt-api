@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.consumer.skjermedePersoner
 
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
-import no.nav.common.utils.EnvironmentUtils
+import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
@@ -15,12 +15,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class SkjermedePersonerConfig {
-    private val scope = DownstreamApi(
-        application = "skjermede-personer-pip",
-        namespace = "nom",
-        cluster = EnvironmentUtils.getRequiredProperty("GCP_CLUSTER")
-    )
-    private val url: String = EnvironmentUtils.getRequiredProperty("SKJERMEDE_PERSONER_PIP_URL")
+    private val scope = DownstreamApi.parse(getRequiredProperty("SKJERMEDE_PERSONER_SCOPE"))
+    private val url: String = getRequiredProperty("SKJERMEDE_PERSONER_PIP_URL")
 
     @Autowired
     lateinit var tokenProvider: MachineToMachineTokenClient

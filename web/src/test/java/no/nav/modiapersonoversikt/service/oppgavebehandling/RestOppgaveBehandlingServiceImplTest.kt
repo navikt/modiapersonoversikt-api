@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import io.mockk.*
-import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
@@ -31,14 +31,14 @@ class RestOppgaveBehandlingServiceImplTest {
     private val pdlOppslagService: PdlOppslagService = mockk()
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
     private val ansattService: AnsattService = mockk()
-    private val stsService: SystemUserTokenProvider = mockk()
+    private val machineToMachineTokenClient: MachineToMachineTokenClient = mockk()
     private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
         pdlOppslagService,
         ansattService,
         tilgangskontroll,
-        stsService,
+        machineToMachineTokenClient,
         apiClient,
         systemApiClient,
         fixedClock

@@ -20,6 +20,9 @@ open class TokenExchangeProviderConfig {
         .password(AppConstants.SYSTEMUSER_PASSWORD)
         .build()
 
+    /**
+     * Må ha denne for bruk i PdlOppslagService slik at vi ikke blander OpenAm token for bruker med AzureAd systemtoken
+     */
     @Bean
     open fun systemUserTokenProvider(): SystemUserTokenProvider = NaisSystemUserTokenProvider(
         EnvironmentUtils.getRequiredProperty("SECURITY_TOKEN_SERVICE_DISCOVERY_URL"),

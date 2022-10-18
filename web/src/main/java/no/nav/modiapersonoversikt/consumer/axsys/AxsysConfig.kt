@@ -16,12 +16,10 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class AxsysConfig {
     private val url: String = EnvironmentUtils.getRequiredProperty("AXSYS_URL")
-    private val scope = DownstreamApi(
-        application = "axsys",
-        namespace = "org",
-        cluster = EnvironmentUtils.getRequiredProperty("AXSYS_CLUSTER")
-    )
     private val httpClient: OkHttpClient = RestClient.baseClient()
+    companion object {
+        val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("AXSYS_SCOPE"))
+    }
 
     @Autowired
     lateinit var tokenProvider: MachineToMachineTokenClient
@@ -29,7 +27,7 @@ open class AxsysConfig {
     @Bean
     open fun axsys(): AxsysClient {
         val tokenSupplier = {
-            tokenProvider.createMachineToMachineToken(scope)
+            tokenProvider.createMachineToMachineToken(downstreamApi)
         }
 
         return CachedAxsysClient(AxsysV2ClientImpl(url, tokenSupplier, httpClient))

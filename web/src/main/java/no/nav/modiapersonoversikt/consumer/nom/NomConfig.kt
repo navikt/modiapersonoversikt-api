@@ -9,6 +9,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
@@ -18,12 +19,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class NomConfig {
-    private val scope = DownstreamApi(
-        application = "nom-api",
-        namespace = "nom",
-        cluster = "prod-gcp"
-    )
-    private val url: String = EnvironmentUtils.getRequiredProperty("NOM_URL")
+    private val scope = DownstreamApi.parse(getRequiredProperty("NOM_SCOPE"))
+    private val url: String = getRequiredProperty("NOM_URL")
     private val httpClient: OkHttpClient = RestClient.baseClient()
 
     @Autowired
