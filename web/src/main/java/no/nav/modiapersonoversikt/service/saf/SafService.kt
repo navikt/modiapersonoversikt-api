@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.service.saf.SafDokumentMapper.fraSafJournalpost
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory
@@ -39,10 +40,16 @@ private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredPrope
 @KtorExperimentalAPI
 private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
 
-class SafServiceImpl : SafService {
+class SafServiceImpl(
+    private val oboTokenProvider: BoundedOnBehalfOfTokenClient
+) : SafService {
     private val log = LoggerFactory.getLogger(SafService::class.java)
     private val client: OkHttpClient = RestClient.baseClient().newBuilder()
-        .addInterceptor(HeadersInterceptor(this::httpHeaders))
+        .addInterceptor(
+            HeadersInterceptor {
+                this.httpHeaders(oboTokenProvider)
+            }
+        )
         .addInterceptor(
             LoggingInterceptor("Saf") { request ->
                 requireNotNull(request.header("X-Correlation-ID")) {
@@ -128,8 +135,8 @@ class SafServiceImpl : SafService {
         }
     }
 
-    private fun httpHeaders(): Map<String, String> {
-        val token = AuthContextUtils.requireToken()
+    private fun httpHeaders(oboTokenProvider: BoundedOnBehalfOfTokenClient): Map<String, String> {
+        val token = AuthContextUtils.requireOboTokenIfPresent(oboTokenProvider)
         val callId = getCallId()
         return mapOf(
             "Authorization" to "Bearer $token",
@@ -139,7 +146,7 @@ class SafServiceImpl : SafService {
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
-        httpHeaders().forEach { (key, value) -> header(key, value) }
+        httpHeaders(oboTokenProvider).forEach { (key, value) -> header(key, value) }
     }
 
     private fun handterDokumentFeilKoder(statuskode: Int): TjenesteResultatWrapper {
