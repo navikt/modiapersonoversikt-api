@@ -85,6 +85,7 @@ data class TraadDTOV2(
 )
 data class MeldingDTOV2(
     val id: String,
+    val meldingsId: String?,
     val meldingstype: Meldingstype,
     val temagruppe: String,
     val skrevetAvTekst: String,
