@@ -21,11 +21,7 @@ class SfLegacyDialogMerkController(
     }
 
     override fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void> {
-        if (request.arsak !== null) {
-            sfHenvendelseService.sendTilSladding(request.traadId, request.arsak, request.meldingId)
-        } else {
-            sfHenvendelseService.sendTilSladding(request.traadId)
-        }
+        sfHenvendelseService.sendTilSladding(request.traadId, request.arsak, request.meldingId)
         return ResponseEntity(HttpStatus.OK)
     }
 
