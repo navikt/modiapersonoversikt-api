@@ -81,7 +81,7 @@
     "/henvendelse/sladding": {
       "post": {
         "tags": ["Henvendelse Behandling"],
-        "description": "Registrerer den gitte meldingen for sladding med den definerte årsakskoden",
+        "description": "Registrerer en eller flere meldinger for sladding med den definerte årsakskoden",
         "requestBody": {
           "required": true,
           "content": {
@@ -93,8 +93,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -682,6 +682,11 @@
             "description": "Unik id for meldingen i kjeden",
             "example": "a0J3N000004dUBJUA2"
           },
+          "sladding": {
+            "type": "boolean",
+            "description": "Viser om meldingen er markert for sladding",
+            "example": true
+          },
           "fra": {
             "$ref": "#/components/schemas/MeldingFra"
           }
@@ -806,6 +811,13 @@
           "kjedeId": {
             "type": "string",
             "example": "a0J3N000004dUBJUA2"
+          },
+          "meldingsIder": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["a0J3N000004dUBJUA2", "a0J3N000004dUBJUA3"]
           }
         },
         "required": ["aarsak", "kjedeId"]

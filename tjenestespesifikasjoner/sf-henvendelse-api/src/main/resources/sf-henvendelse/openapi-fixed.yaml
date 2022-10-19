@@ -57,7 +57,7 @@ paths:
     post:
       tags:
       - "Henvendelse Behandling"
-      description: "Registrerer den gitte meldingen for sladding med den definerte\
+      description: "Registrerer en eller flere meldinger for sladding med den definerte\
         \ årsakskoden"
       requestBody:
         required: true
@@ -66,8 +66,8 @@ paths:
             schema:
               $ref: "#/components/schemas/SladdeRequest"
       responses:
-        "200":
-          description: "OK"
+        "204":
+          description: "No Content"
         "400":
           $ref: "#/components/responses/BadRequest"
         "500":
@@ -527,6 +527,10 @@ components:
           type: "string"
           description: "Unik id for meldingen i kjeden"
           example: "a0J3N000004dUBJUA2"
+        sladding:
+          type: "boolean"
+          description: "Viser om meldingen er markert for sladding"
+          example: true
         fra:
           $ref: "#/components/schemas/MeldingFra"
       required:
@@ -630,6 +634,13 @@ components:
         kjedeId:
           type: "string"
           example: "a0J3N000004dUBJUA2"
+        meldingsIder:
+          type: "array"
+          items:
+            type: "string"
+          example:
+          - "a0J3N000004dUBJUA2"
+          - "a0J3N000004dUBJUA3"
       required:
       - "aarsak"
       - "kjedeId"
