@@ -6,14 +6,14 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.HistoriskUtbetaling
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.KommendeUtbetaling
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kreditortrekk
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
-import java.time.format.DateTimeFormatter
+import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 
 fun hentHistoriskeUtbetalinger(historiskeUtbetalinger: List<HistoriskUtbetaling>) =
     historiskeUtbetalinger.map {
         mapOf(
             "vedtak" to it.vedtak?.let { vedtak -> lagPeriode(vedtak) },
             "utbetalingsgrad" to it.utbetalingsgrad,
-            "utbetalingsdato" to it.utbetalingsdato?.toString(DATOFORMAT),
+            "utbetalingsdato" to it.utbetalingsdato?.toString(JODA_DATOFORMAT),
             "nettobeløp" to it.nettobelop,
             "bruttobeløp" to it.bruttobeloep,
             "skattetrekk" to it.skattetrekk,
@@ -30,7 +30,7 @@ fun hentKommendeUtbetalinger(kommendeUtbetalinger: List<KommendeUtbetaling>) =
         mapOf(
             "vedtak" to it.vedtak?.let { vedtak -> lagPeriode(vedtak) },
             "utbetalingsgrad" to it.utbetalingsgrad,
-            "utbetalingsdato" to it.utbetalingsdato?.toString(DATOFORMAT),
+            "utbetalingsdato" to it.utbetalingsdato?.toString(JODA_DATOFORMAT),
             "bruttobeløp" to it.bruttobeloep,
             "arbeidsgiverNavn" to it.arbeidsgiverNavn,
             "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
@@ -54,11 +54,11 @@ fun hentArbeidsgiverNavn(organisasjonService: OrganisasjonService, orgnr: String
     organisasjonService.hentNoekkelinfo(orgnr).orElse(null).navn
 
 fun lagPeriode(periode: Periode) = mapOf(
-    "fra" to periode.from?.toString(DATOFORMAT),
-    "til" to periode.to?.toString(DATOFORMAT)
+    "fra" to periode.from?.toString(JODA_DATOFORMAT),
+    "til" to periode.to?.toString(JODA_DATOFORMAT)
 )
 
 fun lagPleiepengePeriode(periode: no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Periode) = mapOf(
-    "fom" to periode.fraOgMed?.format(DateTimeFormatter.ofPattern(DATOFORMAT)),
-    "tom" to periode.tilOgMed?.format(DateTimeFormatter.ofPattern(DATOFORMAT))
+    "fom" to periode.fraOgMed?.format(DATOFORMAT),
+    "tom" to periode.tilOgMed?.format(DATOFORMAT)
 )
