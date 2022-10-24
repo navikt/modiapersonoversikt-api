@@ -196,11 +196,17 @@ class SfDialogController @Autowired constructor(
             }
     }
 
+    data class SladdingRequest(
+        val arsak: String,
+        val meldingId: List<String>? = null
+    )
+
     @PostMapping("/{fnr}/{kjedeId}/sendTilSladding")
     fun sendTilSladding(
         @PathVariable("fnr") fnr: String,
         @PathVariable("kjedeId") kjedeId: String,
-        @RequestParam(value = "enhet") enhet: String
+        @RequestParam(value = "enhet") enhet: String,
+        @RequestBody request: SladdingRequest
     ) {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to fnr,
@@ -210,7 +216,7 @@ class SfDialogController @Autowired constructor(
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .check(Policies.henvendelseTilhorerBruker(Fnr(fnr), kjedeId))
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Sladding, *auditIdentifier)) {
-                sfHenvendelseService.sendTilSladding(kjedeId)
+                sfHenvendelseService.sendTilSladding(kjedeId, request.arsak, request.meldingId)
             }
     }
 }

@@ -58,8 +58,6 @@ interface SfHenvendelseService {
     fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
     fun merkSomFeilsendt(kjedeId: String)
 
-    @Deprecated("Skal sende med årsak")
-    fun sendTilSladding(kjedeId: String)
     fun sendTilSladding(kjedeId: String, arsak: String, meldingId: List<String>?)
     fun hentSladdeArsaker(kjedeId: String): List<String>
     fun lukkTraad(kjedeId: String)
@@ -245,16 +243,6 @@ class SfHenvendelseServiceImpl(
             kjedeId.fixKjedeId(),
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::feilsendt).to(true)
-        )
-        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
-    }
-
-    @Deprecated("Skal sende med årsak")
-    override fun sendTilSladding(kjedeId: String) {
-        val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            kjedeId.fixKjedeId(),
-            PatchNote<HenvendelseDTO>()
-                .set(HenvendelseDTO::sladding).to(true)
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
     }

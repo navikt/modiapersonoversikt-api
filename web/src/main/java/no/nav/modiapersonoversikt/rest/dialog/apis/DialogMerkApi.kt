@@ -18,7 +18,7 @@ data class MerkSomFeilsendtRequest(
 data class SendTilSladdingRequest(
     val fnr: String,
     val traadId: String,
-    val arsak: String?,
+    val arsak: String,
     val meldingId: List<String>?,
 )
 
