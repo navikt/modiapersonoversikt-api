@@ -265,8 +265,7 @@ class SfHenvendelseServiceImpl(
             sladdeRequestDTO = SladdeRequestDTO(
                 kjedeId = kjedeId,
                 aarsak = arsak,
-                // TODO sende med liste over meldingsIder bare SF er klare
-                // meldingId = meldingId
+                meldingsIder = meldingId
             )
         )
     }
@@ -290,7 +289,7 @@ class SfHenvendelseServiceImpl(
     }
 
     enum class ApiFeilType {
-        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD, DUPLIKAT_JOURNALPOST
+        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD, DUPLIKAT_JOURNALPOST, MELDING_ID
     }
 
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
@@ -331,6 +330,10 @@ class SfHenvendelseServiceImpl(
 
             if (henvendelse.kasseringsDato?.isAfter(now) == true && meldinger.any { it.fritekst == null }) {
                 feil.add(ApiFeil(ApiFeilType.FRITEKST, henvendelse.kjedeId))
+            }
+
+            if (henvendelse.meldinger?.any { it.meldingsId == null } == true) {
+                feil.add(ApiFeil(ApiFeilType.MELDING_ID, henvendelse.kjedeId))
             }
         }
         val kanJobbesMedIModia = henvendelser

@@ -321,6 +321,7 @@ class SfLegacyDialogController(
             MeldingDTO(
                 mapOf(
                     "id" to "${henvendelse.kjedeId}---${(melding.hashCode())}",
+                    "meldingsId" to melding.meldingsId,
                     "meldingstype" to meldingstypeFraSfTyper(henvendelse, melding),
                     "temagruppe" to henvendelse.gjeldendeTemagruppe,
                     "skrevetAvTekst" to skrevetAv,
@@ -376,6 +377,7 @@ class SfLegacyDialogController(
 
             MeldingDTOV2(
                 id = "${henvendelse.kjedeId}---${(melding.hashCode())}",
+                meldingsId = melding.meldingsId,
                 meldingstype = meldingstypeFraSfTyper(henvendelse, melding),
                 temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe), // TODO error in api-spec
                 skrevetAvTekst = skrevetAv,
