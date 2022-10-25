@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Pleiepen
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Pleiepengerrettighet
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Vedtak
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
-import java.time.format.DateTimeFormatter
 
 class PleiepengerUttrekk constructor(
     private val pleiepengerService: PleiepengerService,
@@ -47,7 +46,7 @@ class PleiepengerUttrekk constructor(
     private fun hentPleiepengePerioder(perioder: List<Pleiepengeperiode>): List<Map<String, Any?>> {
         return perioder.map {
             mapOf(
-                "fom" to it.fraOgMed?.format(DateTimeFormatter.ofPattern(DATOFORMAT)),
+                "fom" to it.fraOgMed?.format(DATOFORMAT),
                 "antallPleiepengedager" to it.antallPleiepengedager,
                 "arbeidsforhold" to it.arbeidsforholdListe?.let { liste -> hentArbeidsforhold(liste) },
                 "vedtak" to it.vedtakListe?.let { liste -> hentVedtak(liste) }
@@ -62,7 +61,7 @@ class PleiepengerUttrekk constructor(
                 "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
                 "inntektsperiode" to it.inntektsperiode,
                 "inntektForPerioden" to it.inntektForPerioden,
-                "refusjonTom" to it.refusjonTom?.format(DateTimeFormatter.ofPattern(DATOFORMAT)),
+                "refusjonTom" to it.refusjonTom?.format(DATOFORMAT),
                 "refusjonstype" to it.refusjonstype,
                 "arbeidsgiverOrgnr" to it.arbeidsgiverOrgnr,
                 "arbeidskategori" to it.arbeidskategori
@@ -76,7 +75,7 @@ class PleiepengerUttrekk constructor(
                 "periode" to it.periode?.let { periode -> lagPleiepengePeriode(periode) },
                 "kompensasjonsgrad" to it.kompensasjonsgrad,
                 "utbetalingsgrad" to it.utbetalingsgrad,
-                "anvistUtbetaling" to it.anvistUtbetaling?.format(DateTimeFormatter.ofPattern(DATOFORMAT)),
+                "anvistUtbetaling" to it.anvistUtbetaling?.format(DATOFORMAT),
                 "bruttobeløp" to it.bruttoBelop,
                 "dagsats" to it.dagsats,
                 "pleiepengegrad" to it.pleiepengegrad

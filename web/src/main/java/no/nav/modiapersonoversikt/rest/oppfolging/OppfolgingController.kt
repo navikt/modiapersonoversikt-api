@@ -17,10 +17,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.rest.DATOFORMAT
+import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -71,9 +70,9 @@ class OppfolgingController @Autowired constructor(
                     "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
                     "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
                     "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
-                    "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
+                    "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
                     "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
-                    "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(DATOFORMAT),
+                    "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
                     "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
                     "ytelser" to hentYtelser(ytelserResponse.ytelser)
                 )
@@ -86,9 +85,9 @@ private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
 
     return ytelser.map {
         mapOf(
-            "datoKravMottatt" to it.datoKravMottat?.toString(DATOFORMAT),
-            "fom" to it.fom?.toString(DATOFORMAT),
-            "tom" to it.tom?.toString(DATOFORMAT),
+            "datoKravMottatt" to it.datoKravMottat?.toString(JODA_DATOFORMAT),
+            "fom" to it.fom?.toString(JODA_DATOFORMAT),
+            "tom" to it.tom?.toString(JODA_DATOFORMAT),
             "status" to it.status,
             "type" to it.type,
             "vedtak" to hentVedtak(it.vedtak),
@@ -116,8 +115,8 @@ private fun hentVedtak(vedtak: List<Vedtak>?): List<Map<String, Any?>> {
 
     return vedtak.map {
         mapOf(
-            "aktivFra" to it.activeFrom?.toString(DATOFORMAT),
-            "aktivTil" to it.activeTo?.toString(DATOFORMAT),
+            "aktivFra" to it.activeFrom?.toString(JODA_DATOFORMAT),
+            "aktivTil" to it.activeTo?.toString(JODA_DATOFORMAT),
             "aktivitetsfase" to it.aktivitetsfase,
             "vedtakstatus" to it.vedtakstatus,
             "vedtakstype" to it.vedtakstype
@@ -130,7 +129,7 @@ private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>
 
     return syfoPunkter.map {
         mapOf(
-            "dato" to it.dato?.toString(DATOFORMAT),
+            "dato" to it.dato?.toString(JODA_DATOFORMAT),
             "fastOppfølgingspunkt" to it.isFastOppfolgingspunkt,
             "status" to it.status,
             "syfoHendelse" to it.syfoHendelse
@@ -177,7 +176,7 @@ private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?,
 
 private fun lagRiktigDato(dato: String?): LocalDate? = dato?.let {
     try {
-        LocalDate.parse(dato, DateTimeFormat.forPattern(DATOFORMAT))
+        LocalDate.parse(dato, JODA_DATOFORMAT)
     } catch (exception: IllegalFieldValueException) {
         throw RuntimeException(exception.message)
     }
