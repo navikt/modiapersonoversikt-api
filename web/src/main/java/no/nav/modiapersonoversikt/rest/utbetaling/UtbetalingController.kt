@@ -31,9 +31,11 @@ class UtbetalingController @Autowired constructor(
     @GetMapping
     fun hent(
         @PathVariable("fnr") fnr: String,
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("startDato")
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        @RequestParam("startDato")
         start: LocalDate,
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("sluttDato")
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        @RequestParam("sluttDato")
         slutt: LocalDate
     ): UtbetalingerResponseDTO {
         return tilgangskontroll

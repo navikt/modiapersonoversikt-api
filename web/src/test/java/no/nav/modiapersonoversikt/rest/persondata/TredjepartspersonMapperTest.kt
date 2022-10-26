@@ -127,7 +127,9 @@ internal class TredjepartspersonMapperTest {
         val split = navn.split(" ")
         return HentTredjepartspersondata.Navn(
             fornavn = "$master __ ${split.first()}",
-            mellomnavn = if (split.size <= 2) null else {
+            mellomnavn = if (split.size <= 2) {
+                null
+            } else {
                 split.subList(1, split.size - 1).joinToString(" ")
             },
             etternavn = split.last(),
