@@ -67,7 +67,9 @@ object Filter {
             under1MndSidenFerdigstillelse(kjede) && lovligeBehandlingstyper.contains(
                 type
             )
-        } else false
+        } else {
+            false
+        }
     }
 
     private fun lovligMenUtgaatStatusEllerUnderBehandling(type: String, kjede: Behandlingskjede): Boolean {
@@ -124,6 +126,8 @@ object Filter {
             val behandlingDato = behandling.behandlingDato
             val nowMinus1Mnd = DateTime.now().minusMonths(1)
             behandlingDato.millis > nowMinus1Mnd.millis
-        } else true
+        } else {
+            true
+        }
     }
 }

@@ -23,7 +23,7 @@ jobs:
           java-version: 17
       - uses: nbadal/action-ktlint-setup@v1
         with:
-          ktlint_version: '0.46.1'
+          ktlint_version: '0.47.1'
       - uses: actions/cache@v1
         with:
           path: ~/.m2
