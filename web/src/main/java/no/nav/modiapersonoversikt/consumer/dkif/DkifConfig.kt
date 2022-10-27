@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.dkif
 
+import DigDirServiceImpl
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1
 import org.springframework.context.annotation.Bean
@@ -16,6 +18,14 @@ open class DkifConfig {
     open fun restDkifService(): Dkif.Service {
         return DkifServiceRestImpl(
             EnvironmentUtils.getRequiredProperty("DKIF_REST_URL")
+        )
+    }
+
+    @Bean(name = ["DigDirRest"])
+    open fun restDigDirService(machineToMachineTokenClient: MachineToMachineTokenClient): Dkif.Service {
+        return DigDirServiceImpl(
+            EnvironmentUtils.getRequiredProperty("DIG_DIR_REST_URL"),
+            machineToMachineTokenClient
         )
     }
 }

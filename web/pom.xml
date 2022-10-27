@@ -220,6 +220,11 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>digdir-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>utbetaling-api</artifactId>
             <version>${project.version}</version>
         </dependency>
