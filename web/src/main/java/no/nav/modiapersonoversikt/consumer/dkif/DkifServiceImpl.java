@@ -1,6 +1,8 @@
 package no.nav.modiapersonoversikt.consumer.dkif;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import no.nav.common.health.HealthCheckResult;
+import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.common.types.identer.Fnr;
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
@@ -58,4 +60,8 @@ public class DkifServiceImpl implements Dkif.Service {
                 .withDigitalKontaktinformasjon(digitalKontaktinformasjon);
     }
 
+    @Override
+    public SelfTestCheck ping() {
+        return new SelfTestCheck("N/A", false, () -> HealthCheckResult.healthy());
+    }
 }

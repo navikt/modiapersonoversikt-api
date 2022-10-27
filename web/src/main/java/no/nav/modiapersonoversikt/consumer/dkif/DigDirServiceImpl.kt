@@ -14,7 +14,6 @@ import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
@@ -23,7 +22,7 @@ class DigDirServiceImpl(
     baseUrl: String = EnvironmentUtils.getRequiredProperty("DIG_DIR_REST_URL"),
     machineToMachineTokenClient: MachineToMachineTokenClient,
     private val cache: Cache<Fnr, Dkif.DigitalKontaktinformasjon> = CacheUtils.createCache()
-) : Dkif.Service, Pingable {
+) : Dkif.Service {
 
     private val scope = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("DIG_DIR_SCOPE"))
 
