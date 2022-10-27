@@ -13,7 +13,9 @@ class MutableClock(
     override fun getZone(): ZoneId = zone
 
     override fun withZone(zone: ZoneId?): Clock {
-        return if (zone == this.zone) this else {
+        return if (zone == this.zone) {
+            this
+        } else {
             this.zone = requireNotNull(zone) {
                 "Cannot set zone to null"
             }

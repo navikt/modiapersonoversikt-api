@@ -1,2 +1,2 @@
 [*.kt]
-disabled_rules=no-wildcard-imports,trailing-comma
+ktlint_disabled_rules=no-wildcard-imports,trailing-comma,trailing-comma-on-call-site,trailing-comma-on-declaration-site

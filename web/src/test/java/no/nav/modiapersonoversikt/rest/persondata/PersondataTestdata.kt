@@ -51,7 +51,9 @@ internal fun gittNavn(navn: String): Persondata.Navn {
     val split = navn.split(" ")
     return Persondata.Navn(
         fornavn = split.first(),
-        mellomnavn = if (split.size <= 2) null else {
+        mellomnavn = if (split.size <= 2) {
+            null
+        } else {
             split.subList(1, split.size - 1).joinToString(" ")
         },
         etternavn = split.last()
