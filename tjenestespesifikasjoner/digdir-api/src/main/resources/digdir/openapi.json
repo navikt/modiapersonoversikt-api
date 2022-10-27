@@ -1,0 +1,358 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API versjon 1",
+    "description": "REST-grensesnittet som er tilgjengelig for konsumering fra andre applikasjoner og komponenter, for å hente personers digitale kontaktinformasjon.",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://digdir-krr-proxy.dev.intern.nav.no",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/rest/v1/personer": {
+      "post": {
+        "tags": [
+          "personer-controller"
+        ],
+        "operationId": "postPersoner",
+        "parameters": [
+          {
+            "name": "inkluderSikkerDigitalPost",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostPersonerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostPersonerResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Azure_AD_System-to-System": []
+          },
+          {
+            "Azure_AD_On-Behalf-Of": []
+          }
+        ]
+      }
+    },
+    "/rest/v1/printsertifikat": {
+      "get": {
+        "tags": [
+          "printsertifikat-controller"
+        ],
+        "operationId": "getPrintsertifikat",
+        "parameters": [
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPrintsertifikatResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Azure_AD_System-to-System": []
+          },
+          {
+            "Azure_AD_On-Behalf-Of": []
+          }
+        ]
+      }
+    },
+    "/rest/v1/person": {
+      "get": {
+        "tags": [
+          "person-controller"
+        ],
+        "operationId": "getPerson",
+        "parameters": [
+          {
+            "name": "Nav-Personident",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inkluderSikkerDigitalPost",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DigitalKontaktinformasjon"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "TokenX": []
+          },
+          {
+            "Azure_AD_System-to-System": []
+          },
+          {
+            "Azure_AD_On-Behalf-Of": []
+          }
+        ]
+      }
+    },
+    "/rest/ping": {
+      "get": {
+        "tags": [
+          "ping-controller"
+        ],
+        "operationId": "getPing",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPingResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Azure_AD_System-to-System": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PostPersonerRequest": {
+        "required": [
+          "personidenter"
+        ],
+        "type": "object",
+        "properties": {
+          "personidenter": {
+            "maxItems": 500,
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DigitalKontaktinformasjon": {
+        "required": [
+          "aktiv",
+          "personident"
+        ],
+        "type": "object",
+        "properties": {
+          "personident": {
+            "type": "string"
+          },
+          "aktiv": {
+            "type": "boolean"
+          },
+          "kanVarsles": {
+            "type": "boolean"
+          },
+          "reservert": {
+            "type": "boolean"
+          },
+          "spraak": {
+            "type": "string"
+          },
+          "spraakOppdatert": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "epostadresse": {
+            "type": "string"
+          },
+          "epostadresseOppdatert": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "epostadresseVerifisert": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "mobiltelefonnummer": {
+            "type": "string"
+          },
+          "mobiltelefonnummerOppdatert": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "mobiltelefonnummerVerifisert": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sikkerDigitalPostkasse": {
+            "$ref": "#/components/schemas/SikkerDigitalPostkasse"
+          }
+        }
+      },
+      "PostPersonerResponse": {
+        "type": "object",
+        "properties": {
+          "personer": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DigitalKontaktinformasjon"
+            }
+          },
+          "feil": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SikkerDigitalPostkasse": {
+        "required": [
+          "adresse",
+          "leverandoerAdresse",
+          "leverandoerSertifikat"
+        ],
+        "type": "object",
+        "properties": {
+          "adresse": {
+            "type": "string"
+          },
+          "leverandoerAdresse": {
+            "type": "string"
+          },
+          "leverandoerSertifikat": {
+            "type": "string"
+          }
+        }
+      },
+      "GetPrintsertifikatResponse": {
+        "required": [
+          "postkasseleverandoerAdresse",
+          "x509Sertifikat"
+        ],
+        "type": "object",
+        "properties": {
+          "postkasseleverandoerAdresse": {
+            "type": "string"
+          },
+          "x509Sertifikat": {
+            "type": "string"
+          }
+        }
+      },
+      "GetPingResponse": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Azure_AD_System-to-System": {
+        "type": "oauth2",
+        "description": "Make sure that your own application's client is pre-authorized to call this application, then use the the token URL `https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token` and request the scope `api://18e2c7bc-e47c-4918-96fc-97d8e0c52a76/.default`.\n\nInsert the generated JWT token below. Note that Swagger UI will prepend the necessary `Bearer` prefix automatically.",
+        "name": "Azure AD (System-to-System)",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token",
+            "scopes": {
+              "api://18e2c7bc-e47c-4918-96fc-97d8e0c52a76/.default": "Generic access to this application"
+            }
+          }
+        }
+      },
+      "Azure_AD_On-Behalf-Of": {
+        "type": "http",
+        "description": "Make sure that your own application's client is pre-authorized to call this application, then use the the token URL `https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token` and request the scope `api://18e2c7bc-e47c-4918-96fc-97d8e0c52a76/.default`.\n\nInsert the generated JWT token below. Note that Swagger UI will prepend the necessary `Bearer` prefix automatically.",
+        "name": "Azure AD (On-Behalf-Of)",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      },
+      "TokenX": {
+        "type": "http",
+        "description": "Make sure that your own application's client is pre-authorized to call this application, then use the the token URL `https://tokendings.dev-gcp.nais.io/token`, a user token from ID Porten (or some other  TokenX token) and `audience=dev-gcp:team-rocket:digdir-krr-proxy`.\n\nInsert the generated JWT token below. Note that Swagger UI will prepend the necessary `Bearer` prefix automatically.",
+        "name": "TokenX",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

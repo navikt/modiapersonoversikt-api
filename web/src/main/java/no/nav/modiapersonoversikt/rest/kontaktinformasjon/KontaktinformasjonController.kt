@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/rest/person/{fnr}/kontaktinformasjon")
 class KontaktinformasjonController @Autowired constructor(
     @Qualifier("DkifSoap") private val dkifSoapService: Dkif.Service,
-    @Qualifier("DkifRest") private val dkifRestService: Dkif.Service,
+    @Qualifier("DigDirRest") private val digDirRestService: Dkif.Service,
     private val tilgangskontroll: Tilgangskontroll
 ) {
 
-    private val dkifExperiment = Scientist.createExperiment<Dkif.DigitalKontaktinformasjon>(
+    private val digDirExperiment = Scientist.createExperiment<Dkif.DigitalKontaktinformasjon>(
         Scientist.Config(
-            name = "dkif",
-            experimentRate = Scientist.FixedValueRate(0.0)
+            name = "digdir",
+            experimentRate = Scientist.FixedValueRate(0.1)
         )
     )
 
@@ -36,12 +36,12 @@ class KontaktinformasjonController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
-                val response = dkifExperiment.run(
+                val response = digDirExperiment.run(
                     control = {
                         dkifSoapService.hentDigitalKontaktinformasjon(fnr)
                     },
                     experiment = {
-                        dkifRestService.hentDigitalKontaktinformasjon(fnr)
+                        digDirRestService.hentDigitalKontaktinformasjon(fnr)
                     }
                 )
 
