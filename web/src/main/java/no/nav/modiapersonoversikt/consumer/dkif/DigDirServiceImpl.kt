@@ -5,10 +5,9 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.digdir.generated.apis.PersonControllerApi
+import no.nav.modiapersonoversikt.consumer.digdir.generated.apis.PingControllerApi
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
-import no.nav.modiapersonoversikt.consumer.dkif.generated.apis.PingApi
 import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
@@ -41,7 +40,7 @@ class DigDirServiceImpl(
         .build()
 
     private val client = PersonControllerApi(basePath = baseUrl, httpClient = httpClient)
-    private val pingApi = PingApi(baseUrl, httpClient)
+    private val pingApi = PingControllerApi(baseUrl, httpClient)
 
     override fun hentDigitalKontaktinformasjon(fnr: String): Dkif.DigitalKontaktinformasjon {
         return requireNotNull(
@@ -86,7 +85,7 @@ class DigDirServiceImpl(
             false
         ) {
             try {
-                pingApi.getPingUsingGET(AppConstants.SYSTEMUSER_USERNAME)
+                pingApi.getPing()
                 HealthCheckResult.healthy()
             } catch (e: Exception) {
                 HealthCheckResult.unhealthy(e)
