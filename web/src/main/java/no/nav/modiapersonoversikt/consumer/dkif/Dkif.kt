@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt.consumer.dkif
 
+import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import java.time.LocalDate
 
 object Dkif {
-    interface Service {
+    interface Service : Pingable {
         fun hentDigitalKontaktinformasjon(fnr: String): DigitalKontaktinformasjon
     }
 

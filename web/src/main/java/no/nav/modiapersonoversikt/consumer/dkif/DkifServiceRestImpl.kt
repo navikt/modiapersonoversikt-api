@@ -15,13 +15,12 @@ import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import okhttp3.OkHttpClient
 
 class DkifServiceRestImpl(
     baseUrl: String = EnvironmentUtils.getRequiredProperty("DKIF_REST_URL"),
     private val cache: Cache<Fnr, Dkif.DigitalKontaktinformasjon> = CacheUtils.createCache()
-) : Dkif.Service, Pingable {
+) : Dkif.Service {
 
     private val httpClient: OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(XCorrelationIdInterceptor())
