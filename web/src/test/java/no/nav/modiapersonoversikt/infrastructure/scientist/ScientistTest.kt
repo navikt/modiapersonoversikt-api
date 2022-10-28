@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.scientist
 
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.waitForCompletion
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.assertj.core.data.Offset.offset
 import org.assertj.core.data.Percentage
@@ -211,5 +212,24 @@ internal class ScientistTest {
                 "Experiment"
             }
         )
+    }
+
+    @Test
+    fun `experiment should report even if control throws exception`() {
+        waitForCompletion { done ->
+            Scientist.createExperiment<String>(
+                Scientist.Config(
+                    name = "DummyExperiment",
+                    experimentRate = Scientist.FixedValueRate(1.0),
+                    reporter = { header, fields, tags, _ ->
+                        assertThat(fields).containsEntry("ok", false)
+                        assertThat(tags).containsEntry("ok", false)
+                        assertThat(fields).containsKey("control")
+                        assertThat(fields).containsKey("experiment")
+                        done()
+                    }
+                )
+            ).run({ error("Control has error") }, { "Hello, World" })
+        }
     }
 }

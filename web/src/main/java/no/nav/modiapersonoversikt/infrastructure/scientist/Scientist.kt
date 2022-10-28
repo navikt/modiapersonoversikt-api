@@ -109,27 +109,27 @@ object Scientist {
         fun runIntrospected(
             control: () -> T,
             experiment: () -> Any?,
-            dataFields: ((Markers, T, Try<Any?>) -> Unit)? = null,
+            dataFields: ((Markers, T?, Try<Any?>) -> Unit)? = null,
             overrideRate: ExperimentRate? = null,
         ): Result<T> {
             if (forceExperiment.get() == true || (overrideRate?.shouldRunExperiment() ?: config.experimentRate.shouldRunExperiment())) {
                 val markers = Markers()
                 val (controlResult, experimentResult) = ConcurrencyUtils.inParallel(
-                    { measureTimeInMillies(control) },
+                    { measureTimeInMillies { Try.of(control) } },
                     { measureTimeInMillies { Try.of(experiment) } }
                 )
 
                 if (experimentResult.value.isFailure) {
                     markers.fieldAndTag("ok", false)
                     if (config.logAndCompareValues) {
-                        markers.field("control", controlResult.value)
+                        markers.field("control", controlResult.value.getOrNull())
                     }
                     markers.fieldAndTag("controlTime", controlResult.time)
                     markers.fieldAndTag("experimentTime", experimentResult.time)
                     markers.field("exception", experimentResult.value.exceptionOrNull()?.message)
                 } else {
                     if (config.logAndCompareValues) {
-                        val controlValue = controlResult.value
+                        val controlValue = controlResult.value.getOrNull()
                         val experimentValue = experimentResult.value.getOrThrow()
                         val (ok, controlJson, experimentJson) = compareAndSerialize(controlValue, experimentValue)
                         markers.fieldAndTag("ok", ok)
@@ -142,14 +142,14 @@ object Scientist {
                     markers.fieldAndTag("experimentTime", experimentResult.time)
                 }
                 if (dataFields != null) {
-                    dataFields(markers, controlResult.value, experimentResult.value)
+                    dataFields(markers, controlResult.value.getOrNull(), experimentResult.value)
                 }
 
                 config.reporter("[SCIENCE] ${config.name}", markers.fields, markers.tags, experimentResult.value.exceptionOrNull())
 
                 return Result(
                     experimentRun = true,
-                    controlValue = controlResult.value,
+                    controlValue = controlResult.value.getOrThrow(),
                     experimentValue = experimentResult.value.getOrNull(),
                     experimentException = experimentResult.value.exceptionOrNull()
                 )
@@ -164,7 +164,7 @@ object Scientist {
         fun run(
             control: () -> T,
             experiment: () -> Any?,
-            dataFields: ((Markers, T, Try<Any?>) -> Unit)? = null,
+            dataFields: ((Markers, T?, Try<Any?>) -> Unit)? = null,
             overrideRate: ExperimentRate? = null,
         ): T =
             runIntrospected(
