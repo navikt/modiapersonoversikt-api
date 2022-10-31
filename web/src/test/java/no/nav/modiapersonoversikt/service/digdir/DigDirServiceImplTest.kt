@@ -42,21 +42,20 @@ internal class DigDirServiceImplTest {
 
     @Language("json")
     private val jsonResponse = """
-      {     
-        "aktiv": true,
-        "epostadresse": "julenissen@nordpolen.no",
-        "epostadresseOppdatert": "2022-08-31T10:15:30+02:00",
-        "epostadresseVerifisert": "2022-08-31T20:00+02:00",
-        "kanVarsles": false,
-        "mobiltelefonnummer": "12345678",
-        "mobiltelefonnummerOppdatert": "2022-08-31T20:00+02:00",
-        "mobiltelefonnummerVerifisert": "2022-08-31T20:00+02:00",
-        "personident": "10108000398",
-        "reservert": false,
-        "sikkerDigitalPostkasse": null,
-        "spraak": "nb",
-        "spraakOppdatert": "2022-08-31T20:00+02:00"
-      }
+                {
+                  "personident": "10108000398",
+                  "aktiv": true,
+                  "kanVarsles": false,
+                  "reservert": false,
+                  "spraak": "nb",
+                  "spraakOppdatert": "2000-01-01T09:00:00Z",
+                  "epostadresse": "noreply@nav.no",
+                  "epostadresseOppdatert": "2000-01-01T09:00:00Z",
+                  "epostadresseVerifisert": "2000-01-01T09:00:00Z",
+                  "mobiltelefonnummer": "11111111",
+                  "mobiltelefonnummerOppdatert": "2000-01-01T09:00:00Z",
+                  "mobiltelefonnummerVerifisert": "2000-01-01T09:00:00Z"
+                }
     """.trimIndent()
 
     @Test
@@ -69,8 +68,8 @@ internal class DigDirServiceImplTest {
         val digDirRestService = DigDirServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
         val response = digDirRestService.hentDigitalKontaktinformasjon("10108000398")
         assertThat(response.personident).isEqualTo("10108000398")
-        assertThat(response.epostadresse?.value).isEqualTo("julenissen@nordpolen.no")
-        assertThat(response.mobiltelefonnummer?.value).isEqualTo("12345678")
+        assertThat(response.epostadresse?.value).isEqualTo("noreply@nav.no")
+        assertThat(response.mobiltelefonnummer?.value).isEqualTo("11111111")
     }
 
     @Test
