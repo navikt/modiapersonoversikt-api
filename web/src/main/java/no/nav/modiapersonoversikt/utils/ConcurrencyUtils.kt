@@ -7,6 +7,8 @@ import org.slf4j.MDC
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ForkJoinPool.commonPool
+import java.util.concurrent.TimeUnit
 
 object ConcurrencyUtils {
     private val authContextHolder = AuthContextHolderThreadLocal.instance()
@@ -18,6 +20,14 @@ object ConcurrencyUtils {
         CompletableFuture.allOf(firstTask, secondTask).get()
 
         return Pair(firstTask.get(), secondTask.get())
+    }
+
+    fun waitForCompletion(block: (done: () -> Unit) -> Unit) {
+        val future = CompletableFuture<Unit>()
+        val doneFn: () -> Unit = { future.complete(Unit) }
+        val swappable = makeThreadSwappable { block(doneFn) }
+        commonPool().execute(swappable)
+        future.get(5, TimeUnit.SECONDS)
     }
 
     fun <T> List<() -> T>.runInParallel(): List<T> {
