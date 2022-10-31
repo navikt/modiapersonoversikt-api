@@ -204,3 +204,7 @@ spec:
       value: "https://arena-q1.adeo.no/arena_ws/services/ArenaSakVedtakService"
     - name: DITTNAV_EVENTER_MODIA_URL
       value: "https://app-q1.adeo.no/dittnav-eventer-modia"
+    - name: TMS_EVENT_API_URL
+      value: "https://tms-event-api.ekstern.dev.nav.no/tms-event-api"
+    - name: TMS_EVENT_API_SCOPE
+      value: "dev-gcp:min-side:tms-event-api"

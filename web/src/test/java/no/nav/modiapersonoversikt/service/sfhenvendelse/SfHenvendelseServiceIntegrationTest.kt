@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
+import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
@@ -37,7 +38,7 @@ internal class SfHenvendelseServiceIntegrationTest {
         }
         Utils.withProperty("SF_HENVENDELSE_URL", "http://localhost:${wiremock.port}") {
             AuthContextUtils.withContext(testSubject) {
-                val api = SfHenvendelseApiFactory.createHenvendelseInfoApi()
+                val api = SfHenvendelseApiFactory.createHenvendelseInfoApi(mockk())
                 val result = api.henvendelseinfoHenvendelselisteGet("aktorid", "coorId")
                 assertThat(result).hasSize(1)
             }

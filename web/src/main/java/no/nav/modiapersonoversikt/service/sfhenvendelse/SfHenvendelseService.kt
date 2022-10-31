@@ -13,7 +13,11 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseBehandlingApi
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseInfoApi
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseOpprettApi
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
 import okhttp3.OkHttpClient
@@ -67,34 +71,20 @@ interface SfHenvendelseService {
 
 private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.java)
 class SfHenvendelseServiceImpl(
-    private val henvendelseBehandlingApi: HenvendelseBehandlingApi = SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
-    private val henvendelseInfoApi: HenvendelseInfoApi = SfHenvendelseApiFactory.createHenvendelseInfoApi(),
-    private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
+    private val oboTokenClient: BoundedOnBehalfOfTokenClient,
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val pdlOppslagService: PdlOppslagService,
     private val norgApi: NorgApi,
     private val ansattService: AnsattService,
-    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient
+    private val henvendelseBehandlingApi: HenvendelseBehandlingApi = createHenvendelseBehandlingApi(oboTokenClient),
+    private val henvendelseInfoApi: HenvendelseInfoApi = createHenvendelseInfoApi(oboTokenClient),
+    private val henvendelseOpprettApi: NyHenvendelseApi = createHenvendelseOpprettApi(oboTokenClient),
 ) : SfHenvendelseService {
     private val adminKodeverkApiForPing = KodeverkApi(
         SfHenvendelseApiFactory.url(),
         SfHenvendelseApiFactory.createClient {
             machineToMachineTokenClient.createMachineToMachineToken()
         }
-    )
-
-    constructor(
-        pdlOppslagService: PdlOppslagService,
-        norgApi: NorgApi,
-        ansattService: AnsattService,
-        machineToMachineTokenClient: BoundedMachineToMachineTokenClient
-    ) : this(
-        SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
-        SfHenvendelseApiFactory.createHenvendelseInfoApi(),
-        SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
-        pdlOppslagService,
-        norgApi,
-        ansattService,
-        machineToMachineTokenClient
     )
 
     override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
@@ -503,9 +493,6 @@ fun String.fixKjedeId(): String {
 object SfHenvendelseApiFactory {
     fun url(): String = getRequiredProperty("SF_HENVENDELSE_URL")
     fun downstreamApi(): DownstreamApi = DownstreamApi.parse(getRequiredProperty("SF_HENVENDELSE_SCOPE"))
-    private val client = createClient {
-        AuthContextUtils.requireToken()
-    }
 
     fun createClient(tokenProvider: () -> String): OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(
@@ -520,7 +507,11 @@ object SfHenvendelseApiFactory {
         )
         .build()
 
-    fun createHenvendelseBehandlingApi() = HenvendelseBehandlingApi(url(), client)
-    fun createHenvendelseInfoApi() = HenvendelseInfoApi(url(), client)
-    fun createHenvendelseOpprettApi() = NyHenvendelseApi(url(), client)
+    fun createHenvendelseBehandlingApi(oboClient: BoundedOnBehalfOfTokenClient) = HenvendelseBehandlingApi(url(), createClient(oboClient.asTokenProvider()))
+    fun createHenvendelseInfoApi(oboClient: BoundedOnBehalfOfTokenClient) = HenvendelseInfoApi(url(), createClient(oboClient.asTokenProvider()))
+    fun createHenvendelseOpprettApi(oboClient: BoundedOnBehalfOfTokenClient) = NyHenvendelseApi(url(), createClient(oboClient.asTokenProvider()))
+
+    fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String = {
+        AuthContextUtils.requireOboTokenIfPresent(this)
+    }
 }
