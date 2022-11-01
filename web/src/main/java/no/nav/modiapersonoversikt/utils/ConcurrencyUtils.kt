@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.utils
 import kotlinx.coroutines.*
 import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.AuthHeaderCapture
 import org.slf4j.MDC
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
@@ -45,10 +46,13 @@ object ConcurrencyUtils {
         val mdc = MDC.getCopyOfContextMap()
         val context = AuthContextUtils.getContext()
         val requestAttributes: RequestAttributes? = RequestContextHolder.getRequestAttributes()
+        val authheader = AuthHeaderCapture.header.get()
         return {
             withRequestAttributes(requestAttributes) {
                 withMDC(mdc) {
-                    authContextHolder.withContext(context.orElse(null), fn)
+                    AuthHeaderCapture.header.withValue(authheader) {
+                        authContextHolder.withContext(context.orElse(null), fn)
+                    }
                 }
             }
         }
@@ -76,5 +80,13 @@ object ConcurrencyUtils {
         } else {
             MDC.setContextMap(contextMap)
         }
+    }
+
+    private fun <S, T> ThreadLocal<S>.withValue(value: S, fn: () -> T): T {
+        val original = this.get()
+        this.set(value)
+        val result = fn()
+        this.set(original)
+        return result
     }
 }
