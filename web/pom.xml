@@ -269,7 +269,17 @@
         </dependency>
         <dependency>
             <groupId>no.nav.personoversikt</groupId>
+            <artifactId>kabac</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.personoversikt</groupId>
             <artifactId>test-utils</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.personoversikt</groupId>
+            <artifactId>kabac</artifactId>
+            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 

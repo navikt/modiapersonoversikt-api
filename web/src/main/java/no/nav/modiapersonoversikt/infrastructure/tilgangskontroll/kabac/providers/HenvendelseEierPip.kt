@@ -2,11 +2,11 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provide
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
+import no.nav.personoversikt.common.kabac.utils.Key
 
 class HenvendelseEierPip(private val henvendelseService: SfHenvendelseService) : Kabac.PolicyInformationPoint<Fnr> {
     override val key = Companion.key

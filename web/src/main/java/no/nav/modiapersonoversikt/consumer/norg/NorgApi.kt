@@ -19,7 +19,7 @@ import no.nav.modiapersonoversikt.consumer.norg.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.utils.isNumeric
-import no.nav.personoversikt.utils.Retry
+import no.nav.personoversikt.common.utils.Retry
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

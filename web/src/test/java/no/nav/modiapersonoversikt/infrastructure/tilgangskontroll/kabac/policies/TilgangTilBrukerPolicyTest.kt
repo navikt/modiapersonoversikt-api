@@ -15,12 +15,12 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.kabac.KabacTestUtils
 import org.junit.jupiter.api.Test
 import java.util.*
 

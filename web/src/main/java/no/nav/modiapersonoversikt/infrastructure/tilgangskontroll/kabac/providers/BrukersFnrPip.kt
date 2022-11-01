@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
 
 class BrukersFnrPip(private val pdl: PdlOppslagService) : Kabac.PolicyInformationPoint<Fnr> {
     override val key = Companion.key

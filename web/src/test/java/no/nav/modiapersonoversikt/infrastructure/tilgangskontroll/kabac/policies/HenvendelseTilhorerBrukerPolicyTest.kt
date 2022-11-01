@@ -6,10 +6,10 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingFraDTO
-import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.HenvendelseEierPip
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.personoversikt.common.kabac.KabacTestUtils
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 import java.time.ZoneOffset

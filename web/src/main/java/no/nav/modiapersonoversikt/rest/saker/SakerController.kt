@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.Feilmelding
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
 import no.nav.modiapersonoversikt.commondomain.sak.TjenesteResultatWrapper
-import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -24,6 +23,7 @@ import no.nav.modiapersonoversikt.service.sakstema.SakstemaService
 import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
+import no.nav.personoversikt.common.kabac.Decision
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

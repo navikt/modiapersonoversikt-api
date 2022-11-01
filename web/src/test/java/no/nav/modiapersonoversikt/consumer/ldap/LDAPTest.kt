@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.consumer.ldap
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.NavIdent
-import no.nav.personoversikt.test.testenvironment.TestEnvironmentExtension
+import no.nav.personoversikt.common.test.testenvironment.TestEnvironmentExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -6,7 +6,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersonda
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata.AdressebeskyttelseGradering
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata.Bostedsadresse
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import no.nav.personoversikt.test.snapshot.SnapshotExtension
+import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension

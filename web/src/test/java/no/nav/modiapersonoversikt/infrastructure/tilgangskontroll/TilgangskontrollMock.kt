@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
-import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
+import no.nav.personoversikt.common.kabac.Decision
 
 object TilgangskontrollMock : TilgangskontrollInstance {
     @JvmStatic
