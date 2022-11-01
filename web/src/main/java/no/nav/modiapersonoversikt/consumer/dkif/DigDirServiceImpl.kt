@@ -70,6 +70,7 @@ class DigDirServiceImpl(
                         header = "Feil ved henting av digital kontaktinformasjon fra digdir",
                         fields = mapOf(
                             "fnr" to fnr,
+                            "exception" to it,
                         )
                     )
                     Dkif.INGEN_KONTAKTINFO

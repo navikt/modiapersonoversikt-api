@@ -43,6 +43,11 @@ object AuthContextUtils {
     }
 
     @JvmStatic
+    fun requireAzureAdUserToken(): String {
+        return requireNotNull(AuthHeaderCapture.header.get())
+    }
+
+    @JvmStatic
     fun requireOboTokenIfPresent(oboTokenProvider: BoundedOnBehalfOfTokenClient): String {
         val authheader = azureAdUserToken()
         if (authheader != null) {

@@ -16,6 +16,7 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.Utils.withProperty
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -41,17 +42,19 @@ internal class SfHenvendelseServiceImplTest {
     private val henvendelseOpprettApi: NyHenvendelseApi = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
     private val norgApi: NorgApi = mockk()
+    private val oboTokenClient: BoundedOnBehalfOfTokenClient = mockk()
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
     private val ansattService: AnsattService = mockk()
     private val sfHenvendelseServiceImpl = withProperty("SF_HENVENDELSE_URL", "http://dummy.io") {
         SfHenvendelseServiceImpl(
-            henvendelseBehandlingApi,
-            henvendelseInfoApi,
-            henvendelseOpprettApi,
+            oboTokenClient,
+            machineToMachineTokenClient,
             pdlOppslagService,
             norgApi,
             ansattService,
-            machineToMachineTokenClient
+            henvendelseBehandlingApi,
+            henvendelseInfoApi,
+            henvendelseOpprettApi,
         )
     }
 

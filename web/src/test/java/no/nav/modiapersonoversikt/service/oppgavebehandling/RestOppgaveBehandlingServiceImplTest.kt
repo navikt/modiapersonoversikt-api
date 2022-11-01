@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import io.mockk.*
-import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
@@ -15,6 +14,8 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingSer
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.*
@@ -31,13 +32,15 @@ class RestOppgaveBehandlingServiceImplTest {
     private val pdlOppslagService: PdlOppslagService = mockk()
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
     private val ansattService: AnsattService = mockk()
-    private val machineToMachineTokenClient: MachineToMachineTokenClient = mockk()
+    private val oboTokenClient: BoundedOnBehalfOfTokenClient = mockk()
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
     private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
         pdlOppslagService,
         ansattService,
         tilgangskontroll,
+        oboTokenClient,
         machineToMachineTokenClient,
         apiClient,
         systemApiClient,
@@ -75,7 +78,11 @@ class RestOppgaveBehandlingServiceImplTest {
         @Test
         fun `skal opprette oppgave`() {
             every { apiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
-            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(
+                ident = "Z999999",
+                fornavn = "Fornavn",
+                etternavn = "Etternavn"
+            )
 
             val response: OpprettOppgaveResponse = withIdent("Z999999") {
                 oppgaveBehandlingService.opprettOppgave(
@@ -122,7 +129,11 @@ class RestOppgaveBehandlingServiceImplTest {
         @Test
         fun `skal opprette skjermet oppgave`() {
             every { systemApiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
-            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(
+                ident = "Z999999",
+                fornavn = "Fornavn",
+                etternavn = "Etternavn"
+            )
 
             val response = withIdent("Z999999") {
                 oppgaveBehandlingService.opprettSkjermetOppgave(
@@ -584,7 +595,11 @@ class RestOppgaveBehandlingServiceImplTest {
         fun `skal ferdigstille oppgave uten beskrivelse`() {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
-            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(
+                ident = "Z999999",
+                fornavn = "Fornavn",
+                etternavn = "Etternavn"
+            )
 
             withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaveIGsak(
@@ -617,7 +632,11 @@ class RestOppgaveBehandlingServiceImplTest {
         fun `skal ferdigstille oppgave med beskrivelse`() {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
-            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(
+                ident = "Z999999",
+                fornavn = "Fornavn",
+                etternavn = "Etternavn"
+            )
 
             withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaveIGsak(
@@ -651,7 +670,11 @@ class RestOppgaveBehandlingServiceImplTest {
         fun `skal ferdigstille oppgaver`() {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
-            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(ident = "Z999999", fornavn = "Fornavn", etternavn = "Etternavn")
+            every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(
+                ident = "Z999999",
+                fornavn = "Fornavn",
+                etternavn = "Etternavn"
+            )
 
             withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaverIGsak(

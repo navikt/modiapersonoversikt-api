@@ -3,14 +3,11 @@ package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
-import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
-import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class BrukernotifikasjonClient(val baseUrl: String) : Brukernotifikasjon.Client {
+class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInterceptor) : Brukernotifikasjon.Client {
     private val httpClient: OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(XCorrelationIdInterceptor())
         .addInterceptor(
@@ -20,6 +17,7 @@ class BrukernotifikasjonClient(val baseUrl: String) : Brukernotifikasjon.Client 
                 }
             }
         )
+        .addInterceptor(authInterceptor)
         .build()
 
     override fun hentBrukernotifikasjoner(type: Brukernotifikasjon.Type, fnr: Fnr): List<Brukernotifikasjon.Event> {
@@ -28,8 +26,7 @@ class BrukernotifikasjonClient(val baseUrl: String) : Brukernotifikasjon.Client 
                 Request
                     .Builder()
                     .get()
-                    .url("$baseUrl/fetch/${type.name.lowercase()}/all")
-                    .header("Cookie", "ID_token=${AuthContextUtils.requireToken()}")
+                    .url("$baseUrl/${type.name.lowercase()}/all")
                     .header("fodselsnummer", fnr.get())
                     .build()
             )

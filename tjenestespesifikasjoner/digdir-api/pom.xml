@@ -40,6 +40,9 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
+                <configuration>
+                    <typeMappings>java.time.OffsetDateTime=java.time.LocalDateTime</typeMappings>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default</id>

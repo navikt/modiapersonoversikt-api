@@ -100,6 +100,8 @@ spec:
       value: "https://saf.nais.adeo.no/graphql"
     - name: SAF_HENTDOKUMENT_URL
       value: "https://saf.nais.adeo.no/rest/hentdokument"
+    - name: SAF_SCOPE
+      value: "prod-fss:teamdokumenthandtering:saf"
     - name: SAKOGBEHANDLING_ENDPOINTURL
       value: "https://modapp.adeo.no/sakogbehandling/ws/SakOgBehandling_v1"
     - name: SERVER_AKTIVITETSPLAN_URL
@@ -202,3 +204,7 @@ spec:
       value: "https://arena.adeo.no/arena_ws/services/ArenaSakVedtakService"
     - name: DITTNAV_EVENTER_MODIA_URL
       value: "https://app.adeo.no/dittnav-eventer-modia"
+    - name: TMS_EVENT_API_URL
+      value: "https://tms-event-api.ekstern.nav.no/tms-event-api"
+    - name: TMS_EVENT_API_SCOPE
+      value: "prod-gcp:min-side:tms-event-api"
