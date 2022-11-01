@@ -23,7 +23,7 @@ internal class ConcurrencyUtilsTest {
         ConcurrencyUtils.inParallel(taskA, taskB)
         val endTime = System.currentTimeMillis()
 
-        assertThat(endTime - startTime).isCloseTo(1000, withPercentage(15.0))
+        assertThat(endTime - startTime).isCloseTo(1000, withPercentage(30.0))
     }
 
     @Test
