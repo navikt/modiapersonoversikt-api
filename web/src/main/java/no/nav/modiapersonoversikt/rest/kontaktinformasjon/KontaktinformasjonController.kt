@@ -6,11 +6,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
-import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,31 +17,15 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/rest/person/{fnr}/kontaktinformasjon")
 class KontaktinformasjonController @Autowired constructor(
-    @Qualifier("DkifSoap") private val dkifSoapService: Dkif.Service,
-    @Qualifier("DigDirRest") private val digDirRestService: Dkif.Service,
+    private val dkif: Dkif.Service,
     private val tilgangskontroll: Tilgangskontroll
 ) {
-
-    private val digDirExperiment = Scientist.createExperiment<Dkif.DigitalKontaktinformasjon>(
-        Scientist.Config(
-            name = "digdir",
-            experimentRate = Scientist.FixedValueRate(0.1)
-        )
-    )
-
     @GetMapping
     fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
-                val response = digDirExperiment.run(
-                    control = {
-                        dkifSoapService.hentDigitalKontaktinformasjon(fnr)
-                    },
-                    experiment = {
-                        digDirRestService.hentDigitalKontaktinformasjon(fnr)
-                    }
-                )
+                val response = dkif.hentDigitalKontaktinformasjon(fnr)
 
                 mapOf(
                     "epost" to getEpost(response),

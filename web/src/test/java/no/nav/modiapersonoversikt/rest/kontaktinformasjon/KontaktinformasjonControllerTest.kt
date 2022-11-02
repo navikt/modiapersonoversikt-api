@@ -20,8 +20,7 @@ private val SIST_OPPDATERT = LocalDate.of(2012, 12, 27)
 class KontaktinformasjonControllerTest {
 
     private val dkifService: Dkif.Service = mockk()
-    private val digDirRestService: Dkif.Service = mockk()
-    private val controller = KontaktinformasjonController(dkifService, digDirRestService, TilgangskontrollMock.get())
+    private val controller = KontaktinformasjonController(dkifService, TilgangskontrollMock.get())
 
     @BeforeEach
     fun before() {
