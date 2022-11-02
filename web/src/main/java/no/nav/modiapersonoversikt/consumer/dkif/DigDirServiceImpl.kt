@@ -16,6 +16,8 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class DigDirServiceImpl(
     baseUrl: String = EnvironmentUtils.getRequiredProperty("DIG_DIR_REST_URL"),
@@ -56,13 +58,13 @@ class DigDirServiceImpl(
                         reservasjon = data.reservert?.toString(),
                         epostadresse = Dkif.Epostadresse(
                             value = data.epostadresse,
-                            sistOppdatert = data.epostadresseOppdatert?.toLocalDate(),
-                            sistVerifisert = data.epostadresseVerifisert?.toLocalDate()
+                            sistOppdatert = toLocalDate(data.epostadresseOppdatert),
+                            sistVerifisert = toLocalDate(data.epostadresseVerifisert)
                         ),
                         mobiltelefonnummer = Dkif.MobilTelefon(
                             value = data.mobiltelefonnummer,
-                            sistOppdatert = data.mobiltelefonnummerOppdatert?.toLocalDate(),
-                            sistVerifisert = data.mobiltelefonnummerVerifisert?.toLocalDate()
+                            sistOppdatert = toLocalDate(data.mobiltelefonnummerOppdatert),
+                            sistVerifisert = toLocalDate(data.mobiltelefonnummerVerifisert)
                         )
                     )
                 }.getOrElse {
@@ -92,4 +94,6 @@ class DigDirServiceImpl(
             }
         }
     }
+
+    private fun toLocalDate(value: ZonedDateTime?) = value?.withZoneSameInstant(ZoneId.systemDefault())?.toLocalDate()
 }
