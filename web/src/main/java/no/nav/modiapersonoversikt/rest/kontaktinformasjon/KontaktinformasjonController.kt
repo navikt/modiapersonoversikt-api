@@ -17,15 +17,16 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/rest/person/{fnr}/kontaktinformasjon")
 class KontaktinformasjonController @Autowired constructor(
-    private val dkif: Dkif.Service,
+    private val dkifService: Dkif.Service,
     private val tilgangskontroll: Tilgangskontroll
 ) {
+
     @GetMapping
     fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
-                val response = dkif.hentDigitalKontaktinformasjon(fnr)
+                val response = dkifService.hentDigitalKontaktinformasjon(fnr)
 
                 mapOf(
                     "epost" to getEpost(response),
