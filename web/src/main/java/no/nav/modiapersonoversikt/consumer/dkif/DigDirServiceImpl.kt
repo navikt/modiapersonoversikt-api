@@ -56,16 +56,20 @@ class DigDirServiceImpl(
                     Dkif.DigitalKontaktinformasjon(
                         personident = data.personident,
                         reservasjon = data.reservert?.toString(),
-                        epostadresse = Dkif.Epostadresse(
-                            value = data.epostadresse,
-                            sistOppdatert = toLocalDate(data.epostadresseOppdatert),
-                            sistVerifisert = toLocalDate(data.epostadresseVerifisert)
-                        ),
-                        mobiltelefonnummer = Dkif.MobilTelefon(
-                            value = data.mobiltelefonnummer,
-                            sistOppdatert = toLocalDate(data.mobiltelefonnummerOppdatert),
-                            sistVerifisert = toLocalDate(data.mobiltelefonnummerVerifisert)
-                        )
+                        epostadresse = data.epostadresse?.let { epostadresse ->
+                            Dkif.Epostadresse(
+                                value = epostadresse,
+                                sistOppdatert = toLocalDate(data.epostadresseOppdatert),
+                                sistVerifisert = toLocalDate(data.epostadresseVerifisert)
+                            )
+                        },
+                        mobiltelefonnummer = data.mobiltelefonnummer?.let { mobiltelefonnummer ->
+                            Dkif.MobilTelefon(
+                                value = mobiltelefonnummer,
+                                sistOppdatert = toLocalDate(data.mobiltelefonnummerOppdatert),
+                                sistVerifisert = toLocalDate(data.mobiltelefonnummerVerifisert)
+                            )
+                        }
                     )
                 }.getOrElse {
                     TjenestekallLogger.warn(
