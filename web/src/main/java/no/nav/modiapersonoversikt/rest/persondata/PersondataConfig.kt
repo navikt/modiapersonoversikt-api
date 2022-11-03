@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.personoversikt.common.kabac.Kabac
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -17,7 +16,7 @@ open class PersondataConfig {
     @Bean
     open fun persondataService(
         pdl: PdlOppslagService,
-        @Qualifier("DkifSoap") dkif: Dkif.Service,
+        dkif: Dkif.Service,
         norgApi: NorgApi,
         skjermedePersonerApi: SkjermedePersonerApi,
         kontonummerService: KontonummerService,

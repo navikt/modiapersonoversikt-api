@@ -7,6 +7,7 @@ import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.digdir.generated.apis.PersonControllerApi
 import no.nav.modiapersonoversikt.consumer.digdir.generated.apis.PingControllerApi
+import no.nav.modiapersonoversikt.consumer.digdir.generated.models.DigitalKontaktinformasjonDTO
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
 import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
@@ -16,6 +17,8 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class DigDirServiceImpl(
     baseUrl: String = EnvironmentUtils.getRequiredProperty("DIG_DIR_REST_URL"),
@@ -51,20 +54,7 @@ class DigDirServiceImpl(
                         inkluderSikkerDigitalPost = true
                     )
                 }.map { data ->
-                    Dkif.DigitalKontaktinformasjon(
-                        personident = data.personident,
-                        reservasjon = data.reservert?.toString(),
-                        epostadresse = Dkif.Epostadresse(
-                            value = data.epostadresse,
-                            sistOppdatert = data.epostadresseOppdatert?.toLocalDate(),
-                            sistVerifisert = data.epostadresseVerifisert?.toLocalDate()
-                        ),
-                        mobiltelefonnummer = Dkif.MobilTelefon(
-                            value = data.mobiltelefonnummer,
-                            sistOppdatert = data.mobiltelefonnummerOppdatert?.toLocalDate(),
-                            sistVerifisert = data.mobiltelefonnummerVerifisert?.toLocalDate()
-                        )
-                    )
+                    mapToDigitalKontaktInformasjon(data)
                 }.getOrElse {
                     TjenestekallLogger.warn(
                         header = "Feil ved henting av digital kontaktinformasjon fra digdir",
@@ -92,4 +82,26 @@ class DigDirServiceImpl(
             }
         }
     }
+
+    private fun mapToDigitalKontaktInformasjon(dto: DigitalKontaktinformasjonDTO) =
+        Dkif.DigitalKontaktinformasjon(
+            personident = dto.personident,
+            reservasjon = dto.reservert?.toString(),
+            epostadresse = dto.epostadresse?.let { epostadresse ->
+                Dkif.Epostadresse(
+                    value = epostadresse,
+                    sistOppdatert = toLocalDate(dto.epostadresseOppdatert),
+                    sistVerifisert = toLocalDate(dto.epostadresseVerifisert)
+                )
+            },
+            mobiltelefonnummer = dto.mobiltelefonnummer?.let { mobiltelefonnummer ->
+                Dkif.MobilTelefon(
+                    value = mobiltelefonnummer,
+                    sistOppdatert = toLocalDate(dto.mobiltelefonnummerOppdatert),
+                    sistVerifisert = toLocalDate(dto.mobiltelefonnummerVerifisert)
+                )
+            }
+        )
+
+    private fun toLocalDate(value: ZonedDateTime?) = value?.withZoneSameInstant(ZoneId.systemDefault())?.toLocalDate()
 }
