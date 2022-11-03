@@ -41,7 +41,7 @@
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <configuration>
-                    <typeMappings>java.time.OffsetDateTime=java.time.LocalDateTime</typeMappings>
+                    <typeMappings>java.time.OffsetDateTime=java.time.ZonedDateTime</typeMappings>
                 </configuration>
                 <executions>
                     <execution>
