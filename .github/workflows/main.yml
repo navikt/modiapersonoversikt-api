@@ -17,19 +17,15 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: 17
+          cache: 'maven'
       - uses: nbadal/action-ktlint-setup@v1
         with:
           ktlint_version: '0.47.1'
-      - uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-cache-${{ hashFiles('pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-cache-
       - name: Ktlint
         run: bash ./linting.sh
       - name: Build using maven
@@ -73,7 +69,7 @@ jobs:
       matrix:
         namespace: [q0, q1]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
@@ -88,7 +84,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
