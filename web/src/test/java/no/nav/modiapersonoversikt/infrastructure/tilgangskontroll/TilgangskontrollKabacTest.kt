@@ -2,14 +2,14 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
 import kotlinx.coroutines.*
 import no.nav.common.types.identer.EnhetId
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.impl.PolicyDecisionPointImpl
-import no.nav.modiapersonoversikt.infrastructure.kabac.impl.PolicyEnforcementPointImpl
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
+import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.kabac.impl.PolicyDecisionPointImpl
+import no.nav.personoversikt.common.kabac.impl.PolicyEnforcementPointImpl
+import no.nav.personoversikt.common.kabac.utils.Key
 import org.junit.jupiter.api.Test
 
 internal class TilgangskontrollKabacTest {

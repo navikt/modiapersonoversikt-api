@@ -4,7 +4,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
-import no.nav.personoversikt.utils.Retry
+import no.nav.personoversikt.common.utils.Retry
 import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*

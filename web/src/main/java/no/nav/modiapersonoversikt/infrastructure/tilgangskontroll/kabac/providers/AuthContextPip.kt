@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provide
 
 import no.nav.common.auth.context.AuthContextHolder
 import no.nav.common.auth.context.AuthContextHolderThreadLocal
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
+import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.kabac.utils.Key
 
 object AuthContextPip : Kabac.PolicyInformationPoint<AuthContextHolder> {
     private val contextHolder = AuthContextHolderThreadLocal.instance()

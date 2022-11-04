@@ -1,14 +1,14 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies
 
 import no.nav.common.types.identer.EnhetId
-import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac.EvaluationContext
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
+import no.nav.personoversikt.common.kabac.Decision
+import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
+import no.nav.personoversikt.common.kabac.utils.Key
 
 internal object TilgangTilModiaPolicy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(TilgangTilModiaPolicy)

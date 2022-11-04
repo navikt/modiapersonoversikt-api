@@ -5,7 +5,7 @@ import no.nav.modiapersonoversikt.service.sakogbehandling.FilterUtils.erKvitteri
 import no.nav.modiapersonoversikt.service.sakstema.domain.Behandling
 import no.nav.modiapersonoversikt.service.sakstema.domain.BehandlingsStatus
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
-import no.nav.personoversikt.utils.KotlinUtils.and
+import no.nav.personoversikt.common.utils.KotlinUtils.and
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak
 import org.joda.time.DateTime

@@ -11,7 +11,6 @@ import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgaveJsonD
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.PostOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
@@ -26,6 +25,7 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
+import no.nav.personoversikt.common.kabac.Decision
 import org.slf4j.LoggerFactory
 import java.time.Clock
 import java.time.LocalDate

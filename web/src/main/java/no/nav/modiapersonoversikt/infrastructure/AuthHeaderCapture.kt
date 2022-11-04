@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure
 
-import no.nav.personoversikt.utils.StringUtils.removePrefix
+import no.nav.personoversikt.common.utils.StringUtils.removePrefix
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest

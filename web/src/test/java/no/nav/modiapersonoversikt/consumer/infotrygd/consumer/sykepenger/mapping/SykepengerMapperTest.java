@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.mappin
 
 import no.nav.modiapersonoversikt.commondomain.Periode;
 import no.nav.modiapersonoversikt.utils.DateUtils;
-import no.nav.personoversikt.test.snapshot.SnapshotRule;
+import no.nav.personoversikt.common.test.snapshot.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.SykepengerMockFactory;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.mapping.to.SykepengerResponse;
