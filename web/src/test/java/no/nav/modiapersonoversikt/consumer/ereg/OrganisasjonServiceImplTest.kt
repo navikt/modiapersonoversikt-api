@@ -10,7 +10,7 @@ import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
 import no.nav.modiapersonoversikt.utils.WireMockUtils.verify
-import no.nav.personoversikt.test.testenvironment.TestEnvironmentRule
+import no.nav.personoversikt.common.test.testenvironment.TestEnvironmentRule
 import org.hamcrest.MatcherAssert
 import org.hamcrest.core.Is
 import org.junit.Rule

@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.infrastructure.kabac.utils.Key
+import no.nav.personoversikt.common.kabac.utils.Key
 
 object CommonAttributes {
     private val base: String = CommonAttributes::class.java.simpleName

@@ -4,12 +4,12 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
-import no.nav.modiapersonoversikt.infrastructure.kabac.KabacTestUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.AuthContextPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.InternalTilgangPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.NavIdentPip
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.modiapersonoversikt.utils.TestUtils
+import no.nav.personoversikt.common.kabac.KabacTestUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 

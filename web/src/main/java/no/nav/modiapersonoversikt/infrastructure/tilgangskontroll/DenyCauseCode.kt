@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
-import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
+import no.nav.personoversikt.common.kabac.Decision
 
 enum class DenyCauseCode : Decision.DenyCause {
     FP1_KODE6,

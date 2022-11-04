@@ -2,11 +2,11 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
 import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.infrastructure.kabac.AttributeValue
-import no.nav.modiapersonoversikt.infrastructure.kabac.CombiningAlgorithm
-import no.nav.modiapersonoversikt.infrastructure.kabac.Decision
-import no.nav.modiapersonoversikt.infrastructure.kabac.Kabac
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
+import no.nav.personoversikt.common.kabac.AttributeValue
+import no.nav.personoversikt.common.kabac.CombiningAlgorithm
+import no.nav.personoversikt.common.kabac.Decision
+import no.nav.personoversikt.common.kabac.Kabac
 
 interface Tilgangskontroll {
     fun check(policy: PolicyWithAttributes): TilgangskontrollInstance

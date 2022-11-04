@@ -12,7 +12,7 @@ import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
-import no.nav.personoversikt.test.testenvironment.TestEnvironmentExtension
+import no.nav.personoversikt.common.test.testenvironment.TestEnvironmentExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
