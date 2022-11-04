@@ -18,6 +18,7 @@ interface AnsattService {
     fun hentEnhetsliste(): List<AnsattEnhet>
     fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet>
     fun hentVeileder(ident: NavIdent): Veileder
+    fun hentVeiledere(identer: List<NavIdent>): Map<NavIdent, Veileder>
     fun hentVeilederRoller(ident: NavIdent): RolleListe
     fun hentAnsattFagomrader(ident: String, enhet: String): Set<String>
     fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt>
@@ -43,16 +44,22 @@ class AnsattServiceImpl @Autowired constructor(
     }
 
     override fun hentVeileder(ident: NavIdent): Veileder {
+        return hentVeiledere(listOf(ident))
+            .getOrDefault(ident, Veileder("", "", ident.get()))
+    }
+
+    override fun hentVeiledere(identer: List<NavIdent>): Map<NavIdent, Veileder> {
         return nomClient
-            .runCatching { finnNavn(ident) }
-            .map {
+            .runCatching { finnNavn(identer) }
+            .getOrDefault(emptyList())
+            .associateBy { it.navIdent }
+            .mapValues { (_, value) ->
                 Veileder(
-                    ident = it.navIdent.get(),
-                    fornavn = it.fornavn,
-                    etternavn = it.etternavn,
+                    ident = value.navIdent.get(),
+                    fornavn = value.fornavn,
+                    etternavn = value.etternavn
                 )
             }
-            .getOrDefault(Veileder("", "", ident.get()))
     }
 
     override fun hentVeilederRoller(ident: NavIdent): RolleListe {
