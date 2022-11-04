@@ -12,7 +12,7 @@ import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
 import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
-import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.slf4j.LoggerFactory
 import java.net.URL
 
@@ -54,7 +54,7 @@ class LoggingGraphqlClient(
                 header(RestConstants.NAV_CALL_ID_HEADER, callId)
                 header("X-Correlation-ID", callId)
             }
-            TjenestekallLogger.info(
+            TjenestekallLogg.info(
                 "$name-request: $callId ($requestId)",
                 mapOf(
                     "operationName" to operationName,
@@ -73,15 +73,15 @@ class LoggingGraphqlClient(
             )
 
             if (response.errors.isNullOrEmpty()) {
-                TjenestekallLogger.info("$name-response: $callId ($requestId)", tjenestekallFelt)
+                TjenestekallLogg.info("$name-response: $callId ($requestId)", tjenestekallFelt)
             } else {
-                TjenestekallLogger.error("$name-response: $callId ($requestId)", tjenestekallFelt)
+                TjenestekallLogg.error("$name-response: $callId ($requestId)", tjenestekallFelt)
             }
 
             response
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot $name (ID: $callId)", exception)
-            TjenestekallLogger.error(
+            TjenestekallLogg.error(
                 header = "$name-response: $callId ($requestId)",
                 fields = mapOf("exception" to exception.message),
                 throwable = exception

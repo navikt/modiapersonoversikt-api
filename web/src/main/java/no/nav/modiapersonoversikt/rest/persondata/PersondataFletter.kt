@@ -7,11 +7,12 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata.Adresseb
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.ANNET
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
-import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
+import no.nav.personoversikt.common.logging.Logging
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Clock
@@ -48,7 +49,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         fun feilendeSystemer(): List<String> {
             return ekstraDatapunker.mapNotNull {
                 if (it is PersondataResult.Failure<*>) {
-                    TjenestekallLogger.logger.error("Persondata feilet system: ${it.system}", it.exception)
+                    Logging.secureLog.error("Persondata feilet system: ${it.system}", it.exception)
                     it.system.name
                 } else {
                     null
@@ -93,7 +94,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     onNotRelevant = { null },
                     onFailure = { system, cause ->
                         feilendeSystemer.add(system.name)
-                        TjenestekallLogger.logger.error("Persondata feilet system: $system", cause)
+                        Logging.secureLog.error("Persondata feilet system: $system", cause)
                         null
                     }
                 ),
@@ -198,7 +199,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 )
 
                 else -> {
-                    TjenestekallLogger.warn(
+                    TjenestekallLogg.warn(
                         "PersondataFletter",
                         mapOf(
                             "personIdent" to data.personIdent,
@@ -248,7 +249,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 )
 
                 else -> {
-                    TjenestekallLogger.warn(
+                    TjenestekallLogg.warn(
                         "PersondataFletter",
                         mapOf(
                             "personIdent" to data.personIdent,
@@ -287,7 +288,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 )
 
                 else -> {
-                    TjenestekallLogger.warn(
+                    TjenestekallLogg.warn(
                         "PersondataFletter",
                         mapOf(
                             "personIdent" to data.personIdent,

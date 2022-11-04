@@ -26,13 +26,11 @@ import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import no.nav.personoversikt.common.kabac.Decision
-import org.slf4j.LoggerFactory
+import no.nav.personoversikt.common.logging.Logging
 import java.time.Clock
 import java.time.LocalDate
 import java.util.*
 import java.util.Optional.ofNullable
-
-private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 
 class RestOppgaveBehandlingServiceImpl(
     private val pdlOppslagService: PdlOppslagService,
@@ -48,6 +46,8 @@ class RestOppgaveBehandlingServiceImpl(
     },
     private val clock: Clock = Clock.systemDefaultZone()
 ) : OppgaveBehandlingService {
+    private val tjenestekallLogg = Logging.secureLog
+
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
         val ident: NavIdent = AuthContextUtils.requireNavIdent()
