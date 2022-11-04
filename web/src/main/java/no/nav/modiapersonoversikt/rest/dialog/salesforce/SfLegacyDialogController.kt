@@ -286,8 +286,9 @@ class SfLegacyDialogController(
                     .plus(meldingFraIdenter ?: emptyList())
             }
             .distinct()
+            .map(::NavIdent)
 
-        val identMap = identer.associateWith { ident -> ansattService.hentVeileder(NavIdent(ident)) }
+        val identMap = ansattService.hentVeiledere(identer).mapKeys { (key, _) -> key.get() }
 
         return DialogMappingContext(temakodeMap, identMap)
     }
