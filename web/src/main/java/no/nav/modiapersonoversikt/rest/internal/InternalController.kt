@@ -12,10 +12,14 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.personoversikt.common.typeanalyzer.Formatter
+import no.nav.personoversikt.common.typeanalyzer.KotlinFormat
+import no.nav.personoversikt.common.typeanalyzer.TypescriptFormat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -55,6 +59,16 @@ class InternalController @Autowired constructor(
                     SokPerson(pdlClient).execute(SokPerson.Variables(paging, criteria), systemTokenAuthHeader)
                 }
             }
+    }
+
+    @GetMapping("/types/{name}")
+    fun getTypedefinition(
+        @PathVariable("name") name: String,
+        @RequestParam(value = "format", required = false) formatName: String?,
+    ): String {
+        val report = Typeanalyzers.valueOf(name).analyzer.report()
+        val format = if (formatName == "typescript") TypescriptFormat else KotlinFormat
+        return Formatter(format).print(report)
     }
 
     private val systemTokenAuthHeader: HeadersBuilder = {
