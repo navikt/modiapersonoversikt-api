@@ -4,7 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.PleiepengerServiceImpl
-import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPerson
@@ -23,7 +22,6 @@ internal class PleiepengerUttrekkTest {
     private val pleiepengerV1: PleiepengerV1 = mockk()
     private val service = PleiepengerServiceImpl(pleiepengerV1)
 
-    private val org: OrganisasjonV4 = mockk()
     private val orgService: OrganisasjonService = mockk()
 
     private val uttrekk = PleiepengerUttrekk(service, orgService)

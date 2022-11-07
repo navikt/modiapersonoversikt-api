@@ -44,12 +44,6 @@
             <cache:cacheable method="hent*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="organisasjonAdvice" key-generator="defaultkeygenerator">
-        <cache:caching cache="organisasjonCache">
-            <cache:cacheable method="hent*" />
-            <cache:cacheable method="finn*" />
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="oppfolgingsinfoAdvice" key-generator="userkeygenerator">
         <cache:caching cache="oppfolgingsinfoCache">
             <cache:cacheable method="hent*" />
@@ -70,7 +64,6 @@
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingerService)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
         <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
-        <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
         <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsApi)"/>
         <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingskontraktService)"/>
     </aop:config>
