@@ -41,6 +41,7 @@ open class CacheConfig {
 
     private fun CaffeineCacheManager.cache(name: String, time: Int, maximumSize: Int = 1000) {
         val cache = Caffeine.newBuilder()
+            .recordStats()
             .expireAfterAccess(Duration.ofSeconds(time.toLong()))
             .expireAfterWrite(Duration.ofSeconds(time.toLong()))
             .maximumSize(maximumSize.toLong())
