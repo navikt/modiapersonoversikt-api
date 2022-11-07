@@ -10,9 +10,12 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.RestUtils
+import no.nav.modiapersonoversikt.rest.Typeanalyzers
+import no.nav.modiapersonoversikt.rest.sampleRate
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
@@ -111,6 +114,7 @@ class SakerController @Autowired constructor(
             ?.variantformat
             ?: ARKIV
 
+    private val captureType = Typeanalyzers.SAKER.analyzer.sampleRate(Scientist.FixedValueRate(0.25))
     private fun byggSakstemaResultat(resultat: ResultatWrapper<List<SakstemaDTO>>): Map<String, Any?> {
         return mapOf(
             "resultat" to resultat.resultat.map {
@@ -125,7 +129,7 @@ class SakerController @Autowired constructor(
                     "harTilgang" to it.harTilgang
                 )
             }
-        )
+        ).also(captureType)
     }
 
     private fun hentBehandlingskjeder(behandlingskjeder: List<Behandlingskjede>): List<Map<String, Any?>> {
