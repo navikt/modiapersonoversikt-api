@@ -269,6 +269,10 @@
         </dependency>
         <dependency>
             <groupId>no.nav.personoversikt</groupId>
+            <artifactId>logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.personoversikt</groupId>
             <artifactId>kabac</artifactId>
         </dependency>
         <dependency>

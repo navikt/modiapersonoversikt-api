@@ -1,12 +1,13 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
-import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.personoversikt.common.kabac.AttributeValue
 import no.nav.personoversikt.common.kabac.CombiningAlgorithm
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.logging.Logging
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 
 interface Tilgangskontroll {
     fun check(policy: PolicyWithAttributes): TilgangskontrollInstance
@@ -63,7 +64,7 @@ private class Instance(
             ctx = ctx,
             policy = policy
         )
-        TjenestekallLogger.logger.info(TjenestekallLogger.format("policy-report: ${getCallId()}", report))
+        Logging.secureLog.info(TjenestekallLogg.format("policy-report: ${getCallId()}", report))
 
         return decision
     }

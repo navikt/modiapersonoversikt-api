@@ -10,7 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
-import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.*
 import okio.Buffer
 import org.slf4j.LoggerFactory
@@ -79,7 +79,7 @@ class LoggingInterceptor(
         val requestId = IdUtils.generateId()
         val requestBody = request.peekContent(config)
 
-        TjenestekallLogger.info(
+        TjenestekallLogg.info(
             "$name-request: $callId ($requestId)",
             mapOf(
                 "url" to request.url().toString(),
@@ -92,7 +92,7 @@ class LoggingInterceptor(
         val response: Response = runCatching { chain.proceed(request) }
             .onFailure { exception ->
                 log.error("$name-response-error (ID: $callId / $requestId)", exception)
-                TjenestekallLogger.error(
+                TjenestekallLogg.error(
                     header = "$name-response-error: $callId ($requestId))",
                     fields = mapOf(
                         "exception" to exception.message,
@@ -109,7 +109,7 @@ class LoggingInterceptor(
         val responseBody = response.peekContent(config)
 
         if (response.code() in 200..299) {
-            TjenestekallLogger.info(
+            TjenestekallLogg.info(
                 header = "$name-response: $callId ($requestId)",
                 fields = mapOf(
                     "status" to "${response.code()} ${response.message()}",
@@ -117,11 +117,11 @@ class LoggingInterceptor(
                     "body" to responseBody
                 ),
                 tags = mapOf(
-                    "time" to timer.measure(),
+                    "time" to timer.measure()
                 )
             )
         } else {
-            TjenestekallLogger.error(
+            TjenestekallLogg.error(
                 header = "$name-response-error: $callId ($requestId)",
                 fields = mapOf(
                     "status" to "${response.code()} ${response.message()}",

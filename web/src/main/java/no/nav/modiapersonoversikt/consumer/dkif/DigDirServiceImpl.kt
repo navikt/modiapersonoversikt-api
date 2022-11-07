@@ -9,13 +9,13 @@ import no.nav.modiapersonoversikt.consumer.digdir.generated.apis.PersonControlle
 import no.nav.modiapersonoversikt.consumer.digdir.generated.apis.PingControllerApi
 import no.nav.modiapersonoversikt.consumer.digdir.generated.models.DigitalKontaktinformasjonDTO
 import no.nav.modiapersonoversikt.consumer.dkif.Dkif
-import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.OkHttpClient
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -56,7 +56,7 @@ class DigDirServiceImpl(
                 }.map { data ->
                     mapToDigitalKontaktInformasjon(data)
                 }.getOrElse {
-                    TjenestekallLogger.warn(
+                    TjenestekallLogg.warn(
                         header = "Feil ved henting av digital kontaktinformasjon fra digdir",
                         fields = mapOf(
                             "fnr" to fnr,

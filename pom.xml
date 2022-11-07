@@ -26,7 +26,7 @@
         <mockk.version>1.13.2</mockk.version>
 
         <common.version>2.2022.09.15_07.46-e4fa96eb6813</common.version>
-        <modia-common-utils.version>1.2022.11.03-14.47-5dd934278450</modia-common-utils.version>
+        <modia-common-utils.version>1.2022.11.04-10.21-5344caa2dceb</modia-common-utils.version>
         <tjenestespesifikasjoner.version>1.2020.06.16-14.51-3b45df54f90a</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
     </properties>
@@ -191,6 +191,11 @@
             <dependency>
                 <groupId>no.nav.personoversikt</groupId>
                 <artifactId>kabac</artifactId>
+                <version>${modia-common-utils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.personoversikt</groupId>
+                <artifactId>logging</artifactId>
                 <version>${modia-common-utils.version}</version>
             </dependency>
             <dependency>

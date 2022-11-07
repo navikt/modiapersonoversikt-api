@@ -7,8 +7,8 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
-import no.nav.modiapersonoversikt.infrastructure.TjenestekallLogger
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory
@@ -29,7 +29,7 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
     override fun hentNokkelInfo(orgnummer: String): OrganisasjonResponse? {
         val uuid = UUID.randomUUID()
         try {
-            TjenestekallLogger.info(
+            TjenestekallLogg.info(
                 "Oppgaver-request: $uuid",
                 mapOf(
                     "orgnummer" to orgnummer,
@@ -54,15 +54,15 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
             )
 
             return if (response.code() in 200..299 && body != null) {
-                TjenestekallLogger.info("Ereg hent orgnavn-response: $uuid", tjenestekallInfo)
+                TjenestekallLogg.info("Ereg hent orgnavn-response: $uuid", tjenestekallInfo)
                 objectMapper.readValue(body)
             } else {
-                TjenestekallLogger.error("Ereg hent orgnavn-response-error: $uuid", tjenestekallInfo)
+                TjenestekallLogg.error("Ereg hent orgnavn-response-error: $uuid", tjenestekallInfo)
                 null
             }
         } catch (exception: Exception) {
             log.error("Feilet ved GET kall mot ereg  (ID: $uuid)", exception)
-            TjenestekallLogger.error(
+            TjenestekallLogg.error(
                 "ereg orgnavn-error: $uuid",
                 mapOf(
                     "exception" to exception,
