@@ -21,6 +21,7 @@ import no.nav.personoversikt.common.typeanalyzer.Formatter
 import no.nav.personoversikt.common.typeanalyzer.KotlinFormat
 import no.nav.personoversikt.common.typeanalyzer.TypescriptFormat
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -61,7 +62,7 @@ class InternalController @Autowired constructor(
             }
     }
 
-    @GetMapping("/types/{name}")
+    @GetMapping("/types/{name}", produces = [MediaType.TEXT_PLAIN_VALUE])
     fun getTypedefinition(
         @PathVariable("name") name: String,
         @RequestParam(value = "format", required = false) formatName: String?,
