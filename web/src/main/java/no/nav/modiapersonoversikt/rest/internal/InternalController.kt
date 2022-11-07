@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.personoversikt.common.typeanalyzer.CaptureStats
 import no.nav.personoversikt.common.typeanalyzer.Formatter
 import no.nav.personoversikt.common.typeanalyzer.KotlinFormat
 import no.nav.personoversikt.common.typeanalyzer.TypescriptFormat
@@ -62,7 +63,14 @@ class InternalController @Autowired constructor(
             }
     }
 
-    @GetMapping("/types/{name}", produces = [MediaType.TEXT_PLAIN_VALUE])
+    @GetMapping("/typeanalyzer")
+    fun getTypeanalyzerStats(): Map<String, CaptureStats> {
+        return Typeanalyzers.values().associate {
+            it.name to it.analyzer.stats
+        }
+    }
+
+    @GetMapping("/typeanalyzer/{name}", produces = [MediaType.TEXT_PLAIN_VALUE])
     fun getTypedefinition(
         @PathVariable("name") name: String,
         @RequestParam(value = "format", required = false) formatName: String?,
