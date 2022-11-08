@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.consumer.digdir.DigDir
+import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,8 +19,8 @@ private val SIST_OPPDATERT = LocalDate.of(2012, 12, 27)
 
 class KontaktinformasjonControllerTest {
 
-    private val digDirService: DigDir.Service = mockk()
-    private val controller = KontaktinformasjonController(digDirService, TilgangskontrollMock.get())
+    private val krrService: Krr.Service = mockk()
+    private val controller = KontaktinformasjonController(krrService, TilgangskontrollMock.get())
 
     @BeforeEach
     fun before() {
@@ -28,14 +28,14 @@ class KontaktinformasjonControllerTest {
     }
 
     private fun setupDKIFMock() {
-        every { digDirService.hentDigitalKontaktinformasjon(FNR) } returns DigDir.DigitalKontaktinformasjon(
+        every { krrService.hentDigitalKontaktinformasjon(FNR) } returns Krr.DigitalKontaktinformasjon(
             personident = null,
             reservasjon = RESERVASJON,
-            epostadresse = DigDir.Epostadresse(
+            epostadresse = Krr.Epostadresse(
                 value = EPOST,
                 sistOppdatert = SIST_OPPDATERT
             ),
-            mobiltelefonnummer = DigDir.MobilTelefon(
+            mobiltelefonnummer = Krr.MobilTelefon(
                 value = MOBILTELEFON,
                 sistOppdatert = SIST_OPPDATERT
             )
@@ -65,7 +65,7 @@ class KontaktinformasjonControllerTest {
 
     @Test
     fun `Når bruker ikke har epost eller mobil`() {
-        every { digDirService.hentDigitalKontaktinformasjon(FNR) } returns DigDir.DigitalKontaktinformasjon()
+        every { krrService.hentDigitalKontaktinformasjon(FNR) } returns Krr.DigitalKontaktinformasjon()
 
         val response = controller.hentKontaktinformasjon(FNR)
         val epost = response["epost"]

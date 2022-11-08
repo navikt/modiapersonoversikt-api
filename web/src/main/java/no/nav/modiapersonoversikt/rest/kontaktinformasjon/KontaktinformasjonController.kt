@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.digdir.DigDir
+import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/rest/person/{fnr}/kontaktinformasjon")
 class KontaktinformasjonController @Autowired constructor(
-    private val digDirService: DigDir.Service,
+    private val krrService: Krr.Service,
     private val tilgangskontroll: Tilgangskontroll
 ) {
 
@@ -26,7 +26,7 @@ class KontaktinformasjonController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
-                val response = digDirService.hentDigitalKontaktinformasjon(fnr)
+                val response = krrService.hentDigitalKontaktinformasjon(fnr)
 
                 mapOf(
                     "epost" to getEpost(response),
@@ -36,7 +36,7 @@ class KontaktinformasjonController @Autowired constructor(
             }
     }
 
-    private fun getEpost(response: DigDir.DigitalKontaktinformasjon): Map<String, Any?>? {
+    private fun getEpost(response: Krr.DigitalKontaktinformasjon): Map<String, Any?>? {
         if (response.epostadresse?.value.isNullOrEmpty()) {
             return null
         }
@@ -46,7 +46,7 @@ class KontaktinformasjonController @Autowired constructor(
         )
     }
 
-    private fun getMobiltelefon(response: DigDir.DigitalKontaktinformasjon): Map<String, Any?>? {
+    private fun getMobiltelefon(response: Krr.DigitalKontaktinformasjon): Map<String, Any?>? {
         if (response.mobiltelefonnummer?.value.isNullOrEmpty()) {
             return null
         }

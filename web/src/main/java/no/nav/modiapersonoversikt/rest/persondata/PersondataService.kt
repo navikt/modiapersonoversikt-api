@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.digdir.DigDir
+import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
@@ -29,7 +29,7 @@ interface PersondataService {
 
 class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
-    private val digDir: DigDir.Service,
+    private val krrService: Krr.Service,
     private val norgApi: NorgApi,
     private val skjermedePersonerApi: SkjermedePersonerApi,
     private val kontonummerService: KontonummerService,
@@ -64,7 +64,7 @@ class PersondataServiceImpl(
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
                 persondata
                     .findKontaktinformasjonTredjepartspersoner()
-                    .associateWith { digDir.hentDigitalKontaktinformasjon(it) }
+                    .associateWith { krrService.hentDigitalKontaktinformasjon(it) }
                     .mapValues { tredjepartspersonMapper.tilKontaktinformasjonTredjepartsperson(it.value) }
             }
         val kontaktinformasjonTredjepartspersonMap = kontaktinformasjonTredjepartsperson.getOrElse(emptyMap())
@@ -84,7 +84,7 @@ class PersondataServiceImpl(
         }
 
         val dkifData =
-            PersondataResult.runCatching(InformasjonElement.DKIF) { digDir.hentDigitalKontaktinformasjon(personIdent) }
+            PersondataResult.runCatching(InformasjonElement.DKIF) { krrService.hentDigitalKontaktinformasjon(personIdent) }
         val bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) {
             kontonummerService.hentKontonummer(Fnr(personIdent))
         }

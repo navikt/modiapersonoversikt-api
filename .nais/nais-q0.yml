@@ -136,9 +136,9 @@ spec:
       value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
     - name: DKIF_REST_URL
       value: "https://dkif.dev.adeo.no/"
-    - name: DIG_DIR_REST_URL
+    - name: KRR_REST_URL
       value: "https://digdir-krr-proxy.dev.intern.nav.no/"
-    - name: DIG_DIR_SCOPE
+    - name: KRR_SCOPE
       value: "dev-gcp:team-rocket:digdir-krr-proxy"
     - name: VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/infotrygd-ws/ForeldrepengerService/v2"

@@ -1,9 +1,9 @@
-package no.nav.modiapersonoversikt.consumer.digdir
+package no.nav.modiapersonoversikt.consumer.krr
 
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import java.time.LocalDate
 
-object DigDir {
+object Krr {
     interface Service : Pingable {
         fun hentDigitalKontaktinformasjon(fnr: String): DigitalKontaktinformasjon
     }

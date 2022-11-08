@@ -215,7 +215,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>digdir-api</artifactId>
+            <artifactId>krr-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

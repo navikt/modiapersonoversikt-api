@@ -5,10 +5,10 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.consumer.digdir.DigDir
-import no.nav.modiapersonoversikt.consumer.digdir.generated.apis.PersonControllerApi
-import no.nav.modiapersonoversikt.consumer.digdir.generated.apis.PingControllerApi
-import no.nav.modiapersonoversikt.consumer.digdir.generated.models.DigitalKontaktinformasjonDTO
+import no.nav.modiapersonoversikt.consumer.krr.Krr
+import no.nav.modiapersonoversikt.consumer.krr.generated.apis.PersonControllerApi
+import no.nav.modiapersonoversikt.consumer.krr.generated.apis.PingControllerApi
+import no.nav.modiapersonoversikt.consumer.krr.generated.models.DigitalKontaktinformasjonDTO
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
@@ -20,13 +20,13 @@ import okhttp3.OkHttpClient
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-class DigDirServiceImpl(
-    baseUrl: String = EnvironmentUtils.getRequiredProperty("DIG_DIR_REST_URL"),
+class KrrServiceImpl(
+    baseUrl: String = EnvironmentUtils.getRequiredProperty("KRR_REST_URL"),
     machineToMachineTokenClient: MachineToMachineTokenClient,
-    private val cache: Cache<Fnr, DigDir.DigitalKontaktinformasjon> = CacheUtils.createCache()
-) : DigDir.Service {
+    private val cache: Cache<Fnr, Krr.DigitalKontaktinformasjon> = CacheUtils.createCache()
+) : Krr.Service {
 
-    private val scope = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("DIG_DIR_SCOPE"))
+    private val scope = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("KRR_SCOPE"))
 
     private val httpClient: OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(
@@ -44,7 +44,7 @@ class DigDirServiceImpl(
     private val client = PersonControllerApi(basePath = baseUrl, httpClient = httpClient)
     private val pingApi = PingControllerApi(baseUrl, httpClient)
 
-    override fun hentDigitalKontaktinformasjon(fnr: String): DigDir.DigitalKontaktinformasjon {
+    override fun hentDigitalKontaktinformasjon(fnr: String): Krr.DigitalKontaktinformasjon {
         return requireNotNull(
             cache.get(Fnr(fnr)) {
                 client.runCatching {
@@ -57,13 +57,13 @@ class DigDirServiceImpl(
                     mapToDigitalKontaktInformasjon(data)
                 }.getOrElse {
                     TjenestekallLogg.warn(
-                        header = "Feil ved henting av digital kontaktinformasjon fra digdir",
+                        header = "Feil ved henting av digital kontaktinformasjon fra krr",
                         fields = mapOf(
                             "fnr" to fnr,
                             "exception" to it,
                         )
                     )
-                    DigDir.INGEN_KONTAKTINFO
+                    Krr.INGEN_KONTAKTINFO
                 }
             }
         )
@@ -71,7 +71,7 @@ class DigDirServiceImpl(
 
     override fun ping(): SelfTestCheck {
         return SelfTestCheck(
-            "DigDirRest",
+            "KrrRest",
             false
         ) {
             try {
@@ -84,18 +84,18 @@ class DigDirServiceImpl(
     }
 
     private fun mapToDigitalKontaktInformasjon(dto: DigitalKontaktinformasjonDTO) =
-        DigDir.DigitalKontaktinformasjon(
+        Krr.DigitalKontaktinformasjon(
             personident = dto.personident,
             reservasjon = dto.reservert?.toString(),
             epostadresse = dto.epostadresse?.let { epostadresse ->
-                DigDir.Epostadresse(
+                Krr.Epostadresse(
                     value = epostadresse,
                     sistOppdatert = toLocalDate(dto.epostadresseOppdatert),
                     sistVerifisert = toLocalDate(dto.epostadresseVerifisert)
                 )
             },
             mobiltelefonnummer = dto.mobiltelefonnummer?.let { mobiltelefonnummer ->
-                DigDir.MobilTelefon(
+                Krr.MobilTelefon(
                     value = mobiltelefonnummer,
                     sistOppdatert = toLocalDate(dto.mobiltelefonnummerOppdatert),
                     sistVerifisert = toLocalDate(dto.mobiltelefonnummerVerifisert)
