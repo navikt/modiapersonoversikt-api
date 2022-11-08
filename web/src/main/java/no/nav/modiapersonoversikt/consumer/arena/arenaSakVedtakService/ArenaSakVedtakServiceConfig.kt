@@ -84,7 +84,7 @@ open class ArenaSakVedtakServiceConfig {
         ) {
             CXFClient(SakVedtakPortType::class.java)
                 .address(address)
-                .wsdl("classpath:wsdl/arenaSakVedtakService.wsdl")
+                .wsdl("classpath:wsdl/arenasakvedtakservice.wsdl")
                 .serviceName(QName("http://arena.nav.no/services/sakvedtakservice", "ArenaSakVedtakService"))
                 .endpointName(QName("http://arena.nav.no/services/sakvedtakservice", "ArenaSakVedtakServicePort"))
                 .withOutInterceptor(WSS4JOutInterceptor(getSecurityProps()))
