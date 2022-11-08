@@ -151,7 +151,7 @@
                             <version>${org.jvnet.jaxb2.version}</version>
                         </dependency>
                         <dependency>
-                            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                             <artifactId>jaxb-adapters</artifactId>
                             <version>${tjenestespesifikasjoner.version}</version>
                         </dependency>
