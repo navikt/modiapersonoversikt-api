@@ -19,23 +19,17 @@ open class CacheConfig {
     @Bean
     open fun cacheManager(): CacheManager {
         return CaffeineCacheManager().apply {
-            cache("abacClientCache", 3600, 10000)
             cache("endpointCache", 3, 10000)
-            cache("kjerneinformasjonCache", 60)
             cache("ytelseskontrakter", 600)
             cache("pleiePengerCache", 300)
-            cache("organisasjonCache", 300)
             cache("oppfolgingsinfoCache", 300)
             cache("oppfolgingCache", 600)
             cache("foreldrePengerCache", 300)
             cache("hentSykmeldingsperioderCache", 300)
             cache("utbetalingCache", 1800, 10000)
             cache("pdlCache", 3600, 100000)
-            cache("asbogosysEnhet", 86400, 10000)
             cache("ldap", 3600, 20000)
             cache("varslingCache", 180, 10000)
-            cache("innsynJournalCache", 1800, 10000)
-            cache("pesysCache", 600)
         }
     }
 

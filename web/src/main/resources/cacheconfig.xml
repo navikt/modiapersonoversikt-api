@@ -23,11 +23,6 @@
             <cache:cacheable method="hent*" unless="#result == null"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="pesysServiceAdvice" key-generator="userkeygenerator">
-        <cache:caching cache="pesysCache">
-            <cache:cacheable method="hent*"/>
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="ldapServiceAdvice" key-generator="methodawarekeygenerator">
         <cache:caching cache="ldap">
             <cache:cacheable method="hent*"/>
@@ -42,12 +37,6 @@
     <cache:advice id="varslingAdvice" key-generator="userkeygenerator">
         <cache:caching cache="varslingCache">
             <cache:cacheable method="hent*"/>
-        </cache:caching>
-    </cache:advice>
-    <cache:advice id="organisasjonAdvice" key-generator="defaultkeygenerator">
-        <cache:caching cache="organisasjonCache">
-            <cache:cacheable method="hent*" />
-            <cache:cacheable method="finn*" />
         </cache:caching>
     </cache:advice>
     <cache:advice id="oppfolgingsinfoAdvice" key-generator="userkeygenerator">
@@ -69,8 +58,6 @@
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingerService)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
-        <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
-        <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
         <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsApi)"/>
         <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingskontraktService)"/>
     </aop:config>

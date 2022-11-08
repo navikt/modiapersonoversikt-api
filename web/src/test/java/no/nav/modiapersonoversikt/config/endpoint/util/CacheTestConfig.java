@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
-import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,11 +27,6 @@ public class CacheTestConfig {
     @Bean
     public NorgApi norgApi() {
         return mock(NorgApi.class);
-    }
-
-    @Bean
-    public OrganisasjonV4 organisasjonV4PortType() {
-        return mock(OrganisasjonV4.class);
     }
 
     @Bean

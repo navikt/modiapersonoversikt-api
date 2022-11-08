@@ -311,10 +311,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-            <artifactId>organisasjonv4-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
             <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
