@@ -5,7 +5,7 @@ import no.nav.personoversikt.common.typeanalyzer.Capture
 import no.nav.personoversikt.common.typeanalyzer.Typeanalyzer
 
 enum class Typeanalyzers(val analyzer: Typeanalyzer) {
-    SAKER(SamplingTypeanalyzer(Scientist.FixedValueRate(0.25)))
+    SAKER(SamplingTypeanalyzer(Scientist.FixedValueRate(0.0)))
 }
 
 class SamplingTypeanalyzer(private val rate: Scientist.ExperimentRate) : Typeanalyzer() {
