@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.consumer.dkif.Dkif
+import no.nav.modiapersonoversikt.consumer.digdir.DigDir
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata.AdressebeskyttelseGradering.*
@@ -29,7 +29,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
-        val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
+        val digDirData: PersondataResult<DigDir.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<KontonummerService.Konto?>,
         val oppfolging: PersondataResult<ArbeidsrettetOppfolging.Status>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
@@ -40,7 +40,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             geografiskeTilknytning,
             erEgenAnsatt,
             navEnhet,
-            dkifData,
+            digDirData,
             bankkonto,
             tredjepartsPerson,
             kontaktinformasjonTredjepartsperson
@@ -909,13 +909,13 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun hantKontaktinformasjon(data: Data): Persondata.KontaktInformasjon {
-        val dkif = data.dkifData.getOrNull()
+        val digDir = data.digDirData.getOrNull()
         val oppfolging = data.oppfolging.getOrNull()
         return Persondata.KontaktInformasjon(
             erManuell = oppfolging?.erManuell,
-            erReservert = dkif?.reservasjon?.toBooleanStrictOrNull(),
-            epost = dkif?.epostadresse?.let { Persondata.KontaktInformasjon.Verdi(it.value, it.sistOppdatert, it.sistVerifisert) },
-            mobil = dkif?.mobiltelefonnummer?.let { Persondata.KontaktInformasjon.Verdi(it.value, it.sistOppdatert, it.sistVerifisert) },
+            erReservert = digDir?.reservasjon?.toBooleanStrictOrNull(),
+            epost = digDir?.epostadresse?.let { Persondata.KontaktInformasjon.Verdi(it.value, it.sistOppdatert, it.sistVerifisert) },
+            mobil = digDir?.mobiltelefonnummer?.let { Persondata.KontaktInformasjon.Verdi(it.value, it.sistOppdatert, it.sistVerifisert) },
         )
     }
 

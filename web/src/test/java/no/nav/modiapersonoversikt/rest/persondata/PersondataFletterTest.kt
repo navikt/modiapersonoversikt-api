@@ -62,7 +62,7 @@ internal class PersondataFletterTest {
                 data = testData.copy(
                     personIdent = fnr,
                     persondata = testPerson,
-                    dkifData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
+                    digDirData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
                     erEgenAnsatt = PersondataResult.Failure(
                         PersondataResult.InformasjonElement.EGEN_ANSATT,
                         Throwable()
@@ -81,7 +81,7 @@ internal class PersondataFletterTest {
                 data = testData.copy(
                     personIdent = fnr,
                     persondata = testPerson,
-                    dkifData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
+                    digDirData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
                     erEgenAnsatt = PersondataResult.Failure(
                         PersondataResult.InformasjonElement.EGEN_ANSATT,
                         Throwable()

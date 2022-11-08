@@ -16,7 +16,7 @@ internal class PersondataServiceImplTest {
     private val persondataServiceImpl = PersondataServiceImpl(
         norgApi = norgApi,
         pdl = mockk(),
-        dkif = mockk(),
+        digDir = mockk(),
         kontonummerService = mockk(),
         skjermedePersonerApi = mockk(),
         oppfolgingService = mockk(),

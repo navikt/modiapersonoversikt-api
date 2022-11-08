@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.consumer.dkif.Dkif
+import no.nav.modiapersonoversikt.consumer.digdir.DigDir
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import java.time.LocalDate
@@ -48,7 +48,7 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    fun tilKontaktinformasjonTredjepartsperson(krrInfo: Dkif.DigitalKontaktinformasjon): Persondata.DigitalKontaktinformasjonTredjepartsperson {
+    fun tilKontaktinformasjonTredjepartsperson(krrInfo: DigDir.DigitalKontaktinformasjon): Persondata.DigitalKontaktinformasjonTredjepartsperson {
         return Persondata.DigitalKontaktinformasjonTredjepartsperson(
             mobiltelefonnummer = krrInfo.mobiltelefonnummer?.value,
             reservasjon = krrInfo.reservasjon
