@@ -23,11 +23,6 @@
             <cache:cacheable method="hent*" unless="#result == null"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="pesysServiceAdvice" key-generator="userkeygenerator">
-        <cache:caching cache="pesysCache">
-            <cache:cacheable method="hent*"/>
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="ldapServiceAdvice" key-generator="methodawarekeygenerator">
         <cache:caching cache="ldap">
             <cache:cacheable method="hent*"/>
@@ -63,7 +58,6 @@
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingerService)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
-        <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsApi)"/>
         <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingskontraktService)"/>
     </aop:config>
