@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.RestUtils
+import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
@@ -125,7 +126,7 @@ class SakerController @Autowired constructor(
                     "harTilgang" to it.harTilgang
                 )
             }
-        )
+        ).also(Typeanalyzers.SAKER.analyzer::capture)
     }
 
     private fun hentBehandlingskjeder(behandlingskjeder: List<Behandlingskjede>): List<Map<String, Any?>> {

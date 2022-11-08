@@ -26,8 +26,8 @@
         <mockk.version>1.13.2</mockk.version>
 
         <common.version>2.2022.09.15_07.46-e4fa96eb6813</common.version>
-        <modia-common-utils.version>1.2022.11.04-10.21-5344caa2dceb</modia-common-utils.version>
-        <tjenestespesifikasjoner.version>1.2020.06.16-14.51-3b45df54f90a</tjenestespesifikasjoner.version>
+        <modia-common-utils.version>1.2022.11.08-10.35-554219ed136d</modia-common-utils.version>
+        <tjenestespesifikasjoner.version>2606.1f6354e</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
     </properties>
 
@@ -120,22 +120,22 @@
 
             <!--Tjenestespesifikasjon-->
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>arenasakvedtakservice</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>dkif-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
                 <exclusions>
@@ -146,60 +146,60 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>person-v3-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>organisasjonv4-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
 
             <!--Modia common-->
             <dependency>
-                <groupId>no.nav.personoversikt</groupId>
+                <groupId>com.github.navikt.modia-common-utils</groupId>
                 <artifactId>kotlin-utils</artifactId>
                 <version>${modia-common-utils.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.personoversikt</groupId>
+                <groupId>com.github.navikt.modia-common-utils</groupId>
                 <artifactId>test-utils</artifactId>
                 <version>${modia-common-utils.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>no.nav.personoversikt</groupId>
+                <groupId>com.github.navikt.modia-common-utils</groupId>
                 <artifactId>typeanalyzer</artifactId>
                 <version>${modia-common-utils.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.personoversikt</groupId>
+                <groupId>com.github.navikt.modia-common-utils</groupId>
                 <artifactId>kabac</artifactId>
                 <version>${modia-common-utils.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.personoversikt</groupId>
+                <groupId>com.github.navikt.modia-common-utils</groupId>
                 <artifactId>logging</artifactId>
                 <version>${modia-common-utils.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.personoversikt</groupId>
+                <groupId>com.github.navikt.modia-common-utils</groupId>
                 <artifactId>kabac</artifactId>
                 <version>${modia-common-utils.version}</version>
                 <type>test-jar</type>
@@ -286,55 +286,32 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>local</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <repositories>
-                <repository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>central</id>
-                    <name>Central Repository</name>
-                    <url>https://repo.maven.apache.org/maven2</url>
-                </repository>
-                <repository>
-                    <id>external-mirror-github-navikt</id>
-                    <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>central</id>
-                    <name>Central Repository</name>
-                    <url>https://repo.maven.apache.org/maven2</url>
-                </pluginRepository>
-                <pluginRepository>
-                    <id>external-mirror-github-navikt</id>
-                    <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-        <profile>
-            <id>ci</id>
-            <repositories>
-                <repository>
-                    <id>github-package-registry-navikt</id>
-                    <url>https://maven.pkg.github.com/navikt/maven-release</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>github-package-registry-navikt</id>
-                    <url>https://maven.pkg.github.com/navikt/maven-release</url>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-    </profiles>
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

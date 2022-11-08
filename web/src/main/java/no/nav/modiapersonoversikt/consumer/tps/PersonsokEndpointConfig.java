@@ -36,7 +36,7 @@ public class PersonsokEndpointConfig {
 
     private CXFClient<PersonsokPortType> createPersonsokPortType() {
         return new CXFClient<>(PersonsokPortType.class)
-                .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/personsoek/v1/Personsoek.wsdl")
+                .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/personsoek/v1/personsoek.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
                 .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL"));
