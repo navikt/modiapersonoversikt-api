@@ -299,7 +299,7 @@ class SfLegacyDialogController(
             val skrevetAv = when (melding.fra.identType) {
                 MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(melding.fra.ident)
                     ?.let { "${it.navn} (${it.ident})" }
-                    ?: "Ukjent"
+                    ?: "(${melding.fra.ident})"
                 MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
             }
             val status = when {
