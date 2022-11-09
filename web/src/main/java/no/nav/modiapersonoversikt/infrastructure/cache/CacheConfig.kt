@@ -33,14 +33,15 @@ open class CacheConfig {
         }
     }
 
-    private fun CaffeineCacheManager.cache(name: String, time: Int, maximumSize: Int = 1000) {
-        val cache = Caffeine.newBuilder()
-            .recordStats()
-            .expireAfterAccess(Duration.ofSeconds(time.toLong()))
-            .expireAfterWrite(Duration.ofSeconds(time.toLong()))
-            .maximumSize(maximumSize.toLong())
-            .build<Any, Any>()
+    private fun CaffeineCacheManager.cache(name: String, time: Long, maximumSize: Long = 1000) {
+        this.registerCustomCache(name, createCache(time, maximumSize).build())
+    }
 
-        this.registerCustomCache(name, cache)
+    companion object {
+        fun createCache(time: Long, maximumSize: Long = 1000) = Caffeine.newBuilder()
+            .recordStats()
+            .expireAfterAccess(Duration.ofSeconds(time))
+            .expireAfterWrite(Duration.ofSeconds(time))
+            .maximumSize(maximumSize)
     }
 }
