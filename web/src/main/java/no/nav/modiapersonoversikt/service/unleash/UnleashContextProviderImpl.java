@@ -10,7 +10,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static java.util.stream.Collectors.joining;
-import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnhetStrategy.ENHETER;
+import static no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.ENHETER_PROPERTY;
 
 public class UnleashContextProviderImpl implements UnleashContextProvider {
 
@@ -36,7 +36,7 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
         return UnleashContext.builder()
                 .userId(ident)
                 .remoteAddress(remoteAddr)
-                .addProperty(ENHETER, getEnheter())
+                .addProperty(ENHETER_PROPERTY, getEnheter())
                 .build();
     }
 

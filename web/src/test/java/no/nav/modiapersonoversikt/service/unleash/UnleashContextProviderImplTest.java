@@ -15,7 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import static java.util.Arrays.asList;
-import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnhetStrategy.ENHETER;
+import static no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.ENHETER_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -66,7 +66,7 @@ class UnleashContextProviderImplTest {
         assertThat(context.getUserId().get(), is(IDENT));
         assertThat(context.getRemoteAddress().get(), is(REMOTE_ADDR));
         assertThat(context.getProperties().size(), is(1));
-        assertThat(context.getProperties().get(ENHETER), is("1234,0000"));
+        assertThat(context.getProperties().get(ENHETER_PROPERTY), is("1234,0000"));
 
     }
 }

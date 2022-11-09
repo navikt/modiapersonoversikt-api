@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnhetStrategy.ENHETER;
+import static no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.ENHETER_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -36,7 +36,7 @@ class ByEnhetStrategyTest {
     @Test
     void kallMedIngenContextGirFalse() {
         HashMap<String, String> parameters = new HashMap<>() {{
-            put(ENHETER, "0118");
+            put(ENHETER_PROPERTY, "0118");
         }};
 
         assertThat(byEnhetStrategy.isEnabled(parameters), is(false));
@@ -56,7 +56,7 @@ class ByEnhetStrategyTest {
 
     private void addEnhetToContextProperties(String enheter) {
         HashMap<String, String> props = new HashMap<>() {{
-            put(ENHETER, enheter);
+            put(ENHETER_PROPERTY, enheter);
         }};
         when(context.getProperties()).thenReturn(props);
     }
