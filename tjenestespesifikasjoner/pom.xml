@@ -33,8 +33,7 @@
         <module>sf-henvendelse-api</module>
         <module>pdl-api</module>
         <module>saf-api</module>
-        <module>dkif-api</module>
-        <module>digdir-api</module>
+        <module>krr-api</module>
         <module>kontoregister-api</module>
         <module>kodeverk-api</module>
         <module>norg-api</module>

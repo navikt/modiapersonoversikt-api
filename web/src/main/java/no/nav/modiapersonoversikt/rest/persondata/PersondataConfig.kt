@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.consumer.dkif.Dkif
+import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
@@ -16,7 +16,7 @@ open class PersondataConfig {
     @Bean
     open fun persondataService(
         pdl: PdlOppslagService,
-        dkif: Dkif.Service,
+        krrService: Krr.Service,
         norgApi: NorgApi,
         skjermedePersonerApi: SkjermedePersonerApi,
         kontonummerService: KontonummerService,
@@ -26,7 +26,7 @@ open class PersondataConfig {
     ): PersondataService {
         return PersondataServiceImpl(
             pdl,
-            dkif,
+            krrService,
             norgApi,
             skjermedePersonerApi,
             kontonummerService,

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>digdir-api</artifactId>
+    <artifactId>krr-api</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -50,10 +50,10 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/digdir/openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/krr/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
-                            <packageName>no.nav.modiapersonoversikt.consumer.digdir.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.consumer.krr.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <configOptions>

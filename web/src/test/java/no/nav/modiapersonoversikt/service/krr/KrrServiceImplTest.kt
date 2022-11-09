@@ -1,6 +1,6 @@
-package no.nav.modiapersonoversikt.service.digdir
+package no.nav.modiapersonoversikt.service.krr
 
-import DigDirServiceImpl
+import KrrServiceImpl
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
@@ -18,15 +18,15 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
-internal class DigDirServiceImplTest {
+internal class KrrServiceImplTest {
     private val machineToMachineTokenClient: MachineToMachineTokenClient = mockk()
 
     @JvmField
     @RegisterExtension
     val testenvironment = TestEnvironmentExtension(
         mapOf(
-            "DIG_DIR_REST_URL" to "http://dummy.no",
-            "DIG_DIR_SCOPE" to "dev-gcp:team-rocket:digdir-krr-proxy",
+            "KRR_REST_URL" to "http://dummy.no",
+            "KRR_SCOPE" to "dev-gcp:team-rocket:digdir-krr-proxy",
         )
     )
 
@@ -59,26 +59,26 @@ internal class DigDirServiceImplTest {
     """.trimIndent()
 
     @Test
-    fun `hent kontaktinformasjon fra DigDirRestApi`() {
-        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "DIG-DIR-TOKEN"
+    fun `hent kontaktinformasjon fra KrrRestApi`() {
+        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "KRR-TOKEN"
         wiremock.get {
             status(200)
             json(jsonResponse)
         }
-        val digDirRestService = DigDirServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
-        val response = digDirRestService.hentDigitalKontaktinformasjon("10108000398")
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
+        val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000398")
         assertThat(response.personident).isEqualTo("10108000398")
         assertThat(response.epostadresse?.value).isEqualTo("noreply@nav.no")
         assertThat(response.mobiltelefonnummer?.value).isEqualTo("11111111")
     }
 
     @Test
-    fun `trigg feil ved henting av kontaktinformasjon fra DigDirRestApi`() {
-        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "DIG-DIR-TOKEN"
+    fun `trigg feil ved henting av kontaktinformasjon fra KrrRestApi`() {
+        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "KRR-TOKEN"
         wiremock.get { status(404) }
-        val digDirRestService = DigDirServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
 
-        val response = digDirRestService.hentDigitalKontaktinformasjon("10108000123")
+        val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
         assertThat(response.reservasjon).isEqualTo("")
         assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
@@ -86,11 +86,11 @@ internal class DigDirServiceImplTest {
     }
 
     @Test
-    fun `trigg server-feil ved henting av kontaktinformasjon fra DigDirRestApi`() {
-        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "DIG-DIR-TOKEN"
+    fun `trigg server-feil ved henting av kontaktinformasjon fra KrrRestApi`() {
+        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "KRR-TOKEN"
         wiremock.get { status(500) }
-        val digDirRestService = DigDirServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
-        val response = digDirRestService.hentDigitalKontaktinformasjon("10108000123")
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
+        val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
         assertThat(response.reservasjon).isEqualTo("")
         assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
