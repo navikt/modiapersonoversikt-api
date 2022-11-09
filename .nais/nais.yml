@@ -109,7 +109,7 @@ spec:
     - name: SERVER_ARENA_URL
       value: "http://arena.adeo.no/forms/arenaMod.html"
     - name: SERVER_DREK_URL
-      value: "https://drek.nais.adeo.no/"
+      value: "https://pdl-web.intern.nav.no/rekvirerdnummer"
     - name: SERVER_GOSYS_URL
       value: "https://wasapp.adeo.no"
     - name: SERVER_NORG2_FRONTEND_URL
