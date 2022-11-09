@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.consumer.dkif.Dkif
+import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
@@ -236,11 +236,11 @@ internal val kontaktinformasjonDodsbo = HentPersondata.KontaktinformasjonForDoed
     )
 )
 
-internal val digitalKontaktinformasjon = Dkif.DigitalKontaktinformasjon(
+internal val digitalKontaktinformasjon = Krr.DigitalKontaktinformasjon(
     personident = "12345678910",
     reservasjon = null,
-    epostadresse = Dkif.Epostadresse(value = "test@test.no"),
-    mobiltelefonnummer = Dkif.MobilTelefon(value = "90009900")
+    epostadresse = Krr.Epostadresse(value = "test@test.no"),
+    mobiltelefonnummer = Krr.MobilTelefon(value = "90009900")
 )
 
 internal val arbeidsrettetOppfolgingStatus = ArbeidsrettetOppfolging.Status(
@@ -451,7 +451,7 @@ internal val testData = PersondataFletter.Data(
     geografiskeTilknytning = PersondataResult.runCatching(InformasjonElement.PDL_GT) { "0123" },
     erEgenAnsatt = PersondataResult.runCatching(InformasjonElement.EGEN_ANSATT) { false },
     navEnhet = PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) { gittNavKontorEnhet() },
-    dkifData = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
+    krrData = PersondataResult.runCatching(InformasjonElement.DKIF) { digitalKontaktinformasjon },
     oppfolging = PersondataResult.runCatching(InformasjonElement.OPPFOLGING) { arbeidsrettetOppfolgingStatus },
     bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
     tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
