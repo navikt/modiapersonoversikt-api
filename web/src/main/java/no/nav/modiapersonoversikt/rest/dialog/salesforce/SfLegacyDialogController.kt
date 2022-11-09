@@ -5,8 +5,6 @@ import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
-import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
-import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.RestUtils
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
@@ -38,12 +36,6 @@ class SfLegacyDialogController(
     private val kodeverk: EnhetligKodeverk.Service,
 ) : DialogApi {
     private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
-    private val experiment = Scientist.createExperiment<List<TraadDTO>>(
-        Scientist.Config(
-            name = "TraadDTO",
-            experimentRate = Scientist.FixedValueRate(0.1)
-        )
-    )
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
         val bruker = EksternBruker.Fnr(fnr)
@@ -51,10 +43,7 @@ class SfLegacyDialogController(
         val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
         val dialogMappingContext = lagMappingContext(sfHenvendelser)
 
-        return experiment.run(
-            control = { sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it) } },
-            experiment = { sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormatV2(it) } },
-        )
+        return sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it) }
     }
 
     override fun sendMelding(request: HttpServletRequest, fnr: String, referatRequest: SendReferatRequest): TraadDTO {
@@ -294,61 +283,6 @@ class SfLegacyDialogController(
     }
 
     private fun DialogMappingContext.mapSfHenvendelserTilLegacyFormat(henvendelse: HenvendelseDTO): TraadDTO {
-        val journalposter = henvendelse.journalposter?.map {
-            tilJournalpostDTO(it)
-        } ?: emptyList()
-
-        val kontorsperre: MarkeringDTO? = henvendelse.markeringer
-            ?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
-        val kontorsperretEnhet: String? = kontorsperre?.kontorsperreGT ?: kontorsperre?.kontorsperreEnhet
-        val kontorsperretAv = identMap[kontorsperre?.markertAv ?: ""]
-            ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) }
-
-        val markertSomFeilsendt = henvendelse.markeringer
-            ?.find { it.markeringstype == MarkeringDTO.Markeringstype.FEILSENDT }
-        val markertSomFeilsendtAv = identMap[markertSomFeilsendt?.markertAv ?: ""]
-            ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) }
-
-        val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
-        val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
-            val skrevetAv = when (melding.fra.identType) {
-                MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> identMap[melding.fra.ident]
-                    ?.let { "${it.navn} (${it.ident})" }
-                    ?: "Ukjent"
-                MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
-            }
-            MeldingDTO(
-                mapOf(
-                    "id" to "${henvendelse.kjedeId}---${(melding.hashCode())}",
-                    "meldingsId" to melding.meldingsId,
-                    "meldingstype" to meldingstypeFraSfTyper(henvendelse, melding),
-                    "temagruppe" to henvendelse.gjeldendeTemagruppe,
-                    "skrevetAvTekst" to skrevetAv,
-                    "fritekst" to hentFritekstFraMelding(henvendelseErKassert, melding),
-                    "lestDato" to melding.lestDato?.format(DATO_TID_FORMAT),
-                    "status" to when {
-                        melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
-                        melding.lestDato != null -> Status.LEST_AV_BRUKER
-                        else -> Status.IKKE_LEST_AV_BRUKER
-                    },
-                    "opprettetDato" to melding.sendtDato.format(DATO_TID_FORMAT),
-                    "avsluttetDato" to henvendelse.avsluttetDato?.format(DATO_TID_FORMAT),
-                    "ferdigstiltDato" to melding.sendtDato.format(DATO_TID_FORMAT),
-                    "kontorsperretEnhet" to kontorsperretEnhet,
-                    "kontorsperretAv" to kontorsperretAv,
-                    "sendtTilSladding" to (henvendelse.sladding ?: false),
-                    "markertSomFeilsendtAv" to markertSomFeilsendtAv
-                )
-            )
-        }
-        return TraadDTO(
-            traadId = henvendelse.kjedeId,
-            meldinger = meldinger,
-            journalposter = journalposter
-        )
-    }
-
-    private fun DialogMappingContext.mapSfHenvendelserTilLegacyFormatV2(henvendelse: HenvendelseDTO): TraadDTOV2 {
         val journalposter = henvendelse.journalposter
             ?.map { tilJournalpostDTO(it) }
             ?: emptyList()
@@ -361,7 +295,7 @@ class SfLegacyDialogController(
         val markertSomFeilsendtAv = getVeileder(markertSomFeilsendt?.markertAv)
 
         val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
-        val meldinger: List<MeldingDTOV2> = (henvendelse.meldinger ?: emptyList()).map { melding ->
+        val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
             val skrevetAv = when (melding.fra.identType) {
                 MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(melding.fra.ident)
                     ?.let { "${it.navn} (${it.ident})" }
@@ -374,7 +308,7 @@ class SfLegacyDialogController(
                 else -> Status.IKKE_LEST_AV_BRUKER
             }
 
-            MeldingDTOV2(
+            MeldingDTO(
                 id = "${henvendelse.kjedeId}---${(melding.hashCode())}",
                 meldingsId = melding.meldingsId,
                 meldingstype = meldingstypeFraSfTyper(henvendelse, melding),
@@ -392,7 +326,7 @@ class SfLegacyDialogController(
                 markertSomFeilsendtAv = markertSomFeilsendtAv
             )
         }
-        return TraadDTOV2(
+        return TraadDTO(
             traadId = henvendelse.kjedeId,
             meldinger = meldinger,
             journalposter = journalposter

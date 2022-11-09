@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import java.time.OffsetDateTime
-import java.util.HashMap
 import javax.servlet.http.HttpServletRequest
 
 interface DialogApi {
@@ -76,14 +75,7 @@ data class TraadDTO(
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogApi.Journalpost>
 )
-class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map)
-
-data class TraadDTOV2(
-    val traadId: String,
-    val meldinger: List<MeldingDTOV2>,
-    val journalposter: List<DialogApi.Journalpost>
-)
-data class MeldingDTOV2(
+data class MeldingDTO(
     val id: String,
     val meldingsId: String?,
     val meldingstype: Meldingstype,
