@@ -7,8 +7,12 @@ import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.split
 class ByEnvironmentStrategy : Strategy {
     override fun getName(): String = "byEnvironment"
 
-    override fun isEnabled(parameters: Map<String, String>?): Boolean {
-        val strategiMiljo = parameters?.get("miljø").splitIntoSet()
+    override fun isEnabled(parameters: Map<String, String?>?): Boolean {
+        val strategiMiljo = parameters?.get(ENABLED_ENVIRONMENT_PROPERTY).splitIntoSet()
         return strategiMiljo.contains(getApplicationEnvironment())
+    }
+
+    companion object {
+        const val ENABLED_ENVIRONMENT_PROPERTY = "miljø"
     }
 }
