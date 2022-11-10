@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.nom
 
-import no.nav.common.client.nom.CachedNomClient
 import no.nav.common.client.nom.NomClient
 import no.nav.common.client.nom.NomClientImpl
 import no.nav.common.client.nom.VeilederNavn
@@ -32,7 +31,7 @@ open class NomConfig {
             return DevNomClient()
         }
         val tokenSupplier = { tokenProvider.createMachineToMachineToken(scope) }
-        return CachedNomClient(NomClientImpl(url, tokenSupplier, httpClient))
+        return NullCachingNomClient(NomClientImpl(url, tokenSupplier, httpClient))
     }
 }
 
