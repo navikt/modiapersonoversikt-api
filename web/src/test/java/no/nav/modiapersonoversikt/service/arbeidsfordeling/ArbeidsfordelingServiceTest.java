@@ -16,7 +16,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 
-import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY;
+import static no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.ENVIRONMENT_PROPERTY;
 import static no.nav.modiapersonoversikt.utils.TestUtils.sneaky;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
