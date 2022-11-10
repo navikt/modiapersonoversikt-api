@@ -2,10 +2,16 @@ package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.Veileder
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 
 object ArbeidsrettetOppfolging {
+    @CacheConfig(cacheNames = ["oppfolgingsinfoCache"], keyGenerator = "userkeygenerator")
     interface Service {
+        @Cacheable
         fun hentOppfolgingsinfo(fodselsnummer: Fnr): Info
+
+        @Cacheable
         fun hentOppfolgingStatus(fodselsnummer: Fnr): Status
         fun ping()
     }

@@ -1,10 +1,16 @@
 package no.nav.modiapersonoversikt.service.varsel
 
 import no.nav.common.types.identer.Fnr
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import java.time.ZonedDateTime
 
+@CacheConfig(cacheNames = ["varslingCache"], keyGenerator = "userkeygenerator")
 interface VarslerService {
+    @Cacheable
     fun hentLegacyVarsler(fnr: Fnr): List<Varsel>
+
+    @Cacheable
     fun hentAlleVarsler(fnr: Fnr): Result
 
     interface UnifiedVarsel

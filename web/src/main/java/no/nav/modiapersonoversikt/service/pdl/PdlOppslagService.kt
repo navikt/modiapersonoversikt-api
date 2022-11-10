@@ -2,16 +2,33 @@ package no.nav.modiapersonoversikt.service.pdl
 
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.SokKriterieRule.*
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 
+@CacheConfig(cacheNames = ["pdlCache"], keyGenerator = "userkeygenerator")
 interface PdlOppslagService {
+    @Cacheable(unless = "#result == null")
     fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit>
+
+    @Cacheable(unless = "#result == null")
     fun hentPersondata(fnr: String): HentPersondata.Result?
+
+    @Cacheable(unless = "#result == null")
     fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult>
+
+    @Cacheable(unless = "#result == null")
     fun hentGeografiskTilknyttning(fnr: String): String?
+
+    @Cacheable(unless = "#result == null")
     fun hentIdenter(fnr: String): HentIdenter.Identliste?
+
+    @Cacheable(unless = "#result == null")
     fun hentAktorId(fnr: String): String?
+
+    @Cacheable(unless = "#result == null")
     fun hentFnr(aktorid: String): String?
 
+    @Cacheable(unless = "#result == null")
     fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse>
 
     enum class SokKriterieRule {

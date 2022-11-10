@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 class SakOgBehandlingServiceTest {
     private val sakOgBehandling: SakOgBehandlingV1 = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
-    private val sakOgBehandlingService = SakOgBehandlingService(sakOgBehandling, pdlOppslagService)
+    private val sakOgBehandlingService = SakOgBehandlingServiceImpl(sakOgBehandling, pdlOppslagService)
 
     @Test
     internal fun `tre ws-saker skal gi liste med tre elementer`() {

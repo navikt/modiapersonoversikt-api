@@ -14,9 +14,9 @@ Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.
 
 ### Caching
 
-Cacheoppsett er hovedsakelig beskrevet i `cacheconfig.xml` og benytter seg av Springs cache abstraction og en underliggende caffeina-cache-implementasjon.
+Cacheoppsett er hovedsakelig beskrevet ved bruk av annotasjon og benytter seg av Springs cache abstraction og en underliggende caffeina-cache-implementasjon.
 
-Tjenestekall mot NORG caches i to forskjellige cacher. Se `cacheconfig.xml` for eksakt hvilke kall som bruker hvilken cache.
+Tjenestekall mot NORG caches i to forskjellige cacher. Se hver enkelt tjeneste for eksakt hvilke kall som bruker hvilken cache.
 Det er hovedsakelig en forskjell på time-to-live og key-generering. Den ene cachen har caching som tar hensyn til innlogget saksbehandler, og har en kort time-to-live.
 Den andre cachen har data som ikke endres pr bruker og caches derfor per node. Denne har også en lengre time-to-live for at dataene skal leve frem til neste faste
 cache-populeringsjobb. Se *Faste jobber* for mer informasjon om denne.

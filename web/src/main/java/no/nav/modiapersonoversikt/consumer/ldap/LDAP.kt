@@ -2,9 +2,13 @@ package no.nav.modiapersonoversikt.consumer.ldap
 
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import javax.naming.ldap.LdapContext
 
+@CacheConfig(cacheNames = ["ldap"], keyGenerator = "methodawarekeygenerator")
 interface LDAPService {
+    @Cacheable
     fun hentRollerForVeileder(ident: NavIdent): List<String>
 }
 
