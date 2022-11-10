@@ -13,10 +13,14 @@ class ByEnhetStrategy : Strategy {
         return false
     }
 
-    override fun isEnabled(parameters: Map<String, String>?, unleashContext: UnleashContext): Boolean {
-        val strategiEnheter = parameters?.get("valgtEnhet").splitIntoSet()
+    override fun isEnabled(parameters: Map<String, String?>?, unleashContext: UnleashContext): Boolean {
+        val strategiEnheter = parameters?.get(ENABLED_ENHETER_PROPERTY).splitIntoSet()
         val ansattesEnheter = unleashContext.properties[ENHETER_PROPERTY].splitIntoSet()
 
         return strategiEnheter.intersect(ansattesEnheter).isNotEmpty()
+    }
+
+    companion object {
+        const val ENABLED_ENHETER_PROPERTY = "valgtEnhet"
     }
 }
