@@ -50,7 +50,7 @@ class SfLegacyDialogController(
         val henvendelse = sfHenvendelseService.sendSamtalereferat(
             kjedeId = null,
             bruker = EksternBruker.Fnr(fnr),
-            enhet = RestUtils.hentValgtEnhet(null, request),
+            enhet = RestUtils.hentValgtEnhet(referatRequest.enhet, request),
             temagruppe = referatRequest.temagruppe,
             kanal = referatRequest.meldingstype.getKanal(),
             fritekst = referatRequest.fritekst
