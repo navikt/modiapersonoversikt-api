@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -28,14 +29,18 @@ class TilgangController @Autowired constructor(private val tilgangskontroll: Til
     }
 
     @GetMapping("/{fnr}")
-    fun harTilgang(@PathVariable("fnr") fnr: String, request: HttpServletRequest): TilgangDTO {
+    fun harTilgang(
+        @PathVariable("fnr") fnr: String,
+        @RequestParam("enhet", required = false) enhet: String?,
+        request: HttpServletRequest
+    ): TilgangDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .getDecision()
             .makeResponse()
             .logAudit(audit, fnr)
             .also {
-                enhetTrace.log(runCatching { RestUtils.hentValgtEnhet(null, request) }.getOrElse { "IKKE SATT" })
+                enhetTrace.log(runCatching { RestUtils.hentValgtEnhet(enhet, request) }.getOrElse { "IKKE SATT" })
             }
     }
 
