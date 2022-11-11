@@ -1,30 +1,23 @@
 package no.nav.modiapersonoversikt.rest.hode;
 
 import kotlin.Pair;
-import no.nav.common.types.identer.EnhetId;
-import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
-import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
-import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.commondomain.Veileder;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
+import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
+import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
-import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
-import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.ValgtEnhet;
-import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.NavnOgEnheter;
-import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.Enheter;
-import static no.nav.modiapersonoversikt.rest.RestUtils.hentValgtEnhet;
-import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*;
+import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ;
+import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.UPDATE;
+import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.*;
 
 @RestController
 @RequestMapping("/rest/hode")
@@ -33,46 +26,25 @@ public class HodeController {
     private AnsattService ansattService;
 
     @Autowired
-    private NorgApi norgApi;
-
-    @Autowired
     Tilgangskontroll tilgangskontroll;
 
-    static class Me {
-        public final String ident, navn, fornavn, etternavn, enhetId, enhetNavn;
-
-        public Me(String ident, String fornavn, String etternavn, String enhetId, String enhetNavn) {
-            this.ident = ident;
-            this.fornavn = fornavn;
-            this.etternavn = etternavn;
-            this.navn = fornavn + " " + etternavn;
-            this.enhetId = enhetId;
-            this.enhetNavn = enhetNavn;
-        }
-    }
-
-    record Enhet(String enhetId, String navn) {
+    record Me(String ident, String navn, String fornavn, String etternavn) {
     }
 
     record Enheter(String ident, List<Enhet> enhetliste) {
     }
 
+    record Enhet(String enhetId, String navn) {
+    }
+
     @GetMapping("/me")
-    public Me hentSaksbehandler(HttpServletRequest request) {
+    public Me hentSaksbehandler() {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, NavnOgEnheter), () -> {
                     String ident = AuthContextUtils.requireIdent();
                     Veileder veileder = hentSaksbehandlerNavn();
-                    String enhetId = hentValgtEnhet(null, request);
-                    String enhetNavn = norgApi
-                            .hentEnheter(EnhetId.of(enhetId), NorgDomain.OppgaveBehandlerFilter.UFILTRERT, NorgApi.getIKKE_NEDLAGT())
-                            .stream()
-                            .findFirst()
-                            .map(NorgDomain.Enhet::getEnhetNavn)
-                            .orElse("[Ukjent enhetId: " + enhetId + "]");
-
-                    return new Me(ident, veileder.getFornavn(), veileder.getEtternavn(), enhetId, enhetNavn);
+                    return new Me(ident, veileder.getNavn(), veileder.getFornavn(), veileder.getEtternavn());
                 });
     }
 
