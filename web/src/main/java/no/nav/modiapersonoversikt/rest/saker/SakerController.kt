@@ -10,10 +10,10 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.RestUtils
-import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
@@ -43,6 +43,13 @@ class SakerController @Autowired constructor(
     private val safService: SafService,
     val tilgangskontroll: Tilgangskontroll
 ) {
+    private val experiment = Scientist.createExperiment<Map<String, Any?>>(
+        Scientist.Config(
+            name = "sakerDTO",
+            experimentRate = Scientist.FixedValueRate(0.1)
+        )
+    )
+
     @GetMapping("/sakstema")
     fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet", required = false) enhet: String?): Map<String, Any?> {
         return tilgangskontroll
@@ -51,13 +58,24 @@ class SakerController @Autowired constructor(
                 val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
                 val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
 
+                val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
                 val resultat =
                     ResultatWrapper(
-                        mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(enhet, request)),
+                        mapTilModiaSakstema(sakstemaWrapper.resultat, valgtEnhet),
                         collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
                     )
 
-                byggSakstemaResultat(resultat)
+                experiment.run(
+                    control = { byggSakstemaResultat(resultat) },
+                    experiment = {
+                        SakerApiMapper.createMappingContext(
+                            tilgangskontroll,
+                            EnhetId(valgtEnhet),
+                            sakstemaWrapper.resultat,
+                            collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
+                        ).mapTilResultat()
+                    }
+                )
             }
     }
 
@@ -126,7 +144,7 @@ class SakerController @Autowired constructor(
                     "harTilgang" to it.harTilgang
                 )
             }
-        ).also(Typeanalyzers.SAKER.analyzer::capture)
+        )
     }
 
     private fun hentBehandlingskjeder(behandlingskjeder: List<Behandlingskjede>): List<Map<String, Any?>> {
