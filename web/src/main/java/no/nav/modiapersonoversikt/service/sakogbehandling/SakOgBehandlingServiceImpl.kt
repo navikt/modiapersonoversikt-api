@@ -9,14 +9,18 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import java.time.LocalDateTime
 import java.util.stream.Collectors
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede as WSBehandlingskjede
 
-class SakOgBehandlingServiceImpl(
+@CacheConfig(cacheNames = ["endpointCache"], keyGenerator = "userkeygenerator")
+open class SakOgBehandlingServiceImpl(
     private val sakOgBehandlingPortType: SakOgBehandlingV1,
     private val pdlOppslagService: PdlOppslagService
 ) : SakOgBehandlingService {
+    @Cacheable
     override fun hentAlleSaker(fnr: String): List<Sak> {
         return try {
             val aktorId = pdlOppslagService.hentAktorId(fnr)
@@ -32,6 +36,7 @@ class SakOgBehandlingServiceImpl(
         }
     }
 
+    @Cacheable
     override fun hentBehandlingskjederGruppertPaaTema(fnr: String): Map<String, List<Behandlingskjede?>> {
         return hentAlleSaker(fnr)
             .associate { sak ->

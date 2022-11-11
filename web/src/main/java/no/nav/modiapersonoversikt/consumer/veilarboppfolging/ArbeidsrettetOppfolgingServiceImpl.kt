@@ -13,8 +13,11 @@ import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.inRange
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import kotlin.reflect.KClass
 
+@CacheConfig(cacheNames = ["oppfolgingsinfoCache"], keyGenerator = "userkeygenerator")
 open class ArbeidsrettetOppfolgingServiceImpl(
     apiUrl: String,
     private val ansattService: AnsattService,
@@ -37,6 +40,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         )
         .build()
 
+    @Cacheable
     override fun hentOppfolgingsinfo(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Info {
         val oppfolgingstatus = hentOppfolgingStatus(fodselsnummer)
         val enhetOgVeileder = when (oppfolgingstatus.underOppfolging) {
@@ -56,6 +60,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         )
     }
 
+    @Cacheable
     override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
         return client.fetchJson(
             url = "$url/underoppfolging?fnr=${fodselsnummer.get()}",
