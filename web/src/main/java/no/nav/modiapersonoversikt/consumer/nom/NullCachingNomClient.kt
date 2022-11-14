@@ -14,22 +14,26 @@ class NullCachingNomClient(
     private val cache: Cache<NavIdent, Optional<VeilederNavn>> = CacheConfig.createCache(12.hours.inWholeSeconds, 10_000L).build()
 ) : NomClient {
 
-    override fun finnNavn(navIdent: NavIdent): VeilederNavn? {
-        return cache.get(navIdent) {
-            Optional.ofNullable(nomClient.finnNavn(navIdent))
-        }?.orElse(null)
+    override fun finnNavn(navIdent: NavIdent): VeilederNavn {
+        val cachedValue = checkNotNull(
+            cache.get(navIdent) {
+                Optional.ofNullable(nomClient.finnNavn(navIdent))
+            }
+        )
+        return cachedValue
+            .orElseThrow { IllegalStateException("Fant ikke navn for NAV-ident: $navIdent") }
     }
 
-    override fun finnNavn(navIdenter: List<NavIdent>): List<VeilederNavn?> {
-        val out = mutableListOf<VeilederNavn?>()
+    override fun finnNavn(navIdenter: List<NavIdent>): List<VeilederNavn> {
+        val out = mutableListOf<VeilederNavn>()
         val uncachedIdenter = mutableListOf<NavIdent>()
 
         navIdenter.forEach { ident ->
             val cachedValue = cache.getIfPresent(ident)
             if (cachedValue == null) {
                 uncachedIdenter.add(ident)
-            } else {
-                out.add(cachedValue.orElse(null))
+            } else if (cachedValue.isPresent) {
+                out.add(cachedValue.get())
             }
         }
 
