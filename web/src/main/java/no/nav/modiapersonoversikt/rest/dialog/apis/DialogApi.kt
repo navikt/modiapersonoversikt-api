@@ -6,48 +6,40 @@ import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import java.time.OffsetDateTime
-import javax.servlet.http.HttpServletRequest
 
 interface DialogApi {
     fun hentMeldinger(
-        request: HttpServletRequest,
         fnr: String,
-        enhet: String?
+        enhet: String
     ): List<TraadDTO>
 
     fun sendMelding(
-        request: HttpServletRequest,
         fnr: String,
         referatRequest: SendReferatRequest
     ): TraadDTO
 
     fun sendSporsmal(
-        request: HttpServletRequest,
         fnr: String,
         sporsmalsRequest: SendSporsmalRequest
     ): TraadDTO
 
     fun sendInfomelding(
-        request: HttpServletRequest,
         fnr: String,
         infomeldingRequest: InfomeldingRequest
     ): TraadDTO
 
     fun startFortsettDialog(
-        request: HttpServletRequest,
         fnr: String,
         ignorerConflict: Boolean?,
         opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO
 
     fun sendFortsettDialog(
-        request: HttpServletRequest,
         fnr: String,
         fortsettDialogRequest: FortsettDialogRequest
     ): TraadDTO
 
     fun slaaSammenTraader(
-        request: HttpServletRequest,
         fnr: String,
         slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?>
@@ -100,27 +92,27 @@ data class OpprettHenvendelseRequest(
 )
 
 data class SendReferatRequest(
-    val enhet: String?,
+    val enhet: String,
     val fritekst: String,
     val temagruppe: String,
     val meldingstype: Meldingstype
 )
 
 data class SendSporsmalRequest(
-    val enhet: String?,
+    val enhet: String,
     val fritekst: String,
     val sak: JournalforingSak,
     val erOppgaveTilknyttetAnsatt: Boolean
 )
 
 data class InfomeldingRequest(
-    val enhet: String?,
+    val enhet: String,
     val fritekst: String,
     val sak: JournalforingSak
 )
 
 data class FortsettDialogRequest(
-    val enhet: String?,
+    val enhet: String,
     val traadId: String,
     val behandlingsId: String,
     val fritekst: String,

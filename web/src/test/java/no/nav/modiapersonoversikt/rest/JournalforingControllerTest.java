@@ -32,7 +32,7 @@ class JournalforingControllerTest {
         JournalforingController journalforingController = new JournalforingController(mock(JournalforingApi.class), TilgangskontrollMock.get());
 
         ResponseEntity<Void> response = AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null, mockHttpRequest())
+                journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null)
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -47,7 +47,7 @@ class JournalforingControllerTest {
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                        journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null, mockHttpRequest())
+                        journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null)
                 )
         );
 
@@ -63,18 +63,11 @@ class JournalforingControllerTest {
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                        journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null, mockHttpRequest())
+                        journalforingController.knyttTilSak("10108000398", "traad-id", new JournalforingSak(), null)
                 )
         );
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
         assertEquals(FEILMELDING_UTEN_ENHET, exception.getReason());
     }
-
-    private MockHttpServletRequest mockHttpRequest() {
-        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
-        mockHttpServletRequest.setCookies(new Cookie(RestUtils.saksbehandlerInnstillingerCookieId(), "1337"));
-        return mockHttpServletRequest;
-    }
-
 }

@@ -12,7 +12,6 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.rest.RestUtils
 import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.saf.SafService
@@ -44,7 +43,7 @@ class SakerController @Autowired constructor(
     val tilgangskontroll: Tilgangskontroll
 ) {
     @GetMapping("/sakstema")
-    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet", required = false) enhet: String?): Map<String, Any?> {
+    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet") enhet: String): Map<String, Any?> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
@@ -53,7 +52,7 @@ class SakerController @Autowired constructor(
 
                 val resultat =
                     ResultatWrapper(
-                        mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(enhet, request)),
+                        mapTilModiaSakstema(sakstemaWrapper.resultat, enhet),
                         collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
                     )
 

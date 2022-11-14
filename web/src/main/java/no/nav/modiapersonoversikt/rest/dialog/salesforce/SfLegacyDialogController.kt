@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
-import no.nav.modiapersonoversikt.rest.RestUtils
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
@@ -17,11 +16,9 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
-import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.NotSupportedException
 
 private val REFERAT_TYPER = listOf(
@@ -35,22 +32,20 @@ class SfLegacyDialogController(
     private val ansattService: AnsattService,
     private val kodeverk: EnhetligKodeverk.Service,
 ) : DialogApi {
-    private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
-    override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
-        val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
+    override fun hentMeldinger(fnr: String, enhet: String): List<TraadDTO> {
         val bruker = EksternBruker.Fnr(fnr)
 
-        val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
+        val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, enhet)
         val dialogMappingContext = lagMappingContext(sfHenvendelser)
 
         return sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it) }
     }
 
-    override fun sendMelding(request: HttpServletRequest, fnr: String, referatRequest: SendReferatRequest): TraadDTO {
+    override fun sendMelding(fnr: String, referatRequest: SendReferatRequest): TraadDTO {
         val henvendelse = sfHenvendelseService.sendSamtalereferat(
             kjedeId = null,
             bruker = EksternBruker.Fnr(fnr),
-            enhet = RestUtils.hentValgtEnhet(referatRequest.enhet, request),
+            enhet = referatRequest.enhet,
             temagruppe = referatRequest.temagruppe,
             kanal = referatRequest.meldingstype.getKanal(),
             fritekst = referatRequest.fritekst
@@ -60,20 +55,18 @@ class SfLegacyDialogController(
     }
 
     override fun sendSporsmal(
-        request: HttpServletRequest,
         fnr: String,
         sporsmalsRequest: SendSporsmalRequest
     ): TraadDTO {
-        val enhet = RestUtils.hentValgtEnhet(sporsmalsRequest.enhet, request)
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
-            enhet = enhet,
+            enhet = sporsmalsRequest.enhet,
             temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode),
             tilknyttetAnsatt = sporsmalsRequest.erOppgaveTilknyttetAnsatt,
             fritekst = sporsmalsRequest.fritekst
         )
         sfHenvendelseService.journalforHenvendelse(
-            enhet = enhet,
+            enhet = sporsmalsRequest.enhet,
             kjedeId = henvendelse.kjedeId,
             saksId = sporsmalsRequest.sak.fagsystemSaksId,
             saksTema = sporsmalsRequest.sak.temaKode,
@@ -84,14 +77,12 @@ class SfLegacyDialogController(
     }
 
     override fun sendInfomelding(
-        request: HttpServletRequest,
         fnr: String,
         infomeldingRequest: InfomeldingRequest
     ): TraadDTO {
-        val enhet = RestUtils.hentValgtEnhet(infomeldingRequest.enhet, request)
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
-            enhet = enhet,
+            enhet = infomeldingRequest.enhet,
             temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
             tilknyttetAnsatt = false,
             fritekst = infomeldingRequest.fritekst
@@ -99,7 +90,7 @@ class SfLegacyDialogController(
 
         sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
         sfHenvendelseService.journalforHenvendelse(
-            enhet = enhet,
+            enhet = infomeldingRequest.enhet,
             kjedeId = henvendelse.kjedeId,
             saksId = infomeldingRequest.sak.fagsystemSaksId,
             saksTema = infomeldingRequest.sak.temaKode,
@@ -110,7 +101,6 @@ class SfLegacyDialogController(
     }
 
     override fun startFortsettDialog(
-        request: HttpServletRequest,
         fnr: String,
         ignorerConflict: Boolean?,
         opprettHenvendelseRequest: OpprettHenvendelseRequest
@@ -126,7 +116,6 @@ class SfLegacyDialogController(
     }
 
     override fun sendFortsettDialog(
-        request: HttpServletRequest,
         fnr: String,
         fortsettDialogRequest: FortsettDialogRequest
     ): TraadDTO {
@@ -134,7 +123,7 @@ class SfLegacyDialogController(
         val oppgaveId = fortsettDialogRequest.oppgaveId
 
         val bruker = EksternBruker.Fnr(fnr)
-        val enhet = RestUtils.hentValgtEnhet(fortsettDialogRequest.enhet, request)
+        val enhet = fortsettDialogRequest.enhet
         var henvendelse = sfHenvendelseService.hentHenvendelse(fortsettDialogRequest.traadId)
 
         val henvendelseTilhorerBruker = sfHenvendelseService.sjekkEierskap(bruker, henvendelse)
@@ -211,7 +200,6 @@ class SfLegacyDialogController(
     }
 
     override fun slaaSammenTraader(
-        request: HttpServletRequest,
         fnr: String,
         slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> {
