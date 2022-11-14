@@ -9,13 +9,17 @@ import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarsel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarselbestilling
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerRequest
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 
-class VarslerServiceImpl(
+@CacheConfig(cacheNames = ["varslingCache"], keyGenerator = "userkeygenerator")
+open class VarslerServiceImpl(
     private val brukervarselV1: BrukervarselV1,
     private val brukernotifikasjonService: Brukernotifikasjon.Service
 ) : VarslerService {
     private val log = LoggerFactory.getLogger("VarslerService")
 
+    @Cacheable
     override fun hentLegacyVarsler(fnr: Fnr): List<VarslerService.Varsel> {
         return hentBrukervarsel(fnr)
             .getOrElse {
@@ -24,6 +28,7 @@ class VarslerServiceImpl(
             }
     }
 
+    @Cacheable
     override fun hentAlleVarsler(fnr: Fnr): VarslerService.Result {
         val (varsel: Result<List<VarslerService.Varsel>>, notifikasjoner: Result<List<Brukernotifikasjon.Event>>) = inParallel(
             { hentBrukervarsel(fnr) },

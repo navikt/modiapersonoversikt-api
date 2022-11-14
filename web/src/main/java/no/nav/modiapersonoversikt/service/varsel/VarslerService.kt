@@ -5,6 +5,7 @@ import java.time.ZonedDateTime
 
 interface VarslerService {
     fun hentLegacyVarsler(fnr: Fnr): List<Varsel>
+
     fun hentAlleVarsler(fnr: Fnr): Result
 
     interface UnifiedVarsel
