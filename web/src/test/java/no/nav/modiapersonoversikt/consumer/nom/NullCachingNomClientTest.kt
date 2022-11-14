@@ -7,6 +7,7 @@ import no.nav.common.client.nom.NomClient
 import no.nav.common.client.nom.VeilederNavn
 import no.nav.common.types.identer.NavIdent
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 internal class NullCachingNomClientTest {
@@ -17,16 +18,33 @@ internal class NullCachingNomClientTest {
     private val navIdent3 = NavIdent("3")
     private val veiledere = listOf(
         VeilederNavn().setNavIdent(navIdent1),
-        null,
         VeilederNavn().setNavIdent(navIdent3),
     )
 
     @Test
-    internal fun `should cache null value`() {
+    internal fun `should not cache errors from underlying service`() {
+        every { baseClient.finnNavn(any<NavIdent>()) } throws IllegalStateException("Something went wrong")
+
+        repeat(2) {
+            assertThatThrownBy { client.finnNavn(navIdent1) }
+                .isExactlyInstanceOf(IllegalStateException::class.java)
+                .hasMessage("Something went wrong")
+        }
+
+        verify(exactly = 2) { baseClient.finnNavn(any<NavIdent>()) }
+    }
+
+    @Test
+    internal fun `should cache null value, but also throw error if no data is found`() {
         every { baseClient.finnNavn(any<NavIdent>()) } returns null
 
-        assertThat(client.finnNavn(navIdent1)).isNull()
-        assertThat(client.finnNavn(navIdent1)).isNull()
+        assertThatThrownBy { client.finnNavn(navIdent1) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("Fant ikke navn for NAV-ident: ${navIdent1.get()}")
+
+        assertThatThrownBy { client.finnNavn(navIdent1) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("Fant ikke navn for NAV-ident: ${navIdent1.get()}")
 
         verify(exactly = 1) { baseClient.finnNavn(any<NavIdent>()) }
     }
@@ -39,8 +57,12 @@ internal class NullCachingNomClientTest {
         assertThat(client.finnNavn(listOf(navIdent1, navIdent2, navIdent3))).isEqualTo(veiledere)
 
         assertThat(client.finnNavn(navIdent1)).isEqualTo(veiledere.first())
-        assertThat(client.finnNavn(navIdent2)).isNull()
         assertThat(client.finnNavn(navIdent3)).isEqualTo(veiledere.last())
+
+        assertThatThrownBy { client.finnNavn(navIdent2) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("Fant ikke navn for NAV-ident: ${navIdent2.get()}")
+        assertThat(client.finnNavn(listOf(navIdent2))).isEmpty()
 
         verify(exactly = 1) { baseClient.finnNavn(any<List<NavIdent>>()) }
         verify(exactly = 0) { baseClient.finnNavn(any<NavIdent>()) }
@@ -56,7 +78,9 @@ internal class NullCachingNomClientTest {
         }
 
         client.finnNavn(navIdent1)
-        client.finnNavn(navIdent2)
+        assertThatThrownBy { client.finnNavn(navIdent2) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("Fant ikke navn for NAV-ident: ${navIdent2.get()}")
         assertThat(client.finnNavn(listOf(navIdent1, navIdent2, navIdent3))).isEqualTo(veiledere)
 
         verify {
