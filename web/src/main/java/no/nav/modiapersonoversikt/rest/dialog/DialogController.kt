@@ -10,7 +10,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/rest/dialog/{fnr}")
@@ -20,59 +19,54 @@ class DialogController @Autowired constructor(
 ) {
     @GetMapping("/meldinger")
     fun hentMeldinger(
-        request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
-        @RequestParam(value = "enhet", required = false) enhet: String?
+        @RequestParam(value = "enhet") enhet: String
     ): List<TraadDTO> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.hentMeldinger(request, fnr, enhet)
+                dialogapi.hentMeldinger(fnr, enhet)
             }
     }
 
     @PostMapping("/sendreferat")
     fun sendMelding(
-        request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody referatRequest: SendReferatRequest
     ): TraadDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.sendMelding(request, fnr, referatRequest)
+                dialogapi.sendMelding(fnr, referatRequest)
             }
     }
 
     @PostMapping("/sendsporsmal")
     fun sendSporsmal(
-        request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody sporsmalsRequest: SendSporsmalRequest
     ): TraadDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.sendSporsmal(request, fnr, sporsmalsRequest)
+                dialogapi.sendSporsmal(fnr, sporsmalsRequest)
             }
     }
 
     @PostMapping("/sendinfomelding")
     fun sendInfomelding(
-        request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody infomeldingRequest: InfomeldingRequest
     ): TraadDTO {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.sendInfomelding(request, fnr, infomeldingRequest)
+                dialogapi.sendInfomelding(fnr, infomeldingRequest)
             }
     }
 
     @PostMapping("/fortsett/opprett")
     fun startFortsettDialog(
-        request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestHeader(value = "Ignore-Conflict", required = false) ignorerConflict: Boolean?,
         @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequest
@@ -84,13 +78,12 @@ class DialogController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
-                dialogapi.startFortsettDialog(request, fnr, ignorerConflict, opprettHenvendelseRequest)
+                dialogapi.startFortsettDialog(fnr, ignorerConflict, opprettHenvendelseRequest)
             }
     }
 
     @PostMapping("/fortsett/ferdigstill")
     fun sendFortsettDialog(
-        request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody fortsettDialogRequest: FortsettDialogRequest
     ): TraadDTO {
@@ -102,13 +95,12 @@ class DialogController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
-                dialogapi.sendFortsettDialog(request, fnr, fortsettDialogRequest)
+                dialogapi.sendFortsettDialog(fnr, fortsettDialogRequest)
             }
     }
 
     @PostMapping("slaasammen")
     fun slaaSammenTraader(
-        request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
         @RequestBody slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> {
@@ -121,7 +113,7 @@ class DialogController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, *auditIdentifier)) {
-                dialogapi.slaaSammenTraader(request, fnr, slaaSammenRequest)
+                dialogapi.slaaSammenTraader(fnr, slaaSammenRequest)
             }
     }
 }

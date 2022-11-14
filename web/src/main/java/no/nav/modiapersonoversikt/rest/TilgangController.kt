@@ -40,7 +40,7 @@ class TilgangController @Autowired constructor(private val tilgangskontroll: Til
             .makeResponse()
             .logAudit(audit, fnr)
             .also {
-                enhetTrace.log(runCatching { RestUtils.hentValgtEnhet(enhet, request) }.getOrElse { "IKKE SATT" })
+                enhetTrace.log(enhet ?: "IKKE SATT")
             }
     }
 
