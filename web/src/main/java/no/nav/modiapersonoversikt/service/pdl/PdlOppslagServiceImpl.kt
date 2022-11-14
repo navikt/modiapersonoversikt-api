@@ -16,9 +16,12 @@ import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import java.net.URL
 
 @KtorExperimentalAPI
+@CacheConfig(cacheNames = ["pdlCache"], keyGenerator = "userkeygenerator")
 open class PdlOppslagServiceImpl constructor(
     private val stsService: SystemUserTokenProvider,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
@@ -31,12 +34,14 @@ open class PdlOppslagServiceImpl constructor(
         oboTokenClient: BoundedOnBehalfOfTokenClient
     ) : this(stsService, machineToMachineTokenClient, oboTokenClient, createClient())
 
+    @Cacheable(unless = "#result == null")
     override fun hentPersondata(fnr: String): HentPersondata.Result? = runBlocking {
         HentPersondata(pdlClient)
             .execute(HentPersondata.Variables(fnr), userTokenAuthorizationHeaders)
             .data
     }
 
+    @Cacheable(unless = "#result == null")
     override fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult> = runBlocking {
         if (fnrs.isEmpty()) {
             emptyList()
@@ -49,6 +54,7 @@ open class PdlOppslagServiceImpl constructor(
         }
     }
 
+    @Cacheable(unless = "#result == null")
     override fun hentIdenter(fnr: String): HentIdenter.Identliste? = runBlocking {
         HentIdenter(pdlClient)
             .execute(HentIdenter.Variables(fnr), userTokenAuthorizationHeaders)
@@ -56,6 +62,7 @@ open class PdlOppslagServiceImpl constructor(
             ?.hentIdenter
     }
 
+    @Cacheable(unless = "#result == null")
     override fun hentGeografiskTilknyttning(fnr: String): String? = runBlocking {
         HentGeografiskTilknyttning(pdlClient)
             .execute(HentGeografiskTilknyttning.Variables(fnr), userTokenAuthorizationHeaders)
@@ -66,9 +73,13 @@ open class PdlOppslagServiceImpl constructor(
             }
     }
 
+    @Cacheable(unless = "#result == null")
     override fun hentAktorId(fnr: String): String? = hentAktivIdent(fnr, IdentGruppe.AKTORID)
+
+    @Cacheable(unless = "#result == null")
     override fun hentFnr(aktorid: String): String? = hentAktivIdent(aktorid, IdentGruppe.FOLKEREGISTERIDENT)
 
+    @Cacheable(unless = "#result == null")
     override fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit> = runBlocking {
         val paging = SokPerson.Paging(
             pageNumber = 1,
@@ -92,6 +103,7 @@ open class PdlOppslagServiceImpl constructor(
         }
     }
 
+    @Cacheable(unless = "#result == null")
     override fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse> = runBlocking {
         HentAdressebeskyttelse(pdlClient)
             .execute(HentAdressebeskyttelse.Variables(fnr), systemTokenAuthorizationHeaders)

@@ -9,6 +9,8 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.Periode
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingsoppslagDTO
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingUtils.leggTilEkstraDagerPaaStartdato
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import java.time.LocalDate
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.AktoerDTO as RsAktoer
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.PeriodeDTO as RsPeriode
@@ -17,8 +19,9 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.TrekkDT
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingDTO as RsUtbetaling
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelseDTO as RsYtelse
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelsekomponentDTO as RsYtelseKomponent
-
+@CacheConfig(cacheNames = ["utbetalingCache"], keyGenerator = "userkeygenerator")
 open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api) : UtbetalingService {
+    @Cacheable
     override fun hentUtbetalinger(
         fnr: Fnr,
         startDato: LocalDate,
