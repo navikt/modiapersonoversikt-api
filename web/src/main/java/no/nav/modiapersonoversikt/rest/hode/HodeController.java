@@ -8,6 +8,8 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,7 @@ import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Sa
 @RestController
 @RequestMapping("/rest/hode")
 public class HodeController {
+    private Logger log = LoggerFactory.getLogger(HodeController.class);
     @Autowired
     private AnsattService ansattService;
 
@@ -68,7 +71,7 @@ public class HodeController {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(UPDATE, ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
-                    CookieUtil.setSaksbehandlersValgteEnhet(response, enhetId);
+                    log.warn("[ENHETCOOKIE] Legacy endepunkt kalt, har ingen effekt");
                     return enhetId;
                 });
     }
