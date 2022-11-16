@@ -25,10 +25,6 @@ class AuditResources {
 
             @JvmField
             val Enheter = AuditResource("saksbehandler.enheter")
-
-            @JvmField
-            val ValgtEnhet = AuditResource("saksbehandler.valgtenhet")
-            val Roller = AuditResource("saksbehandler.roller")
         }
     }
 
