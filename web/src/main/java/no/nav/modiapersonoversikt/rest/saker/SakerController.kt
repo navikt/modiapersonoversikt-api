@@ -13,7 +13,6 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.rest.RestUtils
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
@@ -51,17 +50,16 @@ class SakerController @Autowired constructor(
     )
 
     @GetMapping("/sakstema")
-    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet", required = false) enhet: String?): Map<String, Any?> {
+    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet") enhet: String): Map<String, Any?> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
                 val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
                 val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
 
-                val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
                 val resultat =
                     ResultatWrapper(
-                        mapTilModiaSakstema(sakstemaWrapper.resultat, valgtEnhet),
+                        mapTilModiaSakstema(sakstemaWrapper.resultat, enhet),
                         collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
                     )
 
@@ -70,7 +68,7 @@ class SakerController @Autowired constructor(
                     experiment = {
                         SakerApiMapper.createMappingContext(
                             tilgangskontroll,
-                            EnhetId(valgtEnhet),
+                            EnhetId(enhet),
                             sakstemaWrapper.resultat,
                             collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
                         ).mapTilResultat()

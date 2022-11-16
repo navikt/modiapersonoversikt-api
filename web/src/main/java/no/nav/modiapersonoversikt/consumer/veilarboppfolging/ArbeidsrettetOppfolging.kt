@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.commondomain.Veileder
 object ArbeidsrettetOppfolging {
     interface Service {
         fun hentOppfolgingsinfo(fodselsnummer: Fnr): Info
+
         fun hentOppfolgingStatus(fodselsnummer: Fnr): Status
         fun ping()
     }

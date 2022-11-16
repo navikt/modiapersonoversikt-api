@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static no.nav.modiapersonoversikt.rest.RestUtils.hentValgtEnhet;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.UPDATE;
 
@@ -45,14 +44,18 @@ public class JournalforingController {
     }
 
     @PostMapping("/{traadId}")
-    public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody JournalforingSak sak, @RequestParam(value = "enhet", required = false) String enhet, HttpServletRequest request) {
+    public ResponseEntity<Void> knyttTilSak(
+            @PathVariable("fnr") String fnr,
+            @PathVariable("traadId") String traadId,
+            @RequestBody JournalforingSak sak,
+            @RequestParam(value = "enhet") String enhet
+    ) {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr.of(fnr)))
                 .check(Policies.henvendelseTilhorerBruker(Fnr.of(fnr), traadId))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Journalfor, new Pair<>(AuditIdentifier.FNR, fnr), new Pair<>(AuditIdentifier.TRAAD_ID, traadId), new Pair<>(AuditIdentifier.SAK_ID, sak.saksId)), () -> {
-                    String valgtEnhet = hentValgtEnhet(enhet, request);
                     try {
-                        journalforingApi.knyttTilSak(fnr, traadId, sak, valgtEnhet);
+                        journalforingApi.knyttTilSak(fnr, traadId, sak, enhet);
                     } catch (JournalforingApi.EnhetIkkeSatt exception) {
                         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FEILMELDING_UTEN_ENHET, exception);
                     } catch (Exception exception) {

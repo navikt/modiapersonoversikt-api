@@ -12,6 +12,8 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskon
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.CollectionUtils;
 
 import static java.util.Collections.singletonList;
@@ -20,6 +22,7 @@ import static java.util.Optional.ofNullable;
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten for oppfolgingskontraker.
  */
+@CacheConfig(cacheNames=("oppfolgingCache"), keyGenerator = "userkeygenerator")
 public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktService {
     private static final Audit.AuditDescriptor<WSHentOppfoelgingskontraktListeRequest> auditLogger = Audit.describe(
             Audit.Action.READ,
@@ -31,6 +34,7 @@ public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktServic
     private OppfolgingskontraktMapper mapper = null;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Cacheable
     @Override
     public OppfolgingskontraktResponse hentOppfolgingskontrakter(OppfolgingskontraktRequest request) {
         WSHentOppfoelgingskontraktListeRequest rawRequest = mapper.map(request);
