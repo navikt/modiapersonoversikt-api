@@ -10,11 +10,11 @@ internal class ArchSightCEFLoggerTest {
     @Test
     fun `standard CEF-format`() {
         val time = Instant.now().toEpochMilli()
-        val expected = String.format("$cefHeader act=UPDATE suid=Z999999 sproc=saksbehandler.valgtenhet", time.toString())
+        val expected = String.format("$cefHeader act=UPDATE suid=Z999999 sproc=saksbehandler.enheter", time.toString())
         val message = cefLogger.create(
             CEFEvent(
                 action = Audit.Action.UPDATE,
-                resource = AuditResources.Saksbehandler.ValgtEnhet,
+                resource = AuditResources.Saksbehandler.Enheter,
                 subject = "Z999999",
                 time = time,
                 identifiers = arrayOf()
@@ -27,11 +27,11 @@ internal class ArchSightCEFLoggerTest {
     @Test
     fun `CEF-format med ekstra ider`() {
         val time = Instant.now().toEpochMilli()
-        val expected = String.format("$cefHeader act=UPDATE suid=Z999999 sproc=saksbehandler.valgtenhet duid=12345678910 flexString1=DOK1231 flexString1Label=DOKUMENT_REFERERANSE flexString2=JO9876 flexString2Label=JOURNALPOST_ID cs3=BI4567 cs3Label=BEHANDLING_ID", time.toString())
+        val expected = String.format("$cefHeader act=UPDATE suid=Z999999 sproc=saksbehandler.enheter duid=12345678910 flexString1=DOK1231 flexString1Label=DOKUMENT_REFERERANSE flexString2=JO9876 flexString2Label=JOURNALPOST_ID cs3=BI4567 cs3Label=BEHANDLING_ID", time.toString())
         val message = cefLogger.create(
             CEFEvent(
                 action = Audit.Action.UPDATE,
-                resource = AuditResources.Saksbehandler.ValgtEnhet,
+                resource = AuditResources.Saksbehandler.Enheter,
                 subject = "Z999999",
                 time = time,
                 identifiers = arrayOf(
