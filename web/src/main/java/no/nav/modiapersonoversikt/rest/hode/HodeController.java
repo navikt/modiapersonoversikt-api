@@ -1,30 +1,26 @@
 package no.nav.modiapersonoversikt.rest.hode;
 
-import kotlin.Pair;
-import no.nav.modiapersonoversikt.commondomain.Veileder;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
-import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ;
-import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.UPDATE;
-import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.*;
+import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.Enheter;
+import static no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler.NavnOgEnheter;
 
 @RestController
 @RequestMapping("/rest/hode")
+@SuppressWarnings("unchecked")
 public class HodeController {
-    private Logger log = LoggerFactory.getLogger(HodeController.class);
     @Autowired
     private AnsattService ansattService;
 
@@ -45,9 +41,9 @@ public class HodeController {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, NavnOgEnheter), () -> {
-                    String ident = AuthContextUtils.requireIdent();
-                    Veileder veileder = hentSaksbehandlerNavn();
-                    return new Me(ident, veileder.getNavn(), veileder.getFornavn(), veileder.getEtternavn());
+                    final var navIdent = AuthContextUtils.requireNavIdent();
+                    final var veileder = ansattService.hentVeileder(navIdent);
+                    return new Me(navIdent.get(), veileder.getNavn(), veileder.getFornavn(), veileder.getEtternavn());
                 });
     }
 
@@ -56,29 +52,12 @@ public class HodeController {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enheter), () -> {
-                    String ident = AuthContextUtils.requireIdent();
-                    List<Enhet> enheter = ansattService.hentEnhetsliste()
+                    final var navIdent = AuthContextUtils.requireNavIdent();
+                    final var enheter = ansattService.hentEnhetsliste(navIdent)
                             .stream()
-                            .map((ansattEnhet) -> new Enhet(ansattEnhet.enhetId, ansattEnhet.enhetNavn))
+                            .map((enhet) -> new Enhet(enhet.enhetId, enhet.enhetNavn))
                             .collect(Collectors.toList());
-
-                    return new Enheter(ident, enheter);
+                    return new Enheter(navIdent.get(), enheter);
                 });
-    }
-
-    @PostMapping("/velgenhet")
-    public String settValgtEnhet(HttpServletResponse response, @RequestBody String enhetId) {
-        return tilgangskontroll
-                .check(Policies.tilgangTilModia)
-                .get(Audit.describe(UPDATE, ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
-                    log.warn("[ENHETCOOKIE] Legacy endepunkt kalt, har ingen effekt");
-                    return enhetId;
-                });
-    }
-
-    private Veileder hentSaksbehandlerNavn() {
-        return AuthContextUtils.getNavIdent()
-                .map(ansattService::hentVeileder)
-                .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
     }
 }
