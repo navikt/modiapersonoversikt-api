@@ -33,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 import java.util.*
 import javax.servlet.http.HttpServletRequest
+import kotlin.collections.HashMap
 
 @RestController
 @RequestMapping("/rest/saker/{fnr}")
@@ -45,12 +46,17 @@ class SakerController @Autowired constructor(
     private val experiment = Scientist.createExperiment<Map<String, Any?>>(
         Scientist.Config(
             name = "sakerDTO",
-            experimentRate = Scientist.FixedValueRate(0.1)
+            experimentRate = Scientist.FixedValueRate(0.1),
+            logAndCompareValues = false
         )
     )
 
     @GetMapping("/sakstema")
-    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet") enhet: String): Map<String, Any?> {
+    fun hentSakstema(
+        request: HttpServletRequest,
+        @PathVariable("fnr") fnr: String,
+        @RequestParam(value = "enhet") enhet: String
+    ): Map<String, Any?> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
@@ -72,6 +78,20 @@ class SakerController @Autowired constructor(
                             sakstemaWrapper.resultat,
                             collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
                         ).mapTilResultat()
+                    },
+                    dataFields = { markers, control, experimentTry ->
+                        if (experimentTry.isFailure) {
+                            markers.fieldAndTag("ok", false)
+                            markers.fieldAndTag("control", control)
+                        } else {
+                            val (ok, controlJson, experimentJson) = Scientist.compareAndSerialize(
+                                replaceUUID(control),
+                                replaceUUID(experimentTry.getOrThrow())
+                            )
+                            markers.fieldAndTag("ok", ok)
+                            markers.field("control", controlJson)
+                            markers.field("experiment", experimentJson)
+                        }
                     }
                 )
             }
@@ -86,12 +106,24 @@ class SakerController @Autowired constructor(
     ): ResponseEntity<Any?> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, AuditResources.Person.Dokumenter, AuditIdentifier.FNR to fnr, AuditIdentifier.JOURNALPOST_ID to journalpostId, AuditIdentifier.DOKUMENT_REFERERANSE to dokumentreferanse)) {
+            .get(
+                Audit.describe(
+                    READ,
+                    AuditResources.Person.Dokumenter,
+                    AuditIdentifier.FNR to fnr,
+                    AuditIdentifier.JOURNALPOST_ID to journalpostId,
+                    AuditIdentifier.DOKUMENT_REFERERANSE to dokumentreferanse
+                )
+            ) {
                 val journalpostMetadata = hentDokumentMetadata(journalpostId, fnr)
                 val tilgangskontrollResult = harTilgangTilDokument(fnr, journalpostMetadata)
 
                 // TODO erstatt tilgangsstyring
-                if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
+                if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(
+                        journalpostMetadata,
+                        dokumentreferanse
+                    )
+                ) {
                     throw ResponseStatusException(HttpStatus.FORBIDDEN)
                 } else {
                     val variantformat = finnVariantformat(journalpostMetadata, dokumentreferanse)
@@ -234,7 +266,10 @@ class SakerController @Autowired constructor(
         return sakstemaList.map { sakstema -> createModiaSakstema(sakstema, valgtEnhet) }
     }
 
-    private fun collectFeilendeSystemer(sakerWrapper: ResultatWrapper<List<Sak>>, sakstemaWrapper: ResultatWrapper<List<Sakstema>>): Set<Baksystem> {
+    private fun collectFeilendeSystemer(
+        sakerWrapper: ResultatWrapper<List<Sak>>,
+        sakstemaWrapper: ResultatWrapper<List<Sakstema>>
+    ): Set<Baksystem> {
         return sakerWrapper.feilendeSystemer.union(sakstemaWrapper.feilendeSystemer)
     }
 
@@ -266,7 +301,10 @@ class SakerController @Autowired constructor(
             ?: throw RuntimeException("Fant ikke metadata om journalpostId $journalpostId. Dette bør ikke skje.")
     }
 
-    private fun finnesDokumentReferansenIMetadata(dokumentMetadata: DokumentMetadata, dokumentreferanse: String): Boolean {
+    private fun finnesDokumentReferansenIMetadata(
+        dokumentMetadata: DokumentMetadata,
+        dokumentreferanse: String
+    ): Boolean {
         return dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
             dokumentMetadata.vedlegg.any { dokument -> dokument.dokumentreferanse == dokumentreferanse }
     }
@@ -306,4 +344,40 @@ class SakerController @Autowired constructor(
         val feilkoder: List<Int>,
         val harTilgang: Boolean
     )
+
+    private fun replaceUUID(data: Any?): Any? {
+        return when (data) {
+            is SakerApi.Resultat -> replaceUUIDForResultat(data)
+            is Map<*, *> -> replaceUUIDForMap(data)
+            else -> error("Could not replace UUID in saker response")
+        }
+    }
+
+    private fun replaceUUIDForMap(data: Map<*, *>): Map<*, *> {
+        val resultat = ArrayList(data["resultat"] as List<MutableMap<String, Any?>>)
+            .map { sak ->
+                HashMap(sak).also {
+                    val dokumenter = ArrayList(sak["dokumentMetadata"] as List<MutableMap<String, Any?>>)
+                        .map { dokument ->
+                            HashMap(dokument).also {
+                                it["id"] = "UUID"
+                            }
+                        }
+                    it["dokumentMetadata"] = dokumenter
+                }
+            }
+        return mapOf("resultat" to resultat)
+    }
+
+    private fun replaceUUIDForResultat(data: SakerApi.Resultat): SakerApi.Resultat {
+        return data.copy(
+            resultat = data.resultat.map { sak ->
+                sak.copy(
+                    dokumentMetadata = sak.dokumentMetadata.map { dokument ->
+                        dokument.copy(id = "UUID")
+                    }
+                )
+            }
+        )
+    }
 }
