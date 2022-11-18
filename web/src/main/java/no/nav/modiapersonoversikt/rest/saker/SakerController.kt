@@ -10,9 +10,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
@@ -42,6 +42,13 @@ class SakerController @Autowired constructor(
     private val safService: SafService,
     val tilgangskontroll: Tilgangskontroll
 ) {
+    private val experiment = Scientist.createExperiment<Map<String, Any?>>(
+        Scientist.Config(
+            name = "sakerDTO",
+            experimentRate = Scientist.FixedValueRate(0.1)
+        )
+    )
+
     @GetMapping("/sakstema")
     fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet") enhet: String): Map<String, Any?> {
         return tilgangskontroll
@@ -56,7 +63,17 @@ class SakerController @Autowired constructor(
                         collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
                     )
 
-                byggSakstemaResultat(resultat)
+                experiment.run(
+                    control = { byggSakstemaResultat(resultat) },
+                    experiment = {
+                        SakerApiMapper.createMappingContext(
+                            tilgangskontroll,
+                            EnhetId(enhet),
+                            sakstemaWrapper.resultat,
+                            collectFeilendeSystemer(sakerWrapper, sakstemaWrapper)
+                        ).mapTilResultat()
+                    }
+                )
             }
     }
 
@@ -125,7 +142,7 @@ class SakerController @Autowired constructor(
                     "harTilgang" to it.harTilgang
                 )
             }
-        ).also(Typeanalyzers.SAKER.analyzer::capture)
+        )
     }
 
     private fun hentBehandlingskjeder(behandlingskjeder: List<Behandlingskjede>): List<Map<String, Any?>> {
