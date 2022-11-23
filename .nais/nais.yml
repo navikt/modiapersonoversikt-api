@@ -205,6 +205,6 @@ spec:
     - name: DITTNAV_EVENTER_MODIA_URL
       value: "https://app.adeo.no/dittnav-eventer-modia"
     - name: TMS_EVENT_API_URL
-      value: "https://tms-event-api.ekstern.nav.no/tms-event-api"
+      value: "https://person.nav.no/tms-event-api"
     - name: TMS_EVENT_API_SCOPE
       value: "prod-gcp:min-side:tms-event-api"
