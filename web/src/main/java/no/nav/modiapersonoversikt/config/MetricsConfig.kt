@@ -6,7 +6,6 @@ import no.nav.common.rest.client.RestClient
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.MaskingUtils
-import no.nav.modiapersonoversikt.utils.UnleashProxySwitcher
 import okhttp3.Request
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
@@ -21,13 +20,10 @@ open class MetricsConfig {
     lateinit var unleash: UnleashService
 
     @PostConstruct
-    fun checkIfMetricsListenerShouldBeEnabled() {
-        return UnleashProxySwitcher.createSwitcher(
-            featureToggle = Feature.USE_REST_CLIENT_METRICS,
-            unleashService = unleash,
-            ifEnabled = initRestClientWithMetricsListener(),
-            ifDisabled = Unit
-        )
+    fun setup() {
+        if (unleash.isEnabled(Feature.USE_REST_CLIENT_METRICS)) {
+            initRestClientWithMetricsListener()
+        }
     }
 
     private fun initRestClientWithMetricsListener() {
