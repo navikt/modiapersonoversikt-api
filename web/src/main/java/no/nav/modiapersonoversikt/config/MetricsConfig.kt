@@ -3,8 +3,7 @@ package no.nav.modiapersonoversikt.config
 import io.micrometer.core.instrument.binder.okhttp3.OkHttpMetricsEventListener
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.common.rest.client.RestClient
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.utils.MaskingUtils
 import okhttp3.Request
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,12 +15,9 @@ open class MetricsConfig {
     @Autowired
     lateinit var prometheusMeterRegistry: PrometheusMeterRegistry
 
-    @Autowired
-    lateinit var unleash: UnleashService
-
     @PostConstruct
     fun setup() {
-        if (unleash.isEnabled(Feature.USE_REST_CLIENT_METRICS)) {
+        if (EnvironmentUtils.isDevelopment().orElse(false)) {
             initRestClientWithMetricsListener()
         }
     }
