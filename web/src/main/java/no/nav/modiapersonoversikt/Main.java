@@ -5,6 +5,7 @@ import no.nav.common.utils.EnvironmentUtils;
 import no.nav.common.utils.NaisUtils;
 
 import no.nav.common.utils.SslUtils;
+import no.nav.modiapersonoversikt.config.MetricsConfig;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAP;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +26,7 @@ public class Main {
         SslUtils.setupTruststore();
         // Overstyrer appnavn slik at vi er sikre på at vi later som vi er modiabrukerdialog. ;)
         EnvironmentUtils.setProperty("NAIS_APP_NAME", "modiabrukerdialog", PUBLIC);
-
+        MetricsConfig.setup();
         SpringApplication.run(Main.class, args);
     }
 
