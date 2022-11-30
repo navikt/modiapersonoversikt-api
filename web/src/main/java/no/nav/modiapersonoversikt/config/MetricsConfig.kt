@@ -6,7 +6,7 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.prometheus.client.CollectorRegistry
 import no.nav.common.rest.client.RestClient
-import no.nav.modiapersonoversikt.utils.MaskingUtils
+import no.nav.modiapersonoversikt.utils.UrlMaskingUtils
 import okhttp3.Request
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -32,7 +32,7 @@ open class MetricsConfig() {
         }
 
         private fun buildUriMap(req: Request): String {
-            return MaskingUtils.maskSensitiveInfo(req.url().encodedPath())
+            return UrlMaskingUtils.maskSensitiveInfo(req.url().encodedPath())
         }
     }
 
