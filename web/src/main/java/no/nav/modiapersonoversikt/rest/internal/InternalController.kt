@@ -82,8 +82,6 @@ class InternalController @Autowired constructor(
 
     private val systemTokenAuthHeader: HeadersBuilder = {
         val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken(PdlOppslagServiceConfig.downstreamApi)
-
-        header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + systemuserToken)
         header(RestConstants.AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + systemuserToken)
         header(RestConstants.TEMA_HEADER, RestConstants.ALLE_TEMA_HEADERVERDI)
     }

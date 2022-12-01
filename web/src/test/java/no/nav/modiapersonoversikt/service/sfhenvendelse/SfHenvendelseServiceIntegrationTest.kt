@@ -3,10 +3,12 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
+import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.Utils
 import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
@@ -37,8 +39,11 @@ internal class SfHenvendelseServiceIntegrationTest {
             json(meldinger)
         }
         Utils.withProperty("SF_HENVENDELSE_URL", "http://localhost:${wiremock.port}") {
+            val oboTokenProvider = mockk<BoundedOnBehalfOfTokenClient>()
+            every { oboTokenProvider.exchangeOnBehalfOfToken(testSubject.idToken.serialize()) } returns "OBO-TOKEN"
+
             AuthContextUtils.withContext(testSubject) {
-                val api = SfHenvendelseApiFactory.createHenvendelseInfoApi(mockk())
+                val api = SfHenvendelseApiFactory.createHenvendelseInfoApi(oboTokenProvider)
                 val result = api.henvendelseinfoHenvendelselisteGet("aktorid", "coorId")
                 assertThat(result).hasSize(1)
             }

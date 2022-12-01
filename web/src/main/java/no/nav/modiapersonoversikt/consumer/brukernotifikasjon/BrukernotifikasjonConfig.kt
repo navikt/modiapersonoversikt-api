@@ -20,7 +20,7 @@ open class BrukernotifikasjonConfig {
             BrukernotifikasjonClient(
                 baseUrl = tmsEventApiUrl,
                 authInterceptor = HeadersInterceptor {
-                    val azureAdToken = AuthContextUtils.requireAzureAdUserToken()
+                    val azureAdToken = AuthContextUtils.requireToken()
                     val oboToken = oboTokenProvider.exchangeOnBehalfOfToken(tmsEventApiApi, azureAdToken)
                     mapOf("Authorization" to "Bearer $oboToken")
                 }
