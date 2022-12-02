@@ -512,6 +512,6 @@ object SfHenvendelseApiFactory {
     fun createHenvendelseOpprettApi(oboClient: BoundedOnBehalfOfTokenClient) = NyHenvendelseApi(url(), createClient(oboClient.asTokenProvider()))
 
     fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String = {
-        AuthContextUtils.requireOboTokenIfPresent(this)
+        AuthContextUtils.requireBoundedClientOboToken(this)
     }
 }

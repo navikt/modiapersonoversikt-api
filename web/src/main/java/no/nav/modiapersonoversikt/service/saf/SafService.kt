@@ -136,7 +136,7 @@ class SafServiceImpl(
     }
 
     private fun httpHeaders(oboTokenProvider: BoundedOnBehalfOfTokenClient): Map<String, String> {
-        val token = AuthContextUtils.requireOboTokenIfPresent(oboTokenProvider)
+        val token = AuthContextUtils.requireBoundedClientOboToken(oboTokenProvider)
         val callId = getCallId()
         return mapOf(
             "Authorization" to "Bearer $token",

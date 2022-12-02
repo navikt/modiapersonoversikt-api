@@ -35,7 +35,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         )
         .addInterceptor(
             AuthorizationInterceptor {
-                AuthContextUtils.requireOboTokenIfPresent(oboTokenProvider)
+                AuthContextUtils.requireBoundedClientOboToken(oboTokenProvider)
             }
         )
         .build()

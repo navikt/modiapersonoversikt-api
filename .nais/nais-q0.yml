@@ -72,12 +72,6 @@ spec:
       value: "dev-fss"
     - name: GCP_CLUSTER
       value: "dev-gcp"
-    - name: MODIA_CLIENT_ID
-      value: "modialogin-q0"
-    - name: MODIA_REFRESH_URL
-      value: "https://app-q0.adeo.no/modialogin/api/refresh"
-    - name: ISSO_DISCOVERY_URL
-      value: "https://isso-q.adeo.no/isso/oauth2/.well-known/openid-configuration"
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL

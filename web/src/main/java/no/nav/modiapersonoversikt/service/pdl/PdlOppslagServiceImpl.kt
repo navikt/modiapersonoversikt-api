@@ -124,16 +124,8 @@ open class PdlOppslagServiceImpl constructor(
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
-        when (val azureToken = AuthContextUtils.azureAdUserToken()) {
-            null -> {
-                header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + stsService.systemUserToken)
-                header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + AuthContextUtils.requireToken())
-            }
-            else -> {
-                header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + oboTokenClient.exchangeOnBehalfOfToken(azureToken))
-            }
-        }
-
+        val azureToken = AuthContextUtils.requireToken()
+        header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + oboTokenClient.exchangeOnBehalfOfToken(azureToken))
         header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
     }
 
