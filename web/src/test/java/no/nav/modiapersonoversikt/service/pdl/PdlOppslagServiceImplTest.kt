@@ -75,7 +75,6 @@ internal class PdlOppslagServiceImplTest {
 
     private fun verifyUserTokenHeaders(request: HttpRequestData) {
         assertNotNull(request.headers[RestConstants.NAV_CALL_ID_HEADER], "NAV_CALL_ID_HEADER missing")
-        assertEquals("Bearer $systemuserToken", request.headers[RestConstants.NAV_CONSUMER_TOKEN_HEADER])
         assertEquals("Bearer ${userToken.serialize()}", request.headers[RestConstants.AUTHORIZATION])
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }

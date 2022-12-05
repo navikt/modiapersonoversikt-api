@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfol
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolgingServiceImpl
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
@@ -79,10 +80,13 @@ class ArbeidsrettetOppfolgingImplTest {
             "ident"
         )
 
+        val oboTokenProvider = mockk<BoundedOnBehalfOfTokenClient>()
+        every { oboTokenProvider.exchangeOnBehalfOfToken(testSubject.idToken.serialize()) } returns "OBO-TOKEN"
+
         val apiClient = ArbeidsrettetOppfolgingServiceImpl(
             apiUrl = "http://localhost:${wiremock.port}",
             ansattService = ansattService,
-            oboTokenProvider = mockk()
+            oboTokenProvider = oboTokenProvider
         )
         return Pair(apiClient, ansattService)
     }

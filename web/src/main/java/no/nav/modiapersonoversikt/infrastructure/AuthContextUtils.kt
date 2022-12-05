@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure
 
 import com.nimbusds.jwt.JWTClaimsSet
-import no.nav.common.auth.Constants.AAD_NAV_IDENT_CLAIM
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.types.identer.NavIdent
@@ -12,9 +11,6 @@ import java.util.*
 
 object AuthContextUtils {
     private val authContextHolder = AuthContextHolderThreadLocal.instance()
-
-    @JvmStatic
-    fun getNavIdent(): Optional<NavIdent> = authContextHolder.navIdent
 
     @JvmStatic
     fun getIdent(): Optional<String> = authContextHolder.navIdent.map { it.get() }
@@ -38,29 +34,10 @@ object AuthContextUtils {
     fun requireToken(): String = authContextHolder.requireIdTokenString()
 
     @JvmStatic
-    fun azureAdUserToken(): String? {
-        return AuthHeaderCapture.header.get()
+    fun requireBoundedClientOboToken(oboTokenProvider: BoundedOnBehalfOfTokenClient): String {
+        val token = requireToken()
+        return oboTokenProvider.exchangeOnBehalfOfToken(token)
     }
-
-    @JvmStatic
-    fun requireAzureAdUserToken(): String {
-        return requireNotNull(AuthHeaderCapture.header.get())
-    }
-
-    @JvmStatic
-    fun requireOboTokenIfPresent(oboTokenProvider: BoundedOnBehalfOfTokenClient): String {
-        val authheader = azureAdUserToken()
-        if (authheader != null) {
-            return oboTokenProvider.exchangeOnBehalfOfToken(authheader)
-        }
-        return requireToken()
-    }
-
-    @JvmStatic
-    fun requireClaims(): JWTClaimsSet = authContextHolder.requireIdTokenClaims()
-
-    @JvmStatic
-    fun requireContext(): AuthContext = authContextHolder.requireContext()
 
     @JvmStatic
     fun withContext(authContext: AuthContext?, block: UnsafeRunnable) = authContextHolder.withContext(authContext, block)
@@ -70,17 +47,4 @@ object AuthContextUtils {
 
     @JvmStatic
     fun <T> withContext(authContext: AuthContext?, block: () -> T): T = authContextHolder.withContext(authContext, UnsafeSupplier { block() })
-
-    @JvmStatic
-    fun getTokenType(): TokenType {
-        val claims = requireClaims()
-        return when (claims.getStringClaim(AAD_NAV_IDENT_CLAIM)) {
-            null -> TokenType.OPEN_AM
-            else -> TokenType.AZURE_AD
-        }
-    }
-
-    enum class TokenType {
-        OPEN_AM, AZURE_AD
-    }
 }

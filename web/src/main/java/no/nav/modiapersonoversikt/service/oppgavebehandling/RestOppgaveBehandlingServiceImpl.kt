@@ -39,7 +39,7 @@ class RestOppgaveBehandlingServiceImpl(
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
-        AuthContextUtils.requireOboTokenIfPresent(oboTokenClient)
+        AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
     },
     private val systemApiClient: OppgaveApi = OppgaveApiFactory.createClient {
         machineToMachineTokenClient.createMachineToMachineToken()
