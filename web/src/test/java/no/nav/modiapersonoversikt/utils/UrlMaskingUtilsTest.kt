@@ -72,4 +72,30 @@ class UrlMaskingUtilsTest {
 
         Assertions.assertEquals("/norg2/api/v1/{ident}/org/{orgnr}/name", masked)
     }
+
+    @Test
+    internal fun maskThemAll() {
+        val content = "fnr/12345678910/enhet/0219/gt/987654/ident/Z999123/orgnr/123456789"
+        val masked = UrlMaskingUtils.maskSensitiveInfo(content)
+
+        Assertions.assertEquals("fnr/{fnr}/enhet/{enhet}/gt/{enhet}/ident/{ident}/orgnr/{orgnr}", masked)
+    }
+
+    @Test
+    fun maskHenvendelseId() {
+        val content1 = "/henvendelseinfo/henvendelse/{kjedeId}/status".replace("{" + "kjedeId" + "}", "a1jf31a358c79d24a6")
+        val content2 = "/henvendelseinfo/henvendelse/{kjedeId}".replace("{" + "kjedeId" + "}", "a1jf31a358c79d24a6")
+        val content3 = "/henvendelseinfo/henvendelse/{kjedeId}/status".replace("{" + "kjedeId" + "}", "10016JEAX")
+        val content4 = "/henvendelseinfo/henvendelse/{kjedeId}".replace("{" + "kjedeId" + "}", "10016JEAX")
+
+        val masked1 = UrlMaskingUtils.maskSensitiveInfo(content1)
+        val masked2 = UrlMaskingUtils.maskSensitiveInfo(content2)
+        val masked3 = UrlMaskingUtils.maskSensitiveInfo(content3)
+        val masked4 = UrlMaskingUtils.maskSensitiveInfo(content4)
+
+        Assertions.assertEquals("/henvendelseinfo/henvendelse/{kjedeId}/status", masked1)
+        Assertions.assertEquals("/henvendelseinfo/henvendelse/{kjedeId}", masked2)
+        Assertions.assertEquals("/henvendelseinfo/henvendelse/{kjedeId}/status", masked3)
+        Assertions.assertEquals("/henvendelseinfo/henvendelse/{kjedeId}", masked4)
+    }
 }
