@@ -50,10 +50,26 @@ class UrlMaskingUtilsTest {
     }
 
     @Test
+    internal fun masksGTInTheMiddle() {
+        val content = "/norg2/api/v1/enhet/navkontorer/021901/alle"
+        val masked = UrlMaskingUtils.maskSensitiveInfo(content)
+
+        Assertions.assertEquals("/norg2/api/v1/enhet/navkontorer/{enhet}/alle", masked)
+    }
+
+    @Test
     internal fun masksIdentInTheMiddle() {
         val content = "/norg2/api/v1/Z123456/navkontorer/0219"
         val masked = UrlMaskingUtils.maskSensitiveInfo(content)
 
         Assertions.assertEquals("/norg2/api/v1/{ident}/navkontorer/{enhet}", masked)
+    }
+
+    @Test
+    internal fun masksOrgnrInTheMiddle() {
+        val content = "/norg2/api/v1/Z123456/org/021998765/name"
+        val masked = UrlMaskingUtils.maskSensitiveInfo(content)
+
+        Assertions.assertEquals("/norg2/api/v1/{ident}/org/{orgnr}/name", masked)
     }
 }
