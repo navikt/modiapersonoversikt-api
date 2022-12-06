@@ -16,6 +16,7 @@ public class DokumentMetadata {
 
     private Kommunikasjonsretning retning;
     private LocalDateTime dato;
+    private LocalDateTime lestDato;
     private String navn;
     private String journalpostId;
     private Dokument hoveddokument;
@@ -191,4 +192,8 @@ public class DokumentMetadata {
     public void setTilhorendeFagsakId(String tilhorendeFagsakId) {
         this.tilhorendeFagsakId = tilhorendeFagsakId;
     }
+
+    public LocalDateTime getLestDato() { return lestDato; }
+
+    public void setLestDato(LocalDateTime lestDato) { this.lestDato = lestDato; }
 }

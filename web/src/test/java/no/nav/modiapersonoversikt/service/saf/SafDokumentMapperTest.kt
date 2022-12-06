@@ -484,6 +484,24 @@ internal class SafDokumentMapperTest {
 
         assertEquals(journalFoertDato, dokumentMetadata.dato)
     }
+
+    @Test
+    fun `Setter datoLest for Utgående`() {
+        val lestDato = LocalDateTime.now()
+        val journalpost = lagJournalpost().copy(
+            relevanteDatoer = listOf(
+                RelevantDato(
+                    datotype = Datotype.DATO_LEST,
+                    dato = DateTime(lestDato),
+                )
+            ),
+            journalposttype = JOURNALPOSTTYPE_UT,
+        )
+
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
+
+        assertEquals(lestDato, dokumentMetadata.lestDato)
+    }
 }
 
 private fun lagJournalpost(): Journalpost {

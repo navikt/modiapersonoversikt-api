@@ -479,6 +479,10 @@ enum Datotype {
     # * Returneres for alle journalposter
     DATO_DOKUMENT
 
+    # * Tidspunkt som hoveddokumentet på journalposten ble lest på nav.no
+    # * returneres for utgående journalposter
+    DATO_LEST
+
 }
 
 # Indikerer hvor man kan finne saksparten som dokumentene er journalført mot, samt en peker til selve fagsaken, dersom det finnes en.
