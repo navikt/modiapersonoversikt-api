@@ -9,7 +9,6 @@ import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
 import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
-import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaTime
 import no.nav.personoversikt.common.kabac.Decision
 import org.joda.time.DateTime
 import java.time.LocalDateTime
