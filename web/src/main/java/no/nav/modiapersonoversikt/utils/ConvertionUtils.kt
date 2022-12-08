@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.utils
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 object ConvertionUtils {
     @JvmStatic
@@ -13,7 +14,15 @@ object ConvertionUtils {
         return LocalDate.of(this.year, this.monthOfYear, this.dayOfMonth)
     }
 
+    @JvmStatic
+    fun org.joda.time.LocalDateTime.toJavaDateTime(): LocalDateTime {
+        return LocalDateTime.of(this.year, this.monthOfYear, this.dayOfMonth, this.hourOfDay, this.minuteOfHour, this.secondOfMinute)
+    }
+
     fun org.joda.time.DateTime.toJavaTime(): LocalDate {
         return this.toLocalDate().toJavaTime()
+    }
+    fun org.joda.time.DateTime.toJavaDateTime(): LocalDateTime {
+        return this.toLocalDateTime().toJavaDateTime()
     }
 }
