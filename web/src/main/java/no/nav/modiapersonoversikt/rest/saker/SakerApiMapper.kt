@@ -19,7 +19,6 @@ object SakerApiMapper {
         tilgangskontroll: Tilgangskontroll,
         enhet: EnhetId,
         sakstemaer: List<Sakstema>,
-        feilendeSystem: Set<Baksystem>,
     ): MappingContext {
         val tematilgang = sakstemaer
             .map { it.temakode }
@@ -33,18 +32,14 @@ object SakerApiMapper {
             }
 
         return MappingContext(
-            sakstemaer = sakstemaer,
-            feilendeSystem = feilendeSystem,
             tematilgang = tematilgang,
         )
     }
 
     class MappingContext(
-        private val sakstemaer: List<Sakstema>,
-        private val feilendeSystem: Set<Baksystem>,
         private val tematilgang: Map<String, Boolean>,
     ) {
-        fun mapTilResultat() = SakerApi.Resultat(
+        fun mapTilResultat(sakstemaer: List<Sakstema>) = SakerApi.Resultat(
             sakstemaer.map { sakstema ->
                 val harTilgang = tematilgang[sakstema.temakode] ?: false
                 SakerApi.Sakstema(
