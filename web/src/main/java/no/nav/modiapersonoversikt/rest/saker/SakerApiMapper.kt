@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest.saker
 
 import no.nav.common.types.identer.EnhetId
-import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument

@@ -131,7 +131,7 @@ class SakerController @Autowired constructor(
         dokumentreferanse: String
     ): Boolean {
         return dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
-                dokumentMetadata.vedlegg.any { dokument -> dokument.dokumentreferanse == dokumentreferanse }
+            dokumentMetadata.vedlegg.any { dokument -> dokument.dokumentreferanse == dokumentreferanse }
     }
 
     private fun SakerService.Resultat.asWrapper(): ResultatWrapper<List<Sak>> {
