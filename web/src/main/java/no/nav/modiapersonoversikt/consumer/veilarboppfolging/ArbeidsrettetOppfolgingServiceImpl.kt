@@ -10,7 +10,6 @@ import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
-import no.nav.modiapersonoversikt.utils.inRange
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.cache.annotation.CacheConfig
@@ -93,7 +92,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         val statusCode = response.code()
         val body = response.body()?.string()
 
-        if (statusCode inRange Pair(200, 300)) {
+        if (statusCode in 200 until 300) {
             return objectMapper.readValue(body, type.java)
         } else {
             throw IllegalStateException("Forventet 200-range svar og body fra oppfolging-api, men fikk: $statusCode\n$body")

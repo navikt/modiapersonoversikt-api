@@ -8,7 +8,7 @@ import no.nav.common.log.LogFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.infrastructure.AuthHeaderCapture;
-import no.nav.modiapersonoversikt.infrastructure.scientist.ScientistFilter;
+import no.nav.personoversikt.common.science.scientist.ScientistFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
