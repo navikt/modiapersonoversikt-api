@@ -14,6 +14,8 @@ interface PdlOppslagService {
 
     fun hentIdenter(fnr: String): HentIdenter.Identliste?
 
+    fun hentFolkeregisterIdenter(fnr: String): HentIdenter.Identliste?
+
     fun hentAktorId(fnr: String): String?
 
     fun hentFnr(aktorid: String): String?
