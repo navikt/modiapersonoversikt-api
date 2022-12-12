@@ -68,6 +68,7 @@ object SakerApiMapper {
             retning = behandlingskjede.retning,
             dato = toLegacyData(behandlingskjede.dato),
             datoV2 = behandlingskjede.dato,
+            lestDato = behandlingskjede.lestDato,
             navn = behandlingskjede.navn,
             journalpostId = behandlingskjede.journalpostId,
             hoveddokument = mapTilDokument(behandlingskjede.hoveddokument),
