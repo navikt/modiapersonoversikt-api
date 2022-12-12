@@ -44,6 +44,7 @@ object SakerApi {
         val id: String,
         val retning: Kommunikasjonsretning,
         val dato: LegacyDato,
+        val lestDato: LocalDateTime,
         val datoV2: LocalDateTime,
         val navn: String,
         val journalpostId: String,
