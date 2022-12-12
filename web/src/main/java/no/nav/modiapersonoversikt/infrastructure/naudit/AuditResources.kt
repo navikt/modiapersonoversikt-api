@@ -108,6 +108,7 @@ class AuditResources {
     class Personsok {
         companion object {
             val Resultat = AuditResource("personsok.resultat")
+            val Sokefelter = AuditResource("personsok.trace.sokefelter")
         }
     }
 }
