@@ -22,37 +22,37 @@ class KontaktinformasjonController @Autowired constructor(
 ) {
 
     @GetMapping
-    fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): Map<String, Any?> {
+    fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): KontaktinformasjonApi.Kontaktinformasjon {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
                 val response = krrService.hentDigitalKontaktinformasjon(fnr)
 
-                mapOf(
-                    "epost" to getEpost(response),
-                    "mobiltelefon" to getMobiltelefon(response),
-                    "reservasjon" to response.reservasjon
+                KontaktinformasjonApi.Kontaktinformasjon(
+                    epost = getEpost(response),
+                    mobiltelefon = getMobiltelefon(response),
+                    reservasjon = response.reservasjon
                 )
             }
     }
 
-    private fun getEpost(response: Krr.DigitalKontaktinformasjon): Map<String, Any?>? {
+    private fun getEpost(response: Krr.DigitalKontaktinformasjon): KontaktinformasjonApi.Verdi? {
         if (response.epostadresse?.value.isNullOrEmpty()) {
             return null
         }
-        return mapOf(
-            "value" to response.epostadresse?.value,
-            "sistOppdatert" to response.epostadresse?.sistOppdatert
+        return KontaktinformasjonApi.Verdi(
+            value = requireNotNull(response.epostadresse?.value),
+            sistOppdatert = response.epostadresse?.sistOppdatert
         )
     }
 
-    private fun getMobiltelefon(response: Krr.DigitalKontaktinformasjon): Map<String, Any?>? {
+    private fun getMobiltelefon(response: Krr.DigitalKontaktinformasjon): KontaktinformasjonApi.Verdi? {
         if (response.mobiltelefonnummer?.value.isNullOrEmpty()) {
             return null
         }
-        return mapOf(
-            "value" to response.mobiltelefonnummer?.value,
-            "sistOppdatert" to response.mobiltelefonnummer?.sistOppdatert
+        return KontaktinformasjonApi.Verdi(
+            value = requireNotNull(response.mobiltelefonnummer?.value),
+            sistOppdatert = response.mobiltelefonnummer?.sistOppdatert
         )
     }
 }
