@@ -15,5 +15,6 @@ enum class AuditIdentifier {
     DOKUMENT_REFERERANSE,
     TRAAD_ID,
     SAK_ID,
-    SAK_TEMA
+    SAK_TEMA,
+    SOKEFELTER
 }
