@@ -45,22 +45,22 @@ class KontaktinformasjonControllerTest {
     @Test
     fun `Henter informasjon fra Digital Kontaktinformasjon registeret`() {
         val response = controller.hentKontaktinformasjon(FNR)
-        val epost = response["epost"] as Map<String, Any?>
-        val mobiltelefon = response["mobiltelefon"] as Map<String, Any?>
+        val epost = response.epost
+        val mobiltelefon = response.mobiltelefon
 
         assertAll(
             "Henter epost",
-            Executable { assertEquals(EPOST, epost["value"]) },
-            Executable { assertEquals(SIST_OPPDATERT, epost["sistOppdatert"]) }
+            Executable { assertEquals(EPOST, epost?.value) },
+            Executable { assertEquals(SIST_OPPDATERT, epost?.sistOppdatert) }
         )
 
         assertAll(
             "Henter mobiltelefon",
-            Executable { assertEquals(MOBILTELEFON, mobiltelefon["value"]) },
-            Executable { assertEquals(SIST_OPPDATERT, mobiltelefon["sistOppdatert"]) }
+            Executable { assertEquals(MOBILTELEFON, mobiltelefon?.value) },
+            Executable { assertEquals(SIST_OPPDATERT, mobiltelefon?.sistOppdatert) }
         )
 
-        assertEquals(RESERVASJON, response["reservasjon"])
+        assertEquals(RESERVASJON, response.reservasjon)
     }
 
     @Test
@@ -68,8 +68,8 @@ class KontaktinformasjonControllerTest {
         every { krrService.hentDigitalKontaktinformasjon(FNR) } returns Krr.DigitalKontaktinformasjon()
 
         val response = controller.hentKontaktinformasjon(FNR)
-        val epost = response["epost"]
-        val mobiltelefon = response["mobiltelefon"]
+        val epost = response.epost
+        val mobiltelefon = response.mobiltelefon
 
         assertEquals(null, epost)
         assertEquals(null, mobiltelefon)
