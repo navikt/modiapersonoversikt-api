@@ -63,6 +63,14 @@ open class PdlOppslagServiceImpl constructor(
     }
 
     @Cacheable(unless = "#result == null")
+    override fun hentFolkeregisterIdenter(fnr: String): HentIdenter.Identliste? = runBlocking {
+        HentIdenter(pdlClient)
+            .execute(HentIdenter.Variables(fnr, listOf(HentIdenter.IdentGruppe.FOLKEREGISTERIDENT)), userTokenAuthorizationHeaders)
+            .data
+            ?.hentIdenter
+    }
+
+    @Cacheable(unless = "#result == null")
     override fun hentGeografiskTilknyttning(fnr: String): String? = runBlocking {
         HentGeografiskTilknyttning(pdlClient)
             .execute(HentGeografiskTilknyttning.Variables(fnr), userTokenAuthorizationHeaders)

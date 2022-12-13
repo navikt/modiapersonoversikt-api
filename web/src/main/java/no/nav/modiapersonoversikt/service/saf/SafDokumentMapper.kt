@@ -14,6 +14,7 @@ object SafDokumentMapper {
         return DokumentMetadata().apply {
             retning = getRetning(journalpost)
             dato = getDato(journalpost)
+            lestDato = getLestDato(journalpost)
             navn = journalpost.avsenderMottaker?.navn ?: "ukjent"
             journalpostId = journalpost.journalpostId
             hoveddokument = hovedDokument
@@ -67,6 +68,13 @@ object SafDokumentMapper {
             HentBrukersDokumenter.Journalposttype.N -> journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_JOURNALFOERT)
             else -> LocalDateTime.now()
         } ?: LocalDateTime.now()
+
+    private fun getLestDato(journalpost: HentBrukersDokumenter.Journalpost): LocalDateTime? =
+        if (journalpost.journalposttype == HentBrukersDokumenter.Journalposttype.U) {
+            journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_LEST)
+        } else {
+            null
+        }
 
     private fun HentBrukersDokumenter.Journalpost.getRelevantDatoForType(type: HentBrukersDokumenter.Datotype): LocalDateTime? {
         return this.relevanteDatoer

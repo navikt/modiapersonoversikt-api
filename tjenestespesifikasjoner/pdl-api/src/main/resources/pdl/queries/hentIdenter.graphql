@@ -1,5 +1,5 @@
-query hentIdenter($ident: ID!){
-    hentIdenter(ident: $ident, historikk: true) {
+query hentIdenter($ident: ID!, $grupper: [IdentGruppe!]){
+    hentIdenter(ident: $ident, grupper: $grupper, historikk: true) {
         identer {
             ident
             gruppe

@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.personoversikt.common.kabac.Decision
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +21,10 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/rest/tilgang")
-class TilgangController @Autowired constructor(private val tilgangskontroll: Tilgangskontroll) {
+class TilgangController @Autowired constructor(
+    private val tilgangskontroll: Tilgangskontroll,
+    private val pdlOppslagService: PdlOppslagService
+) {
     private val audit = Audit.describe<String>(Audit.Action.READ, AuditResources.Person.Tilgang) {
         listOf(AuditIdentifier.FNR to it)
     }
@@ -38,6 +42,7 @@ class TilgangController @Autowired constructor(private val tilgangskontroll: Til
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .getDecision()
             .makeResponse()
+            .sjekkAktivFolkeregistrIden(fnr)
             .logAudit(audit, fnr)
             .also {
                 enhetTrace.log(enhet ?: "IKKE SATT")
@@ -58,9 +63,24 @@ class TilgangController @Autowired constructor(private val tilgangskontroll: Til
             .map(JWTClaimsSet::getExpirationDate)
             .orElse(AuthIntropectionDTO.INVALID)
     }
+
+    private fun TilgangDTO.sjekkAktivFolkeregistrIden(fnr: String): TilgangDTO {
+        return if (this.harTilgang) {
+            val aktivIdent = pdlOppslagService.hentFolkeregisterIdenter(fnr)
+                ?.identer?.find { !it.historisk }
+            this.copy(aktivIdent = aktivIdent?.ident)
+        } else {
+            this
+        }
+    }
 }
 
-class TilgangDTO(val harTilgang: Boolean, val ikkeTilgangArsak: Decision.DenyCause?)
+data class TilgangDTO(
+    val harTilgang: Boolean,
+    val ikkeTilgangArsak: Decision.DenyCause?,
+    val aktivIdent: String?
+)
+
 class AuthIntropectionDTO(val expirationDate: Long) {
     companion object {
         val INVALID = AuthIntropectionDTO(-1)
@@ -84,8 +104,8 @@ internal fun JWTClaimsSet.getExpirationDate(): AuthIntropectionDTO {
 
 internal fun Decision.makeResponse(): TilgangDTO {
     return when (val biased = this.withBias(Decision.Type.DENY)) {
-        is Decision.Permit -> TilgangDTO(true, null)
-        is Decision.Deny -> TilgangDTO(false, biased.cause)
-        is Decision.NotApplicable -> TilgangDTO(false, Decision.NO_APPLICABLE_POLICY_FOUND)
+        is Decision.Permit -> TilgangDTO(true, null, null)
+        is Decision.Deny -> TilgangDTO(false, biased.cause, null)
+        is Decision.NotApplicable -> TilgangDTO(false, Decision.NO_APPLICABLE_POLICY_FOUND, null)
     }
 }
