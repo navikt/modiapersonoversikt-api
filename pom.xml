@@ -26,7 +26,7 @@
         <mockk.version>1.13.2</mockk.version>
 
         <common.version>2.2022.09.15_07.46-e4fa96eb6813</common.version>
-        <modia-common-utils.version>1.2022.11.08-14.32-5e1647934748</modia-common-utils.version>
+        <modia-common-utils.version>1.2022.12.09-16.15-e47c5ed96d08-beta</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2606.1f6354e</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
     </properties>
@@ -180,6 +180,11 @@
             <dependency>
                 <groupId>com.github.navikt.modia-common-utils</groupId>
                 <artifactId>logging</artifactId>
+                <version>${modia-common-utils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.navikt.modia-common-utils</groupId>
+                <artifactId>science</artifactId>
                 <version>${modia-common-utils.version}</version>
             </dependency>
             <dependency>
