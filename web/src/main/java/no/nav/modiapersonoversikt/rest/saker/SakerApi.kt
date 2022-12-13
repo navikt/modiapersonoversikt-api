@@ -19,7 +19,6 @@ object SakerApi {
         val erGruppert: Boolean,
         val behandlingskjeder: List<Behandlingskjede>,
         val dokumentMetadata: List<Dokumentmetadata>,
-        val tilhørendeSaker: List<Sak>,
         val tilhorendeSaker: List<Sak>,
         val feilkoder: List<Int>,
         val harTilgang: Boolean,
@@ -27,40 +26,28 @@ object SakerApi {
 
     data class Behandlingskjede(
         val status: BehandlingsStatus,
-        val sistOppdatert: LegacyDato,
+        val sistOppdatert: LocalDateTime,
         val sistOppdatertV2: LocalDateTime,
-    )
-
-    data class LegacyDato(
-        val år: Int,
-        val måned: Int,
-        val dag: Int,
-        val time: Int,
-        val minutt: Int,
-        val sekund: Int,
     )
 
     data class Dokumentmetadata(
         val id: String,
         val retning: Kommunikasjonsretning,
-        val dato: LegacyDato,
-        val lestDato: LocalDateTime?,
+        val dato: LocalDateTime,
         val datoV2: LocalDateTime,
+        val lestDato: LocalDateTime?,
         val navn: String,
         val journalpostId: String,
         val hoveddokument: Dokument,
         val vedlegg: List<Dokument>,
         val avsender: Entitet,
         val mottaker: Entitet,
-        val tilhørendeSaksid: String,
         val tilhorendeSaksid: String,
-        val tilhørendeFagsaksid: String?,
         val tilhorendeFagsaksid: String?,
         val baksystem: Set<Baksystem>,
         val temakode: String,
         val temakodeVisning: String,
         val ettersending: Boolean,
-        val erJournalført: Boolean,
         val erJournalfort: Boolean,
         val feil: Feil,
     )
@@ -84,7 +71,7 @@ object SakerApi {
         val temakode: String,
         val saksid: String,
         val fagsaksnummer: String?,
-        val avsluttet: LegacyDato?,
+        val avsluttet: LocalDateTime?,
         val avsluttetV2: LocalDateTime?,
         val fagsystem: String,
         val baksystem: Baksystem,
