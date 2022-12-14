@@ -18,6 +18,7 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceConfig
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
 import no.nav.personoversikt.common.typeanalyzer.CaptureStats
 import no.nav.personoversikt.common.typeanalyzer.Formatter
 import no.nav.personoversikt.common.typeanalyzer.KotlinFormat
@@ -50,7 +51,7 @@ class InternalController @Autowired constructor(
                         machineToMachineTokenClient.createMachineToMachineToken(DownstreamApi.parse(it))
                     },
                     obs = scope?.let {
-                        onBehalfOfTokenClient.exchangeOnBehalfOfToken(it, token)
+                        onBehalfOfTokenClient.exchangeOnBehalfOfToken(DownstreamApi.parse(it), token)
                     },
                 )
             }
