@@ -181,7 +181,7 @@ spec:
     - name: HASTEKASSERING_TILGANG
       value: "Z992323,Z990366,Z990083,Z990351"
     - name: INTERNAL_TILGANG
-      value: "Z990351,Z994123,Z994404"
+      value: "Z990351,Z994123,Z994404,Z994673"
     - name: CXF_SECURE_LOG
       value: "enabled"
     - name: AXSYS_URL
