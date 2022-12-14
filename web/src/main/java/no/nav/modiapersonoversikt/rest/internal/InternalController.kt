@@ -4,6 +4,7 @@ import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.token_client.client.MachineToMachineTokenClient
+import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
@@ -29,23 +30,28 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/rest/internal")
 class InternalController @Autowired constructor(
     private val machineToMachineTokenClient: MachineToMachineTokenClient,
+    private val onBehalfOfTokenClient: OnBehalfOfTokenClient,
     private val tilgangskontroll: Tilgangskontroll
 
 ) {
-    data class Tokens(val user: String, val system: String?)
+    data class Tokens(val user: String, val obs: String?, val system: String?)
     private val pdlClient = PdlOppslagServiceImpl.createClient()
 
     @GetMapping("/tokens")
     fun hentSystembrukerToken(@RequestParam(value = "scope", required = false) scope: String?): Tokens {
+        val token = AuthContextUtils.getToken().orElse("")
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .check(Policies.kanBrukeInternal)
             .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Tokens)) {
                 Tokens(
-                    user = AuthContextUtils.getToken().orElse("null"),
+                    user = token,
                     system = scope?.let {
                         machineToMachineTokenClient.createMachineToMachineToken(DownstreamApi.parse(it))
-                    }
+                    },
+                    obs = scope?.let {
+                        onBehalfOfTokenClient.exchangeOnBehalfOfToken(it, token)
+                    },
                 )
             }
     }
