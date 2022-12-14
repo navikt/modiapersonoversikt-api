@@ -31,6 +31,13 @@ class PersonsokController @Autowired constructor(
     private val pdlOppslagService: PdlOppslagService,
     val tilgangskontroll: Tilgangskontroll
 ) {
+    private val sokefelterTrace = Audit.describe<Pair<String, String>>(Audit.Action.READ, AuditResources.Personsok.Sokefelter) { data ->
+        val (enhet, felter) = requireNotNull(data)
+        listOf(
+            AuditIdentifier.ENHET_ID to enhet,
+            AuditIdentifier.SOKEFELTER to felter
+        )
+    }
     private val auditDescriptor =
         Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
             val fnr = resultat?.joinToString(", ") { it.ident.ident } ?: "--"
@@ -45,12 +52,17 @@ class PersonsokController @Autowired constructor(
             .check(Policies.tilgangTilModia)
             .get(auditDescriptor) {
                 handterFeil {
+                    val enhet = personsokRequestV3.enhet ?: "Ukjent"
                     if (!personsokRequestV3.kontonummer.isNullOrBlank()) {
+                        sokefelterTrace.log(enhet to "kontonummer")
                         kontonummerSok(personsokRequestV3.kontonummer)
                             .mapNotNull(::lagPersonResponse)
                     } else {
+                        val pdlKriterier = personsokRequestV3.tilPdlKriterier()
+                        val feltnavn = pdlKriterier.joinToString(", ") { it.felt.name }
+                        sokefelterTrace.log(enhet to feltnavn)
                         pdlOppslagService
-                            .sokPerson(personsokRequestV3.tilPdlKriterier())
+                            .sokPerson(pdlKriterier)
                             .mapNotNull(::lagPersonResponse)
                     }
                 }
@@ -348,6 +360,7 @@ data class KodeverdiDTO(val kodeRef: String?, val beskrivelse: String?)
 private fun lagKodeverdi(fimKodeverdi: Kodeverdi) = KodeverdiDTO(fimKodeverdi.kodeRef, fimKodeverdi.value)
 
 data class PersonsokRequestV3(
+    val enhet: String?,
     val navn: String?,
     val kontonummer: String?,
     val utenlandskID: String?,

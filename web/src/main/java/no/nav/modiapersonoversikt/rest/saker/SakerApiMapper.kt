@@ -10,8 +10,6 @@ import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
 import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
 import no.nav.personoversikt.common.kabac.Decision
-import org.joda.time.DateTime
-import java.time.LocalDateTime
 import java.util.*
 
 object SakerApiMapper {
@@ -49,7 +47,6 @@ object SakerApiMapper {
                     erGruppert = sakstema.erGruppert,
                     behandlingskjeder = sakstema.behandlingskjeder.map(::mapTilBehandlingskjede),
                     dokumentMetadata = sakstema.dokumentMetadata.map(::mapTilDokumentMetadata),
-                    tilhørendeSaker = tilhorendeSaker,
                     tilhorendeSaker = tilhorendeSaker,
                     feilkoder = sakstema.feilkoder,
                     harTilgang = harTilgang,
@@ -59,14 +56,14 @@ object SakerApiMapper {
 
         private fun mapTilBehandlingskjede(behandlingskjede: Behandlingskjede) = SakerApi.Behandlingskjede(
             status = behandlingskjede.status,
-            sistOppdatert = toLegacyData(behandlingskjede.sistOppdatert),
+            sistOppdatert = behandlingskjede.sistOppdatert,
             sistOppdatertV2 = behandlingskjede.sistOppdatert,
         )
 
         private fun mapTilDokumentMetadata(behandlingskjede: DokumentMetadata) = SakerApi.Dokumentmetadata(
             id = UUID.randomUUID().toString(),
             retning = behandlingskjede.retning,
-            dato = toLegacyData(behandlingskjede.dato),
+            dato = behandlingskjede.dato,
             datoV2 = behandlingskjede.dato,
             lestDato = behandlingskjede.lestDato,
             navn = behandlingskjede.navn,
@@ -75,15 +72,12 @@ object SakerApiMapper {
             vedlegg = behandlingskjede.vedlegg.map(::mapTilDokument),
             avsender = behandlingskjede.avsender,
             mottaker = behandlingskjede.mottaker,
-            tilhørendeSaksid = behandlingskjede.tilhorendeSakid,
             tilhorendeSaksid = behandlingskjede.tilhorendeSakid,
-            tilhørendeFagsaksid = behandlingskjede.tilhorendeFagsakId,
             tilhorendeFagsaksid = behandlingskjede.tilhorendeFagsakId,
             baksystem = behandlingskjede.baksystem,
             temakode = behandlingskjede.temakode,
             temakodeVisning = behandlingskjede.temakodeVisning,
             ettersending = false,
-            erJournalført = behandlingskjede.isErJournalfort,
             erJournalfort = behandlingskjede.isErJournalfort,
             feil = SakerApi.Feil(
                 inneholderFeil = behandlingskjede.feilWrapper?.inneholderFeil ?: false,
@@ -105,31 +99,10 @@ object SakerApiMapper {
             temakode = sak.temakode,
             saksid = sak.saksId,
             fagsaksnummer = sak.fagsaksnummer,
-            avsluttet = toLegacyData(sak.avsluttet),
+            avsluttet = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
             avsluttetV2 = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
             fagsystem = sak.fagsystem,
             baksystem = sak.baksystem,
         )
-
-        private fun toLegacyData(dato: LocalDateTime) = SakerApi.LegacyDato(
-            år = dato.year,
-            måned = dato.monthValue,
-            dag = dato.dayOfMonth,
-            time = dato.hour,
-            minutt = dato.minute,
-            sekund = dato.second,
-        )
-
-        private fun toLegacyData(maybeDato: Optional<DateTime>) = maybeDato
-            .map { dato ->
-                SakerApi.LegacyDato(
-                    år = dato.year,
-                    måned = dato.monthOfYear,
-                    dag = dato.dayOfMonth,
-                    time = dato.hourOfDay,
-                    minutt = dato.minuteOfHour,
-                    sekund = dato.secondOfMinute,
-                )
-            }.orElse(null)
     }
 }

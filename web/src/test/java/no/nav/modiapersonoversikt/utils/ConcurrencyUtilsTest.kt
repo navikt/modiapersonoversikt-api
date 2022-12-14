@@ -7,7 +7,6 @@ import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.data.Percentage.withPercentage
 import org.junit.jupiter.api.Test
 import org.slf4j.MDC
 import org.springframework.web.context.request.RequestContextHolder
@@ -15,57 +14,39 @@ import org.springframework.web.context.request.ServletWebRequest
 
 internal class ConcurrencyUtilsTest {
     @Test
-    internal fun `should run tasks in parallel`() {
-        val taskA = { Thread.sleep(1000L) }
-        val taskB = { Thread.sleep(1000L) }
-
-        val startTime = System.currentTimeMillis()
-        ConcurrencyUtils.inParallel(taskA, taskB)
-        val endTime = System.currentTimeMillis()
-
-        assertThat(endTime - startTime).isCloseTo(1000, withPercentage(30.0))
-    }
-
-    @Test
     internal fun `should copy mdc`() {
         MDC.put(MDCConstants.MDC_CALL_ID, "CallId")
         MDC.put("TestKey", "TestValue")
 
-        val (taskA, taskB) = ConcurrencyUtils.inParallel(
-            { getCallId() to MDC.get("TestKey") },
-            { getCallId() to MDC.get("TestKey") }
-        )
+        val result = ConcurrencyUtils.makeThreadSwappable {
+            getCallId() to MDC.get("TestKey")
+        }.invoke()
 
-        assertThat(taskA).isEqualTo("CallId" to "TestValue")
-        assertThat(taskB).isEqualTo("CallId" to "TestValue")
+        assertThat(result).isEqualTo("CallId" to "TestValue")
     }
 
     @Test
     internal fun `should copy subject`() {
-        val (taskA, taskB) = AuthContextTestUtils.withIdent(
+        val result = AuthContextTestUtils.withIdent(
             "Z999999",
             UnsafeSupplier {
-                ConcurrencyUtils.inParallel(
-                    { AuthContextUtils.requireIdent() },
-                    { AuthContextUtils.requireIdent() }
-                )
+                ConcurrencyUtils.makeThreadSwappable {
+                    AuthContextUtils.requireIdent()
+                }.invoke()
             }
         )
-        assertThat(taskA).isEqualTo("Z999999")
-        assertThat(taskB).isEqualTo("Z999999")
+        assertThat(result).isEqualTo("Z999999")
     }
 
     @Test
     internal fun `should copy requestContext`() {
         val attributes = ServletWebRequest(mockk())
         RequestContextHolder.setRequestAttributes(attributes)
-        val (taskA, taskB) = ConcurrencyUtils.inParallel(
-            { RequestContextHolder.getRequestAttributes() },
-            { RequestContextHolder.getRequestAttributes() }
-        )
+        val result = ConcurrencyUtils.makeThreadSwappable {
+            RequestContextHolder.getRequestAttributes()
+        }.invoke()
         RequestContextHolder.setRequestAttributes(null)
 
-        assertThat(taskA).isEqualTo(attributes)
-        assertThat(taskB).isEqualTo(attributes)
+        assertThat(result).isEqualTo(attributes)
     }
 }

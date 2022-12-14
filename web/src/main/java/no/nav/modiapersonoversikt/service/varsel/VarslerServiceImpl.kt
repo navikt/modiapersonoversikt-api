@@ -2,7 +2,8 @@ package no.nav.modiapersonoversikt.service.varsel
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
-import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.makeThreadSwappable
+import no.nav.personoversikt.common.utils.ConcurrencyUtils.inParallel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSPerson
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarsel
@@ -31,8 +32,8 @@ open class VarslerServiceImpl(
     @Cacheable
     override fun hentAlleVarsler(fnr: Fnr): VarslerService.Result {
         val (varsel: Result<List<VarslerService.Varsel>>, notifikasjoner: Result<List<Brukernotifikasjon.Event>>) = inParallel(
-            { hentBrukervarsel(fnr) },
-            { runCatching { brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr) } }
+            makeThreadSwappable { hentBrukervarsel(fnr) },
+            makeThreadSwappable { runCatching { brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr) } }
         )
 
         val feil = listOfNotNull(

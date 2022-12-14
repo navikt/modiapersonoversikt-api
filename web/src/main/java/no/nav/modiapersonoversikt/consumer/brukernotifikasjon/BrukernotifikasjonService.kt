@@ -2,7 +2,8 @@ package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon.Type
-import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.runInParallel
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.makeThreadSwappable
+import no.nav.personoversikt.common.utils.ConcurrencyUtils.runInParallel
 
 class BrukernotifikasjonService(
     private val client: Brukernotifikasjon.Client
@@ -13,6 +14,7 @@ class BrukernotifikasjonService(
             { hentBrukernotifikasjoner(Type.INNBOKS, fnr) },
             { hentBrukernotifikasjoner(Type.OPPGAVE, fnr) },
         )
+            .map { makeThreadSwappable(it) }
             .runInParallel()
             .flatten()
     }

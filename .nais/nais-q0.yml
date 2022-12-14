@@ -95,7 +95,7 @@ spec:
     - name: SAF_HENTDOKUMENT_URL
       value: "https://saf-q0.nais.preprod.local/rest/hentdokument"
     - name: SAF_SCOPE
-      value: "dev-fss:teamdokumenthandtering:saf"
+      value: "dev-fss:teamdokumenthandtering:saf-q0"
     - name: SAKOGBEHANDLING_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/sakogbehandling/ws/SakOgBehandling_v1"
     - name: SERVER_AKTIVITETSPLAN_URL
