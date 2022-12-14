@@ -59,7 +59,9 @@ class PersonsokController @Autowired constructor(
                             .mapNotNull(::lagPersonResponse)
                     } else {
                         val pdlKriterier = personsokRequestV3.tilPdlKriterier()
-                        val feltnavn = pdlKriterier.joinToString(", ") { it.felt.name }
+                        val feltnavn = pdlKriterier
+                            .filter { it.value.isNullOrEmpty().not() }
+                            .joinToString(", ") { it.felt.name }
                         sokefelterTrace.log(enhet to feltnavn)
                         pdlOppslagService
                             .sokPerson(pdlKriterier)
