@@ -18,6 +18,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
+import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.slf4j.LoggerFactory
@@ -46,7 +47,7 @@ class OppfolgingController @Autowired constructor(
                     "erUnderOppfolging" to oppfolging.erUnderOppfolging,
                     "veileder" to hentVeileder(oppfolging.veileder),
                     "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
-                )
+                ).also(Typeanalyzers.OPPFOLGING_STATUS.analyzer::capture)
             }
     }
 
@@ -75,7 +76,7 @@ class OppfolgingController @Autowired constructor(
                     "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
                     "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
                     "ytelser" to hentYtelser(ytelserResponse.ytelser)
-                )
+                ).also(Typeanalyzers.OPPFOLGING_YTELSER.analyzer::capture)
             }
     }
 }
