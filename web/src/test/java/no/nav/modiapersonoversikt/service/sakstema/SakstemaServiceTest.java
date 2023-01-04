@@ -23,6 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -56,6 +57,7 @@ public class SakstemaServiceTest {
 
     @Before
     public void setup() {
+        System.setProperty("SAKSOVERSIKT_PRODSETTNINGSDATO", "2015-01-01");
         when(kodeverk.hentKodeverk(any())).thenReturn(new EnhetligKodeverk.Kodeverk<>("DUMMY", new HashMap<>(){{
             put("DAG", "Dagpenger");
             put("AAP", "Arbeidsavklaringspenger");
@@ -317,6 +319,22 @@ public class SakstemaServiceTest {
         assertThat(temakoder.size(), is(5));
     }
 
+    @Test
+    public void skalFjerneGamleJournalposterSomKunFinnesiSAF() {
+        var resultat = SakstemaService.fjernGamleDokumenter(getMockSakstema());
+
+        assertThat(resultat.get(0).dokumentMetadata.size(), is(2));
+        assertThat(resultat.get(1).dokumentMetadata.size(), is(3));
+        assertThat(resultat.get(2).dokumentMetadata.size(), is(0));
+
+        assertThat(resultat.get(0).dokumentMetadata.get(0).getJournalpostId(), is("2"));
+        assertThat(resultat.get(0).dokumentMetadata.get(1).getJournalpostId(), is("3"));
+
+        assertThat(resultat.get(1).dokumentMetadata.get(0).getJournalpostId(), is("4"));
+        assertThat(resultat.get(1).dokumentMetadata.get(1).getJournalpostId(), is("5"));
+        assertThat(resultat.get(1).dokumentMetadata.get(2).getJournalpostId(), is("6"));
+    }
+
     private static List<Sak> lagSaker(String... temakoder) {
         return Stream.of(temakoder)
                 .map(temakode -> new Sak().withTemakode(temakode))
@@ -344,6 +362,57 @@ public class SakstemaServiceTest {
         return Stream.of(temakoder)
                 .map(temakode -> new Pair<String, List<Behandlingskjede>>(temakode, emptyList()))
                 .collect(Collectors.toMap(Pair::component1, Pair::component2));
+    }
+
+    private static List<Sakstema> getMockSakstema() {
+        var dokumentmetadata1 = new DokumentMetadata()
+                .withJournalpostId("1")
+                .withBaksystem(Baksystem.SAF)
+                .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
+        var dokumentmetadata2 = new DokumentMetadata()
+                .withJournalpostId("2")
+                .withBaksystem(Baksystem.SAF)
+                .withBaksystem(Baksystem.HENVENDELSE)
+                .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
+        var dokumentmetadata3 = new DokumentMetadata()
+                .withJournalpostId("3")
+                .withBaksystem(Baksystem.HENVENDELSE)
+                .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
+        var dokumentmetadata4 = new DokumentMetadata()
+                .withJournalpostId("4")
+                .withBaksystem(Baksystem.SAF)
+                .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30));
+        var dokumentmetadata5 = new DokumentMetadata()
+                .withJournalpostId("5")
+                .withBaksystem(Baksystem.HENVENDELSE)
+                .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30));
+        var dokumentmetadata6 = new DokumentMetadata()
+                .withJournalpostId("6")
+                .withBaksystem(Baksystem.HENVENDELSE).withBaksystem(
+                        Baksystem.SAF
+                )
+                .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30));
+        var dokumentmetadata7 = new DokumentMetadata()
+                .withJournalpostId("7")
+                .withBaksystem(Baksystem.SAF)
+                .withDato(LocalDateTime.of(2010, Month.APRIL, 8, 12, 30));
+        var dokumentmetadata8 = new DokumentMetadata()
+                .withJournalpostId("8")
+                .withBaksystem(Baksystem.SAF)
+                .withDato(LocalDateTime.of(2011, Month.APRIL, 8, 12, 30));
+
+        var sakstema1 = new Sakstema()
+                .withDokumentMetadata(List.of(dokumentmetadata1, dokumentmetadata2, dokumentmetadata3));
+        var sakstema2 = new Sakstema()
+                .withDokumentMetadata(List.of(dokumentmetadata4, dokumentmetadata5, dokumentmetadata6));
+        var sakstema3 = new Sakstema()
+                .withDokumentMetadata(List.of(dokumentmetadata7, dokumentmetadata8));
+
+        return List.of(
+                sakstema1,
+                sakstema2,
+                sakstema3
+        );
     }
 
 }

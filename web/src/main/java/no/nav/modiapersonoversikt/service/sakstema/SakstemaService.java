@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.sakstema;
 
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper;
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem;
 import no.nav.modiapersonoversikt.commondomain.sak.FeilendeBaksystemException;
@@ -7,7 +8,6 @@ import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata;
 import no.nav.modiapersonoversikt.service.sakogbehandling.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak;
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema;
-import no.nav.modiapersonoversikt.service.sakogbehandling.FilterUtils;
 import no.nav.modiapersonoversikt.service.saf.SafService;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
@@ -15,6 +15,9 @@ import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -84,6 +87,33 @@ public class SakstemaService {
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
     }
 
+    protected static List<Sakstema> fjernGamleDokumenter(List<Sakstema> saker) {
+        return saker
+                .stream()
+                .map((sak) -> {
+                    var filtrerteDokument = sak.dokumentMetadata
+                            .stream()
+                            .filter((dokument) -> {
+                                var erFraSAF = dokument.getBaksystem().size() == 1 && dokument.getBaksystem().contains(Baksystem.SAF);
+                                var erFraForProdsetting = dokument.getDato().isBefore(getProdsettingsDato());
+                                return !(erFraSAF && erFraForProdsetting);
+                            })
+                            .collect(Collectors.toList());
+                    return sak.withDokumentMetadata(filtrerteDokument);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private static LocalDateTime prodsettingsDato;
+    protected static LocalDateTime getProdsettingsDato() {
+        if (prodsettingsDato == null) {
+            prodsettingsDato = LocalDate
+                    .parse(EnvironmentUtils.getRequiredProperty("SAKSOVERSIKT_PRODSETTNINGSDATO"))
+                    .atStartOfDay();
+        }
+        return prodsettingsDato;
+    }
+
     protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(
             Set<String> temakoder,
             List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata,
@@ -109,7 +139,7 @@ public class SakstemaService {
                 })
                 .collect(toList());
 
-        return new ResultatWrapper<>(FilterUtils.fjernGamleDokumenter(sakstema), feilendeBaksystemer);
+        return new ResultatWrapper<>(fjernGamleDokumenter(sakstema), feilendeBaksystemer);
     }
     private List<DokumentMetadata> tilhorendeDokumentMetadata(List<DokumentMetadata> alleDokumentMetadata, String temakode, List<Sak> tilhorendeSaker) {
         return alleDokumentMetadata
