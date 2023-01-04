@@ -39,8 +39,4 @@ public class ConsumerPingable implements Pingable {
             return HealthCheckResult.unhealthy(e);
         }
     }
-
-    public interface UnsafeConsumer<T> {
-        void accept(T t) throws Throwable;
-    }
 }
