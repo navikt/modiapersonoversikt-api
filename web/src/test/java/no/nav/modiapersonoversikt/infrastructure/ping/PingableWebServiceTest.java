@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure.ping;
 
 import no.nav.common.health.selftest.SelfTestCheck;
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;

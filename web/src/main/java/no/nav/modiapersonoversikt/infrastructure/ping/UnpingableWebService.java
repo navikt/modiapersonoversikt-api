@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.infrastructure.ping;
 
 import no.nav.common.health.HealthCheckResult;
 import no.nav.common.health.selftest.SelfTestCheck;
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
 
 public class UnpingableWebService implements Pingable {
     private final SelfTestCheck instance;

@@ -4,7 +4,7 @@ import no.nav.common.cxf.CXFClient;
 import no.nav.common.cxf.StsConfig;
 import no.nav.modiapersonoversikt.infrastructure.jaxws.handlers.MDCOutHandler;
 import no.nav.modiapersonoversikt.infrastructure.ping.PingableWebService;
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
+import no.nav.modiapersonoversikt.infrastructure.ping.Pingable;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;

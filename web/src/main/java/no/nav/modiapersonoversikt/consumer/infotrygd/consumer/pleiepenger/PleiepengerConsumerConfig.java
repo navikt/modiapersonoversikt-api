@@ -4,7 +4,7 @@ import no.nav.common.cxf.CXFClient;
 import no.nav.common.cxf.StsConfig;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.infrastructure.ping.PingableWebService;
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
+import no.nav.modiapersonoversikt.infrastructure.ping.Pingable;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

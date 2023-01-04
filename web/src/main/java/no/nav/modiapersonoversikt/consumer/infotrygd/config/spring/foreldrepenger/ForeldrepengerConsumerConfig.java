@@ -5,7 +5,7 @@ import no.nav.common.cxf.StsConfig;
 import no.nav.modiapersonoversikt.infrastructure.jaxws.handlers.MDCOutHandler;
 import no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory;
 import no.nav.modiapersonoversikt.infrastructure.ping.PingableWebService;
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
+import no.nav.modiapersonoversikt.infrastructure.ping.Pingable;
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.ForeldrepengerV2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
