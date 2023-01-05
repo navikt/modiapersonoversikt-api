@@ -27,14 +27,12 @@ object SakerApi {
     data class Behandlingskjede(
         val status: BehandlingsStatus,
         val sistOppdatert: LocalDateTime,
-        val sistOppdatertV2: LocalDateTime,
     )
 
     data class Dokumentmetadata(
         val id: String,
         val retning: Kommunikasjonsretning,
         val dato: LocalDateTime,
-        val datoV2: LocalDateTime,
         val lestDato: LocalDateTime?,
         val navn: String,
         val journalpostId: String,
@@ -72,7 +70,6 @@ object SakerApi {
         val saksid: String,
         val fagsaksnummer: String?,
         val avsluttet: LocalDateTime?,
-        val avsluttetV2: LocalDateTime?,
         val fagsystem: String,
         val baksystem: Baksystem,
     )
