@@ -33,7 +33,7 @@ open class SakOgBehandlingServiceImpl(
     }
 
     @Cacheable
-    override fun hentBehandlingskjederGruppertPaaTema(fnr: String): Map<String, List<Behandlingskjede?>> {
+    override fun hentBehandlingskjederGruppertPaaTema(fnr: String): Map<String, List<Behandlingskjede>> {
         return hentAlleSaker(fnr)
             .associate { sak ->
                 val tema = sak.sakstema.value

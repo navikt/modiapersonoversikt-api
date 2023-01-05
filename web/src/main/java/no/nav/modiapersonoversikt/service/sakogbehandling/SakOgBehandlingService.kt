@@ -6,5 +6,5 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 interface SakOgBehandlingService {
     fun hentAlleSaker(fnr: String): List<Sak>
 
-    fun hentBehandlingskjederGruppertPaaTema(fnr: String): Map<String, List<Behandlingskjede?>>
+    fun hentBehandlingskjederGruppertPaaTema(fnr: String): Map<String, List<Behandlingskjede>>
 }
