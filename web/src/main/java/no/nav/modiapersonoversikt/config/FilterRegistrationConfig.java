@@ -7,7 +7,6 @@ import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
 import no.nav.common.log.LogFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.infrastructure.AuthHeaderCapture;
 import no.nav.personoversikt.common.science.scientist.ScientistFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -68,14 +67,4 @@ public class FilterRegistrationConfig {
         registration.addUrlPatterns("/rest/*");
         return registration;
     }
-
-    @Bean
-    public FilterRegistrationBean<AuthHeaderCapture> authHeaderCapture() {
-        FilterRegistrationBean<AuthHeaderCapture> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new AuthHeaderCapture());
-        registration.setOrder(5);
-        registration.addUrlPatterns("/rest/*");
-        return registration;
-    }
-
 }
