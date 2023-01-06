@@ -57,14 +57,12 @@ object SakerApiMapper {
         private fun mapTilBehandlingskjede(behandlingskjede: Behandlingskjede) = SakerApi.Behandlingskjede(
             status = behandlingskjede.status,
             sistOppdatert = behandlingskjede.sistOppdatert,
-            sistOppdatertV2 = behandlingskjede.sistOppdatert,
         )
 
         private fun mapTilDokumentMetadata(behandlingskjede: DokumentMetadata) = SakerApi.Dokumentmetadata(
             id = UUID.randomUUID().toString(),
             retning = behandlingskjede.retning,
             dato = behandlingskjede.dato,
-            datoV2 = behandlingskjede.dato,
             lestDato = behandlingskjede.lestDato,
             navn = behandlingskjede.navn,
             journalpostId = behandlingskjede.journalpostId,
@@ -100,7 +98,6 @@ object SakerApiMapper {
             saksid = sak.saksId,
             fagsaksnummer = sak.fagsaksnummer,
             avsluttet = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
-            avsluttetV2 = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
             fagsystem = sak.fagsystem,
             baksystem = sak.baksystem,
         )
