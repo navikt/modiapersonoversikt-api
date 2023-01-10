@@ -17,7 +17,7 @@ import no.nav.modiapersonoversikt.consumer.norg.generated.apis.Enhetskontaktinfo
 import no.nav.modiapersonoversikt.consumer.norg.generated.apis.OrganiseringApi
 import no.nav.modiapersonoversikt.consumer.norg.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable
+import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import no.nav.modiapersonoversikt.utils.isNumeric
 import no.nav.personoversikt.common.utils.Retry
 import okhttp3.OkHttpClient

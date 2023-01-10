@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure.ping;
 
 import no.nav.common.health.selftest.SelfTestCheck;
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
 import org.apache.cxf.jaxws.JaxWsClientProxy;
 import org.apache.cxf.service.model.EndpointInfo;
 
