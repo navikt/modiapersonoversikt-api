@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.krr
 
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable
+import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import java.time.LocalDate
 
 object Krr {

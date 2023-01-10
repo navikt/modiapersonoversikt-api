@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.infrastructure.ping;
 import no.nav.common.health.HealthCheckResult;
 import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.common.utils.fn.UnsafeRunnable;
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -39,9 +38,5 @@ public class ConsumerPingable implements Pingable {
             }
             return HealthCheckResult.unhealthy(e);
         }
-    }
-
-    public interface UnsafeConsumer<T> {
-        void accept(T t) throws Throwable;
     }
 }

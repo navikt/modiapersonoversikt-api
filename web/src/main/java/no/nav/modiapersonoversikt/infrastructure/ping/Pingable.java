@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.infrastructure.types;
+package no.nav.modiapersonoversikt.infrastructure.ping;
 
 import no.nav.common.health.selftest.SelfTestCheck;
 

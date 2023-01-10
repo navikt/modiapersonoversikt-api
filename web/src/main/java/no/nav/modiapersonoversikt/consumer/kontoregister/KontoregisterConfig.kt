@@ -9,7 +9,7 @@ import no.nav.modiapersonoversikt.config.InDevCondition
 import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable
+import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.springframework.context.annotation.Bean

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable
+import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
 import org.slf4j.LoggerFactory
 

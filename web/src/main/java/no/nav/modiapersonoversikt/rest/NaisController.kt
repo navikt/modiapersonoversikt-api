@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.rest
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.health.selftest.SelfTestUtils
 import no.nav.common.health.selftest.SelftestHtmlGenerator
-import no.nav.modiapersonoversikt.infrastructure.types.Pingable
+import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
