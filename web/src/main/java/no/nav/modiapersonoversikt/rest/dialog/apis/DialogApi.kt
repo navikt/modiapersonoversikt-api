@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
+import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import java.time.OffsetDateTime
 
@@ -64,6 +65,7 @@ interface DialogApi {
 
 data class TraadDTO(
     val traadId: String,
+    val traadType: TraadType,
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogApi.Journalpost>
 )
