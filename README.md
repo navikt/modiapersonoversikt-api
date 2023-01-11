@@ -27,29 +27,9 @@ Cacheoppsettet er ikke blocking, dvs at dersom to tråder spør med like keys vi
 
 ### Faste jobber
 
-* Populering av cache for ansatte i Enheter fra NORG via `ScheduledAnsattListePrefetch` to ganger daglig
-
-Denne jobben henter alle enheter og deretter henter alle ansatte i de respektive enhetene. Dette gjøres med kall mot NORG.
-Bakgrunnen for at denne har blitt til en fast jobb var et ønske om å få ned svartidene for henting av ansatte for alle brukere.
-Tidspunktet for kjøring av jobben bestemmes av en property `PREFETCH_NORG_ANSATTLISTE_SCHEDULE` under fasitressursen `modiabrukerdialog.properties`. Formatet er Springs `@Scheduled`
-cron-format. Jobben bør kjøre utenfor saksbehandlernes arbeidstider, som også er tider når NORG har kapasitet til å svare raskere.
-
-Dersom propertyen ikke finnes eller inneholder feil vil applikasjonen feile under oppstart med tilsvarende
-
-    // Propertyen finnes ikke
-    java.lang.IllegalStateException: Encountered invalid @Scheduled method 'prefetchAnsattListe': Could not resolve placeholder 'PREFETCH_NORG_ANSATTLISTE_SCHEDULE' in string value "${PREFETCH_NORG_ANSATTLISTE_SCHEDULE}"
-
-    // En del av cron-uttrykket er feil
-    java.lang.IllegalStateException: Encountered invalid @Scheduled method 'prefetchAnsattListe': For input string: "7x19"
-
 * Oppdatering av kodeverk for Arkivtemaer
 
 Denne jobben oppdaterer kodeverk for Arkivtemaer ved midnatt hver dag.
-
-* Sletting av Wicket resource cache
-
-Wicket har en evig cache på string-resources brukt av applikasjonen, noe som gjør at enonictekster bare blir hentet ved oppstart.
-Denne jobben kjøres derfor hver halvtime for å få oppdatert data fra enonic.
 
 
 ## Oppstart av appen på Jetty
