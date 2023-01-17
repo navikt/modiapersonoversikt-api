@@ -9,6 +9,8 @@ import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
@@ -21,6 +23,14 @@ open class NomConfig {
     private val scope = DownstreamApi.parse(getRequiredProperty("NOM_SCOPE"))
     private val url: String = getRequiredProperty("NOM_URL")
     private val httpClient: OkHttpClient = RestClient.baseClient()
+        .newBuilder()
+        .addInterceptor(
+            LoggingInterceptor("Nom") {
+                // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til Nom
+                getCallId()
+            }
+        )
+        .build()
 
     @Autowired
     lateinit var tokenProvider: MachineToMachineTokenClient
