@@ -7,6 +7,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.Request
@@ -23,6 +24,15 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
     private val url = baseUrl + "api/v1/organisasjon/"
     private val log = LoggerFactory.getLogger(OrganisasjonV1ClientImpl::class.java)
     private val client = RestClient.baseClient()
+        .newBuilder()
+        .addInterceptor(
+            LoggingInterceptor("Saf") { request ->
+                requireNotNull(request.header(RestConstants.NAV_CALL_ID_HEADER)) {
+                    "Kall uten \"${RestConstants.NAV_CALL_ID_HEADER}\" er ikke lov"
+                }
+            }
+        )
+        .build()
     private val objectMapper = jacksonObjectMapper()
         .apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
 
