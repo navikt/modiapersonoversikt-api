@@ -2,20 +2,18 @@ package no.nav.modiapersonoversikt.service.kontonummer
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
-import no.nav.modiapersonoversikt.consumer.kontoregister.generated.models.HentKontoDTO
-import no.nav.modiapersonoversikt.consumer.kontoregister.generated.models.KontoDTO
+import no.nav.modiapersonoversikt.consumer.kontoregister.generated.models.HentAktivKontoDTO
 
 class KontonummerRegisterService(
     private val kontoregister: KontoregisterV1Api
 ) : KontonummerService {
-    override fun hentKontonummer(fnr: Fnr): KontonummerService.Konto? {
-        val (konto: KontoDTO?, _) = kontoregister.hentKonto(
-            HentKontoDTO(
-                kontohaver = fnr.get(),
-                medHistorikk = false
+    override fun hentKontonummer(fnr: Fnr): KontonummerService.Konto {
+        val konto = kontoregister.hentAktivKonto(
+            HentAktivKontoDTO(
+                kontohaver = fnr.get()
             )
         )
-        return konto?.let {
+        return konto.let {
             KontonummerService.Konto(
                 kontonummer = it.kontonummer,
                 banknavn = it.utenlandskKontoInfo?.banknavn,
