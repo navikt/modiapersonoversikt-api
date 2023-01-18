@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
+import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
@@ -316,8 +317,9 @@ class SfLegacyDialogController(
         }
         return TraadDTO(
             traadId = henvendelse.kjedeId,
+            traadType = TraadType.valueOf(henvendelse.henvendelseType.value),
             meldinger = meldinger,
-            journalposter = journalposter
+            journalposter = journalposter,
         )
     }
 
