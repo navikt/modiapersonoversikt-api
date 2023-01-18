@@ -13,11 +13,57 @@ schemes:
   - https
   - http
 paths:
-  /v1/hent-konto:
+  /v1/hent-konto-med-historikk:
     post:
       tags:
         - kontoregister.v1
       summary: Slår opp kontoinformasjon i Kontoregisteret.
+      operationId: hentKontoMedHistorikk
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: hentKonto
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/HentAktivKonto'
+        - name: nav-call-id
+          in: header
+          type: string
+      responses:
+        '200':
+          description: OK - Kontohaveren har aktiv konto og/eller kontohistorikk
+            Hvis kontohaveren ikke har aktiv konto returneres bare kontohistorikk.
+            Hvis kontohaveren ikke har kontohistorikk returneres en tom kontohistorikk
+          schema:
+            $ref: '#/definitions/KontoMedHistorikk'
+        '204':
+          description: Hvis kontohaveren verken har aktiv konto eller kontohistorikk
+        '400':
+          description: Ugyldig request, oppfyller ikke swagger-kontrakt
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '401':
+          description: Ingen tilgang
+        '406':
+          description: Valideringsfeil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '500':
+          description: Annen feil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+      security:
+        - Bearer: [ ]
+  /v1/hent-konto:
+    post:
+      deprecated: true
+      tags:
+        - kontoregister.v1
+      summary: Denne operasjonen skal fases ut. Bruk hent-aktiv-konto hvis du bare er interessert i aktiv konto. Bruk
+        hent-konto-med-historikk hvis du trenger aktiv konto og historikk.
       operationId: hentKonto
       consumes:
         - application/json
@@ -37,6 +83,48 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Kontoinformasjon'
+        '400':
+          description: Ugyldig request, oppfyller ikke swagger-kontrakt
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '401':
+          description: Ingen tilgang
+        '406':
+          description: Valideringsfeil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+        '500':
+          description: Annen feil
+          schema:
+            $ref: '#/definitions/Feilmelding'
+      security:
+        - Bearer: [ ]
+  /v1/hent-aktiv-konto:
+    post:
+      tags:
+        - kontoregister.v1
+      summary: Slår opp aktiv kontoinformasjon i Kontoregisteret.
+      operationId: hentAktivKonto
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: hentKonto
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/HentAktivKonto'
+        - name: nav-call-id
+          in: header
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Konto'
+        '204':
+          description: Kontohaveren har ingen aktiv konto
         '400':
           description: Ugyldig request, oppfyller ikke swagger-kontrakt
           schema:
@@ -79,6 +167,8 @@ paths:
           description: Ugyldig request, oppfyller ikke swagger-kontrakt
           schema:
             $ref: '#/definitions/Feilmelding'
+        '401':
+          description: Ikke tilgang
         '406':
           description: Valideringsfeil
           schema:
@@ -115,6 +205,8 @@ paths:
           description: Ugyldig request, oppfyller ikke swagger-kontrakt
           schema:
             $ref: '#/definitions/Feilmelding'
+        '401':
+          description: Ikke tilgang
         '406':
           description: Valideringsfeil
           schema:
@@ -193,6 +285,13 @@ definitions:
         type: boolean
         example: false
         description: Valgfri parameter for å få med liste av alle historiske kontoer. Default false.
+  HentAktivKonto:
+    type: object
+    required:
+      - kontohaver
+    properties:
+      kontohaver:
+        $ref: '#/definitions/Kontohaver'
   SlettKonto:
     type: object
     required:
@@ -222,12 +321,23 @@ definitions:
     type: object
     properties:
       aktivKonto:
+        $ref: '#/definitions/KontoDeprecated'
+      kontohistorikk:
+        type: array
+        items:
+          $ref: '#/definitions/HistoriskKonto'
+  KontoMedHistorikk:
+    type: object
+    required:
+      - kontohistorikk
+    properties:
+      aktivKonto:
         $ref: '#/definitions/Konto'
       kontohistorikk:
         type: array
         items:
-          $ref: '#/definitions/Konto'
-  Konto:
+          $ref: '#/definitions/HistoriskKonto'
+  KontoDeprecated:
     type: object
     required:
       - kontohaver
@@ -253,6 +363,60 @@ definitions:
         type: string
       opprettetAv:
         type: string
+      kilde:
+        type: string
+  HistoriskKonto:
+    type: object
+    required:
+      - kontohaver
+      - kontonummer
+      - gyldigFom
+      - gyldigTom
+      - opprettetAv
+      - endretAv
+    properties:
+      kontohaver:
+        $ref: '#/definitions/Kontohaver'
+      kontonummer:
+        $ref: '#/definitions/Kontonummer'
+      utenlandskKontoInfo:
+        $ref: '#/definitions/UtenlandskKontoInfo'
+      gyldigFom:
+        type: string
+        description: Gyldig fra og med dato
+        example: '2020-01-01T10:00:00'
+      gyldigTom:
+        type: string
+        description: Gyldig til og med dato
+        example: '2020-01-01T10:00:00'
+      endretAv:
+        type: string
+      opprettetAv:
+        type: string
+      kilde:
+        type: string
+  Konto:
+    type: object
+    required:
+      - kontohaver
+      - kontonummer
+      - gyldigFom
+      - opprettetAv
+    properties:
+      kontohaver:
+        $ref: '#/definitions/Kontohaver'
+      kontonummer:
+        $ref: '#/definitions/Kontonummer'
+      utenlandskKontoInfo:
+        $ref: '#/definitions/UtenlandskKontoInfo'
+      gyldigFom:
+        type: string
+        description: Gyldig fra og med dato
+        example: '2022-12-02T10:00:00'
+      opprettetAv:
+        type: string
+      kilde:
+        type: string
   UtenlandskKontoInfo:
     type: object
     x-nullable: true
@@ -263,6 +427,7 @@ definitions:
       banknavn:
         type: string
         x-nullable: true
+        example: 'SWEDBANK AB'
       bankkode:
         type: string
         x-nullable: true
@@ -280,19 +445,22 @@ definitions:
         type: string
         x-nullable: true
         description: BIC/SWIFT er et internasjonalt system som brukes for å identifisere banker. Du får oppgitt BIC av banken din. BIC/SWIFT-koden består av 8 eller 11 bokstaver.
-        example: SHEDNO22
+        example: 'SHEDNO22'
       bankadresse1:
         type: string
         x-nullable: true
         description: Benyttes når man bruker bankkode
+        example: 'BOX 224'
       bankadresse2:
         type: string
         x-nullable: true
         description: Benyttes når man bruker bankkode
+        example: '162 13 VALLINBY'
       bankadresse3:
         type: string
         x-nullable: true
         description: Benyttes når man bruker bankkode
+        example: 'SVERIGE'
   Kontohaver:
     type: string
     description: Ident for eier av konto.
@@ -314,7 +482,7 @@ definitions:
       feilmelding:
         type: string
         description: Informasjon om hva som gikk galt
-        example: 'person ikke funnet i kontoregister'
+        example: 'en beskrivende feilmelding'
   Landkoder:
     type: array
     items:
@@ -325,6 +493,9 @@ definitions:
       landkode:
         type: string
         example: SE
+      alternativLandkode:
+        type: string
+        example: GB
       land:
         type: string
         example: Sverige
