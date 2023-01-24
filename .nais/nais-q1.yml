@@ -98,24 +98,10 @@ spec:
       value: "dev-fss:teamdokumenthandtering:saf-q1"
     - name: SAKOGBEHANDLING_ENDPOINTURL
       value: "https://modapp-q1.adeo.no/sakogbehandling/ws/SakOgBehandling_v1"
-    - name: SERVER_AKTIVITETSPLAN_URL
-      value: "https://app-q1.adeo.no"
-    - name: SERVER_ARENA_URL
-      value: "http://arena-q1.adeo.no/forms/arenaMod_q1.html"
     - name: SERVER_DREK_URL
       value: "https://pdl-web.dev.intern.nav.no/rekvirerdnummer"
-    - name: SERVER_GOSYS_URL
-      value: "https://wasapp-q1.adeo.no"
     - name: SERVER_NORG2_FRONTEND_URL
       value: "https://norg2-frontend.nais.preprod.local"
-    - name: SERVER_PESYS_URL
-      value: "https://wasapp-q1.adeo.no"
-    - name: SERVER_VEILARBPORTEFOLJEFLATEFS_URL
-      value: "https://app-q1.adeo.no/veilarbportefoljeflatefs"
-    - name: SERVER_AAREG_URL
-      value: "https://modapp-q1.adeo.no/aareg-web"
-    - name: TJENESTER_URL
-      value: "https://tjenester-q1.nav.no"
     - name: UNLEASH_API_URL
       value: "https://unleash.nais.io/api/"
     - name: REST_UTBETALING_ENDPOINTURL
@@ -126,10 +112,6 @@ spec:
       value: "https://veilarboppfolging.dev.intern.nav.no/veilarboppfolging/api"
     - name: VEILARBOPPFOLGINGAPI_SCOPE
       value: "dev-fss:pto:veilarboppfolging"
-    - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
-      value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
-    - name: DKIF_REST_URL
-      value: "https://dkif.dev.adeo.no/"
     - name: KRR_REST_URL
       value: "https://digdir-krr-proxy.dev.intern.nav.no/"
     - name: KRR_SCOPE
@@ -172,14 +154,8 @@ spec:
       value: "dev-fss:oppgavehandtering:oppgave-q1"
     - name: NORG2_BASEURL
       value: "https://app-q1.adeo.no/norg2"
-    - name: PREFETCH_NORG_ANSATTLISTE_SCHEDULE
-      value: "0 0 7,19 * * *"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
       value: "2016-06-04"
-    - name: FJERN_SOKNADER_FOR_DATO
-      value: "2014-12-09"
-    - name: HASTEKASSERING_TILGANG
-      value: "Z992323,Z990366,Z990083,Z990351"
     - name: INTERNAL_TILGANG
       value: "Z990351,Z994123,Z994404,Z994673"
     - name: CXF_SECURE_LOG
@@ -198,8 +174,6 @@ spec:
       value: "dev-gcp:nom:skjermede-personer-pip"
     - name: ARENA_SAK_VEDTAK_URL
       value: "https://arena-q1.adeo.no/arena_ws/services/ArenaSakVedtakService"
-    - name: DITTNAV_EVENTER_MODIA_URL
-      value: "https://app-q1.adeo.no/dittnav-eventer-modia"
     - name: TMS_EVENT_API_URL
       value: "https://tms-event-api.ekstern.dev.nav.no/tms-event-api"
     - name: TMS_EVENT_API_SCOPE

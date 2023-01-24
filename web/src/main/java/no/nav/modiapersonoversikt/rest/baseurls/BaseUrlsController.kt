@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/rest/baseurls")
 class BaseUrlsController @Autowired
 constructor(private val tilgangskontroll: Tilgangskontroll) {
+    private val baseurls = BaseUrls(
+        norg2Frontend = EnvironmentUtils.getRequiredProperty("SERVER_NORG2_FRONTEND_URL"),
+        drek = EnvironmentUtils.getRequiredProperty("SERVER_DREK_URL"),
+        personforvalter = EnvironmentUtils.getRequiredProperty("PERSONFORVALTER_URL"),
+    )
 
     @GetMapping
     fun hent(): Map<String, Any?> {
@@ -23,20 +28,28 @@ constructor(private val tilgangskontroll: Tilgangskontroll) {
             }
     }
 
-    private fun getBaseUrls(): List<BaseUrl> {
-        val baseUrls = ArrayList<BaseUrl>()
-        baseUrls.add(BaseUrl(key = "norg2-frontend", url = EnvironmentUtils.getRequiredProperty("SERVER_NORG2_FRONTEND_URL")))
-        baseUrls.add(BaseUrl(key = "gosys", url = EnvironmentUtils.getRequiredProperty("SERVER_GOSYS_URL")))
-        baseUrls.add(BaseUrl(key = "arena", url = EnvironmentUtils.getRequiredProperty("SERVER_ARENA_URL")))
-        baseUrls.add(BaseUrl(key = "drek", url = EnvironmentUtils.getRequiredProperty("SERVER_DREK_URL")))
-        baseUrls.add(BaseUrl(key = "aktivitetsplan", url = EnvironmentUtils.getRequiredProperty("SERVER_AKTIVITETSPLAN_URL")))
-        baseUrls.add(BaseUrl(key = "pesys", url = EnvironmentUtils.getRequiredProperty("SERVER_PESYS_URL")))
-        baseUrls.add(BaseUrl(key = "aareg", url = EnvironmentUtils.getRequiredProperty("SERVER_AAREG_URL")))
-        baseUrls.add(BaseUrl(key = "veilarbportefoljeflatefs", url = EnvironmentUtils.getRequiredProperty("SERVER_VEILARBPORTEFOLJEFLATEFS_URL")))
-        baseUrls.add(BaseUrl(key = "personforvalter", url = EnvironmentUtils.getRequiredProperty("PERSONFORVALTER_URL")))
-
-        return baseUrls
+    @GetMapping("/v2")
+    fun hentV2(): BaseUrls {
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(skipAuditLog()) {
+                baseurls
+            }
     }
+
+    private fun getBaseUrls(): List<BaseUrl> {
+        return buildList {
+            add(BaseUrl(key = "norg2-frontend", url = baseurls.norg2Frontend))
+            add(BaseUrl(key = "drek", url = baseurls.drek))
+            add(BaseUrl(key = "personforvalter", url = baseurls.personforvalter))
+        }
+    }
+
+    data class BaseUrls(
+        val norg2Frontend: String,
+        val drek: String,
+        val personforvalter: String,
+    )
 
     data class BaseUrl(
         val key: String = "",
