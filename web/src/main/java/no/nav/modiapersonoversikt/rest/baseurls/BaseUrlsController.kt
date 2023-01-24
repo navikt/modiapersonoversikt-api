@@ -19,15 +19,6 @@ constructor(private val tilgangskontroll: Tilgangskontroll) {
         personforvalter = EnvironmentUtils.getRequiredProperty("PERSONFORVALTER_URL"),
     )
 
-    @GetMapping
-    fun hent(): Map<String, Any?> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(skipAuditLog()) {
-                mapOf("baseUrls" to getBaseUrls())
-            }
-    }
-
     @GetMapping("/v2")
     fun hentV2(): BaseUrls {
         return tilgangskontroll
@@ -37,22 +28,9 @@ constructor(private val tilgangskontroll: Tilgangskontroll) {
             }
     }
 
-    private fun getBaseUrls(): List<BaseUrl> {
-        return buildList {
-            add(BaseUrl(key = "norg2-frontend", url = baseurls.norg2Frontend))
-            add(BaseUrl(key = "drek", url = baseurls.drek))
-            add(BaseUrl(key = "personforvalter", url = baseurls.personforvalter))
-        }
-    }
-
     data class BaseUrls(
         val norg2Frontend: String,
         val drek: String,
         val personforvalter: String,
-    )
-
-    data class BaseUrl(
-        val key: String = "",
-        val url: String = ""
     )
 }
