@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -26,6 +27,14 @@ public class DateUtils {
 
     public static Date toDate(XMLGregorianCalendar xml) {
         return xml.toGregorianCalendar().getTime();
+    }
+
+    public static LocalDate toLocalDate(XMLGregorianCalendar xml) {
+        return LocalDate.of(
+                xml.getYear(),
+                xml.getMonth(),
+                xml.getDay()
+        );
     }
 
     public static Date getDate(int year, int month, int day) {
