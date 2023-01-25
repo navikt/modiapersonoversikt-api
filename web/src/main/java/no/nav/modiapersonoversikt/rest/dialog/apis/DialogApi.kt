@@ -104,7 +104,8 @@ data class SendSporsmalRequest(
     val enhet: String,
     val fritekst: String,
     val sak: JournalforingSak,
-    val erOppgaveTilknyttetAnsatt: Boolean
+    val erOppgaveTilknyttetAnsatt: Boolean,
+    val avsluttet: Boolean? = false
 )
 
 data class InfomeldingRequest(

@@ -48,7 +48,7 @@ class SfLegacyDialogController(
             bruker = EksternBruker.Fnr(fnr),
             enhet = referatRequest.enhet,
             temagruppe = referatRequest.temagruppe,
-            kanal = referatRequest.meldingstype.getKanal(),
+            kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
             fritekst = referatRequest.fritekst
         )
 
@@ -66,6 +66,11 @@ class SfLegacyDialogController(
             tilknyttetAnsatt = sporsmalsRequest.erOppgaveTilknyttetAnsatt,
             fritekst = sporsmalsRequest.fritekst
         )
+
+        if(sporsmalsRequest.avsluttet == true){
+            sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
+        }
+
         sfHenvendelseService.journalforHenvendelse(
             enhet = sporsmalsRequest.enhet,
             kjedeId = henvendelse.kjedeId,
@@ -153,7 +158,7 @@ class SfLegacyDialogController(
                 bruker = bruker,
                 enhet = enhet,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
-                kanal = fortsettDialogRequest.meldingstype.getKanal(),
+                kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = fortsettDialogRequest.fritekst
             )
             val journalposter = (henvendelse.journalposter ?: emptyList())
@@ -380,14 +385,6 @@ class SfLegacyDialogController(
                     MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.CHATMELDING_FRA_NAV
                 }
             }
-        }
-    }
-
-    private fun Meldingstype.getKanal(): SamtalereferatRequestDTO.Kanal {
-        return when (this) {
-            Meldingstype.SAMTALEREFERAT_OPPMOTE -> SamtalereferatRequestDTO.Kanal.OPPMOTE
-            Meldingstype.SAMTALEREFERAT_TELEFON -> SamtalereferatRequestDTO.Kanal.TELEFON
-            else -> throw IllegalArgumentException("Ikke støttet meldingstype, $this")
         }
     }
 }
