@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.sakogbehandling;
 
+import no.nav.modiapersonoversikt.service.sakstema.domain.Behandling;
 import no.nav.modiapersonoversikt.service.sakstema.domain.BehandlingsStatus;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
@@ -11,13 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SakOgBehandlingFilterTest {
+public class FilterTest {
     @Test
     public void sjekkerLovligeTema_vedFiltrering_avSaker() throws Exception {
         List<Sak> saker = List.of(
@@ -26,7 +29,7 @@ public class SakOgBehandlingFilterTest {
                 lagSak("SAP")
         );
 
-        List<Sak> filtrerteSaker = SakOgBehandlingFilter.filtrerSaker(saker);
+        List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(0));
     }
 
@@ -71,7 +74,7 @@ public class SakOgBehandlingFilterTest {
 
         );
 
-        List<Sak> filtrerteSaker = SakOgBehandlingFilter.filtrerSaker(saker);
+        List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
 
         assertThat(filtrerteSaker.size(), is(0));
     }
@@ -84,13 +87,13 @@ public class SakOgBehandlingFilterTest {
                         .withSakstema("DAG")
                         .withBehandlingskjede(
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSisteBehandlingREF("lovlig")
                                         .withSisteBehandlingstype("ae0001")
                                         .withSisteBehandlingsoppdatering(dagensDato)
                                         .build(), // Ulovlig
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSisteBehandlingstype("ae0014")
                                         .withSisteBehandlingREF("lovlig")
                                         .withSisteBehandlingsoppdatering(dagensDato)
@@ -100,7 +103,7 @@ public class SakOgBehandlingFilterTest {
                         .withSakstema("HJL")
                         .withBehandlingskjede(
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSisteBehandlingstype("ae0034")
                                         .withSisteBehandlingREF("lovlig")
                                         .withSisteBehandlingAvslutningsstatus("ok")
@@ -109,7 +112,7 @@ public class SakOgBehandlingFilterTest {
                                         .withSlutt(dagensDato)
                                         .build(),
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSisteBehandlingREF("lovlig")
                                         .withSisteBehandlingstype("ae0047")
                                         .withSisteBehandlingAvslutningsstatus("ok")
@@ -122,12 +125,12 @@ public class SakOgBehandlingFilterTest {
                         .withSakstema("FEI")
                         .withBehandlingskjede(                      // Ulovlig
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSisteBehandlingstype("ae0039").withSisteBehandlingREF("lovlig")
                                         .withSisteBehandlingsoppdatering(dagensDato)
                                         .build(),
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSisteBehandlingstype("ae0047").withSisteBehandlingREF("lovlig")
                                         .withSisteBehandlingsoppdatering(dagensDato)
                                         .build()
@@ -136,7 +139,7 @@ public class SakOgBehandlingFilterTest {
                         .withSakstema("AAP")
                         .withBehandlingskjede(
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSlutt(new DateTime())
                                         .withSisteBehandlingstype("ae0001")
                                         .withSisteBehandlingREF("lovlig")
@@ -145,7 +148,7 @@ public class SakOgBehandlingFilterTest {
                                         .withSisteBehandlingsoppdatering(dagensDato)
                                         .build(), // Ulovlig, men avsluttet kvittering
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSlutt(new DateTime())
                                         .withSisteBehandlingstype("ae0002")
                                         .withSisteBehandlingREF("lovlig")
@@ -158,7 +161,7 @@ public class SakOgBehandlingFilterTest {
 
         );
 
-        List<Sak> filtrerteSaker = SakOgBehandlingFilter.filtrerSaker(saker);
+        List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(3));
 
 
@@ -172,7 +175,7 @@ public class SakOgBehandlingFilterTest {
                         .withSakstema("HJL")
                         .withBehandlingskjede(
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSisteBehandlingstype("ae0034")
                                         .withSisteBehandlingREF("lovlig")
                                         .withSisteBehandlingAvslutningsstatus("ok")
@@ -181,7 +184,7 @@ public class SakOgBehandlingFilterTest {
                                         .withSlutt(toMndSidan)
                                         .build(),
                                 BehandlingskjedeBuilder.create()
-                                        .withSisteBehandlingsstatus(SakOgBehandlingFilter.AVSLUTTET)
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                                         .withSisteBehandlingREF("lovlig")
                                         .withSisteBehandlingstype("ae0047")
                                         .withSisteBehandlingAvslutningsstatus("ok")
@@ -192,7 +195,7 @@ public class SakOgBehandlingFilterTest {
                         ).build()
 
         );
-        List<Sak> filtrerteSaker = SakOgBehandlingFilter.filtrerSaker(saker);
+        List<Sak> filtrerteSaker = Filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(0));
     }
 
@@ -266,45 +269,35 @@ public class SakOgBehandlingFilterTest {
                                         .withSisteBehandlingsoppdatering(DateTime.now())
                                         .withSisteBehandlingsstatus("avsluttet")
                                         .withSisteBehandlingAvslutningsstatus("ok")
-                                        .withSisteBehandlingREF("FS36_1273753")
+                                        .withSisteBehandlingREF("FS36_1273752")
                                         .build()
 
                         ).build()
 
 
         );
-
-        List<Behandlingskjede> filtrerteBehandlinger = SakOgBehandlingFilter.filtrerBehandlinger(saker.get(0).getBehandlingskjede());
+        List<Behandling> filtrerteBehandlinger = Filter.filtrerBehandlinger(hentBehandlingerfraBehandlingskjede(saker.get(0).getBehandlingskjede()));
         assertThat(filtrerteBehandlinger.size(), is(2));
 
     }
 
+
+    private List<Behandling> hentBehandlingerfraBehandlingskjede(List<Behandlingskjede> behandlingskjede) {
+        return behandlingskjede.stream()
+                .map(Transformers::tilBehandling)
+                .collect(toList());
+    }
+
     @Test
     public void filtrerBehandlingerUlovligPrefix() {
-        List<Behandlingskjede> behandling = SakOgBehandlingFilter.filtrerBehandlinger(ulovligPrefix());
+        List<Behandling> behandling = Filter.filtrerBehandlinger(ulovligPrefix());
         assertThat(behandling.size(), is(0));
     }
 
     @Test
     public void filtrerBehandlingerUlovligBehandlingsstatus() {
-        List<Behandlingskjede> behandling = SakOgBehandlingFilter.filtrerBehandlinger(ulovligBehandlingsstatus());
+        List<Behandling> behandling = Filter.filtrerBehandlinger(ulovligBehandlingsstatus());
         assertThat(behandling.size(), is(0));
-    }
-
-    @Test
-    public void mapperBehandlingskjedestatusRiktig() {
-        var opprettet = SakOgBehandlingFilter.behandlingsstatus(lagBehandlingskjede(SakOgBehandlingFilter.OPPRETTET));
-        var avsluttet = SakOgBehandlingFilter.behandlingsstatus(lagBehandlingskjede(SakOgBehandlingFilter.AVSLUTTET));
-        var avbrutt = SakOgBehandlingFilter.behandlingsstatus(lagBehandlingskjede(SakOgBehandlingFilter.AVBRUTT));
-
-        assertThat(opprettet, is(BehandlingsStatus.UNDER_BEHANDLING));
-        assertThat(avsluttet, is(BehandlingsStatus.FERDIG_BEHANDLET));
-        assertThat(avbrutt, is(BehandlingsStatus.AVBRUTT));
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void skalKasteFeilVedUkjentBehandlingsstatus() {
-        SakOgBehandlingFilter.behandlingsstatus(lagBehandlingskjede("ukjent"));
     }
 
     private Sak lagSak(String sakstema) throws Exception {
@@ -312,11 +305,14 @@ public class SakOgBehandlingFilterTest {
         Sakstemaer sakstemaer = new Sakstemaer();
         sakstemaer.setValue(sakstema);
 
-        Behandlingskjede behandlingskjede = lagBehandlingskjede(
-                SakOgBehandlingFilter.AVSLUTTET,
-                "ae0014",
-                "lovlig"
-        );
+        Behandlingskjede behandlingskjede = MockCreationUtil.createWSBehandlingskjede();
+        Behandlingsstatuser behandlingstatus = new Behandlingsstatuser();
+        behandlingstatus.setValue(FilterUtils.AVSLUTTET);
+        behandlingskjede.setSisteBehandlingsstatus(behandlingstatus);
+        behandlingskjede.setSisteBehandlingREF("lovlig");
+        Behandlingstyper behandlingstype = new Behandlingstyper();
+        behandlingstype.setValue("ae0014");
+        behandlingskjede.setSisteBehandlingstype(behandlingstype);
 
         sak.getBehandlingskjede().add(behandlingskjede);
         sak.setSakstema(sakstemaer);
@@ -324,45 +320,23 @@ public class SakOgBehandlingFilterTest {
         return sak;
     }
 
-    private List<Behandlingskjede> ulovligPrefix() {
+    private List<Behandling> ulovligPrefix() {
         return List.of(
-                lagBehandlingskjede(
-                        SakOgBehandlingFilter.AVSLUTTET,
-                        SakOgBehandlingFilter.SEND_SOKNAD_KVITTERINGSTYPE,
-                        "17"
-                )
+                new Behandling()
+                        .withBehandlingsType(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withBehandlingStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                        .withPrefix("17")
+
         );
     }
 
-    private List<Behandlingskjede> ulovligBehandlingsstatus() {
+    private List<Behandling> ulovligBehandlingsstatus() {
         return List.of(
-                lagBehandlingskjede(
-                        SakOgBehandlingFilter.AVSLUTTET,
-                        SakOgBehandlingFilter.SEND_SOKNAD_KVITTERINGSTYPE,
-                        "11"
-                )
+                new Behandling()
+                        .withBehandlingsType(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withBehandlingStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                        .withPrefix("11")
+
         );
-    }
-
-    private Behandlingskjede lagBehandlingskjede(String statusValue) {
-        return lagBehandlingskjede(statusValue, "", "");
-    }
-    private Behandlingskjede lagBehandlingskjede(
-            String statusValue,
-            String typeValue,
-            String behandlingRef
-    ) {
-        var kjede = new Behandlingskjede();
-        var type = new Behandlingskjedetyper();
-        type.setValue(typeValue);
-        kjede.setBehandlingskjedetype(type);
-
-        var status = new Behandlingsstatuser();
-        status.setValue(statusValue);
-        kjede.setSisteBehandlingsstatus(status);
-
-        kjede.setSisteBehandlingREF(behandlingRef);
-
-        return kjede;
     }
 }

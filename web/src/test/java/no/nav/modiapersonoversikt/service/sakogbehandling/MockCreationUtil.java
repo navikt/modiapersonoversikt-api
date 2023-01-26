@@ -26,7 +26,7 @@ public class MockCreationUtil {
 
         Behandlingskjede behandling = createWSBehandlingskjede();
         Behandlingsstatuser status = new Behandlingsstatuser();
-        status.setValue(SakOgBehandlingFilter.AVSLUTTET);
+        status.setValue(FilterUtils.AVSLUTTET);
         behandling.setSisteBehandlingsstatus(status);
 
         Behandlingstyper type = new Behandlingstyper();

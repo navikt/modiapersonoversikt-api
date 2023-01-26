@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.sakogbehandling
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.FeilendeBaksystemException
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.sakstema.domain.Behandling
 import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak
@@ -10,6 +11,9 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
+import java.time.LocalDateTime
+import java.util.stream.Collectors
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede as WSBehandlingskjede
 
 @CacheConfig(cacheNames = ["endpointCache"], keyGenerator = "userkeygenerator")
 open class SakOgBehandlingServiceImpl(
@@ -23,7 +27,7 @@ open class SakOgBehandlingServiceImpl(
             val request = FinnSakOgBehandlingskjedeListeRequest()
             request.aktoerREF = aktorId
             val sobSaker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(request).sak
-            SakOgBehandlingFilter.filtrerSaker(sobSaker)
+            Filter.filtrerSaker(sobSaker)
         } catch (ex: RuntimeException) {
             logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex)
             throw FeilendeBaksystemException(
@@ -33,7 +37,7 @@ open class SakOgBehandlingServiceImpl(
     }
 
     @Cacheable
-    override fun hentBehandlingskjederGruppertPaaTema(fnr: String): Map<String, List<Behandlingskjede>> {
+    override fun hentBehandlingskjederGruppertPaaTema(fnr: String): Map<String, List<Behandlingskjede?>> {
         return hentAlleSaker(fnr)
             .associate { sak ->
                 val tema = sak.sakstema.value
@@ -42,16 +46,29 @@ open class SakOgBehandlingServiceImpl(
             }
     }
 
-    private fun tilBehandligskjeder(sak: Sak): List<Behandlingskjede> {
-        return SakOgBehandlingFilter.filtrerBehandlinger(sak.behandlingskjede)
-            .map {
-                Behandlingskjede()
-                    .withStatus(SakOgBehandlingFilter.behandlingsstatus(it))
-                    .withSistOppdatert(SakOgBehandlingFilter.behandlingsdato(it).atStartOfDay())
-            }
+    private fun filtrerteBehandlinger(sak: Sak): List<Behandling> {
+        return Filter.filtrerBehandlinger(hentBehandlingerFraBehandlingskjeder(sak.behandlingskjede))
+    }
+
+    private fun tilBehandligskjeder(wsSak: Sak): List<Behandlingskjede?> {
+        return filtrerteBehandlinger(wsSak)
+            .map(::tilBehandlingskjede)
     }
 
     companion object {
         private val logger = LoggerFactory.getLogger(SakOgBehandlingServiceImpl::class.java)
+        private fun hentBehandlingerFraBehandlingskjeder(behandlingskjedeListe: List<WSBehandlingskjede>): List<Behandling> {
+            return behandlingskjedeListe.stream()
+                .map(Transformers::tilBehandling)
+                .collect(Collectors.toList())
+        }
+
+        fun tilBehandlingskjede(behandling: Behandling): Behandlingskjede = Behandlingskjede()
+            .withStatus(behandling.getBehandlingsStatus())
+            .withSistOppdatert(
+                LocalDateTime.from(
+                    behandling.getBehandlingDato().toGregorianCalendar().toZonedDateTime()
+                )
+            )
     }
 }
