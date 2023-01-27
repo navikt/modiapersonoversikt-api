@@ -67,7 +67,7 @@ class SfLegacyDialogController(
             fritekst = sporsmalsRequest.fritekst
         )
 
-        if(sporsmalsRequest.avsluttet == true){
+        if (sporsmalsRequest.avsluttet == true) {
             sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
         }
 
