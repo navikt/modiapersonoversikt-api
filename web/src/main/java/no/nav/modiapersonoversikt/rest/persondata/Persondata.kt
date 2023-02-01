@@ -124,13 +124,24 @@ object Persondata {
             gyldighetsPeriode: GyldighetsPeriode? = null
         ) : this(
             coAdresse,
-            linje1.filterNotNull().joinToString(" "),
-            linje2?.filterNotNull()?.joinToString(" "),
-            linje3?.filterNotNull()?.joinToString(" "),
+            vaskLinje(linje1) ?: "",
+            vaskLinje(linje2),
+            vaskLinje(linje3),
             angittFlyttedato,
             sistEndret,
             gyldighetsPeriode
         )
+        companion object {
+            private fun vaskLinje(adresseLinje: List<String?>?): String? {
+                if (adresseLinje == null) return null
+
+                val linjeString = adresseLinje.filterNotNull().joinToString(" ")
+
+                val pattern = Regex("\\s{2,}")
+
+                return pattern.replace(linjeString, " ").trim()
+            }
+        }
     }
 
     data class Apningstid(
