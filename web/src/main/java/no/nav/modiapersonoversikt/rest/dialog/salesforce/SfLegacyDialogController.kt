@@ -36,7 +36,6 @@ class SfLegacyDialogController(
     private val kodeverk: EnhetligKodeverk.Service,
     private val unleashService: UnleashService
 ) : DialogApi {
-    var newDialogEnabled: Boolean = unleashService.isEnabled(Feature.USE_NEW_DIALOG_VISNING)
     override fun hentMeldinger(fnr: String, enhet: String): List<TraadDTO> {
         val bruker = EksternBruker.Fnr(fnr)
 
@@ -47,6 +46,7 @@ class SfLegacyDialogController(
     }
 
     override fun sendMelding(fnr: String, referatRequest: SendReferatRequest): TraadDTO {
+        val newDialogEnabled = unleashService.isEnabled(Feature.USE_NEW_DIALOG_VISNING)
         val henvendelse = sfHenvendelseService.sendSamtalereferat(
             kjedeId = null,
             bruker = EksternBruker.Fnr(fnr),
@@ -129,6 +129,7 @@ class SfLegacyDialogController(
         fnr: String,
         fortsettDialogRequest: FortsettDialogRequest
     ): TraadDTO {
+        val newDialogEnabled = unleashService.isEnabled(Feature.USE_NEW_DIALOG_VISNING)
         val kjedeId = fortsettDialogRequest.traadId
         val oppgaveId = fortsettDialogRequest.oppgaveId
 
