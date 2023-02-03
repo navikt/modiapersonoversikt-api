@@ -110,6 +110,61 @@ internal class AdresseMappingTest {
         Assertions.assertEquals("9750 Nordkapp", kontaktAdresse.linje3)
     }
 
+    @Test
+    internal fun `klarer å håndtere ekstra mellomrom på slutten av adressse`() {
+        val hovedperson = testPerson.copy(
+            bostedsadresse = adresse.copy(
+                vegadresse = HentPersondata.Vegadresse(
+                    matrikkelId = HentPersondata.Long(1234L),
+                    husnummer = "   12",
+                    husbokstav = "A    ",
+                    bruksenhetsnummer = "  H0101",
+                    adressenavn = "fin veg",
+                    kommunenummer = "1234",
+                    postnummer = "6789",
+                    bydelsnummer = null,
+                    tilleggsnavn = null
+                )
+            ).asList()
+        )
+        val tredjepartsPerson = gittTredjepartsperson().copy(
+            bostedsadresse = HentTredjepartspersondata.Bostedsadresse(
+                folkeregistermetadata = null,
+                vegadresse = HentTredjepartspersondata.Vegadresse(
+                    husnummer = "12",
+                    husbokstav = "A",
+                    bruksenhetsnummer = "H0101",
+                    adressenavn = " fin     veg ",
+                    kommunenummer = "1234",
+                    postnummer = "6789",
+                    bydelsnummer = null,
+                    tilleggsnavn = null
+                ),
+                matrikkeladresse = null,
+                utenlandskAdresse = null,
+                ukjentBosted = null
+            ).asList()
+        )
+
+        val barnFnr = "98765432100"
+        val tredjepartsPersonData = TredjepartspersonMapper(kodeverk)
+            .lagTredjepartsperson(barnFnr, tredjepartsPerson, PersondataService.Tilganger(kode6 = true, kode7 = true), kontaktinformasjonTredjepartsperson)
+
+        val persondata = mapper.flettSammenData(
+            data = testData.copy(
+                personIdent = "",
+                persondata = hovedperson,
+                tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
+                    mapOf(barnFnr to requireNotNull(tredjepartsPersonData))
+                }
+            ),
+            clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
+        )
+
+        val harSammeAdresse = persondata.person.forelderBarnRelasjon.find { it.ident == barnFnr }?.harSammeAdresse
+        Assertions.assertTrue(harSammeAdresse ?: false)
+    }
+
     private fun gittTredjepartsperson() = HentTredjepartspersondata.Person(
         navn = emptyList(),
         kjoenn = emptyList(),
