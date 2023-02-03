@@ -17,6 +17,8 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
@@ -32,6 +34,7 @@ class SfLegacyDialogController(
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ansattService: AnsattService,
     private val kodeverk: EnhetligKodeverk.Service,
+    private val unleashService: UnleashService
 ) : DialogApi {
     override fun hentMeldinger(fnr: String, enhet: String): List<TraadDTO> {
         val bruker = EksternBruker.Fnr(fnr)
@@ -43,12 +46,13 @@ class SfLegacyDialogController(
     }
 
     override fun sendMelding(fnr: String, referatRequest: SendReferatRequest): TraadDTO {
+        val newDialogEnabled = unleashService.isEnabled(Feature.USE_NEW_DIALOG_VISNING)
         val henvendelse = sfHenvendelseService.sendSamtalereferat(
             kjedeId = null,
             bruker = EksternBruker.Fnr(fnr),
             enhet = referatRequest.enhet,
             temagruppe = referatRequest.temagruppe,
-            kanal = referatRequest.meldingstype.getKanal(),
+            kanal = if (newDialogEnabled) SamtalereferatRequestDTO.Kanal.OPPMOTE else referatRequest.meldingstype.getKanal(),
             fritekst = referatRequest.fritekst
         )
 
@@ -66,6 +70,11 @@ class SfLegacyDialogController(
             tilknyttetAnsatt = sporsmalsRequest.erOppgaveTilknyttetAnsatt,
             fritekst = sporsmalsRequest.fritekst
         )
+
+        if (sporsmalsRequest.avsluttet == true) {
+            sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
+        }
+
         sfHenvendelseService.journalforHenvendelse(
             enhet = sporsmalsRequest.enhet,
             kjedeId = henvendelse.kjedeId,
@@ -120,6 +129,7 @@ class SfLegacyDialogController(
         fnr: String,
         fortsettDialogRequest: FortsettDialogRequest
     ): TraadDTO {
+        val newDialogEnabled = unleashService.isEnabled(Feature.USE_NEW_DIALOG_VISNING)
         val kjedeId = fortsettDialogRequest.traadId
         val oppgaveId = fortsettDialogRequest.oppgaveId
 
@@ -153,7 +163,7 @@ class SfLegacyDialogController(
                 bruker = bruker,
                 enhet = enhet,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
-                kanal = fortsettDialogRequest.meldingstype.getKanal(),
+                kanal = if (newDialogEnabled) SamtalereferatRequestDTO.Kanal.OPPMOTE else fortsettDialogRequest.meldingstype.getKanal(),
                 fritekst = fortsettDialogRequest.fritekst
             )
             val journalposter = (henvendelse.journalposter ?: emptyList())
