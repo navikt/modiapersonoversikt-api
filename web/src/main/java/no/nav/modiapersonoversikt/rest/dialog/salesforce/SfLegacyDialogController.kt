@@ -156,7 +156,7 @@ class SfLegacyDialogController(
                 )
             }
         }
-        val erSamtalereferat = REFERAT_TYPER.contains(fortsettDialogRequest.meldingstype)
+        val erSamtalereferat = REFERAT_TYPER.contains(fortsettDialogRequest.meldingstype) || fortsettDialogRequest.traadType == TraadType.SAMTALEREFERAT
         if (erSamtalereferat) {
             henvendelse = sfHenvendelseService.sendSamtalereferat(
                 kjedeId = kjedeId,
@@ -186,7 +186,7 @@ class SfLegacyDialogController(
                 fritekst = fortsettDialogRequest.fritekst
             )
 
-            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
+            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE || fortsettDialogRequest.avsluttet == true) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
             if (fortsettDialogRequest.sak != null) {

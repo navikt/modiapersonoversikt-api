@@ -117,12 +117,14 @@ data class InfomeldingRequest(
 data class FortsettDialogRequest(
     val enhet: String,
     val traadId: String,
+    val traadType: TraadType?,
     val behandlingsId: String,
     val fritekst: String,
     val sak: JournalforingSak?,
     val erOppgaveTilknyttetAnsatt: Boolean,
     val meldingstype: Meldingstype,
-    val oppgaveId: String?
+    val oppgaveId: String?,
+    val avsluttet: Boolean? = false,
 )
 
 data class SlaaSammenRequest(
