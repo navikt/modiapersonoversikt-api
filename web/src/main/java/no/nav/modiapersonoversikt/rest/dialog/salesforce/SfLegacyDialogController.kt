@@ -59,6 +59,14 @@ class SfLegacyDialogController(
         return parseFraHenvendelseTilTraad(henvendelse)
     }
 
+    override fun sendMelding(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
+        return if (meldingRequest.traadId != null) {
+            opprettNyDialog(fnr, meldingRequest)
+        } else {
+            fortsettPaEksisterendeDialog(fnr, meldingRequest)
+        }
+    }
+
     override fun sendSporsmal(
         fnr: String,
         sporsmalsRequest: SendSporsmalRequest
@@ -399,5 +407,122 @@ class SfLegacyDialogController(
             Meldingstype.SAMTALEREFERAT_TELEFON -> SamtalereferatRequestDTO.Kanal.TELEFON
             else -> throw IllegalArgumentException("Ikke støttet meldingstype, $this")
         }
+    }
+
+    private fun opprettNyDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
+        if (meldingRequest.traadType == TraadType.SAMTALEREFERAT) {
+            val henvendelse = sfHenvendelseService.sendSamtalereferat(
+                kjedeId = null,
+                bruker = EksternBruker.Fnr(fnr),
+                enhet = meldingRequest.enhet,
+                temagruppe = meldingRequest.temagruppe,
+                kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
+                fritekst = meldingRequest.fritekst
+            )
+            return parseFraHenvendelseTilTraad(henvendelse)
+        } else {
+            val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
+                bruker = EksternBruker.Fnr(fnr),
+                enhet = meldingRequest.enhet,
+                temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(meldingRequest.sak!!.temaKode),
+                tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
+                fritekst = meldingRequest.fritekst
+            )
+
+            if (meldingRequest.avsluttet == true) {
+                sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
+            }
+
+            sfHenvendelseService.journalforHenvendelse(
+                enhet = meldingRequest.enhet,
+                kjedeId = henvendelse.kjedeId,
+                saksId = meldingRequest.sak.fagsystemSaksId,
+                saksTema = meldingRequest.sak.temaKode,
+                fagsakSystem = meldingRequest.sak.fagsystemKode
+            )
+
+            return parseFraHenvendelseTilTraad(henvendelse)
+        }
+    }
+
+    private fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
+        val kjedeId = meldingRequest.traadId!!
+        val oppgaveId = meldingRequest.oppgaveId
+
+        val bruker = EksternBruker.Fnr(fnr)
+        val enhet = meldingRequest.enhet
+        var henvendelse = sfHenvendelseService.hentHenvendelse(meldingRequest.traadId)
+
+        val henvendelseTilhorerBruker = sfHenvendelseService.sjekkEierskap(bruker, henvendelse)
+        if (!henvendelseTilhorerBruker) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Henvendelse $kjedeId tilhørte ikke bruker")
+        }
+
+        if (oppgaveId != null) {
+            val oppgave: Oppgave? = oppgaveBehandlingService.hentOppgave(oppgaveId)
+            if (kjedeId != oppgave?.henvendelseId) {
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Feil oppgaveId fra client. Forventet '$kjedeId', men fant '${oppgave?.henvendelseId}'"
+                )
+            } else if (oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId)) {
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt"
+                )
+            }
+        }
+
+        if (meldingRequest.traadType == TraadType.SAMTALEREFERAT) {
+            henvendelse = sfHenvendelseService.sendSamtalereferat(
+                kjedeId = kjedeId,
+                bruker = bruker,
+                enhet = enhet,
+                temagruppe = henvendelse.gjeldendeTemagruppe!!,
+                kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
+                fritekst = meldingRequest.fritekst
+            )
+            val journalposter = (henvendelse.journalposter ?: emptyList())
+                .distinctBy { it.fagsakId }
+            journalposter.forEach {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = it.fagsakId,
+                    saksTema = it.journalfortTema,
+                    fagsakSystem = it.fagsaksystem?.name
+                )
+            }
+        } else {
+            henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
+                bruker = bruker,
+                kjedeId = kjedeId,
+                enhet = enhet,
+                tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
+                fritekst = meldingRequest.fritekst
+            )
+
+            if (meldingRequest.avsluttet == true) {
+                sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
+            }
+            if (meldingRequest.sak != null) {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = meldingRequest.sak.fagsystemSaksId,
+                    saksTema = meldingRequest.sak.temaKode,
+                    fagsakSystem = meldingRequest.sak.fagsystemKode
+                )
+            }
+        }
+        if (oppgaveId != null) {
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(
+                oppgaveId,
+                Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe!!),
+                enhet
+            )
+        }
+
+        return parseFraHenvendelseTilTraad(henvendelse)
     }
 }
