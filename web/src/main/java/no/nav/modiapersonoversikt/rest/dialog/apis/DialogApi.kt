@@ -19,6 +19,11 @@ interface DialogApi {
         referatRequest: SendReferatRequest
     ): TraadDTO
 
+    fun sendMelding(
+        fnr: String,
+        meldingRequest: SendMeldingRequest
+    ): TraadDTO
+
     fun sendSporsmal(
         fnr: String,
         sporsmalsRequest: SendSporsmalRequest
@@ -91,6 +96,19 @@ class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?)
 data class OpprettHenvendelseRequest(
     val enhet: String?,
     val traadId: String
+)
+
+data class SendMeldingRequest(
+    val traadId: String?,
+    val traadType: TraadType,
+    val enhet: String,
+    val fritekst: String,
+    val temagruppe: String,
+    val sak: JournalforingSak?,
+    val erOppgaveTilknyttetAnsatt: Boolean?,
+    val avsluttet: Boolean?,
+    val behandlingsId: String?,
+    val oppgaveId: String?
 )
 
 data class SendReferatRequest(
