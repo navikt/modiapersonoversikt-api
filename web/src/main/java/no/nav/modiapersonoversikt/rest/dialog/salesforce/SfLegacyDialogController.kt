@@ -335,6 +335,7 @@ class SfLegacyDialogController(
         }
         return TraadDTO(
             traadId = henvendelse.kjedeId,
+            temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe),
             traadType = TraadType.valueOf(henvendelse.henvendelseType.value),
             meldinger = meldinger,
             journalposter = journalposter,

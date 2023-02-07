@@ -71,6 +71,7 @@ interface DialogApi {
 data class TraadDTO(
     val traadId: String,
     val traadType: TraadType,
+    val temagruppe: String,
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogApi.Journalpost>
 )
