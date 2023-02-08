@@ -7,7 +7,9 @@ import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
-import no.nav.modiapersonoversikt.rest.dialog.domain.*
+import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
+import no.nav.modiapersonoversikt.rest.dialog.domain.Status
+import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
@@ -162,7 +164,7 @@ class SfLegacyDialogController(
                 )
             }
         }
-        val erSamtalereferat = REFERAT_TYPER.contains(fortsettDialogRequest.meldingstype) || fortsettDialogRequest.traadType == TraadType.SAMTALEREFERAT
+        val erSamtalereferat = REFERAT_TYPER.contains(fortsettDialogRequest.meldingstype)
         if (erSamtalereferat) {
             henvendelse = sfHenvendelseService.sendSamtalereferat(
                 kjedeId = kjedeId,
@@ -192,7 +194,7 @@ class SfLegacyDialogController(
                 fritekst = fortsettDialogRequest.fritekst
             )
 
-            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE || fortsettDialogRequest.avsluttet == true) {
+            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
             if (fortsettDialogRequest.sak != null) {
@@ -414,7 +416,7 @@ class SfLegacyDialogController(
                 kjedeId = null,
                 bruker = EksternBruker.Fnr(fnr),
                 enhet = meldingRequest.enhet,
-                temagruppe = meldingRequest.temagruppe,
+                temagruppe = meldingRequest.temagruppe!!,
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = meldingRequest.fritekst
             )

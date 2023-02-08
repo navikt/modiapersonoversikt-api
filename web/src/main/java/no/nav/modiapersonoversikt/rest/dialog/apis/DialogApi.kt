@@ -104,7 +104,7 @@ data class SendMeldingRequest(
     val traadType: TraadType,
     val enhet: String,
     val fritekst: String,
-    val temagruppe: String,
+    val temagruppe: String?,
     val sak: JournalforingSak?,
     val erOppgaveTilknyttetAnsatt: Boolean?,
     val avsluttet: Boolean?,
