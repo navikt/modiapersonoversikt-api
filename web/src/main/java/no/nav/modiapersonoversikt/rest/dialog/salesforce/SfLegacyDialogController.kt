@@ -7,9 +7,7 @@ import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
-import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
-import no.nav.modiapersonoversikt.rest.dialog.domain.Status
-import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
+import no.nav.modiapersonoversikt.rest.dialog.domain.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
@@ -61,9 +59,9 @@ class SfLegacyDialogController(
 
     override fun sendMelding(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
         return if (meldingRequest.traadId != null) {
-            opprettNyDialog(fnr, meldingRequest)
-        } else {
             fortsettPaEksisterendeDialog(fnr, meldingRequest)
+        } else {
+            opprettNyDialog(fnr, meldingRequest)
         }
     }
 
