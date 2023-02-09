@@ -19,6 +19,11 @@ interface DialogApi {
         referatRequest: SendReferatRequest
     ): TraadDTO
 
+    fun sendMelding(
+        fnr: String,
+        meldingRequest: SendMeldingRequest
+    ): TraadDTO
+
     fun sendSporsmal(
         fnr: String,
         sporsmalsRequest: SendSporsmalRequest
@@ -66,6 +71,7 @@ interface DialogApi {
 data class TraadDTO(
     val traadId: String,
     val traadType: TraadType,
+    val temagruppe: String,
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogApi.Journalpost>
 )
@@ -93,6 +99,19 @@ data class OpprettHenvendelseRequest(
     val traadId: String
 )
 
+data class SendMeldingRequest(
+    val traadId: String?,
+    val traadType: TraadType,
+    val enhet: String,
+    val fritekst: String,
+    val temagruppe: String?,
+    val sak: JournalforingSak?,
+    val erOppgaveTilknyttetAnsatt: Boolean?,
+    val avsluttet: Boolean?,
+    val behandlingsId: String?,
+    val oppgaveId: String?
+)
+
 data class SendReferatRequest(
     val enhet: String,
     val fritekst: String,
@@ -117,12 +136,14 @@ data class InfomeldingRequest(
 data class FortsettDialogRequest(
     val enhet: String,
     val traadId: String,
+    val traadType: TraadType?,
     val behandlingsId: String,
     val fritekst: String,
     val sak: JournalforingSak?,
     val erOppgaveTilknyttetAnsatt: Boolean,
     val meldingstype: Meldingstype,
-    val oppgaveId: String?
+    val oppgaveId: String?,
+    val avsluttet: Boolean? = false,
 )
 
 data class SlaaSammenRequest(

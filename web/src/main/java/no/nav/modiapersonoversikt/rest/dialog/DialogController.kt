@@ -29,6 +29,18 @@ class DialogController @Autowired constructor(
             }
     }
 
+    @PostMapping("/sendmelding")
+    fun sendMeldinger(
+        @PathVariable("fnr") fnr: String,
+        @RequestBody meldingRequest: SendMeldingRequest
+    ): TraadDTO {
+        return tilgangskontroll
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
+                dialogapi.sendMelding(fnr, meldingRequest)
+            }
+    }
+
     @PostMapping("/sendreferat")
     fun sendMelding(
         @PathVariable("fnr") fnr: String,
