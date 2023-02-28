@@ -24,6 +24,8 @@ import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.time.OffsetDateTime
 import kotlin.reflect.KProperty1
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 sealed class EksternBruker(val ident: String) {
     data class AktorId(val aktorId: String) : EksternBruker(aktorId)
@@ -505,6 +507,7 @@ object SfHenvendelseApiFactory {
         .addInterceptor(
             AuthorizationInterceptor(tokenProvider)
         )
+        .readTimeout(15.seconds.toJavaDuration())
         .build()
 
     fun createHenvendelseBehandlingApi(oboClient: BoundedOnBehalfOfTokenClient) = HenvendelseBehandlingApi(url(), createClient(oboClient.asTokenProvider()))
