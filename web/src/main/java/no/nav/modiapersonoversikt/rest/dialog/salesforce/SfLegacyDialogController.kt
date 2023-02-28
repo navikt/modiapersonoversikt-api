@@ -506,15 +506,18 @@ class SfLegacyDialogController(
             if (meldingRequest.avsluttet == true) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
-            if (meldingRequest.sak != null) {
-                sfHenvendelseService.journalforHenvendelse(
-                    enhet = enhet,
-                    kjedeId = henvendelse.kjedeId,
-                    saksId = meldingRequest.sak.fagsystemSaksId,
-                    saksTema = meldingRequest.sak.temaKode,
-                    fagsakSystem = meldingRequest.sak.fagsystemKode
-                )
+
+            if (meldingRequest.sak == null) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingen sak sendt fra klienten. For å fortsette en samtale kreves det en sak.")
             }
+
+            sfHenvendelseService.journalforHenvendelse(
+                enhet = enhet,
+                kjedeId = henvendelse.kjedeId,
+                saksId = meldingRequest.sak.fagsystemSaksId,
+                saksTema = meldingRequest.sak.temaKode,
+                fagsakSystem = meldingRequest.sak.fagsystemKode
+            )
         }
         if (oppgaveId != null) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(
