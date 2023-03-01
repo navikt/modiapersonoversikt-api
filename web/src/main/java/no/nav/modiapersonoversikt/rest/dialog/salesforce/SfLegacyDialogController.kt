@@ -495,6 +495,10 @@ class SfLegacyDialogController(
                 )
             }
         } else {
+            if (meldingRequest.sak == null) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingen sak sendt fra klienten. For å fortsette en samtale kreves det en sak.")
+            }
+
             henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
                 bruker = bruker,
                 kjedeId = kjedeId,
@@ -505,10 +509,6 @@ class SfLegacyDialogController(
 
             if (meldingRequest.avsluttet == true) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
-            }
-
-            if (meldingRequest.sak == null) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingen sak sendt fra klienten. For å fortsette en samtale kreves det en sak.")
             }
 
             sfHenvendelseService.journalforHenvendelse(
