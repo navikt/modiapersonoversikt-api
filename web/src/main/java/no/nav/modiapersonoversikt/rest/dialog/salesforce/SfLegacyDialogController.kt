@@ -495,10 +495,6 @@ class SfLegacyDialogController(
                 )
             }
         } else {
-            if (meldingRequest.sak == null) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingen sak sendt fra klienten. For å fortsette en samtale kreves det en sak.")
-            }
-
             henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
                 bruker = bruker,
                 kjedeId = kjedeId,
@@ -511,13 +507,15 @@ class SfLegacyDialogController(
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
 
-            sfHenvendelseService.journalforHenvendelse(
-                enhet = enhet,
-                kjedeId = henvendelse.kjedeId,
-                saksId = meldingRequest.sak.fagsystemSaksId,
-                saksTema = meldingRequest.sak.temaKode,
-                fagsakSystem = meldingRequest.sak.fagsystemKode
-            )
+            if (meldingRequest.sak != null) {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = meldingRequest.sak.fagsystemSaksId,
+                    saksTema = meldingRequest.sak.temaKode,
+                    fagsakSystem = meldingRequest.sak.fagsystemKode
+                )
+            }
         }
         if (oppgaveId != null) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(
