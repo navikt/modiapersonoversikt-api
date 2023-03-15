@@ -102,7 +102,7 @@ spec:
     - name: SERVER_DREK_URL
       value: "https://pdl-web.intern.nav.no/rekvirerdnummer"
     - name: SERVER_NORG2_FRONTEND_URL
-      value: "https://norg2-frontend.nais.adeo.no"
+      value: "https://norg2-frontend.intern.nav.no/"
     - name: UNLEASH_API_URL
       value: "https://unleash.nais.io/api/"
     - name: REST_UTBETALING_ENDPOINTURL
