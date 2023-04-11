@@ -18,7 +18,45 @@ object Brukernotifikasjon {
         val aktiv: Boolean,
         val eksternVarslingSendt: Boolean,
         val eksternVarslingKanaler: List<String>,
+        val eksternVarsling: EksternVarslingInfo? = null,
+        val varslingsTidspunkt: VarslingsTidspunkt? = null,
     ) : VarslerService.UnifiedVarsel
+
+    data class EksternVarslingInfo(
+        val sendt: Boolean,
+        val renotifikasjonSendt: Boolean,
+        val prefererteKanaler: List<String>,
+        val sendteKanaler: List<String>,
+        val historikk: List<HistorikkEntry>
+    )
+
+    data class HistorikkEntry(
+        val melding: String,
+        val status: String, // en av følgende: bestilt, feilet, info, sendt, ferdigstilt
+        val distribusjonsId: Long? = null,
+        val kanal: String? = null,
+        val renotifikasjon: Boolean? = null,
+        val tidspunkt: ZonedDateTime
+    )
+
+    data class VarslingsTidspunkt(
+        val sendt: Boolean,
+        val tidspunkt: ZonedDateTime?,
+        val renotifikasjonSendt: Boolean,
+        val renotifikasjonTidspunkt: ZonedDateTime?,
+        val sendteKanaler: List<String>,
+        val renotifikasjonsKanaler: List<String>,
+        val harFeilteVarslinger: Boolean,
+        val harFeilteRevarslinger: Boolean,
+        val feilteVarsliner: List<FeiletVarsling>,
+        val feilteRevarslinger: List<FeiletVarsling>
+    )
+
+    data class FeiletVarsling(
+        val tidspunkt: ZonedDateTime,
+        val feilmelding: String,
+        val kanal: String?
+    )
 
     enum class Type {
         OPPGAVE, INNBOKS, BESKJED
@@ -26,6 +64,80 @@ object Brukernotifikasjon {
 
     interface Client {
         fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
+    }
+
+    object Mapper {
+        private fun filtrerUtRevarslinger(historikk: List<HistorikkEntry>): Pair<List<HistorikkEntry>, List<HistorikkEntry>> {
+            val varslinger = mutableListOf<HistorikkEntry>()
+            val revarslinger = mutableListOf<HistorikkEntry>()
+
+            for (entry in historikk) {
+                if (entry.renotifikasjon == null || !entry.renotifikasjon) {
+                    varslinger.add(entry)
+                } else {
+                    revarslinger.add(entry)
+                }
+            }
+            return Pair(varslinger, revarslinger)
+        }
+
+        private fun finnTidspunktFraVarslingsHistorikk(historikk: List<HistorikkEntry>): ZonedDateTime? =
+            historikk.filter { it.status != "feilet" }.maxByOrNull { it.tidspunkt }?.tidspunkt
+
+        private fun finnFeilteVarslinger(historikk: List<HistorikkEntry>): List<FeiletVarsling> {
+            val feilteVarsliner = mutableListOf<FeiletVarsling>()
+
+            for (entry in historikk) {
+                if (entry.status == "feilet") {
+                    feilteVarsliner.add(
+                        FeiletVarsling(
+                            tidspunkt = entry.tidspunkt,
+                            feilmelding = entry.melding,
+                            kanal = entry.kanal
+                        )
+                    )
+                }
+            }
+
+            return feilteVarsliner
+        }
+
+        fun byggVarslingsTidspunkt(event: Event): Event {
+            val eksternVarsling = event.eksternVarsling ?: return event
+
+            val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)
+            val feilteVarsliner = finnFeilteVarslinger(varslinger)
+            val feilteRevarslinger = finnFeilteVarslinger(revarslinger)
+
+            val varslingsTidspunkt = VarslingsTidspunkt(
+                sendt = eksternVarsling.sendt,
+                tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
+                renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
+                renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
+                sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
+                renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
+                feilteVarsliner = feilteVarsliner,
+                harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
+                feilteRevarslinger = feilteRevarslinger,
+                harFeilteRevarslinger = feilteRevarslinger.isNotEmpty()
+            )
+
+            return Event(
+                fodselsnummer = event.fodselsnummer,
+                grupperingsId = event.grupperingsId,
+                eventId = event.eventId,
+                forstBehandlet = event.forstBehandlet,
+                produsent = event.produsent,
+                sikkerhetsnivaa = event.sikkerhetsnivaa,
+                sistOppdatert = event.sistOppdatert,
+                tekst = event.tekst,
+                link = event.link,
+                aktiv = event.aktiv,
+                eksternVarslingSendt = event.eksternVarslingSendt,
+                eksternVarslingKanaler = event.eksternVarslingKanaler,
+                varslingsTidspunkt = varslingsTidspunkt,
+            )
+        }
     }
 
     interface Service {
