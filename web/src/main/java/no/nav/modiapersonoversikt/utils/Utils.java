@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.utils;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class Utils {
@@ -13,6 +14,19 @@ public class Utils {
                 System.clearProperty(key);
             } else {
                 System.setProperty(key, original);
+            }
+        }
+    }
+
+    public static <T> T withProperties(Map<String, String> properties, Supplier<T> fn) {
+        try {
+            for (var property : properties.entrySet()) {
+                System.setProperty(property.getKey(), property.getValue());
+            }
+            return fn.get();
+        } finally {
+            for (var property : properties.entrySet()) {
+                System.clearProperty(property.getKey());
             }
         }
     }

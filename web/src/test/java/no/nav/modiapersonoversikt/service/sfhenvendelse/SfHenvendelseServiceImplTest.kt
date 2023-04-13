@@ -17,7 +17,7 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
-import no.nav.modiapersonoversikt.utils.Utils.withProperty
+import no.nav.modiapersonoversikt.utils.Utils.withProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -26,6 +26,7 @@ import java.time.ZoneOffset
 import java.util.*
 
 internal class SfHenvendelseServiceImplTest {
+
     companion object {
         @JvmField
         @RegisterExtension
@@ -40,21 +41,31 @@ internal class SfHenvendelseServiceImplTest {
     private val henvendelseBehandlingApi: HenvendelseBehandlingApi = mockk()
     private val henvendelseInfoApi: HenvendelseInfoApi = mockk()
     private val henvendelseOpprettApi: NyHenvendelseApi = mockk()
+    private val henvendelseBehandlingProxyApi: HenvendelseBehandlingApi = mockk()
+    private val henvendelseInfoProxyApi: HenvendelseInfoApi = mockk()
+    private val henvendelseOpprettProxyApi: NyHenvendelseApi = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
     private val norgApi: NorgApi = mockk()
-    private val oboTokenClient: BoundedOnBehalfOfTokenClient = mockk()
-    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
+    private val oboApiTokenClient: BoundedOnBehalfOfTokenClient = mockk()
+    private val machineToMachineApiTokenClient: BoundedMachineToMachineTokenClient = mockk()
+    private val oboProxyApiTokenClient: BoundedOnBehalfOfTokenClient = mockk()
+    private val machineToMachineProxyApiTokenClient: BoundedMachineToMachineTokenClient = mockk()
     private val ansattService: AnsattService = mockk()
-    private val sfHenvendelseServiceImpl = withProperty("SF_HENVENDELSE_URL", "http://dummy.io") {
+    private val sfHenvendelseServiceImpl = withProperties(mapOf("SF_HENVENDELSE_URL" to "http://dummy.io", "SF_HENVENDELSE_PROXY_URL" to "http://dummy.io")) {
         SfHenvendelseServiceImpl(
-            oboTokenClient,
-            machineToMachineTokenClient,
+            oboApiTokenClient,
+            machineToMachineApiTokenClient,
+            oboProxyApiTokenClient,
+            machineToMachineProxyApiTokenClient,
             pdlOppslagService,
             norgApi,
             ansattService,
             henvendelseBehandlingApi,
             henvendelseInfoApi,
             henvendelseOpprettApi,
+            henvendelseBehandlingProxyApi,
+            henvendelseInfoProxyApi,
+            henvendelseOpprettProxyApi,
         )
     }
 

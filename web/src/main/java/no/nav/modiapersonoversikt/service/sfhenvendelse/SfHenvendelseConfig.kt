@@ -21,8 +21,10 @@ open class SfHenvendelseConfig {
         machineToMachineTokenClient: MachineToMachineTokenClient
     ): SfHenvendelseService {
         return SfHenvendelseServiceImpl(
-            oboTokenClient = oboTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
-            machineToMachineTokenClient = machineToMachineTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
+            oboApiTokenClient = oboTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
+            mtmApiTokenClient = machineToMachineTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
+            oboProxyApiTokenClient = oboTokenClient.bindTo(SfHenvendelseApiFactory.downstreamProxyApi()),
+            mtmProxyApiTokenClient = machineToMachineTokenClient.bindTo(SfHenvendelseApiFactory.downstreamProxyApi()),
             pdlOppslagService = pdlOppslagService,
             norgApi = norgApi,
             ansattService = ansattService,
