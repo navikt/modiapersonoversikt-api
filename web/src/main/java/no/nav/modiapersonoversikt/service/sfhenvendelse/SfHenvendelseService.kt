@@ -118,6 +118,9 @@ class SfHenvendelseServiceImpl(
             enhet
         )
 
+        val aktorId = bruker.aktorId()
+        val callId = getCallId()
+
         return Scientist.createExperiment<List<HenvendelseDTO>>(
             Scientist.Config(
                 name = "hentHenvendelse",
@@ -126,7 +129,7 @@ class SfHenvendelseServiceImpl(
         ).run(
             control = {
                 henvendelseInfoApi
-                    .henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())
+                    .henvendelseinfoHenvendelselisteGet(aktorId, callId)
                     .let { loggFeilSomErSpesialHandtert(bruker, it) }
                     .asSequence()
                     .filter(kontorsperreTilgang(enhetOgGTListe))
@@ -137,8 +140,8 @@ class SfHenvendelseServiceImpl(
                     .toList()
             },
             experiment = {
-                henvendelseInfoApi
-                    .henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())
+                henvendelseInfoProxyApi
+                    .henvendelseinfoHenvendelselisteGet(aktorId, callId)
                     .let { loggFeilSomErSpesialHandtert(bruker, it) }
                     .asSequence()
                     .filter(kontorsperreTilgang(enhetOgGTListe))
@@ -152,6 +155,9 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
+        val callId = getCallId()
+        val fixKjedeId = kjedeId.fixKjedeId()
+        
         return Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
                 name = "hentHenvendelse",
@@ -159,10 +165,10 @@ class SfHenvendelseServiceImpl(
             )
         ).run(
             control = {
-                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
+                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
             },
             experiment = {
-                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
+                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId,callId)
             }
         )
     }
@@ -174,6 +180,9 @@ class SfHenvendelseServiceImpl(
         saksId: String?,
         fagsakSystem: String?
     ) {
+        val callId = getCallId()
+        val fixKjedeId = kjedeId.fixKjedeId()
+        
         val fagsaksystem = if (saksId != null) {
             JournalRequestDTO.Fagsaksystem.valueOf(
                 requireNotNull(fagsakSystem) {
@@ -193,7 +202,7 @@ class SfHenvendelseServiceImpl(
             control = {
                 henvendelseBehandlingApi
                     .henvendelseJournalPost(
-                        getCallId(),
+                        callId,
                         JournalRequestDTO(
                             journalforendeEnhet = enhet,
                             kjedeId = kjedeId.fixKjedeId(),
@@ -206,7 +215,7 @@ class SfHenvendelseServiceImpl(
             experiment = {
                 henvendelseBehandlingProxyApi
                     .henvendelseJournalPost(
-                        getCallId(),
+                        callId,
                         JournalRequestDTO(
                             journalforendeEnhet = enhet,
                             kjedeId = kjedeId.fixKjedeId(),
@@ -227,6 +236,10 @@ class SfHenvendelseServiceImpl(
         kanal: SamtalereferatRequestDTO.Kanal,
         fritekst: String
     ): HenvendelseDTO {
+        val callId = getCallId()
+        val fixKjedeId = kjedeId?.fixKjedeId()
+        val aktorId = bruker.aktorId()
+        
         return Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
                 name = "sendSamtalereferat",
@@ -235,28 +248,28 @@ class SfHenvendelseServiceImpl(
         ).run(
             control = {
                 henvendelseOpprettApi.henvendelseNySamtalereferatPost(
-                    xCorrelationID = getCallId(),
+                    xCorrelationID = callId,
                     samtalereferatRequestDTO = SamtalereferatRequestDTO(
-                        aktorId = bruker.aktorId(),
+                        aktorId = aktorId,
                         temagruppe = temagruppe,
                         enhet = enhet,
                         kanal = kanal,
                         fritekst = fritekst
                     ),
-                    kjedeId = kjedeId?.fixKjedeId()
+                    kjedeId = fixKjedeId
                 )
             },
             experiment = {
                 henvendelseOpprettProxyApi.henvendelseNySamtalereferatPost(
-                    xCorrelationID = getCallId(),
+                    xCorrelationID = callId,
                     samtalereferatRequestDTO = SamtalereferatRequestDTO(
-                        aktorId = bruker.aktorId(),
+                        aktorId = aktorId,
                         temagruppe = temagruppe,
                         enhet = enhet,
                         kanal = kanal,
                         fritekst = fritekst
                     ),
-                    kjedeId = kjedeId?.fixKjedeId()
+                    kjedeId = fixKjedeId
                 )
             }
         )
@@ -269,6 +282,9 @@ class SfHenvendelseServiceImpl(
         tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO {
+        val callId = getCallId()
+        val aktorId = bruker.aktorId()
+        
         return Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
                 name = "opprettNyDialogOgSendMelding",
@@ -277,10 +293,10 @@ class SfHenvendelseServiceImpl(
         ).run(
             control = {
                 henvendelseOpprettApi.henvendelseNyMeldingPost(
-                    getCallId(),
+                    callId,
                     kjedeId = null,
                     meldingRequestDTO = MeldingRequestDTO(
-                        aktorId = bruker.aktorId(),
+                        aktorId = aktorId,
                         temagruppe = temagruppe,
                         enhet = enhet,
                         tildelMeg = tilknyttetAnsatt,
@@ -290,10 +306,10 @@ class SfHenvendelseServiceImpl(
             },
             experiment = {
                 henvendelseOpprettProxyApi.henvendelseNyMeldingPost(
-                    getCallId(),
+                    callId,
                     kjedeId = null,
                     meldingRequestDTO = MeldingRequestDTO(
-                        aktorId = bruker.aktorId(),
+                        aktorId = aktorId,
                         temagruppe = temagruppe,
                         enhet = enhet,
                         tildelMeg = tilknyttetAnsatt,
@@ -311,6 +327,8 @@ class SfHenvendelseServiceImpl(
         tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO {
+        val fixKjedeId = kjedeId.fixKjedeId()
+        val aktorId = bruker.aktorId()
         val callId = getCallId()
         val henvendelse = Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
@@ -319,10 +337,10 @@ class SfHenvendelseServiceImpl(
             )
         ).run(
             control = {
-                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
+                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
             },
             experiment = {
-                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
+                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
             }
         )
 
@@ -343,7 +361,7 @@ class SfHenvendelseServiceImpl(
                         callId,
                         kjedeId = kjedeId.fixKjedeId(),
                         meldingRequestDTO = MeldingRequestDTO(
-                            aktorId = bruker.aktorId(),
+                            aktorId = aktorId,
                             temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                             enhet = enhet,
                             fritekst = fritekst,
@@ -357,7 +375,7 @@ class SfHenvendelseServiceImpl(
                         callId,
                         kjedeId = kjedeId.fixKjedeId(),
                         meldingRequestDTO = MeldingRequestDTO(
-                            aktorId = bruker.aktorId(),
+                            aktorId = aktorId,
                             temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                             enhet = enhet,
                             fritekst = fritekst,
@@ -369,6 +387,9 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
+        val fixKjedeId = kjedeId.fixKjedeId()
+        val callId = getCallId()
+        
         val henvendelse = Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
                 name = "henvendelseTilhorerBruker",
@@ -376,10 +397,10 @@ class SfHenvendelseServiceImpl(
             )
         ).run(
             control = {
-                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
+                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
             },
             experiment = {
-                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
+                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
             }
         )
 
@@ -394,8 +415,9 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun merkSomFeilsendt(kjedeId: String) {
+        val fixKjedeId = kjedeId.fixKjedeId()
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            kjedeId.fixKjedeId(),
+            fixKjedeId,
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::feilsendt).to(true)
         )
@@ -416,6 +438,8 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun sendTilSladding(kjedeId: String, arsak: String, meldingId: List<String>?) {
+        val callId = getCallId()
+
         Scientist.createExperiment<Unit>(
             Scientist.Config(
                 name = "sendTilSladding",
@@ -424,7 +448,7 @@ class SfHenvendelseServiceImpl(
         ).run(
             control = {
                 henvendelseBehandlingApi.henvendelseSladdingPost(
-                    xCorrelationID = getCallId(),
+                    xCorrelationID = callId,
                     sladdeRequestDTO = SladdeRequestDTO(
                         kjedeId = kjedeId,
                         aarsak = arsak,
@@ -434,7 +458,7 @@ class SfHenvendelseServiceImpl(
             },
             experiment = {
                 henvendelseBehandlingProxyApi.henvendelseSladdingPost(
-                    xCorrelationID = getCallId(),
+                    xCorrelationID = callId,
                     sladdeRequestDTO = SladdeRequestDTO(
                         kjedeId = kjedeId,
                         aarsak = arsak,
@@ -446,6 +470,8 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun hentSladdeArsaker(kjedeId: String): List<String> {
+        val callId = getCallId()
+
         return Scientist.createExperiment<List<String>>(
             Scientist.Config(
                 name = "hentSladdeArsaker",
@@ -454,13 +480,13 @@ class SfHenvendelseServiceImpl(
         ).run(
             control = {
                 henvendelseBehandlingApi.henvendelseSladdingAarsakerKjedeIdGet(
-                    xCorrelationID = getCallId(),
+                    xCorrelationID = callId,
                     kjedeId = kjedeId
                 )
             },
             experiment = {
                 henvendelseBehandlingProxyApi.henvendelseSladdingAarsakerKjedeIdGet(
-                    xCorrelationID = getCallId(),
+                    xCorrelationID = callId,
                     kjedeId = kjedeId
                 )
             }
@@ -468,6 +494,9 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun lukkTraad(kjedeId: String) {
+        val fixKjedeId = kjedeId.fixKjedeId()
+        val callId = getCallId()
+
         Scientist.createExperiment<Unit>(
             Scientist.Config(
                 name = "lukkTraad",
@@ -476,20 +505,22 @@ class SfHenvendelseServiceImpl(
         ).run(
             control = {
                 henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPost(
-                    kjedeId.fixKjedeId(),
-                    getCallId()
+                    fixKjedeId,
+                    callId
                 )
             },
             experiment = {
                 henvendelseBehandlingProxyApi.henvendelseMeldingskjedeLukkPost(
-                    kjedeId.fixKjedeId(),
-                    getCallId()
+                    fixKjedeId,
+                    callId
                 )
             }
         )
     }
 
     override fun ping() {
+        val callId = getCallId()
+
         Scientist.createExperiment<Unit>(
             Scientist.Config(
                 name = "ping",
@@ -497,10 +528,10 @@ class SfHenvendelseServiceImpl(
             )
         ).run(
             control = {
-                adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(getCallId())
+                adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(callId)
             },
             experiment = {
-                adminKodeverkProxyApiForPing.henvendelseKodeverkTemagrupperGet(getCallId())
+                adminKodeverkProxyApiForPing.henvendelseKodeverkTemagrupperGet(callId)
             }
         )
     }
