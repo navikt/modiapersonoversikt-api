@@ -141,6 +141,10 @@ spec:
       value: "https://sf-henvendelse.intern.nav.no/api"
     - name: SF_HENVENDELSE_SCOPE
       value: "prod-fss:teamcrm:sf-henvendelse"
+    - name: SF_HENVENDELSE_PROXY_URL
+      value: "https://sf-henvendelse-api-proxy.intern.nav.no/api"
+    - name: SF_HENVENDELSE_PROXY_SCOPE
+      value: "prod-fss:teamnks:sf-henvendelse-api-proxy"
     - name: PDL_API_URL
       value: "https://pdl-api.nais.adeo.no/graphql"
     - name: PDL_SCOPE

@@ -1,19 +1,10 @@
 @file:DependsOn("no.nav.common:yaml:2.2021.12.09_11.56-a71c36a61ba3")
 
-import Manuelle_fikser_for_api_main.ChangeUtils.Field
 import Manuelle_fikser_for_api_main.ChangeUtils.JsonSource
 import Manuelle_fikser_for_api_main.ChangeUtils.YamlSource
-import Manuelle_fikser_for_api_main.ChangeUtils.addDefinition
-import Manuelle_fikser_for_api_main.ChangeUtils.addResponse
 import Manuelle_fikser_for_api_main.ChangeUtils.changeFile
 import Manuelle_fikser_for_api_main.ChangeUtils.forDefinition
-import Manuelle_fikser_for_api_main.ChangeUtils.forEndpoint
-import Manuelle_fikser_for_api_main.ChangeUtils.forParameter
-import Manuelle_fikser_for_api_main.ChangeUtils.forProperty
-import Manuelle_fikser_for_api_main.ChangeUtils.getTyped
-import Manuelle_fikser_for_api_main.ChangeUtils.objectOf
 import Manuelle_fikser_for_api_main.ChangeUtils.removeProperty
-import Manuelle_fikser_for_api_main.ChangeUtils.renameProperty
 import Manuelle_fikser_for_api_main.ChangeUtils.setRequired
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -26,7 +17,7 @@ import java.nio.file.Path
 
 changeFile(
     from = JsonSource("norg-api/src/main/resources/norg/openapi.json"),
-    to = YamlSource("norg-api/src/main/resources/norg/openapi-fixed.yaml"),
+    to = YamlSource("norg-api/src/main/resources/norg/openapi-fixed.yaml")
 ) {
     /**
      * NorgApi specen bruker arv og subklasser
