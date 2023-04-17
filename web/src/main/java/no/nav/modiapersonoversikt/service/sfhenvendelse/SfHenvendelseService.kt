@@ -157,7 +157,7 @@ class SfHenvendelseServiceImpl(
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
         val callId = getCallId()
         val fixKjedeId = kjedeId.fixKjedeId()
-        
+
         return Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
                 name = "hentHenvendelse",
@@ -168,7 +168,7 @@ class SfHenvendelseServiceImpl(
                 henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
             },
             experiment = {
-                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId,callId)
+                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
             }
         )
     }
@@ -182,7 +182,7 @@ class SfHenvendelseServiceImpl(
     ) {
         val callId = getCallId()
         val fixKjedeId = kjedeId.fixKjedeId()
-        
+
         val fagsaksystem = if (saksId != null) {
             JournalRequestDTO.Fagsaksystem.valueOf(
                 requireNotNull(fagsakSystem) {
@@ -239,7 +239,7 @@ class SfHenvendelseServiceImpl(
         val callId = getCallId()
         val fixKjedeId = kjedeId?.fixKjedeId()
         val aktorId = bruker.aktorId()
-        
+
         return Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
                 name = "sendSamtalereferat",
@@ -284,7 +284,7 @@ class SfHenvendelseServiceImpl(
     ): HenvendelseDTO {
         val callId = getCallId()
         val aktorId = bruker.aktorId()
-        
+
         return Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
                 name = "opprettNyDialogOgSendMelding",
@@ -389,7 +389,7 @@ class SfHenvendelseServiceImpl(
     override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
         val fixKjedeId = kjedeId.fixKjedeId()
         val callId = getCallId()
-        
+
         val henvendelse = Scientist.createExperiment<HenvendelseDTO>(
             Scientist.Config(
                 name = "henvendelseTilhorerBruker",
