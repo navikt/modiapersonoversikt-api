@@ -14,6 +14,8 @@ import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.NyHenven
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
@@ -51,6 +53,7 @@ internal class SfHenvendelseServiceImplTest {
     private val oboProxyApiTokenClient: BoundedOnBehalfOfTokenClient = mockk()
     private val machineToMachineProxyApiTokenClient: BoundedMachineToMachineTokenClient = mockk()
     private val ansattService: AnsattService = mockk()
+    private val unleashService: UnleashService = mockk()
     private val sfHenvendelseServiceImpl = withProperties(mapOf("SF_HENVENDELSE_URL" to "http://dummy.io", "SF_HENVENDELSE_PROXY_URL" to "http://dummy.io")) {
         SfHenvendelseServiceImpl(
             oboApiTokenClient,
@@ -66,11 +69,13 @@ internal class SfHenvendelseServiceImplTest {
             henvendelseBehandlingProxyApi,
             henvendelseInfoProxyApi,
             henvendelseOpprettProxyApi,
+            unleashService
         )
     }
 
     @Test
     internal fun `skal fjerne kontorsperrede henvendelser`() {
+        every { unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API) } returns false
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns listOf(
             EnhetGeografiskTilknyttning(
@@ -90,6 +95,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal fjerne innhold om man ikke har tematilgang`() {
+        every { unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API) } returns false
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns listOf(
             EnhetGeografiskTilknyttning(
@@ -110,6 +116,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal fjerne lage dummy innhold om henvendelse er kassert`() {
+        every { unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API) } returns false
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns listOf(
             EnhetGeografiskTilknyttning(
@@ -128,6 +135,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal fjerne henvendelse om den ikke har noen meldinger`() {
+        every { unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API) } returns false
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns listOf(
             EnhetGeografiskTilknyttning(
@@ -150,6 +158,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal sortere meldinger kronologisk`() {
+        every { unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API) } returns false
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns listOf(
             EnhetGeografiskTilknyttning(

@@ -19,8 +19,12 @@ import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseInfoProxyApi
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseOpprettApi
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseOpprettProxyApi
-import no.nav.modiapersonoversikt.utils.*
-import no.nav.personoversikt.common.science.scientist.Scientist
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
+import no.nav.modiapersonoversikt.utils.DownstreamApi
+import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.time.OffsetDateTime
@@ -89,6 +93,7 @@ class SfHenvendelseServiceImpl(
     private val henvendelseBehandlingProxyApi: HenvendelseBehandlingApi = createHenvendelseBehandlingProxyApi(oboProxyApiTokenClient),
     private val henvendelseInfoProxyApi: HenvendelseInfoApi = createHenvendelseInfoProxyApi(oboProxyApiTokenClient),
     private val henvendelseOpprettProxyApi: NyHenvendelseApi = createHenvendelseOpprettProxyApi(oboProxyApiTokenClient),
+    private val unleashService: UnleashService
 ) : SfHenvendelseService {
     private val adminKodeverkApiForPing = KodeverkApi(
         SfHenvendelseApiFactory.url(),
@@ -105,6 +110,7 @@ class SfHenvendelseServiceImpl(
     )
 
     override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val enhetOgGTListe = norgApi
             .runCatching {
                 hentGeografiskTilknyttning(EnhetId(enhet))
@@ -121,56 +127,41 @@ class SfHenvendelseServiceImpl(
         val aktorId = bruker.aktorId()
         val callId = getCallId()
 
-        return Scientist.createExperiment<List<HenvendelseDTO>>(
-            Scientist.Config(
-                name = "hentHenvendelse",
-                rate = { true }
-            )
-        ).run(
-            control = {
-                henvendelseInfoApi
-                    .henvendelseinfoHenvendelselisteGet(aktorId, callId)
-                    .let { loggFeilSomErSpesialHandtert(bruker, it) }
-                    .asSequence()
-                    .filter(kontorsperreTilgang(enhetOgGTListe))
-                    .map(kassertInnhold(OffsetDateTime.now()))
-                    .map(journalfortTemaTilgang(tematilganger))
-                    .map(::sorterMeldinger)
-                    .map(::unikeJournalposter)
-                    .toList()
-            },
-            experiment = {
-                henvendelseInfoProxyApi
-                    .henvendelseinfoHenvendelselisteGet(aktorId, callId)
-                    .let { loggFeilSomErSpesialHandtert(bruker, it) }
-                    .asSequence()
-                    .filter(kontorsperreTilgang(enhetOgGTListe))
-                    .map(kassertInnhold(OffsetDateTime.now()))
-                    .map(journalfortTemaTilgang(tematilganger))
-                    .map(::sorterMeldinger)
-                    .map(::unikeJournalposter)
-                    .toList()
-            }
-        )
+        return if (newProxyApiEnabled) {
+            henvendelseInfoProxyApi
+                .henvendelseinfoHenvendelselisteGet(aktorId, callId)
+                .let { loggFeilSomErSpesialHandtert(bruker, it) }
+                .asSequence()
+                .filter(kontorsperreTilgang(enhetOgGTListe))
+                .map(kassertInnhold(OffsetDateTime.now()))
+                .map(journalfortTemaTilgang(tematilganger))
+                .map(::sorterMeldinger)
+                .map(::unikeJournalposter)
+                .toList()
+        } else {
+            henvendelseInfoApi
+                .henvendelseinfoHenvendelselisteGet(aktorId, callId)
+                .let { loggFeilSomErSpesialHandtert(bruker, it) }
+                .asSequence()
+                .filter(kontorsperreTilgang(enhetOgGTListe))
+                .map(kassertInnhold(OffsetDateTime.now()))
+                .map(journalfortTemaTilgang(tematilganger))
+                .map(::sorterMeldinger)
+                .map(::unikeJournalposter)
+                .toList()
+        }
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val callId = getCallId()
         val fixKjedeId = kjedeId.fixKjedeId()
 
-        return Scientist.createExperiment<HenvendelseDTO>(
-            Scientist.Config(
-                name = "hentHenvendelse",
-                rate = { true }
-            )
-        ).run(
-            control = {
-                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
-            },
-            experiment = {
-                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
-            }
-        )
+        return if (newProxyApiEnabled) {
+            henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+        } else {
+            henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+        }
     }
 
     override fun journalforHenvendelse(
@@ -180,6 +171,7 @@ class SfHenvendelseServiceImpl(
         saksId: String?,
         fagsakSystem: String?
     ) {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val callId = getCallId()
         val fixKjedeId = kjedeId.fixKjedeId()
 
@@ -193,39 +185,31 @@ class SfHenvendelseServiceImpl(
             null
         }
 
-        return Scientist.createExperiment<Unit>(
-            Scientist.Config(
-                name = "journalforHenvendelse",
-                rate = { true }
-            )
-        ).run(
-            control = {
-                henvendelseBehandlingApi
-                    .henvendelseJournalPost(
-                        callId,
-                        JournalRequestDTO(
-                            journalforendeEnhet = enhet,
-                            kjedeId = kjedeId.fixKjedeId(),
-                            temakode = saksTema,
-                            fagsakId = if (saksTema == "BID") null else saksId,
-                            fagsaksystem = if (saksTema == "BID") null else fagsaksystem,
-                        )
+        return if (newProxyApiEnabled) {
+            henvendelseBehandlingProxyApi
+                .henvendelseJournalPost(
+                    callId,
+                    JournalRequestDTO(
+                        journalforendeEnhet = enhet,
+                        kjedeId = fixKjedeId,
+                        temakode = saksTema,
+                        fagsakId = if (saksTema == "BID") null else saksId,
+                        fagsaksystem = if (saksTema == "BID") null else fagsaksystem,
                     )
-            },
-            experiment = {
-                henvendelseBehandlingProxyApi
-                    .henvendelseJournalPost(
-                        callId,
-                        JournalRequestDTO(
-                            journalforendeEnhet = enhet,
-                            kjedeId = kjedeId.fixKjedeId(),
-                            temakode = saksTema,
-                            fagsakId = if (saksTema == "BID") null else saksId,
-                            fagsaksystem = if (saksTema == "BID") null else fagsaksystem,
-                        )
+                )
+        } else {
+            henvendelseBehandlingApi
+                .henvendelseJournalPost(
+                    callId,
+                    JournalRequestDTO(
+                        journalforendeEnhet = enhet,
+                        kjedeId = fixKjedeId,
+                        temakode = saksTema,
+                        fagsakId = if (saksTema == "BID") null else saksId,
+                        fagsaksystem = if (saksTema == "BID") null else fagsaksystem,
                     )
-            }
-        )
+                )
+        }
     }
 
     override fun sendSamtalereferat(
@@ -236,43 +220,36 @@ class SfHenvendelseServiceImpl(
         kanal: SamtalereferatRequestDTO.Kanal,
         fritekst: String
     ): HenvendelseDTO {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val callId = getCallId()
         val fixKjedeId = kjedeId?.fixKjedeId()
         val aktorId = bruker.aktorId()
 
-        return Scientist.createExperiment<HenvendelseDTO>(
-            Scientist.Config(
-                name = "sendSamtalereferat",
-                rate = { true }
+        return if (newProxyApiEnabled) {
+            henvendelseOpprettProxyApi.henvendelseNySamtalereferatPost(
+                xCorrelationID = callId,
+                samtalereferatRequestDTO = SamtalereferatRequestDTO(
+                    aktorId = aktorId,
+                    temagruppe = temagruppe,
+                    enhet = enhet,
+                    kanal = kanal,
+                    fritekst = fritekst
+                ),
+                kjedeId = fixKjedeId
             )
-        ).run(
-            control = {
-                henvendelseOpprettApi.henvendelseNySamtalereferatPost(
-                    xCorrelationID = callId,
-                    samtalereferatRequestDTO = SamtalereferatRequestDTO(
-                        aktorId = aktorId,
-                        temagruppe = temagruppe,
-                        enhet = enhet,
-                        kanal = kanal,
-                        fritekst = fritekst
-                    ),
-                    kjedeId = fixKjedeId
-                )
-            },
-            experiment = {
-                henvendelseOpprettProxyApi.henvendelseNySamtalereferatPost(
-                    xCorrelationID = callId,
-                    samtalereferatRequestDTO = SamtalereferatRequestDTO(
-                        aktorId = aktorId,
-                        temagruppe = temagruppe,
-                        enhet = enhet,
-                        kanal = kanal,
-                        fritekst = fritekst
-                    ),
-                    kjedeId = fixKjedeId
-                )
-            }
-        )
+        } else {
+            henvendelseOpprettApi.henvendelseNySamtalereferatPost(
+                xCorrelationID = callId,
+                samtalereferatRequestDTO = SamtalereferatRequestDTO(
+                    aktorId = aktorId,
+                    temagruppe = temagruppe,
+                    enhet = enhet,
+                    kanal = kanal,
+                    fritekst = fritekst
+                ),
+                kjedeId = fixKjedeId
+            )
+        }
     }
 
     override fun opprettNyDialogOgSendMelding(
@@ -282,42 +259,35 @@ class SfHenvendelseServiceImpl(
         tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val callId = getCallId()
         val aktorId = bruker.aktorId()
 
-        return Scientist.createExperiment<HenvendelseDTO>(
-            Scientist.Config(
-                name = "opprettNyDialogOgSendMelding",
-                rate = { true }
+        return if (newProxyApiEnabled) {
+            henvendelseOpprettProxyApi.henvendelseNyMeldingPost(
+                callId,
+                kjedeId = null,
+                meldingRequestDTO = MeldingRequestDTO(
+                    aktorId = aktorId,
+                    temagruppe = temagruppe,
+                    enhet = enhet,
+                    tildelMeg = tilknyttetAnsatt,
+                    fritekst = fritekst
+                )
             )
-        ).run(
-            control = {
-                henvendelseOpprettApi.henvendelseNyMeldingPost(
-                    callId,
-                    kjedeId = null,
-                    meldingRequestDTO = MeldingRequestDTO(
-                        aktorId = aktorId,
-                        temagruppe = temagruppe,
-                        enhet = enhet,
-                        tildelMeg = tilknyttetAnsatt,
-                        fritekst = fritekst
-                    )
+        } else {
+            henvendelseOpprettApi.henvendelseNyMeldingPost(
+                callId,
+                kjedeId = null,
+                meldingRequestDTO = MeldingRequestDTO(
+                    aktorId = aktorId,
+                    temagruppe = temagruppe,
+                    enhet = enhet,
+                    tildelMeg = tilknyttetAnsatt,
+                    fritekst = fritekst
                 )
-            },
-            experiment = {
-                henvendelseOpprettProxyApi.henvendelseNyMeldingPost(
-                    callId,
-                    kjedeId = null,
-                    meldingRequestDTO = MeldingRequestDTO(
-                        aktorId = aktorId,
-                        temagruppe = temagruppe,
-                        enhet = enhet,
-                        tildelMeg = tilknyttetAnsatt,
-                        fritekst = fritekst
-                    )
-                )
-            }
-        )
+            )
+        }
     }
 
     override fun sendMeldingPaEksisterendeDialog(
@@ -327,82 +297,60 @@ class SfHenvendelseServiceImpl(
         tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val fixKjedeId = kjedeId.fixKjedeId()
         val aktorId = bruker.aktorId()
         val callId = getCallId()
-        val henvendelse = Scientist.createExperiment<HenvendelseDTO>(
-            Scientist.Config(
-                name = "henvendelseinfoHenvendelseKjedeIdGet",
-                rate = { true }
-            )
-        ).run(
-            control = {
-                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
-            },
-            experiment = {
-                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
-            }
-        )
+        val henvendelse = if (newProxyApiEnabled) {
+            henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+        } else {
+            henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+        }
 
         val kjedeTilhorerBruker = sjekkEierskap(bruker, henvendelse)
         if (!kjedeTilhorerBruker) {
             throw IllegalStateException("Henvendelse $kjedeId tilhørte ikke bruker")
         }
 
-        return Scientist.createExperiment<HenvendelseDTO>(
-            Scientist.Config(
-                name = "sendMeldingPaEksisterendeDialog",
-                rate = { true }
-            )
-        ).run(
-            control = {
-                henvendelseOpprettApi
-                    .henvendelseNyMeldingPost(
-                        callId,
-                        kjedeId = kjedeId.fixKjedeId(),
-                        meldingRequestDTO = MeldingRequestDTO(
-                            aktorId = aktorId,
-                            temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
-                            enhet = enhet,
-                            fritekst = fritekst,
-                            tildelMeg = tilknyttetAnsatt
-                        )
+        return if (newProxyApiEnabled) {
+            henvendelseOpprettProxyApi
+                .henvendelseNyMeldingPost(
+                    callId,
+                    kjedeId = kjedeId.fixKjedeId(),
+                    meldingRequestDTO = MeldingRequestDTO(
+                        aktorId = aktorId,
+                        temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
+                        enhet = enhet,
+                        fritekst = fritekst,
+                        tildelMeg = tilknyttetAnsatt
                     )
-            },
-            experiment = {
-                henvendelseOpprettProxyApi
-                    .henvendelseNyMeldingPost(
-                        callId,
-                        kjedeId = kjedeId.fixKjedeId(),
-                        meldingRequestDTO = MeldingRequestDTO(
-                            aktorId = aktorId,
-                            temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
-                            enhet = enhet,
-                            fritekst = fritekst,
-                            tildelMeg = tilknyttetAnsatt
-                        )
+                )
+        } else {
+            henvendelseOpprettApi
+                .henvendelseNyMeldingPost(
+                    callId,
+                    kjedeId = kjedeId.fixKjedeId(),
+                    meldingRequestDTO = MeldingRequestDTO(
+                        aktorId = aktorId,
+                        temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
+                        enhet = enhet,
+                        fritekst = fritekst,
+                        tildelMeg = tilknyttetAnsatt
                     )
-            }
-        )
+                )
+        }
     }
 
     override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val fixKjedeId = kjedeId.fixKjedeId()
         val callId = getCallId()
 
-        val henvendelse = Scientist.createExperiment<HenvendelseDTO>(
-            Scientist.Config(
-                name = "henvendelseTilhorerBruker",
-                rate = { true }
-            )
-        ).run(
-            control = {
-                henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
-            },
-            experiment = {
-                henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
-            }
-        )
+        val henvendelse = if (newProxyApiEnabled) {
+            henvendelseInfoProxyApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+        } else {
+            henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+        }
 
         return sjekkEierskap(bruker, henvendelse)
     }
@@ -415,6 +363,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun merkSomFeilsendt(kjedeId: String) {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val fixKjedeId = kjedeId.fixKjedeId()
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             fixKjedeId,
@@ -422,118 +371,82 @@ class SfHenvendelseServiceImpl(
                 .set(HenvendelseDTO::feilsendt).to(true)
         )
 
-        Scientist.createExperiment<Unit>(
-            Scientist.Config(
-                name = "merkSomFeilsendt",
-                rate = { true }
-            )
-        ).run(
-            control = {
-                henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
-            },
-            experiment = {
-                henvendelseBehandlingProxyApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
-            }
-        )
+        if (newProxyApiEnabled) {
+            henvendelseBehandlingProxyApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
+        } else {
+            henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
+        }
     }
 
     override fun sendTilSladding(kjedeId: String, arsak: String, meldingId: List<String>?) {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val callId = getCallId()
 
-        Scientist.createExperiment<Unit>(
-            Scientist.Config(
-                name = "sendTilSladding",
-                rate = { true }
+        if (newProxyApiEnabled) {
+            henvendelseBehandlingProxyApi.henvendelseSladdingPost(
+                xCorrelationID = callId,
+                sladdeRequestDTO = SladdeRequestDTO(
+                    kjedeId = kjedeId,
+                    aarsak = arsak,
+                    meldingsIder = meldingId
+                )
             )
-        ).run(
-            control = {
-                henvendelseBehandlingApi.henvendelseSladdingPost(
-                    xCorrelationID = callId,
-                    sladdeRequestDTO = SladdeRequestDTO(
-                        kjedeId = kjedeId,
-                        aarsak = arsak,
-                        meldingsIder = meldingId
-                    )
+        } else {
+            henvendelseBehandlingApi.henvendelseSladdingPost(
+                xCorrelationID = callId,
+                sladdeRequestDTO = SladdeRequestDTO(
+                    kjedeId = kjedeId,
+                    aarsak = arsak,
+                    meldingsIder = meldingId
                 )
-            },
-            experiment = {
-                henvendelseBehandlingProxyApi.henvendelseSladdingPost(
-                    xCorrelationID = callId,
-                    sladdeRequestDTO = SladdeRequestDTO(
-                        kjedeId = kjedeId,
-                        aarsak = arsak,
-                        meldingsIder = meldingId
-                    )
-                )
-            }
-        )
+            )
+        }
     }
 
     override fun hentSladdeArsaker(kjedeId: String): List<String> {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val callId = getCallId()
 
-        return Scientist.createExperiment<List<String>>(
-            Scientist.Config(
-                name = "hentSladdeArsaker",
-                rate = { true }
+        return if (newProxyApiEnabled) {
+            henvendelseBehandlingProxyApi.henvendelseSladdingAarsakerKjedeIdGet(
+                xCorrelationID = callId,
+                kjedeId = kjedeId
             )
-        ).run(
-            control = {
-                henvendelseBehandlingApi.henvendelseSladdingAarsakerKjedeIdGet(
-                    xCorrelationID = callId,
-                    kjedeId = kjedeId
-                )
-            },
-            experiment = {
-                henvendelseBehandlingProxyApi.henvendelseSladdingAarsakerKjedeIdGet(
-                    xCorrelationID = callId,
-                    kjedeId = kjedeId
-                )
-            }
-        )
+        } else {
+            henvendelseBehandlingApi.henvendelseSladdingAarsakerKjedeIdGet(
+                xCorrelationID = callId,
+                kjedeId = kjedeId
+            )
+        }
     }
 
     override fun lukkTraad(kjedeId: String) {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val fixKjedeId = kjedeId.fixKjedeId()
         val callId = getCallId()
 
-        Scientist.createExperiment<Unit>(
-            Scientist.Config(
-                name = "lukkTraad",
-                rate = { true }
+        if (newProxyApiEnabled) {
+            henvendelseBehandlingProxyApi.henvendelseMeldingskjedeLukkPost(
+                fixKjedeId,
+                callId
             )
-        ).run(
-            control = {
-                henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPost(
-                    fixKjedeId,
-                    callId
-                )
-            },
-            experiment = {
-                henvendelseBehandlingProxyApi.henvendelseMeldingskjedeLukkPost(
-                    fixKjedeId,
-                    callId
-                )
-            }
-        )
+        } else {
+            henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPost(
+                fixKjedeId,
+                callId
+            )
+        }
     }
 
     override fun ping() {
+        val newProxyApiEnabled = unleashService.isEnabled(Feature.USE_NEW_HENVENDELSE_PROXY_API)
         val callId = getCallId()
 
-        Scientist.createExperiment<Unit>(
-            Scientist.Config(
-                name = "ping",
-                rate = { true }
-            )
-        ).run(
-            control = {
-                adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(callId)
-            },
-            experiment = {
-                adminKodeverkProxyApiForPing.henvendelseKodeverkTemagrupperGet(callId)
-            }
-        )
+        if (newProxyApiEnabled) {
+            adminKodeverkProxyApiForPing.henvendelseKodeverkTemagrupperGet(callId)
+        } else {
+            adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(callId)
+        }
     }
 
     enum class ApiFeilType {
