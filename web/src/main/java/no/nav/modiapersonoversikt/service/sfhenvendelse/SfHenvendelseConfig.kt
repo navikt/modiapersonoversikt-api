@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.infrastructure.ping.ConsumerPingable
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.bindTo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,7 +21,8 @@ open class SfHenvendelseConfig {
         oboTokenClient: OnBehalfOfTokenClient,
         oboTokenProxyClient: OnBehalfOfTokenClient,
         machineToMachineTokenClient: MachineToMachineTokenClient,
-        machineToMachineProxyTokenClient: MachineToMachineTokenClient
+        machineToMachineProxyTokenClient: MachineToMachineTokenClient,
+        unleashService: UnleashService
     ): SfHenvendelseService {
         return SfHenvendelseServiceImpl(
             oboApiTokenClient = oboTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
@@ -30,6 +32,7 @@ open class SfHenvendelseConfig {
             pdlOppslagService = pdlOppslagService,
             norgApi = norgApi,
             ansattService = ansattService,
+            unleashService = unleashService
         )
     }
 
