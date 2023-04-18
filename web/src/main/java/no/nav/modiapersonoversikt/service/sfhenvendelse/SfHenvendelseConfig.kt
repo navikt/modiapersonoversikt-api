@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.infrastructure.ping.ConsumerPingable
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.bindTo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,14 +19,20 @@ open class SfHenvendelseConfig {
         norgApi: NorgApi,
         ansattService: AnsattService,
         oboTokenClient: OnBehalfOfTokenClient,
-        machineToMachineTokenClient: MachineToMachineTokenClient
+        oboTokenProxyClient: OnBehalfOfTokenClient,
+        machineToMachineTokenClient: MachineToMachineTokenClient,
+        machineToMachineProxyTokenClient: MachineToMachineTokenClient,
+        unleashService: UnleashService
     ): SfHenvendelseService {
         return SfHenvendelseServiceImpl(
-            oboTokenClient = oboTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
-            machineToMachineTokenClient = machineToMachineTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
+            oboApiTokenClient = oboTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
+            mtmApiTokenClient = machineToMachineTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
+            oboProxyApiTokenClient = oboTokenProxyClient.bindTo(SfHenvendelseApiFactory.downstreamProxyApi()),
+            mtmProxyApiTokenClient = machineToMachineProxyTokenClient.bindTo(SfHenvendelseApiFactory.downstreamProxyApi()),
             pdlOppslagService = pdlOppslagService,
             norgApi = norgApi,
             ansattService = ansattService,
+            unleashService = unleashService
         )
     }
 
