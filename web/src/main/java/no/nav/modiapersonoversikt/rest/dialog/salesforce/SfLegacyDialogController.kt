@@ -17,7 +17,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -46,13 +45,12 @@ class SfLegacyDialogController(
     }
 
     override fun sendMelding(fnr: String, referatRequest: SendReferatRequest): TraadDTO {
-        val newDialogEnabled = unleashService.isEnabled(Feature.USE_NEW_DIALOG_VISNING)
         val henvendelse = sfHenvendelseService.sendSamtalereferat(
             kjedeId = null,
             bruker = EksternBruker.Fnr(fnr),
             enhet = referatRequest.enhet,
             temagruppe = referatRequest.temagruppe,
-            kanal = if (newDialogEnabled) SamtalereferatRequestDTO.Kanal.OPPMOTE else referatRequest.meldingstype.getKanal(),
+            kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
             fritekst = referatRequest.fritekst
         )
 
@@ -137,7 +135,6 @@ class SfLegacyDialogController(
         fnr: String,
         fortsettDialogRequest: FortsettDialogRequest
     ): TraadDTO {
-        val newDialogEnabled = unleashService.isEnabled(Feature.USE_NEW_DIALOG_VISNING)
         val kjedeId = fortsettDialogRequest.traadId
         val oppgaveId = fortsettDialogRequest.oppgaveId
 
@@ -171,7 +168,7 @@ class SfLegacyDialogController(
                 bruker = bruker,
                 enhet = enhet,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
-                kanal = if (newDialogEnabled) SamtalereferatRequestDTO.Kanal.OPPMOTE else fortsettDialogRequest.meldingstype.getKanal(),
+                kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = fortsettDialogRequest.fritekst
             )
             val journalposter = (henvendelse.journalposter ?: emptyList())
