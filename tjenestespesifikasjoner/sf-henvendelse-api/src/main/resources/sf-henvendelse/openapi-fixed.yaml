@@ -4,7 +4,7 @@ info:
   title: "Salesforce Henvendelse API"
   version: "1.0"
 servers:
-- url: "https://sf-henvendelse.dev.intern.nav.no/api"
+- url: "https://sf-henvendelse.intern.dev.nav.no/api"
 - url: "https://sf-henvendelse.intern.nav.no/api"
 - url: "https://navdialog--uat.my.salesforce.com/services/apexrest"
 paths:
