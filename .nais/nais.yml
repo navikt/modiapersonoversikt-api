@@ -138,12 +138,8 @@ spec:
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL
       value: "https://arena.adeo.no/ail_ws/Ytelseskontrakt_v3"
     - name: SF_HENVENDELSE_URL
-      value: "https://sf-henvendelse.intern.nav.no/api"
-    - name: SF_HENVENDELSE_SCOPE
-      value: "prod-fss:teamcrm:sf-henvendelse"
-    - name: SF_HENVENDELSE_PROXY_URL
       value: "https://sf-henvendelse-api-proxy.intern.nav.no/api"
-    - name: SF_HENVENDELSE_PROXY_SCOPE
+    - name: SF_HENVENDELSE_SCOPE
       value: "prod-fss:teamnks:sf-henvendelse-api-proxy"
     - name: PDL_API_URL
       value: "https://pdl-api.nais.adeo.no/graphql"
