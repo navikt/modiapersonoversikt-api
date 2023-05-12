@@ -11,7 +11,7 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 object TilgangTilBrukerMedSkjermingPolicy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(TilgangTilBrukerMedSkjermingPolicy)
-    private val skjermingRoller = RolleListe("0000-ga-gosys_utvidet", "0000-ga-pensjon_utvidet")
+    private val skjermingRoller = RolleListe("0000-ga-egne_ansatte")
 
     override fun evaluate(ctx: EvaluationContext): Decision {
         val veilederRoller = ctx.getValue(VeiledersRollerPip)
