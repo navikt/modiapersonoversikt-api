@@ -1,0 +1,36 @@
+name: "Deploy henvendelse oppdatering topic"
+on:
+  push:
+    paths:
+      - nais/topics/**
+      - .github/workflows/topic.yml
+jobs:
+  deploy-topic-to-dev:
+    if: github.ref == 'refs/heads/dev'
+    name: Deploy topic to dev-fss
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Deploy henvendelse-oppdatering-melding topic
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: nais/topics/henvendelse-oppdatering-melding.yaml
+          VARS: nais/topics/dev.json
+
+  deploy-topic-to-prod:
+    if: github.ref == 'refs/heads/master'
+    name: Deploy topic to prod-fss
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Deploy henvendelse-oppdatering-melding topic
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: nais/topics/henvendelse-oppdatering-melding.yaml
+          VARS: nais/topics/prod.json

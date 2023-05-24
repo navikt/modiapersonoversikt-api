@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
+import no.nav.modiapersonoversikt.kafka.HenvendelseProducer
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
@@ -17,6 +18,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -33,6 +35,7 @@ class SfLegacyDialogController(
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ansattService: AnsattService,
     private val kodeverk: EnhetligKodeverk.Service,
+    private val meldingProducer: HenvendelseProducer,
     private val unleashService: UnleashService
 ) : DialogApi {
     override fun hentMeldinger(fnr: String, enhet: String): List<TraadDTO> {
@@ -53,6 +56,10 @@ class SfLegacyDialogController(
             kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
             fritekst = referatRequest.fritekst
         )
+
+        if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+            meldingProducer.sendHenvendelseUpdate(henvendelse)
+        }
 
         return parseFraHenvendelseTilTraad(henvendelse)
     }
@@ -76,6 +83,10 @@ class SfLegacyDialogController(
             tilknyttetAnsatt = sporsmalsRequest.erOppgaveTilknyttetAnsatt,
             fritekst = sporsmalsRequest.fritekst
         )
+
+        if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+            meldingProducer.sendHenvendelseUpdate(henvendelse)
+        }
 
         if (sporsmalsRequest.avsluttet == true) {
             sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
@@ -104,6 +115,9 @@ class SfLegacyDialogController(
             fritekst = infomeldingRequest.fritekst
         )
 
+        if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+            meldingProducer.sendHenvendelseUpdate(henvendelse)
+        }
         sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
         sfHenvendelseService.journalforHenvendelse(
             enhet = infomeldingRequest.enhet,
@@ -171,6 +185,11 @@ class SfLegacyDialogController(
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = fortsettDialogRequest.fritekst
             )
+
+            if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+                meldingProducer.sendHenvendelseUpdate(henvendelse)
+            }
+
             val journalposter = (henvendelse.journalposter ?: emptyList())
                 .distinctBy { it.fagsakId }
             journalposter.forEach {
@@ -190,6 +209,10 @@ class SfLegacyDialogController(
                 tilknyttetAnsatt = fortsettDialogRequest.erOppgaveTilknyttetAnsatt,
                 fritekst = fortsettDialogRequest.fritekst
             )
+
+            if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+                meldingProducer.sendHenvendelseUpdate(henvendelse)
+            }
 
             if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
@@ -304,6 +327,7 @@ class SfLegacyDialogController(
                 MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(melding.fra.ident)
                     ?.let { "${it.navn} (${it.ident})" }
                     ?: "(${melding.fra.ident})"
+
                 MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
             }
             val status = when {
@@ -382,6 +406,7 @@ class SfLegacyDialogController(
                     else -> Meldingstype.SAMTALEREFERAT_TELEFON
                 }
             }
+
             HenvendelseDTO.HenvendelseType.MELDINGSKJEDE -> {
                 when (melding.fra.identType) {
                     MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) Meldingstype.SPORSMAL_SKRIFTLIG else Meldingstype.SVAR_SBL_INNGAAENDE
@@ -389,6 +414,7 @@ class SfLegacyDialogController(
                     MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.SVAR_SKRIFTLIG
                 }
             }
+
             HenvendelseDTO.HenvendelseType.CHAT -> {
                 when (melding.fra.identType) {
                     MeldingFraDTO.IdentType.AKTORID -> Meldingstype.CHATMELDING_FRA_BRUKER
@@ -417,6 +443,11 @@ class SfLegacyDialogController(
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = meldingRequest.fritekst
             )
+
+            if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+                meldingProducer.sendHenvendelseUpdate(henvendelse)
+            }
+
             return parseFraHenvendelseTilTraad(henvendelse)
         } else {
             val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
@@ -426,6 +457,10 @@ class SfLegacyDialogController(
                 tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
                 fritekst = meldingRequest.fritekst
             )
+
+            if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+                meldingProducer.sendHenvendelseUpdate(henvendelse)
+            }
 
             if (meldingRequest.avsluttet == true) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
@@ -480,6 +515,11 @@ class SfLegacyDialogController(
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = meldingRequest.fritekst
             )
+
+            if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+                meldingProducer.sendHenvendelseUpdate(henvendelse)
+            }
+
             val journalposter = (henvendelse.journalposter ?: emptyList())
                 .distinctBy { it.fagsakId }
             journalposter.forEach {
@@ -499,6 +539,10 @@ class SfLegacyDialogController(
                 tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
                 fritekst = meldingRequest.fritekst
             )
+
+            if (unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
+                meldingProducer.sendHenvendelseUpdate(henvendelse)
+            }
 
             if (meldingRequest.avsluttet == true) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
