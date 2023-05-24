@@ -17,7 +17,7 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: nais/topics/henvendelse-oppdatering-melding.yaml
+          RESOURCE: nais/topics/henvendelse-oppdatering-melding.yml
           VARS: nais/topics/dev.json
 
   deploy-topic-to-prod:
@@ -32,5 +32,5 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
-          RESOURCE: nais/topics/henvendelse-oppdatering-melding.yaml
+          RESOURCE: nais/topics/henvendelse-oppdatering-melding.yml
           VARS: nais/topics/prod.json
