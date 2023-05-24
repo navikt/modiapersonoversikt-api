@@ -33,4 +33,3 @@ class HenvendelseProducerImpl(
         producer.sendRecord(message = message)
     }
 }
-
