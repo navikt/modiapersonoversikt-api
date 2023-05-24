@@ -10,5 +10,5 @@ open class HenvendelseKafkaConfig {
     open fun henvendelseProducer(
         @Value("\${KAFKA_BROKERS}") kafkaBrokerUrl: String,
         @Value("\${KAFKA_HENVENDELSE_OPPDATERING_TOPIC}") kafkaTopic: String
-    ) = HenvendelseProducerImpl(kafkaBrokerUrl, kafkaTopic)
+    ) = HenvendelseProducerImpl(kafkaBrokerUrl, kafkaTopic, listOf("SYK"))
 }

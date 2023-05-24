@@ -13,7 +13,8 @@ interface HenvendelseProducer {
 
 class HenvendelseProducerImpl(
     kafkaBrokerUrl: String,
-    kafkaTopic: String
+    kafkaTopic: String,
+    private val temaSomSkalPubliseres: List<String>
 ) : HenvendelseProducer {
     private val producer: KafkaPersonoversiktProducer<HenvendelseKafkaDTO>
 
@@ -30,6 +31,8 @@ class HenvendelseProducerImpl(
             tema = henvendelse.gjeldendeTema,
             tidspunkt = henvendelse.opprettetDato.toInstant().toKotlinInstant()
         )
-        producer.sendRecord(message = message)
+        if (temaSomSkalPubliseres.contains(message.tema)) {
+            producer.sendRecord(message = message)
+        }
     }
 }
