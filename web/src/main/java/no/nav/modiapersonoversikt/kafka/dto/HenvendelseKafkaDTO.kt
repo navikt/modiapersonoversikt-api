@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class HenvendelseKafkaDTO(
     val fnr: String,
-    val tema: String?,
+    val tema: String,
     val tidspunkt: Instant
 )
