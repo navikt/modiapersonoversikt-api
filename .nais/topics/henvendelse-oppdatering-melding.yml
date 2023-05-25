@@ -20,7 +20,7 @@ spec:
   acl:
     - team: personoversikt
       application: modiapersonoversikt-api
-      access: readwrite
+      access: write
 #    - team: flex
 #      application:
 #      access: read
