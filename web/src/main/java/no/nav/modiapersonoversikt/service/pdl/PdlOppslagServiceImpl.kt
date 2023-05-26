@@ -135,6 +135,7 @@ open class PdlOppslagServiceImpl constructor(
         val azureToken = AuthContextUtils.requireToken()
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + oboTokenClient.exchangeOnBehalfOfToken(azureToken))
         header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
+        header(BEHANDLINGSNUMMER_HEADER, BEHANDLINGSNUMMER_HEADERVERDI)
     }
 
     private val systemTokenAuthorizationHeaders: HeadersBuilder = {
