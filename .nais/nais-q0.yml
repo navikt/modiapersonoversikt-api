@@ -100,17 +100,17 @@ spec:
     - name: SAKOGBEHANDLING_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/sakogbehandling/ws/SakOgBehandling_v1"
     - name: SERVER_DREK_URL
-      value: "https://pdl-web.intern.dev.nav.no/rekvirerdnummer"
+      value: "https://pdl-web.dev.intern.nav.no/rekvirerdnummer"
     - name: SERVER_NORG2_FRONTEND_URL
       value: "https://norg2-frontend.intern.dev.nav.no"
     - name: UNLEASH_API_URL
       value: "https://unleash.nais.io/api/"
     - name: REST_UTBETALING_ENDPOINTURL
-      value: "https://sokos-utbetaldata.intern.dev.nav.no/utbetaldata/api"
+      value: "https://sokos-utbetaldata.dev.intern.nav.no/utbetaldata/api"
     - name: UTBETALING_SCOPE
       value: "dev-fss:okonomi:sokos-utbetaldata"
     - name: VEILARBOPPFOLGINGAPI_URL
-      value: "https://veilarboppfolging.intern.dev.nav.no/veilarboppfolging/api"
+      value: "https://veilarboppfolging.dev.intern.nav.no/veilarboppfolging/api"
     - name: VEILARBOPPFOLGINGAPI_SCOPE
       value: "dev-fss:pto:veilarboppfolging"
     - name: KRR_REST_URL
@@ -138,15 +138,15 @@ spec:
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL
       value: "https://arena-q0.adeo.no/ail_ws/Ytelseskontrakt_v3"
     - name: SF_HENVENDELSE_URL
-      value: "https://sf-henvendelse-api-proxy.intern.dev.nav.no/api"
+      value: "https://sf-henvendelse-api-proxy.dev.intern.nav.no/api"
     - name: SF_HENVENDELSE_SCOPE
       value: "dev-fss:teamnks:sf-henvendelse-api-proxy"
     - name: PDL_API_URL
-      value: "https://pdl-api-q0.intern.dev.nav.no/graphql"
+      value: "https://pdl-api-q0.dev.intern.nav.no/graphql"
     - name: PDL_SCOPE
       value: "dev-fss:pdl:pdl-api"
     - name: PERSONFORVALTER_URL
-      value: "https://pdl-web.intern.dev.nav.no/endreperson"
+      value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
       value: "https://oppgave-q0.nais.preprod.local/"
     - name: OPPGAVE_SCOPE

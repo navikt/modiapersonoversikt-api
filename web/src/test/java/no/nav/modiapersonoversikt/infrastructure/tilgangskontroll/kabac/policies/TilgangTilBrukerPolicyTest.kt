@@ -139,7 +139,7 @@ internal class TilgangTilBrukerPolicyTest {
             .assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
             .withMessage("Veileder har ikke tilgang til skjermet person")
 
-        gittAtVeilederHarRoller("0000-ga-bd06_modiagenerelltilgang", "0000-ga-gosys_utvidet")
+        gittAtVeilederHarRoller("0000-ga-bd06_modiagenerelltilgang", "0000-ga-egne_ansatte")
         policy
             .assertPermit(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
     }
