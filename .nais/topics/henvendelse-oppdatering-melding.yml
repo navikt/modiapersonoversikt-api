@@ -21,6 +21,6 @@ spec:
     - team: personoversikt
       application: modiapersonoversikt-api
       access: write
-#    - team: flex
-#      application:
-#      access: read
+    - team: flex
+      application: flex-modia-kontakt-metrikk
+      access: read
