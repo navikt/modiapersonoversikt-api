@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
+import no.nav.modiapersonoversikt.kafka.HenvendelseProducer
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogMerkApi
@@ -10,7 +11,6 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -30,7 +30,7 @@ open class DialogConfig {
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @Autowired
-    private lateinit var unleashService: UnleashService
+    private lateinit var henvendelseProducer: HenvendelseProducer
 
     @Bean
     open fun dialogApi(): DialogApi {
@@ -39,7 +39,7 @@ open class DialogConfig {
             oppgaveBehandlingService,
             ansattService,
             kodeverk,
-            unleashService
+            henvendelseProducer,
         )
     }
 
