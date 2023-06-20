@@ -1,0 +1,25 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: henvendelse-oppdatering-melding
+  namespace: personoversikt
+  labels:
+    team: personoversikt
+  annotations:
+    dcat.data.nav.no/title: "personoversikt.henvendelse-oppdatering-melding"
+    dcat.data.nav.no/description: "Topic for alle henvendelser som produseres av saksbehandlere/veiledere"
+spec:
+  pool: {{kafkaPool}}
+  config:
+    cleanupPolicy: delete
+    minimumInSyncReplicas: 1
+    partitions: 3
+    replication: 2
+    retentionBytes: -1    # Messages will never get deleted because of disk space
+    retentionHours: 730  # Messages are stored for 1 month
+  acl:
+  {{#each acl as |acl| }}
+    - team: {{acl.team }}
+      application: {{acl.application}}
+      access: {{acl.access}}
+  {{/each}}

@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
+import no.nav.modiapersonoversikt.kafka.HenvendelseProducer
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
@@ -17,7 +18,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
@@ -33,8 +33,9 @@ class SfLegacyDialogController(
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ansattService: AnsattService,
     private val kodeverk: EnhetligKodeverk.Service,
-    private val unleashService: UnleashService
+    private val meldingProducer: HenvendelseProducer,
 ) : DialogApi {
+
     override fun hentMeldinger(fnr: String, enhet: String): List<TraadDTO> {
         val bruker = EksternBruker.Fnr(fnr)
 
@@ -69,10 +70,12 @@ class SfLegacyDialogController(
         fnr: String,
         sporsmalsRequest: SendSporsmalRequest
     ): TraadDTO {
+        val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode)
+
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
             enhet = sporsmalsRequest.enhet,
-            temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode),
+            temagruppe = temagruppe,
             tilknyttetAnsatt = sporsmalsRequest.erOppgaveTilknyttetAnsatt,
             fritekst = sporsmalsRequest.fritekst
         )
@@ -96,10 +99,11 @@ class SfLegacyDialogController(
         fnr: String,
         infomeldingRequest: InfomeldingRequest
     ): TraadDTO {
+        val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode)
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
             enhet = infomeldingRequest.enhet,
-            temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
+            temagruppe = temagruppe,
             tilknyttetAnsatt = false,
             fritekst = infomeldingRequest.fritekst
         )
@@ -171,6 +175,7 @@ class SfLegacyDialogController(
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = fortsettDialogRequest.fritekst
             )
+
             val journalposter = (henvendelse.journalposter ?: emptyList())
                 .distinctBy { it.fagsakId }
             journalposter.forEach {
@@ -304,6 +309,7 @@ class SfLegacyDialogController(
                 MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(melding.fra.ident)
                     ?.let { "${it.navn} (${it.ident})" }
                     ?: "(${melding.fra.ident})"
+
                 MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
             }
             val status = when {
@@ -382,6 +388,7 @@ class SfLegacyDialogController(
                     else -> Meldingstype.SAMTALEREFERAT_TELEFON
                 }
             }
+
             HenvendelseDTO.HenvendelseType.MELDINGSKJEDE -> {
                 when (melding.fra.identType) {
                     MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) Meldingstype.SPORSMAL_SKRIFTLIG else Meldingstype.SVAR_SBL_INNGAAENDE
@@ -389,6 +396,7 @@ class SfLegacyDialogController(
                     MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.SVAR_SKRIFTLIG
                 }
             }
+
             HenvendelseDTO.HenvendelseType.CHAT -> {
                 when (melding.fra.identType) {
                     MeldingFraDTO.IdentType.AKTORID -> Meldingstype.CHATMELDING_FRA_BRUKER
@@ -417,14 +425,25 @@ class SfLegacyDialogController(
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = meldingRequest.fritekst
             )
+
             return parseFraHenvendelseTilTraad(henvendelse)
         } else {
+            val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(meldingRequest.sak!!.temaKode)
+
             val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
                 bruker = EksternBruker.Fnr(fnr),
                 enhet = meldingRequest.enhet,
-                temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(meldingRequest.sak!!.temaKode),
+                temagruppe = temagruppe,
                 tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
                 fritekst = meldingRequest.fritekst
+            )
+
+            meldingProducer.sendHenvendelseUpdate(
+                fnr = henvendelse.fnr,
+                tema = meldingRequest.sak.temaKode,
+                temagruppe = henvendelse.gjeldendeTemagruppe!!,
+                tidspunkt = henvendelse.opprettetDato,
+                traadId = henvendelse.kjedeId
             )
 
             if (meldingRequest.avsluttet == true) {
@@ -480,6 +499,7 @@ class SfLegacyDialogController(
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                 fritekst = meldingRequest.fritekst
             )
+
             val journalposter = (henvendelse.journalposter ?: emptyList())
                 .distinctBy { it.fagsakId }
             journalposter.forEach {
@@ -498,6 +518,14 @@ class SfLegacyDialogController(
                 enhet = enhet,
                 tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
                 fritekst = meldingRequest.fritekst
+            )
+
+            meldingProducer.sendHenvendelseUpdate(
+                fnr = henvendelse.fnr,
+                tema = meldingRequest.sak?.temaKode,
+                temagruppe = henvendelse.gjeldendeTemagruppe!!,
+                tidspunkt = henvendelse.opprettetDato,
+                traadId = henvendelse.kjedeId
             )
 
             if (meldingRequest.avsluttet == true) {

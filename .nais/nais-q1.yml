@@ -58,6 +58,8 @@ spec:
       claims:
         extra:
           - "NAVident"
+  kafka:
+    pool: nav-dev
   accessPolicy:
     inbound:
       rules:
@@ -179,3 +181,5 @@ spec:
       value: "https://tms-event-api.ekstern.dev.nav.no/tms-event-api"
     - name: TMS_EVENT_API_SCOPE
       value: "dev-gcp:min-side:tms-event-api"
+    - name: KAFKA_HENVENDELSE_OPPDATERING_TOPIC
+      value: "personoversikt.henvendelse-oppdatering-melding"

@@ -1,0 +1,20 @@
+{
+  "kafkaPool": "nav-dev",
+  "acl": [
+    {
+      "team": "personoversikt",
+      "application": "modiapersonoversikt-api-q0",
+      "access": "write"
+    },
+    {
+      "team": "personoversikt",
+      "application": "modiapersonoversikt-api-q1",
+      "access": "write"
+    },
+    {
+      "team": "flex",
+      "application": "flex-modia-kontakt-metrikk",
+      "access": "read"
+    }
+  ]
+}
