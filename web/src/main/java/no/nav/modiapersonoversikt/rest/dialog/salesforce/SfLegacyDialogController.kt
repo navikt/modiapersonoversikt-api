@@ -442,7 +442,6 @@ class SfLegacyDialogController(
                 fnr = henvendelse.fnr,
                 tema = meldingRequest.sak.temaKode,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!,
-                tidspunkt = henvendelse.opprettetDato,
                 traadId = henvendelse.kjedeId
             )
 
@@ -524,7 +523,6 @@ class SfLegacyDialogController(
                 fnr = henvendelse.fnr,
                 tema = meldingRequest.sak?.temaKode,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!,
-                tidspunkt = henvendelse.opprettetDato,
                 traadId = henvendelse.kjedeId
             )
 

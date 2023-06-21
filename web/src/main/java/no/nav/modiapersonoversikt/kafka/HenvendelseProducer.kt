@@ -1,14 +1,12 @@
 package no.nav.modiapersonoversikt.kafka
 
-import kotlinx.datetime.toKotlinInstant
+import kotlinx.datetime.Clock
 import no.nav.modiapersonoversikt.kafka.dto.HenvendelseKafkaDTO
 import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogController
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.personoversikt.common.logging.Logging
 import org.slf4j.LoggerFactory
-import java.time.OffsetDateTime
-import java.util.*
 
 interface HenvendelseProducer {
     fun sendHenvendelseUpdate(
@@ -16,7 +14,6 @@ interface HenvendelseProducer {
         tema: String?,
         temagruppe: String,
         traadId: String,
-        tidspunkt: OffsetDateTime
     )
 }
 
@@ -33,17 +30,17 @@ class HenvendelseProducerImpl(
         tema: String?,
         temagruppe: String,
         traadId: String,
-        tidspunkt: OffsetDateTime
     ) {
         if (!unleashService.isEnabled(Feature.SEND_HENVENDELSE_TO_KAFKA)) {
             return
         }
+
         val message = HenvendelseKafkaDTO(
             fnr = fnr,
             tema = tema,
             temagruppe = temagruppe,
             traadId = traadId,
-            tidspunkt = tidspunkt.toInstant().toKotlinInstant()
+            tidspunkt = Clock.System.now()
         )
 
         if (temaSomSkalPubliseres.contains(message.tema) || temagruppeSomSkalPubliseres.contains(message.temagruppe)) {

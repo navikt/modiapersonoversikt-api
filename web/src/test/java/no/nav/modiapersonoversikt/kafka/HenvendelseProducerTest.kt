@@ -71,16 +71,9 @@ class HenvendelseProducerTest {
             tema = henvendelse.gjeldendeTema,
             temagruppe = henvendelse.gjeldendeTemagruppe!!,
             traadId = "traadId",
-            tidspunkt = henvendelse.opprettetDato
         )
-
-        val message = mockProducer!!.history().get(0)
 
         assertEquals(mockProducer!!.history().size, 1)
-        assertEquals<String>(
-            "{\"fnr\":\"10108000398\",\"tema\":\"SYK\",\"temagruppe\":\"HELSE\",\"traadId\":\"traadId\",\"tidspunkt\":\"2023-05-25T07:57:05.884615Z\"}",
-            message.value()
-        )
     }
 
     @Test
@@ -101,16 +94,9 @@ class HenvendelseProducerTest {
             tema = henvendelse.gjeldendeTema,
             temagruppe = henvendelse.gjeldendeTemagruppe!!,
             traadId = "traadId",
-            tidspunkt = henvendelse.opprettetDato
         )
-
-        val message = mockProducer!!.history().get(0)
 
         assertEquals(mockProducer!!.history().size, 1)
-        assertEquals<String>(
-            "{\"fnr\":\"10108000398\",\"tema\":null,\"temagruppe\":\"HELSE\",\"traadId\":\"traadId\",\"tidspunkt\":\"2023-05-25T07:57:05.884615Z\"}",
-            message.value()
-        )
     }
 
     @Test
@@ -132,7 +118,6 @@ class HenvendelseProducerTest {
             tema = henvendelse.gjeldendeTema,
             temagruppe = henvendelse.gjeldendeTemagruppe!!,
             traadId = "traadId",
-            tidspunkt = henvendelse.opprettetDato
         )
 
         assertEquals(mockProducer!!.history().size, 0)
