@@ -21,12 +21,6 @@ import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
-import javax.ws.rs.NotSupportedException
-
-private val REFERAT_TYPER = listOf(
-    Meldingstype.SAMTALEREFERAT_TELEFON,
-    Meldingstype.SAMTALEREFERAT_OPPMOTE
-)
 
 class SfLegacyDialogController(
     private val sfHenvendelseService: SfHenvendelseService,
@@ -35,7 +29,6 @@ class SfLegacyDialogController(
     private val kodeverk: EnhetligKodeverk.Service,
     private val meldingProducer: HenvendelseProducer,
 ) : DialogApi {
-
     override fun hentMeldinger(fnr: String, enhet: String): List<TraadDTO> {
         val bruker = EksternBruker.Fnr(fnr)
 
@@ -45,54 +38,12 @@ class SfLegacyDialogController(
         return sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it) }
     }
 
-    override fun sendMelding(fnr: String, referatRequest: SendReferatRequest): TraadDTO {
-        val henvendelse = sfHenvendelseService.sendSamtalereferat(
-            kjedeId = null,
-            bruker = EksternBruker.Fnr(fnr),
-            enhet = referatRequest.enhet,
-            temagruppe = referatRequest.temagruppe,
-            kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
-            fritekst = referatRequest.fritekst
-        )
-
-        return parseFraHenvendelseTilTraad(henvendelse)
-    }
-
     override fun sendMelding(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
         return if (meldingRequest.traadId != null) {
             fortsettPaEksisterendeDialog(fnr, meldingRequest)
         } else {
             opprettNyDialog(fnr, meldingRequest)
         }
-    }
-
-    override fun sendSporsmal(
-        fnr: String,
-        sporsmalsRequest: SendSporsmalRequest
-    ): TraadDTO {
-        val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode)
-
-        val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
-            bruker = EksternBruker.Fnr(fnr),
-            enhet = sporsmalsRequest.enhet,
-            temagruppe = temagruppe,
-            tilknyttetAnsatt = sporsmalsRequest.erOppgaveTilknyttetAnsatt,
-            fritekst = sporsmalsRequest.fritekst
-        )
-
-        if (sporsmalsRequest.avsluttet == true) {
-            sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
-        }
-
-        sfHenvendelseService.journalforHenvendelse(
-            enhet = sporsmalsRequest.enhet,
-            kjedeId = henvendelse.kjedeId,
-            saksId = sporsmalsRequest.sak.fagsystemSaksId,
-            saksTema = sporsmalsRequest.sak.temaKode,
-            fagsakSystem = sporsmalsRequest.sak.fagsystemKode
-        )
-
-        return parseFraHenvendelseTilTraad(henvendelse)
     }
 
     override fun sendInfomelding(
@@ -133,98 +84,6 @@ class SfLegacyDialogController(
             finnOgTilordneOppgaveIdTilTrad(traad, fnr, opprettHenvendelseRequest.enhet, ignorerConflict ?: false)
 
         return FortsettDialogDTO(opprettHenvendelseRequest.traadId, oppgaveId)
-    }
-
-    override fun sendFortsettDialog(
-        fnr: String,
-        fortsettDialogRequest: FortsettDialogRequest
-    ): TraadDTO {
-        val kjedeId = fortsettDialogRequest.traadId
-        val oppgaveId = fortsettDialogRequest.oppgaveId
-
-        val bruker = EksternBruker.Fnr(fnr)
-        val enhet = fortsettDialogRequest.enhet
-        var henvendelse = sfHenvendelseService.hentHenvendelse(fortsettDialogRequest.traadId)
-
-        val henvendelseTilhorerBruker = sfHenvendelseService.sjekkEierskap(bruker, henvendelse)
-        if (!henvendelseTilhorerBruker) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Henvendelse $kjedeId tilhørte ikke bruker")
-        }
-
-        if (oppgaveId != null) {
-            val oppgave: Oppgave? = oppgaveBehandlingService.hentOppgave(oppgaveId)
-            if (kjedeId != oppgave?.henvendelseId) {
-                throw ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Feil oppgaveId fra client. Forventet '$kjedeId', men fant '${oppgave?.henvendelseId}'"
-                )
-            } else if (oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId)) {
-                throw ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt"
-                )
-            }
-        }
-        val erSamtalereferat = REFERAT_TYPER.contains(fortsettDialogRequest.meldingstype)
-        if (erSamtalereferat) {
-            henvendelse = sfHenvendelseService.sendSamtalereferat(
-                kjedeId = kjedeId,
-                bruker = bruker,
-                enhet = enhet,
-                temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
-                kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
-                fritekst = fortsettDialogRequest.fritekst
-            )
-
-            val journalposter = (henvendelse.journalposter ?: emptyList())
-                .distinctBy { it.fagsakId }
-            journalposter.forEach {
-                sfHenvendelseService.journalforHenvendelse(
-                    enhet = enhet,
-                    kjedeId = henvendelse.kjedeId,
-                    saksId = it.fagsakId,
-                    saksTema = it.journalfortTema,
-                    fagsakSystem = it.fagsaksystem?.name
-                )
-            }
-        } else {
-            henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
-                bruker = bruker,
-                kjedeId = kjedeId,
-                enhet = enhet,
-                tilknyttetAnsatt = fortsettDialogRequest.erOppgaveTilknyttetAnsatt,
-                fritekst = fortsettDialogRequest.fritekst
-            )
-
-            if (fortsettDialogRequest.meldingstype !== Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
-                sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
-            }
-            if (fortsettDialogRequest.sak != null) {
-                sfHenvendelseService.journalforHenvendelse(
-                    enhet = enhet,
-                    kjedeId = henvendelse.kjedeId,
-                    saksId = fortsettDialogRequest.sak.fagsystemSaksId,
-                    saksTema = fortsettDialogRequest.sak.temaKode,
-                    fagsakSystem = fortsettDialogRequest.sak.fagsystemKode
-                )
-            }
-        }
-        if (oppgaveId != null) {
-            oppgaveBehandlingService.ferdigstillOppgaveIGsak(
-                oppgaveId,
-                Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe!!), // TODO må fikses av SF-api. Temagruppe kan ikke være null
-                enhet
-            )
-        }
-
-        return parseFraHenvendelseTilTraad(henvendelse)
-    }
-
-    override fun slaaSammenTraader(
-        fnr: String,
-        slaaSammenRequest: SlaaSammenRequest
-    ): Map<String, Any?> {
-        throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
     }
 
     private fun parseFraHenvendelseTilTraad(henvendelse: HenvendelseDTO): TraadDTO {
@@ -407,14 +266,6 @@ class SfLegacyDialogController(
         }
     }
 
-    private fun Meldingstype.getKanal(): SamtalereferatRequestDTO.Kanal {
-        return when (this) {
-            Meldingstype.SAMTALEREFERAT_OPPMOTE -> SamtalereferatRequestDTO.Kanal.OPPMOTE
-            Meldingstype.SAMTALEREFERAT_TELEFON -> SamtalereferatRequestDTO.Kanal.TELEFON
-            else -> throw IllegalArgumentException("Ikke støttet meldingstype, $this")
-        }
-    }
-
     private fun opprettNyDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
         if (meldingRequest.traadType == TraadType.SAMTALEREFERAT) {
             val henvendelse = sfHenvendelseService.sendSamtalereferat(
@@ -461,7 +312,7 @@ class SfLegacyDialogController(
         }
     }
 
-    private fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
+    override fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
         val kjedeId = meldingRequest.traadId!!
         val oppgaveId = meldingRequest.oppgaveId
 
