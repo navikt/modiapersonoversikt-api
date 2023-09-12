@@ -222,6 +222,17 @@
         },
         "title": "Hendelse"
       },
+      "BehandlingWithHendelse": {
+        "type": "object",
+        "properties": {
+          "behandling": {
+            "type": "behandling"
+          },
+          "hendelse": {
+            "type": "hendelse"
+          }
+        }
+      },
       "GetPingResponse": {
         "type": "object",
         "properties": {
