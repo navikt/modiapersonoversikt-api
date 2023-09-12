@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.soknadsstatus
 
+import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.apis.SoknadsstatusControllerApi
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Behandling
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Hendelse
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
@@ -10,7 +11,7 @@ interface SoknadsstatusService {
     fun ping()
 }
 
-class SoknadsstatusServiceImpl(oboTokenClient: BoundedOnBehalfOfTokenClient, soknadsstatusApi: Soknads) : SoknadsstatusService {
+class SoknadsstatusServiceImpl(private val soknadsstatusApi: SoknadsstatusControllerApi) : SoknadsstatusService {
     override fun hentHendelser(ident: String): List<Hendelse> {
         TODO("Not yet implemented")
     }

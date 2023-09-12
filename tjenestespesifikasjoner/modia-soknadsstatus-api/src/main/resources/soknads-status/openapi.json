@@ -1,0 +1,266 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Søknad status API 1",
+    "description": "Tjeneste for å samle inn informasjon om status på brukers søknader",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://intern.nav.no/modia-soknadsstatus-api/api",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/behandling/{ident}": {
+      "get": {
+        "summary": "Henter en liste av brukers behandlinger",
+        "operationId": "hentAlleBehandlinger",
+        "tags": [
+          "soknadsstatus-controller"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "\"Bearer \" + OIDC token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ident",
+            "in": "path",
+            "description": "fnr for bruker",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Behandling"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Feil api nøkkel"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Azure_AD_System-to-System": []
+          },
+          {
+            "Azure_AD_On-Behalf-Of": []
+          }
+        ]
+      }
+    },
+    "/hendelse/{ident}": {
+      "get": {
+        "summary": "Henter en liste av brukers hendelser",
+        "operationId": "hentAlleHendelser",
+        "tags": [
+          "soknadsstatus-controller"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "\"Bearer \" + OIDC token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ident",
+            "in": "path",
+            "description": "fnr for bruker",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Hendelse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Feil api nøkkel"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Azure_AD_System-to-System": []
+          },
+          {
+            "Azure_AD_On-Behalf-Of": []
+          }
+        ]
+      }
+    },
+    "/rest/ping": {
+      "get": {
+        "tags": [
+          "soknadsstatus-controller"
+        ],
+        "operationId": "getPing",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPingResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Azure_AD_System-to-System": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Behandling": {
+        "type": "object",
+        "properties": {
+          "behandlingId": {
+            "type": "string"
+          },
+          "produsentSystem": {
+            "type": "string"
+          },
+          "startTidspunkt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sluttTidspunkt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sistOppdatert": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sakstema": {
+            "type": "string"
+          },
+          "behandlingsTema": {
+            "type": "string"
+          },
+          "behandlingsType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "ansvarligEnhet": {
+            "type": "string"
+          },
+          "primaerBehandling": {
+            "type": "string"
+          }
+        },
+        "title": "Behandling"
+      },
+      "Hendelse": {
+        "type": "object",
+        "properties": {
+          "hendelseId": {
+            "type": "string"
+          },
+          "behandlingId": {
+            "type": "string"
+          },
+          "hendelseProdusent": {
+            "type": "string"
+          },
+          "hendelseType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "ansvarligEnhet": {
+            "type": "string"
+          }
+        },
+        "title": "Hendelse"
+      },
+      "GetPingResponse": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Azure_AD_System-to-System": {
+        "type": "oauth2",
+        "description": "Make sure that your own application's client is pre-authorized to call this application, then use the the token URL `https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token` and request the scope `api://18e2c7bc-e47c-4918-96fc-97d8e0c52a76/.default`.\n\nInsert the generated JWT token below. Note that Swagger UI will prepend the necessary `Bearer` prefix automatically.",
+        "name": "Azure AD (System-to-System)",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token",
+            "scopes": {
+              "api://18e2c7bc-e47c-4918-96fc-97d8e0c52a76/.default": "Generic access to this application"
+            }
+          }
+        }
+      },
+      "Azure_AD_On-Behalf-Of": {
+        "type": "http",
+        "description": "Make sure that your own application's client is pre-authorized to call this application, then use the the token URL `https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token` and request the scope `api://18e2c7bc-e47c-4918-96fc-97d8e0c52a76/.default`.\n\nInsert the generated JWT token below. Note that Swagger UI will prepend the necessary `Bearer` prefix automatically.",
+        "name": "Azure AD (On-Behalf-Of)",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      },
+      "TokenX": {
+        "type": "http",
+        "description": "Make sure that your own application's client is pre-authorized to call this application, then use the the token URL `https://tokendings.dev-gcp.nais.io/token`, a user token from ID Porten (or some other  TokenX token) and `audience=dev-gcp:team-rocket:digdir-krr-proxy`.\n\nInsert the generated JWT token below. Note that Swagger UI will prepend the necessary `Bearer` prefix automatically.",
+        "name": "TokenX",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
