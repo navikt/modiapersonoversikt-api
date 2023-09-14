@@ -295,7 +295,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void gruppererTemaFraSakerDokumentMetadataOgBehandlingskjeder() {
-        Set<String> temakoder = SakstemaService.hentAlleTema(
+        Set<String> temakoder = SakstemaService.Companion.hentAlleTema(
                 lagSaker(Konstanter.DAGPENGER, Konstanter.KONTROLL),
                 lagDokument(List.of(Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER), List.of("KNA", "IND")),
                 lagBehandlingskjeder(Konstanter.FORELDREPENGER, Konstanter.DAGPENGER, Konstanter.OPPFOLGING)
