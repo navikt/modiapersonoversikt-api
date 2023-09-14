@@ -21,21 +21,21 @@
         ],
         "parameters": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \" + OIDC token",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "ident",
             "in": "path",
             "description": "fnr for bruker",
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "inkluderHendelser",
+            "in": "query",
+            "description": "Hent tilhørende hendelser for en behandling",
+            "required": false,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -79,15 +79,6 @@
         ],
         "parameters": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \" + OIDC token",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "ident",
             "in": "path",
             "description": "fnr for bruker",
@@ -128,12 +119,12 @@
         ]
       }
     },
-    "/rest/ping": {
+    "/internal/isAlive": {
       "get": {
         "tags": [
           "soknadsstatus-controller"
         ],
-        "operationId": "getPing",
+        "operationId": "ping",
         "responses": {
           "200": {
             "description": "OK",
@@ -158,6 +149,15 @@
     "schemas": {
       "Behandling": {
         "type": "object",
+        "required": [
+          "behandlingId",
+          "startTidspunkt",
+          "sistOppdatert",
+          "sakstema",
+          "behandlingsTema",
+          "behandlingsType",
+          "status"
+        ],
         "properties": {
           "behandlingId": {
             "type": "string"
@@ -187,19 +187,36 @@
             "type": "string"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "UNDER_BEHANDLING",
+              "FERDIG_BEHANDLET",
+              "AVBRUTT"
+            ]
           },
           "ansvarligEnhet": {
             "type": "string"
           },
           "primaerBehandling": {
             "type": "string"
+          },
+          "hendelser": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Hendelse"
+            }
           }
         },
         "title": "Behandling"
       },
       "Hendelse": {
         "type": "object",
+        "required": [
+          "hendelseId",
+          "behandlingId",
+          "hendelseType",
+          "status"
+        ],
         "properties": {
           "hendelseId": {
             "type": "string"
@@ -211,27 +228,26 @@
             "type": "string"
           },
           "hendelseType": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "BEHANDLING_OPPRETTET",
+              "BEHANDLING_AVSLUTTET",
+              "BEHANDLING_OPPRETTET_OG_AVSLUTTET"
+            ]
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "UNDER_BEHANDLING",
+              "FERDIG_BEHANDLET",
+              "AVBRUTT"
+            ]
           },
           "ansvarligEnhet": {
             "type": "string"
           }
         },
         "title": "Hendelse"
-      },
-      "BehandlingWithHendelse": {
-        "type": "object",
-        "properties": {
-          "behandling": {
-            "type": "behandling"
-          },
-          "hendelse": {
-            "type": "hendelse"
-          }
-        }
       },
       "GetPingResponse": {
         "type": "object",
