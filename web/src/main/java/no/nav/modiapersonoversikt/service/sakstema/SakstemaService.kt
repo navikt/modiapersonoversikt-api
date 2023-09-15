@@ -1,5 +1,12 @@
 package no.nav.modiapersonoversikt.service.sakstema
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json.Default.encodeToJsonElement
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.FeilendeBaksystemException
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
@@ -9,10 +16,15 @@ import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakogbehandling.FilterUtils.fjernGamleDokumenter
 import no.nav.modiapersonoversikt.service.sakogbehandling.SakOgBehandlingService
+import no.nav.modiapersonoversikt.service.sakstema.domain.BehandlingsStatus
 import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
+import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
+import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusService
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.slf4j.LoggerFactory
+import org.slf4j.event.Level
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import java.util.function.Function
@@ -30,14 +42,25 @@ class SakstemaService {
     @Autowired
     lateinit var kodeverk: EnhetligKodeverk.Service
 
+    @Autowired
+    lateinit var soknadsstatusService: SoknadsstatusService
+
     fun hentSakstema(saker: List<Sak>, fnr: String): ResultatWrapper<List<Sakstema>> {
         val wrapper = safService.hentJournalposter(fnr)
 
         return try {
-            val behandlingskjeder: Map<String, List<Behandlingskjede?>?> =
+            val behandlingskjeder: Map<String, List<Behandlingskjede?>> =
                 sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(
                     fnr
                 )
+
+            try {
+                val soknadsstatus = soknadsstatusService.hentBehandlingerGruppertPaaTema(fnr)
+                Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjeder, soknadsstatus)
+            } catch (e: Exception) {
+                Experiment.experimentLog("Failed to fetch experiment", Level.ERROR, behandlingskjeder, null, false, e)
+            }
+
             val temakoder = hentAlleTema(saker, wrapper.resultat, behandlingskjeder)
             opprettSakstemaresultat(saker, wrapper, temakoder, behandlingskjeder)
         } catch (e: FeilendeBaksystemException) {
@@ -143,4 +166,159 @@ class SakstemaService {
             return Predicate { dm: DokumentMetadata -> dm.baksystem.contains(Baksystem.HENVENDELSE) && dm.temakode == temakode }
         }
     }
+}
+
+@Serializable
+private data class BehandlingskjedeDTO(
+    val sistOppdatert: LocalDateTime,
+    val status: BehandlingsStatus
+)
+
+internal object Experiment {
+    fun compareSakogbehandlingAndSoknadsstatus(
+        control: Map<String, List<Behandlingskjede?>>,
+        experiment: Map<String, Soknadsstatus>?
+    ): Boolean {
+        if (experiment == null) {
+            experimentLog("Eksperiment var null", Level.ERROR, control, null)
+            return false
+        }
+        try {
+            if (!checkTheme(control, experiment!!)) {
+                experimentLog("Eksperiment og kontroll hadde ikke samme tema", Level.ERROR, control, experiment)
+                return false
+            }
+            if (!checkBehandlinger(control, experiment)) {
+                experimentLog(
+                    "Eksperiment og kontroll hadde ikke samme behandlingsstatus",
+                    Level.ERROR,
+                    control,
+                    experiment
+                )
+                return false
+            }
+
+            experimentLog("Eksperiment og kontroll var like", Level.INFO, control, experiment, true)
+            return true
+        } catch (e: Exception) {
+            experimentLog("Klarte ikke å håndtere eksperiment", Level.ERROR, control, experiment, false, e)
+            return false
+        }
+    }
+
+    private fun checkBehandlinger(
+        control: Map<String, List<Behandlingskjede?>>,
+        experiment: Map<String, Soknadsstatus>
+    ): Boolean {
+        for (controlEntry in control.entries) {
+            val controlSoknadsstatus = Soknadsstatus()
+
+            for (behandling in controlEntry.value) {
+                if (behandling?.status == null) continue
+
+                when (behandling.status) {
+                    BehandlingsStatus.UNDER_BEHANDLING -> controlSoknadsstatus.underBehandling++
+                    BehandlingsStatus.AVBRUTT -> controlSoknadsstatus.avbrutt++
+                    BehandlingsStatus.FERDIG_BEHANDLET -> controlSoknadsstatus.ferdigBehandlet++
+                }
+            }
+
+            val experimentStatus = experiment[controlEntry.key] ?: return false
+
+            if (controlSoknadsstatus.avbrutt != experimentStatus.avbrutt) return false
+            if (controlSoknadsstatus.ferdigBehandlet != experimentStatus.ferdigBehandlet) return false
+            if (controlSoknadsstatus.underBehandling != experimentStatus.underBehandling) return false
+        }
+
+        return true
+    }
+
+    private fun checkTheme(
+        control: Map<String, List<Behandlingskjede?>>,
+        experiment: Map<String, Soknadsstatus>
+    ): Boolean {
+        val controlThemes = control.keys.toMutableSet()
+        val experimentThemes = experiment.keys.toMutableSet()
+
+        for (key in control.keys) {
+            if (!experimentThemes.contains(key)) {
+                return false
+            }
+            controlThemes.remove(key)
+            experimentThemes.remove(key)
+        }
+
+        return experimentThemes.isEmpty()
+    }
+
+    fun experimentLog(
+        message: String,
+        level: Level,
+        control: Map<String, List<Behandlingskjede?>>?,
+        experiment: Map<String, Soknadsstatus>?,
+        success: Boolean = false,
+        exception: Throwable? = null,
+    ) {
+        val header = "[Experiment]: Soknadsstatus"
+
+        var controlJson: JsonObject? = null
+        if (control != null) {
+            try {
+                controlJson = encodeControl(control)
+            } catch (e: Exception) {
+                TjenestekallLogg.error(
+                    header,
+                    fields = mapOf("message" to "Failed to encode control", "success" to false),
+                    throwable = e
+                )
+            }
+        }
+        var experimentJson: JsonObject? = null
+        if (experiment != null) {
+            try {
+                experimentJson = encodeExperiment(experiment)
+            } catch (e: Exception) {
+                TjenestekallLogg.error(
+                    header,
+                    fields = mapOf("message" to "Failed to encode experiment", "success" to false),
+                    throwable = e
+                )
+            }
+        }
+
+        val fields =
+            mapOf(message to message, "control" to controlJson, "experiment" to experimentJson, "success" to success)
+
+        if (level == Level.ERROR) {
+            TjenestekallLogg.error(header, fields = fields, throwable = exception)
+        }
+
+        if (level == Level.INFO) {
+            TjenestekallLogg.info(header, fields)
+        }
+    }
+
+    private fun encodeControl(control: Map<String, List<Behandlingskjede?>>): JsonObject {
+        return control.toJsonObject {
+            val behandlingskjeder = it as List<Behandlingskjede?>?
+            val behandlingsKjedeJson = behandlingskjeder?.filterNotNull()?.map { kjede ->
+                val behandlingsKjedeDTO = BehandlingskjedeDTO(
+                    sistOppdatert = kjede.sistOppdatert.toKotlinLocalDateTime(),
+                    status = kjede.status
+                )
+                encodeToJsonElement(BehandlingskjedeDTO.serializer(), behandlingsKjedeDTO)
+            } ?: listOf()
+            JsonArray(behandlingsKjedeJson)
+        }
+    }
+
+    private fun encodeExperiment(experiment: Map<String, Soknadsstatus>): JsonObject {
+        return experiment.toJsonObject {
+            val soknadsstatus = it as Soknadsstatus
+            encodeToJsonElement(Soknadsstatus.serializer(), soknadsstatus)
+        }
+    }
+
+    fun Map<*, *>.toJsonObject(mapValue: (Any?) -> JsonElement) =
+        JsonObject(mapKeys { it.key.toString() }.mapValues { mapValue(it.value) })
 }
