@@ -24,7 +24,14 @@ private val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProp
 @Configuration
 open class SoknadsstatusConfig {
     @Bean
-    open fun soknadsstatusApi(tokenClient: OnBehalfOfTokenClient) = SoknadsstatusApiFactory.createSoknadsstatusApi(tokenClient.bindTo(downstreamApi))
+    open fun soknadsstatusApi(tokenClient: OnBehalfOfTokenClient) =
+        SoknadsstatusApiFactory.createSoknadsstatusApi(tokenClient.bindTo(downstreamApi))
+
+    @Bean
+    open fun soknadsstatusService(
+        tokenClient: OnBehalfOfTokenClient,
+        soknadsstatusApi: SoknadsstatusControllerApi
+    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi), soknadsstatusApi)
 }
 
 object SoknadsstatusApiFactory {

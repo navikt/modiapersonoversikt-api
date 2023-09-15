@@ -5,7 +5,7 @@ import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.model
 import java.time.OffsetDateTime
 import java.util.*
 
-internal object BehandlingMockUtils {
+object BehandlingMockUtils {
     fun createBehandling(): Behandling {
         val behandlingId = "kdhsfke"
         return Behandling(
