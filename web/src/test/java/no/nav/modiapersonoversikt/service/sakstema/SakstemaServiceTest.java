@@ -14,6 +14,7 @@ import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema;
 import no.nav.modiapersonoversikt.service.saf.SafService;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede;
+import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,9 @@ public class SakstemaServiceTest {
 
     @Mock
     private SafService safService;
+
+    @Mock
+    private SoknadsstatusService soknadsstatusService;
 
     @InjectMocks
     private SakstemaService sakstemaService = new SakstemaService();
@@ -295,7 +299,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void gruppererTemaFraSakerDokumentMetadataOgBehandlingskjeder() {
-        Set<String> temakoder = SakstemaService.hentAlleTema(
+        Set<String> temakoder = SakstemaService.Companion.hentAlleTema(
                 lagSaker(Konstanter.DAGPENGER, Konstanter.KONTROLL),
                 lagDokument(List.of(Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER), List.of("KNA", "IND")),
                 lagBehandlingskjeder(Konstanter.FORELDREPENGER, Konstanter.DAGPENGER, Konstanter.OPPFOLGING)
