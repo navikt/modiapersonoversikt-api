@@ -18,14 +18,11 @@ import org.springframework.context.annotation.Configuration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
-private val url = EnvironmentUtils.getRequiredProperty("")
-private val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty(""))
+private val url = EnvironmentUtils.getRequiredProperty("MODIA_SOKNADSSTATUS_API_URL")
+private val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("MODIA_SOKNADSSTATUS_SCOPE"))
 
 @Configuration
 open class SoknadsstatusConfig {
-    @Bean
-    open fun soknadsstatusApi(tokenClient: OnBehalfOfTokenClient) =
-        SoknadsstatusApiFactory.createSoknadsstatusApi(tokenClient.bindTo(downstreamApi))
 
     @Bean
     open fun soknadsstatusService(
