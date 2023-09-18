@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/behandling/{ident}": {
+    "/api/soknadsstatus/behandling/{ident}": {
       "get": {
         "summary": "Henter en liste av brukers behandlinger",
         "operationId": "hentAlleBehandlinger",
@@ -70,7 +70,7 @@
         ]
       }
     },
-    "/hendelse/{ident}": {
+    "/api/soknadsstatus/hendelse/{ident}": {
       "get": {
         "summary": "Henter en liste av brukers hendelser",
         "operationId": "hentAlleHendelser",
