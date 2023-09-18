@@ -6,7 +6,7 @@ import no.nav.modiapersonoversikt.service.soknadsstatus.Filter.erKvitteringstype
 import no.nav.modiapersonoversikt.service.soknadsstatus.Filter.lovligMenUtgaattStatusEllerUnderBehandling
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import kotlin.test.assertFalse
 
 class FilterTest {
@@ -56,7 +56,7 @@ class FilterTest {
 
         behandling = createBehandling().copy(
             status = Behandling.Status.FERDIG_BEHANDLET,
-            sluttTidspunkt = OffsetDateTime.now().minusDays(4),
+            sluttTidspunkt = LocalDateTime.now().minusDays(4),
             behandlingsType = "asdsad"
         )
         assertFalse(
@@ -74,7 +74,7 @@ class FilterTest {
     @Test
     fun `sjekker om saken har utgått status eller er under behandling`() {
         var behandling = createBehandling().copy(
-            sluttTidspunkt = OffsetDateTime.now().minusMonths(2),
+            sluttTidspunkt = LocalDateTime.now().minusMonths(2),
             status = Behandling.Status.FERDIG_BEHANDLET
         )
         assertFalse(

@@ -87,7 +87,7 @@ object Filter {
     // om nødvendig element mangler, skal ikkje behandlingstypen vises, logikken fiterer sakstemaet vekk
     // alle beahndlinger er ugyldig/utgått (se kode for filterbehandler for uttak av det visbare behandlingssettet).
     private fun under1MndSidenFerdistillelse(behandling: Behandling): Boolean {
-        return behandling.sluttTidspunkt?.toLocalDateTime()?.isAfter(LocalDateTime.now().minusMonths(1)) ?: false
+        return behandling.sluttTidspunkt?.isAfter(LocalDateTime.now().minusMonths(1)) ?: false
     }
 
     // filterer ut ulovlige sakstema basert på blacklist
@@ -118,7 +118,7 @@ object Filter {
     // filterning av behandlingskjeder mappet til behandling som er ferdig/avsluttet og er over 1 måned sidan den blie avslutta
     private fun sisteHendelseErIkkeEldreEnn1Maned(behandling: Behandling): Boolean {
         return if (behandling.status == Behandling.Status.FERDIG_BEHANDLET) {
-            val behandlingsDato = behandling.sistOppdatert.toLocalDateTime()
+            val behandlingsDato = behandling.sistOppdatert
             val nowMinus1Mnth = LocalDateTime.now().minusMonths(1)
             return behandlingsDato.isAfter(nowMinus1Mnth)
         } else {

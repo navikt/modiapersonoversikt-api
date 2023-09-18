@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.service.soknadsstatus
 
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Behandling
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Hendelse
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.util.*
 
 object BehandlingMockUtils {
@@ -10,8 +10,8 @@ object BehandlingMockUtils {
         val behandlingId = "kdhsfke"
         return Behandling(
             behandlingId = behandlingId,
-            startTidspunkt = OffsetDateTime.parse("2023-06-16T12:40:24+01:00"),
-            sistOppdatert = OffsetDateTime.parse("2023-06-18T12:40:24+01:00"),
+            startTidspunkt = LocalDateTime.parse("2023-06-16T12:40:24"),
+            sistOppdatert = LocalDateTime.parse("2023-06-18T12:40:24"),
             sakstema = "AAP",
             behandlingsTema = "AAP",
             behandlingsType = "ae0047",
