@@ -30,8 +30,7 @@ open class SoknadsstatusConfig {
     @Bean
     open fun soknadsstatusService(
         tokenClient: OnBehalfOfTokenClient,
-        soknadsstatusApi: SoknadsstatusControllerApi
-    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi), soknadsstatusApi)
+    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi))
 }
 
 object SoknadsstatusApiFactory {
