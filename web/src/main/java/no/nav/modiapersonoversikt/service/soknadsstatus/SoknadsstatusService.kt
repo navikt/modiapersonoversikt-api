@@ -10,8 +10,9 @@ import org.springframework.cache.annotation.Cacheable
 interface SoknadsstatusService {
     fun hentHendelser(ident: String): List<Hendelse>
     fun hentBehandlinger(ident: String): List<Behandling>
-    fun hentBehandlingerMedHendelser(ident: String): List<Behandling>
-    fun hentBehandlingerGruppertPaaTema(ident: String): Map<String, Soknadsstatus>
+    fun hentBehandlingerMedHendelser(ident: String, filtrer: Boolean = true): List<Behandling>
+    fun hentBehandlingerGruppertPaaTema(ident: String, filtrer: Boolean = true): Map<String, Soknadsstatus>
+    fun grupperBehandlingerPaaTema(behandlinger: List<Behandling>, filtrer: Boolean = true): Map<String, Soknadsstatus>
     fun ping()
 }
 
@@ -34,16 +35,27 @@ open class SoknadsstatusServiceImpl(
     }
 
     @Cacheable
-    override fun hentBehandlingerMedHendelser(ident: String): List<Behandling> {
+    override fun hentBehandlingerMedHendelser(ident: String, filtrer: Boolean): List<Behandling> {
         val behandlinger = soknadsstatusApi.hentAlleBehandlinger(ident, inkluderHendelser = true)
-        return Filter.filtrerOgSorterBehandligner(behandlinger)
+        return if (filtrer) Filter.filtrerOgSorterBehandligner(behandlinger) else behandlinger
     }
 
     @Cacheable
-    override fun hentBehandlingerGruppertPaaTema(ident: String): Map<String, Soknadsstatus> {
-        val behandlinger = hentBehandlingerMedHendelser(ident)
+    override fun hentBehandlingerGruppertPaaTema(ident: String, filtrer: Boolean): Map<String, Soknadsstatus> {
+        val behandlinger = hentBehandlingerMedHendelser(ident, filtrer)
+        return grupperBehandlingerPaaTema(behandlinger)
+    }
+
+    override fun grupperBehandlingerPaaTema(
+        behandlinger: List<Behandling>,
+        filtrer: Boolean
+    ): Map<String, Soknadsstatus> {
+        var tmpBehandlinger = behandlinger
+        if (filtrer) {
+            tmpBehandlinger = Filter.filtrerOgSorterBehandligner(behandlinger)
+        }
         val temamap = mutableMapOf<String, Soknadsstatus>()
-        for (behandling in behandlinger) {
+        for (behandling in tmpBehandlinger) {
             val temastatus = temamap[behandling.behandlingsTema] ?: Soknadsstatus()
             when (behandling.status) {
                 Behandling.Status.UNDER_BEHANDLING -> temastatus.underBehandling++

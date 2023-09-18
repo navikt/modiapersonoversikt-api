@@ -15,7 +15,7 @@ class SoknadsstatusExperimentTest {
         val tema = listOf("SAK", "SAK1", "SAK2")
         val behandlingskjede = createBehandlingskjede(tema)
         val soknadsstatus = createSoknadsstatus(tema)
-        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus)
+        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus, null)
         assertTrue(res)
     }
 
@@ -25,7 +25,7 @@ class SoknadsstatusExperimentTest {
         val behandlingskjede = createBehandlingskjede(tema)
         tema.add("SAK3")
         val soknadsstatus = createSoknadsstatus(tema)
-        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus)
+        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus, null)
         assertFalse(res)
     }
 
@@ -35,7 +35,7 @@ class SoknadsstatusExperimentTest {
         val soknadsstatus = createSoknadsstatus(tema)
         tema.add("SAK3")
         val behandlingskjede = createBehandlingskjede(tema)
-        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus)
+        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus, null)
         assertFalse(res)
     }
 
@@ -49,7 +49,7 @@ class SoknadsstatusExperimentTest {
             )
         )
         val soknadsstatus = createSoknadsstatus(tema)
-        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus)
+        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus, null)
         assertFalse(res)
     }
 
@@ -59,7 +59,7 @@ class SoknadsstatusExperimentTest {
         val behandlingskjede = createBehandlingskjede(tema)
         val soknadsstatus = createSoknadsstatus(tema).toMutableMap()
         soknadsstatus["SAK"] = Soknadsstatus(avbrutt = 1)
-        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus)
+        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, soknadsstatus, null)
         assertFalse(res)
     }
 
@@ -67,7 +67,7 @@ class SoknadsstatusExperimentTest {
     fun `skal reportere ulik når eksperiment er null`() {
         val tema = mutableListOf("SAK", "SAK1", "SAK2")
         val behandlingskjede = createBehandlingskjede(tema)
-        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, null)
+        val res = Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjede, null, null)
         assertFalse(res)
     }
 

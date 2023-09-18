@@ -55,10 +55,24 @@ class SakstemaService {
                 )
 
             try {
-                val soknadsstatus = soknadsstatusService.hentBehandlingerGruppertPaaTema(fnr)
-                Experiment.compareSakogbehandlingAndSoknadsstatus(behandlingskjeder, soknadsstatus)
+                val soknadsstatus = soknadsstatusService.hentBehandlingerMedHendelser(fnr, false)
+                val filtrerteBehandlinger = soknadsstatusService.grupperBehandlingerPaaTema(soknadsstatus, true)
+                val ufiltrerteBehandlinger = soknadsstatusService.grupperBehandlingerPaaTema(soknadsstatus, false)
+                Experiment.compareSakogbehandlingAndSoknadsstatus(
+                    behandlingskjeder,
+                    filtrerteBehandlinger,
+                    ufiltrerteBehandlinger
+                )
             } catch (e: Exception) {
-                Experiment.experimentLog("Failed to fetch experiment", Level.ERROR, behandlingskjeder, null, false, e)
+                Experiment.experimentLog(
+                    "Failed to fetch experiment",
+                    Level.ERROR,
+                    behandlingskjeder,
+                    null,
+                    null,
+                    false,
+                    e
+                )
             }
 
             val temakoder = hentAlleTema(saker, wrapper.resultat, behandlingskjeder)
@@ -177,15 +191,23 @@ private data class BehandlingskjedeDTO(
 internal object Experiment {
     fun compareSakogbehandlingAndSoknadsstatus(
         control: Map<String, List<Behandlingskjede?>>,
-        experiment: Map<String, Soknadsstatus>?
+        experiment: Map<String, Soknadsstatus>?,
+        experimentNoFilter: Map<String, Soknadsstatus>?
     ): Boolean {
         if (experiment == null) {
-            experimentLog("Eksperiment var null", Level.ERROR, control, null)
+            experimentLog("Eksperiment var null", Level.ERROR, control, null, experimentNoFilter, false)
             return false
         }
         try {
             if (!checkTheme(control, experiment!!)) {
-                experimentLog("Eksperiment og kontroll hadde ikke samme tema", Level.ERROR, control, experiment)
+                experimentLog(
+                    "Eksperiment og kontroll hadde ikke samme tema",
+                    Level.ERROR,
+                    control,
+                    experiment,
+                    experimentNoFilter,
+                    false
+                )
                 return false
             }
             if (!checkBehandlinger(control, experiment)) {
@@ -193,15 +215,24 @@ internal object Experiment {
                     "Eksperiment og kontroll hadde ikke samme behandlingsstatus",
                     Level.ERROR,
                     control,
-                    experiment
+                    experiment,
+                    experimentNoFilter
                 )
                 return false
             }
 
-            experimentLog("Eksperiment og kontroll var like", Level.INFO, control, experiment, true)
+            experimentLog("Eksperiment og kontroll var like", Level.INFO, control, experiment, experimentNoFilter, true)
             return true
         } catch (e: Exception) {
-            experimentLog("Klarte ikke å håndtere eksperiment", Level.ERROR, control, experiment, false, e)
+            experimentLog(
+                "Klarte ikke å håndtere eksperiment",
+                Level.ERROR,
+                control,
+                experiment,
+                experimentNoFilter,
+                false,
+                e
+            )
             return false
         }
     }
@@ -256,6 +287,7 @@ internal object Experiment {
         level: Level,
         control: Map<String, List<Behandlingskjede?>>?,
         experiment: Map<String, Soknadsstatus>?,
+        experimentNoFilter: Map<String, Soknadsstatus>?,
         success: Boolean = false,
         exception: Throwable? = null,
     ) {
@@ -286,8 +318,27 @@ internal object Experiment {
             }
         }
 
+        var experimentNoFilterJson: JsonObject? = null
+
+        if (experimentNoFilter != null) {
+            try {
+                experimentNoFilterJson = encodeExperiment(experimentNoFilter)
+            } catch (e: Exception) {
+                TjenestekallLogg.error(
+                    header,
+                    fields = mapOf("message" to "Failed to encode experiment without filter", "success" to false)
+                )
+            }
+        }
+
         val fields =
-            mapOf(message to message, "control" to controlJson, "experiment" to experimentJson, "success" to success)
+            mapOf(
+                message to message,
+                "control" to controlJson,
+                "experiment" to experimentJson,
+                "experimentNoFilter" to experimentNoFilterJson,
+                "success" to success
+            )
 
         if (level == Level.ERROR) {
             TjenestekallLogg.error(header, fields = fields, throwable = exception)
