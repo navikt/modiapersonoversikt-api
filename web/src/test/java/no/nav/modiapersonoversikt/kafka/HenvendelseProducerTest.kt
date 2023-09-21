@@ -1,11 +1,7 @@
 package no.nav.modiapersonoversikt.kafka
 
-import io.mockk.every
-import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
 import no.nav.modiapersonoversikt.kafka.dto.HenvendelseKafkaDTO
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.apache.kafka.clients.producer.MockProducer
 import org.apache.kafka.common.serialization.Serdes.StringSerde
 import org.junit.jupiter.api.*
@@ -20,13 +16,9 @@ private val TEMAGRUPPE_SOM_SKAL_PUBLISERES = listOf("HELSE")
 class HenvendelseProducerTest {
     var mockProducer: MockProducer<String, String>? = null
     var henvendelseProducer: HenvendelseProducerImpl? = null
-    var unleashService: UnleashService = mockk()
 
     @BeforeEach
     fun setUp() {
-        every { unleashService.isEnabled(any<String>()) } returns true
-        every { unleashService.isEnabled(any<Feature>()) } returns true
-
         mockProducer = MockProducer(
             true,
             StringSerde().serializer(),
@@ -39,7 +31,6 @@ class HenvendelseProducerTest {
             messageSerializer = HenvendelseKafkaDTO.serializer()
         )
         henvendelseProducer = HenvendelseProducerImpl(
-            unleashService = unleashService,
             temaSomSkalPubliseres = TEMA_SOM_SKAL_PUBLISERES,
             temagruppeSomSkalPubliseres = TEMAGRUPPE_SOM_SKAL_PUBLISERES,
             producer = personoversiktProducer
