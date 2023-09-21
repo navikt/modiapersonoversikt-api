@@ -1,12 +1,7 @@
 package no.nav.modiapersonoversikt.service.sakstema
 
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json.Default.encodeToJsonElement
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.FeilendeBaksystemException
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
@@ -21,16 +16,16 @@ import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
+import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusService
-import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.slf4j.LoggerFactory
-import org.slf4j.event.Level
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import java.util.function.Function
 import java.util.function.Predicate
 import java.util.stream.Collectors
 import java.util.stream.Stream
+import kotlin.collections.HashSet
 
 class SakstemaService {
     @Autowired
@@ -54,33 +49,47 @@ class SakstemaService {
                     fnr
                 )
 
-            try {
-                val soknadsstatus = soknadsstatusService.hentBehandlingerMedHendelser(fnr, false)
-                val filtrerteBehandlinger = soknadsstatusService.grupperBehandlingerPaaTema(soknadsstatus, true)
-                val ufiltrerteBehandlinger = soknadsstatusService.grupperBehandlingerPaaTema(soknadsstatus, false)
-                Experiment.compareSakogbehandlingAndSoknadsstatus(
-                    behandlingskjeder,
-                    filtrerteBehandlinger,
-                    ufiltrerteBehandlinger
-                )
-            } catch (e: Exception) {
-                Experiment.experimentLog(
-                    "Failed to fetch experiment",
-                    Level.ERROR,
-                    behandlingskjeder,
-                    null,
-                    null,
-                    false,
-                    e
-                )
-            }
-
             val temakoder = hentAlleTema(saker, wrapper.resultat, behandlingskjeder)
             opprettSakstemaresultat(saker, wrapper, temakoder, behandlingskjeder)
         } catch (e: FeilendeBaksystemException) {
             val temakoder = hentAlleTema(saker, wrapper.resultat, emptyMap<String, List<Behandlingskjede?>>())
             wrapper.feilendeSystemer.add(e.baksystem)
             opprettSakstemaresultat(saker, wrapper, temakoder, emptyMap<String, List<Behandlingskjede?>>())
+        }
+    }
+
+    fun hentSakstemaSoknadsstatus(saker: List<Sak>, fnr: String): ResultatWrapper<List<SoknadsstatusSakstema>> {
+        val wrapper = safService.hentJournalposter(fnr)
+
+        return try {
+            val behandlingskjeder: Map<String, List<Behandlingskjede?>> =
+                sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(
+                    fnr
+                )
+
+            val behandlingIderFraSakOgBehandling =
+                behandlingskjeder.values.flatMap { kjede -> kjede.map { it?.behandlingId } }.filterNotNull()
+
+            var soknadsstatuser: Map<String, Soknadsstatus>
+            try {
+                soknadsstatuser = soknadsstatusService.hentBehandlingerGruppertPaaTema(
+                    fnr,
+                    behandlingerSomAlleredeErInkludert = behandlingIderFraSakOgBehandling.toSet()
+                )
+            } catch (e: Exception) {
+                soknadsstatuser = emptyMap()
+                LOG.error("Klarte ikke å hente ut soknadsstatus")
+            }
+
+            val behandlingsKjederSomSoknadsstatuser = convertBehandlingskjederToSoknadsstatuser(behandlingskjeder)
+            val alleSoknadsstatuser = soknadsstatuser + behandlingsKjederSomSoknadsstatuser
+
+            val temakoder = hentAlleTema(saker, wrapper.resultat, alleSoknadsstatuser)
+            opprettSakstemaresultat(saker, wrapper, temakoder, alleSoknadsstatuser)
+        } catch (e: FeilendeBaksystemException) {
+            val temakoder = hentAlleTema(saker, wrapper.resultat, emptyMap<String, Soknadsstatus>())
+            wrapper.feilendeSystemer.add(e.baksystem)
+            opprettSakstemaresultat(saker, wrapper, temakoder, emptyMap<String, Soknadsstatus>())
         }
     }
 
@@ -94,7 +103,22 @@ class SakstemaService {
             .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer)
     }
 
-    fun opprettSakstemaForEnTemagruppe(
+    @JvmName("opprettSakstemaresultatSoknadsstatus")
+    private fun opprettSakstemaresultat(
+        saker: List<Sak>,
+        wrapper: ResultatWrapper<List<DokumentMetadata>>,
+        temakoder: Set<String>,
+        soknadsstatuser: Map<String, Soknadsstatus>
+    ): ResultatWrapper<List<SoknadsstatusSakstema>> {
+        return opprettSakstemaForEnTemagruppe(
+            temakoder = temakoder,
+            alleSaker = saker,
+            alleDokumentMetadata = wrapper.resultat,
+            soknadsstatuser
+        )
+    }
+
+    public fun opprettSakstemaForEnTemagruppe(
         temakoder: Set<String>,
         alleSaker: List<Sak>,
         alleDokumentMetadata: List<DokumentMetadata>,
@@ -122,6 +146,31 @@ class SakstemaService {
             }
             .collect(Collectors.toList<Sakstema>())
         return ResultatWrapper(fjernGamleDokumenter(sakstema), feilendeBaksystemer)
+    }
+
+    @JvmName("opprettSakstemaForEnTemagrupperSoknadsstatus")
+    private fun opprettSakstemaForEnTemagruppe(
+        temakoder: Set<String>,
+        alleSaker: List<Sak>,
+        alleDokumentMetadata: List<DokumentMetadata>,
+        soknadsstatuser: Map<String, Soknadsstatus>
+    ): ResultatWrapper<List<SoknadsstatusSakstema>> {
+        val feilendeBaksystem: MutableSet<Baksystem> = mutableSetOf()
+        val sakstema = temakoder.map { temakode: String ->
+            val tilhorendeSaker = sakerITemagruppe(alleSaker, temakode)
+            val tilhorendeDokumentMetadata = tilhorendeDokumentMetadata(alleDokumentMetadata, temakode, tilhorendeSaker)
+            val temanavn = getTemanavnForTemakode(temakode)
+            feilendeBaksystem.addAll(temanavn.feilendeSystemer)
+            SoknadsstatusSakstema(
+                temakode = temakode,
+                temanavn = temanavn.resultat,
+                erGruppert = false,
+                soknadsstatus = soknadsstatuser[temakode] ?: Soknadsstatus(),
+                dokumentMetadata = tilhorendeDokumentMetadata,
+                tilhorendeSaker = tilhorendeSaker,
+            )
+        }
+        return ResultatWrapper(fjernGamleDokumenter(sakstema), feilendeBaksystem)
     }
 
     private fun tilhorendeDokumentMetadata(
@@ -169,6 +218,19 @@ class SakstemaService {
                 .collect(Collectors.toSet())
         }
 
+        @JvmName("hentAlleTemaSoknadsstatus")
+        fun hentAlleTema(
+            saker: List<Sak>,
+            dokumentMetadata: List<DokumentMetadata>,
+            soknadsstatuser: Map<String, Soknadsstatus>
+        ): Set<String> {
+            val sakerTema = saker.map { it.temakode }
+            val dokumentTema =
+                dokumentMetadata.filter { it.baksystem.contains(Baksystem.HENVENDELSE) }.map { it.temakode }
+            val soknadsstatusTema = soknadsstatuser.keys
+            return (sakerTema + dokumentTema + soknadsstatusTema).toSet()
+        }
+
         private fun tilhorendeFraJoark(tilhorendeSaker: List<Sak>): Predicate<DokumentMetadata> {
             return Predicate { dm: DokumentMetadata ->
                 tilhorendeSaker.stream().map { obj: Sak -> obj.saksId }
@@ -180,196 +242,30 @@ class SakstemaService {
             return Predicate { dm: DokumentMetadata -> dm.baksystem.contains(Baksystem.HENVENDELSE) && dm.temakode == temakode }
         }
     }
-}
 
-@Serializable
-private data class BehandlingskjedeDTO(
-    val sistOppdatert: LocalDateTime,
-    val status: BehandlingsStatus
-)
+    private fun convertBehandlingskjederToSoknadsstatuser(
+        behandlingskjeder: Map<String, List<Behandlingskjede?>>,
+    ): Map<String, Soknadsstatus> {
+        val res = mutableMapOf<String, Soknadsstatus>()
+        for (behandlingskjede in behandlingskjeder.entries) {
+            val soknadsstatus = Soknadsstatus()
 
-internal object Experiment {
-    fun compareSakogbehandlingAndSoknadsstatus(
-        control: Map<String, List<Behandlingskjede?>>,
-        experiment: Map<String, Soknadsstatus>?,
-        experimentNoFilter: Map<String, Soknadsstatus>?
-    ): Boolean {
-        if (experiment == null) {
-            experimentLog("Eksperiment var null", Level.ERROR, control, null, experimentNoFilter, false)
-            return false
-        }
-        try {
-            if (!checkTheme(control, experiment!!)) {
-                experimentLog(
-                    "Eksperiment og kontroll hadde ikke samme tema",
-                    Level.ERROR,
-                    control,
-                    experiment,
-                    experimentNoFilter,
-                    false
-                )
-                return false
-            }
-            if (!checkBehandlinger(control, experiment)) {
-                experimentLog(
-                    "Eksperiment og kontroll hadde ikke samme behandlingsstatus",
-                    Level.ERROR,
-                    control,
-                    experiment,
-                    experimentNoFilter
-                )
-                return false
-            }
-
-            experimentLog("Eksperiment og kontroll var like", Level.INFO, control, experiment, experimentNoFilter, true)
-            return true
-        } catch (e: Exception) {
-            experimentLog(
-                "Klarte ikke å håndtere eksperiment",
-                Level.ERROR,
-                control,
-                experiment,
-                experimentNoFilter,
-                false,
-                e
-            )
-            return false
-        }
-    }
-
-    private fun checkBehandlinger(
-        control: Map<String, List<Behandlingskjede?>>,
-        experiment: Map<String, Soknadsstatus>
-    ): Boolean {
-        for (controlEntry in control.entries) {
-            val controlSoknadsstatus = Soknadsstatus()
-
-            for (behandling in controlEntry.value) {
+            for (behandling in behandlingskjede.value) {
                 if (behandling?.status == null) continue
 
                 when (behandling.status) {
-                    BehandlingsStatus.UNDER_BEHANDLING -> controlSoknadsstatus.underBehandling++
-                    BehandlingsStatus.AVBRUTT -> controlSoknadsstatus.avbrutt++
-                    BehandlingsStatus.FERDIG_BEHANDLET -> controlSoknadsstatus.ferdigBehandlet++
+                    BehandlingsStatus.UNDER_BEHANDLING -> soknadsstatus.underBehandling++
+                    BehandlingsStatus.AVBRUTT -> soknadsstatus.avbrutt++
+                    BehandlingsStatus.FERDIG_BEHANDLET -> soknadsstatus.ferdigBehandlet++
+                }
+
+                if (soknadsstatus.sistOppdatert == null || behandling.sistOppdatert.isAfter(soknadsstatus.sistOppdatert!!.toJavaLocalDateTime())) {
+                    soknadsstatus.sistOppdatert = behandling.sistOppdatert.toKotlinLocalDateTime()
                 }
             }
-
-            val experimentStatus = experiment[controlEntry.key] ?: return false
-
-            if (controlSoknadsstatus.avbrutt != experimentStatus.avbrutt) return false
-            if (controlSoknadsstatus.ferdigBehandlet != experimentStatus.ferdigBehandlet) return false
-            if (controlSoknadsstatus.underBehandling != experimentStatus.underBehandling) return false
+            res[behandlingskjede.key] = soknadsstatus
         }
 
-        return true
+        return res
     }
-
-    private fun checkTheme(
-        control: Map<String, List<Behandlingskjede?>>,
-        experiment: Map<String, Soknadsstatus>
-    ): Boolean {
-        val controlThemes = control.keys.toMutableSet()
-        val experimentThemes = experiment.keys.toMutableSet()
-
-        for (key in control.keys) {
-            if (!experimentThemes.contains(key)) {
-                return false
-            }
-            controlThemes.remove(key)
-            experimentThemes.remove(key)
-        }
-
-        return experimentThemes.isEmpty()
-    }
-
-    fun experimentLog(
-        message: String,
-        level: Level,
-        control: Map<String, List<Behandlingskjede?>>?,
-        experiment: Map<String, Soknadsstatus>?,
-        experimentNoFilter: Map<String, Soknadsstatus>?,
-        success: Boolean = false,
-        exception: Throwable? = null,
-    ) {
-        val header = "[Experiment]: Soknadsstatus"
-
-        var controlJson: JsonObject? = null
-        if (control != null) {
-            try {
-                controlJson = encodeControl(control)
-            } catch (e: Exception) {
-                TjenestekallLogg.error(
-                    header,
-                    fields = mapOf("message" to "Failed to encode control", "success" to false),
-                    throwable = e
-                )
-            }
-        }
-        var experimentJson: JsonObject? = null
-        if (experiment != null) {
-            try {
-                experimentJson = encodeExperiment(experiment)
-            } catch (e: Exception) {
-                TjenestekallLogg.error(
-                    header,
-                    fields = mapOf("message" to "Failed to encode experiment", "success" to false),
-                    throwable = e
-                )
-            }
-        }
-
-        var experimentNoFilterJson: JsonObject? = null
-
-        if (experimentNoFilter != null) {
-            try {
-                experimentNoFilterJson = encodeExperiment(experimentNoFilter)
-            } catch (e: Exception) {
-                TjenestekallLogg.error(
-                    header,
-                    fields = mapOf("message" to "Failed to encode experiment without filter", "success" to false)
-                )
-            }
-        }
-
-        val fields =
-            mapOf(
-                message to message,
-                "control" to controlJson,
-                "experiment" to experimentJson,
-                "experimentNoFilter" to experimentNoFilterJson,
-                "success" to success
-            )
-
-        if (level == Level.ERROR) {
-            TjenestekallLogg.error(header, fields = fields, throwable = exception)
-        }
-
-        if (level == Level.INFO) {
-            TjenestekallLogg.info(header, fields)
-        }
-    }
-
-    private fun encodeControl(control: Map<String, List<Behandlingskjede?>>): JsonObject {
-        return control.toJsonObject {
-            val behandlingskjeder = it as List<Behandlingskjede?>?
-            val behandlingsKjedeJson = behandlingskjeder?.filterNotNull()?.map { kjede ->
-                val behandlingsKjedeDTO = BehandlingskjedeDTO(
-                    sistOppdatert = kjede.sistOppdatert.toKotlinLocalDateTime(),
-                    status = kjede.status
-                )
-                encodeToJsonElement(BehandlingskjedeDTO.serializer(), behandlingsKjedeDTO)
-            } ?: listOf()
-            JsonArray(behandlingsKjedeJson)
-        }
-    }
-
-    private fun encodeExperiment(experiment: Map<String, Soknadsstatus>): JsonObject {
-        return experiment.toJsonObject {
-            val soknadsstatus = it as Soknadsstatus
-            encodeToJsonElement(Soknadsstatus.serializer(), soknadsstatus)
-        }
-    }
-
-    fun Map<*, *>.toJsonObject(mapValue: (Any?) -> JsonElement) =
-        JsonObject(mapKeys { it.key.toString() }.mapValues { mapValue(it.value) })
 }

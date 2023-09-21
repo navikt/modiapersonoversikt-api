@@ -6,11 +6,16 @@ import no.nav.modiapersonoversikt.commondomain.sak.Feilmelding
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument.DokumentStatus
 import no.nav.modiapersonoversikt.service.saf.domain.Kommunikasjonsretning
 import no.nav.modiapersonoversikt.service.sakstema.domain.BehandlingsStatus
+import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
 import java.time.LocalDateTime
 
 object SakerApi {
     data class Resultat(
         val resultat: List<Sakstema>,
+    )
+
+    data class ResultatSoknadsstatus(
+        val resultat: List<SoknadsstatusSakstema>
     )
 
     data class Sakstema(
@@ -22,6 +27,17 @@ object SakerApi {
         val tilhorendeSaker: List<Sak>,
         val feilkoder: List<Int>,
         val harTilgang: Boolean,
+    )
+
+    data class SoknadsstatusSakstema(
+        val temakode: String,
+        val temanavn: String,
+        val erGruppert: Boolean,
+        val soknadsstatus: Soknadsstatus,
+        val dokumentMetadata: List<Dokumentmetadata>,
+        val tilhorendeSaker: List<Sak>,
+        val feilkoder: List<Int>,
+        val harTilgang: Boolean
     )
 
     data class Behandlingskjede(

@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
+import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
 import no.nav.personoversikt.common.kabac.Decision
 import java.util.*
@@ -17,6 +18,28 @@ object SakerApiMapper {
         tilgangskontroll: Tilgangskontroll,
         enhet: EnhetId,
         sakstemaer: List<Sakstema>,
+    ): MappingContext {
+        val tematilgang = sakstemaer
+            .map { it.temakode }
+            .distinct()
+            .associateWith { tema ->
+                val decision = tilgangskontroll
+                    .check(Policies.tilgangTilTema(enhet, tema))
+                    .getDecision()
+
+                decision.type == Decision.Type.PERMIT
+            }
+
+        return MappingContext(
+            tematilgang = tematilgang,
+        )
+    }
+
+    @JvmName("createMappingContextSoknadsstatus")
+    fun createMappingContext(
+        tilgangskontroll: Tilgangskontroll,
+        enhet: EnhetId,
+        sakstemaer: List<SoknadsstatusSakstema>,
     ): MappingContext {
         val tematilgang = sakstemaer
             .map { it.temakode }
@@ -50,6 +73,23 @@ object SakerApiMapper {
                     tilhorendeSaker = tilhorendeSaker,
                     feilkoder = sakstema.feilkoder,
                     harTilgang = harTilgang,
+                )
+            }
+        )
+
+        fun mapTilResultat(sakstemaer: List<SoknadsstatusSakstema>) = SakerApi.ResultatSoknadsstatus(
+            sakstemaer.map { sakstema ->
+                val harTilgang = tematilgang[sakstema.temakode] ?: false
+                val tilhorendeSaker = sakstema.tilhorendeSaker.map(::mapTilTilhorendeSak)
+                SakerApi.SoknadsstatusSakstema(
+                    temakode = sakstema.temakode,
+                    temanavn = sakstema.temanavn,
+                    erGruppert = sakstema.erGruppert,
+                    soknadsstatus = sakstema.soknadsstatus,
+                    dokumentMetadata = sakstema.dokumentMetadata.map(::mapTilDokumentMetadata),
+                    tilhorendeSaker = tilhorendeSaker,
+                    feilkoder = sakstema.feilkoder,
+                    harTilgang = harTilgang
                 )
             }
         )

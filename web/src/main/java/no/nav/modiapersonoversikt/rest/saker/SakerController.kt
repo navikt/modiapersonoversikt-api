@@ -57,6 +57,26 @@ class SakerController @Autowired constructor(
             }
     }
 
+    @GetMapping("/v2/sakstema")
+    fun hentSakstemaSoknadsstatus(
+        request: HttpServletRequest,
+        @PathVariable("fnr") fnr: String,
+        @RequestParam(value = "enhet") enhet: String
+    ): SakerApi.ResultatSoknadsstatus {
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
+                val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
+                val sakstemaWrapper = sakstemaService.hentSakstemaSoknadsstatus(sakerWrapper.resultat, fnr)
+                val mappingContext = SakerApiMapper.createMappingContext(
+                    tilgangskontroll = tilgangskontroll,
+                    enhet = EnhetId(enhet),
+                    sakstemaer = sakstemaWrapper.resultat
+                )
+
+                mappingContext.mapTilResultat(sakstemaWrapper.resultat)
+            }
+    }
+
     @GetMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"], produces = ["application/pdf"])
     fun hentDokument(
         request: HttpServletRequest,
