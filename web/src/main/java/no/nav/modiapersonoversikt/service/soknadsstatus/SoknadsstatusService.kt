@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.service.soknadsstatus
 
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.apis.SoknadsstatusControllerApi
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Behandling
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Hendelse
@@ -10,9 +12,12 @@ import org.springframework.cache.annotation.Cacheable
 interface SoknadsstatusService {
     fun hentHendelser(ident: String): List<Hendelse>
     fun hentBehandlinger(ident: String): List<Behandling>
-    fun hentBehandlingerMedHendelser(ident: String, filtrer: Boolean = true): List<Behandling>
-    fun hentBehandlingerGruppertPaaTema(ident: String, filtrer: Boolean = true): Map<String, Soknadsstatus>
-    fun grupperBehandlingerPaaTema(behandlinger: List<Behandling>, filtrer: Boolean = true): Map<String, Soknadsstatus>
+    fun hentBehandlingerMedHendelser(ident: String): List<Behandling>
+    fun hentBehandlingerGruppertPaaTema(
+        ident: String,
+        behandlingerSomAlleredeErInkludert: Set<String> = setOf()
+    ): Map<String, Soknadsstatus>
+
     fun ping()
 }
 
@@ -35,34 +40,38 @@ open class SoknadsstatusServiceImpl(
     }
 
     @Cacheable
-    override fun hentBehandlingerMedHendelser(ident: String, filtrer: Boolean): List<Behandling> {
+    override fun hentBehandlingerMedHendelser(ident: String): List<Behandling> {
         val behandlinger = soknadsstatusApi.hentAlleBehandlinger(ident, inkluderHendelser = true)
-        return if (filtrer) Filter.filtrerOgSorterBehandligner(behandlinger) else behandlinger
+        return Filter.filtrerOgSorterBehandligner(behandlinger)
     }
 
     @Cacheable
-    override fun hentBehandlingerGruppertPaaTema(ident: String, filtrer: Boolean): Map<String, Soknadsstatus> {
-        val behandlinger = hentBehandlingerMedHendelser(ident, filtrer)
-        return grupperBehandlingerPaaTema(behandlinger)
+    override fun hentBehandlingerGruppertPaaTema(
+        ident: String,
+        behandlingerSomAlleredeErInkludert: Set<String>
+    ): Map<String, Soknadsstatus> {
+        val behandlinger = hentBehandlingerMedHendelser(ident)
+        return grupperBehandlingerPaaTema(behandlinger, behandlingerSomAlleredeErInkludert)
     }
 
-    override fun grupperBehandlingerPaaTema(
+    private fun grupperBehandlingerPaaTema(
         behandlinger: List<Behandling>,
-        filtrer: Boolean
+        behandlingerSomAlleredeErInkludert: Set<String>,
     ): Map<String, Soknadsstatus> {
-        var tmpBehandlinger = behandlinger
-        if (filtrer) {
-            tmpBehandlinger = Filter.filtrerOgSorterBehandligner(behandlinger)
-        }
         val temamap = mutableMapOf<String, Soknadsstatus>()
-        for (behandling in tmpBehandlinger) {
-            val temastatus = temamap[behandling.behandlingsTema] ?: Soknadsstatus()
+        for (behandling in behandlinger) {
+            if (behandlingerSomAlleredeErInkludert.contains(behandling.behandlingId)) continue
+            val temastatus = temamap[behandling.sakstema] ?: Soknadsstatus()
             when (behandling.status) {
                 Behandling.Status.UNDER_BEHANDLING -> temastatus.underBehandling++
                 Behandling.Status.FERDIG_BEHANDLET -> temastatus.ferdigBehandlet++
                 Behandling.Status.AVBRUTT -> temastatus.avbrutt++
             }
-            temamap[behandling.behandlingsTema] = temastatus
+            if (temastatus.sistOppdatert == null || behandling.sistOppdatert.isAfter(temastatus.sistOppdatert!!.toJavaLocalDateTime())) {
+                temastatus.sistOppdatert = behandling.sistOppdatert.toKotlinLocalDateTime()
+            }
+
+            temamap[behandling.sakstema] = temastatus
         }
         return temamap
     }
