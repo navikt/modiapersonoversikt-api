@@ -38,6 +38,7 @@
         <module>kodeverk-api</module>
         <module>norg-api</module>
         <module>skjermede-personer-pip-api</module>
+        <module>modia-soknadsstatus-api</module>
         <module>utbetaling-api</module>
     </modules>
 

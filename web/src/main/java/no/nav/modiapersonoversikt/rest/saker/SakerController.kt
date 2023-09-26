@@ -24,7 +24,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
@@ -51,6 +50,26 @@ class SakerController @Autowired constructor(
                     tilgangskontroll = tilgangskontroll,
                     enhet = EnhetId(enhet),
                     sakstemaer = sakstemaWrapper.resultat,
+                )
+
+                mappingContext.mapTilResultat(sakstemaWrapper.resultat)
+            }
+    }
+
+    @GetMapping("/v2/sakstema")
+    fun hentSakstemaSoknadsstatus(
+        request: HttpServletRequest,
+        @PathVariable("fnr") fnr: String,
+        @RequestParam(value = "enhet") enhet: String
+    ): SakerApi.ResultatSoknadsstatus {
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
+                val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
+                val sakstemaWrapper = sakstemaService.hentSakstemaSoknadsstatus(sakerWrapper.resultat, fnr)
+                val mappingContext = SakerApiMapper.createMappingContext(
+                    tilgangskontroll = tilgangskontroll,
+                    enhet = EnhetId(enhet),
+                    sakstemaer = sakstemaWrapper.resultat
                 )
 
                 mappingContext.mapTilResultat(sakstemaWrapper.resultat)

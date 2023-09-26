@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.sakogbehandling
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
+import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede
 import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
@@ -68,6 +69,19 @@ object FilterUtils {
                 (erFraSaf && erFraForProdsetting).not()
             }
             sak.withDokumentMetadata(filtrerteDokument)
+        }
+    }
+
+    @JvmStatic
+    @JvmName("fjernGamleDokumentSoknadsstatus")
+    fun fjernGamleDokumenter(saker: List<SoknadsstatusSakstema>): List<SoknadsstatusSakstema> {
+        return saker.map { sak ->
+            val filtrerteDokument = sak.dokumentMetadata.filter { dokument ->
+                val erFraSaf = dokument.baksystem.size == 1 && dokument.baksystem.contains(Baksystem.SAF)
+                val erFraForProdsetting: Boolean by lazy { dokument.dato.isBefore(PROD_SETTING_DATO) }
+                (erFraSaf && erFraForProdsetting).not()
+            }
+            sak.copy(dokumentMetadata = filtrerteDokument)
         }
     }
 }

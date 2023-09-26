@@ -65,6 +65,7 @@ open class SakOgBehandlingServiceImpl(
 
         fun tilBehandlingskjede(behandling: Behandling): Behandlingskjede = Behandlingskjede()
             .withStatus(behandling.getBehandlingsStatus())
+            .withBehandlingId(behandling.behandlingsId)
             .withSistOppdatert(
                 LocalDateTime.from(
                     behandling.getBehandlingDato().toGregorianCalendar().toZonedDateTime()
