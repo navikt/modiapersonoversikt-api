@@ -17,7 +17,7 @@ object Filter {
         ::harLovligBehandlingstype,
         ::harLovligBehandlingsstatus,
         ::harLovligPrefix,
-        ::sisteHendelseErIkkeEldreEnn1Maned
+        ::sisteHendelseErIkkeEldreEnn1Ar
     )
 
     fun filtrerOgSorterBehandligner(behandlinger: List<Behandling>): List<Behandling> {
@@ -115,11 +115,11 @@ object Filter {
         return !behandling.behandlingId.startsWith(ULOVLIG_PREFIX)
     }
 
-    // filterning av behandlingskjeder mappet til behandling som er ferdig/avsluttet og er over 1 måned sidan den blie avslutta
-    private fun sisteHendelseErIkkeEldreEnn1Maned(behandling: Behandling): Boolean {
+    // filterning av behandlingskjeder mappet til behandling som er ferdig/avsluttet og er over 1 år sidan den blie avslutta
+    private fun sisteHendelseErIkkeEldreEnn1Ar(behandling: Behandling): Boolean {
         return if (behandling.status == Behandling.Status.FERDIG_BEHANDLET) {
             val behandlingsDato = behandling.sistOppdatert
-            val nowMinus1Mnth = LocalDateTime.now().minusMonths(1)
+            val nowMinus1Mnth = LocalDateTime.now().minusYears(1)
             return behandlingsDato.isAfter(nowMinus1Mnth)
         } else {
             true
