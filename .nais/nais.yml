@@ -181,3 +181,7 @@ spec:
       value: "prod-gcp:min-side:tms-event-api"
     - name: KAFKA_HENVENDELSE_OPPDATERING_TOPIC
       value: "personoversikt.henvendelse-oppdatering-melding"
+    - name: MODIA_SOKNADSSTATUS_API_URL
+      value: "https://modia-soknadsstatus-api.intern.nav.no"
+    - name: MODIA_SOKNADSSTATUS_SCOPE
+      value: "prod-gcp:personoversikt:modia-soknadsstatus-api"
