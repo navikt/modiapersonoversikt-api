@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.rest.dialog.apis
 
-import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
@@ -16,17 +15,7 @@ interface DialogApi {
 
     fun sendMelding(
         fnr: String,
-        referatRequest: SendReferatRequest
-    ): TraadDTO
-
-    fun sendMelding(
-        fnr: String,
         meldingRequest: SendMeldingRequest
-    ): TraadDTO
-
-    fun sendSporsmal(
-        fnr: String,
-        sporsmalsRequest: SendSporsmalRequest
     ): TraadDTO
 
     fun sendInfomelding(
@@ -40,15 +29,7 @@ interface DialogApi {
         opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO
 
-    fun sendFortsettDialog(
-        fnr: String,
-        fortsettDialogRequest: FortsettDialogRequest
-    ): TraadDTO
-
-    fun slaaSammenTraader(
-        fnr: String,
-        slaaSammenRequest: SlaaSammenRequest
-    ): Map<String, Any?>
+    fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO
 
     data class Journalpost(
         val journalfortAv: Veileder?,
@@ -112,47 +93,8 @@ data class SendMeldingRequest(
     val oppgaveId: String?
 )
 
-data class SendReferatRequest(
-    val enhet: String,
-    val fritekst: String,
-    val temagruppe: String,
-    val meldingstype: Meldingstype
-)
-
-data class SendSporsmalRequest(
-    val enhet: String,
-    val fritekst: String,
-    val sak: JournalforingSak,
-    val erOppgaveTilknyttetAnsatt: Boolean,
-    val avsluttet: Boolean? = false
-)
-
 data class InfomeldingRequest(
     val enhet: String,
     val fritekst: String,
     val sak: JournalforingSak
-)
-
-data class FortsettDialogRequest(
-    val enhet: String,
-    val traadId: String,
-    val traadType: TraadType?,
-    val behandlingsId: String,
-    val fritekst: String,
-    val sak: JournalforingSak?,
-    val erOppgaveTilknyttetAnsatt: Boolean,
-    val meldingstype: Meldingstype,
-    val oppgaveId: String?,
-    val avsluttet: Boolean? = false,
-)
-
-data class SlaaSammenRequest(
-    val enhet: String?,
-    val traader: List<SlaaSammenTraad>,
-    val temagruppe: Temagruppe
-)
-
-data class SlaaSammenTraad(
-    val oppgaveId: String,
-    val traadId: String
 )
