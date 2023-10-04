@@ -82,7 +82,7 @@ object Brukernotifikasjon {
         }
 
         private fun finnTidspunktFraVarslingsHistorikk(historikk: List<HistorikkEntry>): ZonedDateTime? =
-            historikk.filter { it.status != "feilet" }.maxByOrNull { it.tidspunkt }?.tidspunkt
+            historikk.filter { it.status == "sendt" }.minByOrNull { it.tidspunkt }?.tidspunkt
 
         private fun finnFeilteVarslinger(historikk: List<HistorikkEntry>): List<FeiletVarsling> {
             val feilteVarsliner = mutableListOf<FeiletVarsling>()

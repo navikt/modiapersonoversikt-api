@@ -34,46 +34,15 @@ class DialogController @Autowired constructor(
         @PathVariable("fnr") fnr: String,
         @RequestBody meldingRequest: SendMeldingRequest
     ): TraadDTO {
+        val auditIdentifier = arrayOf(
+            AuditIdentifier.FNR to fnr,
+            AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
+            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId
+        )
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
+            .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
                 dialogapi.sendMelding(fnr, meldingRequest)
-            }
-    }
-
-    @PostMapping("/sendreferat")
-    fun sendMelding(
-        @PathVariable("fnr") fnr: String,
-        @RequestBody referatRequest: SendReferatRequest
-    ): TraadDTO {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.sendMelding(fnr, referatRequest)
-            }
-    }
-
-    @PostMapping("/sendsporsmal")
-    fun sendSporsmal(
-        @PathVariable("fnr") fnr: String,
-        @RequestBody sporsmalsRequest: SendSporsmalRequest
-    ): TraadDTO {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.sendSporsmal(fnr, sporsmalsRequest)
-            }
-    }
-
-    @PostMapping("/sendinfomelding")
-    fun sendInfomelding(
-        @PathVariable("fnr") fnr: String,
-        @RequestBody infomeldingRequest: InfomeldingRequest
-    ): TraadDTO {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.sendInfomelding(fnr, infomeldingRequest)
             }
     }
 
@@ -97,35 +66,17 @@ class DialogController @Autowired constructor(
     @PostMapping("/fortsett/ferdigstill")
     fun sendFortsettDialog(
         @PathVariable("fnr") fnr: String,
-        @RequestBody fortsettDialogRequest: FortsettDialogRequest
+        @RequestBody meldingRequest: SendMeldingRequest
     ): TraadDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to fnr,
-            AuditIdentifier.BEHANDLING_ID to fortsettDialogRequest.behandlingsId,
-            AuditIdentifier.OPPGAVE_ID to fortsettDialogRequest.oppgaveId
+            AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
+            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId
         )
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
-                dialogapi.sendFortsettDialog(fnr, fortsettDialogRequest)
-            }
-    }
-
-    @PostMapping("slaasammen")
-    fun slaaSammenTraader(
-        @PathVariable("fnr") fnr: String,
-        @RequestBody slaaSammenRequest: SlaaSammenRequest
-    ): Map<String, Any?> {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
-            AuditIdentifier.TRAAD_ID to slaaSammenRequest.traader.joinToString(" ") {
-                "${it.traadId}:${it.oppgaveId}"
-            }
-        )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, *auditIdentifier)) {
-                dialogapi.slaaSammenTraader(fnr, slaaSammenRequest)
+                dialogapi.fortsettPaEksisterendeDialog(fnr, meldingRequest)
             }
     }
 }
