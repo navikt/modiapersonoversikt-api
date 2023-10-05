@@ -6,6 +6,8 @@ metadata:
   labels:
     team: personoversikt
 spec:
+  envFrom:
+    - secret: modiapersonoversikt-unleash-api-token
   image: "{{image}}"
   port: 8080
   team: personoversikt
@@ -61,6 +63,9 @@ spec:
   kafka:
     pool: nav-prod
   accessPolicy:
+    outbound:
+      external:
+        - host: personoversikt-unleash-api.nav.cloud.nais.io
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -106,7 +111,7 @@ spec:
     - name: SERVER_NORG2_FRONTEND_URL
       value: "https://norg2-frontend.intern.nav.no/"
     - name: UNLEASH_API_URL
-      value: "https://unleash.nais.io/api/"
+      value: "https://personoversikt-unleash-api.nav.cloud.nais.io/"
     - name: REST_UTBETALING_ENDPOINTURL
       value: "https://sokos-utbetaldata.intern.nav.no/utbetaldata/api"
     - name: UTBETALING_SCOPE
