@@ -14,7 +14,6 @@ open class KontonummerServiceConfig {
     @Autowired
     private lateinit var tps: PersonV3
 
-
     @Autowired
     private lateinit var kontoregister: KontoregisterV1Api
 
@@ -24,9 +23,10 @@ open class KontonummerServiceConfig {
             featureToggle = Feature.USE_REST_KONTOREGISTER,
             unleashService = unleash,
             ifEnabled = KontonummerRegisterService(kontoregister),
-            ifDisabled = TpsKontonummerService(tps)
+            ifDisabled = TpsKontonummerService(tps),
         )
     }
+
     @Bean
     open fun kontonummerService() = TpsKontonummerService(tps)
 }
