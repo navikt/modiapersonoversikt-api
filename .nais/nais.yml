@@ -110,8 +110,6 @@ spec:
       value: "https://pdl-web.intern.nav.no/rekvirerdnummer"
     - name: SERVER_NORG2_FRONTEND_URL
       value: "https://norg2-frontend.intern.nav.no/"
-    - name: UNLEASH_API_URL
-      value: "https://personoversikt-unleash-api.nav.cloud.nais.io/"
     - name: REST_UTBETALING_ENDPOINTURL
       value: "https://sokos-utbetaldata.intern.nav.no/utbetaldata/api"
     - name: UTBETALING_SCOPE

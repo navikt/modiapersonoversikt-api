@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.utils
 
+import io.getunleash.DefaultUnleash
+import io.getunleash.util.UnleashConfig
 import io.mockk.every
 import io.mockk.mockk
-import no.finn.unleash.DefaultUnleash
-import no.finn.unleash.util.UnleashConfig
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashContextProviderImpl
