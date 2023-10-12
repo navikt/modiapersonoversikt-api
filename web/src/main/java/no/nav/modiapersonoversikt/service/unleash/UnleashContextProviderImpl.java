@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.unleash;
 
-import no.finn.unleash.UnleashContext;
-import no.finn.unleash.UnleashContextProvider;
+import io.getunleash.UnleashContext;
+import io.getunleash.UnleashContextProvider;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import org.springframework.web.context.request.RequestContextHolder;

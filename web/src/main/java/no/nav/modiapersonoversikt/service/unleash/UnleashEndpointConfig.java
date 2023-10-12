@@ -1,12 +1,11 @@
 package no.nav.modiapersonoversikt.service.unleash;
 
-import no.finn.unleash.DefaultUnleash;
-import no.finn.unleash.Unleash;
-import no.finn.unleash.UnleashContextProvider;
-import no.finn.unleash.repository.HttpToggleFetcher;
-import no.finn.unleash.repository.ToggleFetcher;
-import no.finn.unleash.strategy.Strategy;
-import no.finn.unleash.util.UnleashConfig;
+import io.getunleash.DefaultUnleash;
+import io.getunleash.Unleash;
+import io.getunleash.UnleashContextProvider;
+import io.getunleash.repository.OkHttpFeatureFetcher;
+import io.getunleash.strategy.Strategy;
+import io.getunleash.util.UnleashConfig;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.service.unleash.strategier.ByEnhetStrategy;
@@ -24,19 +23,20 @@ import static no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory.c
 
 @Configuration
 public class UnleashEndpointConfig {
-    String api = EnvironmentUtils.getRequiredProperty("UNLEASH_API_URL");
+    String api = EnvironmentUtils.getRequiredProperty("UNLEASH_SERVER_API_URL") + "/api";
+    String apiToken = EnvironmentUtils.getRequiredProperty("UNLEASH_SERVER_API_TOKEN");
 
     @Bean
     @Autowired
-    public UnleashService unleashService(ToggleFetcher toggleFetcher, Unleash defaultUnleash) {
-        UnleashServiceImpl unleashService = new UnleashServiceImpl(toggleFetcher, defaultUnleash, api);
+    public UnleashService unleashService(OkHttpFeatureFetcher featureFetcher, Unleash defaultUnleash) {
+        UnleashServiceImpl unleashService = new UnleashServiceImpl(featureFetcher, defaultUnleash, api);
         return createTimerProxyForWebService("unleash", unleashService, UnleashService.class);
     }
 
     @Bean
     @Autowired
-    public ToggleFetcher unleashHttpToggleFetcher(UnleashConfig unleashConfig) {
-        return new HttpToggleFetcher(unleashConfig);
+    public OkHttpFeatureFetcher unleashHttpToggleFetcher(UnleashConfig unleashConfig) {
+        return new OkHttpFeatureFetcher(unleashConfig);
     }
 
     @Bean
@@ -61,7 +61,9 @@ public class UnleashEndpointConfig {
                 .appName("modiapersonoversikt")
                 .instanceId(System.getProperty("APP_ENVIRONMENT_NAME", "local"))
                 .unleashAPI(api)
+                .apiKey(apiToken)
                 .unleashContextProvider(unleashContextProvider)
+                .unleashFeatureFetcherFactory(OkHttpFeatureFetcher::new)
                 .build();
     }
 

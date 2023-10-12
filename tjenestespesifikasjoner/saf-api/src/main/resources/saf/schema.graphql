@@ -143,8 +143,12 @@ type Query {
     # * Fysiske dokumentet tilknyttet journalposten kan hentes i saf - REST hentdokument
     journalpost(
         # ID til Journalposten man ønsker å hente detaljer for.
-        # * Hvis argumentet ikke er angitt så returneres en feil.
-        journalpostId: String!
+        # * Hvis både journalpostId og eksternReferanseId er angitt så returneres det basert på journalpostId.
+        journalpostId: String
+
+        # Brukes for sporing og feilsøking på tvers av systemer.
+        # * Hvis eksternReferanseId eller journalpostId argumenter ikke er angitt så returneres en feil.
+        eksternReferanseId: String
     ): Journalpost
 
     # Henter metadata for en dokumentInfo (dokumentbeskrivelse) med tilknyttede journalposter.
@@ -380,13 +384,19 @@ type AvsenderMottaker {
 # * Returneres kun for utgående journalposter
 type Utsendingsinfo {
 
+    # Informasjon om varsel som er sendt til mottaker ved digital distribusjon.
+    # Sortert slik at nyeste varsel kommer først
+    varselSendt: [VarselSendt!]!
+
     # Epostvarsel sendt til bruker ved distribusjon til nav.no
     # Vil kun være satt hvis brevet er distribuert til nav.no
-    epostVarselSendt: EpostVarselSendt
+    # Dette feltet vil fjernes og erstattes med varselSendt
+    epostVarselSendt: EpostVarselSendt @deprecated(reason: "alle epost-varsler kommer nå i feltet varselSendt")
 
     # SMS varsel sendt til bruker ved distribusjon til nav.no
     # Vil kun være satt hvis brevet er distribuert til nav.no
-    smsVarselSendt: SmsVarselSendt
+    # Dette feltet vil fjernes og erstattes med varselSendt
+    smsVarselSendt: SmsVarselSendt @deprecated(reason: "alle sms-varsler kommer nå i feltet varselSendt")
 
     # Informasjon om distribusjon til fysisk post gjennom Posten Norge
     # Vil kun være satt hvis brevet er distribuert som fysisk post gjennom sentral utskrift
@@ -397,8 +407,29 @@ type Utsendingsinfo {
     digitalpostSendt: DigitalpostSendt
 }
 
+# Informasjon om sms- og epost-varsel som er sendt til mottaker ved digital distribusjon
+type VarselSendt {
+    # Type varsel som er sendt til mottaker.
+    # "EPOST" dersom epost-varsel eller "SMS" dersom sms-varsel
+    type: String!
+
+    # Tittel på epost hvis epost-varsel. Vil være null hvis sms-varsel.
+    tittel: String
+
+    # Adressen varsel ble sendt til.
+    # Kan være en epostadresse (hvis epostvarsel) eller et telefonnummer (hvis smsvarsel).
+    adresse: String!
+
+    # Innhold i varsel som er sendt til mottaker. Kan inneholde HTML.
+    varslingstekst: String!
+
+    # Tidspunkt når varselet ble sendt. Lokal norsk tid.
+    varslingstidspunkt: DateTime
+}
+
 # Epostvarsel sendt til bruker ved distribusjon til nav.no
 # Vil kun være satt hvis brevet er distribuert til nav.no
+# Deprecated: bruk VarselSendt
 type EpostVarselSendt {
     # Tittel på eposten som ble sendt til bruker.
     tittel: String!
@@ -412,6 +443,7 @@ type EpostVarselSendt {
 
 # SMS varsel sendt til bruker ved distribusjon til nav.no
 # Vil kun være satt hvis brevet er distribuert til nav.no
+# Deprecated: bruk VarselSendt
 type SmsVarselSendt {
     # Mobilnummeret som varselet ble sendt til.
     adresse: String!
@@ -498,6 +530,9 @@ type Dokumentvariant {
     # * NB: Verdien 'PDFA' mappes til 'PDF'
     # * NB: Feltet skal kun brukes etter avtale med Team Dokument.
     filtype: String @deprecated(reason: "Feltet er deprekert og er kun til internt bruk. Feltet skal kun brukes etter avtale med Team Dokument.")
+
+    # Dokumentets filstørrelse i bytes.
+    filstoerrelse: Int @deprecated(reason: "Feltet er deprekert og er kun til internt bruk. Feltet skal kun brukes etter avtale med Team Dokument.")
 
     # Sier hvorvidt saksbehandler som gjør oppslaget vil få tilgang til å åpne denne dokumentvarianten.
     # * Dersom verdien er false, vil tilgang bli avslått dersom saksbehandler forsøker å åpne dokumentet.
@@ -713,8 +748,14 @@ enum Tema {
     # Aa-registeret
     AAR
 
-    # Ajourhold - Grunnopplysninger
+    # Ajourhold – grunnopplysninger
     AGR
+
+    # Arbeidsrådgivning – psykologtester
+    ARP
+
+    # Arbeidsrådgivning – skjermet
+    ARS
 
     # Barnetrygd
     BAR
@@ -728,7 +769,7 @@ enum Tema {
     # Dagpenger
     DAG
 
-    # Enslig forsørger
+    # Enslig mor eller far
     ENF
 
     # Erstatning
@@ -740,11 +781,14 @@ enum Tema {
     #Omstillingsstønad
     EYO
 
-    # Farskap
+    # Foreldreskap
     FAR
 
     # Feilutbetaling
     FEI
+
+    # Fiskerpensjon
+    FIP
 
     # Foreldre- og svangerskapspenger
     FOR
@@ -782,6 +826,12 @@ enum Tema {
     # Kontantstøtte
     KON
 
+    # Klage – lønnsgaranti
+    KLL
+
+    # Kontroll – anmeldelse
+    KTA
+
     # Kontroll
     KTR
 
@@ -794,7 +844,7 @@ enum Tema {
     # Omsorgspenger, pleiepenger og opplæringspenger
     OMS
 
-    # Oppfølging - Arbeidsgiver
+    # Oppfølging – arbeidsgiver
     OPA
 
     # Oppfølging
@@ -806,10 +856,10 @@ enum Tema {
     # Permittering og masseoppsigelser
     PER
 
-    # Rehabilitering
+    # Rehabiliteringspenger
     REH
 
-    # Rekruttering og stilling
+    # Rekruttering
     REK
 
     # Retting av personopplysninger
@@ -821,17 +871,14 @@ enum Tema {
     # Sanksjon - Arbeidsgiver
     SAA
 
-    # Saksomkostninger
+    # Sakskostnader
     SAK
 
-    # Sanksjon - Person
+    # Sanksjon – person
     SAP
 
     # Serviceklager
     SER
-
-    # Sikkerhetstiltak
-    SIK
 
     # Regnskap/utbetaling
     STO
@@ -857,7 +904,7 @@ enum Tema {
     # Tilleggsstønad
     TSO
 
-    # Tilleggsstønad arbeidssøkere
+    # Tilleggsstønad – arbeidssøkere
     TSR
 
     # Unntak fra medlemskap
@@ -875,7 +922,7 @@ enum Tema {
     # Yrkesrettet attføring
     YRA
 
-    # Yrkesskade / Menerstatning
+    # Yrkesskade og menerstatning
     YRK
 }
 

@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.service.unleash.strategier
 
+import io.getunleash.UnleashContext
 import io.mockk.every
 import io.mockk.mockk
-import no.finn.unleash.UnleashContext
 import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.ENHETER_PROPERTY
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
