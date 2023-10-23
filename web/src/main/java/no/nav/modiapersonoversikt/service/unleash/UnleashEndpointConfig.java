@@ -1,17 +1,13 @@
 package no.nav.modiapersonoversikt.service.unleash;
 
-import no.finn.unleash.DefaultUnleash;
-import no.finn.unleash.Unleash;
-import no.finn.unleash.UnleashContextProvider;
-import no.finn.unleash.repository.HttpToggleFetcher;
-import no.finn.unleash.repository.ToggleFetcher;
-import no.finn.unleash.strategy.Strategy;
-import no.finn.unleash.util.UnleashConfig;
+import io.getunleash.DefaultUnleash;
+import io.getunleash.Unleash;
+import io.getunleash.UnleashContextProvider;
+import io.getunleash.repository.HttpFeatureFetcher;
+import io.getunleash.strategy.Strategy;
+import io.getunleash.util.UnleashConfig;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
-import no.nav.modiapersonoversikt.service.unleash.UnleashContextProviderImpl;
-import no.nav.modiapersonoversikt.service.unleash.UnleashService;
-import no.nav.modiapersonoversikt.service.unleash.UnleashServiceImpl;
 import no.nav.modiapersonoversikt.service.unleash.strategier.ByEnhetStrategy;
 import no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy;
 import no.nav.modiapersonoversikt.service.unleash.strategier.IsNotProdStrategy;
@@ -27,19 +23,20 @@ import static no.nav.modiapersonoversikt.infrastructure.metrics.MetricsFactory.c
 
 @Configuration
 public class UnleashEndpointConfig {
-    String api = EnvironmentUtils.getRequiredProperty("UNLEASH_API_URL");
+    String api = EnvironmentUtils.getRequiredProperty("UNLEASH_SERVER_API_URL") + "/api";
+    String apiToken = EnvironmentUtils.getRequiredProperty("UNLEASH_SERVER_API_TOKEN");
 
     @Bean
     @Autowired
-    public UnleashService unleashService(ToggleFetcher toggleFetcher, Unleash defaultUnleash) {
-        UnleashServiceImpl unleashService = new UnleashServiceImpl(toggleFetcher, defaultUnleash, api);
-        return createTimerProxyForWebService("unleash", unleashService, UnleashService.class);
+    public UnleashService unleashService(HttpFeatureFetcher featureFetcher, Unleash defaultUnleash) {
+        UnleashServiceImpl unleashService = new UnleashServiceImpl(featureFetcher, defaultUnleash, api);
+        return unleashService;
     }
 
     @Bean
     @Autowired
-    public ToggleFetcher unleashHttpToggleFetcher(UnleashConfig unleashConfig) {
-        return new HttpToggleFetcher(unleashConfig);
+    public HttpFeatureFetcher unleashHttpToggleFetcher(UnleashConfig unleashConfig) {
+        return new HttpFeatureFetcher(unleashConfig);
     }
 
     @Bean
@@ -61,10 +58,13 @@ public class UnleashEndpointConfig {
     @Autowired
     public UnleashConfig unleashConfig(UnleashContextProvider unleashContextProvider) {
         return UnleashConfig.builder()
-                .appName("modiabrukerdialog")
+                .appName("modiapersonoversikt-api")
+                .environment(System.getProperty("UNLEASH_ENVIRONMENT"))
                 .instanceId(System.getProperty("APP_ENVIRONMENT_NAME", "local"))
                 .unleashAPI(api)
+                .apiKey(apiToken)
                 .unleashContextProvider(unleashContextProvider)
+                .synchronousFetchOnInitialisation(true)
                 .build();
     }
 

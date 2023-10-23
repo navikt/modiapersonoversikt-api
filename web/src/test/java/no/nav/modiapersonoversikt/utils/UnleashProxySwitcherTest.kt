@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.utils
 
+import io.getunleash.DefaultUnleash
+import io.getunleash.util.UnleashConfig
 import io.mockk.every
 import io.mockk.mockk
-import no.finn.unleash.DefaultUnleash
-import no.finn.unleash.util.UnleashConfig
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashContextProviderImpl
@@ -43,7 +43,7 @@ internal class UnleashProxySwitcherTest {
     private fun createUnleashService(ansattService: AnsattService): UnleashServiceImpl {
         val unleashContextProvider = UnleashContextProviderImpl(ansattService)
         val unleashConfig = UnleashConfig.builder()
-            .appName("modiabrukerdialog")
+            .appName("modiapersonoversikt-api")
             .instanceId(System.getProperty("APP_ENVIRONMENT_NAME", "local"))
             .unleashAPI("http://dummy.io")
             .unleashContextProvider(unleashContextProvider)

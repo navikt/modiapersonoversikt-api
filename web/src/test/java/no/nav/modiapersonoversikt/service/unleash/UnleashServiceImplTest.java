@@ -1,15 +1,15 @@
 package no.nav.modiapersonoversikt.service.unleash;
 
-import no.finn.unleash.Unleash;
-import no.finn.unleash.repository.FeatureToggleResponse;
-import no.finn.unleash.repository.ToggleFetcher;
+import io.getunleash.Unleash;
+import io.getunleash.repository.ClientFeaturesResponse;
+import io.getunleash.repository.HttpFeatureFetcher;
 import no.nav.common.health.selftest.SelfTestCheck;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static no.finn.unleash.repository.FeatureToggleResponse.Status.NOT_CHANGED;
-import static no.finn.unleash.repository.FeatureToggleResponse.Status.UNAVAILABLE;
+import static io.getunleash.repository.FeatureToggleResponse.Status.NOT_CHANGED;
+import static io.getunleash.repository.FeatureToggleResponse.Status.UNAVAILABLE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -20,7 +20,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
 class UnleashServiceImplTest {
 
     @Mock
-    private ToggleFetcher toggleFetcher;
+    private HttpFeatureFetcher toggleFetcher;
     @Mock
     private Unleash unleash;
 
@@ -55,23 +55,23 @@ class UnleashServiceImplTest {
 
     @Test
     void pingHappyCase() {
-        when(toggleFetcher.fetchToggles()).thenReturn(new FeatureToggleResponse(NOT_CHANGED, 200));
+        when(toggleFetcher.fetchFeatures()).thenReturn(new ClientFeaturesResponse(NOT_CHANGED, 200));
 
         unleashService.ping().getCheck().checkHealth();
         SelfTestCheck pingResult = unleashService.ping();
 
-        verify(toggleFetcher, times(1)).fetchToggles();
+        verify(toggleFetcher, times(1)).fetchFeatures();
         assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(true));
     }
 
     @Test
     void pingUnavailable() {
-        when(toggleFetcher.fetchToggles()).thenReturn(new FeatureToggleResponse(UNAVAILABLE, 200));
+        when(toggleFetcher.fetchFeatures()).thenReturn(new ClientFeaturesResponse(UNAVAILABLE, 200));
 
         unleashService.ping().getCheck().checkHealth();
         SelfTestCheck pingResult = unleashService.ping();
 
-        verify(toggleFetcher, times(1)).fetchToggles();
+        verify(toggleFetcher, times(1)).fetchFeatures();
         assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(false));
     }
 
