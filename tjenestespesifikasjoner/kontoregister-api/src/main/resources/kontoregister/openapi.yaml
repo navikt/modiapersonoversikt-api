@@ -391,6 +391,8 @@ definitions:
         example: '2020-01-01T10:00:00'
       endretAv:
         type: string
+      endretAvKilde:
+        type: string
       opprettetAv:
         type: string
       kilde:

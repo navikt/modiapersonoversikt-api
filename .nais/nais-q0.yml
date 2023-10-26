@@ -129,7 +129,7 @@ spec:
     - name: EREG_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/ereg/"
     - name: KONTOREGISTER_REST_URL
-      value: "https://sokos-kontoregister-person.intern.dev.nav.no/kontoregister/api/kontoregister"
+      value: "https://sokos-kontoregister-person.intern.dev.nav.no/api/system"
     - name: KONTOREGISTER_SCOPE
       value: "dev-gcp:okonomi:sokos-kontoregister-person"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
