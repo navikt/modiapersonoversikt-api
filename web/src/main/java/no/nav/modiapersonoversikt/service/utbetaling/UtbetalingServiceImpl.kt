@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.AktoerD
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.PeriodeDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingsoppslagDTO
-import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingUtils.leggTilEkstraDagerPaaStartdato
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import java.time.LocalDate
@@ -32,7 +31,7 @@ open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api)
                 ident = fnr.get(),
                 rolle = UtbetalingsoppslagDTO.Rolle.RETTIGHETSHAVER,
                 periode = PeriodeDTO(
-                    fom = leggTilEkstraDagerPaaStartdato(startDato),
+                    fom = startDato,
                     tom = sluttDato
                 ),
                 periodetype = UtbetalingsoppslagDTO.Periodetype.UTBETALINGSPERIODE
