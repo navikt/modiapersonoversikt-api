@@ -181,10 +181,15 @@ query hentPersondata($ident: ID!){
             type
             embete
             vergeEllerFullmektig {
-                navn  {
-                    fornavn
-                    mellomnavn
-                    etternavn
+                identifiserendeInformasjon {
+                    navn  {
+                        fornavn
+                        mellomnavn
+                        etternavn
+                    }
+                    kjoenn
+                    foedselsdato
+                    statsborgerskap
                 }
                 motpartsPersonident
                 omfang

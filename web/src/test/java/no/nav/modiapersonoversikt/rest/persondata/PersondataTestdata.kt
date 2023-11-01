@@ -60,6 +60,15 @@ internal fun gittNavn(navn: String): Persondata.Navn {
     )
 }
 
+internal fun gittIdentifiserendeInformasjon(navn: String, kjoenn: String): HentPersondata.IdentifiserendeInformasjon {
+    return HentPersondata.IdentifiserendeInformasjon(
+        navn = gittPersonnavn(navn),
+        kjoenn = kjoenn,
+        foedselsdato = HentPersondata.Date(LocalDate.parse("2000-01-01")),
+        statsborgerskap = listOf()
+    )
+}
+
 internal fun gittPersonnavn(navn: String): HentPersondata.Personnavn {
     val persondataNavn = gittNavn(navn)
     return HentPersondata.Personnavn(
@@ -284,7 +293,7 @@ internal val vergemal = HentPersondata.VergemaalEllerFremtidsfullmakt(
     type = "voksen",
     embete = "fylkesmannenIOsloOgViken",
     vergeEllerFullmektig = HentPersondata.VergeEllerFullmektig(
-        navn = gittPersonnavn("Person Vergemål"),
+        identifiserendeInformasjon = gittIdentifiserendeInformasjon("Person Vergemål", "K"),
         motpartsPersonident = "55555111000",
         omfang = null,
         omfangetErInnenPersonligOmraade = false

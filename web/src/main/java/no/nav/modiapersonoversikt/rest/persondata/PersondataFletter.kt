@@ -806,7 +806,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val motpart = data.tredjepartsPerson.map { personer ->
                 personer[vergemal.vergeEllerFullmektig.motpartsPersonident]?.navn
             }.getOrNull()
-            val navn = vergemal.vergeEllerFullmektig.navn?.let(::hentNavn)
+            val navn = vergemal.vergeEllerFullmektig.identifiserendeInformasjon?.navn?.let(::hentNavn)
 
             Persondata.Verge(
                 ident = vergemal.vergeEllerFullmektig.motpartsPersonident,
