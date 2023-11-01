@@ -130,7 +130,6 @@ class PersonsokControllerTest {
                             fornavn = "fornavn",
                             mellomnavn = "mellomnavn",
                             etternavn = "etternavn",
-                            forkortetNavn = null,
                             originaltNavn = null
                         )
                     ),

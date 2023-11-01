@@ -7,7 +7,6 @@ query sokPerson($paging: Paging, $criteria: [Criterion]) {
                     fornavn
                     mellomnavn
                     etternavn
-                    forkortetNavn
                     originaltNavn {
                         fornavn
                         mellomnavn
