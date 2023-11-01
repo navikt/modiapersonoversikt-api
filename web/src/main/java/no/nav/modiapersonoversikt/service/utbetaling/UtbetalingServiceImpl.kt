@@ -8,6 +8,9 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.AktoerD
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.PeriodeDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingsoppslagDTO
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingUtils.leggTilEkstraDagerPaaStartdato
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import java.time.LocalDate
@@ -18,20 +21,27 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.TrekkDT
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingDTO as RsUtbetaling
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelseDTO as RsYtelse
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.YtelsekomponentDTO as RsYtelseKomponent
+
 @CacheConfig(cacheNames = ["utbetalingCache"], keyGenerator = "userkeygenerator")
-open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api) : UtbetalingService {
+open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api, private val unleash: UnleashService) : UtbetalingService {
     @Cacheable
     override fun hentUtbetalinger(
         fnr: Fnr,
         startDato: LocalDate,
         sluttDato: LocalDate
     ): List<UtbetalingDomain.Utbetaling> {
+        val fomDato = if (unleash.isEnabled(Feature.UTVIDET_UTBETALINGS_SPORRING.propertyKey)) {
+            startDato
+        } else {
+            leggTilEkstraDagerPaaStartdato(startDato)
+        }
+
         val utbetalinger = utbetaldataV2Api.hentUtbetalingsinformasjonIntern(
             utbetalingsoppslagDTO = UtbetalingsoppslagDTO(
                 ident = fnr.get(),
                 rolle = UtbetalingsoppslagDTO.Rolle.RETTIGHETSHAVER,
                 periode = PeriodeDTO(
-                    fom = startDato,
+                    fom = fomDato,
                     tom = sluttDato
                 ),
                 periodetype = UtbetalingsoppslagDTO.Periodetype.UTBETALINGSPERIODE
