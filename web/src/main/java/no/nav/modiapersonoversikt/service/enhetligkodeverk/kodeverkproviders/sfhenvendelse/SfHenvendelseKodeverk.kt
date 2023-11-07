@@ -10,6 +10,8 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 object SfHenvendelseKodeverk {
     class Provider(
@@ -20,7 +22,11 @@ object SfHenvendelseKodeverk {
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, String> {
             val respons = sfHenvendelseKodeverk.henvendelseKodeverkTemagrupperGet(
                 getCallId()
+            ) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av kodverk."
             )
+
             return EnhetligKodeverk.Kodeverk(kodeverkNavn, parseTilKodeverk(respons))
         }
     }

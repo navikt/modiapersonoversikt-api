@@ -54,7 +54,18 @@ class KrrServiceImpl(
                         inkluderSikkerDigitalPost = true
                     )
                 }.map { data ->
-                    mapToDigitalKontaktInformasjon(data)
+                    if (data != null) {
+                        mapToDigitalKontaktInformasjon(data)
+                    } else {
+                        TjenestekallLogg.warn(
+                            header = "Feil ved henting av digital kontaktinformasjon fra krr",
+                            fields = mapOf(
+                                "fnr" to fnr,
+                                "exception" to it,
+                            )
+                        )
+                        Krr.INGEN_KONTAKTINFO
+                    }
                 }.getOrElse {
                     TjenestekallLogg.warn(
                         header = "Feil ved henting av digital kontaktinformasjon fra krr",

@@ -22,6 +22,8 @@ import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
 import kotlin.reflect.KProperty1
 import kotlin.time.Duration.Companion.seconds
@@ -108,14 +110,14 @@ class SfHenvendelseServiceImpl(
 
         return henvendelseInfoApi
             .henvendelseinfoHenvendelselisteGet(aktorId, callId)
-            .let { loggFeilSomErSpesialHandtert(bruker, it) }
-            .asSequence()
-            .filter(kontorsperreTilgang(enhetOgGTListe))
-            .map(kassertInnhold(OffsetDateTime.now()))
-            .map(journalfortTemaTilgang(tematilganger))
-            .map(::sorterMeldinger)
-            .map(::unikeJournalposter)
-            .toList()
+            ?.let { loggFeilSomErSpesialHandtert(bruker, it) }
+            ?.asSequence()
+            ?.filter(kontorsperreTilgang(enhetOgGTListe))
+            ?.map(kassertInnhold(OffsetDateTime.now()))
+            ?.map(journalfortTemaTilgang(tematilganger))
+            ?.map(::sorterMeldinger)
+            ?.map(::unikeJournalposter)
+            ?.toList().orEmpty()
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
@@ -123,6 +125,10 @@ class SfHenvendelseServiceImpl(
         val fixKjedeId = kjedeId.fixKjedeId()
 
         return henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+            ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av henvendelse."
+            )
     }
 
     override fun journalforHenvendelse(
@@ -180,6 +186,9 @@ class SfHenvendelseServiceImpl(
                 fritekst = fritekst
             ),
             kjedeId = fixKjedeId
+        ) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Feil ved opprettelse av ny Samtalereferat."
         )
     }
 
@@ -204,6 +213,10 @@ class SfHenvendelseServiceImpl(
                 fritekst = fritekst
             )
         )
+            ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved opprettelse av ny henvendelse."
+            )
     }
 
     override fun sendMeldingPaEksisterendeDialog(
@@ -216,7 +229,10 @@ class SfHenvendelseServiceImpl(
         val fixKjedeId = kjedeId.fixKjedeId()
         val aktorId = bruker.aktorId()
         val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Feil ved henting av ny henvendelseinfo."
+        )
 
         val kjedeTilhorerBruker = sjekkEierskap(bruker, henvendelse)
         if (!kjedeTilhorerBruker) {
@@ -228,19 +244,25 @@ class SfHenvendelseServiceImpl(
                 kjedeId = kjedeId.fixKjedeId(),
                 meldingRequestDTO = MeldingRequestDTO(
                     aktorId = aktorId,
-                    temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
+                    temagruppe = henvendelse?.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                     enhet = enhet,
                     fritekst = fritekst,
                     tildelMeg = tilknyttetAnsatt
                 )
-            )
+            ) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Feil ved opprettelse av ny henvendelse."
+        )
     }
 
     override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
         val fixKjedeId = kjedeId.fixKjedeId()
         val callId = getCallId()
 
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Feil ved henting av ny henvendelseinfo."
+        )
 
         return sjekkEierskap(bruker, henvendelse)
     }
@@ -281,7 +303,7 @@ class SfHenvendelseServiceImpl(
         return henvendelseBehandlingApi.henvendelseSladdingAarsakerKjedeIdGet(
             xCorrelationID = callId,
             kjedeId = kjedeId
-        )
+        ).orEmpty()
     }
 
     override fun lukkTraad(kjedeId: String) {

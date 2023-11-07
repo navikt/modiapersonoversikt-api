@@ -9,6 +9,8 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 object FellesKodeverk {
 
@@ -22,7 +24,11 @@ object FellesKodeverk {
                 navConsumerId = AppConstants.SYSTEMUSER_USERNAME,
                 kodeverksnavn = kodeverkNavn,
                 spraak = listOf("nb")
+            ) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av kodverk."
             )
+
             return EnhetligKodeverk.Kodeverk(kodeverkNavn, parseTilKodeverk(respons))
         }
     }

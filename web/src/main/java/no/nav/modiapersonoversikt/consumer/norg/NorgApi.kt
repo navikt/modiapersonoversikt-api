@@ -104,8 +104,7 @@ class NorgApiImpl(
     override fun hentGeografiskTilknyttning(enhet: EnhetId): List<EnhetGeografiskTilknyttning> {
         return gtCache.get(enhet.get()) {
             enhetApi
-                .getNavKontorerByEnhetsnummerUsingGET(it)
-                .map(::toInternalDomain)
+                .getNavKontorerByEnhetsnummerUsingGET(it)?.map(::toInternalDomain)
         } ?: emptyList()
     }
 
@@ -134,7 +133,7 @@ class NorgApiImpl(
                 enhetApi.getEnhetByGeografiskOmraadeUsingGET(
                     geografiskOmraade = geografiskTilknytning,
                     disk = diskresjonskode?.name
-                ).let(::toInternalDomain)
+                )?.let(::toInternalDomain)
             } else {
                 /**
                  * Ikke numerisk GT tilsier at det er landkode pga utenlandsk GT og da har vi ingen enhet
@@ -151,7 +150,7 @@ class NorgApiImpl(
     override fun hentRegionalEnhet(enhet: EnhetId): EnhetId? {
         return regionalkontorCache.get(enhet) { enhetId ->
             organiseringApi.getAllOrganiseringerForEnhetUsingGET(enhetId.get())
-                .firstOrNull { it.orgType == "FYLKE" }
+                ?.firstOrNull { it.orgType == "FYLKE" }
                 ?.organiserer
                 ?.nr
                 ?.let(::EnhetId)
@@ -186,7 +185,7 @@ class NorgApiImpl(
                 log.error("Kunne ikke hente enheter fra arbeidsfordeling.", it)
                 emptyList()
             }
-            .map(::toInternalDomain)
+            ?.map(::toInternalDomain).orEmpty()
     }
 
     override fun hentKontaktinfo(enhet: EnhetId): EnhetKontaktinformasjon {
@@ -221,7 +220,7 @@ class NorgApiImpl(
                     .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
                         consumerId = AppConstants.SYSTEMUSER_USERNAME
                     )
-                    .mapNotNull {
+                    ?.mapNotNull {
                         try {
                             toInternalDomain(it)
                         } catch (e: Exception) {
@@ -229,7 +228,7 @@ class NorgApiImpl(
                             null
                         }
                     }
-                    .associateBy { EnhetId(it.enhet.enhetId) }
+                    ?.associateBy { EnhetId(it.enhet.enhetId) }.orEmpty()
                 lastUpdateOfCache = LocalDateTime.now(clock)
             }
         }
