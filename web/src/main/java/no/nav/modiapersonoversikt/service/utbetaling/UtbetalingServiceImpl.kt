@@ -49,9 +49,9 @@ open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api,
         )
 
         return utbetalinger
-            .filter(finnUtbetalingerISokeperioden(startDato, sluttDato))
-            .sortedBy { it.posteringsdato }
-            .map(::mapTilDTO)
+            ?.filter(finnUtbetalingerISokeperioden(startDato, sluttDato))
+            ?.sortedBy { it.posteringsdato }
+            ?.map(::mapTilDTO).orEmpty()
     }
 
     private fun finnUtbetalingerISokeperioden(start: LocalDate, slutt: LocalDate) =

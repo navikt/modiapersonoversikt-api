@@ -7,13 +7,13 @@ import no.nav.modiapersonoversikt.consumer.kontoregister.generated.models.HentAk
 class KontonummerRegisterService(
     private val kontoregister: KontoregisterV1Api
 ) : KontonummerService {
-    override fun hentKontonummer(fnr: Fnr): KontonummerService.Konto {
+    override fun hentKontonummer(fnr: Fnr): KontonummerService.Konto? {
         val konto = kontoregister.hentAktivKonto(
             HentAktivKontoDTO(
                 kontohaver = fnr.get()
             )
         )
-        return konto.let {
+        return konto?.let {
             KontonummerService.Konto(
                 kontonummer = it.kontonummer,
                 banknavn = it.utenlandskKontoInfo?.banknavn,

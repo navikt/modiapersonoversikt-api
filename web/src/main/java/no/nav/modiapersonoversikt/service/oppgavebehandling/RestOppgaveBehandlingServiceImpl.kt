@@ -27,6 +27,8 @@ import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.logging.Logging
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
 import java.time.LocalDate
 import java.util.*
@@ -80,6 +82,9 @@ class RestOppgaveBehandlingServiceImpl(
                 metadata = request.behandlingskjedeId.coerceBlankToNull()
                     ?.let { mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to it) }
             )
+        ) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Feil ved opprettelse av oppgave."
         )
 
         val oppgaveId = response.id ?: throw IllegalStateException("Response inneholdt ikke oppgaveId")
@@ -114,6 +119,9 @@ class RestOppgaveBehandlingServiceImpl(
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
             )
+        ) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Feil ved opprettelse av oppgave."
         )
 
         val oppgaveId = response.id ?: throw IllegalStateException("Response inneholdt ikke oppgaveId")
@@ -168,6 +176,9 @@ class RestOppgaveBehandlingServiceImpl(
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
                 offset = offset
+            ) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av oppgave."
             )
         }
     }
@@ -187,6 +198,9 @@ class RestOppgaveBehandlingServiceImpl(
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
                 offset = offset
+            ) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av oppgave."
             )
         }
     }
@@ -276,6 +290,9 @@ class RestOppgaveBehandlingServiceImpl(
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
                 offset = offset
+            ) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av oppgave."
             )
         }
         val henvendelseOppgave = oppgaver.firstOrNull { it.henvendelseId == henvendelseId }
@@ -292,10 +309,15 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     private fun hentOppgaveJsonDTO(oppgaveId: String): OppgaveJsonDTO {
-        return apiClient.hentOppgave(
+        val oppgave = apiClient.hentOppgave(
             xCorrelationID = correlationId(),
             id = oppgaveId.toLong()
-        ).toOppgaveJsonDTO()
+        ) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Feil ved henting av oppgave."
+        )
+
+        return oppgave.toOppgaveJsonDTO()
     }
 
     private fun hentOppgaverPaginertOgTilgangskontroll(action: (offset: Long) -> GetOppgaverResponseJsonDTO): MutableList<Oppgave> {

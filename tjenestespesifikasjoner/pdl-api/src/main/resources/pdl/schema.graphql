@@ -160,6 +160,7 @@ type Person {
     innflyttingTilNorge: [InnflyttingTilNorge!]!
     utflyttingFraNorge: [UtflyttingFraNorge!]!
     vergemaalEllerFremtidsfullmakt(historikk: Boolean = false): [VergemaalEllerFremtidsfullmakt!]!
+    rettsligHandleevne(historikk: Boolean = false): [RettsligHandleevne!]!
 }
 
 type DeltBosted {
@@ -645,6 +646,13 @@ type VergemaalEllerFremtidsfullmakt {
     embete: String
     vergeEllerFullmektig: VergeEllerFullmektig!
 
+    folkeregistermetadata: Folkeregistermetadata
+    metadata: Metadata!
+}
+
+
+type RettsligHandleevne {
+    rettsligHandleevneomfang: String
     folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
