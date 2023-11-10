@@ -31,18 +31,18 @@ open class SoknadsstatusServiceImpl(
 
     @Cacheable
     override fun hentHendelser(ident: String): List<Hendelse> {
-        return soknadsstatusApi.hentAlleHendelser(ident)
+        return soknadsstatusApi.hentAlleHendelser(ident).orEmpty()
     }
 
     @Cacheable
     override fun hentBehandlinger(ident: String): List<Behandling> {
-        return soknadsstatusApi.hentAlleBehandlinger(ident)
+        return soknadsstatusApi.hentAlleBehandlinger(ident).orEmpty()
     }
 
     @Cacheable
     override fun hentBehandlingerMedHendelser(ident: String): List<Behandling> {
         val behandlinger = soknadsstatusApi.hentAlleBehandlinger(ident, inkluderHendelser = true)
-        return Filter.filtrerOgSorterBehandligner(behandlinger)
+        return behandlinger?.let { Filter.filtrerOgSorterBehandligner(it) }.orEmpty()
     }
 
     @Cacheable

@@ -14,6 +14,8 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveApiFactory
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 object OppgaveKodeverk {
 
@@ -23,7 +25,11 @@ object OppgaveKodeverk {
     ) : EnhetligKodeverk.KodeverkProvider<String, Tema> {
 
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, Tema> {
-            val respons = oppgaveKodeverk.hentInterntKodeverk(getCallId())
+            val respons = oppgaveKodeverk.hentInterntKodeverk(getCallId()) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av kodverk."
+            )
+
             return EnhetligKodeverk.Kodeverk(kodeverkNavn, parseTilKodeverk(respons))
         }
     }
