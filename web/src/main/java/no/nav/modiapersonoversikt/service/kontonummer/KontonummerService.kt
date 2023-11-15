@@ -7,17 +7,16 @@ interface KontonummerService {
     data class Konto(
         val kontonummer: String,
         val banknavn: String?,
-        val sistEndret: SistEndret?,
+        val sistEndret: LocalDateTime?,
         val swift: String? = null,
         val adresse: Adresse? = null,
         val bankkode: String? = null,
         val landkode: String? = null,
         val valutakode: String? = null,
+        val kilde: String? = null,
+        val opprettetAv: String,
     )
-    data class SistEndret(
-        val ident: String,
-        val tidspunkt: LocalDateTime
-    )
+
     data class Adresse(
         val linje1: String,
         val linje2: String? = null,
