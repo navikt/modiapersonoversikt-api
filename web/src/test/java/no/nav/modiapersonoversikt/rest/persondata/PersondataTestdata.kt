@@ -222,7 +222,9 @@ internal val utenlandskBankkonto = KontonummerService.Konto(
         linje1 = "Utenlandsk bankkontoadresse"
     ),
     landkode = "ESP",
-    valutakode = "NOK"
+    valutakode = "NOK",
+    opprettetAv = "",
+    kilde = ""
 )
 
 internal val kontaktinformasjonDodsbo = HentPersondata.KontaktinformasjonForDoedsbo(

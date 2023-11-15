@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.kontonummer
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
 import no.nav.modiapersonoversikt.consumer.kontoregister.generated.models.HentAktivKontoDTO
+import java.time.LocalDateTime
 
 class KontonummerRegisterService(
     private val kontoregister: KontoregisterV1Api
@@ -17,7 +18,7 @@ class KontonummerRegisterService(
             KontonummerService.Konto(
                 kontonummer = it.kontonummer,
                 banknavn = it.utenlandskKontoInfo?.banknavn,
-                sistEndret = null, // Informasjon finnes ikke i API
+                sistEndret = LocalDateTime.parse(it.gyldigFom),
                 swift = it.utenlandskKontoInfo?.swiftBicKode,
                 adresse = KontonummerService.Adresse(
                     linje1 = it.utenlandskKontoInfo?.bankadresse1 ?: "Ukjent adresse",
@@ -27,6 +28,8 @@ class KontonummerRegisterService(
                 bankkode = it.utenlandskKontoInfo?.bankkode,
                 landkode = it.utenlandskKontoInfo?.bankLandkode,
                 valutakode = it.utenlandskKontoInfo?.valutakode,
+                opprettetAv = it.opprettetAv,
+                kilde = it.kilde,
             )
         }
     }
