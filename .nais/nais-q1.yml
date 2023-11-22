@@ -124,8 +124,6 @@ spec:
       value: "dev-gcp:team-rocket:digdir-krr-proxy"
     - name: VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL
       value: "https://modapp-q1.adeo.no/infotrygd-ws/ForeldrepengerService/v2"
-    - name: VIRKSOMHET_KODEVERK_V2_ENDPOINTURL
-      value: "https://kodeverk.nais.preprod.local/ws/kodeverk/v2"
     - name: VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL
       value: "https://arena-q1.adeo.no/ail_ws/Oppfoelging_v1"
     - name: EREG_ENDPOINTURL
