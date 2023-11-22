@@ -9,6 +9,7 @@ import java.util.UUID
 
 interface KafkaPersonoversiktProducer<MESSAGE_TYPE> {
     fun sendRecord(key: String? = UUID.randomUUID().toString(), message: MESSAGE_TYPE)
+    fun close()
 }
 
 class KafkaPersonoversiktProducerImpl<MESSAGE_TYPE>(
@@ -19,5 +20,9 @@ class KafkaPersonoversiktProducerImpl<MESSAGE_TYPE>(
     override fun sendRecord(key: String?, message: MESSAGE_TYPE) {
         val encodedMessage = Json.encodeToString(messageSerializer, message)
         producer.send(ProducerRecord(topic, key, encodedMessage))
+    }
+
+    override fun close() {
+        producer.close()
     }
 }

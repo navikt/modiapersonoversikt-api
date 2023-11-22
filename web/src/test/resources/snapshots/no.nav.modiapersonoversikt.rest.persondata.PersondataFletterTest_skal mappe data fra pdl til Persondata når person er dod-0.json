@@ -18,11 +18,13 @@
       },
       "bankkode" : null,
       "banknavn" : null,
+      "kilde" : "",
       "kontonummer" : "123",
       "landkode" : {
         "beskrivelse" : "Spania",
         "kode" : "ESP"
       },
+      "opprettetAv" : "",
       "sistEndret" : null,
       "swift" : "ASD123",
       "valuta" : {

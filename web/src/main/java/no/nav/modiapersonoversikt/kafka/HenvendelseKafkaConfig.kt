@@ -10,7 +10,7 @@ import java.util.*
 
 @Configuration
 open class HenvendelseKafkaConfig {
-    @Bean
+    @Bean(destroyMethod = "close")
     open fun henvendelseProducer(
         @Value("\${KAFKA_BROKERS}") kafkaBrokerUrl: String,
         @Value("\${KAFKA_HENVENDELSE_OPPDATERING_TOPIC}") kafkaTopic: String
@@ -18,6 +18,7 @@ open class HenvendelseKafkaConfig {
         val props = Properties()
         commonProducerConfig(props, kafkaBrokerUrl, "modiabrukerdialog-producer")
         val kafkaProducer = KafkaProducer(props, StringSerializer(), StringSerializer())
+
         return HenvendelseProducerImpl(
             temaSomSkalPubliseres = listOf("SYK"),
             temagruppeSomSkalPubliseres = listOf("HELSE"),

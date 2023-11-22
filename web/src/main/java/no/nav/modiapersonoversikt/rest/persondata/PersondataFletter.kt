@@ -929,8 +929,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     swift = it.swift,
                     sistEndret = it.sistEndret?.let { sistEndret ->
                         Persondata.SistEndret(
-                            ident = sistEndret.ident,
-                            tidspunkt = sistEndret.tidspunkt,
+                            ident = "",
+                            tidspunkt = sistEndret,
                             system = "",
                             kilde = "",
                         )
@@ -949,6 +949,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     valuta = it.valutakode?.let { valutakode ->
                         kodeverk.hentKodeBeskrivelse(Kodeverk.VALUTA, valutakode)
                     },
+                    opprettetAv = it.opprettetAv,
+                    kilde = it.kilde
                 )
             }
         }

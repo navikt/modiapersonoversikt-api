@@ -200,7 +200,9 @@ object Persondata {
         val swift: String? = null,
         val landkode: KodeBeskrivelse<String>? = null,
         val adresse: Adresse? = null,
-        val valuta: KodeBeskrivelse<String>? = null
+        val valuta: KodeBeskrivelse<String>? = null,
+        val kilde: String? = null,
+        val opprettetAv: String,
     )
 
     data class TilrettelagtKommunikasjon(
