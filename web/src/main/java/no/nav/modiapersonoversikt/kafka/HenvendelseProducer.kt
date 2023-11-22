@@ -13,6 +13,8 @@ interface HenvendelseProducer {
         temagruppe: String,
         traadId: String,
     )
+
+    fun close()
 }
 
 class HenvendelseProducerImpl(
@@ -44,5 +46,9 @@ class HenvendelseProducerImpl(
                 Logging.secureLog.error("Klarte ikke å sende henvendelse melding: $message", e)
             }
         }
+    }
+
+    override fun close() {
+        producer.close()
     }
 }
