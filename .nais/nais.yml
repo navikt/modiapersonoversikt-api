@@ -5,6 +5,8 @@ metadata:
   namespace: personoversikt
   labels:
     team: personoversikt
+  annotations:
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
 spec:
   envFrom:
     - secret: modiapersonoversikt-api-unleash-api-token
