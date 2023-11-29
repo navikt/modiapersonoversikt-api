@@ -76,11 +76,13 @@ data class MeldingDTO(
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?)
 
 data class OpprettHenvendelseRequest(
+    val fnr: String = "",
     val enhet: String?,
     val traadId: String
 )
 
 data class SendMeldingRequest(
+    val fnr: String = "",
     val traadId: String?,
     val traadType: TraadType,
     val enhet: String,
@@ -94,6 +96,7 @@ data class SendMeldingRequest(
 )
 
 data class InfomeldingRequest(
+    val fnr: String = "",
     val enhet: String,
     val fritekst: String,
     val sak: JournalforingSak
