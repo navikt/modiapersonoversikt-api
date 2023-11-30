@@ -38,7 +38,7 @@ class SfLegacyDialogController(
         return sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it) }
     }
 
-    override fun sendMelding(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
+    override fun sendMelding(fnr: String, meldingRequest: SendMelding): TraadDTO {
         return if (meldingRequest.traadId != null) {
             fortsettPaEksisterendeDialog(fnr, meldingRequest)
         } else {
@@ -48,7 +48,7 @@ class SfLegacyDialogController(
 
     override fun sendInfomelding(
         fnr: String,
-        infomeldingRequest: InfomeldingRequest
+        infomeldingRequest: Infomelding,
     ): TraadDTO {
         val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode)
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
@@ -56,7 +56,7 @@ class SfLegacyDialogController(
             enhet = infomeldingRequest.enhet,
             temagruppe = temagruppe,
             tilknyttetAnsatt = false,
-            fritekst = infomeldingRequest.fritekst
+            fritekst = infomeldingRequest.fritekst,
         )
 
         sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
@@ -65,7 +65,7 @@ class SfLegacyDialogController(
             kjedeId = henvendelse.kjedeId,
             saksId = infomeldingRequest.sak.fagsystemSaksId,
             saksTema = infomeldingRequest.sak.temaKode,
-            fagsakSystem = infomeldingRequest.sak.fagsystemKode
+            fagsakSystem = infomeldingRequest.sak.fagsystemKode,
         )
 
         return parseFraHenvendelseTilTraad(henvendelse)
@@ -74,7 +74,7 @@ class SfLegacyDialogController(
     override fun startFortsettDialog(
         fnr: String,
         ignorerConflict: Boolean?,
-        opprettHenvendelseRequest: OpprettHenvendelseRequest
+        opprettHenvendelseRequest: OpprettHenvendelse,
     ): FortsettDialogDTO {
         /**
          * Artifakt av legacy-henvendelse, beholdt for å holde apiene like.
@@ -95,7 +95,7 @@ class SfLegacyDialogController(
         traad: HenvendelseDTO,
         fnr: String,
         enhet: String?,
-        ignorerConflict: Boolean
+        ignorerConflict: Boolean,
     ): String? {
         return if (traad.erSporsmalFraBruker()) {
             try {
@@ -104,7 +104,7 @@ class SfLegacyDialogController(
                     traad.kjedeId,
                     traad.gjeldendeTemagruppe?.let { Temagruppe.valueOf(it) },
                     enhet,
-                    ignorerConflict
+                    ignorerConflict,
                 )?.oppgaveId
             } catch (e: OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler) {
                 throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
@@ -121,7 +121,7 @@ class SfLegacyDialogController(
 
     class DialogMappingContext(
         val temakodeMap: Map<String, String>,
-        val identMap: Map<String, Veileder>
+        val identMap: Map<String, Veileder>,
     ) {
         fun getVeileder(ident: String?): Veileder? {
             return identMap[ident ?: ""]
@@ -192,7 +192,7 @@ class SfLegacyDialogController(
                 kontorsperretEnhet = kontorsperretEnhet,
                 kontorsperretAv = kontorsperretAv,
                 sendtTilSladding = (henvendelse.sladding ?: false),
-                markertSomFeilsendtAv = markertSomFeilsendtAv
+                markertSomFeilsendtAv = markertSomFeilsendtAv,
             )
         }
         return TraadDTO(
@@ -217,7 +217,7 @@ class SfLegacyDialogController(
             ?.let {
                 DialogApi.Veileder(
                     ident = it.ident,
-                    navn = "${it.fornavn} ${it.etternavn}"
+                    navn = "${it.fornavn} ${it.etternavn}",
                 )
             }
             ?: DialogApi.Veileder.UKJENT,
@@ -225,7 +225,7 @@ class SfLegacyDialogController(
 
     private fun hentFritekstFraMelding(
         erKassert: Boolean,
-        melding: no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO
+        melding: no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO,
     ): String {
         if (erKassert) {
             return "Innholdet i denne henvendelsen er slettet av NAV."
@@ -235,7 +235,7 @@ class SfLegacyDialogController(
 
     private fun meldingstypeFraSfTyper(
         henvendelse: HenvendelseDTO,
-        melding: no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO
+        melding: no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO,
     ): Meldingstype {
         val erForsteMelding = henvendelse.meldinger?.firstOrNull() == melding
         return when (henvendelse.henvendelseType) {
@@ -266,7 +266,7 @@ class SfLegacyDialogController(
         }
     }
 
-    private fun opprettNyDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
+    private fun opprettNyDialog(fnr: String, meldingRequest: SendMelding): TraadDTO {
         if (meldingRequest.traadType == TraadType.SAMTALEREFERAT) {
             val henvendelse = sfHenvendelseService.sendSamtalereferat(
                 kjedeId = null,
@@ -274,26 +274,27 @@ class SfLegacyDialogController(
                 enhet = meldingRequest.enhet,
                 temagruppe = meldingRequest.temagruppe!!,
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
-                fritekst = meldingRequest.fritekst
+                fritekst = meldingRequest.fritekst,
             )
 
             return parseFraHenvendelseTilTraad(henvendelse)
         } else {
-            val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(meldingRequest.sak!!.temaKode)
+            val sak = meldingRequest.sak!!
+            val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sak.temaKode)
 
             val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
                 bruker = EksternBruker.Fnr(fnr),
                 enhet = meldingRequest.enhet,
                 temagruppe = temagruppe,
                 tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
-                fritekst = meldingRequest.fritekst
+                fritekst = meldingRequest.fritekst,
             )
 
             meldingProducer.sendHenvendelseUpdate(
                 fnr = henvendelse.fnr,
-                tema = meldingRequest.sak.temaKode,
+                tema = sak.temaKode,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!,
-                traadId = henvendelse.kjedeId
+                traadId = henvendelse.kjedeId,
             )
 
             if (meldingRequest.avsluttet == true) {
@@ -303,22 +304,22 @@ class SfLegacyDialogController(
             sfHenvendelseService.journalforHenvendelse(
                 enhet = meldingRequest.enhet,
                 kjedeId = henvendelse.kjedeId,
-                saksId = meldingRequest.sak.fagsystemSaksId,
-                saksTema = meldingRequest.sak.temaKode,
-                fagsakSystem = meldingRequest.sak.fagsystemKode
+                saksId = sak.fagsystemSaksId,
+                saksTema = sak.temaKode,
+                fagsakSystem = sak.fagsystemKode,
             )
 
             return parseFraHenvendelseTilTraad(henvendelse)
         }
     }
 
-    override fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO {
+    override fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMelding): TraadDTO {
         val kjedeId = meldingRequest.traadId!!
         val oppgaveId = meldingRequest.oppgaveId
 
         val bruker = EksternBruker.Fnr(fnr)
         val enhet = meldingRequest.enhet
-        var henvendelse = sfHenvendelseService.hentHenvendelse(meldingRequest.traadId)
+        var henvendelse = sfHenvendelseService.hentHenvendelse(kjedeId)
 
         val henvendelseTilhorerBruker = sfHenvendelseService.sjekkEierskap(bruker, henvendelse)
         if (!henvendelseTilhorerBruker) {
@@ -330,12 +331,12 @@ class SfLegacyDialogController(
             if (kjedeId != oppgave?.henvendelseId) {
                 throw ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Feil oppgaveId fra client. Forventet '$kjedeId', men fant '${oppgave?.henvendelseId}'"
+                    "Feil oppgaveId fra client. Forventet '$kjedeId', men fant '${oppgave?.henvendelseId}'",
                 )
             } else if (oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId)) {
                 throw ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt"
+                    "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt",
                 )
             }
         }
@@ -347,7 +348,7 @@ class SfLegacyDialogController(
                 enhet = enhet,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!,
                 kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
-                fritekst = meldingRequest.fritekst
+                fritekst = meldingRequest.fritekst,
             )
 
             val journalposter = (henvendelse.journalposter ?: emptyList())
@@ -358,36 +359,37 @@ class SfLegacyDialogController(
                     kjedeId = henvendelse.kjedeId,
                     saksId = it.fagsakId,
                     saksTema = it.journalfortTema,
-                    fagsakSystem = it.fagsaksystem?.name
+                    fagsakSystem = it.fagsaksystem?.name,
                 )
             }
         } else {
+            val sak = meldingRequest.sak
             henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
                 bruker = bruker,
                 kjedeId = kjedeId,
                 enhet = enhet,
                 tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
-                fritekst = meldingRequest.fritekst
+                fritekst = meldingRequest.fritekst,
             )
 
             meldingProducer.sendHenvendelseUpdate(
                 fnr = henvendelse.fnr,
-                tema = meldingRequest.sak?.temaKode,
+                tema = sak?.temaKode,
                 temagruppe = henvendelse.gjeldendeTemagruppe!!,
-                traadId = henvendelse.kjedeId
+                traadId = henvendelse.kjedeId,
             )
 
             if (meldingRequest.avsluttet == true) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
 
-            if (meldingRequest.sak != null) {
+            if (sak != null) {
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
                     kjedeId = henvendelse.kjedeId,
-                    saksId = meldingRequest.sak.fagsystemSaksId,
-                    saksTema = meldingRequest.sak.temaKode,
-                    fagsakSystem = meldingRequest.sak.fagsystemKode
+                    saksId = sak.fagsystemSaksId,
+                    saksTema = sak.temaKode,
+                    fagsakSystem = sak.fagsystemKode,
                 )
             }
         }
@@ -395,7 +397,7 @@ class SfLegacyDialogController(
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(
                 oppgaveId,
                 Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe!!),
-                enhet
+                enhet,
             )
         }
 

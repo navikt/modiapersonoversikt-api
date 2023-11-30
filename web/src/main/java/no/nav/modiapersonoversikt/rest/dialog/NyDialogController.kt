@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/rest/dialog")
 class NyDialogController @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll,
-    private val dialogapi: DialogApi
+    private val dialogapi: DialogApi,
 ) {
     @PostMapping("/meldinger")
     fun hentMeldinger(
         @RequestParam(value = "enhet") enhet: String,
-        @RequestBody fnr: String
+        @RequestBody fnr: String,
     ): List<TraadDTO> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 dialogapi.hentMeldinger(fnr, enhet)
             }
@@ -31,15 +30,14 @@ class NyDialogController @Autowired constructor(
 
     @PostMapping("/sendmelding")
     fun sendMeldinger(
-        @RequestBody meldingRequest: SendMeldingRequest,
+        @RequestBody meldingRequest: NySendMeldingRequest,
     ): TraadDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to meldingRequest.fnr,
             AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
-            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId
+            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId,
         )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
                 dialogapi.sendMelding(meldingRequest.fnr, meldingRequest)
             }
@@ -48,14 +46,13 @@ class NyDialogController @Autowired constructor(
     @PostMapping("/fortsett/opprett")
     fun startFortsettDialog(
         @RequestHeader(value = "Ignore-Conflict", required = false) ignorerConflict: Boolean?,
-        @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequest
+        @RequestBody opprettHenvendelseRequest: NyOpprettHenvendelseRequest,
     ): FortsettDialogDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to opprettHenvendelseRequest.fnr,
-            AuditIdentifier.TRAAD_ID to opprettHenvendelseRequest.traadId
+            AuditIdentifier.TRAAD_ID to opprettHenvendelseRequest.traadId,
         )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(opprettHenvendelseRequest.fnr)))
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(opprettHenvendelseRequest.fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
                 dialogapi.startFortsettDialog(opprettHenvendelseRequest.fnr, ignorerConflict, opprettHenvendelseRequest)
             }
@@ -63,15 +60,14 @@ class NyDialogController @Autowired constructor(
 
     @PostMapping("/fortsett/ferdigstill")
     fun sendFortsettDialog(
-        @RequestBody meldingRequest: SendMeldingRequest,
+        @RequestBody meldingRequest: NySendMeldingRequest,
     ): TraadDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to meldingRequest.fnr,
             AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
-            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId
+            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId,
         )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
             .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
                 dialogapi.fortsettPaEksisterendeDialog(meldingRequest.fnr, meldingRequest)
             }

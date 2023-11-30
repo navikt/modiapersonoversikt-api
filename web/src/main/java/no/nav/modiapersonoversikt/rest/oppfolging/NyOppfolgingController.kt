@@ -29,7 +29,7 @@ class NyOppfolgingController @Autowired constructor(
     private val service: ArbeidsrettetOppfolging.Service,
     private val tilgangskontroll: Tilgangskontroll,
     private val ytelseskontraktService: YtelseskontraktService,
-    private val oppfolgingskontraktService: OppfolgingskontraktService
+    private val oppfolgingskontraktService: OppfolgingskontraktService,
 ) {
 
     @PostMapping
@@ -40,15 +40,15 @@ class NyOppfolgingController @Autowired constructor(
                 Audit.describe(
                     Audit.Action.READ,
                     AuditResources.Person.Oppfolging,
-                    AuditIdentifier.FNR to fnr
-                )
+                    AuditIdentifier.FNR to fnr,
+                ),
             ) {
                 val oppfolging = service.hentOppfolgingsinfo(Fnr(fnr))
 
                 mapOf(
                     "erUnderOppfolging" to oppfolging.erUnderOppfolging,
                     "veileder" to hentVeileder(oppfolging.veileder),
-                    "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
+                    "enhet" to hentEnhet(oppfolging.oppfolgingsenhet),
                 ).also(Typeanalyzers.OPPFOLGING_STATUS.analyzer::capture)
             }
     }
@@ -57,7 +57,7 @@ class NyOppfolgingController @Autowired constructor(
     fun hentUtvidetOppf(
         @RequestBody fnr: String,
         @RequestParam("startDato") start: String?,
-        @RequestParam("sluttDato") slutt: String?
+        @RequestParam("sluttDato") slutt: String?,
     ): Map<String, Any?> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
@@ -65,18 +65,18 @@ class NyOppfolgingController @Autowired constructor(
                 Audit.describe(
                     Audit.Action.READ,
                     AuditResources.Person.YtelserOgKontrakter,
-                    AuditIdentifier.FNR to fnr
-                )
+                    AuditIdentifier.FNR to fnr,
+                ),
             ) {
                 val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(
-                    lagOppfolgingskontraktRequest(fnr, start, slutt)
+                    lagOppfolgingskontraktRequest(fnr, start, slutt),
                 )
                 val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(
                     lagYtelseRequest(
                         fnr,
                         start,
-                        slutt
-                    )
+                        slutt,
+                    ),
                 )
                 val oppfolgingstatus = runCatching { hent(fnr) }
 
@@ -89,7 +89,7 @@ class NyOppfolgingController @Autowired constructor(
                     "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
                     "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
                     "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
-                    "ytelser" to hentYtelser(ytelserResponse.ytelser)
+                    "ytelser" to hentYtelser(ytelserResponse.ytelser),
                 ).also(Typeanalyzers.OPPFOLGING_YTELSER.analyzer::capture)
             }
     }
@@ -107,7 +107,7 @@ class NyOppfolgingController @Autowired constructor(
                 "vedtak" to hentVedtak(it.vedtak),
                 "dagerIgjenMedBortfall" to it.dagerIgjenMedBortfall,
                 "ukerIgjenMedBortfall" to it.ukerIgjenMedBortfall,
-                *hentDagPengerFelter(it)
+                *hentDagPengerFelter(it),
             )
         }
     }
@@ -118,8 +118,9 @@ class NyOppfolgingController @Autowired constructor(
                 "dagerIgjenPermittering" to ytelse.antallDagerIgjenPermittering,
                 "ukerIgjenPermittering" to ytelse.antallUkerIgjenPermittering,
                 "dagerIgjen" to ytelse.antallDagerIgjen,
-                "ukerIgjen" to ytelse.antallUkerIgjen
+                "ukerIgjen" to ytelse.antallUkerIgjen,
             )
+
             else -> emptyArray()
         }
     }
@@ -133,7 +134,7 @@ class NyOppfolgingController @Autowired constructor(
                 "aktivTil" to it.activeTo?.toString(JODA_DATOFORMAT),
                 "aktivitetsfase" to it.aktivitetsfase,
                 "vedtakstatus" to it.vedtakstatus,
-                "vedtakstype" to it.vedtakstype
+                "vedtakstype" to it.vedtakstype,
             )
         }
     }
@@ -146,7 +147,7 @@ class NyOppfolgingController @Autowired constructor(
                 "dato" to it.dato?.toString(JODA_DATOFORMAT),
                 "fastOppfølgingspunkt" to it.isFastOppfolgingspunkt,
                 "status" to it.status,
-                "syfoHendelse" to it.syfoHendelse
+                "syfoHendelse" to it.syfoHendelse,
             )
         }
     }
@@ -155,7 +156,7 @@ class NyOppfolgingController @Autowired constructor(
         return veileder?.let {
             mapOf(
                 "ident" to it.ident,
-                "navn" to it.navn
+                "navn" to it.navn,
             )
         }
     }
@@ -165,7 +166,7 @@ class NyOppfolgingController @Autowired constructor(
             mapOf(
                 "id" to it.enhetId,
                 "navn" to it.navn,
-                "status" to null // TODO Ubrukt i frontend, men lar feltet være frem til det er fjernet fra domenemodellen der
+                "status" to null, // TODO Ubrukt i frontend, men lar feltet være frem til det er fjernet fra domenemodellen der
             )
         }
     }
@@ -179,7 +180,11 @@ class NyOppfolgingController @Autowired constructor(
         return request
     }
 
-    private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?, slutt: String?): OppfolgingskontraktRequest {
+    private fun lagOppfolgingskontraktRequest(
+        fodselsnummer: String,
+        start: String?,
+        slutt: String?,
+    ): OppfolgingskontraktRequest {
         val request =
             OppfolgingskontraktRequest()
         request.fodselsnummer = fodselsnummer
@@ -195,5 +200,4 @@ class NyOppfolgingController @Autowired constructor(
             throw RuntimeException(exception.message)
         }
     }
-
 }
