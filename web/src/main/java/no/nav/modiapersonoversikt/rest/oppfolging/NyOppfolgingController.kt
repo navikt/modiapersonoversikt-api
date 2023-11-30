@@ -195,5 +195,4 @@ class NyOppfolgingController @Autowired constructor(
             throw RuntimeException(exception.message)
         }
     }
-
 }
