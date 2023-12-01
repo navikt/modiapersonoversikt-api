@@ -87,7 +87,7 @@ class AuthIntropectionDTO(val expirationDate: Long) {
     }
 }
 
-private fun <T> TilgangDTO.logAudit(audit: Audit.AuditDescriptor<T>, data: T): TilgangDTO {
+internal fun <T> TilgangDTO.logAudit(audit: Audit.AuditDescriptor<T>, data: T): TilgangDTO {
     when (this.harTilgang) {
         true -> audit.log(data)
         else -> audit.denied("Ikke tilgang til $data, årsak: ${this.ikkeTilgangArsak}")
