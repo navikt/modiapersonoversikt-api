@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/oppgaver")
-class NyOppgaveController @Autowired constructor(
+class OppgaveControllerV2 @Autowired constructor(
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val tilgangkontroll: Tilgangskontroll
 ) {

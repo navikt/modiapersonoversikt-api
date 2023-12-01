@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/dialog")
-class NyDialogController @Autowired constructor(
+class DialogControllerV2 @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll,
     private val dialogapi: DialogApi,
 ) {

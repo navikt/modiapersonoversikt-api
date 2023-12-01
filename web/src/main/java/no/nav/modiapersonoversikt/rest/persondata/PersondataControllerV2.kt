@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/v2/person")
-class NyPersondataController(
+class PersondataControllerV2(
     private val persondataService: PersondataService,
     private val tilgangskontroll: Tilgangskontroll,
     private val pdlOppslagService: PdlOppslagService

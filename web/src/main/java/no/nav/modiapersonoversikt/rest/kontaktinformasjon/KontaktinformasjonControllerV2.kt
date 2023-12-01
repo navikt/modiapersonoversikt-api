@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/person/kontaktinformasjon")
-class NyKontaktinformasjonController @Autowired constructor(
+class KontaktinformasjonControllerV2 @Autowired constructor(
     private val krrService: Krr.Service,
     private val tilgangskontroll: Tilgangskontroll
 ) {

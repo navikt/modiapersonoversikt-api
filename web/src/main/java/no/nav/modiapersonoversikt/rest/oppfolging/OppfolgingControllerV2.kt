@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/oppfolging")
-class NyOppfolgingController @Autowired constructor(
+class OppfolgingControllerV2 @Autowired constructor(
     private val service: ArbeidsrettetOppfolging.Service,
     private val tilgangskontroll: Tilgangskontroll,
     private val ytelseskontraktService: YtelseskontraktService,
