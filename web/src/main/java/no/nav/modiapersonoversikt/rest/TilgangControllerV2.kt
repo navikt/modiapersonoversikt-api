@@ -9,10 +9,10 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.personoversikt.common.kabac.Decision
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/rest/tilgang")
-class TilgangController @Autowired constructor(
+class TilgangControllerV2 @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll,
     private val pdlOppslagService: PdlOppslagService
 ) {
@@ -32,9 +32,9 @@ class TilgangController @Autowired constructor(
         listOf(AuditIdentifier.ENHET_ID to it)
     }
 
-    @GetMapping("/{fnr}")
+    @PostMapping()
     fun harTilgang(
-        @PathVariable("fnr") fnr: String,
+        @RequestBody fnr: String,
         @RequestParam("enhet", required = false) enhet: String?,
         request: HttpServletRequest
     ): TilgangDTO {
@@ -72,40 +72,5 @@ class TilgangController @Autowired constructor(
         } else {
             this
         }
-    }
-}
-
-data class TilgangDTO(
-    val harTilgang: Boolean,
-    val ikkeTilgangArsak: Decision.DenyCause?,
-    val aktivIdent: String?
-)
-
-class AuthIntropectionDTO(val expirationDate: Long) {
-    companion object {
-        val INVALID = AuthIntropectionDTO(-1)
-    }
-}
-
-internal fun <T> TilgangDTO.logAudit(audit: Audit.AuditDescriptor<T>, data: T): TilgangDTO {
-    when (this.harTilgang) {
-        true -> audit.log(data)
-        else -> audit.denied("Ikke tilgang til $data, årsak: ${this.ikkeTilgangArsak}")
-    }
-    return this
-}
-
-internal fun JWTClaimsSet.getExpirationDate(): AuthIntropectionDTO {
-    return when (val exp: Date? = this.expirationTime) {
-        null -> AuthIntropectionDTO.INVALID
-        else -> AuthIntropectionDTO(exp.time)
-    }
-}
-
-internal fun Decision.makeResponse(): TilgangDTO {
-    return when (val biased = this.withBias(Decision.Type.DENY)) {
-        is Decision.Permit -> TilgangDTO(true, null, null)
-        is Decision.Deny -> TilgangDTO(false, biased.cause, null)
-        is Decision.NotApplicable -> TilgangDTO(false, Decision.NO_APPLICABLE_POLICY_FOUND, null)
     }
 }
