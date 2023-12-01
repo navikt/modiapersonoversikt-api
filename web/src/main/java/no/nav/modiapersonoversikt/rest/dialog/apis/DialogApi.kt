@@ -10,38 +10,38 @@ import java.time.OffsetDateTime
 interface DialogApi {
     fun hentMeldinger(
         fnr: String,
-        enhet: String
+        enhet: String,
     ): List<TraadDTO>
 
     fun sendMelding(
         fnr: String,
-        meldingRequest: SendMeldingRequest
+        meldingRequest: SendMelding,
     ): TraadDTO
 
     fun sendInfomelding(
         fnr: String,
-        infomeldingRequest: InfomeldingRequest
+        infomeldingRequest: Infomelding,
     ): TraadDTO
 
     fun startFortsettDialog(
         fnr: String,
         ignorerConflict: Boolean?,
-        opprettHenvendelseRequest: OpprettHenvendelseRequest
+        opprettHenvendelseRequest: OpprettHenvendelse,
     ): FortsettDialogDTO
 
-    fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMeldingRequest): TraadDTO
+    fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMelding): TraadDTO
 
     data class Journalpost(
         val journalfortAv: Veileder?,
         val journalfortDato: OffsetDateTime,
         val journalfortTema: String,
         val journalfortTemanavn: String,
-        val journalfortSaksid: String?
+        val journalfortSaksid: String?,
     )
 
     data class Veileder(
         val ident: String,
-        val navn: String
+        val navn: String,
     ) {
         companion object {
             val UKJENT = Veileder("-", "Ukjent")
@@ -54,7 +54,7 @@ data class TraadDTO(
     val traadType: TraadType,
     val temagruppe: String,
     val meldinger: List<MeldingDTO>,
-    val journalposter: List<DialogApi.Journalpost>
+    val journalposter: List<DialogApi.Journalpost>,
 )
 data class MeldingDTO(
     val id: String,
@@ -75,29 +75,77 @@ data class MeldingDTO(
 )
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?)
 
+abstract class OpprettHenvendelse {
+    abstract val enhet: String?
+    abstract val traadId: String
+}
+
 data class OpprettHenvendelseRequest(
-    val fnr: String = "",
-    val enhet: String?,
-    val traadId: String
-)
+    override val enhet: String?,
+    override val traadId: String,
+) : OpprettHenvendelse()
+
+data class NyOpprettHenvendelseRequest(
+    val fnr: String,
+    override val enhet: String?,
+    override val traadId: String,
+) : OpprettHenvendelse()
+
+abstract class SendMelding {
+    abstract val traadId: String?
+    abstract val traadType: TraadType
+    abstract val enhet: String
+    abstract val fritekst: String
+    abstract val temagruppe: String?
+    abstract val sak: JournalforingSak?
+    abstract val erOppgaveTilknyttetAnsatt: Boolean?
+    abstract val avsluttet: Boolean?
+    abstract val behandlingsId: String?
+    abstract val oppgaveId: String?
+}
 
 data class SendMeldingRequest(
-    val fnr: String = "",
-    val traadId: String?,
-    val traadType: TraadType,
-    val enhet: String,
-    val fritekst: String,
-    val temagruppe: String?,
-    val sak: JournalforingSak?,
-    val erOppgaveTilknyttetAnsatt: Boolean?,
-    val avsluttet: Boolean?,
-    val behandlingsId: String?,
-    val oppgaveId: String?
-)
+    override val traadId: String?,
+    override val traadType: TraadType,
+    override val enhet: String,
+    override val fritekst: String,
+    override val temagruppe: String?,
+    override val sak: JournalforingSak?,
+    override val erOppgaveTilknyttetAnsatt: Boolean?,
+    override val avsluttet: Boolean?,
+    override val behandlingsId: String?,
+    override val oppgaveId: String?,
+) : SendMelding()
+
+data class NySendMeldingRequest(
+    val fnr: String,
+    override val traadId: String?,
+    override val traadType: TraadType,
+    override val enhet: String,
+    override val fritekst: String,
+    override val temagruppe: String?,
+    override val sak: JournalforingSak?,
+    override val erOppgaveTilknyttetAnsatt: Boolean?,
+    override val avsluttet: Boolean?,
+    override val behandlingsId: String?,
+    override val oppgaveId: String?,
+) : SendMelding()
+
+abstract class Infomelding {
+    abstract val enhet: String
+    abstract val fritekst: String
+    abstract val sak: JournalforingSak
+}
 
 data class InfomeldingRequest(
-    val fnr: String = "",
-    val enhet: String,
-    val fritekst: String,
-    val sak: JournalforingSak
-)
+    override val enhet: String,
+    override val fritekst: String,
+    override val sak: JournalforingSak,
+) : Infomelding()
+
+data class NyInfomeldingRequest(
+    val fnr: String,
+    override val enhet: String,
+    override val fritekst: String,
+    override val sak: JournalforingSak,
+) : Infomelding()
