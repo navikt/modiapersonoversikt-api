@@ -30,7 +30,7 @@ class DialogControllerV2 @Autowired constructor(
 
     @PostMapping("/sendmelding")
     fun sendMeldinger(
-        @RequestBody meldingRequest: NySendMeldingRequest,
+        @RequestBody meldingRequest: SendMeldingRequestV2,
     ): TraadDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to meldingRequest.fnr,
@@ -46,7 +46,7 @@ class DialogControllerV2 @Autowired constructor(
     @PostMapping("/fortsett/opprett")
     fun startFortsettDialog(
         @RequestHeader(value = "Ignore-Conflict", required = false) ignorerConflict: Boolean?,
-        @RequestBody opprettHenvendelseRequest: NyOpprettHenvendelseRequest,
+        @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequestV2,
     ): FortsettDialogDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to opprettHenvendelseRequest.fnr,
@@ -60,7 +60,7 @@ class DialogControllerV2 @Autowired constructor(
 
     @PostMapping("/fortsett/ferdigstill")
     fun sendFortsettDialog(
-        @RequestBody meldingRequest: NySendMeldingRequest,
+        @RequestBody meldingRequest: SendMeldingRequestV2,
     ): TraadDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to meldingRequest.fnr,

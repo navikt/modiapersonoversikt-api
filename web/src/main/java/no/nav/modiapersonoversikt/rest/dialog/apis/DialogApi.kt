@@ -85,7 +85,7 @@ data class OpprettHenvendelseRequest(
     override val traadId: String,
 ) : OpprettHenvendelse()
 
-data class NyOpprettHenvendelseRequest(
+data class OpprettHenvendelseRequestV2(
     val fnr: String,
     override val enhet: String?,
     override val traadId: String,
@@ -117,7 +117,7 @@ data class SendMeldingRequest(
     override val oppgaveId: String?,
 ) : SendMelding()
 
-data class NySendMeldingRequest(
+data class SendMeldingRequestV2(
     val fnr: String,
     override val traadId: String?,
     override val traadType: TraadType,
@@ -143,7 +143,7 @@ data class InfomeldingRequest(
     override val sak: JournalforingSak,
 ) : Infomelding()
 
-data class NyInfomeldingRequest(
+data class InfomeldingRequestV2(
     val fnr: String,
     override val enhet: String,
     override val fritekst: String,
