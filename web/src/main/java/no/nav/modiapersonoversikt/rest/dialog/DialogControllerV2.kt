@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -20,11 +21,11 @@ class DialogControllerV2 @Autowired constructor(
     @PostMapping("/meldinger")
     fun hentMeldinger(
         @RequestParam(value = "enhet") enhet: String,
-        @RequestBody fnr: String,
+        @RequestBody fnrRequest: FnrRequest,
     ): List<TraadDTO> {
-        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.hentMeldinger(fnr, enhet)
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                dialogapi.hentMeldinger(fnrRequest.fnr, enhet)
             }
     }
 

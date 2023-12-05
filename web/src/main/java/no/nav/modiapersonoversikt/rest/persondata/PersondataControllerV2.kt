@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentIdenter
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -19,21 +20,21 @@ class PersondataControllerV2(
 ) {
 
     @PostMapping
-    fun hentPersondata(@RequestBody fnr: String): Persondata.Data {
+    fun hentPersondata(@RequestBody fnrRequest: FnrRequest): Persondata.Data {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnr)) {
-                persondataService.hentPerson(fnr)
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                persondataService.hentPerson(fnrRequest.fnr)
             }
     }
 
     @PostMapping("/identer")
-    fun hentIdenter(@RequestBody fnr: String): HentIdenter.Identliste? {
-        return pdlOppslagService.hentIdenter(fnr)
+    fun hentIdenter(@RequestBody fnrRequest: FnrRequest): HentIdenter.Identliste? {
+        return pdlOppslagService.hentIdenter(fnrRequest.fnr)
     }
 
     @PostMapping("/aktorid")
-    fun hentAktorId(@RequestBody fnr: String): String? {
-        return pdlOppslagService.hentAktorId(fnr)
+    fun hentAktorId(@RequestBody fnrRequest: FnrRequest): String? {
+        return pdlOppslagService.hentAktorId(fnrRequest.fnr)
     }
 }

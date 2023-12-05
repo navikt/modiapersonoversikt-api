@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.PleiepengerService
@@ -27,29 +28,29 @@ class YtelseControllerV2 @Autowired constructor(
 ) {
 
     @PostMapping("sykepenger")
-    fun hentSykepenger(@RequestBody fnr: String): Map<String, Any?> {
+    fun hentSykepenger(@RequestBody fnrRequest: FnrRequest): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnr)) {
-                SykepengerUttrekk(sykepengerService).hent(fnr)
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                SykepengerUttrekk(sykepengerService).hent(fnrRequest.fnr)
             }
     }
 
     @PostMapping("foreldrepenger")
-    fun hentForeldrepenger(@RequestBody fnr: String): Map<String, Any?> {
+    fun hentForeldrepenger(@RequestBody fnrRequest: FnrRequest): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnr)) {
-                ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnrRequest.fnr)
             }
     }
 
     @PostMapping("pleiepenger")
-    fun hentPleiepenger(@RequestBody fnr: String): Map<String, Any?> {
+    fun hentPleiepenger(@RequestBody fnrRequest: FnrRequest): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnr)) {
-                PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnrRequest.fnr)
             }
     }
 

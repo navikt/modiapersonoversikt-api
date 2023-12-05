@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest
@@ -33,17 +34,17 @@ class OppfolgingControllerV2 @Autowired constructor(
 ) {
 
     @PostMapping
-    fun hent(@RequestBody fnr: String): Map<String, Any?> {
+    fun hent(@RequestBody fnrRequest: FnrRequest): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
             .get(
                 Audit.describe(
                     Audit.Action.READ,
                     AuditResources.Person.Oppfolging,
-                    AuditIdentifier.FNR to fnr,
+                    AuditIdentifier.FNR to fnrRequest.fnr,
                 ),
             ) {
-                val oppfolging = service.hentOppfolgingsinfo(Fnr(fnr))
+                val oppfolging = service.hentOppfolgingsinfo(Fnr(fnrRequest.fnr))
 
                 mapOf(
                     "erUnderOppfolging" to oppfolging.erUnderOppfolging,
@@ -55,30 +56,30 @@ class OppfolgingControllerV2 @Autowired constructor(
 
     @PostMapping("/ytelserogkontrakter")
     fun hentUtvidetOppf(
-        @RequestBody fnr: String,
+        @RequestBody fnrRequest: FnrRequest,
         @RequestParam("startDato") start: String?,
         @RequestParam("sluttDato") slutt: String?,
     ): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
             .get(
                 Audit.describe(
                     Audit.Action.READ,
                     AuditResources.Person.YtelserOgKontrakter,
-                    AuditIdentifier.FNR to fnr,
+                    AuditIdentifier.FNR to fnrRequest.fnr,
                 ),
             ) {
                 val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(
-                    lagOppfolgingskontraktRequest(fnr, start, slutt),
+                    lagOppfolgingskontraktRequest(fnrRequest.fnr, start, slutt),
                 )
                 val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(
                     lagYtelseRequest(
-                        fnr,
+                        fnrRequest.fnr,
                         start,
                         slutt,
                     ),
                 )
-                val oppfolgingstatus = runCatching { hent(fnr) }
+                val oppfolgingstatus = runCatching { hent(fnrRequest) }
 
                 mapOf(
                     "oppfolging" to oppfolgingstatus.getOrNull(),
