@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
@@ -19,11 +20,11 @@ class KontaktinformasjonControllerV2 @Autowired constructor(
 ) {
 
     @PostMapping
-    fun hentKontaktinformasjon(@RequestBody fnr: String): KontaktinformasjonApi.Kontaktinformasjon {
+    fun hentKontaktinformasjon(@RequestBody fnrRequest: FnrRequest): KontaktinformasjonApi.Kontaktinformasjon {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
-                val response = krrService.hentDigitalKontaktinformasjon(fnr)
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                val response = krrService.hentDigitalKontaktinformasjon(fnrRequest.fnr)
 
                 KontaktinformasjonApi.Kontaktinformasjon(
                     epost = getEpost(response),

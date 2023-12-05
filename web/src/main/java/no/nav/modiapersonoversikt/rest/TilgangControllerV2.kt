@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.rest
 
 import com.nimbusds.jwt.JWTClaimsSet
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -34,16 +35,16 @@ class TilgangControllerV2 @Autowired constructor(
 
     @PostMapping()
     fun harTilgang(
-        @RequestBody fnr: String,
+        @RequestBody fnrRequest: FnrRequest,
         @RequestParam("enhet", required = false) enhet: String?,
         request: HttpServletRequest
     ): TilgangDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
             .getDecision()
             .makeResponse()
-            .sjekkAktivFolkeregistrIden(fnr)
-            .logAudit(audit, fnr)
+            .sjekkAktivFolkeregistrIden(fnrRequest.fnr)
+            .logAudit(audit, fnrRequest.fnr)
             .also {
                 enhetTrace.log(enhet ?: "IKKE SATT")
             }

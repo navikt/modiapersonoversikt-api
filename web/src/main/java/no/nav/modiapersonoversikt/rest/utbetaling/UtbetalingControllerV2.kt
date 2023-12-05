@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.utbetaling
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -30,7 +31,7 @@ class UtbetalingControllerV2 @Autowired constructor(
 
     @PostMapping
     fun hent(
-        @RequestBody fnr: String,
+        @RequestBody fnrRequest: FnrRequest,
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         @RequestParam("startDato")
         start: LocalDate,
@@ -39,9 +40,9 @@ class UtbetalingControllerV2 @Autowired constructor(
         slutt: LocalDate
     ): UtbetalingerResponseDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, AuditIdentifier.FNR to fnr)) {
-                val utbetalinger = service.hentUtbetalinger(Fnr(fnr), start, slutt)
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                val utbetalinger = service.hentUtbetalinger(Fnr(fnrRequest.fnr), start, slutt)
                 UtbetalingerResponseDTO(
                     utbetalinger = utbetalinger,
                     periode = UtbetalingerPeriodeDTO(

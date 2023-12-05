@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -21,20 +22,20 @@ class VarslerControllerV2(
 ) {
 
     @PostMapping("/varsler")
-    fun hentLegacyVarsler(@RequestBody fnr: String): List<VarslerService.Varsel> {
+    fun hentLegacyVarsler(@RequestBody fnrRequest: FnrRequest): List<VarslerService.Varsel> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnr)) {
-                varslerService.hentLegacyVarsler(Fnr(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                varslerService.hentLegacyVarsler(Fnr(fnrRequest.fnr))
             }
     }
 
     @PostMapping("/v2/varsler/")
-    fun hentAlleVarsler(@RequestBody fnr: String): VarslerService.Result {
+    fun hentAlleVarsler(@RequestBody fnrRequest: FnrRequest): VarslerService.Result {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnr)) {
-                varslerService.hentAlleVarsler(Fnr(fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                varslerService.hentAlleVarsler(Fnr(fnrRequest.fnr))
             }
     }
 }

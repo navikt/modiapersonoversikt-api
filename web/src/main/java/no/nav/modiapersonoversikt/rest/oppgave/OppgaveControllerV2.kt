@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.oppgave
 
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -29,11 +30,11 @@ class OppgaveControllerV2 @Autowired constructor(
             }
 
     @PostMapping("/tildelt/{fnr}")
-    fun finnTildelte(@RequestBody fnr: String): List<OppgaveDTO> =
+    fun finnTildelte(@RequestBody fnrRequest: FnrRequest): List<OppgaveDTO> =
         tilgangkontroll
             .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                oppgaveBehandlingService.finnTildelteOppgaverIGsak(fnr)
+                oppgaveBehandlingService.finnTildelteOppgaverIGsak(fnrRequest.fnr)
                     .map { mapOppgave(it) }
             }
 
