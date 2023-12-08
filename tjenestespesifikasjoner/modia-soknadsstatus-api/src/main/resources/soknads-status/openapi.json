@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://intern.nav.no/modia-soknadsstatus-api/api",
+      "url": "https://intern.nav.no/modia-soknadsstatus-api",
       "description": "Generated server url"
     }
   ],
@@ -15,7 +15,7 @@
     "/api/soknadsstatus/behandling/{ident}": {
       "get": {
         "summary": "Henter en liste av brukers behandlinger",
-        "operationId": "hentAlleBehandlinger",
+        "operationId": "hentAlleBehandlingerMedFnrIPath",
         "tags": [
           "soknadsstatus-controller"
         ],
@@ -73,7 +73,7 @@
     "/api/soknadsstatus/hendelse/{ident}": {
       "get": {
         "summary": "Henter en liste av brukers hendelser",
-        "operationId": "hentAlleHendelser",
+        "operationId": "hentAlleHendelserMedFnrIPath",
         "tags": [
           "soknadsstatus-controller"
         ],
@@ -88,6 +88,115 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Hendelse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Feil api nøkkel"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Azure_AD_System-to-System": []
+          },
+          {
+            "Azure_AD_On-Behalf-Of": []
+          }
+        ]
+      }
+    },
+    "/api/soknadsstatus/behandling": {
+      "post": {
+        "summary": "Henter en liste av brukers behandlinger",
+        "operationId": "hentAlleBehandlinger",
+        "tags": [
+          "soknadsstatus-controller"
+        ],
+        "parameters": [
+          {
+            "name": "inkluderHendelser",
+            "in": "query",
+            "description": "Hent tilhørende hendelser for en behandling",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Ident for bruker",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FnrRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Behandling"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Feil api nøkkel"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Azure_AD_System-to-System": []
+          },
+          {
+            "Azure_AD_On-Behalf-Of": []
+          }
+        ]
+      }
+    },
+    "/api/soknadsstatus/hendelse": {
+      "post": {
+        "summary": "Henter en liste av brukers hendelser",
+        "operationId": "hentAlleHendelser",
+        "tags": [
+          "soknadsstatus-controller"
+        ],
+        "requestBody": {
+          "description": "Ident for bruker",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FnrRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -253,6 +362,14 @@
         "type": "object",
         "properties": {
           "response": {
+            "type": "string"
+          }
+        }
+      },
+      "FnrRequest": {
+        "type": "object",
+        "properties": {
+          "fnr": {
             "type": "string"
           }
         }
