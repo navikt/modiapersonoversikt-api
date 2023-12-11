@@ -29,7 +29,7 @@ class OppgaveControllerV2 @Autowired constructor(
                     .map { mapOppgave(it) }
             }
 
-    @PostMapping("/tildelt/{fnr}")
+    @PostMapping("/tildelt")
     fun finnTildelte(@RequestBody fnrRequest: FnrRequest): List<OppgaveDTO> =
         tilgangkontroll
             .check(Policies.tilgangTilModia)

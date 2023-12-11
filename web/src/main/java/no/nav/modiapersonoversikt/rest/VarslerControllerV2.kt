@@ -21,7 +21,7 @@ class VarslerControllerV2(
     private val tilgangskontroll: Tilgangskontroll,
 ) {
 
-    @PostMapping("/v3/varsler/")
+    @PostMapping("/v3/varsler")
     fun hentAlleVarsler(@RequestBody fnrRequest: FnrRequest): VarslerService.Result {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
