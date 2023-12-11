@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
 @RestController
-@RequestMapping("/rest/utbetaling")
+@RequestMapping("/rest/v2/utbetaling")
 class UtbetalingControllerV2 @Autowired constructor(
     private val service: UtbetalingService,
     private val tilgangskontroll: Tilgangskontroll,

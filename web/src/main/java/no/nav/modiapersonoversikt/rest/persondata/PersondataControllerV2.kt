@@ -12,7 +12,7 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/v2/person")
+@RequestMapping("/rest/v3/person")
 class PersondataControllerV2(
     private val persondataService: PersondataService,
     private val tilgangskontroll: Tilgangskontroll,

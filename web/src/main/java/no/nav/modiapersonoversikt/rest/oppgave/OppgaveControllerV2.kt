@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/oppgaver")
+@RequestMapping("/rest/v2/oppgaver")
 class OppgaveControllerV2 @Autowired constructor(
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val tilgangkontroll: Tilgangskontroll

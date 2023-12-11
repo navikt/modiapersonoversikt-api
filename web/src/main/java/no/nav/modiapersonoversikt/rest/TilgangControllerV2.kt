@@ -21,7 +21,7 @@ import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/rest/tilgang")
+@RequestMapping("/rest/v2/tilgang")
 class TilgangControllerV2 @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll,
     private val pdlOppslagService: PdlOppslagService

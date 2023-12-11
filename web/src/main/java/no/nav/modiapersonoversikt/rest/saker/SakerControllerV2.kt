@@ -28,7 +28,7 @@ import org.springframework.web.server.ResponseStatusException
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/rest/saker/")
+@RequestMapping("/rest/v2/saker")
 class SakerControllerV2 @Autowired constructor(
     private val sakstemaService: SakstemaService,
     private val sakerService: SakerService,

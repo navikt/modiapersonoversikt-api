@@ -21,16 +21,7 @@ class VarslerControllerV2(
     private val tilgangskontroll: Tilgangskontroll,
 ) {
 
-    @PostMapping("/varsler")
-    fun hentLegacyVarsler(@RequestBody fnrRequest: FnrRequest): List<VarslerService.Varsel> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                varslerService.hentLegacyVarsler(Fnr(fnrRequest.fnr))
-            }
-    }
-
-    @PostMapping("/v2/varsler/")
+    @PostMapping("/v3/varsler/")
     fun hentAlleVarsler(@RequestBody fnrRequest: FnrRequest): VarslerService.Result {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))

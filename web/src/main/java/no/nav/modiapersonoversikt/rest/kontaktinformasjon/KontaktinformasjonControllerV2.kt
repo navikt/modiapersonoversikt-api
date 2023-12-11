@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/person/kontaktinformasjon")
+@RequestMapping("/rest/v2/person/kontaktinformasjon")
 class KontaktinformasjonControllerV2 @Autowired constructor(
     private val krrService: Krr.Service,
     private val tilgangskontroll: Tilgangskontroll
