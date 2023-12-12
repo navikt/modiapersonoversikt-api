@@ -4,6 +4,7 @@ import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.apis.SoknadsstatusControllerApi
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Behandling
+import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.FnrRequest
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Hendelse
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import org.springframework.cache.annotation.CacheConfig
@@ -31,17 +32,17 @@ open class SoknadsstatusServiceImpl(
 
     @Cacheable
     override fun hentHendelser(ident: String): List<Hendelse> {
-        return soknadsstatusApi.hentAlleHendelser(ident).orEmpty()
+        return soknadsstatusApi.hentAlleHendelser(FnrRequest(ident)).orEmpty()
     }
 
     @Cacheable
     override fun hentBehandlinger(ident: String): List<Behandling> {
-        return soknadsstatusApi.hentAlleBehandlinger(ident).orEmpty()
+        return soknadsstatusApi.hentAlleBehandlinger(FnrRequest(ident)).orEmpty()
     }
 
     @Cacheable
     override fun hentBehandlingerMedHendelser(ident: String): List<Behandling> {
-        val behandlinger = soknadsstatusApi.hentAlleBehandlinger(ident, inkluderHendelser = true)
+        val behandlinger = soknadsstatusApi.hentAlleBehandlinger(FnrRequest(ident), inkluderHendelser = true)
         return behandlinger?.let { Filter.filtrerOgSorterBehandligner(it) }.orEmpty()
     }
 
