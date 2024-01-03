@@ -138,6 +138,7 @@ type Person {
     doedsfall: [Doedsfall!]!
     falskIdentitet: FalskIdentitet
     foedsel: [Foedsel!]!
+    foedselsdato: [Foedselsdato!]!
     foedested: [Foedested!]!
     folkeregisteridentifikator(historikk: Boolean = false): [Folkeregisteridentifikator!]!
     folkeregisterpersonstatus(historikk: Boolean = false): [Folkeregisterpersonstatus!]!
@@ -154,7 +155,7 @@ type Person {
     sikkerhetstiltak:[Sikkerhetstiltak!]!
     sivilstand(historikk: Boolean = false):[Sivilstand!]!
     statsborgerskap(historikk: Boolean = false): [Statsborgerskap!]!
-    telefonnummer: [Telefonnummer!]!
+    telefonnummer(historikk: Boolean = false): [Telefonnummer!]!
     tilrettelagtKommunikasjon:[TilrettelagtKommunikasjon!]!
     utenlandskIdentifikasjonsnummer(historikk: Boolean = false): [UtenlandskIdentifikasjonsnummer!]!
     innflyttingTilNorge: [InnflyttingTilNorge!]!
@@ -385,6 +386,13 @@ type Foedested {
     foedeland: String
     foedested: String
     foedekommune: String
+    folkeregistermetadata: Folkeregistermetadata
+    metadata: Metadata!
+}
+
+type Foedselsdato {
+    foedselsdato: Date
+    foedselsaar: Int
     folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }

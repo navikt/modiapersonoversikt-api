@@ -138,6 +138,10 @@ spec:
       value: "https://app-q0.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
       value: "https://app-q0.adeo.no/tpsws-aura/ws/Personsok/v1"
+    - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL_NAIS
+      value: "https://tpsws-q0.intern.dev.nav.no/ws/Person/v3"
+    - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL_NAIS
+      value: "https://tpsws-q0.intern.dev.nav.no/ws/Personsok/v1"
     - name: VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/infotrygd-ws/Pleiepenger/v1"
     - name: VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL
