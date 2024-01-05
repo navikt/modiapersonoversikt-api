@@ -9,13 +9,15 @@ jobs:
     if: github.ref == 'refs/heads/dev'
     name: Deploy unleash api token to dev-fss
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Deploy unleash api token
-        uses: nais/deploy/actions/deploy@master
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: .nais/unleash/unleash-apitoken-preprod.yaml
 
@@ -23,12 +25,14 @@ jobs:
     if: github.ref == 'refs/heads/master'
     name: Deploy unleash api-token to prod-fss
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Deploy unleash api token
-        uses: nais/deploy/actions/deploy@master
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
           RESOURCE: .nais/unleash/unleash-apitoken-prod.yaml
