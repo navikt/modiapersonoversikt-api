@@ -135,12 +135,8 @@ spec:
     - name: KONTOREGISTER_SCOPE
       value: "prod-gcp:okonomi:sokos-kontoregister-person"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: "https://app.adeo.no/tpsws-aura/ws/Person/v3"
-    - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
-      value: "https://app.adeo.no/tpsws-aura/ws/Personsok/v1"
-    - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL_NAIS
       value: "https://tpsws.intern.nav.no/ws/Person/v3"
-    - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL_NAIS
+    - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
       value: "https://tpsws.intern.nav.no/ws/Personsok/v1"
     - name: VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL
       value: "https://modapp.adeo.no/infotrygd-ws/Pleiepenger/v1"
