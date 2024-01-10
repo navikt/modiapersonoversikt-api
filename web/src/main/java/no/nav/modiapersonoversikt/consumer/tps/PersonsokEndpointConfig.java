@@ -5,8 +5,6 @@ import no.nav.common.cxf.StsConfig;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.infrastructure.ping.PingableWebService;
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable;
-import no.nav.modiapersonoversikt.service.unleash.Feature;
-import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +19,6 @@ public class PersonsokEndpointConfig {
 
     @Autowired
     private StsConfig stsConfig;
-
-    @Autowired
-    private UnleashService unleashService;
 
     @Bean
     public PersonsokPortType personsokPortType() {
@@ -40,19 +35,11 @@ public class PersonsokEndpointConfig {
     }
 
     private CXFClient<PersonsokPortType> createPersonsokPortType() {
-        String adress;
-
-        if (unleashService.isEnabled(Feature.NY_TPSWS_INGRESS)) {
-            adress = "VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL_NAIS";
-        } else {
-            adress = "VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL";
-        }
-
         return new CXFClient<>(PersonsokPortType.class)
                 .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/personsoek/v1/personsoek.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
-                .address(EnvironmentUtils.getRequiredProperty(adress));
+                .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL"));
     }
 
 }

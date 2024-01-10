@@ -9,7 +9,6 @@ import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfol
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolgingServiceImpl;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl;
-import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,10 +48,6 @@ public class CacheTestConfig {
     @Bean
     public PdlOppslagService pdlOppslagService() {
         System.setProperty("PDL_API_URL", "http://dummy.no");
-        return mock(PdlOppslagServiceImpl.class); }
-
-    @Bean
-    public UnleashService unleashService() {
-        return mock(UnleashService.class);
+        return mock(PdlOppslagServiceImpl.class);
     }
 }
