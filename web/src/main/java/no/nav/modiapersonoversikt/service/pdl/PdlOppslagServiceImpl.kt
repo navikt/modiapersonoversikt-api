@@ -37,7 +37,7 @@ open class PdlOppslagServiceImpl constructor(
     @Cacheable(unless = "#result == null")
     override fun hentPersondata(fnr: String): HentPersondata.Result? = runBlocking {
         HentPersondata(pdlClient)
-            .execute(HentPersondata.Variables(fnr), userTokenAuthorizationHeaders)
+            .execute(HentPersondata.Variables(fnr), userTokenAuthorizationHeaders).assertNoErrors()
             .data
     }
 
@@ -47,7 +47,7 @@ open class PdlOppslagServiceImpl constructor(
             emptyList()
         } else {
             HentTredjepartspersondata(pdlClient)
-                .execute(HentTredjepartspersondata.Variables(fnrs), systemTokenAuthorizationHeaders)
+                .execute(HentTredjepartspersondata.Variables(fnrs), systemTokenAuthorizationHeaders).assertNoErrors()
                 .data
                 ?.hentPersonBolk
                 ?: emptyList()
@@ -57,7 +57,7 @@ open class PdlOppslagServiceImpl constructor(
     @Cacheable(unless = "#result == null")
     override fun hentIdenter(fnr: String): HentIdenter.Identliste? = runBlocking {
         HentIdenter(pdlClient)
-            .execute(HentIdenter.Variables(fnr), userTokenAuthorizationHeaders)
+            .execute(HentIdenter.Variables(fnr), userTokenAuthorizationHeaders).assertNoErrors()
             .data
             ?.hentIdenter
     }
@@ -65,7 +65,7 @@ open class PdlOppslagServiceImpl constructor(
     @Cacheable(unless = "#result == null")
     override fun hentFolkeregisterIdenter(fnr: String): HentIdenter.Identliste? = runBlocking {
         HentIdenter(pdlClient)
-            .execute(HentIdenter.Variables(fnr, listOf(HentIdenter.IdentGruppe.FOLKEREGISTERIDENT)), userTokenAuthorizationHeaders)
+            .execute(HentIdenter.Variables(fnr, listOf(HentIdenter.IdentGruppe.FOLKEREGISTERIDENT)), userTokenAuthorizationHeaders).assertNoErrors()
             .data
             ?.hentIdenter
     }
@@ -73,7 +73,7 @@ open class PdlOppslagServiceImpl constructor(
     @Cacheable(unless = "#result == null")
     override fun hentGeografiskTilknyttning(fnr: String): String? = runBlocking {
         HentGeografiskTilknyttning(pdlClient)
-            .execute(HentGeografiskTilknyttning.Variables(fnr), userTokenAuthorizationHeaders)
+            .execute(HentGeografiskTilknyttning.Variables(fnr), userTokenAuthorizationHeaders).assertNoErrors()
             .data
             ?.hentGeografiskTilknytning
             ?.run {
@@ -114,7 +114,7 @@ open class PdlOppslagServiceImpl constructor(
     @Cacheable(unless = "#result == null")
     override fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse> = runBlocking {
         HentAdressebeskyttelse(pdlClient)
-            .execute(HentAdressebeskyttelse.Variables(fnr), systemTokenAuthorizationHeaders)
+            .execute(HentAdressebeskyttelse.Variables(fnr), systemTokenAuthorizationHeaders).assertNoErrors()
             .data
             ?.hentPerson
             ?.adressebeskyttelse
@@ -123,7 +123,7 @@ open class PdlOppslagServiceImpl constructor(
 
     private fun hentAktivIdent(ident: String, gruppe: IdentGruppe): String? = runBlocking {
         HentAktorid(pdlClient)
-            .execute(HentAktorid.Variables(ident, listOf(gruppe)), userTokenAuthorizationHeaders)
+            .execute(HentAktorid.Variables(ident, listOf(gruppe)), userTokenAuthorizationHeaders).assertNoErrors()
             .data
             ?.hentIdenter
             ?.identer
