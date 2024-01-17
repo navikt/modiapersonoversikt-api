@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
@@ -9,24 +10,21 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/person/{fnr}/kontaktinformasjon")
+@RequestMapping("/rest/person/kontaktinformasjon")
 class KontaktinformasjonController @Autowired constructor(
     private val krrService: Krr.Service,
     private val tilgangskontroll: Tilgangskontroll
 ) {
 
-    @GetMapping
-    fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): KontaktinformasjonApi.Kontaktinformasjon {
+    @PostMapping
+    fun hentKontaktinformasjon(@RequestBody fnrRequest: FnrRequest): KontaktinformasjonApi.Kontaktinformasjon {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
-                val response = krrService.hentDigitalKontaktinformasjon(fnr)
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                val response = krrService.hentDigitalKontaktinformasjon(fnrRequest.fnr)
 
                 KontaktinformasjonApi.Kontaktinformasjon(
                     epost = getEpost(response),

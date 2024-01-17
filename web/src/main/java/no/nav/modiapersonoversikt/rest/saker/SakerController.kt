@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.rest.saker
 
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.Feilmelding
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
@@ -27,24 +28,24 @@ import org.springframework.web.server.ResponseStatusException
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/rest/saker/{fnr}")
+@RequestMapping("/rest/saker")
 class SakerController @Autowired constructor(
     private val sakstemaService: SakstemaService,
     private val sakerService: SakerService,
     private val safService: SafService,
     val tilgangskontroll: Tilgangskontroll
 ) {
-    @GetMapping("/sakstema")
+    @PostMapping("/sakstema")
     fun hentSakstema(
         request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
+        @RequestBody fnrRequest: FnrRequest,
         @RequestParam(value = "enhet") enhet: String
     ): SakerApi.Resultat {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
-                val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
-                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                val sakerWrapper = sakerService.hentSafSaker(fnrRequest.fnr).asWrapper()
+                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnrRequest.fnr)
 
                 val mappingContext = SakerApiMapper.createMappingContext(
                     tilgangskontroll = tilgangskontroll,
@@ -56,16 +57,16 @@ class SakerController @Autowired constructor(
             }
     }
 
-    @GetMapping("/v2/sakstema")
+    @PostMapping("/v2/sakstema")
     fun hentSakstemaSoknadsstatus(
         request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
+        @RequestBody fnrRequest: FnrRequest,
         @RequestParam(value = "enhet") enhet: String
     ): SakerApi.ResultatSoknadsstatus {
-        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
-                val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
-                val sakstemaWrapper = sakstemaService.hentSakstemaSoknadsstatus(sakerWrapper.resultat, fnr)
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                val sakerWrapper = sakerService.hentSafSaker(fnrRequest.fnr).asWrapper()
+                val sakstemaWrapper = sakstemaService.hentSakstemaSoknadsstatus(sakerWrapper.resultat, fnrRequest.fnr)
                 val mappingContext = SakerApiMapper.createMappingContext(
                     tilgangskontroll = tilgangskontroll,
                     enhet = EnhetId(enhet),
@@ -76,26 +77,26 @@ class SakerController @Autowired constructor(
             }
     }
 
-    @GetMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"], produces = ["application/pdf"])
+    @PostMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"], produces = ["application/pdf"])
     fun hentDokument(
         request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
+        @RequestBody fnrRequest: FnrRequest,
         @PathVariable("journalpostId") journalpostId: String,
         @PathVariable("dokumentreferanse") dokumentreferanse: String
     ): ResponseEntity<Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
             .get(
                 Audit.describe(
                     READ,
                     AuditResources.Person.Dokumenter,
-                    AuditIdentifier.FNR to fnr,
+                    AuditIdentifier.FNR to fnrRequest.fnr,
                     AuditIdentifier.JOURNALPOST_ID to journalpostId,
                     AuditIdentifier.DOKUMENT_REFERERANSE to dokumentreferanse
                 )
             ) {
-                val journalpostMetadata = hentDokumentMetadata(journalpostId, fnr)
-                val tilgangskontrollResult = harTilgangTilDokument(fnr, journalpostMetadata)
+                val journalpostMetadata = hentDokumentMetadata(journalpostId, fnrRequest.fnr)
+                val tilgangskontrollResult = harTilgangTilDokument(fnrRequest, journalpostMetadata)
 
                 // TODO erstatt tilgangsstyring
                 if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(
@@ -116,12 +117,12 @@ class SakerController @Autowired constructor(
             }
     }
 
-    private fun harTilgangTilDokument(fnr: String, dokument: DokumentMetadata): TjenesteResultatWrapper {
+    private fun harTilgangTilDokument(fnrRequest: FnrRequest, dokument: DokumentMetadata): TjenesteResultatWrapper {
         return if (!dokument.isErJournalfort) {
             TjenesteResultatWrapper(
                 Feilmelding.IKKE_JOURNALFORT,
                 mapOf(
-                    "fnr" to fnr
+                    "fnr" to fnrRequest.fnr
                 )
             )
         } else if (dokument.feilWrapper.inneholderFeil) {
