@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -12,71 +13,64 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/dialog/{fnr}")
+@RequestMapping("/rest/dialog")
 class DialogController @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll,
-    private val dialogapi: DialogApi
+    private val dialogapi: DialogApi,
 ) {
-    @GetMapping("/meldinger")
+    @PostMapping("/meldinger")
     fun hentMeldinger(
-        @PathVariable("fnr") fnr: String,
-        @RequestParam(value = "enhet") enhet: String
+        @RequestParam(value = "enhet") enhet: String,
+        @RequestBody fnrRequest: FnrRequest,
     ): List<TraadDTO> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                dialogapi.hentMeldinger(fnr, enhet)
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                dialogapi.hentMeldinger(fnrRequest.fnr, enhet)
             }
     }
 
     @PostMapping("/sendmelding")
     fun sendMeldinger(
-        @PathVariable("fnr") fnr: String,
-        @RequestBody meldingRequest: SendMeldingRequest
+        @RequestBody meldingRequest: SendMeldingRequestV2,
     ): TraadDTO {
         val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
+            AuditIdentifier.FNR to meldingRequest.fnr,
             AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
-            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId
+            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId,
         )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
-                dialogapi.sendMelding(fnr, meldingRequest)
+                dialogapi.sendMelding(meldingRequest.fnr, meldingRequest)
             }
     }
 
     @PostMapping("/fortsett/opprett")
     fun startFortsettDialog(
-        @PathVariable("fnr") fnr: String,
         @RequestHeader(value = "Ignore-Conflict", required = false) ignorerConflict: Boolean?,
-        @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequest
+        @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequestV2,
     ): FortsettDialogDTO {
         val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
-            AuditIdentifier.TRAAD_ID to opprettHenvendelseRequest.traadId
+            AuditIdentifier.FNR to opprettHenvendelseRequest.fnr,
+            AuditIdentifier.TRAAD_ID to opprettHenvendelseRequest.traadId,
         )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(opprettHenvendelseRequest.fnr)))
             .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
-                dialogapi.startFortsettDialog(fnr, ignorerConflict, opprettHenvendelseRequest)
+                dialogapi.startFortsettDialog(opprettHenvendelseRequest.fnr, ignorerConflict, opprettHenvendelseRequest)
             }
     }
 
     @PostMapping("/fortsett/ferdigstill")
     fun sendFortsettDialog(
-        @PathVariable("fnr") fnr: String,
-        @RequestBody meldingRequest: SendMeldingRequest
+        @RequestBody meldingRequest: SendMeldingRequestV2,
     ): TraadDTO {
         val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
+            AuditIdentifier.FNR to meldingRequest.fnr,
             AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
-            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId
+            AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId,
         )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+        return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
             .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
-                dialogapi.fortsettPaEksisterendeDialog(fnr, meldingRequest)
+                dialogapi.fortsettPaEksisterendeDialog(meldingRequest.fnr, meldingRequest)
             }
     }
 }
