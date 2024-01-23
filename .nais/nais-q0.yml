@@ -12,6 +12,7 @@ spec:
     - secret: modiapersonoversikt-api-unleash-api-token
   image: "{{image}}"
   port: 8080
+  team: personoversikt
   liveness:
     path: /modiapersonoversikt-api/internal/isAlive
     initialDelay: 50
