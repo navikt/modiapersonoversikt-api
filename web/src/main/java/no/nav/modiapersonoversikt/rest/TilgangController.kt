@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.rest
 
 import com.nimbusds.jwt.JWTClaimsSet
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -13,8 +12,7 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.personoversikt.common.kabac.Decision
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -34,18 +32,18 @@ class TilgangController @Autowired constructor(
         listOf(AuditIdentifier.ENHET_ID to it)
     }
 
-    @PostMapping()
+    @GetMapping("/{fnr}")
     fun harTilgang(
-        @RequestBody fnrRequest: FnrRequest,
+        @PathVariable("fnr") fnr: String,
         @RequestParam("enhet", required = false) enhet: String?,
         request: HttpServletRequest
     ): TilgangDTO {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .getDecision()
             .makeResponse()
-            .sjekkAktivFolkeregistrIden(fnrRequest.fnr)
-            .logAudit(audit, fnrRequest.fnr)
+            .sjekkAktivFolkeregistrIden(fnr)
+            .logAudit(audit, fnr)
             .also {
                 enhetTrace.log(enhet ?: "IKKE SATT")
             }

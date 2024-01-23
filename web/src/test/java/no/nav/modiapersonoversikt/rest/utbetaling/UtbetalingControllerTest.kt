@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.rest.utbetaling
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingService
 import org.junit.jupiter.api.Test
@@ -21,14 +20,14 @@ internal class UtbetalingControllerTest {
     @Test
     fun `Kaster ApplicationException`() {
         every { service.hentUtbetalinger(any(), any(), any()) } throws RuntimeException("")
-        assertFailsWith<RuntimeException> { controller.hent(FnrRequest(FNR), datoStart, datoSlutt) }
+        assertFailsWith<RuntimeException> { controller.hent(FNR, datoStart, datoSlutt) }
     }
 
     @Test
     fun `Kaster feil ved feil dato`() {
         assertFailsWith<RuntimeException> {
             val feilDatoFormat = LocalDate.parse("234-14-7")
-            controller.hent(FnrRequest(FNR), feilDatoFormat, feilDatoFormat)
+            controller.hent(FNR, feilDatoFormat, feilDatoFormat)
         }
     }
 }
