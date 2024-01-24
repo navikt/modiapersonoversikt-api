@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -9,7 +8,10 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.varsel.VarslerService
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/rest")
@@ -18,21 +20,21 @@ class VarslerController(
     private val tilgangskontroll: Tilgangskontroll,
 ) {
 
-    @PostMapping("/varsler")
-    fun hentLegacyVarsler(@RequestBody fnrRequest: FnrRequest): List<VarslerService.Varsel> {
+    @GetMapping("/varsler/{fnr}")
+    fun hentLegacyVarsler(@PathVariable("fnr") fnr: String): List<VarslerService.Varsel> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                varslerService.hentLegacyVarsler(Fnr(fnrRequest.fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnr)) {
+                varslerService.hentLegacyVarsler(Fnr(fnr))
             }
     }
 
-    @PostMapping("/v2/varsler")
-    fun hentAlleVarsler(@RequestBody fnrRequest: FnrRequest): VarslerService.Result {
+    @GetMapping("/v2/varsler/{fnr}")
+    fun hentAlleVarsler(@PathVariable("fnr") fnr: String): VarslerService.Result {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                varslerService.hentAlleVarsler(Fnr(fnrRequest.fnr))
+            .check(Policies.tilgangTilBruker(Fnr(fnr)))
+            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnr)) {
+                varslerService.hentAlleVarsler(Fnr(fnr))
             }
     }
 }
