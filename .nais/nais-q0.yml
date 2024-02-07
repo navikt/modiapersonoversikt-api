@@ -88,7 +88,7 @@ spec:
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app-q0.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: FELLES_KODEVERK_URL
-      value: "https://kodeverk.nais.preprod.local"
+      value: "https://kodeverk-api.nav.no"
     - name: LDAP_BASEDN
       value: "dc=preprod,dc=local"
     - name: LDAP_DOMAIN
