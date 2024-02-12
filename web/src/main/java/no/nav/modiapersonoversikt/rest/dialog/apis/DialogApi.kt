@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.rest.dialog.apis
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.JournalpostDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingFraDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
 import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
@@ -64,6 +65,7 @@ data class TraadDTO(
     val avsluttetDato: OffsetDateTime?,
     val sistEndretAv: String?,
     val sladding: Boolean?,
+    val lukketAv: String?,
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogApi.Journalpost>,
 )
