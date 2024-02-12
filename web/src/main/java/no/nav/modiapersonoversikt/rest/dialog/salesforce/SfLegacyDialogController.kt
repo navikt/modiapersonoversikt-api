@@ -213,12 +213,12 @@ class SfLegacyDialogController(
     private fun DialogMappingContext.getIdent(ident: String?, identType: MeldingFraDTO.IdentType) = when (identType) {
         MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(ident)
             ?.let { "${it.navn} (${it.ident})" }
-            ?: "(${ident})"
+            ?: "($ident)"
 
         MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
     }
 
-        private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) = DialogApi.Journalpost(
+    private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) = DialogApi.Journalpost(
         journalfortDato = journalpost.journalfortDato,
         journalfortTema = journalpost.journalfortTema,
         journalfortTemanavn = temakodeMap[journalpost.journalfortTema] ?: journalpost.journalfortTema,
