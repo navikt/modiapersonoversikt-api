@@ -197,6 +197,13 @@ class SfLegacyDialogController(
         }
         return TraadDTO(
             traadId = henvendelse.kjedeId,
+            fnr = henvendelse.fnr,
+            opprettetDato = henvendelse.opprettetDato,
+            kontorsperre = henvendelse.kontorsperre,
+            feilsendt = henvendelse.feilsendt,
+            avsluttetDato = henvendelse.avsluttetDato,
+            sistEndretAv = henvendelse.sistEndretAv,
+            sladding = henvendelse.sladding,
             temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe),
             traadType = TraadType.valueOf(henvendelse.henvendelseType.value),
             meldinger = meldinger,
@@ -221,6 +228,8 @@ class SfLegacyDialogController(
                 )
             }
             ?: DialogApi.Veileder.UKJENT,
+        journalforendeEnhet = journalpost.journalforendeEnhet,
+        journalfortFagsaksystem = journalpost.fagsaksystem?.value
     )
 
     private fun hentFritekstFraMelding(

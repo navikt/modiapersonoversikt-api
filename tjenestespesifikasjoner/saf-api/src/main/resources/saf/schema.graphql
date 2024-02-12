@@ -888,7 +888,7 @@ enum Tema {
     # Serviceklager
     SER
 
-    # Regnskap/utbetaling
+    # Regnskap/utbetaling/årsoppgave
     STO
 
     # Supplerende stønad
