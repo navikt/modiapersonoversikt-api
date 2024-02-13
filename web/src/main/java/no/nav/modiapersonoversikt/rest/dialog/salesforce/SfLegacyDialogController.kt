@@ -164,13 +164,7 @@ class SfLegacyDialogController(
 
         val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
         val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
-            val skrevetAv = when (melding.fra.identType) {
-                MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(melding.fra.ident)
-                    ?.let { "${it.navn} (${it.ident})" }
-                    ?: "(${melding.fra.ident})"
-
-                MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
-            }
+            val skrevetAv = getIdent(melding.fra.ident, melding.fra.identType)
             val status = when {
                 melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
                 melding.lestDato != null -> Status.LEST_AV_BRUKER
@@ -197,6 +191,14 @@ class SfLegacyDialogController(
         }
         return TraadDTO(
             traadId = henvendelse.kjedeId,
+            fnr = henvendelse.fnr,
+            opprettetDato = henvendelse.opprettetDato,
+            kontorsperre = henvendelse.kontorsperre,
+            feilsendt = henvendelse.feilsendt,
+            avsluttetDato = henvendelse.avsluttetDato,
+            sistEndretAv = henvendelse.sistEndretAv,
+            sladding = henvendelse.sladding,
+            lukketAv = henvendelse.lukketAv?.let { getIdent(it.ident, it.identType) },
             temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe),
             traadType = TraadType.valueOf(henvendelse.henvendelseType.value),
             meldinger = meldinger,
@@ -206,6 +208,14 @@ class SfLegacyDialogController(
 
     private fun List<MarkeringDTO>?.getForType(type: MarkeringDTO.Markeringstype): MarkeringDTO? {
         return this?.find { it.markeringstype == type }
+    }
+
+    private fun DialogMappingContext.getIdent(ident: String?, identType: MeldingFraDTO.IdentType) = when (identType) {
+        MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(ident)
+            ?.let { "${it.navn} (${it.ident})" }
+            ?: "($ident)"
+
+        MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
     }
 
     private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) = DialogApi.Journalpost(
@@ -221,6 +231,8 @@ class SfLegacyDialogController(
                 )
             }
             ?: DialogApi.Veileder.UKJENT,
+        journalforendeEnhet = journalpost.journalforendeEnhet,
+        journalfortFagsaksystem = journalpost.fagsaksystem?.value
     )
 
     private fun hentFritekstFraMelding(
