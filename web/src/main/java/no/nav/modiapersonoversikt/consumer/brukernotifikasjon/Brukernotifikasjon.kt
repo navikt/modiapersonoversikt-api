@@ -64,6 +64,7 @@ object Brukernotifikasjon {
 
     interface Client {
         fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
+        fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Event>
     }
 
     object Mapper {
