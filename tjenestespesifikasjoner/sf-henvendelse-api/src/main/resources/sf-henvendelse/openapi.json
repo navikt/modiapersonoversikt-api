@@ -7,10 +7,7 @@
   "servers": [
     { "url": "https://sf-henvendelse.dev.intern.nav.no/api" },
     { "url": "https://sf-henvendelse.intern.nav.no/api" },
-    { "url": "https://navdialog--uat.my.salesforce.com/services/apexrest" },
-    { "url": "https://sf-henvendelse-api-proxy.intern.dev.nav.no/api" },
-    { "url": "https://sf-henvendelse-api-proxy.intern.nav.no/api" },
-    { "url": "http://sf-henvendelse-api-proxy.teamnks.svc.nais.local/api" }
+    { "url": "https://navdialog--uat.my.salesforce.com/services/apexrest" }
   ],
   "paths": {
     "/henvendelse/kodeverk/temagrupper": {
@@ -552,10 +549,12 @@
               "BISYS",
               "BA",
               "EF",
+              "EY",
               "KONT",
               "SUPSTONAD",
               "OMSORGSPENGER",
-              "HJELPEMIDLER"
+              "HJELPEMIDLER",
+              "NEESSI"
             ],
             "description": "Fagsystemet som saken behandles i, required hvis saksId er definert",
             "example": "AO01"
@@ -617,10 +616,12 @@
               "BISYS",
               "BA",
               "EF",
+              "EY",
               "KONT",
               "SUPSTONAD",
               "OMSORGSPENGER",
-              "HJELPEMIDLER"
+              "HJELPEMIDLER",
+              "NEESSI"
             ],
             "description": "Fagsystemet som saken behandles i.",
             "example": "AO01"
@@ -738,6 +739,11 @@
             "description": "Definerer om henvendelsen er markert som kontorsperret. Markeringsinformasjon finnes i listen av markeringer",
             "example": false
           },
+          "sistEndretAv": {
+            "type": "string",
+            "description": "Identen til den siste som gjorde endring på tråden.",
+            "example": "Z994035"
+          },
           "sladding": {
             "type": "boolean",
             "description": "Definerer om henvendelsen skal vurderes for sladding. Dette sender henvendelsen til en sladdekø",
@@ -777,6 +783,9 @@
             "items": {
               "$ref": "#/components/schemas/Markering"
             }
+          },
+          "lukketAv": {
+            "$ref": "#/components/schemas/MeldingFra"
           }
         },
         "required": [

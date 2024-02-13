@@ -37,6 +37,8 @@ interface DialogApi {
         val journalfortTema: String,
         val journalfortTemanavn: String,
         val journalfortSaksid: String?,
+        val journalforendeEnhet: String?,
+        val journalfortFagsaksystem: String?,
     )
 
     data class Veileder(
@@ -51,8 +53,16 @@ interface DialogApi {
 
 data class TraadDTO(
     val traadId: String,
+    val fnr: String,
     val traadType: TraadType,
     val temagruppe: String,
+    val opprettetDato: OffsetDateTime?,
+    val kontorsperre: Boolean,
+    val feilsendt: Boolean,
+    val avsluttetDato: OffsetDateTime?,
+    val sistEndretAv: String?,
+    val sladding: Boolean?,
+    val lukketAv: String?,
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogApi.Journalpost>,
 )
@@ -73,6 +83,7 @@ data class MeldingDTO(
     val sendtTilSladding: Boolean,
     val markertSomFeilsendtAv: Veileder?,
 )
+
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?)
 
 abstract class OpprettHenvendelse {

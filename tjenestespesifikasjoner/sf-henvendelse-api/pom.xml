@@ -40,6 +40,9 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
+                <configuration>
+                    <typeMappings>java.time.OffsetDateTime=java.time.OffsetDateTime</typeMappings>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default</id>
@@ -47,7 +50,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/sf-henvendelse/openapi-fixed.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/sf-henvendelse/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
                             <packageName>no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated</packageName>
@@ -73,7 +76,6 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                                 <sourceDir>${project.build.directory}/generated-sources/openapi/src/main/kotlin</sourceDir>
                             </sourceDirs>
                         </configuration>
