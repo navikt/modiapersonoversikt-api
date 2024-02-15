@@ -29,7 +29,6 @@ open class BrukernotifikasjonConfig {
                     val oboToken = oboTokenProvider.exchangeOnBehalfOfToken(tmsEventApiApi, azureAdToken)
                     mapOf("Authorization" to "Bearer $oboToken")
                 }
-            ),
-            unleashService
+            )
         )
 }

@@ -37,7 +37,7 @@ class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInte
         return OkHttpUtils.objectMapper.readValue(bodyContent)
     }
 
-    override fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Brukernotifikasjon.Event> {
+    override fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Brukernotifikasjon.EventNy> {
         val response = httpClient
             .newCall(
                 Request
