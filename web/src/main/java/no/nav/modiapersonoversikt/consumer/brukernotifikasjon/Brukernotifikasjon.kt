@@ -63,7 +63,7 @@ object Brukernotifikasjon {
         val varselId: String,
         val aktiv: Boolean,
         val produsent: Produsent,
-        val sensitivitet: Sensitivitet,
+        val sensitivitet: String,
         val innhold: Innhold,
         val eksternVarsling: EksternVarslingInfoV2? = null,
         val opprettet: ZonedDateTime,
@@ -93,11 +93,6 @@ object Brukernotifikasjon {
 
     enum class Type {
         OPPGAVE, INNBOKS, BESKJED
-    }
-
-    enum class Sensitivitet {
-        substantial,
-        high
     }
 
     interface Client {
