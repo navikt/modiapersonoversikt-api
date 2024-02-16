@@ -32,11 +32,11 @@ object Brukernotifikasjon {
 
     data class HistorikkEntry(
         val melding: String,
-        val status: String, // en av følgende: bestilt, feilet, info, sendt, ferdigstilt
+        val status: String,
         val distribusjonsId: Long? = null,
         val kanal: String? = null,
         val renotifikasjon: Boolean? = null,
-        val tidspunkt: ZonedDateTime
+        val tidspunkt: ZonedDateTime,
     )
 
     data class VarslingsTidspunkt(
@@ -61,7 +61,7 @@ object Brukernotifikasjon {
     data class EventV2(
         val type: String,
         val varselId: String,
-        val aktive: Boolean,
+        val aktiv: Boolean,
         val produsent: Produsent,
         val sensitivitet: String,
         val innhold: Innhold,
@@ -75,12 +75,12 @@ object Brukernotifikasjon {
 
     data class Produsent(
         val namespace: String,
-        val appnavn: String
+        val appnavn: String,
     )
 
     data class Innhold(
         val tekst: String,
-        val link: String
+        val link: String? = null,
     )
 
     data class EksternVarslingInfoV2(
@@ -88,7 +88,7 @@ object Brukernotifikasjon {
         val renotifikasjonSendt: Boolean,
         val kanaler: List<String>,
         val historikk: List<HistorikkEntry>,
-        val sistOppdatert: ZonedDateTime
+        val sistOppdatert: ZonedDateTime,
     )
 
     enum class Type {
@@ -196,7 +196,7 @@ object Brukernotifikasjon {
             return EventV2(
                 type = event.type,
                 varselId = event.varselId,
-                aktive = event.aktive,
+                aktiv = event.aktiv,
                 produsent = event.produsent,
                 sensitivitet = event.sensitivitet,
                 innhold = event.innhold,

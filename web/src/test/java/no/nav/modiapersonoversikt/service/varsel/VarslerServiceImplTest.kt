@@ -108,7 +108,7 @@ class VarslerServiceImplTest {
     private val eventV2 = Brukernotifikasjon.EventV2(
         type = "beskjed",
         varselId = "123",
-        aktive = true,
+        aktiv = true,
         opprettet = ZonedDateTime.now(clock),
         produsent = Brukernotifikasjon.Produsent("", "srvappname"),
         innhold = Brukernotifikasjon.Innhold("text", "link"),
