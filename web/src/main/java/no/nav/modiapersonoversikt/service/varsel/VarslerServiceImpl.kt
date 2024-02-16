@@ -39,7 +39,7 @@ open class VarslerServiceImpl(
             makeThreadSwappable {
                 runCatching {
                     if (unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey)) {
-                        brukernotifikasjonService.hentAlleBrukernotifikasjonerNy(fnr)
+                        brukernotifikasjonService.hentAlleBrukernotifikasjonerV2(fnr)
                     } else {
                         brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr)
                     }

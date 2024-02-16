@@ -213,7 +213,7 @@ object Brukernotifikasjon {
 
     interface Service {
         fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Event>
-        fun hentAlleBrukernotifikasjonerNy(fnr: Fnr): List<EventV2>
+        fun hentAlleBrukernotifikasjonerV2(fnr: Fnr): List<EventV2>
         fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
     }
 }

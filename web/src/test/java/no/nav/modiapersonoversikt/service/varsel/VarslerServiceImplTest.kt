@@ -72,17 +72,17 @@ class VarslerServiceImplTest {
     }
 
     @Test
-    internal fun `skal hente varsler fra brukervarsel og ny brukernotifikasjon`() {
+    internal fun `skal hente varsler fra brukervarsel og v2 brukernotifikasjon`() {
         every { unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey) } returns true
         every { brukervarselV1.hentVarselForBruker(any()) } returns WSHentVarselForBrukerResponse().withBrukervarsel(
             WSBrukervarsel().withVarselbestillingListe(
                 WSVarselbestilling(),
             )
         )
-        every { brukernotifikasjonService.hentAlleBrukernotifikasjonerNy(any()) } returns listOf(
-            eventNy.copy(varselId = "1"),
-            eventNy.copy(varselId = "2"),
-            eventNy.copy(varselId = "3"),
+        every { brukernotifikasjonService.hentAlleBrukernotifikasjonerV2(any()) } returns listOf(
+            eventV2.copy(varselId = "1"),
+            eventV2.copy(varselId = "2"),
+            eventV2.copy(varselId = "3"),
         )
 
         val varsler = varselService.hentAlleVarsler(Fnr("12345678910"))
@@ -105,7 +105,7 @@ class VarslerServiceImplTest {
         eksternVarslingKanaler = emptyList()
     )
 
-    private val eventNy = Brukernotifikasjon.EventV2(
+    private val eventV2 = Brukernotifikasjon.EventV2(
         type = "beskjed",
         varselId = "123",
         aktive = true,
