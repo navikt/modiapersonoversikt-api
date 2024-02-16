@@ -2,13 +2,11 @@ package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon.Type
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.makeThreadSwappable
 import no.nav.personoversikt.common.utils.ConcurrencyUtils.runInParallel
 
 class BrukernotifikasjonService(
     private val client: Brukernotifikasjon.Client,
-    private val unleashService: UnleashService
 ) : Brukernotifikasjon.Service {
     override fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Brukernotifikasjon.Event> {
         return listOf(
@@ -19,6 +17,14 @@ class BrukernotifikasjonService(
             .map { makeThreadSwappable(it) }
             .runInParallel()
             .flatten()
+    }
+
+    override fun hentAlleBrukernotifikasjonerV2(fnr: Fnr): List<Brukernotifikasjon.EventV2> {
+        return client.hentAlleBrukernotifikasjoner(fnr)
+            .filter { producerDenyList.contains(it.produsent.appnavn).not() }
+            .map {
+                Brukernotifikasjon.Mapper.byggVarslingsTidspunktV2(it)
+            }
     }
 
     override fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Brukernotifikasjon.Event> {

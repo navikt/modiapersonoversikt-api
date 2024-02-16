@@ -36,4 +36,21 @@ class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInte
 
         return OkHttpUtils.objectMapper.readValue(bodyContent)
     }
+
+    override fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Brukernotifikasjon.EventV2> {
+        val response = httpClient
+            .newCall(
+                Request
+                    .Builder()
+                    .get()
+                    .url("$baseUrl/varsel/alle")
+                    .header("fodselsnummer", fnr.get())
+                    .build()
+            )
+            .execute()
+
+        val bodyContent = checkNotNull(response.body()?.string()) { "No Content" }
+
+        return OkHttpUtils.objectMapper.readValue(bodyContent)
+    }
 }

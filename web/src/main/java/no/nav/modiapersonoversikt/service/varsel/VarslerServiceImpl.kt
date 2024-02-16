@@ -2,6 +2,8 @@ package no.nav.modiapersonoversikt.service.varsel
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.makeThreadSwappable
 import no.nav.personoversikt.common.utils.ConcurrencyUtils.inParallel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
@@ -16,7 +18,8 @@ import org.springframework.cache.annotation.Cacheable
 @CacheConfig(cacheNames = ["varslingCache"], keyGenerator = "userkeygenerator")
 open class VarslerServiceImpl(
     private val brukervarselV1: BrukervarselV1,
-    private val brukernotifikasjonService: Brukernotifikasjon.Service
+    private val brukernotifikasjonService: Brukernotifikasjon.Service,
+    private val unleashService: UnleashService
 ) : VarslerService {
     private val log = LoggerFactory.getLogger("VarslerService")
 
@@ -31,9 +34,17 @@ open class VarslerServiceImpl(
 
     @Cacheable
     override fun hentAlleVarsler(fnr: Fnr): VarslerService.Result {
-        val (varsel: Result<List<VarslerService.Varsel>>, notifikasjoner: Result<List<Brukernotifikasjon.Event>>) = inParallel(
+        val (varsel, notifikasjoner) = inParallel(
             makeThreadSwappable { hentBrukervarsel(fnr) },
-            makeThreadSwappable { runCatching { brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr) } }
+            makeThreadSwappable {
+                runCatching {
+                    if (unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey)) {
+                        brukernotifikasjonService.hentAlleBrukernotifikasjonerV2(fnr)
+                    } else {
+                        brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr)
+                    }
+                }
+            }
         )
 
         val feil = listOfNotNull(
