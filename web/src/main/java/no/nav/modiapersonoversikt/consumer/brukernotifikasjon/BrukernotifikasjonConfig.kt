@@ -16,9 +16,6 @@ open class BrukernotifikasjonConfig {
     private val tmsEventApiUrl: String = getRequiredProperty("TMS_EVENT_API_URL")
     private val tmsEventApiApi: DownstreamApi = DownstreamApi.parse(getRequiredProperty("TMS_EVENT_API_SCOPE"))
 
-    @Autowired
-    private lateinit var unleashService: UnleashService
-
     @Bean
     open fun brukernotifikasjonService(oboTokenProvider: OnBehalfOfTokenClient): Brukernotifikasjon.Service =
         BrukernotifikasjonService(
