@@ -19,11 +19,11 @@ class BrukernotifikasjonService(
             .flatten()
     }
 
-    override fun hentAlleBrukernotifikasjonerV2(fnr: Fnr): List<Brukernotifikasjon.EventV2> {
+    override fun hentAlleBrukernotifikasjonerV2(fnr: Fnr): List<Brukernotifikasjon.Event> {
         return client.hentAlleBrukernotifikasjoner(fnr)
             .filter { producerDenyList.contains(it.produsent.appnavn).not() }
             .map {
-                Brukernotifikasjon.Mapper.byggVarslingsTidspunktV2(it)
+                Brukernotifikasjon.Mapper.byggVarslingsTidspunktV2(fnr.get(), it)
             }
     }
 
