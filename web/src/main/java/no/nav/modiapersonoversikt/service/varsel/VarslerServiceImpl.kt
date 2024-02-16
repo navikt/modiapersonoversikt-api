@@ -36,6 +36,7 @@ open class VarslerServiceImpl(
     @Cacheable
     override fun hentAlleVarsler(fnr: Fnr): VarslerService.Result {
         val isV2Enabled = unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey)
+
         val (varsel, notifikasjoner) = inParallel(
             makeThreadSwappable { hentBrukervarsel(fnr) },
             makeThreadSwappable {
