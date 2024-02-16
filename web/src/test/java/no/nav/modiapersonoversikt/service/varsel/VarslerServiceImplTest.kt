@@ -80,9 +80,9 @@ class VarslerServiceImplTest {
             )
         )
         every { brukernotifikasjonService.hentAlleBrukernotifikasjonerV2(any()) } returns listOf(
-            eventV2.copy(varselId = "1"),
-            eventV2.copy(varselId = "2"),
-            eventV2.copy(varselId = "3"),
+            event.copy(eventId = "1"),
+            event.copy(eventId = "2"),
+            event.copy(eventId = "3"),
         )
 
         val varsler = varselService.hentAlleVarsler(Fnr("12345678910"))
@@ -103,18 +103,5 @@ class VarslerServiceImplTest {
         aktiv = true,
         eksternVarslingSendt = false,
         eksternVarslingKanaler = emptyList()
-    )
-
-    private val eventV2 = Brukernotifikasjon.EventV2(
-        type = "beskjed",
-        varselId = "123",
-        aktiv = true,
-        opprettet = ZonedDateTime.now(clock),
-        produsent = Brukernotifikasjon.Produsent("", "srvappname"),
-        innhold = Brukernotifikasjon.Innhold("text", "link"),
-        aktivFremTil = ZonedDateTime.now(clock),
-        inaktivert = ZonedDateTime.now(clock),
-        sensitivitet = "substantial",
-        inaktivertAv = "http://dummy.io/",
     )
 }

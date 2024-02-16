@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 object Brukernotifikasjon {
     data class Event(
         val fodselsnummer: String,
-        val grupperingsId: String,
+        val grupperingsId: String? = null,
         val eventId: String,
         val forstBehandlet: ZonedDateTime,
         val produsent: String,
@@ -173,46 +173,61 @@ object Brukernotifikasjon {
             )
         }
 
-        fun byggVarslingsTidspunktV2(event: EventV2): EventV2 {
-            val eksternVarsling = event.eksternVarsling ?: return event
-
-            val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)
-            val feilteVarsliner = finnFeilteVarslinger(varslinger)
-            val feilteRevarslinger = finnFeilteVarslinger(revarslinger)
-
-            val varslingsTidspunkt = VarslingsTidspunkt(
-                sendt = eksternVarsling.sendt,
-                tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
-                renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
-                renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
-                sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
-                renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
-                feilteVarsliner = feilteVarsliner,
-                harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
-                feilteRevarslinger = feilteRevarslinger,
-                harFeilteRevarslinger = feilteRevarslinger.isNotEmpty()
+        fun byggVarslingsTidspunktV2(fnr: String, eventV2: EventV2): Event {
+            val eksternVarsling = eventV2.eksternVarsling
+            val event = Event(
+                fodselsnummer = fnr,
+                eventId = eventV2.varselId,
+                forstBehandlet = eventV2.opprettet,
+                produsent = eventV2.produsent.appnavn,
+                sikkerhetsnivaa = toSikkerhetsnivaa(eventV2.sensitivitet),
+                sistOppdatert = eventV2.opprettet,
+                tekst = eventV2.innhold.tekst,
+                link = eventV2.innhold.link ?: "",
+                aktiv = eventV2.aktiv,
+                eksternVarslingSendt = eventV2.eksternVarsling?.sendt ?: false,
+                eksternVarslingKanaler = eventV2.eksternVarsling?.kanaler ?: listOf()
             )
 
-            return EventV2(
-                type = event.type,
-                varselId = event.varselId,
-                aktiv = event.aktiv,
-                produsent = event.produsent,
-                sensitivitet = event.sensitivitet,
-                innhold = event.innhold,
-                eksternVarsling = event.eksternVarsling,
-                opprettet = event.opprettet,
-                aktivFremTil = event.aktivFremTil,
-                inaktivert = event.inaktivert,
-                inaktivertAv = event.inaktivertAv,
-                varslingsTidspunkt = varslingsTidspunkt
-            )
+            if (eksternVarsling != null) {
+                val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)
+                val feilteVarsliner = finnFeilteVarslinger(varslinger)
+                val feilteRevarslinger = finnFeilteVarslinger(revarslinger)
+
+                val varslingsTidspunkt = VarslingsTidspunkt(
+                    sendt = eksternVarsling.sendt,
+                    tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
+                    renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
+                    renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
+                    sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
+                    renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
+                    feilteVarsliner = feilteVarsliner,
+                    harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
+                    feilteRevarslinger = feilteRevarslinger,
+                    harFeilteRevarslinger = feilteRevarslinger.isNotEmpty()
+                )
+
+                return event.copy(
+                    sistOppdatert = eksternVarsling.sistOppdatert,
+                    varslingsTidspunkt = varslingsTidspunkt
+                )
+            }
+
+
+            return event
         }
+
+        fun toSikkerhetsnivaa(sensitivitet: String): Int =
+            when (sensitivitet) {
+                "substantial" -> 3
+                "high" -> 4
+                else -> throw IllegalArgumentException("Ugyldig sikkerhetsnivaa")
+            }
     }
 
     interface Service {
         fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Event>
-        fun hentAlleBrukernotifikasjonerV2(fnr: Fnr): List<EventV2>
+        fun hentAlleBrukernotifikasjonerV2(fnr: Fnr): List<Event>
         fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
     }
 }
