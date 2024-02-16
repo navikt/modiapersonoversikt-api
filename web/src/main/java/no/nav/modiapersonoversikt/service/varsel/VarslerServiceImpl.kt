@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.makeThreadSwappable
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.utils.ConcurrencyUtils.inParallel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSPerson
@@ -34,11 +35,13 @@ open class VarslerServiceImpl(
 
     @Cacheable
     override fun hentAlleVarsler(fnr: Fnr): VarslerService.Result {
+        val isV2Enabled = unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey)
+
         val (varsel, notifikasjoner) = inParallel(
             makeThreadSwappable { hentBrukervarsel(fnr) },
             makeThreadSwappable {
                 runCatching {
-                    if (unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey)) {
+                    if (isV2Enabled) {
                         brukernotifikasjonService.hentAlleBrukernotifikasjonerV2(fnr)
                     } else {
                         brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr)
@@ -46,6 +49,13 @@ open class VarslerServiceImpl(
                 }
             }
         )
+
+        if (varsel.exceptionOrNull() != null) {
+            TjenestekallLogg.error("Feilet ved uthentig av varsler", fields = mapOf(), throwable = varsel.exceptionOrNull())
+        }
+        if (notifikasjoner.exceptionOrNull() != null) {
+            TjenestekallLogg.error("Feilet ved uthentig av notifikasjoner", fields = mapOf(), throwable = notifikasjoner.exceptionOrNull())
+        }
 
         val feil = listOfNotNull(
             varsel.exceptionOrNull()?.let { "Feil ved uthenting av varsler" },
