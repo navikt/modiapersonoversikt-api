@@ -213,7 +213,6 @@ object Brukernotifikasjon {
                 )
             }
 
-
             return event
         }
 
