@@ -58,7 +58,7 @@ object Brukernotifikasjon {
         val kanal: String?
     )
 
-    data class EventNy(
+    data class EventV2(
         val type: String,
         val varselId: String,
         val aktive: Boolean,
@@ -98,7 +98,7 @@ object Brukernotifikasjon {
 
     interface Client {
         fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
-        fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<EventNy>
+        fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<EventV2>
     }
 
     object Mapper {
@@ -174,7 +174,7 @@ object Brukernotifikasjon {
             )
         }
 
-        fun byggVarslingsTidspunktNy(event: EventNy): EventNy {
+        fun byggVarslingsTidspunktNy(event: EventV2): EventV2 {
             val eksternVarsling = event.eksternVarsling ?: return event
 
             val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)
@@ -194,7 +194,7 @@ object Brukernotifikasjon {
                 harFeilteRevarslinger = feilteRevarslinger.isNotEmpty()
             )
 
-            return EventNy(
+            return EventV2(
                 type = event.type,
                 varselId = event.varselId,
                 aktive = event.aktive,
@@ -213,7 +213,7 @@ object Brukernotifikasjon {
 
     interface Service {
         fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Event>
-        fun hentAlleBrukernotifikasjonerNy(fnr: Fnr): List<EventNy>
+        fun hentAlleBrukernotifikasjonerNy(fnr: Fnr): List<EventV2>
         fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
     }
 }

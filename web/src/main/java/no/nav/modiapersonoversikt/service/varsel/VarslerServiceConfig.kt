@@ -14,6 +14,7 @@ open class VarslerServiceConfig {
 
     @Autowired
     private lateinit var unleashService: UnleashService
+
     @Bean
     open fun varslerService(
         brukervarselV1: BrukervarselV1,

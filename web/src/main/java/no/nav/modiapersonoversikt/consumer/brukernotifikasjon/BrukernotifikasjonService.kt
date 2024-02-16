@@ -19,7 +19,7 @@ class BrukernotifikasjonService(
             .flatten()
     }
 
-    override fun hentAlleBrukernotifikasjonerNy(fnr: Fnr): List<Brukernotifikasjon.EventNy> {
+    override fun hentAlleBrukernotifikasjonerNy(fnr: Fnr): List<Brukernotifikasjon.EventV2> {
         return client.hentAlleBrukernotifikasjoner(fnr)
             .filter { producerDenyList.contains(it.produsent.appnavn).not() }
             .map {

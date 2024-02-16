@@ -105,7 +105,7 @@ class VarslerServiceImplTest {
         eksternVarslingKanaler = emptyList()
     )
 
-    private val eventNy = Brukernotifikasjon.EventNy(
+    private val eventNy = Brukernotifikasjon.EventV2(
         type = "beskjed",
         varselId = "123",
         aktive = true,
