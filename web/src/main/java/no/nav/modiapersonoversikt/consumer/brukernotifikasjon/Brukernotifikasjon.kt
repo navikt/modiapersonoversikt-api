@@ -65,11 +65,11 @@ object Brukernotifikasjon {
         val produsent: Produsent,
         val sensitivitet: String,
         val innhold: Innhold,
-        val eksternVarsling: EksternVarsling? = null,
+        val eksternVarsling: EksternVarslingInfoV2? = null,
         val opprettet: ZonedDateTime,
-        val aktivFremTil: ZonedDateTime,
-        val inaktivert: ZonedDateTime,
-        val inaktivertAv: String,
+        val aktivFremTil: ZonedDateTime? = null,
+        val inaktivert: ZonedDateTime? = null,
+        val inaktivertAv: String? = null,
         val varslingsTidspunkt: VarslingsTidspunkt? = null,
     ) : VarslerService.UnifiedVarsel
 
@@ -83,9 +83,8 @@ object Brukernotifikasjon {
         val link: String
     )
 
-    data class EksternVarsling(
+    data class EksternVarslingInfoV2(
         val sendt: Boolean,
-        val status: String,
         val renotifikasjonSendt: Boolean,
         val kanaler: List<String>,
         val historikk: List<HistorikkEntry>,
