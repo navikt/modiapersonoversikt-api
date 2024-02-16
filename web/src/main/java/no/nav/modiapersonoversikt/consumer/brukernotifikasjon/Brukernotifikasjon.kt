@@ -174,7 +174,7 @@ object Brukernotifikasjon {
             )
         }
 
-        fun byggVarslingsTidspunktNy(event: EventV2): EventV2 {
+        fun byggVarslingsTidspunktV2(event: EventV2): EventV2 {
             val eksternVarsling = event.eksternVarsling ?: return event
 
             val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)

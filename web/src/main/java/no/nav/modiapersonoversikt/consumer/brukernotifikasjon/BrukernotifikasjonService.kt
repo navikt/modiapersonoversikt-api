@@ -23,7 +23,7 @@ class BrukernotifikasjonService(
         return client.hentAlleBrukernotifikasjoner(fnr)
             .filter { producerDenyList.contains(it.produsent.appnavn).not() }
             .map {
-                Brukernotifikasjon.Mapper.byggVarslingsTidspunktNy(it)
+                Brukernotifikasjon.Mapper.byggVarslingsTidspunktV2(it)
             }
     }
 
