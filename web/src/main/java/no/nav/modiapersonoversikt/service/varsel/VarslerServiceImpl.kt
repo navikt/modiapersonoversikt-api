@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.makeThreadSwappable
-import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.utils.ConcurrencyUtils.inParallel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSPerson
@@ -49,13 +48,6 @@ open class VarslerServiceImpl(
                 }
             }
         )
-
-        if (varsel.exceptionOrNull() != null) {
-            TjenestekallLogg.error("Feilet ved uthentig av varsler", fields = mapOf(), throwable = varsel.exceptionOrNull())
-        }
-        if (notifikasjoner.exceptionOrNull() != null) {
-            TjenestekallLogg.error("Feilet ved uthentig av notifikasjoner", fields = mapOf(), throwable = notifikasjoner.exceptionOrNull())
-        }
 
         val feil = listOfNotNull(
             varsel.exceptionOrNull()?.let { "Feil ved uthenting av varsler" },
