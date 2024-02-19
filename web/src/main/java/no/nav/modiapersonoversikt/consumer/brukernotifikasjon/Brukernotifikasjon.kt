@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 object Brukernotifikasjon {
     data class Event(
         val fodselsnummer: String,
-        val grupperingsId: String,
+        val grupperingsId: String? = null,
         val eventId: String,
         val forstBehandlet: ZonedDateTime,
         val produsent: String,
@@ -32,11 +32,11 @@ object Brukernotifikasjon {
 
     data class HistorikkEntry(
         val melding: String,
-        val status: String, // en av følgende: bestilt, feilet, info, sendt, ferdigstilt
+        val status: String,
         val distribusjonsId: Long? = null,
         val kanal: String? = null,
         val renotifikasjon: Boolean? = null,
-        val tidspunkt: ZonedDateTime
+        val tidspunkt: ZonedDateTime,
     )
 
     data class VarslingsTidspunkt(
@@ -58,12 +58,46 @@ object Brukernotifikasjon {
         val kanal: String?
     )
 
+    data class EventV2(
+        val type: String,
+        val varselId: String,
+        val aktiv: Boolean,
+        val produsent: Produsent,
+        val sensitivitet: String,
+        val innhold: Innhold,
+        val eksternVarsling: EksternVarslingInfoV2? = null,
+        val opprettet: ZonedDateTime,
+        val aktivFremTil: ZonedDateTime? = null,
+        val inaktivert: ZonedDateTime? = null,
+        val inaktivertAv: String? = null,
+        val varslingsTidspunkt: VarslingsTidspunkt? = null,
+    ) : VarslerService.UnifiedVarsel
+
+    data class Produsent(
+        val namespace: String,
+        val appnavn: String,
+    )
+
+    data class Innhold(
+        val tekst: String,
+        val link: String? = null,
+    )
+
+    data class EksternVarslingInfoV2(
+        val sendt: Boolean,
+        val renotifikasjonSendt: Boolean,
+        val kanaler: List<String>,
+        val historikk: List<HistorikkEntry>,
+        val sistOppdatert: ZonedDateTime,
+    )
+
     enum class Type {
         OPPGAVE, INNBOKS, BESKJED
     }
 
     interface Client {
         fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
+        fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<EventV2>
     }
 
     object Mapper {
@@ -138,10 +172,61 @@ object Brukernotifikasjon {
                 varslingsTidspunkt = varslingsTidspunkt,
             )
         }
+
+        fun byggVarslingsTidspunktV2(fnr: String, eventV2: EventV2): Event {
+            val eksternVarsling = eventV2.eksternVarsling
+            val event = Event(
+                fodselsnummer = fnr,
+                eventId = eventV2.varselId,
+                forstBehandlet = eventV2.opprettet,
+                produsent = eventV2.produsent.appnavn,
+                sikkerhetsnivaa = toSikkerhetsnivaa(eventV2.sensitivitet),
+                sistOppdatert = eventV2.opprettet,
+                tekst = eventV2.innhold.tekst,
+                link = eventV2.innhold.link ?: "",
+                aktiv = eventV2.aktiv,
+                eksternVarslingSendt = eventV2.eksternVarsling?.sendt ?: false,
+                eksternVarslingKanaler = eventV2.eksternVarsling?.kanaler ?: listOf()
+            )
+
+            if (eksternVarsling != null) {
+                val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)
+                val feilteVarsliner = finnFeilteVarslinger(varslinger)
+                val feilteRevarslinger = finnFeilteVarslinger(revarslinger)
+
+                val varslingsTidspunkt = VarslingsTidspunkt(
+                    sendt = eksternVarsling.sendt,
+                    tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
+                    renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
+                    renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
+                    sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
+                    renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
+                    feilteVarsliner = feilteVarsliner,
+                    harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
+                    feilteRevarslinger = feilteRevarslinger,
+                    harFeilteRevarslinger = feilteRevarslinger.isNotEmpty()
+                )
+
+                return event.copy(
+                    sistOppdatert = eksternVarsling.sistOppdatert,
+                    varslingsTidspunkt = varslingsTidspunkt
+                )
+            }
+
+            return event
+        }
+
+        fun toSikkerhetsnivaa(sensitivitet: String): Int =
+            when (sensitivitet) {
+                "substantial" -> 3
+                "high" -> 4
+                else -> throw IllegalArgumentException("Ugyldig sikkerhetsnivaa")
+            }
     }
 
     interface Service {
         fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Event>
+        fun hentAlleBrukernotifikasjonerV2(fnr: Fnr): List<Event>
         fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
     }
 }
