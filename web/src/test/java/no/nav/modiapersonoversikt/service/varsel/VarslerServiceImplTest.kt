@@ -4,8 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSBrukervarsel
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarselbestilling
@@ -24,13 +22,11 @@ class VarslerServiceImplTest {
     private val brukervarselV1 = mockk<BrukervarselV1>()
     private val brukernotifikasjonService = mockk<Brukernotifikasjon.Service>()
     private val soapfault = mockk<SOAPFault>()
-    private val unleashService = mockk<UnleashService>()
     private val varselService: VarslerService =
-        VarslerServiceImpl(brukervarselV1, brukernotifikasjonService, unleashService)
+        VarslerServiceImpl(brukervarselV1, brukernotifikasjonService)
 
     @Test
     internal fun `skal ikke tryne hele verden om det skjer soap faults`() {
-        every { unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey) } returns false
         every { soapfault.faultString } returns ""
         every { brukervarselV1.hentVarselForBruker(any()) } throws SOAPFaultException(soapfault)
         val varsler = varselService.hentLegacyVarsler(Fnr("12345678910"))
@@ -39,7 +35,6 @@ class VarslerServiceImplTest {
 
     @Test
     internal fun `skal rapportere om feil i system`() {
-        every { unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey) } returns false
         every { soapfault.faultString } returns ""
         every { brukervarselV1.hentVarselForBruker(any()) } throws SOAPFaultException(soapfault)
         every { brukernotifikasjonService.hentAlleBrukernotifikasjoner(any()) } throws IllegalStateException("Noe feil")
@@ -52,7 +47,6 @@ class VarslerServiceImplTest {
 
     @Test
     internal fun `skal hente varsler fra brukervarsel og brukernotifikasjon`() {
-        every { unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey) } returns false
         every { brukervarselV1.hentVarselForBruker(any()) } returns WSHentVarselForBrukerResponse().withBrukervarsel(
             WSBrukervarsel().withVarselbestillingListe(
                 WSVarselbestilling(),
@@ -68,25 +62,6 @@ class VarslerServiceImplTest {
 
         val varsler = varselService.hentAlleVarsler(Fnr("12345678910"))
         assertThat(varsler.varsler).hasSize(6)
-        assertThat(varsler.feil).isEmpty()
-    }
-
-    @Test
-    internal fun `skal hente varsler fra brukervarsel og v2 brukernotifikasjon`() {
-        every { unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey) } returns true
-        every { brukervarselV1.hentVarselForBruker(any()) } returns WSHentVarselForBrukerResponse().withBrukervarsel(
-            WSBrukervarsel().withVarselbestillingListe(
-                WSVarselbestilling(),
-            )
-        )
-        every { brukernotifikasjonService.hentAlleBrukernotifikasjonerV2(any()) } returns listOf(
-            event.copy(eventId = "1"),
-            event.copy(eventId = "2"),
-            event.copy(eventId = "3"),
-        )
-
-        val varsler = varselService.hentAlleVarsler(Fnr("12345678910"))
-        assertThat(varsler.varsler).hasSize(4)
         assertThat(varsler.feil).isEmpty()
     }
 
