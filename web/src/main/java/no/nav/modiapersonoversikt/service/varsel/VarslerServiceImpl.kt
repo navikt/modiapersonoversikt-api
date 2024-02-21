@@ -2,8 +2,6 @@ package no.nav.modiapersonoversikt.service.varsel
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.makeThreadSwappable
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.utils.ConcurrencyUtils.inParallel
@@ -20,7 +18,6 @@ import org.springframework.cache.annotation.Cacheable
 open class VarslerServiceImpl(
     private val brukervarselV1: BrukervarselV1,
     private val brukernotifikasjonService: Brukernotifikasjon.Service,
-    private val unleashService: UnleashService
 ) : VarslerService {
     private val log = LoggerFactory.getLogger("VarslerService")
 
@@ -35,17 +32,11 @@ open class VarslerServiceImpl(
 
     @Cacheable
     override fun hentAlleVarsler(fnr: Fnr): VarslerService.Result {
-        val isV2Enabled = unleashService.isEnabled(Feature.TMS_EVENT_API_UPDATE.propertyKey)
-
         val (varsel, notifikasjoner) = inParallel(
             makeThreadSwappable { hentBrukervarsel(fnr) },
             makeThreadSwappable {
                 runCatching {
-                    if (isV2Enabled) {
-                        brukernotifikasjonService.hentAlleBrukernotifikasjonerV2(fnr)
-                    } else {
-                        brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr)
-                    }
+                    brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr)
                 }
             }
         )
