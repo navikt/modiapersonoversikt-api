@@ -4,7 +4,7 @@ import no.nav.common.auth.context.UserRole;
 import no.nav.common.auth.oidc.filter.OidcAuthenticationFilter;
 import no.nav.common.auth.oidc.filter.OidcAuthenticator;
 import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
-import no.nav.common.log.LogFilter;
+import no.nav.common.rest.filter.LogRequestFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.personoversikt.common.science.scientist.ScientistFilter;
@@ -42,9 +42,9 @@ public class FilterRegistrationConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<LogFilter> logFilterRegistrationBean() {
-        FilterRegistrationBean<LogFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new LogFilter("modiapersonoversikt-api", isDevelopment().orElse(false)));
+    public FilterRegistrationBean<LogRequestFilter> logFilterRegistrationBean() {
+        FilterRegistrationBean<LogRequestFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new LogRequestFilter("modiapersonoversikt-api", isDevelopment().orElse(false)));
         registration.setOrder(2);
         registration.addUrlPatterns("/*");
         return registration;
