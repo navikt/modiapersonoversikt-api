@@ -255,7 +255,7 @@
         <dependency>
             <groupId>com.expediagroup</groupId>
             <artifactId>graphql-kotlin-client</artifactId>
-            <version>3.6.8</version>
+            <version>7.0.2</version>
         </dependency>
         <dependency>
             <groupId>io.getunleash</groupId>

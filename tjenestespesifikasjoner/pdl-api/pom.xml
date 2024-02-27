@@ -15,7 +15,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <graphql-kotlin.version>3.6.8</graphql-kotlin.version>
+        <graphql-kotlin.version>7.0.2</graphql-kotlin.version>
     </properties>
 
     <dependencies>
