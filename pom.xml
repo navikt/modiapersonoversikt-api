@@ -27,7 +27,7 @@
         <mockk.version>1.13.2</mockk.version>
 
         <common.version>2.2023.01.09_08.56-ae38750bc0d9</common.version>
-        <modia-common-utils.version>1.2022.12.13-14.31-5b35ebe08f61</modia-common-utils.version>
+        <modia-common-utils.version>1.2023.07.20-13.43-64707e48b53b</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2618.0448179</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
     </properties>
