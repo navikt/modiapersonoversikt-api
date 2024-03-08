@@ -13,7 +13,7 @@ import org.joda.time.LocalDate
 class SykepengerUttrekk constructor(private val sykepengerService: SykepengerServiceBi) {
 
     fun hent(fodselsnummer: String): Map<String, Any?> {
-        val sykepenger = sykepengerService.hentSykmeldingsperioder(SykepengerRequest(LocalDate.now().minusYears(2), fodselsnummer, LocalDate.now()))
+        val sykepenger = sykepengerService.hentSykmeldingsperioder(SykepengerRequest(LocalDate.now().minusYears(2).plusDays(2), fodselsnummer, LocalDate.now()))
 
         return mapOf(
             "sykepenger" to sykepenger?.sykmeldingsperioder?.let { hentSykemeldingsperioder(it) }
