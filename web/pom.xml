@@ -253,11 +253,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.expediagroup</groupId>
-            <artifactId>graphql-kotlin-client</artifactId>
-            <version>3.6.8</version>
-        </dependency>
-        <dependency>
             <groupId>io.getunleash</groupId>
             <artifactId>unleash-client-java</artifactId>
             <version>8.3.1</version>

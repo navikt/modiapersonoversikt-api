@@ -5,8 +5,8 @@ import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse.AdressebeskyttelseGradering.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import org.slf4j.Logger
@@ -70,7 +70,7 @@ class ArbeidsfordelingServiceImpl(
     }
 }
 
-private fun HentAdressebeskyttelse.Adressebeskyttelse.toNorgDiskresjonsKode(): NorgDomain.DiskresjonsKode {
+private fun Adressebeskyttelse.toNorgDiskresjonsKode(): NorgDomain.DiskresjonsKode {
     return when (this.gradering) {
         STRENGT_FORTROLIG, STRENGT_FORTROLIG_UTLAND -> NorgDomain.DiskresjonsKode.SPSF
         FORTROLIG -> NorgDomain.DiskresjonsKode.SPFO

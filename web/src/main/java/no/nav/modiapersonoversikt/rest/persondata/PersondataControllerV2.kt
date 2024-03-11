@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.FnrRequest
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentIdenter
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -32,7 +32,7 @@ class PersondataControllerV2(
     @PostMapping("/identer")
     fun hentIdenter(
         @RequestBody fnrRequest: FnrRequest,
-    ): HentIdenter.Identliste? {
+    ): Identliste? {
         return pdlOppslagService.hentIdenter(fnrRequest.fnr)
     }
 
