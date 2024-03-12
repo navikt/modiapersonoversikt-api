@@ -1,26 +1,32 @@
 package no.nav.modiapersonoversikt.service.pdl
 
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
+import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
+import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Criterion
+import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.SearchRule
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.PersonSearchHit
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.SokKriterieRule.*
 
 interface PdlOppslagService {
-    fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit>
+    fun sokPerson(kriterier: List<PdlKriterie>): List<PersonSearchHit>
 
     fun hentPersondata(fnr: String): HentPersondata.Result?
 
-    fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult>
+    fun hentTredjepartspersondata(fnrs: List<String>): List<HentPersonBolkResult>
 
     fun hentGeografiskTilknyttning(fnr: String): String?
 
-    fun hentIdenter(fnr: String): HentIdenter.Identliste?
+    fun hentIdenter(fnr: String): Identliste?
 
-    fun hentFolkeregisterIdenter(fnr: String): HentIdenter.Identliste?
+    fun hentFolkeregisterIdenter(fnr: String): Identliste?
 
     fun hentAktorId(fnr: String): String?
 
     fun hentFnr(aktorid: String): String?
 
-    fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse>
+    fun hentAdressebeskyttelse(fnr: String): List<Adressebeskyttelse>
 
     enum class SokKriterieRule {
         EQUALS,
@@ -48,22 +54,22 @@ interface PdlOppslagService {
     data class PdlKriterie(
         val felt: PdlFelt,
         val value: String?,
-        val boost: Float? = null,
+        val boost: Double? = null,
         val searchHistorical: PdlSokeOmfang = PdlSokeOmfang.HISTORISK_OG_GJELDENDE,
     ) {
         fun asCriterion() =
             if (value.isNullOrEmpty()) {
                 null
             } else {
-                SokPerson.Criterion(
+                Criterion(
                     fieldName = felt.feltnavn,
                     searchRule =
                         when (felt.rule) {
-                            EQUALS -> SokPerson.SearchRule(equals = this.value, boost = boost)
-                            CONTAINS -> SokPerson.SearchRule(contains = this.value, boost = boost)
-                            FUZZY_MATCH -> SokPerson.SearchRule(fuzzy = this.value, boost = boost)
-                            AFTER -> SokPerson.SearchRule(after = this.value, boost = boost)
-                            BEFORE -> SokPerson.SearchRule(before = this.value, boost = boost)
+                            EQUALS -> SearchRule(equals = this.value, boost = boost)
+                            CONTAINS -> SearchRule(contains = this.value, boost = boost)
+                            FUZZY_MATCH -> SearchRule(fuzzy = this.value, boost = boost)
+                            AFTER -> SearchRule(after = this.value, boost = boost)
+                            BEFORE -> SearchRule(before = this.value, boost = boost)
                         },
                     searchHistorical = searchHistorical.verdi,
                 )

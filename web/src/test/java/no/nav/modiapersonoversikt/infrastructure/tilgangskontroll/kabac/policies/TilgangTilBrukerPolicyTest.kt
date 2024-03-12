@@ -13,7 +13,8 @@ import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
@@ -181,8 +182,8 @@ internal class TilgangTilBrukerPolicyTest {
     private fun gittAtBrukerIkkeHarAdressebeskyttelse() {
         every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
             listOf(
-                HentAdressebeskyttelse.Adressebeskyttelse(
-                    HentAdressebeskyttelse.AdressebeskyttelseGradering.UGRADERT,
+                Adressebeskyttelse(
+                    AdressebeskyttelseGradering.UGRADERT,
                 ),
             )
     }
@@ -198,8 +199,8 @@ internal class TilgangTilBrukerPolicyTest {
     private fun gittAtBrukerHarKode6() {
         every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
             listOf(
-                HentAdressebeskyttelse.Adressebeskyttelse(
-                    HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                Adressebeskyttelse(
+                    AdressebeskyttelseGradering.STRENGT_FORTROLIG,
                 ),
             )
     }
@@ -207,8 +208,8 @@ internal class TilgangTilBrukerPolicyTest {
     private fun gittAtBrukerHarKode7() {
         every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
             listOf(
-                HentAdressebeskyttelse.Adressebeskyttelse(
-                    HentAdressebeskyttelse.AdressebeskyttelseGradering.FORTROLIG,
+                Adressebeskyttelse(
+                    AdressebeskyttelseGradering.FORTROLIG,
                 ),
             )
     }

@@ -3,7 +3,8 @@ package no.nav.modiapersonoversikt.rest.persondata
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -67,33 +68,33 @@ internal fun gittNavn(navn: String): Persondata.Navn {
 internal fun gittIdentifiserendeInformasjon(
     navn: String,
     kjoenn: String,
-): HentPersondata.IdentifiserendeInformasjon {
-    return HentPersondata.IdentifiserendeInformasjon(
+): IdentifiserendeInformasjon {
+    return IdentifiserendeInformasjon(
         navn = gittPersonnavn(navn),
         kjoenn = kjoenn,
-        foedselsdato = HentPersondata.Date(LocalDate.parse("2000-01-01")),
+        foedselsdato = LocalDate.parse("2000-01-01"),
         statsborgerskap = listOf(),
     )
 }
 
-internal fun gittPersonnavn(navn: String): HentPersondata.Personnavn {
+internal fun gittPersonnavn(navn: String): Personnavn {
     val persondataNavn = gittNavn(navn)
-    return HentPersondata.Personnavn(
+    return Personnavn(
         fornavn = persondataNavn.fornavn,
         mellomnavn = persondataNavn.mellomnavn,
         etternavn = persondataNavn.etternavn,
     )
 }
 
-internal fun gittHentPersondataNavn(navn: String): List<HentPersondata.Navn> {
+internal fun gittHentPersondataNavn(navn: String): List<Navn> {
     val persondataNavn = gittNavn(navn)
     val fregNavn =
-        HentPersondata.Navn(
+        Navn(
             fornavn = persondataNavn.fornavn,
             mellomnavn = persondataNavn.mellomnavn,
             etternavn = persondataNavn.etternavn,
             metadata =
-                HentPersondata.Metadata(
+                Metadata(
                     master = "Freg",
                     endringer = emptyList(),
                 ),
@@ -206,14 +207,12 @@ internal fun gittNavKontorEnhet(
 )
 
 internal fun gittEndring(
-    registrert: HentPersondata.DateTime =
-        HentPersondata.DateTime(
-            LocalDateTime.of(2020, 7, 1, 10, 0),
-        ),
+    registrert: LocalDateTime =
+        LocalDateTime.of(2020, 7, 1, 10, 0),
     registrertAv: String = "Folkeregisteret",
     systemkilde: String = "FREG",
     kilde: String = "Bruker",
-) = HentPersondata.Endring(
+) = Endring(
     registrert = registrert,
     registrertAv = registrertAv,
     systemkilde = systemkilde,
@@ -221,7 +220,7 @@ internal fun gittEndring(
 )
 
 internal val metadata =
-    HentPersondata.Metadata(
+    Metadata(
         endringer =
             listOf(
                 gittEndring(),
@@ -230,7 +229,7 @@ internal val metadata =
     )
 
 internal val adresse =
-    HentPersondata.Bostedsadresse(
+    Bostedsadresse(
         gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
         gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
         metadata = metadata,
@@ -259,11 +258,11 @@ internal val utenlandskBankkonto =
     )
 
 internal val kontaktinformasjonDodsbo =
-    HentPersondata.KontaktinformasjonForDoedsbo(
-        skifteform = HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG,
+    KontaktinformasjonForDoedsbo(
+        skifteform = KontaktinformasjonForDoedsboSkifteform.OFFENTLIG,
         attestutstedelsesdato = gittDato("2014-05-02"),
         personSomKontakt =
-            HentPersondata.KontaktinformasjonForDoedsboPersonSomKontakt(
+            KontaktinformasjonForDoedsboPersonSomKontakt(
                 identifikasjonsnummer = "11225666000",
                 foedselsdato = null,
                 personnavn = null,
@@ -272,7 +271,7 @@ internal val kontaktinformasjonDodsbo =
         organisasjonSomKontakt = null,
         metadata = metadata,
         adresse =
-            HentPersondata.KontaktinformasjonForDoedsboAdresse(
+            KontaktinformasjonForDoedsboAdresse(
                 adresselinje1 = "Gateveien",
                 adresselinje2 = null,
                 poststedsnavn = "Poststed",
@@ -296,21 +295,21 @@ internal val arbeidsrettetOppfolgingStatus =
     )
 
 internal val sivilstandPerson =
-    HentPersondata.Sivilstand(
-        type = HentPersondata.Sivilstandstype.GIFT,
+    Sivilstand(
+        type = Sivilstandstype.GIFT,
         gyldigFraOgMed = gittDato("2015-09-09"),
         relatertVedSivilstand = "11225678910",
     )
 
 internal val statsborger =
-    HentPersondata.Statsborgerskap(
+    Statsborgerskap(
         land = "NOR",
         gyldigFraOgMed = gittDato("2000-10-01"),
         gyldigTilOgMed = null,
     )
 
 internal val sikkerhetstiltakData =
-    HentPersondata.Sikkerhetstiltak(
+    Sikkerhetstiltak(
         tiltakstype = "TFUS",
         beskrivelse = "Telefonisk utestengelse",
         gyldigFraOgMed = gittDato("2019-01-01"),
@@ -318,79 +317,79 @@ internal val sikkerhetstiltakData =
     )
 
 internal val tilrettelagtKommunikasjonData =
-    HentPersondata.TilrettelagtKommunikasjon(
-        talespraaktolk = HentPersondata.Tolk(spraak = "NO"),
-        tegnspraaktolk = HentPersondata.Tolk(spraak = "NO"),
+    TilrettelagtKommunikasjon(
+        talespraaktolk = Tolk(spraak = "NO"),
+        tegnspraaktolk = Tolk(spraak = "NO"),
     )
 
 internal val fullmaktPerson =
-    HentPersondata.Fullmakt(
+    Fullmakt(
         motpartsPersonident = "55555666000",
-        motpartsRolle = HentPersondata.FullmaktsRolle.FULLMEKTIG,
+        motpartsRolle = FullmaktsRolle.FULLMEKTIG,
         omraader = emptyList(),
         gyldigFraOgMed = gittDato("2018-01-03"),
         gyldigTilOgMed = gittDato("2018-10-03"),
     )
 
 internal val vergemal =
-    HentPersondata.VergemaalEllerFremtidsfullmakt(
+    VergemaalEllerFremtidsfullmakt(
         type = "voksen",
         embete = "fylkesmannenIOsloOgViken",
         vergeEllerFullmektig =
-            HentPersondata.VergeEllerFullmektig(
+            VergeEllerFullmektig(
                 identifiserendeInformasjon = gittIdentifiserendeInformasjon("Person Vergemål", "K"),
                 motpartsPersonident = "55555111000",
                 omfang = null,
                 omfangetErInnenPersonligOmraade = false,
             ),
         folkeregistermetadata =
-            HentPersondata.Folkeregistermetadata(
+            Folkeregistermetadata(
                 gyldighetstidspunkt = gittDateTime("2018-02-02T00:00:00"),
                 opphoerstidspunkt = null,
             ),
     )
 
 internal val foreldreansvarData =
-    HentPersondata.Foreldreansvar(
+    Foreldreansvar(
         ansvar = "felles",
         ansvarlig = "55333111000",
         ansvarssubjekt = "98765432100",
-        metadata = HentPersondata.Metadata2(historisk = false),
+        metadata = Metadata2(historisk = false),
         ansvarligUtenIdentifikator = null,
     )
 
 internal val forelderBarnRelasjonData =
     listOf(
-        HentPersondata.ForelderBarnRelasjon(
+        ForelderBarnRelasjon(
             relatertPersonsIdent = "98765432100",
             relatertPersonUtenFolkeregisteridentifikator = null,
-            relatertPersonsRolle = HentPersondata.ForelderBarnRelasjonRolle.BARN,
+            relatertPersonsRolle = ForelderBarnRelasjonRolle.BARN,
         ),
-        HentPersondata.ForelderBarnRelasjon(
+        ForelderBarnRelasjon(
             relatertPersonsIdent = "11223344910",
             relatertPersonUtenFolkeregisteridentifikator = null,
-            relatertPersonsRolle = HentPersondata.ForelderBarnRelasjonRolle.BARN,
+            relatertPersonsRolle = ForelderBarnRelasjonRolle.BARN,
         ),
-        HentPersondata.ForelderBarnRelasjon(
+        ForelderBarnRelasjon(
             relatertPersonsIdent = null,
             relatertPersonUtenFolkeregisteridentifikator =
-                HentPersondata.RelatertBiPerson(
+                RelatertBiPerson(
                     navn =
-                        HentPersondata.Personnavn(
+                        Personnavn(
                             fornavn = "Tredjepart",
                             mellomnavn = "Relasjon",
                             etternavn = "Fra utlandet",
                         ),
-                    foedselsdato = HentPersondata.Date(LocalDate.parse("2000-01-01")),
+                    foedselsdato = LocalDate.parse("2000-01-01"),
                     statsborgerskap = null,
-                    kjoenn = HentPersondata.KjoennType.MANN,
+                    kjoenn = KjoennType.MANN,
                 ),
-            relatertPersonsRolle = HentPersondata.ForelderBarnRelasjonRolle.MEDMOR,
+            relatertPersonsRolle = ForelderBarnRelasjonRolle.MEDMOR,
         ),
     )
 
 internal fun gittVegadresse(
-    matrikkelId: HentPersondata.Long? = null,
+    matrikkelId: Long? = null,
     husbokstav: String? = null,
     husnummer: String? = "3",
     bruksenhetsnummer: String? = null,
@@ -399,7 +398,7 @@ internal fun gittVegadresse(
     bydelsnummer: String? = null,
     tilleggsnavn: String? = null,
     postnumme: String? = "1444",
-) = HentPersondata.Vegadresse(
+) = Vegadresse(
     matrikkelId = matrikkelId,
     husbokstav = husbokstav,
     husnummer = husnummer,
@@ -412,7 +411,7 @@ internal fun gittVegadresse(
 )
 
 internal val deltBostedData =
-    HentPersondata.DeltBosted(
+    DeltBosted(
         startdatoForKontrakt = gittDato("2019-09-09"),
         sluttdatoForKontrakt = null,
         coAdressenavn = null,
@@ -423,7 +422,7 @@ internal val deltBostedData =
     )
 
 internal val kontaktadresseData =
-    HentPersondata.Kontaktadresse(
+    Kontaktadresse(
         gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
         gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
         metadata = metadata,
@@ -436,7 +435,7 @@ internal val kontaktadresseData =
     )
 
 internal val oppholdsadresseData =
-    HentPersondata.Oppholdsadresse(
+    Oppholdsadresse(
         gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
         gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
         oppholdAnnetSted = "UTENRIKS",
@@ -448,7 +447,7 @@ internal val oppholdsadresseData =
     )
 
 internal val bostedadresseData =
-    HentPersondata.Bostedsadresse(
+    Bostedsadresse(
         gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
         gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
         metadata = metadata,
@@ -460,35 +459,35 @@ internal val bostedadresseData =
         angittFlyttedato = null,
     )
 
-internal fun gittDato(dato: String) = HentPersondata.Date(LocalDate.parse(dato))
+internal fun gittDato(dato: String) = LocalDate.parse(dato)
 
-internal fun gittDateTime(dato: String) = HentPersondata.DateTime(LocalDateTime.parse(dato))
+internal fun gittDateTime(dato: String) = LocalDateTime.parse(dato)
 
 internal fun ukjentBosted(bosted: String) =
     listOf(
         adresse.copy(
-            ukjentBosted = HentPersondata.UkjentBosted(bosted),
+            ukjentBosted = UkjentBosted(bosted),
         ),
     )
 
 internal val testPerson =
-    HentPersondata.Person(
+    Person(
         navn = gittHentPersondataNavn("Teste Ruud McTestesen"),
-        kjoenn = listOf(HentPersondata.Kjoenn(HentPersondata.KjoennType.MANN)),
-        foedsel = listOf(HentPersondata.Foedsel(gittDato("2000-01-02"))),
+        kjoenn = listOf(Kjoenn(KjoennType.MANN)),
+        foedsel = listOf(Foedsel(gittDato("2000-01-02"))),
         adressebeskyttelse =
             listOf(
-                HentPersondata.Adressebeskyttelse(HentPersondata.AdressebeskyttelseGradering.UGRADERT),
+                Adressebeskyttelse(AdressebeskyttelseGradering.UGRADERT),
             ),
         statsborgerskap = listOf(statsborger),
         doedsfall = emptyList(),
-        folkeregisterpersonstatus = listOf(HentPersondata.Folkeregisterpersonstatus("bosatt")),
+        folkeregisterpersonstatus = listOf(Folkeregisterpersonstatus("bosatt")),
         sivilstand = listOf(sivilstandPerson),
         sikkerhetstiltak = listOf(sikkerhetstiltakData),
         kontaktinformasjonForDoedsbo = listOf(kontaktinformasjonDodsbo),
         tilrettelagtKommunikasjon = listOf(tilrettelagtKommunikasjonData),
         fullmakt = listOf(fullmaktPerson),
-        telefonnummer = listOf(HentPersondata.Telefonnummer("47", "90909090", 1, metadata)),
+        telefonnummer = listOf(Telefonnummer("47", "90909090", 1, metadata)),
         vergemaalEllerFremtidsfullmakt = listOf(vergemal),
         foreldreansvar = listOf(foreldreansvarData),
         forelderBarnRelasjon = forelderBarnRelasjonData,

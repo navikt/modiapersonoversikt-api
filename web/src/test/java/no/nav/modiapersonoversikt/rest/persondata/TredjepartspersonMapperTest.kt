@@ -2,9 +2,8 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata.AdressebeskyttelseGradering
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata.Bostedsadresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering
+import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.*
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.BeforeEach
@@ -111,7 +110,7 @@ internal class TredjepartspersonMapperTest {
         navn: String = "Harry Tester Testesen",
         adressebeskyttelse: AdressebeskyttelseGradering = AdressebeskyttelseGradering.UGRADERT,
         bosted: List<Bostedsadresse> = ukjentBosted("Ingen ved hvor harry bor"),
-    ) = HentTredjepartspersondata.Person(
+    ) = Person(
         navn =
             listOf(
                 gittNavn(navn, "Freg"),
@@ -119,7 +118,7 @@ internal class TredjepartspersonMapperTest {
             ),
         adressebeskyttelse =
             listOf(
-                HentTredjepartspersondata.Adressebeskyttelse(adressebeskyttelse),
+                Adressebeskyttelse(adressebeskyttelse),
             ),
         bostedsadresse = bosted,
         kjoenn = emptyList(),
@@ -135,9 +134,9 @@ internal class TredjepartspersonMapperTest {
     private fun gittNavn(
         navn: String,
         master: String = "Freg",
-    ): HentTredjepartspersondata.Navn {
+    ): Navn {
         val split = navn.split(" ")
-        return HentTredjepartspersondata.Navn(
+        return Navn(
             fornavn = "$master __ ${split.first()}",
             mellomnavn =
                 if (split.size <= 2) {
@@ -146,7 +145,7 @@ internal class TredjepartspersonMapperTest {
                     split.subList(1, split.size - 1).joinToString(" ")
                 },
             etternavn = split.last(),
-            metadata = HentTredjepartspersondata.Metadata(master = master),
+            metadata = Metadata(master = master),
         )
     }
 
@@ -171,7 +170,7 @@ internal class TredjepartspersonMapperTest {
     ) = listOf(
         adresse.copy(
             vegadresse =
-                HentTredjepartspersondata.Vegadresse(
+                Vegadresse(
                     husnummer = husnummer,
                     husbokstav = husbokstav,
                     bruksenhetsnummer = bruksenhetsnummer,
@@ -192,7 +191,7 @@ internal class TredjepartspersonMapperTest {
     ) = listOf(
         adresse.copy(
             matrikkeladresse =
-                HentTredjepartspersondata.Matrikkeladresse(
+                Matrikkeladresse(
                     bruksenhetsnummer = bruksenhetsnummer,
                     tilleggsnavn = tilleggsnavn,
                     postnummer = postnummer,
@@ -204,7 +203,7 @@ internal class TredjepartspersonMapperTest {
     private fun ukjentBosted(bosted: String) =
         listOf(
             adresse.copy(
-                ukjentBosted = HentTredjepartspersondata.UkjentBosted(bosted),
+                ukjentBosted = UkjentBosted(bosted),
             ),
         )
 }

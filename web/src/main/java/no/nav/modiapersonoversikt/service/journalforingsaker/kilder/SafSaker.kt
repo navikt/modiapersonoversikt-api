@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.journalforingsaker.kilder
 
-import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
+import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Sakstype
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerKilde
 import no.nav.modiapersonoversikt.service.saf.SafService
@@ -22,15 +22,15 @@ class SafSaker(private val service: SafService) : SakerKilde {
                 ?.filterNotNull()
                 ?.map {
                     JournalforingSak().apply {
-                        opprettetDato = it.datoOpprettet?.value?.let { convertJavaDateTimeToJoda(it) }
+                        opprettetDato = it.datoOpprettet?.let { convertJavaDateTimeToJoda(it) }
                         saksId = it.arkivsaksnummer
                         fagsystemSaksId = it.fagsakId
                         temaKode = it.tema?.name ?: ""
                         fagsystemKode = it.fagsaksystem ?: ""
                         sakstype =
                             when (it.sakstype) {
-                                HentBrukersSaker.Sakstype.FAGSAK -> "MFS"
-                                HentBrukersSaker.Sakstype.GENERELL_SAK -> "GEN"
+                                Sakstype.FAGSAK -> "MFS"
+                                Sakstype.GENERELL_SAK -> "GEN"
                                 else -> throw IllegalStateException("Ukjent sakstype: ${it.sakstype}")
                             }
                     }

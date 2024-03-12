@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.journalforingsaker
 
-import com.expediagroup.graphql.types.GraphQLResponse
+import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import io.mockk.*
@@ -14,6 +14,10 @@ import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
+import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Sakstype
+import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Tema
+import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukerssaker.Sak
+import no.nav.modiapersonoversikt.infrastructure.http.GenericGraphQlResponse
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak.*
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerServiceImpl.Companion.leggTilFagsystemNavn
@@ -64,7 +68,7 @@ class SakerServiceImplTest {
 
         val saksliste: List<JournalforingSak> = sakerService.hentSaker(FNR).saker
 
-        assertThat(saksliste[0].saksId, `is`(SAK_ID_1))
+        assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
         assertThat(saksliste[saksliste.size - 1].temaKode, `is`("BID"))
@@ -93,7 +97,7 @@ class SakerServiceImplTest {
 
     @Test
     fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i sak`() {
-        every { safService.hentSaker(any()) } returns GraphQLResponse()
+        every { safService.hentSaker(any()) } returns GenericGraphQlResponse()
         val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
         val xmlDato = DatatypeFactory.newInstance().newXMLGregorianCalendar(dato.toString())
@@ -221,89 +225,86 @@ class SakerServiceImplTest {
             )
 
         const val FNR = "fnr"
-        const val SAK_ID_1 = "1"
-        private const val FAGSYSTEM_SAK_ID_1 = "11"
-        private const val SAK_ID_2 = "2"
-        private const val FAGSYSTEM_SAK_ID_2 = "22"
-        private const val SAK_ID_3 = "3"
-        private const val FAGSYSTEM_SAK_ID_3 = "33"
-        private const val SAK_ID_4 = "4"
+        val SakId_1 = "1"
+        private val FagsystemSakId_1 = "11"
+        private val SakId_2 = "2"
+        private val FagsystemSakId_2 = "22"
+        private val SakId_3 = "3"
+        private val FagsystemSakId_3 = "33"
+        private val SakId_4 = "4"
 
-        private fun earlierDateTimeWithOffSet(offset: Long) =
-            HentBrukersSaker.DateTime(
-                LocalDateTime.now().minusDays(offset),
-            )
+        private fun earlierDateTimeWithOffSet(offset: Long) = LocalDateTime.now().minusDays(offset)
 
-        fun createSaksliste(): GraphQLResponse<HentBrukersSaker.Result> {
-            return GraphQLResponse(
+        fun createSaksliste(): GraphQLClientResponse<HentBrukersSaker.Result> {
+            return GenericGraphQlResponse(
                 data =
                     HentBrukersSaker.Result(
                         saker =
                             listOf(
-                                HentBrukersSaker.Sak(
-                                    arkivsaksnummer = SAK_ID_1,
+                                Sak(
+                                    arkivsaksnummer = SakId_1,
                                     arkivsaksystem = null,
                                     datoOpprettet = earlierDateTimeWithOffSet(4),
-                                    fagsakId = FAGSYSTEM_SAK_ID_1,
+                                    fagsakId = FagsystemSakId_1,
                                     fagsaksystem = "IT01",
-                                    sakstype = HentBrukersSaker.Sakstype.FAGSAK,
+                                    sakstype = Sakstype.FAGSAK,
                                     tema = null,
                                 ),
-                                HentBrukersSaker.Sak(
-                                    arkivsaksnummer = SAK_ID_2,
+                                Sak(
+                                    arkivsaksnummer = SakId_2,
                                     arkivsaksystem = null,
                                     datoOpprettet = earlierDateTimeWithOffSet(3),
                                     fagsaksystem = "IT01",
-                                    fagsakId = FAGSYSTEM_SAK_ID_2,
-                                    sakstype = HentBrukersSaker.Sakstype.FAGSAK,
+                                    fagsakId = FagsystemSakId_2,
+                                    sakstype = Sakstype.FAGSAK,
                                     tema = null,
                                 ),
-                                HentBrukersSaker.Sak(
-                                    arkivsaksnummer = SAK_ID_3,
+                                Sak(
+                                    arkivsaksnummer = SakId_3,
                                     arkivsaksystem = null,
                                     datoOpprettet = earlierDateTimeWithOffSet(5),
                                     fagsaksystem = "IT01",
-                                    fagsakId = FAGSYSTEM_SAK_ID_3,
-                                    sakstype = HentBrukersSaker.Sakstype.FAGSAK,
+                                    fagsakId = FagsystemSakId_3,
+                                    sakstype = Sakstype.FAGSAK,
                                     tema = null,
                                 ),
-                                HentBrukersSaker.Sak(
-                                    arkivsaksnummer = SAK_ID_4,
+                                Sak(
+                                    arkivsaksnummer = SakId_4,
                                     arkivsaksystem = null,
                                     datoOpprettet = earlierDateTimeWithOffSet(5),
                                     fagsaksystem = null,
                                     fagsakId = null,
-                                    sakstype = HentBrukersSaker.Sakstype.GENERELL_SAK,
-                                    tema = HentBrukersSaker.Tema.STO,
+                                    sakstype = Sakstype.GENERELL_SAK,
+                                    tema = Tema.STO,
                                 ),
                             ),
                     ),
             )
         }
 
-        fun createOppfolgingSaksliste(): GraphQLResponse<HentBrukersSaker.Result> {
-            return GraphQLResponse(
+        fun createOppfolgingSaksliste(): GraphQLClientResponse<HentBrukersSaker.Result> {
+            return GenericGraphQlResponse(
                 data =
                     HentBrukersSaker.Result(
                         saker =
                             listOf(
-                                HentBrukersSaker.Sak(
+                                Sak(
                                     arkivsaksnummer = "4",
                                     arkivsaksystem = null,
                                     datoOpprettet = earlierDateTimeWithOffSet(0),
                                     fagsaksystem = "AO01",
                                     fagsakId = "44",
-                                    sakstype = HentBrukersSaker.Sakstype.FAGSAK,
-                                    tema = HentBrukersSaker.Tema.OPP,
+                                    sakstype = Sakstype.FAGSAK,
+                                    tema = Tema.OPP,
                                 ),
-                                HentBrukersSaker.Sak(
+                                Sak(
                                     arkivsaksnummer = "5",
                                     arkivsaksystem = null,
                                     datoOpprettet = earlierDateTimeWithOffSet(3),
                                     fagsaksystem = "FS22",
                                     fagsakId = null,
-                                    sakstype = HentBrukersSaker.Sakstype.GENERELL_SAK,
-                                    tema = HentBrukersSaker.Tema.OPP,
+                                    sakstype = Sakstype.GENERELL_SAK,
+                                    tema = Tema.OPP,
                                 ),
                             ),
                     ),

@@ -1,8 +1,7 @@
 package no.nav.modiapersonoversikt.service.saf
 
-import com.expediagroup.graphql.types.GraphQLResponse
+import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import io.ktor.client.request.*
-import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
@@ -10,8 +9,10 @@ import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
 import no.nav.modiapersonoversikt.commondomain.sak.TjenesteResultatWrapper
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter
-import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter.Journalposttype
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
+import no.nav.modiapersonoversikt.consumer.saf.generated.enums.BrukerIdType
+import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Journalposttype
+import no.nav.modiapersonoversikt.consumer.saf.generated.inputs.BrukerIdInput
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.service.saf.SafDokumentMapper.fraSafJournalpost
@@ -32,13 +33,12 @@ interface SafService {
         variantFormat: Dokument.Variantformat,
     ): TjenesteResultatWrapper
 
-    fun hentSaker(ident: String): GraphQLResponse<HentBrukersSaker.Result>
+    fun hentSaker(ident: String): GraphQLClientResponse<HentBrukersSaker.Result>
 }
 
 private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
 private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
 
-@KtorExperimentalAPI
 private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
 
 class SafServiceImpl(
@@ -72,14 +72,14 @@ class SafServiceImpl(
     override fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val variables =
             HentBrukersDokumenter.Variables(
-                HentBrukersDokumenter.BrukerIdInput(
+                BrukerIdInput(
                     id = fnr,
-                    type = HentBrukersDokumenter.BrukerIdType.FNR,
+                    type = BrukerIdType.FNR,
                 ),
             )
 
         return runBlocking {
-            val response = HentBrukersDokumenter(graphQLClient).execute(variables, userTokenAuthorizationHeaders)
+            val response = graphQLClient.execute(HentBrukersDokumenter(variables), userTokenAuthorizationHeaders)
             if (response.errors.isNullOrEmpty()) {
                 val data =
                     requireNotNull(response.data)
@@ -100,26 +100,26 @@ class SafServiceImpl(
         }
     }
 
-    override fun hentSaker(ident: String): GraphQLResponse<HentBrukersSaker.Result> {
+    override fun hentSaker(ident: String): GraphQLClientResponse<HentBrukersSaker.Result> {
         val variables =
             if (ident.length == 11) {
                 HentBrukersSaker.Variables(
-                    HentBrukersSaker.BrukerIdInput(
+                    BrukerIdInput(
                         id = ident,
-                        type = HentBrukersSaker.BrukerIdType.FNR,
+                        type = BrukerIdType.FNR,
                     ),
                 )
             } else {
                 HentBrukersSaker.Variables(
-                    HentBrukersSaker.BrukerIdInput(
+                    BrukerIdInput(
                         id = ident,
-                        type = HentBrukersSaker.BrukerIdType.AKTOERID,
+                        type = BrukerIdType.AKTOERID,
                     ),
                 )
             }
         return runBlocking {
-            HentBrukersSaker(graphQLClient)
-                .execute(variables, userTokenAuthorizationHeaders)
+            graphQLClient
+                .execute(HentBrukersSaker(variables), userTokenAuthorizationHeaders)
         }
     }
 
@@ -162,7 +162,7 @@ class SafServiceImpl(
                 log.warn(
                     """
                     Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi
-                    """,
+                    """.trim(),
                 )
             401 -> log.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
             404 -> log.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")

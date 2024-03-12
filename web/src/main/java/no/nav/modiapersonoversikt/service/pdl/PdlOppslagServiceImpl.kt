@@ -1,13 +1,18 @@
 package no.nav.modiapersonoversikt.service.pdl
 
-import com.expediagroup.graphql.client.GraphQLClient
+import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAktorid.IdentGruppe
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.IdentGruppe
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
+import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
+import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Paging
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.PersonSearchHit
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants.*
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
@@ -20,13 +25,12 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import java.net.URL
 
-@KtorExperimentalAPI
 @CacheConfig(cacheNames = ["pdlCache"], keyGenerator = "userkeygenerator")
 open class PdlOppslagServiceImpl constructor(
     private val stsService: SystemUserTokenProvider,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
-    private val pdlClient: GraphQLClient<*>,
+    private val pdlClient: GraphQLKtorClient,
 ) : PdlOppslagService {
     constructor(
         stsService: SystemUserTokenProvider,
@@ -37,19 +41,20 @@ open class PdlOppslagServiceImpl constructor(
     @Cacheable(unless = "#result == null")
     override fun hentPersondata(fnr: String): HentPersondata.Result? =
         runBlocking {
-            HentPersondata(pdlClient)
-                .execute(HentPersondata.Variables(fnr), userTokenAuthorizationHeaders).assertNoErrors()
-                .data
+            pdlClient
+                .execute(HentPersondata(HentPersondata.Variables(fnr)), userTokenAuthorizationHeaders).assertNoErrors().data
         }
 
     @Cacheable(unless = "#result == null")
-    override fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult> =
+    override fun hentTredjepartspersondata(fnrs: List<String>): List<HentPersonBolkResult> =
         runBlocking {
             if (fnrs.isEmpty()) {
                 emptyList()
             } else {
-                HentTredjepartspersondata(pdlClient)
-                    .execute(HentTredjepartspersondata.Variables(fnrs), systemTokenAuthorizationHeaders).assertNoErrors()
+                pdlClient.execute(
+                    HentTredjepartspersondata(HentTredjepartspersondata.Variables(fnrs)),
+                    systemTokenAuthorizationHeaders,
+                ).assertNoErrors()
                     .data
                     ?.hentPersonBolk
                     ?: emptyList()
@@ -57,20 +62,20 @@ open class PdlOppslagServiceImpl constructor(
         }
 
     @Cacheable(unless = "#result == null")
-    override fun hentIdenter(fnr: String): HentIdenter.Identliste? =
+    override fun hentIdenter(fnr: String): Identliste? =
         runBlocking {
-            HentIdenter(pdlClient)
-                .execute(HentIdenter.Variables(fnr), userTokenAuthorizationHeaders).assertNoErrors()
+            pdlClient
+                .execute(HentIdenter(HentIdenter.Variables(fnr)), userTokenAuthorizationHeaders).assertNoErrors()
                 .data
                 ?.hentIdenter
         }
 
     @Cacheable(unless = "#result == null")
-    override fun hentFolkeregisterIdenter(fnr: String): HentIdenter.Identliste? =
+    override fun hentFolkeregisterIdenter(fnr: String): Identliste? =
         runBlocking {
-            HentIdenter(pdlClient)
+            pdlClient
                 .execute(
-                    HentIdenter.Variables(fnr, listOf(HentIdenter.IdentGruppe.FOLKEREGISTERIDENT)),
+                    HentIdenter(HentIdenter.Variables(fnr, listOf(IdentGruppe.FOLKEREGISTERIDENT))),
                     userTokenAuthorizationHeaders,
                 ).assertNoErrors()
                 .data
@@ -80,8 +85,11 @@ open class PdlOppslagServiceImpl constructor(
     @Cacheable(unless = "#result == null")
     override fun hentGeografiskTilknyttning(fnr: String): String? =
         runBlocking {
-            HentGeografiskTilknyttning(pdlClient)
-                .execute(HentGeografiskTilknyttning.Variables(fnr), userTokenAuthorizationHeaders).assertNoErrors()
+            pdlClient
+                .execute(
+                    HentGeografiskTilknyttning(HentGeografiskTilknyttning.Variables(fnr)),
+                    userTokenAuthorizationHeaders,
+                ).assertNoErrors()
                 .data
                 ?.hentGeografiskTilknytning
                 ?.run {
@@ -96,10 +104,10 @@ open class PdlOppslagServiceImpl constructor(
     override fun hentFnr(aktorid: String): String? = hentAktivIdent(aktorid, IdentGruppe.FOLKEREGISTERIDENT)
 
     @Cacheable(unless = "#result == null")
-    override fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit> =
+    override fun sokPerson(kriterier: List<PdlKriterie>): List<PersonSearchHit> =
         runBlocking {
             val paging =
-                SokPerson.Paging(
+                Paging(
                     pageNumber = 1,
                     resultsPerPage = 30,
                 )
@@ -108,9 +116,11 @@ open class PdlOppslagServiceImpl constructor(
             if (criteria.isEmpty()) {
                 emptyList()
             } else {
-                SokPerson(pdlClient)
+                pdlClient
                     .execute(
-                        SokPerson.Variables(paging, criteria),
+                        SokPerson(
+                            SokPerson.Variables(paging, criteria),
+                        ),
                         userTokenAuthorizationHeaders,
                     )
                     .assertNoErrors()
@@ -122,10 +132,10 @@ open class PdlOppslagServiceImpl constructor(
         }
 
     @Cacheable(unless = "#result == null")
-    override fun hentAdressebeskyttelse(fnr: String): List<HentAdressebeskyttelse.Adressebeskyttelse> =
+    override fun hentAdressebeskyttelse(fnr: String): List<Adressebeskyttelse> =
         runBlocking {
-            HentAdressebeskyttelse(pdlClient)
-                .execute(HentAdressebeskyttelse.Variables(fnr), systemTokenAuthorizationHeaders).assertNoErrors()
+            pdlClient
+                .execute(HentAdressebeskyttelse(HentAdressebeskyttelse.Variables(fnr)), systemTokenAuthorizationHeaders).assertNoErrors()
                 .data
                 ?.hentPerson
                 ?.adressebeskyttelse
@@ -137,8 +147,8 @@ open class PdlOppslagServiceImpl constructor(
         gruppe: IdentGruppe,
     ): String? =
         runBlocking {
-            HentAktorid(pdlClient)
-                .execute(HentAktorid.Variables(ident, listOf(gruppe)), userTokenAuthorizationHeaders).assertNoErrors()
+            pdlClient
+                .execute(HentAktorid(HentAktorid.Variables(ident, listOf(gruppe))), userTokenAuthorizationHeaders).assertNoErrors()
                 .data
                 ?.hentIdenter
                 ?.identer
