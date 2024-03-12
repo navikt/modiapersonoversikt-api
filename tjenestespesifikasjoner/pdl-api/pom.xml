@@ -14,6 +14,8 @@
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <graphql-kotlin.version>3.6.8</graphql-kotlin.version>
     </properties>
 
     <dependencies>
@@ -23,7 +25,8 @@
         </dependency>
         <dependency>
             <groupId>com.expediagroup</groupId>
-            <artifactId>graphql-kotlin-ktor-client</artifactId>
+            <artifactId>graphql-kotlin-client</artifactId>
+            <version>${graphql-kotlin.version}</version>
         </dependency>
     </dependencies>
 
@@ -35,34 +38,38 @@
                 <version>${graphql-kotlin.version}</version>
                 <executions>
                     <execution>
-                        <id>download schema from github and generate client</id>
+                        <id>download schema from github</id>
                         <goals>
                             <goal>download-sdl</goal>
-                            <goal>generate-client</goal>
                         </goals>
                         <configuration>
                             <endpoint>https://navikt.github.io/pdl/pdl-api-sdl.graphqls</endpoint>
+                            <outputDirectory>src/main/resources/pdl</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate kotlin classes from schema + queries</id>
+                        <goals>
+                            <goal>generate-client</goal>
+                        </goals>
+                        <configuration>
+                            <schemaFile>src/main/resources/pdl/schema.graphql</schemaFile>
                             <packageName>no.nav.modiapersonoversikt.consumer.pdl.generated</packageName>
-                            <serializer>KOTLINX</serializer>
-
                             <queryFileDirectory>src/main/resources/pdl/queries</queryFileDirectory>
-                            <customScalars>
-                                <customScalar>
-                                    <scalar>Long</scalar>
+                            <converters>
+                                <Long>
                                     <type>kotlin.Long</type>
                                     <converter>no.nav.modiapersonoversikt.consumer.pdl.converters.LongScalarConverter</converter>
-                                </customScalar>
-                                <customScalar>
-                                    <scalar>Date</scalar>
+                                </Long>
+                                <Date>
                                     <type>java.time.LocalDate</type>
                                     <converter>no.nav.modiapersonoversikt.consumer.pdl.converters.DateScalarConverter</converter>
-                                </customScalar>
-                                <customScalar>
-                                    <scalar>DateTime</scalar>
+                                </Date>
+                                <DateTime>
                                     <type>java.time.LocalDateTime</type>
                                     <converter>no.nav.modiapersonoversikt.consumer.pdl.converters.DateTimeScalarConverter</converter>
-                                </customScalar>
-                            </customScalars>
+                                </DateTime>
+                            </converters>
                         </configuration>
                     </execution>
                 </executions>

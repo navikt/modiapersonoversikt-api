@@ -1,12 +1,15 @@
 package no.nav.modiapersonoversikt.infrastructure.http
 
-import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
-import com.expediagroup.graphql.client.types.GraphQLClientError
-import com.expediagroup.graphql.client.types.GraphQLClientRequest
-import com.expediagroup.graphql.client.types.GraphQLClientResponse
+import com.expediagroup.graphql.client.GraphQLClient
+import com.expediagroup.graphql.types.GraphQLError
+import com.expediagroup.graphql.types.GraphQLResponse
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.ktor.client.request.*
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.cio.CIOEngineConfig
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.header
+import io.ktor.util.KtorExperimentalAPI
 import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.personoversikt.common.logging.TjenestekallLogg
@@ -15,9 +18,9 @@ import java.net.URL
 
 typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
 
-class GraphQLException(override val message: String, val errors: List<GraphQLClientError>) : RuntimeException(message)
+class GraphQLException(override val message: String, val errors: List<GraphQLError>) : RuntimeException(message)
 
-fun <T> GraphQLClientResponse<T>.assertNoErrors(): GraphQLClientResponse<T> {
+fun <T> GraphQLResponse<T>.assertNoErrors(): GraphQLResponse<T> {
     if (this.errors.isNullOrEmpty()) {
         return this
     } else {
@@ -31,34 +34,38 @@ private val mapper =
     jacksonObjectMapper()
         .registerModule(JavaTimeModule())
 
+@KtorExperimentalAPI
 class LoggingGraphqlClient(
     private val name: String,
     url: URL,
-) : GraphQLKtorClient(url) {
+) : GraphQLClient<CIOEngineConfig>(url, CIO, mapper, {}) {
     private val log = LoggerFactory.getLogger(LoggingGraphqlClient::class.java)
 
-    override suspend fun <T : Any> execute(
-        request: GraphQLClientRequest<T>,
-        requestCustomizer: HttpRequestBuilder.() -> Unit,
-    ): GraphQLClientResponse<T> {
+    override suspend fun <T> execute(
+        query: String,
+        operationName: String?,
+        variables: Any?,
+        resultType: Class<T>,
+        requestBuilder: HeadersBuilder,
+    ): GraphQLResponse<T> {
         val callId = getCallId()
         val requestId = IdUtils.generateId()
         return try {
             val mappedRequestBuilder: HeadersBuilder = {
-                requestCustomizer.invoke(this)
+                requestBuilder.invoke(this)
                 header(RestConstants.NAV_CALL_ID_HEADER, callId)
                 header("X-Correlation-ID", callId)
             }
             TjenestekallLogg.info(
                 "$name-request: $callId ($requestId)",
                 mapOf(
-                    "operationName" to request.operationName,
-                    "variables" to request.variables,
+                    "operationName" to operationName,
+                    "variables" to variables,
                 ),
             )
 
             val timer: Long = System.currentTimeMillis()
-            val response = super.execute(request, mappedRequestBuilder)
+            val response = super.execute(query, operationName, variables, resultType, mappedRequestBuilder)
 
             val tjenestekallFelt =
                 mapOf(
@@ -82,19 +89,10 @@ class LoggingGraphqlClient(
                 fields = mapOf("exception" to exception.message),
                 throwable = exception,
             )
-            val error = GenericGraphQlError("Feilet ved oppslag mot $name (ID: $callId)")
-            GenericGraphQlResponse(errors = listOf(error), data = null)
+            val error = GraphQLError("Feilet ved oppslag mot $name (ID: $callId)")
+            GraphQLResponse(errors = listOf(error))
         }
     }
 
     private inline fun Long.measure(): Long = System.currentTimeMillis() - this
 }
-
-data class GenericGraphQlResponse<T>(
-    override val errors: List<GraphQLClientError>? = null,
-    override val data: T? = null,
-) : GraphQLClientResponse<T>
-
-data class GenericGraphQlError(
-    override val message: String,
-) : GraphQLClientError

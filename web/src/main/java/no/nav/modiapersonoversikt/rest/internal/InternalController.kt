@@ -1,13 +1,11 @@
 package no.nav.modiapersonoversikt.rest.internal
 
-import com.expediagroup.graphql.client.types.GraphQLClientResponse
+import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
-import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Criterion
-import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Paging
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
@@ -67,15 +65,15 @@ class InternalController
 
         @PostMapping("/pdlsok")
         fun pdlPersonsok(
-            @RequestBody criteria: List<Criterion>,
-        ): GraphQLClientResponse<SokPerson.Result> {
+            @RequestBody criteria: List<SokPerson.Criterion>,
+        ): GraphQLResponse<SokPerson.Result> {
             return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanBrukeInternal)
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Pdlsok)) {
                     runBlocking {
-                        val paging = Paging(pageNumber = 1, resultsPerPage = 30)
-                        pdlClient.execute(SokPerson(SokPerson.Variables(paging, criteria)), systemTokenAuthHeader)
+                        val paging = SokPerson.Paging(pageNumber = 1, resultsPerPage = 30)
+                        SokPerson(pdlClient).execute(SokPerson.Variables(paging, criteria), systemTokenAuthHeader)
                     }
                 }
         }

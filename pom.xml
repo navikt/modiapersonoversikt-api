@@ -30,8 +30,6 @@
         <modia-common-utils.version>1.2022.12.13-14.31-5b35ebe08f61</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2618.0448179</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
-        <graphql-kotlin.version>7.0.2</graphql-kotlin.version>
-
     </properties>
 
     <dependencyManagement>
@@ -124,12 +122,6 @@
                 <groupId>no.bekk.bekkopen</groupId>
                 <artifactId>nocommons</artifactId>
                 <version>0.6</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.expediagroup</groupId>
-                <artifactId>graphql-kotlin-ktor-client</artifactId>
-                <version>${graphql-kotlin.version}</version>
             </dependency>
 
             <!--Tjenestespesifikasjon-->

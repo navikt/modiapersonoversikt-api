@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
@@ -183,7 +182,7 @@ class PersondataServiceImpl(
             }
     }
 
-    private fun Person.findTredjepartsPersoner(): List<String> {
+    private fun HentPersondata.Person.findTredjepartsPersoner(): List<String> {
         return setOf(
             *this.fullmakt.map { it.motpartsPersonident }.toTypedArray(),
             *this.vergemaalEllerFremtidsfullmakt.mapNotNull {
@@ -197,7 +196,7 @@ class PersondataServiceImpl(
         ).toList()
     }
 
-    private fun Person.findKontaktinformasjonTredjepartspersoner(): List<String> {
+    private fun HentPersondata.Person.findKontaktinformasjonTredjepartspersoner(): List<String> {
         return setOf(
             *this.fullmakt.map { it.motpartsPersonident }.toTypedArray(),
         ).toList()

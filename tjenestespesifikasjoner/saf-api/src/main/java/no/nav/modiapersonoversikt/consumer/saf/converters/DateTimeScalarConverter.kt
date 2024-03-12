@@ -9,5 +9,5 @@ private val formatter = DateTimeFormatter.ISO_DATE_TIME
 class DateTimeScalarConverter : ScalarConverter<LocalDateTime> {
     override fun toJson(value: LocalDateTime): String = value.format(formatter)
 
-    override fun toScalar(rawValue: Any): LocalDateTime = LocalDateTime.parse(rawValue as String, formatter)
+    override fun toScalar(rawValue: String): LocalDateTime = LocalDateTime.parse(rawValue, formatter)
 }

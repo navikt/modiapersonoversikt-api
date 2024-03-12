@@ -1,14 +1,9 @@
 package no.nav.modiapersonoversikt.rest.person
 
-import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
-import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.*
-import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Matrikkeladresse
-import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Person
+import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Bostedsadresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Kjoenn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -17,8 +12,6 @@ import java.math.BigInteger
 import java.time.*
 import javax.xml.datatype.DatatypeFactory
 import javax.xml.datatype.XMLGregorianCalendar
-import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Bostedsadresse as PdlBostedsadresse
-import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Kjoenn as PdlKjoenn
 
 class PersonsokControllerTest {
     @Nested
@@ -153,13 +146,13 @@ class PersonsokControllerTest {
         @Test
         internal fun `should map pdl response`() {
             val person =
-                PersonSearchHit(
-                    score = 1.0,
+                SokPerson.PersonSearchHit(
+                    score = 1.0f,
                     person =
-                        Person(
+                        SokPerson.Person(
                             navn =
                                 listOf(
-                                    Navn(
+                                    SokPerson.Navn(
                                         fornavn = "fornavn",
                                         mellomnavn = "mellomnavn",
                                         etternavn = "etternavn",
@@ -168,13 +161,13 @@ class PersonsokControllerTest {
                                 ),
                             kjoenn =
                                 listOf(
-                                    PdlKjoenn(
-                                        KjoennType.KVINNE,
+                                    SokPerson.Kjoenn(
+                                        SokPerson.KjoennType.KVINNE,
                                     ),
                                 ),
                             utenlandskIdentifikasjonsnummer =
                                 listOf(
-                                    UtenlandskIdentifikasjonsnummer(
+                                    SokPerson.UtenlandskIdentifikasjonsnummer(
                                         identifikasjonsnummer = "987654-987",
                                         utstederland = "SWE",
                                         opphoert = false,
@@ -182,7 +175,7 @@ class PersonsokControllerTest {
                                 ),
                             folkeregisteridentifikator =
                                 listOf(
-                                    Folkeregisteridentifikator(
+                                    SokPerson.Folkeregisteridentifikator(
                                         identifikasjonsnummer = "12345678910",
                                         status = "AKTIV",
                                         type = "FNR",
@@ -190,9 +183,9 @@ class PersonsokControllerTest {
                                 ),
                             kontaktadresse =
                                 listOf(
-                                    Kontaktadresse(
+                                    SokPerson.Kontaktadresse(
                                         vegadresse =
-                                            Vegadresse(
+                                            SokPerson.Vegadresse(
                                                 husbokstav = "Z",
                                                 husnummer = "10",
                                                 bruksenhetsnummer = null,
@@ -210,9 +203,9 @@ class PersonsokControllerTest {
                                 ),
                             bostedsadresse =
                                 listOf(
-                                    PdlBostedsadresse(
+                                    SokPerson.Bostedsadresse(
                                         matrikkeladresse =
-                                            Matrikkeladresse(
+                                            SokPerson.Matrikkeladresse(
                                                 bruksenhetsnummer = "123101",
                                                 tilleggsnavn = "Supergården",
                                                 postnummer = "1234",

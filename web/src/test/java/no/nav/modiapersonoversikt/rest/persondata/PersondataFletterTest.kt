@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Doedsfall
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.BeforeEach
@@ -48,7 +48,7 @@ internal class PersondataFletterTest {
                     testData
                         .copy(
                             personIdent = fnr,
-                            persondata = testPerson.copy(doedsfall = listOf(Doedsfall(gittDato("2010-01-02")))),
+                            persondata = testPerson.copy(doedsfall = listOf(HentPersondata.Doedsfall(gittDato("2010-01-02")))),
                             geografiskeTilknytning = PersondataResult.NotRelevant(),
                             navEnhet = PersondataResult.NotRelevant(),
                         ),

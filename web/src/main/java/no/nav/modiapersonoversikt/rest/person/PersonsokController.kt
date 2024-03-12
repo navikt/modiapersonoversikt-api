@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.person
 
-import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.infrastructure.http.GraphQLException
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -11,19 +11,7 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.PdlFelt
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.PdlKriterie
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Bruker
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Gateadresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Kodeverdi
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Matrikkeladresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseNorge
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseUtland
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.NorskIdent
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Personnavn
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.PostboksadresseNorsk
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.StedsadresseNorge
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.StrukturertAdresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.UstrukturertAdresse
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
 import java.time.LocalDate
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person as VirksomhetPerson
 
 @RestController
 @RequestMapping("/rest/personsok")
@@ -90,7 +77,7 @@ class PersonsokController
                 }
         }
 
-        private fun kontonummerSok(kontonummer: String): List<VirksomhetPerson> {
+        private fun kontonummerSok(kontonummer: String): List<Person> {
             val request =
                 FinnPersonRequest()
                     .apply {
@@ -132,8 +119,8 @@ class PersonsokController
             }
     }
 
-fun lagPersonResponse(searchHit: PersonSearchHit): PersonSokResponsDTO? {
-    val ident: Folkeregisteridentifikator = searchHit.person?.folkeregisteridentifikator?.firstOrNull() ?: return null
+fun lagPersonResponse(searchHit: SokPerson.PersonSearchHit): PersonSokResponsDTO? {
+    val ident: SokPerson.Folkeregisteridentifikator = searchHit.person?.folkeregisteridentifikator?.firstOrNull() ?: return null
     val navn: PersonnavnDTO = hentNavn(searchHit.person) ?: return null
     val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer
     return PersonSokResponsDTO(
@@ -154,7 +141,7 @@ fun lagPersonResponse(searchHit: PersonSearchHit): PersonSokResponsDTO? {
     )
 }
 
-private fun lagBostedsadresse(adr: List<Bostedsadresse>?): String? {
+private fun lagBostedsadresse(adr: List<SokPerson.Bostedsadresse>?): String? {
     if (adr.isNullOrEmpty()) {
         return null
     }
@@ -200,7 +187,7 @@ private fun lagBostedsadresse(adr: List<Bostedsadresse>?): String? {
     }
 }
 
-fun lagPostadresse(adr: List<Kontaktadresse>?): String? {
+fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
     if (adr.isNullOrEmpty()) {
         return null
     }
@@ -262,7 +249,7 @@ fun lagPostadresse(adr: List<Kontaktadresse>?): String? {
     }
 }
 
-fun hentNavn(person: Person?): PersonnavnDTO? {
+fun hentNavn(person: SokPerson.Person?): PersonnavnDTO? {
     return person
         ?.navn
         ?.first()
@@ -288,7 +275,7 @@ data class PersonSokResponsDTO(
     val utenlandskID: List<UtenlandskIdDTO>?,
 )
 
-fun lagPersonResponse(fimPerson: VirksomhetPerson): PersonSokResponsDTO? {
+fun lagPersonResponse(fimPerson: Person): PersonSokResponsDTO? {
     val ident = fimPerson.ident?.let(::lagNorskIdent) ?: return null
     val navn = fimPerson.personnavn?.let(::lagNavn) ?: return null
 
@@ -366,7 +353,7 @@ data class BrukerinfoDTO(
     val ansvarligEnhet: String?,
 )
 
-private fun lagBrukerinfo(fimPerson: VirksomhetPerson): BrukerinfoDTO? =
+private fun lagBrukerinfo(fimPerson: Person): BrukerinfoDTO? =
     if (fimPerson is Bruker) {
         BrukerinfoDTO(
             gjeldendePostadresseType = fimPerson.gjeldendePostadresseType?.let { lagKodeverdi(it) },

@@ -3,8 +3,6 @@ package no.nav.modiapersonoversikt.service.arbeidsfordeling;
 import no.nav.common.types.identer.Fnr;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse;
-import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering;
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse;
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService.ArbeidsfordelingException;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
@@ -81,9 +79,9 @@ class ArbeidsfordelingServiceTest {
     }
 
     private void gitt_at_alt_fungerer() {
-        ArrayList<Adressebeskyttelse> adressebeskyttelseMock = new ArrayList<>();
-        adressebeskyttelseMock.add(new Adressebeskyttelse(
-                AdressebeskyttelseGradering.UGRADERT
+        ArrayList<HentAdressebeskyttelse.Adressebeskyttelse> adressebeskyttelseMock = new ArrayList<>();
+        adressebeskyttelseMock.add(new HentAdressebeskyttelse.Adressebeskyttelse(
+                HentAdressebeskyttelse.AdressebeskyttelseGradering.UGRADERT
         ));
         sneaky(() -> {
             when(pdlOppslagService.hentGeografiskTilknyttning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);

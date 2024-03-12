@@ -2,9 +2,8 @@ package no.nav.modiapersonoversikt.rest.persondata
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Postboksadresse
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Vegadresse
-import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.Person
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentTredjepartspersondata
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import org.junit.jupiter.api.Assertions
@@ -13,8 +12,6 @@ import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
-import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.Bostedsadresse as TredjepartsBostedsadresse
-import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.Vegadresse as TredjepartsVegadresse
 
 internal class AdresseMappingTest {
     val kodeverk: EnhetligKodeverk.Service = mockk()
@@ -38,8 +35,8 @@ internal class AdresseMappingTest {
                 bostedsadresse =
                     adresse.copy(
                         vegadresse =
-                            Vegadresse(
-                                matrikkelId = 1234L,
+                            HentPersondata.Vegadresse(
+                                matrikkelId = HentPersondata.Long(1234L),
                                 husnummer = "12",
                                 husbokstav = "A",
                                 bruksenhetsnummer = "H0101",
@@ -54,10 +51,10 @@ internal class AdresseMappingTest {
         val tredjepartsPerson =
             gittTredjepartsperson().copy(
                 bostedsadresse =
-                    TredjepartsBostedsadresse(
+                    HentTredjepartspersondata.Bostedsadresse(
                         folkeregistermetadata = null,
                         vegadresse =
-                            TredjepartsVegadresse(
+                            HentTredjepartspersondata.Vegadresse(
                                 husnummer = "12",
                                 husbokstav = "A",
                                 bruksenhetsnummer = "H0101",
@@ -110,7 +107,7 @@ internal class AdresseMappingTest {
                         coAdressenavn = null,
                         vegadresse = null,
                         postboksadresse =
-                            Postboksadresse(
+                            HentPersondata.Postboksadresse(
                                 postbokseier = "C/O Fornavn Etternavn",
                                 postboks = "123",
                                 postnummer = "9750",
@@ -141,8 +138,8 @@ internal class AdresseMappingTest {
                 bostedsadresse =
                     adresse.copy(
                         vegadresse =
-                            Vegadresse(
-                                matrikkelId = 1234L,
+                            HentPersondata.Vegadresse(
+                                matrikkelId = HentPersondata.Long(1234L),
                                 husnummer = "   12",
                                 husbokstav = "A    ",
                                 bruksenhetsnummer = "  H0101",
@@ -157,10 +154,10 @@ internal class AdresseMappingTest {
         val tredjepartsPerson =
             gittTredjepartsperson().copy(
                 bostedsadresse =
-                    TredjepartsBostedsadresse(
+                    HentTredjepartspersondata.Bostedsadresse(
                         folkeregistermetadata = null,
                         vegadresse =
-                            TredjepartsVegadresse(
+                            HentTredjepartspersondata.Vegadresse(
                                 husnummer = "12",
                                 husbokstav = "A",
                                 bruksenhetsnummer = "H0101",
@@ -205,7 +202,7 @@ internal class AdresseMappingTest {
     }
 
     private fun gittTredjepartsperson() =
-        Person(
+        HentTredjepartspersondata.Person(
             navn = emptyList(),
             kjoenn = emptyList(),
             foedsel = emptyList(),

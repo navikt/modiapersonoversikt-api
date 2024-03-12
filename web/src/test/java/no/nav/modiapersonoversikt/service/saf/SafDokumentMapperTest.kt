@@ -4,8 +4,7 @@ import io.mockk.every
 import io.mockk.mockkStatic
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.Entitet.*
-import no.nav.modiapersonoversikt.consumer.saf.generated.enums.*
-import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukersdokumenter.*
+import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersDokumenter.*
 import no.nav.modiapersonoversikt.service.saf.SafDokumentMapper.fraSafJournalpost
 import no.nav.modiapersonoversikt.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INN
 import no.nav.modiapersonoversikt.service.saf.SafServiceImpl.Companion.JOURNALPOSTTYPE_INTERN
@@ -418,7 +417,7 @@ internal class SafDokumentMapperTest {
                     listOf(
                         RelevantDato(
                             datotype = Datotype.DATO_REGISTRERT,
-                            dato = registrertDato,
+                            dato = DateTime(registrertDato),
                         ),
                     ),
             )
@@ -441,15 +440,15 @@ internal class SafDokumentMapperTest {
                     listOf(
                         RelevantDato(
                             datotype = Datotype.DATO_EKSPEDERT,
-                            dato = ekspedertDato,
+                            dato = DateTime(ekspedertDato),
                         ),
                         RelevantDato(
                             datotype = Datotype.DATO_SENDT_PRINT,
-                            dato = sendtPrintDato,
+                            dato = DateTime(sendtPrintDato),
                         ),
                         RelevantDato(
                             datotype = Datotype.DATO_JOURNALFOERT,
-                            dato = journalFoertDato,
+                            dato = DateTime(journalFoertDato),
                         ),
                     ),
             )
@@ -471,11 +470,11 @@ internal class SafDokumentMapperTest {
                     listOf(
                         RelevantDato(
                             datotype = Datotype.DATO_SENDT_PRINT,
-                            dato = sendtPrintDato,
+                            dato = DateTime(sendtPrintDato),
                         ),
                         RelevantDato(
                             datotype = Datotype.DATO_JOURNALFOERT,
-                            dato = journalFoertDato,
+                            dato = DateTime(journalFoertDato),
                         ),
                     ),
             )
@@ -496,7 +495,7 @@ internal class SafDokumentMapperTest {
                     listOf(
                         RelevantDato(
                             datotype = Datotype.DATO_JOURNALFOERT,
-                            dato = journalFoertDato,
+                            dato = DateTime(journalFoertDato),
                         ),
                     ),
             )
@@ -515,7 +514,7 @@ internal class SafDokumentMapperTest {
                     listOf(
                         RelevantDato(
                             datotype = Datotype.DATO_JOURNALFOERT,
-                            dato = journalFoertDato,
+                            dato = DateTime(journalFoertDato),
                         ),
                     ),
                 journalposttype = JOURNALPOSTTYPE_INTERN,
@@ -535,7 +534,7 @@ internal class SafDokumentMapperTest {
                     listOf(
                         RelevantDato(
                             datotype = Datotype.DATO_LEST,
-                            dato = lestDato,
+                            dato = DateTime(lestDato),
                         ),
                     ),
                 journalposttype = JOURNALPOSTTYPE_UT,
@@ -550,7 +549,7 @@ internal class SafDokumentMapperTest {
 private fun lagJournalpost(): Journalpost {
     val bruker = Bruker(id = aremarkFNR, type = BrukerIdType.FNR)
     val dokumenter: List<DokumentInfo> = listOf(lagHoveddokument(), lagVedlegg())
-    val relevanteDatoer = listOf(RelevantDato(dato = relevantdato, datotype = datotype))
+    val relevanteDatoer = listOf(RelevantDato(dato = DateTime(relevantdato), datotype = datotype))
     val sak = lagSak()
 
     return Journalpost(
@@ -559,7 +558,7 @@ private fun lagJournalpost(): Journalpost {
         dokumenter = dokumenter,
         journalpostId = journalpostId,
         tittel = journalpostTittel,
-        datoOpprettet = datoOpprettet,
+        datoOpprettet = DateTime(datoOpprettet),
         journalposttype = journalpostType,
         journalstatus = journalStatus,
         relevanteDatoer = relevanteDatoer,

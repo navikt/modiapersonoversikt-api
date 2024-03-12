@@ -1,13 +1,12 @@
 package no.nav.modiapersonoversikt.service.pdl
 
-import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
-import com.expediagroup.graphql.client.serialization.GraphQLClientKotlinxSerializer
+import com.expediagroup.graphql.client.GraphQLClient
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
-import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.util.*
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.auth.context.AuthContext
@@ -28,6 +27,7 @@ import org.junit.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URL
 
+@OptIn(KtorExperimentalAPI::class)
 internal class PdlOppslagServiceImplTest {
     private val userToken = PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
 
@@ -93,7 +93,7 @@ internal class PdlOppslagServiceImplTest {
                         "  \"errors\": [\n" +
                         "    {\n" +
                         "      \"message\":" +
-                        " \"Variable 'ident' has an invalid value: Variable 'ident' has coerced Null value for NonNull type 'ID!'\",\n" +
+                        "\"Variable 'ident' has an invalid value: Variable 'ident' has coerced Null value for NonNull type 'ID!'\",\n" +
                         "      \"locations\": [\n" +
                         "        {\n" +
                         "          \"line\": 1,\n" +
@@ -135,16 +135,15 @@ internal class PdlOppslagServiceImplTest {
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }
 
-    private fun createMockGraphQLClient(handler: MockRequestHandleScope.(request: HttpRequestData) -> HttpResponseData): GraphQLKtorClient {
-        return GraphQLKtorClient(
+    private fun createMockGraphQLClient(handler: MockRequestHandleScope.(request: HttpRequestData) -> HttpResponseData): GraphQLClient<*> {
+        return GraphQLClient(
             url = URL("http://dummy.no"),
-            httpClient =
-                HttpClient(engineFactory = MockEngine) {
-                    engine {
-                        addHandler { handler.invoke(this, it) }
-                    }
-                },
-            serializer = GraphQLClientKotlinxSerializer(),
+            engineFactory = MockEngine,
+            configuration = {
+                engine {
+                    addHandler { handler.invoke(this, it) }
+                }
+            },
         )
     }
 }
