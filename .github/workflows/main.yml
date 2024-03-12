@@ -30,7 +30,7 @@ jobs:
           cache: 'maven'
       - uses: nbadal/action-ktlint-setup@v1
         with:
-          ktlint_version: '0.47.1'
+          ktlint_version: '1.2.1'
       - name: Ktlint
         run: bash ./linting.sh
       - name: Build using maven
