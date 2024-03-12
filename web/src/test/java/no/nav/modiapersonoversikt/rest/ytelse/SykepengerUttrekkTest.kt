@@ -21,7 +21,6 @@ private const val FNR = "10108000398"
 private const val STANS = "STANS"
 
 internal class SykepengerUttrekkTest {
-
     private val sykepengerV2: SykepengerV2 = mockk()
 
     private val service = DefaultSykepengerService()
@@ -66,13 +65,14 @@ internal class SykepengerUttrekkTest {
     }
 
     private fun mockResponse(): FimHentSykepengerListeResponse {
-        val periode = FimsykSykmeldingsperiode()
-            .withStansaarsak(
-                FimsykStansaarsak()
-                    .withTermnavn(STANS)
-            )
-            .withSykmeldtFom(createXMLGregorianCalendar())
-            .withArbeidskategori(FimsykArbeidskategori())
+        val periode =
+            FimsykSykmeldingsperiode()
+                .withStansaarsak(
+                    FimsykStansaarsak()
+                        .withTermnavn(STANS),
+                )
+                .withSykmeldtFom(createXMLGregorianCalendar())
+                .withArbeidskategori(FimsykArbeidskategori())
         periode.sykmeldt = FimsykBruker().withIdent(FNR)
 
         return FimHentSykepengerListeResponse().withSykmeldingsperiodeListe(periode)

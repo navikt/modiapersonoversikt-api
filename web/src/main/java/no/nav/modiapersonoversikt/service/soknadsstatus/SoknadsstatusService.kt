@@ -12,11 +12,14 @@ import org.springframework.cache.annotation.Cacheable
 
 interface SoknadsstatusService {
     fun hentHendelser(ident: String): List<Hendelse>
+
     fun hentBehandlinger(ident: String): List<Behandling>
+
     fun hentBehandlingerMedHendelser(ident: String): List<Behandling>
+
     fun hentBehandlingerGruppertPaaTema(
         ident: String,
-        behandlingerSomAlleredeErInkludert: Set<String> = setOf()
+        behandlingerSomAlleredeErInkludert: Set<String> = setOf(),
     ): Map<String, Soknadsstatus>
 
     fun ping()
@@ -25,11 +28,11 @@ interface SoknadsstatusService {
 @CacheConfig(cacheNames = ["soknadsstatusCache"], keyGenerator = "userkeygenerator")
 open class SoknadsstatusServiceImpl(
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
-    private val soknadsstatusApi: SoknadsstatusControllerApi = SoknadsstatusApiFactory.createSoknadsstatusApi(
-        oboTokenClient
-    )
+    private val soknadsstatusApi: SoknadsstatusControllerApi =
+        SoknadsstatusApiFactory.createSoknadsstatusApi(
+            oboTokenClient,
+        ),
 ) : SoknadsstatusService {
-
     @Cacheable
     override fun hentHendelser(ident: String): List<Hendelse> {
         return soknadsstatusApi.hentAlleHendelser(FnrRequest(ident)).orEmpty()
@@ -49,7 +52,7 @@ open class SoknadsstatusServiceImpl(
     @Cacheable
     override fun hentBehandlingerGruppertPaaTema(
         ident: String,
-        behandlingerSomAlleredeErInkludert: Set<String>
+        behandlingerSomAlleredeErInkludert: Set<String>,
     ): Map<String, Soknadsstatus> {
         val behandlinger = hentBehandlingerMedHendelser(ident)
         return grupperBehandlingerPaaTema(behandlinger, behandlingerSomAlleredeErInkludert)

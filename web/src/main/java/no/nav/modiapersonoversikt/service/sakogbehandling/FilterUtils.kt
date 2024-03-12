@@ -23,11 +23,12 @@ object FilterUtils {
     @JvmStatic
     fun behandlingsDato(wsBehandlingskjede: Behandlingskjede): DateTime {
         val erAvsluttet = erAvsluttet(wsBehandlingskjede)
-        val calendar = if (erAvsluttet) {
-            wsBehandlingskjede.slutt ?: wsBehandlingskjede.sisteBehandlingsoppdatering
-        } else {
-            wsBehandlingskjede.start
-        }
+        val calendar =
+            if (erAvsluttet) {
+                wsBehandlingskjede.slutt ?: wsBehandlingskjede.sisteBehandlingsoppdatering
+            } else {
+                wsBehandlingskjede.start
+            }
 
         return DateTime(calendar.toGregorianCalendar().time)
     }
@@ -47,7 +48,7 @@ object FilterUtils {
                 Bruker `sisteBehandlingsoppdatering` som fallback.
                 BehandlingsId: ${kjede.sisteBehandlingREF}
                 BehandlinsgkjedeId: ${kjede.behandlingskjedeId}
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
         return erAvsluttet
@@ -62,12 +63,13 @@ object FilterUtils {
     @JvmStatic
     fun fjernGamleDokumenter(saker: List<Sakstema>): List<Sakstema> {
         return saker.map { sak ->
-            val filtrerteDokument = sak.dokumentMetadata.filter { dokument ->
-                val erFraSaf = dokument.baksystem.size == 1 && dokument.baksystem.contains(Baksystem.SAF)
-                val erFraForProdsetting: Boolean by lazy { dokument.dato.isBefore(PROD_SETTING_DATO) }
+            val filtrerteDokument =
+                sak.dokumentMetadata.filter { dokument ->
+                    val erFraSaf = dokument.baksystem.size == 1 && dokument.baksystem.contains(Baksystem.SAF)
+                    val erFraForProdsetting: Boolean by lazy { dokument.dato.isBefore(PROD_SETTING_DATO) }
 
-                (erFraSaf && erFraForProdsetting).not()
-            }
+                    (erFraSaf && erFraForProdsetting).not()
+                }
             sak.withDokumentMetadata(filtrerteDokument)
         }
     }
@@ -76,11 +78,12 @@ object FilterUtils {
     @JvmName("fjernGamleDokumentSoknadsstatus")
     fun fjernGamleDokumenter(saker: List<SoknadsstatusSakstema>): List<SoknadsstatusSakstema> {
         return saker.map { sak ->
-            val filtrerteDokument = sak.dokumentMetadata.filter { dokument ->
-                val erFraSaf = dokument.baksystem.size == 1 && dokument.baksystem.contains(Baksystem.SAF)
-                val erFraForProdsetting: Boolean by lazy { dokument.dato.isBefore(PROD_SETTING_DATO) }
-                (erFraSaf && erFraForProdsetting).not()
-            }
+            val filtrerteDokument =
+                sak.dokumentMetadata.filter { dokument ->
+                    val erFraSaf = dokument.baksystem.size == 1 && dokument.baksystem.contains(Baksystem.SAF)
+                    val erFraForProdsetting: Boolean by lazy { dokument.dato.isBefore(PROD_SETTING_DATO) }
+                    (erFraSaf && erFraForProdsetting).not()
+                }
             sak.copy(dokumentMetadata = filtrerteDokument)
         }
     }

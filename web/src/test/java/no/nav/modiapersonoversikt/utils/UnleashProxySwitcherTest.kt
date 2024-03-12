@@ -22,12 +22,13 @@ internal class UnleashProxySwitcherTest {
         val unleashService = createUnleashService(ansattService)
         val (instance1, instance2) = createInstances()
 
-        val proxy = UnleashProxySwitcher.createSwitcher(
-            featureToggle = Feature.SAMPLE_FEATURE,
-            unleashService = unleashService,
-            ifEnabled = instance1,
-            ifDisabled = instance2
-        )
+        val proxy =
+            UnleashProxySwitcher.createSwitcher(
+                featureToggle = Feature.SAMPLE_FEATURE,
+                unleashService = unleashService,
+                ifEnabled = instance1,
+                ifDisabled = instance2,
+            )
 
         assertDoesNotThrow {
             assertNotNull(proxy.equals("anything"))
@@ -42,12 +43,13 @@ internal class UnleashProxySwitcherTest {
 
     private fun createUnleashService(ansattService: AnsattService): UnleashServiceImpl {
         val unleashContextProvider = UnleashContextProviderImpl(ansattService)
-        val unleashConfig = UnleashConfig.builder()
-            .appName("modiapersonoversikt-api")
-            .instanceId(System.getProperty("APP_ENVIRONMENT_NAME", "local"))
-            .unleashAPI("http://dummy.io")
-            .unleashContextProvider(unleashContextProvider)
-            .build()
+        val unleashConfig =
+            UnleashConfig.builder()
+                .appName("modiapersonoversikt-api")
+                .instanceId(System.getProperty("APP_ENVIRONMENT_NAME", "local"))
+                .unleashAPI("http://dummy.io")
+                .unleashContextProvider(unleashContextProvider)
+                .build()
 
         val unleash = DefaultUnleash(unleashConfig)
         return UnleashServiceImpl(null, unleash, null)

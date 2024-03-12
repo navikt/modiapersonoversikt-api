@@ -18,14 +18,16 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class AxsysConfig {
     private val url: String = EnvironmentUtils.getRequiredProperty("AXSYS_URL")
-    private val httpClient: OkHttpClient = RestClient.baseClient().newBuilder()
-        .addInterceptor(
-            LoggingInterceptor("Axsys") {
-                // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til axsys
-                getCallId()
-            }
-        )
-        .build()
+    private val httpClient: OkHttpClient =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(
+                LoggingInterceptor("Axsys") {
+                    // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til axsys
+                    getCallId()
+                },
+            )
+            .build()
+
     companion object {
         val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("AXSYS_SCOPE"))
     }

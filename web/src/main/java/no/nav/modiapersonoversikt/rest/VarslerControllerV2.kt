@@ -20,9 +20,10 @@ class VarslerControllerV2(
     private val varslerService: VarslerService,
     private val tilgangskontroll: Tilgangskontroll,
 ) {
-
     @PostMapping("/v3/varsler")
-    fun hentAlleVarsler(@RequestBody fnrRequest: FnrRequest): VarslerService.Result {
+    fun hentAlleVarsler(
+        @RequestBody fnrRequest: FnrRequest,
+    ): VarslerService.Result {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
             .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnrRequest.fnr)) {

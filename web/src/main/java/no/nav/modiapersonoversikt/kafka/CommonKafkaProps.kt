@@ -24,12 +24,16 @@ private fun aivenSecurityProps(
     props[SslConfigs.SSL_KEY_PASSWORD_CONFIG] = kafkaEnvironment.aivenCredstorePassword
 }
 
-fun commonProducerConfig(props: Properties, brokerUrl: String, clientId: String) {
+fun commonProducerConfig(
+    props: Properties,
+    brokerUrl: String,
+    clientId: String,
+) {
     props[ProducerConfig.ACKS_CONFIG] = "all"
     props[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = brokerUrl
     props[ProducerConfig.CLIENT_ID_CONFIG] = clientId
     aivenSecurityProps(
         props,
-        KafkaSecurityConfig()
+        KafkaSecurityConfig(),
     )
 }

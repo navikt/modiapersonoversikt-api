@@ -30,12 +30,13 @@ internal class PersondataFletterTest {
     internal fun `skal mappe data fra pdl til Persondata`() {
         snapshot.assertMatches(
             mapper.flettSammenData(
-                data = testData.copy(
-                    personIdent = fnr,
-                    persondata = testPerson,
-                ),
-                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
-            )
+                data =
+                    testData.copy(
+                        personIdent = fnr,
+                        persondata = testPerson,
+                    ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            ),
         )
     }
 
@@ -43,15 +44,16 @@ internal class PersondataFletterTest {
     internal fun `skal mappe data fra pdl til Persondata når person er dod`() {
         snapshot.assertMatches(
             mapper.flettSammenData(
-                data = testData
-                    .copy(
-                        personIdent = fnr,
-                        persondata = testPerson.copy(doedsfall = listOf(HentPersondata.Doedsfall(gittDato("2010-01-02")))),
-                        geografiskeTilknytning = PersondataResult.NotRelevant(),
-                        navEnhet = PersondataResult.NotRelevant(),
-                    ),
-                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
-            )
+                data =
+                    testData
+                        .copy(
+                            personIdent = fnr,
+                            persondata = testPerson.copy(doedsfall = listOf(HentPersondata.Doedsfall(gittDato("2010-01-02")))),
+                            geografiskeTilknytning = PersondataResult.NotRelevant(),
+                            navEnhet = PersondataResult.NotRelevant(),
+                        ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            ),
         )
     }
 
@@ -59,18 +61,20 @@ internal class PersondataFletterTest {
     internal fun `skal filtrere ut egenAnsatt fra feiledeSystemer når veileder ikke har tilgang`() {
         snapshot.assertMatches(
             mapper.flettSammenData(
-                data = testData.copy(
-                    personIdent = fnr,
-                    persondata = testPerson,
-                    krrData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
-                    erEgenAnsatt = PersondataResult.Failure(
-                        PersondataResult.InformasjonElement.EGEN_ANSATT,
-                        Throwable()
+                data =
+                    testData.copy(
+                        personIdent = fnr,
+                        persondata = testPerson,
+                        krrData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
+                        erEgenAnsatt =
+                            PersondataResult.Failure(
+                                PersondataResult.InformasjonElement.EGEN_ANSATT,
+                                Throwable(),
+                            ),
+                        harTilgangTilSkjermetPerson = false,
                     ),
-                    harTilgangTilSkjermetPerson = false
-                ),
-                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
-            ).feilendeSystemer
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            ).feilendeSystemer,
         )
     }
 
@@ -78,18 +82,20 @@ internal class PersondataFletterTest {
     internal fun `skal ikke filtrere ut egenAnsatt fra feiledeSystemer når veileder har tilgang`() {
         snapshot.assertMatches(
             mapper.flettSammenData(
-                data = testData.copy(
-                    personIdent = fnr,
-                    persondata = testPerson,
-                    krrData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
-                    erEgenAnsatt = PersondataResult.Failure(
-                        PersondataResult.InformasjonElement.EGEN_ANSATT,
-                        Throwable()
+                data =
+                    testData.copy(
+                        personIdent = fnr,
+                        persondata = testPerson,
+                        krrData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable()),
+                        erEgenAnsatt =
+                            PersondataResult.Failure(
+                                PersondataResult.InformasjonElement.EGEN_ANSATT,
+                                Throwable(),
+                            ),
+                        harTilgangTilSkjermetPerson = true,
                     ),
-                    harTilgangTilSkjermetPerson = true
-                ),
-                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
-            ).feilendeSystemer
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            ).feilendeSystemer,
         )
     }
 }

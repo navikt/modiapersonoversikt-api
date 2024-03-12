@@ -11,6 +11,7 @@ class BrukersDiskresjonskodePip(private val pdl: PdlOppslagService) : Kabac.Poli
     enum class Kode { KODE6, KODE7 }
 
     override val key = Companion.key
+
     companion object : Kabac.AttributeKey<Kode?> {
         override val key = Key<Kode?>(BrukersDiskresjonskodePip::class.java.simpleName)
     }
@@ -24,7 +25,9 @@ class BrukersDiskresjonskodePip(private val pdl: PdlOppslagService) : Kabac.Poli
         return this
             .mapNotNull {
                 when (it.gradering) {
-                    HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG, HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND -> Kode.KODE6
+                    HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                    HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+                    -> Kode.KODE6
                     HentAdressebeskyttelse.AdressebeskyttelseGradering.FORTROLIG -> Kode.KODE7
                     else -> null
                 }

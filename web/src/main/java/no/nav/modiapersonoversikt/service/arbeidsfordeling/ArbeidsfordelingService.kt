@@ -17,7 +17,7 @@ interface ArbeidsfordelingService {
         fagomrade: String?,
         oppgavetype: String?,
         brukerIdent: Fnr?,
-        underkategori: String?
+        underkategori: String?,
     ): List<NorgDomain.Enhet>
 
     class ArbeidsfordelingException(message: String?, cause: Throwable?) : RuntimeException(message, cause)
@@ -26,7 +26,7 @@ interface ArbeidsfordelingService {
 class ArbeidsfordelingServiceImpl(
     private val norgApi: NorgApi,
     private val pdlOppslagService: PdlOppslagService,
-    private val skjermedePersonerApi: SkjermedePersonerApi
+    private val skjermedePersonerApi: SkjermedePersonerApi,
 ) : ArbeidsfordelingService {
     val log: Logger = LoggerFactory.getLogger(ArbeidsfordelingService::class.java)
 
@@ -34,20 +34,22 @@ class ArbeidsfordelingServiceImpl(
         fagomrade: String?,
         oppgavetype: String?,
         brukerIdent: Fnr?,
-        underkategori: String?
+        underkategori: String?,
     ): List<NorgDomain.Enhet> {
         return runCatching {
             val behandling: Behandling? = underkategori?.parseV2BehandlingString()
             val geografiskTilknyttning = brukerIdent?.get()?.let(pdlOppslagService::hentGeografiskTilknyttning)
-            val diskresjonskode = brukerIdent?.get()
-                ?.let(pdlOppslagService::hentAdressebeskyttelse)
-                ?.let { if (it.isEmpty()) null else it.first().toNorgDiskresjonsKode() }
+            val diskresjonskode =
+                brukerIdent?.get()
+                    ?.let(pdlOppslagService::hentAdressebeskyttelse)
+                    ?.let { if (it.isEmpty()) null else it.first().toNorgDiskresjonsKode() }
 
-            val erEgenAnsatt = if (underkategori == "ANSOS_KNA") {
-                false
-            } else {
-                brukerIdent?.let(skjermedePersonerApi::erSkjermetPerson)
-            }
+            val erEgenAnsatt =
+                if (underkategori == "ANSOS_KNA") {
+                    false
+                } else {
+                    brukerIdent?.let(skjermedePersonerApi::erSkjermetPerson)
+                }
 
             norgApi.hentBehandlendeEnheter(
                 behandling = behandling,
@@ -55,14 +57,14 @@ class ArbeidsfordelingServiceImpl(
                 oppgavetype = oppgavetype,
                 fagomrade = fagomrade,
                 erEgenAnsatt = erEgenAnsatt,
-                diskresjonskode = diskresjonskode
+                diskresjonskode = diskresjonskode,
             )
         }
             .getOrElse {
                 log.error("Kunne ikke hente behandlende enheter", it)
                 throw ArbeidsfordelingService.ArbeidsfordelingException(
                     "Kunne ikke hente behandlende enheter",
-                    it
+                    it,
                 )
             }
     }

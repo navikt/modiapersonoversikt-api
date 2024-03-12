@@ -39,10 +39,11 @@ object Filter {
             .toList()
     }
 
-    private fun erLovligBehandling(wsBehandlingskjede: Behandlingskjede) = ::harLovligStatusPaBehandling
-        .and(::harLovligBehandlingstypeEllerAvsluttetKvittering)
-        .and(::harLovligPrefix)
-        .invoke(wsBehandlingskjede)
+    private fun erLovligBehandling(wsBehandlingskjede: Behandlingskjede) =
+        ::harLovligStatusPaBehandling
+            .and(::harLovligBehandlingstypeEllerAvsluttetKvittering)
+            .and(::harLovligPrefix)
+            .invoke(wsBehandlingskjede)
 
     private fun harLovligStatusPaBehandling(kjede: Behandlingskjede): Boolean {
         return when (val status = kjede.sisteBehandlingsstatus.value) {
@@ -51,28 +52,37 @@ object Filter {
             else -> status == FilterUtils.AVSLUTTET
         }
     }
+
     private fun harLovligBehandlingstypeEllerAvsluttetKvittering(kjede: Behandlingskjede): Boolean {
         val type = kjede.sisteBehandlingstype.value
-        return erFerdigsUnder1MndSidanEllerInnsendtSoknad(type, kjede) || lovligMenUtgaatStatusEllerUnderBehandling(
-            type,
-            kjede
-        )
+        return erFerdigsUnder1MndSidanEllerInnsendtSoknad(type, kjede) ||
+            lovligMenUtgaatStatusEllerUnderBehandling(
+                type,
+                kjede,
+            )
     }
 
-    private fun erFerdigsUnder1MndSidanEllerInnsendtSoknad(type: String, kjede: Behandlingskjede): Boolean {
+    private fun erFerdigsUnder1MndSidanEllerInnsendtSoknad(
+        type: String,
+        kjede: Behandlingskjede,
+    ): Boolean {
         if (erKvitteringstype(type)) {
             return erAvsluttet(kjede) && under1MndSidenFerdigstillelse(kjede)
         }
         return if (erAvsluttet(kjede)) {
-            under1MndSidenFerdigstillelse(kjede) && lovligeBehandlingstyper.contains(
-                type
-            )
+            under1MndSidenFerdigstillelse(kjede) &&
+                lovligeBehandlingstyper.contains(
+                    type,
+                )
         } else {
             false
         }
     }
 
-    private fun lovligMenUtgaatStatusEllerUnderBehandling(type: String, kjede: Behandlingskjede): Boolean {
+    private fun lovligMenUtgaatStatusEllerUnderBehandling(
+        type: String,
+        kjede: Behandlingskjede,
+    ): Boolean {
         if (erAvsluttet(kjede) && !under1MndSidenFerdigstillelse(kjede)) {
             return false
         }
@@ -86,9 +96,10 @@ object Filter {
             try {
                 val sisteDato = kjede.sisteBehandlingsoppdatering
                 val now = LocalDate.now().minus(1, ChronoUnit.MONTHS)
-                val xgcMonthAgo = DatatypeFactory
-                    .newInstance()
-                    .newXMLGregorianCalendarDate(now.year, now.monthValue, now.dayOfMonth, 0)
+                val xgcMonthAgo =
+                    DatatypeFactory
+                        .newInstance()
+                        .newXMLGregorianCalendarDate(now.year, now.monthValue, now.dayOfMonth, 0)
                 val sisteDatoIMilliSec = sisteDato.toGregorianCalendar().timeInMillis.toDouble()
                 val mndSidanIMilliSec = xgcMonthAgo.toGregorianCalendar().timeInMillis.toDouble()
                 return sisteDatoIMilliSec >= mndSidanIMilliSec

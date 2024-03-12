@@ -11,9 +11,10 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 object TilgangTilBrukerMedKode7Policy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(TilgangTilBrukerMedKode7Policy)
-    private val kode7Roller = RolleListe(
-        "0000-ga-fortrolig_adresse"
-    )
+    private val kode7Roller =
+        RolleListe(
+            "0000-ga-fortrolig_adresse",
+        )
 
     override fun evaluate(ctx: EvaluationContext): Decision {
         val veilederRoller = ctx.getValue(VeiledersRollerPip)

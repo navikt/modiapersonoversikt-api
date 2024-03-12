@@ -16,12 +16,16 @@ internal class UnleashHandler<T : Any>(
     val feature: Feature,
     val unleashService: UnleashService,
     val ifEnabled: T,
-    val ifDisabled: T
+    val ifDisabled: T,
 ) : InvocationHandler {
     val log: Logger = LoggerFactory.getLogger(UnleashHandler::class.java)
     val name: String = type.java.simpleName
 
-    override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
+    override fun invoke(
+        proxy: Any,
+        method: Method,
+        args: Array<out Any>?,
+    ): Any? {
         val nullsafeArgs = args ?: arrayOfNulls<Any>(0)
         return try {
             if (unleashService.isEnabled(feature)) {
@@ -41,21 +45,23 @@ object UnleashProxySwitcher {
         featureToggle: Feature,
         unleashService: UnleashService,
         ifEnabled: T,
-        ifDisabled: T
+        ifDisabled: T,
     ): T {
-        val invocationHandler = UnleashHandler(
-            type = T::class,
-            feature = featureToggle,
-            unleashService = unleashService,
-            ifEnabled = ifEnabled,
-            ifDisabled = ifDisabled
-        )
+        val invocationHandler =
+            UnleashHandler(
+                type = T::class,
+                feature = featureToggle,
+                unleashService = unleashService,
+                ifEnabled = ifEnabled,
+                ifDisabled = ifDisabled,
+            )
 
-        val proxy = Proxy.newProxyInstance(
-            T::class.java.classLoader,
-            arrayOf(T::class.java),
-            invocationHandler
-        )
+        val proxy =
+            Proxy.newProxyInstance(
+                T::class.java.classLoader,
+                arrayOf(T::class.java),
+                invocationHandler,
+            )
 
         return proxy as T
     }

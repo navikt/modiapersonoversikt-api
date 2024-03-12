@@ -19,22 +19,25 @@ class HenvendelseProducerTest {
 
     @BeforeEach
     fun setUp() {
-        mockProducer = MockProducer(
-            true,
-            StringSerde().serializer(),
-            StringSerde().serializer()
-        )
+        mockProducer =
+            MockProducer(
+                true,
+                StringSerde().serializer(),
+                StringSerde().serializer(),
+            )
 
-        val personoversiktProducer = KafkaPersonoversiktProducerImpl(
-            producer = mockProducer!!,
-            topic = TOPIC,
-            messageSerializer = HenvendelseKafkaDTO.serializer()
-        )
-        henvendelseProducer = HenvendelseProducerImpl(
-            temaSomSkalPubliseres = TEMA_SOM_SKAL_PUBLISERES,
-            temagruppeSomSkalPubliseres = TEMAGRUPPE_SOM_SKAL_PUBLISERES,
-            producer = personoversiktProducer
-        )
+        val personoversiktProducer =
+            KafkaPersonoversiktProducerImpl(
+                producer = mockProducer!!,
+                topic = TOPIC,
+                messageSerializer = HenvendelseKafkaDTO.serializer(),
+            )
+        henvendelseProducer =
+            HenvendelseProducerImpl(
+                temaSomSkalPubliseres = TEMA_SOM_SKAL_PUBLISERES,
+                temagruppeSomSkalPubliseres = TEMAGRUPPE_SOM_SKAL_PUBLISERES,
+                producer = personoversiktProducer,
+            )
     }
 
     @AfterEach
@@ -45,17 +48,18 @@ class HenvendelseProducerTest {
 
     @Test
     fun `henvendelser med riktig tema blir sendt til kafka`() {
-        val henvendelse = HenvendelseDTO(
-            henvendelseType = HenvendelseDTO.HenvendelseType.CHAT,
-            fnr = "10108000398",
-            aktorId = "10108000398",
-            opprettetDato = OffsetDateTime.parse("2023-05-25T07:57:05.884615Z"),
-            kontorsperre = false,
-            feilsendt = false,
-            kjedeId = "",
-            gjeldendeTema = "SYK",
-            gjeldendeTemagruppe = "HELSE",
-        )
+        val henvendelse =
+            HenvendelseDTO(
+                henvendelseType = HenvendelseDTO.HenvendelseType.CHAT,
+                fnr = "10108000398",
+                aktorId = "10108000398",
+                opprettetDato = OffsetDateTime.parse("2023-05-25T07:57:05.884615Z"),
+                kontorsperre = false,
+                feilsendt = false,
+                kjedeId = "",
+                gjeldendeTema = "SYK",
+                gjeldendeTemagruppe = "HELSE",
+            )
 
         henvendelseProducer!!.sendHenvendelseUpdate(
             fnr = henvendelse.fnr,
@@ -69,16 +73,17 @@ class HenvendelseProducerTest {
 
     @Test
     fun `henvendelser med riktig temagruppe blir sendt til kafka`() {
-        val henvendelse = HenvendelseDTO(
-            henvendelseType = HenvendelseDTO.HenvendelseType.CHAT,
-            fnr = "10108000398",
-            aktorId = "10108000398",
-            opprettetDato = OffsetDateTime.parse("2023-05-25T07:57:05.884615Z"),
-            kontorsperre = false,
-            feilsendt = false,
-            kjedeId = "",
-            gjeldendeTemagruppe = "HELSE",
-        )
+        val henvendelse =
+            HenvendelseDTO(
+                henvendelseType = HenvendelseDTO.HenvendelseType.CHAT,
+                fnr = "10108000398",
+                aktorId = "10108000398",
+                opprettetDato = OffsetDateTime.parse("2023-05-25T07:57:05.884615Z"),
+                kontorsperre = false,
+                feilsendt = false,
+                kjedeId = "",
+                gjeldendeTemagruppe = "HELSE",
+            )
 
         henvendelseProducer!!.sendHenvendelseUpdate(
             fnr = henvendelse.fnr,
@@ -92,17 +97,18 @@ class HenvendelseProducerTest {
 
     @Test
     fun `henvendelser som ikke har riktig temagruppe blir ikke sendt til kafka`() {
-        val henvendelse = HenvendelseDTO(
-            henvendelseType = HenvendelseDTO.HenvendelseType.CHAT,
-            fnr = "10108000398",
-            aktorId = "10108000398",
-            opprettetDato = OffsetDateTime.now(),
-            kontorsperre = false,
-            feilsendt = false,
-            kjedeId = "",
-            gjeldendeTema = "AAP",
-            gjeldendeTemagruppe = "ARBD"
-        )
+        val henvendelse =
+            HenvendelseDTO(
+                henvendelseType = HenvendelseDTO.HenvendelseType.CHAT,
+                fnr = "10108000398",
+                aktorId = "10108000398",
+                opprettetDato = OffsetDateTime.now(),
+                kontorsperre = false,
+                feilsendt = false,
+                kjedeId = "",
+                gjeldendeTema = "AAP",
+                gjeldendeTemagruppe = "ARBD",
+            )
 
         henvendelseProducer!!.sendHenvendelseUpdate(
             fnr = henvendelse.fnr,

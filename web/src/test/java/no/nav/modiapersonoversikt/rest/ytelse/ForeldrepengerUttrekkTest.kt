@@ -18,7 +18,6 @@ import kotlin.test.assertFailsWith
 private const val FNR = "10108000398"
 
 internal class ForeldrepengerUttrekkTest {
-
     private val foreldrepengerServiceV2: ForeldrepengerV2 = mockk()
 
     private val service = DefaultForeldrepengerService()
@@ -62,10 +61,11 @@ internal class ForeldrepengerUttrekkTest {
 
     private fun createXMLGregorianCalendar() = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2000, 2, 1, 1)
 
-    private fun mockResponse() = FimHentForeldrepengerettighetResponse()
-        .withForeldrepengerettighet(
-            FimFoedsel()
-                .withAntallBarn(BigInteger.TEN)
-                .withBarnetFoedt(createXMLGregorianCalendar())
-        )
+    private fun mockResponse() =
+        FimHentForeldrepengerettighetResponse()
+            .withForeldrepengerettighet(
+                FimFoedsel()
+                    .withAntallBarn(BigInteger.TEN)
+                    .withBarnetFoedt(createXMLGregorianCalendar()),
+            )
 }

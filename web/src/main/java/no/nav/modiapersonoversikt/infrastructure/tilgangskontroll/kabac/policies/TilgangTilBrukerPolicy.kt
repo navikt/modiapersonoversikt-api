@@ -9,6 +9,6 @@ object TilgangTilBrukerPolicy : Kabac.Policy by CombiningAlgorithm.denyOverride.
         GeografiskTilgangPolicy,
         TilgangTilBrukerMedSkjermingPolicy,
         TilgangTilBrukerMedKode6Policy,
-        TilgangTilBrukerMedKode7Policy
-    )
+        TilgangTilBrukerMedKode7Policy,
+    ),
 )

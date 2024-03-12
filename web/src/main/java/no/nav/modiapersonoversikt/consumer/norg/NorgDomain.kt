@@ -4,16 +4,27 @@ import no.nav.common.types.identer.EnhetId
 
 object NorgDomain {
     enum class EnhetStatus {
-        UNDER_ETABLERING, AKTIV, UNDER_AVVIKLING, NEDLAGT;
+        UNDER_ETABLERING,
+        AKTIV,
+        UNDER_AVVIKLING,
+        NEDLAGT,
+        ;
+
         companion object {
             fun safeValueOf(status: String?) = valueOf(safeEnumValue(status))
         }
     }
+
     enum class OppgaveBehandlerFilter {
-        UFILTRERT, KUN_OPPGAVEBEHANDLERE, INGEN_OPPGAVEBEHANDLERE
+        UFILTRERT,
+        KUN_OPPGAVEBEHANDLERE,
+        INGEN_OPPGAVEBEHANDLERE,
     }
+
     enum class DiskresjonsKode {
-        SPFO, SPSF, ANY
+        SPFO,
+        SPSF,
+        ANY,
     }
 
     data class EnhetGeografiskTilknyttning(
@@ -27,16 +38,18 @@ object NorgDomain {
         val enhetId: String,
         val enhetNavn: String,
         val status: EnhetStatus,
-        val oppgavebehandler: Boolean
+        val oppgavebehandler: Boolean,
     )
+
     data class EnhetKontaktinformasjon(
         val enhet: Enhet,
         val publikumsmottak: List<Publikumsmottak>,
-        val overordnetEnhet: EnhetId?
+        val overordnetEnhet: EnhetId?,
     )
+
     data class Publikumsmottak(
         val besoksadresse: Gateadresse?,
-        val apningstider: List<Apningstid>
+        val apningstider: List<Apningstid>,
     )
 
     data class Gateadresse(
@@ -48,7 +61,15 @@ object NorgDomain {
     )
 
     enum class Ukedag {
-        MANDAG, TIRSDAG, ONSDAG, TORSDAG, FREDAG, LORDAG, SONDAG;
+        MANDAG,
+        TIRSDAG,
+        ONSDAG,
+        TORSDAG,
+        FREDAG,
+        LORDAG,
+        SONDAG,
+        ;
+
         companion object {
             fun safeValueOf(status: String?) = valueOf(safeEnumValue(status))
         }
@@ -58,7 +79,7 @@ object NorgDomain {
         val ukedag: Ukedag,
         val stengt: Boolean,
         val apentFra: String?,
-        val apentTil: String?
+        val apentTil: String?,
     )
 
     private fun safeEnumValue(value: String?) = requireNotNull(value).uppercase().replace(' ', '_')

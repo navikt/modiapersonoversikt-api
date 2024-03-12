@@ -19,18 +19,20 @@ open class SakOgBehandlingEndpointConfig {
 
     @Bean
     open fun sakOgBehandlingPortType(): SakOgBehandlingV1 {
-        val porttype = createSakogbehandlingPortType()
-            .configureStsForSubject(stsConfig)
-            .build()
+        val porttype =
+            createSakogbehandlingPortType()
+                .configureStsForSubject(stsConfig)
+                .build()
 
         return MetricsFactory.createTimerProxyForWebService("SakOgBehandling", porttype, SakOgBehandlingV1::class.java)
     }
 
     @Bean
     open fun pingSakOgBehandling(): Pingable {
-        val porttype = createSakogbehandlingPortType()
-            .configureStsForSystemUser(stsConfig)
-            .build()
+        val porttype =
+            createSakogbehandlingPortType()
+                .configureStsForSystemUser(stsConfig)
+                .build()
 
         return PingableWebService("Sak og behandling", porttype)
     }
@@ -43,8 +45,8 @@ open class SakOgBehandlingEndpointConfig {
             .endpointName(
                 QName(
                     "http://nav.no/tjeneste/virksomhet/sakOgBehandling/v1/Binding",
-                    "SakOgBehandling_v1Port"
-                )
+                    "SakOgBehandling_v1Port",
+                ),
             )
             .address(EnvironmentUtils.getRequiredProperty("SAKOGBEHANDLING_ENDPOINTURL"))
     }

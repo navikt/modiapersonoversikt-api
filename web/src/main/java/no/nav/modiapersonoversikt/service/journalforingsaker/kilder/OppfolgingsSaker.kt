@@ -8,7 +8,10 @@ internal class OppfolgingsSaker : SakerKilde {
     override val kildeNavn: String
         get() = "OPPFOLGING"
 
-    override fun leggTilSaker(fnr: String, saker: MutableList<JournalforingSak>) {
+    override fun leggTilSaker(
+        fnr: String,
+        saker: MutableList<JournalforingSak>,
+    ) {
         val generelleSaker = saker.filter(JournalforingSak.IS_GENERELL_SAK::test)
         val fagsaker = saker.filter(JournalforingSak.IS_GENERELL_SAK.negate()::test)
 
@@ -25,12 +28,15 @@ internal class OppfolgingsSaker : SakerKilde {
                     fagsystemKode = JournalforingSak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
                     sakstype = JournalforingSak.SAKSTYPE_GENERELL
                     opprettetDato = DateTime.now()
-                }
+                },
             )
         }
     }
 
-    private fun fjernGenerellOppfolgingssak(saker: MutableList<JournalforingSak>, generelleSaker: List<JournalforingSak>) {
+    private fun fjernGenerellOppfolgingssak(
+        saker: MutableList<JournalforingSak>,
+        generelleSaker: List<JournalforingSak>,
+    ) {
         for (sak in generelleSaker) {
             if (JournalforingSak.TEMAKODE_OPPFOLGING == sak.temaKode) {
                 saker.remove(sak)

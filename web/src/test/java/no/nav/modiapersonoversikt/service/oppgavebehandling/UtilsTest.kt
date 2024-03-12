@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 data class Response(val total: Long, val data: List<String>)
+
 internal class UtilsTest {
     @Test
     fun `skal ikke havne i evig loop`() {
@@ -12,7 +13,7 @@ internal class UtilsTest {
             data = { it.data },
             action = { offset ->
                 Response(total = 1, data = emptyList())
-            }
+            },
         )
 
         assertTrue(true)

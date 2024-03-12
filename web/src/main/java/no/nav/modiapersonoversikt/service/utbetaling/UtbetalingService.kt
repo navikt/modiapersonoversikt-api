@@ -5,5 +5,9 @@ import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import java.time.LocalDate
 
 interface UtbetalingService : Pingable {
-    fun hentUtbetalinger(fnr: Fnr, startDato: LocalDate, sluttDato: LocalDate): List<UtbetalingDomain.Utbetaling>
+    fun hentUtbetalinger(
+        fnr: Fnr,
+        startDato: LocalDate,
+        sluttDato: LocalDate,
+    ): List<UtbetalingDomain.Utbetaling>
 }

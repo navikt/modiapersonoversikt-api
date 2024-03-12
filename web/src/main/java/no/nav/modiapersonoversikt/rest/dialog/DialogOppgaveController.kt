@@ -24,89 +24,105 @@ private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
 @RestController
 @RequestMapping("/rest/dialogoppgave")
-class DialogOppgaveController @Autowired constructor(
-    private val oppgavebehandling: OppgaveBehandlingService,
-    private val tilgangskontroll: Tilgangskontroll,
-    private val kodeverkService: EnhetligKodeverk.Service
-) {
+class DialogOppgaveController
+    @Autowired
+    constructor(
+        private val oppgavebehandling: OppgaveBehandlingService,
+        private val tilgangskontroll: Tilgangskontroll,
+        private val kodeverkService: EnhetligKodeverk.Service,
+    ) {
+        @PostMapping("/v2/opprett")
+        fun opprettOppgave(
+            @RequestBody request: OpprettOppgaveRequestDTO,
+        ): OpprettOppgaveResponseDTO {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
+                .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.behandlingskjedeId))
+                .get(
+                    Audit.describe(
+                        CREATE,
+                        Henvendelse.Oppgave.Opprett,
+                        AuditIdentifier.FNR to request.fnr,
+                        AuditIdentifier.BEHANDLING_ID to request.behandlingskjedeId,
+                    ),
+                ) {
+                    oppgavebehandling.opprettOppgave(request.fromDTO()).toDTO()
+                }
+        }
 
-    @PostMapping("/v2/opprett")
-    fun opprettOppgave(@RequestBody request: OpprettOppgaveRequestDTO): OpprettOppgaveResponseDTO {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
-            .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.behandlingskjedeId))
-            .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingskjedeId)) {
-                oppgavebehandling.opprettOppgave(request.fromDTO()).toDTO()
-            }
+        @PostMapping("/v2/opprettskjermetoppgave")
+        fun opprettSkjermetOppgave(
+            @RequestBody request: OpprettSkjermetOppgaveDTO,
+        ): OpprettOppgaveResponseDTO {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
+                    oppgavebehandling.opprettSkjermetOppgave(request.fromDTO()).toDTO()
+                }
+        }
+
+        @GetMapping("/v2/tema")
+        fun hentAlleTema(): List<OppgaveKodeverk.Tema> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.skipAuditLog()) {
+                    kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentAlleVerdier().toList()
+                }
+        }
+
+        private fun kalkulerFrist(
+            temaKode: String,
+            oppgaveTypeKode: String,
+        ): LocalDate {
+            val dagerFrist =
+                kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentVerdiEllerNull(temaKode)
+                    ?.oppgavetyper
+                    ?.find { it.kode == oppgaveTypeKode }
+                    ?.dagerFrist
+                    ?: 2
+            return arbeidsdagerFraDatoJava(dagerFrist, LocalDate.now())
+        }
+
+        private fun OpprettOppgaveRequestDTO.fromDTO(): OpprettOppgaveRequest =
+            OpprettOppgaveRequest(
+                fnr = fnr,
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = beskrivelse,
+                temagruppe = "",
+                tema = temaKode,
+                oppgavetype = oppgaveTypeKode,
+                behandlingstype = HENVENDELSESTYPE_KODE,
+                prioritet = prioritetKode,
+                underkategoriKode = underkategoriKode,
+                opprettetavenhetsnummer = opprettetavenhetsnummer,
+                oppgaveFrist = kalkulerFrist(temaKode, oppgaveTypeKode),
+                valgtEnhetsId = valgtEnhetId.toString(),
+                behandlingskjedeId = behandlingskjedeId.fixKjedeId(),
+                dagerFrist = dagerFrist,
+                ansvarligEnhetId = ansvarligEnhetId,
+                ansvarligIdent = ansvarligIdent,
+            )
+
+        private fun OpprettSkjermetOppgaveDTO.fromDTO(): OpprettSkjermetOppgaveRequest =
+            OpprettSkjermetOppgaveRequest(
+                fnr = fnr,
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = beskrivelse,
+                temagruppe = "",
+                tema = temaKode,
+                oppgavetype = oppgaveTypeKode,
+                behandlingstype = HENVENDELSESTYPE_KODE,
+                prioritet = prioritetKode,
+                underkategoriKode = underkategoriKode,
+                opprettetavenhetsnummer = opprettetavenhetsnummer,
+                oppgaveFrist = kalkulerFrist(temaKode, oppgaveTypeKode),
+            )
+
+        private fun OpprettOppgaveResponse.toDTO(): OpprettOppgaveResponseDTO =
+            OpprettOppgaveResponseDTO(
+                id = id,
+            )
     }
-
-    @PostMapping("/v2/opprettskjermetoppgave")
-    fun opprettSkjermetOppgave(
-        @RequestBody request: OpprettSkjermetOppgaveDTO
-    ): OpprettOppgaveResponseDTO {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
-                oppgavebehandling.opprettSkjermetOppgave(request.fromDTO()).toDTO()
-            }
-    }
-
-    @GetMapping("/v2/tema")
-    fun hentAlleTema(): List<OppgaveKodeverk.Tema> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.skipAuditLog()) {
-                kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentAlleVerdier().toList()
-            }
-    }
-
-    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): LocalDate {
-        val dagerFrist = kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentVerdiEllerNull(temaKode)
-            ?.oppgavetyper
-            ?.find { it.kode == oppgaveTypeKode }
-            ?.dagerFrist
-            ?: 2
-        return arbeidsdagerFraDatoJava(dagerFrist, LocalDate.now())
-    }
-
-    private fun OpprettOppgaveRequestDTO.fromDTO(): OpprettOppgaveRequest = OpprettOppgaveRequest(
-        fnr = fnr,
-        behandlesAvApplikasjon = "FS22",
-        beskrivelse = beskrivelse,
-        temagruppe = "",
-        tema = temaKode,
-        oppgavetype = oppgaveTypeKode,
-        behandlingstype = HENVENDELSESTYPE_KODE,
-        prioritet = prioritetKode,
-        underkategoriKode = underkategoriKode,
-        opprettetavenhetsnummer = opprettetavenhetsnummer,
-        oppgaveFrist = kalkulerFrist(temaKode, oppgaveTypeKode),
-        valgtEnhetsId = valgtEnhetId.toString(),
-        behandlingskjedeId = behandlingskjedeId.fixKjedeId(),
-        dagerFrist = dagerFrist,
-        ansvarligEnhetId = ansvarligEnhetId,
-        ansvarligIdent = ansvarligIdent
-
-    )
-
-    private fun OpprettSkjermetOppgaveDTO.fromDTO(): OpprettSkjermetOppgaveRequest = OpprettSkjermetOppgaveRequest(
-        fnr = fnr,
-        behandlesAvApplikasjon = "FS22",
-        beskrivelse = beskrivelse,
-        temagruppe = "",
-        tema = temaKode,
-        oppgavetype = oppgaveTypeKode,
-        behandlingstype = HENVENDELSESTYPE_KODE,
-        prioritet = prioritetKode,
-        underkategoriKode = underkategoriKode,
-        opprettetavenhetsnummer = opprettetavenhetsnummer,
-        oppgaveFrist = kalkulerFrist(temaKode, oppgaveTypeKode)
-    )
-
-    private fun OpprettOppgaveResponse.toDTO(): OpprettOppgaveResponseDTO = OpprettOppgaveResponseDTO(
-        id = id
-    )
-}
 
 data class OpprettOppgaveRequestDTO(
     val fnr: String,
@@ -120,7 +136,7 @@ data class OpprettOppgaveRequestDTO(
     val temaKode: String,
     val underkategoriKode: String?,
     val oppgaveTypeKode: String,
-    val prioritetKode: String
+    val prioritetKode: String,
 )
 
 data class OpprettSkjermetOppgaveDTO(
@@ -130,9 +146,9 @@ data class OpprettSkjermetOppgaveDTO(
     val temaKode: String,
     val underkategoriKode: String?,
     val oppgaveTypeKode: String,
-    val prioritetKode: String
+    val prioritetKode: String,
 )
 
 data class OpprettOppgaveResponseDTO(
-    val id: String
+    val id: String,
 )

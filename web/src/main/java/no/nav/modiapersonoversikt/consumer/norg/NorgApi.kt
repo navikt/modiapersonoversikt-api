@@ -42,11 +42,16 @@ interface NorgApi : Pingable {
     fun hentEnheter(
         enhetId: EnhetId?,
         oppgaveBehandlende: OppgaveBehandlerFilter = OppgaveBehandlerFilter.UFILTRERT,
-        enhetStatuser: List<EnhetStatus> = IKKE_NEDLAGT
+        enhetStatuser: List<EnhetStatus> = IKKE_NEDLAGT,
     ): List<Enhet>
 
-    fun finnNavKontor(geografiskTilknytning: String, diskresjonskode: NorgDomain.DiskresjonsKode?): Enhet?
+    fun finnNavKontor(
+        geografiskTilknytning: String,
+        diskresjonskode: NorgDomain.DiskresjonsKode?,
+    ): Enhet?
+
     fun hentRegionalEnheter(enhet: List<EnhetId>): List<EnhetId>
+
     fun hentRegionalEnhet(enhet: EnhetId): EnhetId?
 
     fun hentBehandlendeEnheter(
@@ -55,7 +60,7 @@ interface NorgApi : Pingable {
         oppgavetype: String?,
         fagomrade: String?,
         erEgenAnsatt: Boolean?,
-        diskresjonskode: NorgDomain.DiskresjonsKode?
+        diskresjonskode: NorgDomain.DiskresjonsKode?,
     ): List<Enhet>
 
     fun hentKontaktinfo(enhet: EnhetId): EnhetKontaktinformasjon
@@ -65,7 +70,7 @@ class NorgApiImpl(
     private val url: String,
     httpClient: OkHttpClient,
     scheduler: Timer = Timer(),
-    private val clock: Clock = Clock.systemDefaultZone()
+    private val clock: Clock = Clock.systemDefaultZone(),
 ) : NorgApi {
     private val log: Logger = LoggerFactory.getLogger(NorgApi::class.java)
     private val cacheRetention = Duration.ofHours(1)
@@ -76,14 +81,15 @@ class NorgApiImpl(
     private val gtCache = createNorgCache<String, List<EnhetGeografiskTilknyttning>>()
     private val regionalkontorCache = createNorgCache<EnhetId, EnhetId>()
 
-    private val retry = Retry(
-        Retry.Config(
-            initDelay = 30.seconds,
-            growthFactor = 2.0,
-            delayLimit = 1.hours,
-            scheduler = scheduler
+    private val retry =
+        Retry(
+            Retry.Config(
+                initDelay = 30.seconds,
+                growthFactor = 2.0,
+                delayLimit = 1.hours,
+                scheduler = scheduler,
+            ),
         )
-    )
 
     private val arbeidsfordelingApi = ArbeidsfordelingApi(url, httpClient)
     private val enhetApi = EnhetApi(url, httpClient)
@@ -97,7 +103,7 @@ class NorgApiImpl(
             period = cacheRetention.toMillis(),
             action = {
                 hentEnheterOgKontaktinformasjon()
-            }
+            },
         )
     }
 
@@ -111,14 +117,15 @@ class NorgApiImpl(
     override fun hentEnheter(
         enhetId: EnhetId?,
         oppgaveBehandlende: OppgaveBehandlerFilter,
-        enhetStatuser: List<EnhetStatus>
+        enhetStatuser: List<EnhetStatus>,
     ): List<Enhet> {
         val kandidater = if (enhetId != null) listOfNotNull(cache[enhetId]) else cache.values
-        val oppgaveBehandlerFilter: (EnhetKontaktinformasjon) -> Boolean = when (oppgaveBehandlende) {
-            OppgaveBehandlerFilter.UFILTRERT -> ({ true })
-            OppgaveBehandlerFilter.INGEN_OPPGAVEBEHANDLERE -> ({ !it.enhet.oppgavebehandler })
-            OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE -> ({ it.enhet.oppgavebehandler })
-        }
+        val oppgaveBehandlerFilter: (EnhetKontaktinformasjon) -> Boolean =
+            when (oppgaveBehandlende) {
+                OppgaveBehandlerFilter.UFILTRERT -> ({ true })
+                OppgaveBehandlerFilter.INGEN_OPPGAVEBEHANDLERE -> ({ !it.enhet.oppgavebehandler })
+                OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE -> ({ it.enhet.oppgavebehandler })
+            }
 
         return kandidater
             .filter(oppgaveBehandlerFilter)
@@ -126,13 +133,16 @@ class NorgApiImpl(
             .map { it.enhet }
     }
 
-    override fun finnNavKontor(geografiskTilknytning: String, diskresjonskode: NorgDomain.DiskresjonsKode?): Enhet? {
+    override fun finnNavKontor(
+        geografiskTilknytning: String,
+        diskresjonskode: NorgDomain.DiskresjonsKode?,
+    ): Enhet? {
         val key = "finnNavKontor[$geografiskTilknytning,$diskresjonskode]"
         return navkontorCache.get(key) {
             if (geografiskTilknytning.isNumeric()) {
                 enhetApi.getEnhetByGeografiskOmraadeUsingGET(
                     geografiskOmraade = geografiskTilknytning,
-                    disk = diskresjonskode?.name
+                    disk = diskresjonskode?.name,
                 )?.let(::toInternalDomain)
             } else {
                 /**
@@ -163,7 +173,7 @@ class NorgApiImpl(
         oppgavetype: String?,
         fagomrade: String?,
         erEgenAnsatt: Boolean?,
-        diskresjonskode: NorgDomain.DiskresjonsKode?
+        diskresjonskode: NorgDomain.DiskresjonsKode?,
     ): List<Enhet> {
         return arbeidsfordelingApi
             .runCatching {
@@ -178,7 +188,7 @@ class NorgApiImpl(
                         diskresjonskode = diskresjonskode?.name,
                         enhetNummer = null,
                         temagruppe = null,
-                    )
+                    ),
                 )
             }
             .getOrElse {
@@ -194,92 +204,104 @@ class NorgApiImpl(
         }
     }
 
-    override fun ping() = SelfTestCheck(
-        "NorgApi via $url (${cache.size}, ${gtCache.estimatedSize()}, ${navkontorCache.estimatedSize()}, ${regionalkontorCache.estimatedSize()})",
-        false
-    ) {
-        val limit = LocalDateTime.now(clock).minus(cacheRetention).plus(cacheGraceperiod)
-        val cacheIsFresh = lastUpdateOfCache?.isAfter(limit) == true
+    override fun ping() =
+        SelfTestCheck(
+            """
+            NorgApi via $url (${cache.size}, ${gtCache.estimatedSize()}, ${navkontorCache.estimatedSize()}, ${regionalkontorCache.estimatedSize()})
+            """,
+            false,
+        ) {
+            val limit = LocalDateTime.now(clock).minus(cacheRetention).plus(cacheGraceperiod)
+            val cacheIsFresh = lastUpdateOfCache?.isAfter(limit) == true
 
-        if (cacheIsFresh && cache.isNotEmpty()) {
-            HealthCheckResult.healthy()
-        } else {
-            HealthCheckResult.unhealthy(
-                """
-                Last updated: $lastUpdateOfCache
-                CacheSize: ${cache.size}
-                """.trimIndent()
-            )
+            if (cacheIsFresh && cache.isNotEmpty()) {
+                HealthCheckResult.healthy()
+            } else {
+                HealthCheckResult.unhealthy(
+                    """
+                    Last updated: $lastUpdateOfCache
+                    CacheSize: ${cache.size}
+                    """.trimIndent(),
+                )
+            }
         }
-    }
 
     private fun hentEnheterOgKontaktinformasjon() {
         runBlocking {
             retry.run {
-                cache = enhetKontaktInfoApi
-                    .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
-                        consumerId = AppConstants.SYSTEMUSER_USERNAME
-                    )
-                    ?.mapNotNull {
-                        try {
-                            toInternalDomain(it)
-                        } catch (e: Exception) {
-                            log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
-                            null
+                cache =
+                    enhetKontaktInfoApi
+                        .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
+                            consumerId = AppConstants.SYSTEMUSER_USERNAME,
+                        )
+                        ?.mapNotNull {
+                            try {
+                                toInternalDomain(it)
+                            } catch (e: Exception) {
+                                log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
+                                null
+                            }
                         }
-                    }
-                    ?.associateBy { EnhetId(it.enhet.enhetId) }.orEmpty()
+                        ?.associateBy { EnhetId(it.enhet.enhetId) }.orEmpty()
                 lastUpdateOfCache = LocalDateTime.now(clock)
             }
         }
     }
 
-    private fun <KEY, VALUE> createNorgCache() = CacheUtils.createCache<KEY, VALUE>(
-        expireAfterWrite = cacheRetention,
-        maximumSize = 2000
-    )
+    private fun <KEY, VALUE> createNorgCache() =
+        CacheUtils.createCache<KEY, VALUE>(
+            expireAfterWrite = cacheRetention,
+            maximumSize = 2000,
+        )
 
     companion object {
-        internal fun toInternalDomain(kontor: RsNavKontorDTO) = EnhetGeografiskTilknyttning(
-            alternativEnhetId = kontor.alternativEnhetId?.toString(),
-            enhetId = kontor.enhetId?.toString(),
-            geografiskOmraade = kontor.geografiskOmraade,
-            navKontorId = kontor.navKontorId?.toString()
-        )
+        internal fun toInternalDomain(kontor: RsNavKontorDTO) =
+            EnhetGeografiskTilknyttning(
+                alternativEnhetId = kontor.alternativEnhetId?.toString(),
+                enhetId = kontor.enhetId?.toString(),
+                geografiskOmraade = kontor.geografiskOmraade,
+                navKontorId = kontor.navKontorId?.toString(),
+            )
 
-        internal fun toInternalDomain(enhet: RsEnhetDTO) = Enhet(
-            enhetId = requireNotNull(enhet.enhetNr),
-            enhetNavn = requireNotNull(enhet.navn),
-            status = EnhetStatus.safeValueOf(enhet.status),
-            oppgavebehandler = requireNotNull(enhet.oppgavebehandler)
-        )
+        internal fun toInternalDomain(enhet: RsEnhetDTO) =
+            Enhet(
+                enhetId = requireNotNull(enhet.enhetNr),
+                enhetNavn = requireNotNull(enhet.navn),
+                status = EnhetStatus.safeValueOf(enhet.status),
+                oppgavebehandler = requireNotNull(enhet.oppgavebehandler),
+            )
 
-        internal fun toInternalDomain(enhet: RsEnhetInkludertKontaktinformasjonDTO) = EnhetKontaktinformasjon(
-            enhet = toInternalDomain(requireNotNull(enhet.enhet)),
-            publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList(),
-            overordnetEnhet = enhet.overordnetEnhet?.let(::EnhetId)
-        )
+        internal fun toInternalDomain(enhet: RsEnhetInkludertKontaktinformasjonDTO) =
+            EnhetKontaktinformasjon(
+                enhet = toInternalDomain(requireNotNull(enhet.enhet)),
+                publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList(),
+                overordnetEnhet = enhet.overordnetEnhet?.let(::EnhetId),
+            )
 
-        private fun toInternalDomain(mottak: RsPublikumsmottakDTO) = NorgDomain.Publikumsmottak(
-            besoksadresse = mottak.besoeksadresse?.let { toInternalDomain(it) },
-            apningstider = mottak.aapningstider
-                ?.filter { it.dag != null }
-                ?.map { toInternalDomain(it) } ?: emptyList()
-        )
+        private fun toInternalDomain(mottak: RsPublikumsmottakDTO) =
+            NorgDomain.Publikumsmottak(
+                besoksadresse = mottak.besoeksadresse?.let { toInternalDomain(it) },
+                apningstider =
+                    mottak.aapningstider
+                        ?.filter { it.dag != null }
+                        ?.map { toInternalDomain(it) } ?: emptyList(),
+            )
 
-        private fun toInternalDomain(adresse: RsStedsadresseDTO) = NorgDomain.Gateadresse(
-            gatenavn = adresse.gatenavn,
-            husnummer = adresse.husnummer,
-            husbokstav = adresse.husbokstav,
-            postnummer = adresse.postnummer,
-            poststed = adresse.poststed
-        )
+        private fun toInternalDomain(adresse: RsStedsadresseDTO) =
+            NorgDomain.Gateadresse(
+                gatenavn = adresse.gatenavn,
+                husnummer = adresse.husnummer,
+                husbokstav = adresse.husbokstav,
+                postnummer = adresse.postnummer,
+                poststed = adresse.poststed,
+            )
 
-        private fun toInternalDomain(aapningstid: RsAapningstidDTO) = NorgDomain.Apningstid(
-            ukedag = NorgDomain.Ukedag.safeValueOf(aapningstid.dag),
-            stengt = aapningstid.stengt ?: false,
-            apentFra = aapningstid.fra,
-            apentTil = aapningstid.til
-        )
+        private fun toInternalDomain(aapningstid: RsAapningstidDTO) =
+            NorgDomain.Apningstid(
+                ukedag = NorgDomain.Ukedag.safeValueOf(aapningstid.dag),
+                stengt = aapningstid.stengt ?: false,
+                apentFra = aapningstid.fra,
+                apentTil = aapningstid.til,
+            )
     }
 }

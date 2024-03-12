@@ -7,5 +7,5 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.sfh
 data class KodeverkProviders(
     val fellesKodeverk: FellesKodeverk.Provider,
     val sfHenvendelseKodeverk: SfHenvendelseKodeverk.Provider,
-    val oppgaveKodeverk: OppgaveKodeverk.Provider
+    val oppgaveKodeverk: OppgaveKodeverk.Provider,
 )

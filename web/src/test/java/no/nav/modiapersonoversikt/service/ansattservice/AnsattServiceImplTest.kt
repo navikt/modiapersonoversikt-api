@@ -28,18 +28,20 @@ internal class AnsattServiceImplTest {
 
     @Test
     fun `skal hente alle ansatte for en enhet`() {
-        every { axsys.hentTilganger(NavIdent("Z994404")) } returns listOf(
-            lagNavEnhet("111", "testEnhet"),
-            lagNavEnhet("222", "testEnhet2"),
-            lagNavEnhet("333", "testEnhet3")
-        )
+        every { axsys.hentTilganger(NavIdent("Z994404")) } returns
+            listOf(
+                lagNavEnhet("111", "testEnhet"),
+                lagNavEnhet("222", "testEnhet2"),
+                lagNavEnhet("333", "testEnhet3"),
+            )
 
-        val enheter: List<AnsattEnhet> = AuthContextTestUtils.withIdent(
-            "Z994404",
-            UnsafeSupplier {
-                ansattServiceImpl.hentEnhetsliste()
-            }
-        )
+        val enheter: List<AnsattEnhet> =
+            AuthContextTestUtils.withIdent(
+                "Z994404",
+                UnsafeSupplier {
+                    ansattServiceImpl.hentEnhetsliste()
+                },
+            )
 
         snapshot.assertMatches(enheter)
     }
@@ -55,10 +57,11 @@ internal class AnsattServiceImplTest {
 
     @Test
     fun `skal kunne hente liste over ansatt sine fagområder`() {
-        every { axsys.hentTilganger(NavIdent("Z994404")) } returns listOf(
-            lagNavEnhet("111", "enhet123", listOf("AAP", "DAG")),
-            lagNavEnhet("222", "testEnhet2", listOf("SYK", "SYM"))
-        )
+        every { axsys.hentTilganger(NavIdent("Z994404")) } returns
+            listOf(
+                lagNavEnhet("111", "enhet123", listOf("AAP", "DAG")),
+                lagNavEnhet("222", "testEnhet2", listOf("SYK", "SYM")),
+            )
 
         val fagomraader = ansattServiceImpl.hentAnsattFagomrader("Z994404", "111")
 
@@ -70,24 +73,30 @@ internal class AnsattServiceImplTest {
         val listeMedNavIder = listOf(NavIdent("111"), NavIdent("222"), NavIdent("333"), NavIdent("444"))
 
         every { axsys.hentAnsatte(EnhetId("123")) } returns listeMedNavIder
-        every { nomClient.finnNavn(listeMedNavIder) } returns listOf(
-            lagNavAnsatt("Kalle", "Karlsson", "111"),
-            lagNavAnsatt("Klara", "Svensson", "222"),
-            lagNavAnsatt("Knut", "Larsson", "333"),
-            lagNavAnsatt("Kristina", "Johansson", "444")
-        )
-
-        val ansatteListe = ansattServiceImpl.ansatteForEnhet(
-            AnsattEnhet(
-                "123",
-                "testEnhet"
+        every { nomClient.finnNavn(listeMedNavIder) } returns
+            listOf(
+                lagNavAnsatt("Kalle", "Karlsson", "111"),
+                lagNavAnsatt("Klara", "Svensson", "222"),
+                lagNavAnsatt("Knut", "Larsson", "333"),
+                lagNavAnsatt("Kristina", "Johansson", "444"),
             )
-        )
+
+        val ansatteListe =
+            ansattServiceImpl.ansatteForEnhet(
+                AnsattEnhet(
+                    "123",
+                    "testEnhet",
+                ),
+            )
 
         snapshot.assertMatches(ansatteListe)
     }
 
-    private fun lagNavAnsatt(fornavn: String, etternavn: String, id: String): VeilederNavn {
+    private fun lagNavAnsatt(
+        fornavn: String,
+        etternavn: String,
+        id: String,
+    ): VeilederNavn {
         return VeilederNavn()
             .setFornavn(fornavn)
             .setEtternavn(etternavn)
@@ -95,7 +104,11 @@ internal class AnsattServiceImplTest {
             .setVisningsNavn("$fornavn $etternavn")
     }
 
-    private fun lagNavEnhet(enhetsId: String, enhetsNavn: String, temaer: List<String>? = null): AxsysEnhet {
+    private fun lagNavEnhet(
+        enhetsId: String,
+        enhetsNavn: String,
+        temaer: List<String>? = null,
+    ): AxsysEnhet {
         return AxsysEnhet()
             .setEnhetId(EnhetId(enhetsId))
             .setNavn(enhetsNavn)

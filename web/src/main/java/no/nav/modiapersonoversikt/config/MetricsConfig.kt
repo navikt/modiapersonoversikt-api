@@ -21,8 +21,8 @@ open class MetricsConfig() {
             RestClient.setBaseClient(
                 RestClient.baseClientBuilder().eventListener(
                     buildEventListener().uriMapper(::buildUriMap)
-                        .build()
-                ).build()
+                        .build(),
+                ).build(),
             )
         }
 

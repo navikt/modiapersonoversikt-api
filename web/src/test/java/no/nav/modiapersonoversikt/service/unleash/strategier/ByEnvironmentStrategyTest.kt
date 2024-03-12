@@ -12,7 +12,11 @@ internal class ByEnvironmentStrategyTest {
 
     @ParameterizedTest
     @MethodSource("testcases")
-    internal fun `should evaluate strategy`(unleashConfig: String?, simulatedEnv: String?, expected: Boolean) {
+    internal fun `should evaluate strategy`(
+        unleashConfig: String?,
+        simulatedEnv: String?,
+        expected: Boolean,
+    ) {
         withEnvironment(mapOf(ENVIRONMENT_PROPERTY to simulatedEnv)) {
             val parameters = mapOf(ByEnvironmentStrategy.ENABLED_ENVIRONMENT_PROPERTY to unleashConfig)
 
@@ -22,23 +26,30 @@ internal class ByEnvironmentStrategyTest {
 
     companion object {
         @JvmStatic
-        fun testcases() = listOf(
-            strategyEnabled(simulatedEnv = "t6", unleashConfig = "t6"),
-            strategyEnabled(simulatedEnv = "q1", unleashConfig = "q6,q1,t6"),
-            strategyDisabled(simulatedEnv = "p", unleashConfig = "q0"),
-            strategyDisabled(simulatedEnv = null, unleashConfig = "q0"),
-            strategyDisabled(simulatedEnv = null, unleashConfig = ""),
-            strategyDisabled(simulatedEnv = "q0", unleashConfig = null),
-            strategyDisabled(simulatedEnv = "", unleashConfig = null),
-            strategyDisabled(simulatedEnv = "", unleashConfig = ""),
-            strategyDisabled(simulatedEnv = "", unleashConfig = ",,,"),
-        )
+        fun testcases() =
+            listOf(
+                strategyEnabled(simulatedEnv = "t6", unleashConfig = "t6"),
+                strategyEnabled(simulatedEnv = "q1", unleashConfig = "q6,q1,t6"),
+                strategyDisabled(simulatedEnv = "p", unleashConfig = "q0"),
+                strategyDisabled(simulatedEnv = null, unleashConfig = "q0"),
+                strategyDisabled(simulatedEnv = null, unleashConfig = ""),
+                strategyDisabled(simulatedEnv = "q0", unleashConfig = null),
+                strategyDisabled(simulatedEnv = "", unleashConfig = null),
+                strategyDisabled(simulatedEnv = "", unleashConfig = ""),
+                strategyDisabled(simulatedEnv = "", unleashConfig = ",,,"),
+            )
 
-        private fun strategyEnabled(unleashConfig: String?, simulatedEnv: String?): Arguments {
+        private fun strategyEnabled(
+            unleashConfig: String?,
+            simulatedEnv: String?,
+        ): Arguments {
             return Arguments.of(unleashConfig, simulatedEnv, true)
         }
 
-        private fun strategyDisabled(unleashConfig: String?, simulatedEnv: String?): Arguments {
+        private fun strategyDisabled(
+            unleashConfig: String?,
+            simulatedEnv: String?,
+        ): Arguments {
             return Arguments.of(unleashConfig, simulatedEnv, false)
         }
     }

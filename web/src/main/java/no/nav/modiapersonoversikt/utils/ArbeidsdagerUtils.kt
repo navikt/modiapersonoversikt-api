@@ -6,7 +6,10 @@ import java.time.ZoneId
 import java.util.*
 
 object ArbeidsdagerUtils {
-    fun arbeidsdagerFraDatoJava(ukedager: Int, startDato: LocalDate): LocalDate {
+    fun arbeidsdagerFraDatoJava(
+        ukedager: Int,
+        startDato: LocalDate,
+    ): LocalDate {
         val zone = ZoneId.systemDefault()
         val date = Date.from(startDato.atStartOfDay(zone).toInstant())
         val future = NorwegianDateUtil.addWorkingDaysToDate(date, ukedager)

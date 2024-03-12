@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.opp
 
 abstract class ObjectEnum<T> {
     private val values = mutableListOf<T>()
+
     fun values(): List<T> = values
 
     protected fun <V : T> add(value: V): V {
@@ -42,6 +43,7 @@ class FellesKodeverkKilde(override val navn: String) : EnhetligKodeverk.Kilde<St
 
 class SfHenvendelseKodeverkKilde : EnhetligKodeverk.Kilde<String, String> {
     override val navn = "SF_TEMAGRUPPER"
+
     override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> {
         return providers.sfHenvendelseKodeverk.hentKodeverk(navn)
     }
@@ -49,6 +51,7 @@ class SfHenvendelseKodeverkKilde : EnhetligKodeverk.Kilde<String, String> {
 
 class OppgaveKodeverkKilde : EnhetligKodeverk.Kilde<String, OppgaveKodeverk.Tema> {
     override val navn = "OPPGAVE"
+
     override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, OppgaveKodeverk.Tema> {
         return providers.oppgaveKodeverk.hentKodeverk(navn)
     }

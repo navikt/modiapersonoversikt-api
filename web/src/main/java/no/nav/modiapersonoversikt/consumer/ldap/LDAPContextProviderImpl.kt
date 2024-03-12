@@ -8,15 +8,16 @@ import javax.naming.ldap.LdapContext
 
 class LDAPContextProviderImpl : LDAPContextProvider {
     companion object {
-        private val ldapEnvironment = Hashtable(
-            mutableMapOf(
-                Context.INITIAL_CONTEXT_FACTORY to "com.sun.jndi.ldap.LdapCtxFactory",
-                Context.SECURITY_AUTHENTICATION to "simple",
-                Context.PROVIDER_URL to EnvironmentUtils.getRequiredProperty("LDAP_URL"),
-                Context.SECURITY_PRINCIPAL to EnvironmentUtils.getRequiredProperty(LDAP.USERNAME),
-                Context.SECURITY_CREDENTIALS to EnvironmentUtils.getRequiredProperty(LDAP.PASSWORD),
+        private val ldapEnvironment =
+            Hashtable(
+                mutableMapOf(
+                    Context.INITIAL_CONTEXT_FACTORY to "com.sun.jndi.ldap.LdapCtxFactory",
+                    Context.SECURITY_AUTHENTICATION to "simple",
+                    Context.PROVIDER_URL to EnvironmentUtils.getRequiredProperty("LDAP_URL"),
+                    Context.SECURITY_PRINCIPAL to EnvironmentUtils.getRequiredProperty(LDAP.USERNAME),
+                    Context.SECURITY_CREDENTIALS to EnvironmentUtils.getRequiredProperty(LDAP.PASSWORD),
+                ),
             )
-        )
     }
 
     override fun getContext(): LdapContext {

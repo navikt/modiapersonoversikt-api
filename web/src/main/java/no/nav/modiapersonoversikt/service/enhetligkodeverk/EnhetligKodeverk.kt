@@ -12,7 +12,10 @@ object EnhetligKodeverk {
     class Kodeverk<KEY, VALUE>(val navn: String, private val kodeverk: Map<KEY, VALUE>) {
         private val log = LoggerFactory.getLogger(Kodeverk::class.java)
 
-        fun hentVerdi(kodeRef: KEY, default: VALUE): VALUE {
+        fun hentVerdi(
+            kodeRef: KEY,
+            default: VALUE,
+        ): VALUE {
             val verdi = kodeverk[kodeRef]
             if (verdi == null) {
                 log.warn("Ukjent kodeRef $kodeRef i kodeverk $navn")
@@ -23,9 +26,10 @@ object EnhetligKodeverk {
 
         fun hentVerdiEllerNull(kodeRef: KEY): VALUE? = kodeverk[kodeRef]
 
-        fun hentVerdi(kodeRef: KEY): VALUE = requireNotNull(hentVerdiEllerNull(kodeRef)) {
-            "Ukjent kodeRef $kodeRef i kodeverk $navn"
-        }
+        fun hentVerdi(kodeRef: KEY): VALUE =
+            requireNotNull(hentVerdiEllerNull(kodeRef)) {
+                "Ukjent kodeRef $kodeRef i kodeverk $navn"
+            }
 
         fun hentAlleVerdier(): Collection<VALUE> = kodeverk.values
 
@@ -34,6 +38,7 @@ object EnhetligKodeverk {
 
     interface Kilde<KEY, VALUE> {
         val navn: String
+
         fun hentKodeverk(providers: KodeverkProviders): Kodeverk<KEY, VALUE>
     }
 

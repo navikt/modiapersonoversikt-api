@@ -15,30 +15,36 @@ private const val APPLICATION_PREFIX = "modiapersonoversikt."
 
 @RestController
 @RequestMapping("/rest/featuretoggle")
-class FeatureToggleController @Autowired constructor(
-    private val unleashService: UnleashService,
-    private val tilgangskontroll: Tilgangskontroll
-) {
-    @GetMapping("/{id}")
-    fun hentMedId(@PathVariable("id") toggleId: String): Boolean =
-        tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.skipAuditLog()) {
-                unleashService.isEnabled(sjekkPrefix(toggleId))
-            }
-
-    @GetMapping
-    fun hentToggles(@RequestParam(value = "id", required = false) ids: Set<String>?): Map<String, Boolean> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.skipAuditLog()) {
-                (ids ?: emptySet()).associateWith {
-                    unleashService.isEnabled(sjekkPrefix(it))
+class FeatureToggleController
+    @Autowired
+    constructor(
+        private val unleashService: UnleashService,
+        private val tilgangskontroll: Tilgangskontroll,
+    ) {
+        @GetMapping("/{id}")
+        fun hentMedId(
+            @PathVariable("id") toggleId: String,
+        ): Boolean =
+            tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.skipAuditLog()) {
+                    unleashService.isEnabled(sjekkPrefix(toggleId))
                 }
-            }
-    }
 
-    private fun sjekkPrefix(propertyKey: String): String {
-        return if (propertyKey.contains(".")) propertyKey else APPLICATION_PREFIX + propertyKey
+        @GetMapping
+        fun hentToggles(
+            @RequestParam(value = "id", required = false) ids: Set<String>?,
+        ): Map<String, Boolean> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.skipAuditLog()) {
+                    (ids ?: emptySet()).associateWith {
+                        unleashService.isEnabled(sjekkPrefix(it))
+                    }
+                }
+        }
+
+        private fun sjekkPrefix(propertyKey: String): String {
+            return if (propertyKey.contains(".")) propertyKey else APPLICATION_PREFIX + propertyKey
+        }
     }
-}

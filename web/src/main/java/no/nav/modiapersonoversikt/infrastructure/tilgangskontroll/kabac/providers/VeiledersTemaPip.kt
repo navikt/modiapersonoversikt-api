@@ -16,7 +16,7 @@ class VeiledersTemaPip(private val ansattService: AnsattService) : Kabac.PolicyI
     override fun provide(ctx: EvaluationContext): Set<String> {
         return ansattService.hentAnsattFagomrader(
             ident = ctx.getValue(NavIdentPip).get(),
-            enhet = ctx.getValue(CommonAttributes.ENHET).get()
+            enhet = ctx.getValue(CommonAttributes.ENHET).get(),
         )
     }
 }

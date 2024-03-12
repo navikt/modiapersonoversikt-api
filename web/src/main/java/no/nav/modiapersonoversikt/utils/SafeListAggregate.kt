@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 
 class SafeListAggregate<TYPE, ERRORTYPE>(
     private val successes: List<TYPE>,
-    private val failures: List<ERRORTYPE> = mutableListOf()
+    private val failures: List<ERRORTYPE> = mutableListOf(),
 ) {
     private val log: Logger = LoggerFactory.getLogger(SafeListAggregate::class.java)
 
@@ -13,13 +13,13 @@ class SafeListAggregate<TYPE, ERRORTYPE>(
         val group = this.successes.groupBy(predicate)
         return SafeListAggregate(
             successes = group[true] ?: emptyList(),
-            failures = group[false] ?: emptyList()
+            failures = group[false] ?: emptyList(),
         )
     }
 
     fun <NEWTYPE> fold(
         transformSuccess: (TYPE) -> NEWTYPE,
-        transformFailure: (TYPE) -> ERRORTYPE
+        transformFailure: (TYPE) -> ERRORTYPE,
     ): SafeListAggregate<NEWTYPE, ERRORTYPE> {
         val mappedSuccesses: MutableList<NEWTYPE> = mutableListOf()
         val mappedFailures: MutableList<ERRORTYPE> = this.failures.toMutableList()

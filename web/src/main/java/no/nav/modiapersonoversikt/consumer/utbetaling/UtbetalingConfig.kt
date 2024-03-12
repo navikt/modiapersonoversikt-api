@@ -16,28 +16,30 @@ open class UtbetalingConfig {
     private val scope = DownstreamApi.parse(getRequiredProperty("UTBETALING_SCOPE"))
 
     @Bean
-    open fun utbetalingV2Api(tokenClient: MachineToMachineTokenClient) = UtbetaldataV2Api(
-        basePath = basePath,
-        httpClient = RestClient.baseClient().newBuilder()
-            .addInterceptor(
-                HeadersInterceptor {
-                    mapOf(
-                        "nav-call-id" to getCallId()
+    open fun utbetalingV2Api(tokenClient: MachineToMachineTokenClient) =
+        UtbetaldataV2Api(
+            basePath = basePath,
+            httpClient =
+                RestClient.baseClient().newBuilder()
+                    .addInterceptor(
+                        HeadersInterceptor {
+                            mapOf(
+                                "nav-call-id" to getCallId(),
+                            )
+                        },
                     )
-                }
-            )
-            .addInterceptor(
-                LoggingInterceptor("UtbetaldataV2") { request ->
-                    requireNotNull(request.header("nav-call-id")) {
-                        "Kall uten \"nav-call-id\" er ikke lov"
-                    }
-                }
-            )
-            .addInterceptor(
-                AuthorizationInterceptor {
-                    tokenClient.createMachineToMachineToken(scope)
-                }
-            )
-            .build()
-    )
+                    .addInterceptor(
+                        LoggingInterceptor("UtbetaldataV2") { request ->
+                            requireNotNull(request.header("nav-call-id")) {
+                                "Kall uten \"nav-call-id\" er ikke lov"
+                            }
+                        },
+                    )
+                    .addInterceptor(
+                        AuthorizationInterceptor {
+                            tokenClient.createMachineToMachineToken(scope)
+                        },
+                    )
+                    .build(),
+        )
 }

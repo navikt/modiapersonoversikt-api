@@ -8,19 +8,30 @@ internal class GenerelleSaker : SakerKilde {
     override val kildeNavn: String
         get() = "GENERELLE"
 
-    override fun leggTilSaker(fnr: String, saker: MutableList<JournalforingSak>) {
-        val generelleSaker = saker
-            .filter { obj: JournalforingSak -> obj.isSakstypeForVisningGenerell }
+    override fun leggTilSaker(
+        fnr: String,
+        saker: MutableList<JournalforingSak>,
+    ) {
+        val generelleSaker =
+            saker
+                .filter { obj: JournalforingSak -> obj.isSakstypeForVisningGenerell }
 
-        val manglendeGenerelleSaker = JournalforingSak.GODKJENTE_TEMA_FOR_GENERELL_SAK
-            .filter { temakode: String -> harIngenSakerMedTemakode(temakode, generelleSaker) && JournalforingSak.TEMAKODE_OPPFOLGING != temakode }
-            .map { temakode: String -> lagGenerellSakMedTema(temakode) }
+        val manglendeGenerelleSaker =
+            JournalforingSak.GODKJENTE_TEMA_FOR_GENERELL_SAK
+                .filter {
+                        temakode: String ->
+                    harIngenSakerMedTemakode(temakode, generelleSaker) && JournalforingSak.TEMAKODE_OPPFOLGING != temakode
+                }
+                .map { temakode: String -> lagGenerellSakMedTema(temakode) }
 
         saker.addAll(manglendeGenerelleSaker)
     }
 
     companion object {
-        private fun harIngenSakerMedTemakode(temakode: String, generelleSaker: List<JournalforingSak>): Boolean {
+        private fun harIngenSakerMedTemakode(
+            temakode: String,
+            generelleSaker: List<JournalforingSak>,
+        ): Boolean {
             return generelleSaker.none { it.temaKode == temakode }
         }
 

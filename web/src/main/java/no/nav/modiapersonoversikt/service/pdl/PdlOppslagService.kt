@@ -27,13 +27,13 @@ interface PdlOppslagService {
         CONTAINS,
         FUZZY_MATCH,
         AFTER,
-        BEFORE
+        BEFORE,
     }
 
     enum class PdlSokeOmfang(val verdi: Boolean?) {
         HISTORISK_OG_GJELDENDE(null),
         HISTORISK(true),
-        GJELDENDE(false)
+        GJELDENDE(false),
     }
 
     enum class PdlFelt(val feltnavn: String, val rule: SokKriterieRule) {
@@ -42,13 +42,14 @@ interface PdlOppslagService {
         UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", EQUALS),
         FODSELSDATO_FRA("person.foedsel.foedselsdato", AFTER),
         FODSELSDATO_TIL("person.foedsel.foedselsdato", BEFORE),
-        KJONN("person.kjoenn.kjoenn", EQUALS)
+        KJONN("person.kjoenn.kjoenn", EQUALS),
     }
+
     data class PdlKriterie(
         val felt: PdlFelt,
         val value: String?,
         val boost: Float? = null,
-        val searchHistorical: PdlSokeOmfang = PdlSokeOmfang.HISTORISK_OG_GJELDENDE
+        val searchHistorical: PdlSokeOmfang = PdlSokeOmfang.HISTORISK_OG_GJELDENDE,
     ) {
         fun asCriterion() =
             if (value.isNullOrEmpty()) {
@@ -56,14 +57,15 @@ interface PdlOppslagService {
             } else {
                 SokPerson.Criterion(
                     fieldName = felt.feltnavn,
-                    searchRule = when (felt.rule) {
-                        EQUALS -> SokPerson.SearchRule(equals = this.value, boost = boost)
-                        CONTAINS -> SokPerson.SearchRule(contains = this.value, boost = boost)
-                        FUZZY_MATCH -> SokPerson.SearchRule(fuzzy = this.value, boost = boost)
-                        AFTER -> SokPerson.SearchRule(after = this.value, boost = boost)
-                        BEFORE -> SokPerson.SearchRule(before = this.value, boost = boost)
-                    },
-                    searchHistorical = searchHistorical.verdi
+                    searchRule =
+                        when (felt.rule) {
+                            EQUALS -> SokPerson.SearchRule(equals = this.value, boost = boost)
+                            CONTAINS -> SokPerson.SearchRule(contains = this.value, boost = boost)
+                            FUZZY_MATCH -> SokPerson.SearchRule(fuzzy = this.value, boost = boost)
+                            AFTER -> SokPerson.SearchRule(after = this.value, boost = boost)
+                            BEFORE -> SokPerson.SearchRule(before = this.value, boost = boost)
+                        },
+                    searchHistorical = searchHistorical.verdi,
                 )
             }
     }

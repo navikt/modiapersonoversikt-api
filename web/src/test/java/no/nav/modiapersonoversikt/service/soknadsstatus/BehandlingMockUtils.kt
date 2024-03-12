@@ -16,9 +16,10 @@ object BehandlingMockUtils {
             behandlingsTema = "AAP",
             behandlingsType = "ae0047",
             status = Behandling.Status.UNDER_BEHANDLING,
-            hendelser = listOf(
-                createHendelse(behandlingId)
-            )
+            hendelser =
+                listOf(
+                    createHendelse(behandlingId),
+                ),
         )
     }
 

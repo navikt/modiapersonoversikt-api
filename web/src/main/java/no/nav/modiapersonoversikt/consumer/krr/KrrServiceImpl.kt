@@ -23,23 +23,23 @@ import java.time.ZonedDateTime
 class KrrServiceImpl(
     baseUrl: String = EnvironmentUtils.getRequiredProperty("KRR_REST_URL"),
     machineToMachineTokenClient: MachineToMachineTokenClient,
-    private val cache: Cache<Fnr, Krr.DigitalKontaktinformasjon> = CacheUtils.createCache()
+    private val cache: Cache<Fnr, Krr.DigitalKontaktinformasjon> = CacheUtils.createCache(),
 ) : Krr.Service {
-
     private val scope = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("KRR_SCOPE"))
 
-    private val httpClient: OkHttpClient = RestClient.baseClient().newBuilder()
-        .addInterceptor(
-            LoggingInterceptor("digdir-krr-proxy") { request ->
-                requireNotNull(request.header("Nav-Call-Id"))
-            }
-        )
-        .addInterceptor(
-            AuthorizationInterceptor {
-                machineToMachineTokenClient.createMachineToMachineToken(scope)
-            }
-        )
-        .build()
+    private val httpClient: OkHttpClient =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(
+                LoggingInterceptor("digdir-krr-proxy") { request ->
+                    requireNotNull(request.header("Nav-Call-Id"))
+                },
+            )
+            .addInterceptor(
+                AuthorizationInterceptor {
+                    machineToMachineTokenClient.createMachineToMachineToken(scope)
+                },
+            )
+            .build()
 
     private val client = PersonControllerApi(basePath = baseUrl, httpClient = httpClient)
     private val pingApi = PingControllerApi(baseUrl, httpClient)
@@ -51,7 +51,7 @@ class KrrServiceImpl(
                     getPerson(
                         navPersonident = fnr,
                         navCallId = getCallId(),
-                        inkluderSikkerDigitalPost = true
+                        inkluderSikkerDigitalPost = true,
                     )
                 }.map { data ->
                     if (data != null) {
@@ -59,31 +59,33 @@ class KrrServiceImpl(
                     } else {
                         TjenestekallLogg.warn(
                             header = "Feil ved henting av digital kontaktinformasjon fra krr",
-                            fields = mapOf(
-                                "fnr" to fnr,
-                                "exception" to it,
-                            )
+                            fields =
+                                mapOf(
+                                    "fnr" to fnr,
+                                    "exception" to it,
+                                ),
                         )
                         Krr.INGEN_KONTAKTINFO
                     }
                 }.getOrElse {
                     TjenestekallLogg.warn(
                         header = "Feil ved henting av digital kontaktinformasjon fra krr",
-                        fields = mapOf(
-                            "fnr" to fnr,
-                            "exception" to it,
-                        )
+                        fields =
+                            mapOf(
+                                "fnr" to fnr,
+                                "exception" to it,
+                            ),
                     )
                     Krr.INGEN_KONTAKTINFO
                 }
-            }
+            },
         )
     }
 
     override fun ping(): SelfTestCheck {
         return SelfTestCheck(
             "KrrRest",
-            false
+            false,
         ) {
             try {
                 pingApi.getPing()
@@ -98,20 +100,22 @@ class KrrServiceImpl(
         Krr.DigitalKontaktinformasjon(
             personident = dto.personident,
             reservasjon = dto.reservert?.toString(),
-            epostadresse = dto.epostadresse?.let { epostadresse ->
-                Krr.Epostadresse(
-                    value = epostadresse,
-                    sistOppdatert = toLocalDate(dto.epostadresseOppdatert),
-                    sistVerifisert = toLocalDate(dto.epostadresseVerifisert)
-                )
-            },
-            mobiltelefonnummer = dto.mobiltelefonnummer?.let { mobiltelefonnummer ->
-                Krr.MobilTelefon(
-                    value = mobiltelefonnummer,
-                    sistOppdatert = toLocalDate(dto.mobiltelefonnummerOppdatert),
-                    sistVerifisert = toLocalDate(dto.mobiltelefonnummerVerifisert)
-                )
-            }
+            epostadresse =
+                dto.epostadresse?.let { epostadresse ->
+                    Krr.Epostadresse(
+                        value = epostadresse,
+                        sistOppdatert = toLocalDate(dto.epostadresseOppdatert),
+                        sistVerifisert = toLocalDate(dto.epostadresseVerifisert),
+                    )
+                },
+            mobiltelefonnummer =
+                dto.mobiltelefonnummer?.let { mobiltelefonnummer ->
+                    Krr.MobilTelefon(
+                        value = mobiltelefonnummer,
+                        sistOppdatert = toLocalDate(dto.mobiltelefonnummerOppdatert),
+                        sistVerifisert = toLocalDate(dto.mobiltelefonnummerVerifisert),
+                    )
+                },
         )
 
     private fun toLocalDate(value: ZonedDateTime?) = value?.withZoneSameInstant(ZoneId.systemDefault())?.toLocalDate()

@@ -13,7 +13,7 @@ open class HenvendelseKafkaConfig {
     @Bean(destroyMethod = "close")
     open fun henvendelseProducer(
         @Value("\${KAFKA_BROKERS}") kafkaBrokerUrl: String,
-        @Value("\${KAFKA_HENVENDELSE_OPPDATERING_TOPIC}") kafkaTopic: String
+        @Value("\${KAFKA_HENVENDELSE_OPPDATERING_TOPIC}") kafkaTopic: String,
     ): HenvendelseProducer {
         val props = Properties()
         commonProducerConfig(props, kafkaBrokerUrl, "modiabrukerdialog-producer")
@@ -22,7 +22,7 @@ open class HenvendelseKafkaConfig {
         return HenvendelseProducerImpl(
             temaSomSkalPubliseres = listOf("SYK"),
             temagruppeSomSkalPubliseres = listOf("HELSE"),
-            producer = KafkaPersonoversiktProducerImpl(kafkaProducer, kafkaTopic, HenvendelseKafkaDTO.serializer())
+            producer = KafkaPersonoversiktProducerImpl(kafkaProducer, kafkaTopic, HenvendelseKafkaDTO.serializer()),
         )
     }
 }

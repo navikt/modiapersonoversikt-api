@@ -12,14 +12,15 @@ import org.joda.time.DateTime
 object Transformers {
     @JvmStatic
     fun tilBehandling(wsBehandlingskjede: Behandlingskjede): Behandling {
-        var behandling = Behandling()
-            .withBehandlingsType(wsBehandlingskjede.sisteBehandlingstype.value)
-            .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
-            .withOpprettetDato(DateTime(wsBehandlingskjede.start.toGregorianCalendar().time))
-            .withPrefix(wsBehandlingskjede.sisteBehandlingREF.substring(0, 2))
-            .withBehandlingsId(wsBehandlingskjede.sisteBehandlingREF)
-            .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
-            .withBehandlingKvittering(kvitteringstype(wsBehandlingskjede.sisteBehandlingstype))
+        var behandling =
+            Behandling()
+                .withBehandlingsType(wsBehandlingskjede.sisteBehandlingstype.value)
+                .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
+                .withOpprettetDato(DateTime(wsBehandlingskjede.start.toGregorianCalendar().time))
+                .withPrefix(wsBehandlingskjede.sisteBehandlingREF.substring(0, 2))
+                .withBehandlingsId(wsBehandlingskjede.sisteBehandlingREF)
+                .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
+                .withBehandlingKvittering(kvitteringstype(wsBehandlingskjede.sisteBehandlingstype))
         val behandlingstema = wsBehandlingskjede.behandlingstema
         if (behandlingstema != null) {
             behandling = behandling.withBehandlingsTema(behandlingstema.value)

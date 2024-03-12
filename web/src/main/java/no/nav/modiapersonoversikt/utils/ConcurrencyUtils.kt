@@ -22,7 +22,10 @@ object ConcurrencyUtils {
         }
     }
 
-    private fun <T> withMDC(mdcContextMap: Map<String?, String?>?, fn: () -> T): T {
+    private fun <T> withMDC(
+        mdcContextMap: Map<String?, String?>?,
+        fn: () -> T,
+    ): T {
         val original = MDC.getCopyOfContextMap()
         setMDC(mdcContextMap)
         val result = fn()
@@ -30,7 +33,10 @@ object ConcurrencyUtils {
         return result
     }
 
-    private fun <T> withRequestAttributes(requestAttributes: RequestAttributes?, fn: () -> T): T {
+    private fun <T> withRequestAttributes(
+        requestAttributes: RequestAttributes?,
+        fn: () -> T,
+    ): T {
         val original: RequestAttributes? = RequestContextHolder.getRequestAttributes()
         RequestContextHolder.setRequestAttributes(requestAttributes)
         val result = fn()

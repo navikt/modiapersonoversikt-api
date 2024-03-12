@@ -10,14 +10,16 @@ object EnumKodeverk {
     }
 
     class Kilde<ENUM, VALUE>(enum: KClass<ENUM>) : EnhetligKodeverk.Kilde<String, VALUE>
-    where ENUM : Enum<ENUM>, ENUM : WithValue<VALUE> {
+        where ENUM : Enum<ENUM>, ENUM : WithValue<VALUE> {
         override val navn: String = enum.toString()
-        private val kodeverk = EnhetligKodeverk.Kodeverk(
-            navn = navn,
-            kodeverk = enum.java
-                .enumConstants
-                .associate { it.name to it.getValue() }
-        )
+        private val kodeverk =
+            EnhetligKodeverk.Kodeverk(
+                navn = navn,
+                kodeverk =
+                    enum.java
+                        .enumConstants
+                        .associate { it.name to it.getValue() },
+            )
 
         override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, VALUE> = kodeverk
     }

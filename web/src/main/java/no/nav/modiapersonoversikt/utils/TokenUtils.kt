@@ -28,21 +28,28 @@ private fun DownstreamApi.tokenscope(): String = "api://$cluster.$namespace.$app
 fun MachineToMachineTokenClient.createMachineToMachineToken(api: DownstreamApi): String {
     return this.createMachineToMachineToken(api.tokenscope())
 }
-fun OnBehalfOfTokenClient.exchangeOnBehalfOfToken(api: DownstreamApi, accesstoken: String): String {
+
+fun OnBehalfOfTokenClient.exchangeOnBehalfOfToken(
+    api: DownstreamApi,
+    accesstoken: String,
+): String {
     return this.exchangeOnBehalfOfToken(api.tokenscope(), accesstoken)
 }
 
 interface BoundedMachineToMachineTokenClient {
     fun createMachineToMachineToken(): String
 }
+
 interface BoundedOnBehalfOfTokenClient {
     fun exchangeOnBehalfOfToken(accesstoken: String): String
 }
 
-fun MachineToMachineTokenClient.bindTo(api: DownstreamApi) = object : BoundedMachineToMachineTokenClient {
-    override fun createMachineToMachineToken() = createMachineToMachineToken(api.tokenscope())
-}
+fun MachineToMachineTokenClient.bindTo(api: DownstreamApi) =
+    object : BoundedMachineToMachineTokenClient {
+        override fun createMachineToMachineToken() = createMachineToMachineToken(api.tokenscope())
+    }
 
-fun OnBehalfOfTokenClient.bindTo(api: DownstreamApi) = object : BoundedOnBehalfOfTokenClient {
-    override fun exchangeOnBehalfOfToken(accesstoken: String) = exchangeOnBehalfOfToken(api.tokenscope(), accesstoken)
-}
+fun OnBehalfOfTokenClient.bindTo(api: DownstreamApi) =
+    object : BoundedOnBehalfOfTokenClient {
+        override fun exchangeOnBehalfOfToken(accesstoken: String) = exchangeOnBehalfOfToken(api.tokenscope(), accesstoken)
+    }

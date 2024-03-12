@@ -19,6 +19,7 @@ import java.net.URL
 typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
 
 class GraphQLException(override val message: String, val errors: List<GraphQLError>) : RuntimeException(message)
+
 fun <T> GraphQLResponse<T>.assertNoErrors(): GraphQLResponse<T> {
     if (this.errors.isNullOrEmpty()) {
         return this
@@ -29,13 +30,14 @@ fun <T> GraphQLResponse<T>.assertNoErrors(): GraphQLResponse<T> {
     }
 }
 
-private val mapper = jacksonObjectMapper()
-    .registerModule(JavaTimeModule())
+private val mapper =
+    jacksonObjectMapper()
+        .registerModule(JavaTimeModule())
 
 @KtorExperimentalAPI
 class LoggingGraphqlClient(
     private val name: String,
-    url: URL
+    url: URL,
 ) : GraphQLClient<CIOEngineConfig>(url, CIO, mapper, {}) {
     private val log = LoggerFactory.getLogger(LoggingGraphqlClient::class.java)
 
@@ -44,7 +46,7 @@ class LoggingGraphqlClient(
         operationName: String?,
         variables: Any?,
         resultType: Class<T>,
-        requestBuilder: HeadersBuilder
+        requestBuilder: HeadersBuilder,
     ): GraphQLResponse<T> {
         val callId = getCallId()
         val requestId = IdUtils.generateId()
@@ -58,19 +60,20 @@ class LoggingGraphqlClient(
                 "$name-request: $callId ($requestId)",
                 mapOf(
                     "operationName" to operationName,
-                    "variables" to variables
-                )
+                    "variables" to variables,
+                ),
             )
 
             val timer: Long = System.currentTimeMillis()
             val response = super.execute(query, operationName, variables, resultType, mappedRequestBuilder)
 
-            val tjenestekallFelt = mapOf(
-                "data" to response.data,
-                "errors" to response.errors,
-                "extensions" to response.extensions,
-                "time" to timer.measure()
-            )
+            val tjenestekallFelt =
+                mapOf(
+                    "data" to response.data,
+                    "errors" to response.errors,
+                    "extensions" to response.extensions,
+                    "time" to timer.measure(),
+                )
 
             if (response.errors.isNullOrEmpty()) {
                 TjenestekallLogg.info("$name-response: $callId ($requestId)", tjenestekallFelt)
@@ -84,11 +87,12 @@ class LoggingGraphqlClient(
             TjenestekallLogg.error(
                 header = "$name-response: $callId ($requestId)",
                 fields = mapOf("exception" to exception.message),
-                throwable = exception
+                throwable = exception,
             )
             val error = GraphQLError("Feilet ved oppslag mot $name (ID: $callId)")
             GraphQLResponse(errors = listOf(error))
         }
     }
+
     private inline fun Long.measure(): Long = System.currentTimeMillis() - this
 }

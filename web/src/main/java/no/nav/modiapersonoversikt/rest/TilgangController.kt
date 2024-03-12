@@ -21,64 +21,69 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/rest/tilgang")
-class TilgangController @Autowired constructor(
-    private val tilgangskontroll: Tilgangskontroll,
-    private val pdlOppslagService: PdlOppslagService
-) {
-    private val audit = Audit.describe<String>(Audit.Action.READ, AuditResources.Person.Tilgang) {
-        listOf(AuditIdentifier.FNR to it)
-    }
-    private val enhetTrace = Audit.describe<String>(Audit.Action.READ, AuditResources.Person.EnhetTrace) {
-        listOf(AuditIdentifier.ENHET_ID to it)
-    }
-
-    @GetMapping("/{fnr}")
-    fun harTilgang(
-        @PathVariable("fnr") fnr: String,
-        @RequestParam("enhet", required = false) enhet: String?,
-        request: HttpServletRequest
-    ): TilgangDTO {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .getDecision()
-            .makeResponse()
-            .sjekkAktivFolkeregistrIden(fnr)
-            .logAudit(audit, fnr)
-            .also {
-                enhetTrace.log(enhet ?: "IKKE SATT")
+class TilgangController
+    @Autowired
+    constructor(
+        private val tilgangskontroll: Tilgangskontroll,
+        private val pdlOppslagService: PdlOppslagService,
+    ) {
+        private val audit =
+            Audit.describe<String>(Audit.Action.READ, AuditResources.Person.Tilgang) {
+                listOf(AuditIdentifier.FNR to it)
             }
-    }
+        private val enhetTrace =
+            Audit.describe<String>(Audit.Action.READ, AuditResources.Person.EnhetTrace) {
+                listOf(AuditIdentifier.ENHET_ID to it)
+            }
 
-    @GetMapping
-    fun harTilgang(): TilgangDTO {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .getDecision()
-            .makeResponse()
-    }
+        @GetMapping("/{fnr}")
+        fun harTilgang(
+            @PathVariable("fnr") fnr: String,
+            @RequestParam("enhet", required = false) enhet: String?,
+            request: HttpServletRequest,
+        ): TilgangDTO {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnr)))
+                .getDecision()
+                .makeResponse()
+                .sjekkAktivFolkeregistrIden(fnr)
+                .logAudit(audit, fnr)
+                .also {
+                    enhetTrace.log(enhet ?: "IKKE SATT")
+                }
+        }
 
-    @GetMapping("/auth")
-    fun authIntropection(): AuthIntropectionDTO {
-        return AuthContextUtils.getClaims()
-            .map(JWTClaimsSet::getExpirationDate)
-            .orElse(AuthIntropectionDTO.INVALID)
-    }
+        @GetMapping
+        fun harTilgang(): TilgangDTO {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .getDecision()
+                .makeResponse()
+        }
 
-    private fun TilgangDTO.sjekkAktivFolkeregistrIden(fnr: String): TilgangDTO {
-        return if (this.harTilgang) {
-            val aktivIdent = pdlOppslagService.hentFolkeregisterIdenter(fnr)
-                ?.identer?.find { !it.historisk }
-            this.copy(aktivIdent = aktivIdent?.ident)
-        } else {
-            this
+        @GetMapping("/auth")
+        fun authIntropection(): AuthIntropectionDTO {
+            return AuthContextUtils.getClaims()
+                .map(JWTClaimsSet::getExpirationDate)
+                .orElse(AuthIntropectionDTO.INVALID)
+        }
+
+        private fun TilgangDTO.sjekkAktivFolkeregistrIden(fnr: String): TilgangDTO {
+            return if (this.harTilgang) {
+                val aktivIdent =
+                    pdlOppslagService.hentFolkeregisterIdenter(fnr)
+                        ?.identer?.find { !it.historisk }
+                this.copy(aktivIdent = aktivIdent?.ident)
+            } else {
+                this
+            }
         }
     }
-}
 
 data class TilgangDTO(
     val harTilgang: Boolean,
     val ikkeTilgangArsak: Decision.DenyCause?,
-    val aktivIdent: String?
+    val aktivIdent: String?,
 )
 
 class AuthIntropectionDTO(val expirationDate: Long) {
@@ -87,7 +92,10 @@ class AuthIntropectionDTO(val expirationDate: Long) {
     }
 }
 
-internal fun <T> TilgangDTO.logAudit(audit: Audit.AuditDescriptor<T>, data: T): TilgangDTO {
+internal fun <T> TilgangDTO.logAudit(
+    audit: Audit.AuditDescriptor<T>,
+    data: T,
+): TilgangDTO {
     when (this.harTilgang) {
         true -> audit.log(data)
         else -> audit.denied("Ikke tilgang til $data, årsak: ${this.ikkeTilgangArsak}")

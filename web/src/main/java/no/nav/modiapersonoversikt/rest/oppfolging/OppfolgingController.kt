@@ -27,59 +27,63 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/oppfolging/{fnr}")
-class OppfolgingController @Autowired constructor(
-    private val service: ArbeidsrettetOppfolging.Service,
-    private val tilgangskontroll: Tilgangskontroll,
-    private val ytelseskontraktService: YtelseskontraktService,
-    private val oppfolgingskontraktService: OppfolgingskontraktService
-) {
+class OppfolgingController
+    @Autowired
+    constructor(
+        private val service: ArbeidsrettetOppfolging.Service,
+        private val tilgangskontroll: Tilgangskontroll,
+        private val ytelseskontraktService: YtelseskontraktService,
+        private val oppfolgingskontraktService: OppfolgingskontraktService,
+    ) {
+        private val logger = LoggerFactory.getLogger(OppfolgingController::class.java)
 
-    private val logger = LoggerFactory.getLogger(OppfolgingController::class.java)
+        @GetMapping
+        fun hent(
+            @PathVariable("fnr") fodselsnummer: String,
+        ): Map<String, Any?> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fodselsnummer)))
+                .get(Audit.describe(READ, Person.Oppfolging, AuditIdentifier.FNR to fodselsnummer)) {
+                    val oppfolging = service.hentOppfolgingsinfo(Fnr(fodselsnummer))
 
-    @GetMapping
-    fun hent(@PathVariable("fnr") fodselsnummer: String): Map<String, Any?> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fodselsnummer)))
-            .get(Audit.describe(READ, Person.Oppfolging, AuditIdentifier.FNR to fodselsnummer)) {
-                val oppfolging = service.hentOppfolgingsinfo(Fnr(fodselsnummer))
+                    mapOf(
+                        "erUnderOppfolging" to oppfolging.erUnderOppfolging,
+                        "veileder" to hentVeileder(oppfolging.veileder),
+                        "enhet" to hentEnhet(oppfolging.oppfolgingsenhet),
+                    ).also(Typeanalyzers.OPPFOLGING_STATUS.analyzer::capture)
+                }
+        }
 
-                mapOf(
-                    "erUnderOppfolging" to oppfolging.erUnderOppfolging,
-                    "veileder" to hentVeileder(oppfolging.veileder),
-                    "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
-                ).also(Typeanalyzers.OPPFOLGING_STATUS.analyzer::capture)
-            }
+        @GetMapping("/ytelserogkontrakter")
+        fun hentUtvidetOppf(
+            @PathVariable("fnr") fodselsnummer: String,
+            @RequestParam("startDato") start: String?,
+            @RequestParam("sluttDato") slutt: String?,
+        ): Map<String, Any?> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fodselsnummer)))
+                .get(Audit.describe(READ, Person.YtelserOgKontrakter, AuditIdentifier.FNR to fodselsnummer)) {
+                    val kontraktResponse =
+                        oppfolgingskontraktService.hentOppfolgingskontrakter(
+                            lagOppfolgingskontraktRequest(fodselsnummer, start, slutt),
+                        )
+                    val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
+                    val oppfolgingstatus = runCatching { hent(fodselsnummer) }
+
+                    mapOf(
+                        "oppfolging" to oppfolgingstatus.getOrNull(),
+                        "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
+                        "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
+                        "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
+                        "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
+                        "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
+                        "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
+                        "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
+                        "ytelser" to hentYtelser(ytelserResponse.ytelser),
+                    ).also(Typeanalyzers.OPPFOLGING_YTELSER.analyzer::capture)
+                }
+        }
     }
-
-    @GetMapping("/ytelserogkontrakter")
-    fun hentUtvidetOppf(
-        @PathVariable("fnr") fodselsnummer: String,
-        @RequestParam("startDato") start: String?,
-        @RequestParam("sluttDato") slutt: String?
-    ): Map<String, Any?> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fodselsnummer)))
-            .get(Audit.describe(READ, Person.YtelserOgKontrakter, AuditIdentifier.FNR to fodselsnummer)) {
-                val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(
-                    lagOppfolgingskontraktRequest(fodselsnummer, start, slutt)
-                )
-                val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
-                val oppfolgingstatus = runCatching { hent(fodselsnummer) }
-
-                mapOf(
-                    "oppfolging" to oppfolgingstatus.getOrNull(),
-                    "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
-                    "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
-                    "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
-                    "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
-                    "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
-                    "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
-                    "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
-                    "ytelser" to hentYtelser(ytelserResponse.ytelser)
-                ).also(Typeanalyzers.OPPFOLGING_YTELSER.analyzer::capture)
-            }
-    }
-}
 
 private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
     if (ytelser == null) return emptyList()
@@ -94,19 +98,20 @@ private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
             "vedtak" to hentVedtak(it.vedtak),
             "dagerIgjenMedBortfall" to it.dagerIgjenMedBortfall,
             "ukerIgjenMedBortfall" to it.ukerIgjenMedBortfall,
-            *hentDagPengerFelter(it)
+            *hentDagPengerFelter(it),
         )
     }
 }
 
 private fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> {
     return when (ytelse) {
-        is Dagpengeytelse -> arrayOf(
-            "dagerIgjenPermittering" to ytelse.antallDagerIgjenPermittering,
-            "ukerIgjenPermittering" to ytelse.antallUkerIgjenPermittering,
-            "dagerIgjen" to ytelse.antallDagerIgjen,
-            "ukerIgjen" to ytelse.antallUkerIgjen
-        )
+        is Dagpengeytelse ->
+            arrayOf(
+                "dagerIgjenPermittering" to ytelse.antallDagerIgjenPermittering,
+                "ukerIgjenPermittering" to ytelse.antallUkerIgjenPermittering,
+                "dagerIgjen" to ytelse.antallDagerIgjen,
+                "ukerIgjen" to ytelse.antallUkerIgjen,
+            )
         else -> emptyArray()
     }
 }
@@ -120,7 +125,7 @@ private fun hentVedtak(vedtak: List<Vedtak>?): List<Map<String, Any?>> {
             "aktivTil" to it.activeTo?.toString(JODA_DATOFORMAT),
             "aktivitetsfase" to it.aktivitetsfase,
             "vedtakstatus" to it.vedtakstatus,
-            "vedtakstype" to it.vedtakstype
+            "vedtakstype" to it.vedtakstype,
         )
     }
 }
@@ -133,7 +138,7 @@ private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>
             "dato" to it.dato?.toString(JODA_DATOFORMAT),
             "fastOppfølgingspunkt" to it.isFastOppfolgingspunkt,
             "status" to it.status,
-            "syfoHendelse" to it.syfoHendelse
+            "syfoHendelse" to it.syfoHendelse,
         )
     }
 }
@@ -142,7 +147,7 @@ private fun hentVeileder(veileder: Veileder?): Map<String, Any?>? {
     return veileder?.let {
         mapOf(
             "ident" to it.ident,
-            "navn" to it.navn
+            "navn" to it.navn,
         )
     }
 }
@@ -152,12 +157,16 @@ private fun hentEnhet(enhet: ArbeidsrettetOppfolging.Enhet?): Map<String, Any?>?
         mapOf(
             "id" to it.enhetId,
             "navn" to it.navn,
-            "status" to null // TODO Ubrukt i frontend, men lar feltet være frem til det er fjernet fra domenemodellen der
+            "status" to null, // TODO Ubrukt i frontend, men lar feltet være frem til det er fjernet fra domenemodellen der
         )
     }
 }
 
-private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: String?): YtelseskontraktRequest {
+private fun lagYtelseRequest(
+    fodselsnummer: String,
+    start: String?,
+    slutt: String?,
+): YtelseskontraktRequest {
     val request =
         YtelseskontraktRequest()
     request.fodselsnummer = fodselsnummer
@@ -166,7 +175,11 @@ private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: Strin
     return request
 }
 
-private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?, slutt: String?): OppfolgingskontraktRequest {
+private fun lagOppfolgingskontraktRequest(
+    fodselsnummer: String,
+    start: String?,
+    slutt: String?,
+): OppfolgingskontraktRequest {
     val request =
         OppfolgingskontraktRequest()
     request.fodselsnummer = fodselsnummer
@@ -175,10 +188,11 @@ private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?,
     return request
 }
 
-private fun lagRiktigDato(dato: String?): LocalDate? = dato?.let {
-    try {
-        LocalDate.parse(dato, JODA_DATOFORMAT)
-    } catch (exception: IllegalFieldValueException) {
-        throw RuntimeException(exception.message)
+private fun lagRiktigDato(dato: String?): LocalDate? =
+    dato?.let {
+        try {
+            LocalDate.parse(dato, JODA_DATOFORMAT)
+        } catch (exception: IllegalFieldValueException) {
+            throw RuntimeException(exception.message)
+        }
     }
-}

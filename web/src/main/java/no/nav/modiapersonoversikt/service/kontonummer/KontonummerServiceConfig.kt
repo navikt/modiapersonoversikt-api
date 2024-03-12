@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class KontonummerServiceConfig {
-
     @Autowired
     private lateinit var kontoregister: KontoregisterV1Api
 

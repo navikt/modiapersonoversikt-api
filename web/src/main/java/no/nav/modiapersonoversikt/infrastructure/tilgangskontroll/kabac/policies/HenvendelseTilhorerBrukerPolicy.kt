@@ -10,10 +10,12 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 internal object HenvendelseTilhorerBrukerPolicy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(HenvendelseTilhorerBrukerPolicy)
+
     override fun evaluate(ctx: EvaluationContext): Decision {
-        val fnr = requireNotNull(ctx.getValue(CommonAttributes.FNR)) {
-            "Kan ikke evaluere eierskap av henvendelse uten FNR"
-        }
+        val fnr =
+            requireNotNull(ctx.getValue(CommonAttributes.FNR)) {
+                "Kan ikke evaluere eierskap av henvendelse uten FNR"
+            }
         val eier = ctx.getValue(HenvendelseEierPip)
 
         return if (fnr == eier) {

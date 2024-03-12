@@ -12,16 +12,17 @@ object OppgaveApiFactory {
     val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("OPPGAVE_SCOPE"))
 
     fun createClient(tokenProvider: () -> String): OppgaveApi {
-        val client = RestClient.baseClient().newBuilder()
-            .addInterceptor(
-                LoggingInterceptor("Oppgave") { request ->
-                    requireNotNull(request.header("X-Correlation-ID")) {
-                        "Kall uten \"X-Correlation-ID\" er ikke lov"
-                    }
-                }
-            )
-            .addInterceptor(AuthorizationInterceptor(tokenProvider))
-            .build()
+        val client =
+            RestClient.baseClient().newBuilder()
+                .addInterceptor(
+                    LoggingInterceptor("Oppgave") { request ->
+                        requireNotNull(request.header("X-Correlation-ID")) {
+                            "Kall uten \"X-Correlation-ID\" er ikke lov"
+                        }
+                    },
+                )
+                .addInterceptor(AuthorizationInterceptor(tokenProvider))
+                .build()
         return OppgaveApi(url, client)
     }
 }

@@ -14,7 +14,10 @@ object Utils {
     const val KONTAKT_NAV = "KNA"
     const val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
 
-    fun defaultEnhetGittTemagruppe(temagruppe: Temagruppe?, valgtEnhet: String?): String {
+    fun defaultEnhetGittTemagruppe(
+        temagruppe: Temagruppe?,
+        valgtEnhet: String?,
+    ): String {
         return if (temagruppe == null) {
             DEFAULT_ENHET
         } else if (temagruppe == FMLI && valgtEnhet == STORD_ENHET) {
@@ -31,7 +34,7 @@ object Utils {
         navn: String,
         enhet: String?,
         innhold: String?,
-        clock: Clock
+        clock: Clock,
     ): String {
         return String.format(
             "--- %s %s (%s, %s) ---\n%s",
@@ -39,11 +42,14 @@ object Utils {
             navn,
             ident.get(),
             enhet,
-            innhold
+            innhold,
         )
     }
 
-    fun leggTilBeskrivelse(gammelBeskrivelse: String?, leggTil: String): String {
+    fun leggTilBeskrivelse(
+        gammelBeskrivelse: String?,
+        leggTil: String,
+    ): String {
         return if (gammelBeskrivelse.isNullOrBlank()) {
             leggTil
         } else {
@@ -56,10 +62,11 @@ object Utils {
      * En liten off-by-one bug i oppgave gjør at vi per nå må sette den til 49
      */
     const val OPPGAVE_MAX_LIMIT: Long = 49
+
     fun <RESPONSE, DATA> paginering(
         total: (response: RESPONSE) -> Long,
         data: (response: RESPONSE) -> List<DATA>,
-        action: (offset: Long) -> RESPONSE
+        action: (offset: Long) -> RESPONSE,
     ): List<DATA> {
         var page: Long = 0
         val buffer = mutableListOf<DATA>()

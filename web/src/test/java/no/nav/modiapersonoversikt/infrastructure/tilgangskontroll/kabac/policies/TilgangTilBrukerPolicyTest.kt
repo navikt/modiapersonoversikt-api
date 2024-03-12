@@ -179,11 +179,12 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtBrukerIkkeHarAdressebeskyttelse() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns listOf(
-            HentAdressebeskyttelse.Adressebeskyttelse(
-                HentAdressebeskyttelse.AdressebeskyttelseGradering.UGRADERT
+        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+            listOf(
+                HentAdressebeskyttelse.Adressebeskyttelse(
+                    HentAdressebeskyttelse.AdressebeskyttelseGradering.UGRADERT,
+                ),
             )
-        )
     }
 
     private fun gittAtBrukerIkkeErSkjermet() {
@@ -195,19 +196,21 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtBrukerHarKode6() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns listOf(
-            HentAdressebeskyttelse.Adressebeskyttelse(
-                HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG
+        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+            listOf(
+                HentAdressebeskyttelse.Adressebeskyttelse(
+                    HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                ),
             )
-        )
     }
 
     private fun gittAtBrukerHarKode7() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns listOf(
-            HentAdressebeskyttelse.Adressebeskyttelse(
-                HentAdressebeskyttelse.AdressebeskyttelseGradering.FORTROLIG
+        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+            listOf(
+                HentAdressebeskyttelse.Adressebeskyttelse(
+                    HentAdressebeskyttelse.AdressebeskyttelseGradering.FORTROLIG,
+                ),
             )
-        )
     }
 
     private fun gittAtBrukerHarEnhet(enhetId: EnhetId?) {
@@ -217,12 +220,13 @@ internal class TilgangTilBrukerPolicyTest {
         if (enhetId == null) {
             every { norg.finnNavKontor(geografiskTilknyttning, null) } returns null
         } else {
-            every { norg.finnNavKontor(geografiskTilknyttning, null) } returns NorgDomain.Enhet(
-                enhetId = enhetId.get(),
-                enhetNavn = "Navn",
-                status = NorgDomain.EnhetStatus.AKTIV,
-                oppgavebehandler = false
-            )
+            every { norg.finnNavKontor(geografiskTilknyttning, null) } returns
+                NorgDomain.Enhet(
+                    enhetId = enhetId.get(),
+                    enhetNavn = "Navn",
+                    status = NorgDomain.EnhetStatus.AKTIV,
+                    oppgavebehandler = false,
+                )
         }
     }
 
@@ -269,7 +273,7 @@ internal class TilgangTilBrukerPolicyTest {
             BrukersRegionEnhetPip(norg),
             VeiledersRollerPip(ansattService),
             VeiledersEnheterPip(ansattService),
-            VeiledersRegionEnheterPip(norg)
+            VeiledersRegionEnheterPip(norg),
         )
     }
 }
