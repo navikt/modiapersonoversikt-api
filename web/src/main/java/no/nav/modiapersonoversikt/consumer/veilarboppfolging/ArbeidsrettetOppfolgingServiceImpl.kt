@@ -23,29 +23,31 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     private val oboTokenProvider: BoundedOnBehalfOfTokenClient,
 ) : ArbeidsrettetOppfolging.Service {
     private val url = apiUrl.removeSuffix("/")
-    private val client = RestClient.baseClient().newBuilder()
-        .addInterceptor(XCorrelationIdInterceptor())
-        .addInterceptor(
-            LoggingInterceptor("Oppfolging") {
-                requireNotNull(it.header("X-Correlation-ID")) {
-                    "Kall uten \"X-Correlation-ID\" er ikke lov"
-                }
-            }
-        )
-        .addInterceptor(
-            AuthorizationInterceptor {
-                AuthContextUtils.requireBoundedClientOboToken(oboTokenProvider)
-            }
-        )
-        .build()
+    private val client =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(XCorrelationIdInterceptor())
+            .addInterceptor(
+                LoggingInterceptor("Oppfolging") {
+                    requireNotNull(it.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
+                },
+            )
+            .addInterceptor(
+                AuthorizationInterceptor {
+                    AuthContextUtils.requireBoundedClientOboToken(oboTokenProvider)
+                },
+            )
+            .build()
 
     @Cacheable
     override fun hentOppfolgingsinfo(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Info {
         val oppfolgingstatus = hentOppfolgingStatus(fodselsnummer)
-        val enhetOgVeileder = when (oppfolgingstatus.underOppfolging) {
-            true -> hentOppfolgingsEnhetOgVeileder(fodselsnummer)
-            else -> null
-        }
+        val enhetOgVeileder =
+            when (oppfolgingstatus.underOppfolging) {
+                true -> hentOppfolgingsEnhetOgVeileder(fodselsnummer)
+                else -> null
+            }
         return ArbeidsrettetOppfolging.Info(
             oppfolgingstatus.underOppfolging,
             oppfolgingstatus.erManuell,
@@ -53,9 +55,9 @@ open class ArbeidsrettetOppfolgingServiceImpl(
             enhetOgVeileder?.oppfolgingsenhet?.let {
                 ArbeidsrettetOppfolging.Enhet(
                     it.enhetId,
-                    it.navn
+                    it.navn,
                 )
-            }
+            },
         )
     }
 
@@ -63,14 +65,15 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
         return client.fetchJson(
             url = "$url/underoppfolging?fnr=${fodselsnummer.get()}",
-            type = ArbeidsrettetOppfolging.Status::class
+            type = ArbeidsrettetOppfolging.Status::class,
         )
     }
 
     override fun ping() {
-        val request = Request.Builder()
-            .url("$url/ping")
-            .build()
+        val request =
+            Request.Builder()
+                .url("$url/ping")
+                .build()
 
         RestClient.baseClient()
             .newCall(request)
@@ -82,11 +85,14 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder {
         return client.fetchJson(
             url = "$url/person/${fodselsnummer.get()}/oppfolgingsstatus",
-            type = ArbeidsrettetOppfolging.EnhetOgVeileder::class
+            type = ArbeidsrettetOppfolging.EnhetOgVeileder::class,
         )
     }
 
-    private fun <T : Any> OkHttpClient.fetchJson(url: String, type: KClass<T>): T {
+    private fun <T : Any> OkHttpClient.fetchJson(
+        url: String,
+        type: KClass<T>,
+    ): T {
         val request = Request.Builder().url(url).build()
         val response = this.newCall(request).execute()
         val statusCode = response.code()

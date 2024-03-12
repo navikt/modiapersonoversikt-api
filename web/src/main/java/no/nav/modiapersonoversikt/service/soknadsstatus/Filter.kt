@@ -10,15 +10,16 @@ object Filter {
     private const val SEND_SOKNAD_KVITTERINGSTYPE = "ae0002"
     private const val DOKUMENTINNSENDING_KVITTERINGSTYPE = "ae0001"
 
-    private val behandlingFilters = listOf<(Behandling) -> Boolean>(
-        ::erLovligBehandling,
-        ::harLovligSakstema,
-        ::harHendelser,
-        ::harLovligBehandlingstype,
-        ::harLovligBehandlingsstatus,
-        ::harLovligPrefix,
-        ::sisteHendelseErIkkeEldreEnn1Ar
-    )
+    private val behandlingFilters =
+        listOf<(Behandling) -> Boolean>(
+            ::erLovligBehandling,
+            ::harLovligSakstema,
+            ::harHendelser,
+            ::harLovligBehandlingstype,
+            ::harLovligBehandlingsstatus,
+            ::harLovligPrefix,
+            ::sisteHendelseErIkkeEldreEnn1Ar,
+        )
 
     fun filtrerOgSorterBehandligner(behandlinger: List<Behandling>): List<Behandling> {
         return filtrerBehandlinger(behandlinger = behandlinger).sortedByDescending { it.sistOppdatert }
@@ -38,9 +39,10 @@ object Filter {
     }
 
     private fun erLovligBehandling(behandling: Behandling): Boolean {
-        return harLovligStatusPaBehandling(behandling) && harLovligBehandlingstypeEllerAvsluttetKvittering(behandling) && harLovligPrefix(
-            behandling
-        )
+        return harLovligStatusPaBehandling(behandling) && harLovligBehandlingstypeEllerAvsluttetKvittering(behandling) &&
+            harLovligPrefix(
+                behandling,
+            )
     }
 
     internal fun harLovligStatusPaBehandling(behandling: Behandling): Boolean {
@@ -51,13 +53,17 @@ object Filter {
     }
 
     internal fun harLovligBehandlingstypeEllerAvsluttetKvittering(behandling: Behandling): Boolean {
-        return erFerdigUnder1MndSidenEllerInnsendtSoknad(behandling.behandlingsType, behandling) || lovligMenUtgaattStatusEllerUnderBehandling(
-            behandling.behandlingsType,
-            behandling
-        )
+        return erFerdigUnder1MndSidenEllerInnsendtSoknad(behandling.behandlingsType, behandling) ||
+            lovligMenUtgaattStatusEllerUnderBehandling(
+                behandling.behandlingsType,
+                behandling,
+            )
     }
 
-    internal fun erFerdigUnder1MndSidenEllerInnsendtSoknad(type: String, behandling: Behandling): Boolean {
+    internal fun erFerdigUnder1MndSidenEllerInnsendtSoknad(
+        type: String,
+        behandling: Behandling,
+    ): Boolean {
         if (erKvitteringstype(type)) {
             return erAvsluttet(behandling)
         }
@@ -77,7 +83,10 @@ object Filter {
         return behandling.status == Behandling.Status.FERDIG_BEHANDLET || behandling.status == Behandling.Status.AVBRUTT
     }
 
-    internal fun lovligMenUtgaattStatusEllerUnderBehandling(type: String, behandling: Behandling): Boolean {
+    internal fun lovligMenUtgaattStatusEllerUnderBehandling(
+        type: String,
+        behandling: Behandling,
+    ): Boolean {
         if (erAvsluttet(behandling) && !under1MndSidenFerdistillelse(behandling)) {
             return false
         }

@@ -17,12 +17,13 @@ open class PdlOppslagServiceConfig {
     open fun pdlOppslagService(
         stsService: SystemUserTokenProvider,
         machineToMachineTokenClient: MachineToMachineTokenClient,
-        oboTokenClient: OnBehalfOfTokenClient
-    ): PdlOppslagService = PdlOppslagServiceImpl(
-        stsService,
-        machineToMachineTokenClient.bindTo(downstreamApi),
-        oboTokenClient.bindTo(downstreamApi)
-    )
+        oboTokenClient: OnBehalfOfTokenClient,
+    ): PdlOppslagService =
+        PdlOppslagServiceImpl(
+            stsService,
+            machineToMachineTokenClient.bindTo(downstreamApi),
+            oboTokenClient.bindTo(downstreamApi),
+        )
 
     companion object {
         val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("PDL_SCOPE"))

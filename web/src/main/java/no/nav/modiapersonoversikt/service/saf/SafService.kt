@@ -25,10 +25,11 @@ import java.net.URL
 
 interface SafService {
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>>
+
     fun hentDokument(
         journalpostId: String,
         dokumentInfoId: String,
-        variantFormat: Dokument.Variantformat
+        variantFormat: Dokument.Variantformat,
     ): TjenesteResultatWrapper
 
     fun hentSaker(ident: String): GraphQLResponse<HentBrukersSaker.Result>
@@ -41,23 +42,24 @@ private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredPrope
 private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
 
 class SafServiceImpl(
-    private val oboTokenProvider: BoundedOnBehalfOfTokenClient
+    private val oboTokenProvider: BoundedOnBehalfOfTokenClient,
 ) : SafService {
     private val log = LoggerFactory.getLogger(SafService::class.java)
-    private val client: OkHttpClient = RestClient.baseClient().newBuilder()
-        .addInterceptor(
-            HeadersInterceptor {
-                this.httpHeaders(oboTokenProvider)
-            }
-        )
-        .addInterceptor(
-            LoggingInterceptor("Saf") { request ->
-                requireNotNull(request.header("X-Correlation-ID")) {
-                    "Kall uten \"X-Correlation-ID\" er ikke lov"
-                }
-            }
-        )
-        .build()
+    private val client: OkHttpClient =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(
+                HeadersInterceptor {
+                    this.httpHeaders(oboTokenProvider)
+                },
+            )
+            .addInterceptor(
+                LoggingInterceptor("Saf") { request ->
+                    requireNotNull(request.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
+                },
+            )
+            .build()
 
     companion object {
         const val VEDLEGG_START_INDEX = 1
@@ -68,50 +70,53 @@ class SafServiceImpl(
     }
 
     override fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
-        val variables = HentBrukersDokumenter.Variables(
-            HentBrukersDokumenter.BrukerIdInput(
-                id = fnr,
-                type = HentBrukersDokumenter.BrukerIdType.FNR
+        val variables =
+            HentBrukersDokumenter.Variables(
+                HentBrukersDokumenter.BrukerIdInput(
+                    id = fnr,
+                    type = HentBrukersDokumenter.BrukerIdType.FNR,
+                ),
             )
-        )
 
         return runBlocking {
             val response = HentBrukersDokumenter(graphQLClient).execute(variables, userTokenAuthorizationHeaders)
             if (response.errors.isNullOrEmpty()) {
-                val data = requireNotNull(response.data)
-                    .dokumentoversiktBruker
-                    .journalposter
-                    .filterNotNull()
-                    .mapNotNull { fraSafJournalpost(it) }
+                val data =
+                    requireNotNull(response.data)
+                        .dokumentoversiktBruker
+                        .journalposter
+                        .filterNotNull()
+                        .mapNotNull { fraSafJournalpost(it) }
                 ResultatWrapper(
                     data,
-                    emptySet()
+                    emptySet(),
                 )
             } else {
                 ResultatWrapper(
                     emptyList(),
-                    setOf(Baksystem.SAF)
+                    setOf(Baksystem.SAF),
                 )
             }
         }
     }
 
     override fun hentSaker(ident: String): GraphQLResponse<HentBrukersSaker.Result> {
-        val variables = if (ident.length == 11) {
-            HentBrukersSaker.Variables(
-                HentBrukersSaker.BrukerIdInput(
-                    id = ident,
-                    type = HentBrukersSaker.BrukerIdType.FNR
+        val variables =
+            if (ident.length == 11) {
+                HentBrukersSaker.Variables(
+                    HentBrukersSaker.BrukerIdInput(
+                        id = ident,
+                        type = HentBrukersSaker.BrukerIdType.FNR,
+                    ),
                 )
-            )
-        } else {
-            HentBrukersSaker.Variables(
-                HentBrukersSaker.BrukerIdInput(
-                    id = ident,
-                    type = HentBrukersSaker.BrukerIdType.AKTOERID
+            } else {
+                HentBrukersSaker.Variables(
+                    HentBrukersSaker.BrukerIdInput(
+                        id = ident,
+                        type = HentBrukersSaker.BrukerIdType.AKTOERID,
+                    ),
                 )
-            )
-        }
+            }
         return runBlocking {
             HentBrukersSaker(graphQLClient)
                 .execute(variables, userTokenAuthorizationHeaders)
@@ -121,16 +126,18 @@ class SafServiceImpl(
     override fun hentDokument(
         journalpostId: String,
         dokumentInfoId: String,
-        variantFormat: Dokument.Variantformat
+        variantFormat: Dokument.Variantformat,
     ): TjenesteResultatWrapper {
         val url = "$SAF_HENTDOKUMENT_BASEURL/$journalpostId/$dokumentInfoId/${variantFormat.name}"
-        val response = client.newCall(
-            Request.Builder().url(url).build()
-        ).execute()
+        val response =
+            client.newCall(
+                Request.Builder().url(url).build(),
+            ).execute()
         return when (response.code()) {
-            200 -> TjenesteResultatWrapper(
-                response.body()?.bytes()
-            )
+            200 ->
+                TjenesteResultatWrapper(
+                    response.body()?.bytes(),
+                )
             else -> handterDokumentFeilKoder(response.code())
         }
     }
@@ -141,7 +148,7 @@ class SafServiceImpl(
         return mapOf(
             "Authorization" to "Bearer $token",
             "Content-Type" to "application/json",
-            "X-Correlation-ID" to callId
+            "X-Correlation-ID" to callId,
         )
     }
 
@@ -151,13 +158,18 @@ class SafServiceImpl(
 
     private fun handterDokumentFeilKoder(statuskode: Int): TjenesteResultatWrapper {
         when (statuskode) {
-            400 -> log.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
+            400 ->
+                log.warn(
+                    """
+                    Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi
+                    """,
+                )
             401 -> log.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
             404 -> log.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
         }
         return TjenesteResultatWrapper(
             null,
-            statuskode
+            statuskode,
         )
     }
 }

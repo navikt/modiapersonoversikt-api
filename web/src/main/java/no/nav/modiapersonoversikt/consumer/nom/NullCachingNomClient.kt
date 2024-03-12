@@ -11,15 +11,15 @@ import kotlin.time.Duration.Companion.hours
 
 class NullCachingNomClient(
     private val nomClient: NomClient,
-    private val cache: Cache<NavIdent, Optional<VeilederNavn>> = CacheConfig.createCache(12.hours.inWholeSeconds, 10_000L).build()
+    private val cache: Cache<NavIdent, Optional<VeilederNavn>> = CacheConfig.createCache(12.hours.inWholeSeconds, 10_000L).build(),
 ) : NomClient {
-
     override fun finnNavn(navIdent: NavIdent): VeilederNavn {
-        val cachedValue = checkNotNull(
-            cache.get(navIdent) {
-                Optional.ofNullable(nomClient.finnNavn(navIdent))
-            }
-        )
+        val cachedValue =
+            checkNotNull(
+                cache.get(navIdent) {
+                    Optional.ofNullable(nomClient.finnNavn(navIdent))
+                },
+            )
         return cachedValue
             .orElseThrow { IllegalStateException("Fant ikke navn for NAV-ident: $navIdent") }
     }
@@ -49,5 +49,6 @@ class NullCachingNomClient(
 
         return out
     }
+
     override fun checkHealth(): HealthCheckResult = nomClient.checkHealth()
 }

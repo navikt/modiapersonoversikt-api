@@ -12,7 +12,8 @@ open class SafConfig {
     val downstreamapi = DownstreamApi.parse(getRequiredProperty("SAF_SCOPE"))
 
     @Bean
-    open fun safService(oboTokenClient: OnBehalfOfTokenClient): SafService = SafServiceImpl(
-        oboTokenClient.bindTo(downstreamapi)
-    )
+    open fun safService(oboTokenClient: OnBehalfOfTokenClient): SafService =
+        SafServiceImpl(
+            oboTokenClient.bindTo(downstreamapi),
+        )
 }

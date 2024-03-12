@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController
 class PersondataController(
     private val persondataService: PersondataService,
     private val tilgangskontroll: Tilgangskontroll,
-    private val pdlOppslagService: PdlOppslagService
+    private val pdlOppslagService: PdlOppslagService,
 ) {
-
     @GetMapping
-    fun hentPersondata(@PathVariable("fnr") fnr: String): Persondata.Data {
+    fun hentPersondata(
+        @PathVariable("fnr") fnr: String,
+    ): Persondata.Data {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnr)) {
@@ -31,12 +32,16 @@ class PersondataController(
     }
 
     @GetMapping("/identer")
-    fun hentIdenter(@PathVariable("fnr") fodselsnummer: String): HentIdenter.Identliste? {
+    fun hentIdenter(
+        @PathVariable("fnr") fodselsnummer: String,
+    ): HentIdenter.Identliste? {
         return pdlOppslagService.hentIdenter(fodselsnummer)
     }
 
     @GetMapping("/aktorid")
-    fun hentAktorId(@PathVariable("fnr") fodselsnummer: String): String? {
+    fun hentAktorId(
+        @PathVariable("fnr") fodselsnummer: String,
+    ): String? {
         return pdlOppslagService.hentAktorId(fodselsnummer)
     }
 }

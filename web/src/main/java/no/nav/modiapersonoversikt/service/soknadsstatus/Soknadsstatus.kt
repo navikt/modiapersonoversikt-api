@@ -9,5 +9,5 @@ data class Soknadsstatus(
     var ferdigBehandlet: Int = 0,
     var avbrutt: Int = 0,
     @JsonSerialize(using = LocalDateTimeAsStringSerializer::class)
-    var sistOppdatert: LocalDateTime? = null
+    var sistOppdatert: LocalDateTime? = null,
 )

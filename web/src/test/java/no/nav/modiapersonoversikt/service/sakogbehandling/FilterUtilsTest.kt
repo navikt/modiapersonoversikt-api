@@ -35,48 +35,59 @@ internal class FilterUtilsTest {
     }
 
     private fun getMockSaksteman(): List<Sakstema> {
-        val dokumentmetadata1 = DokumentMetadata()
-            .withJournalpostId("1")
-            .withBaksystem(Baksystem.SAF)
-            .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30))
-        val dokumentmetadata2 = DokumentMetadata()
-            .withJournalpostId("2")
-            .withBaksystem(Baksystem.SAF)
-            .withBaksystem(Baksystem.HENVENDELSE)
-            .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30))
-        val dokumentmetadata3 = DokumentMetadata()
-            .withJournalpostId("3")
-            .withBaksystem(Baksystem.HENVENDELSE)
-            .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30))
-        val dokumentmetadata4 = DokumentMetadata()
-            .withJournalpostId("4")
-            .withBaksystem(Baksystem.SAF)
-            .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30))
-        val dokumentmetadata5 = DokumentMetadata()
-            .withJournalpostId("5")
-            .withBaksystem(Baksystem.HENVENDELSE)
-            .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30))
-        val dokumentmetadata6 = DokumentMetadata()
-            .withJournalpostId("6")
-            .withBaksystem(Baksystem.HENVENDELSE).withBaksystem(
-                Baksystem.SAF
-            )
-            .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30))
-        val dokumentmetadata7 = DokumentMetadata()
-            .withJournalpostId("7")
-            .withBaksystem(Baksystem.SAF)
-            .withDato(LocalDateTime.of(2010, Month.APRIL, 8, 12, 30))
-        val dokumentmetadata8 = DokumentMetadata()
-            .withJournalpostId("8")
-            .withBaksystem(Baksystem.SAF)
-            .withDato(LocalDateTime.of(2011, Month.APRIL, 8, 12, 30))
+        val dokumentmetadata1 =
+            DokumentMetadata()
+                .withJournalpostId("1")
+                .withBaksystem(Baksystem.SAF)
+                .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30))
+        val dokumentmetadata2 =
+            DokumentMetadata()
+                .withJournalpostId("2")
+                .withBaksystem(Baksystem.SAF)
+                .withBaksystem(Baksystem.HENVENDELSE)
+                .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30))
+        val dokumentmetadata3 =
+            DokumentMetadata()
+                .withJournalpostId("3")
+                .withBaksystem(Baksystem.HENVENDELSE)
+                .withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30))
+        val dokumentmetadata4 =
+            DokumentMetadata()
+                .withJournalpostId("4")
+                .withBaksystem(Baksystem.SAF)
+                .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30))
+        val dokumentmetadata5 =
+            DokumentMetadata()
+                .withJournalpostId("5")
+                .withBaksystem(Baksystem.HENVENDELSE)
+                .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30))
+        val dokumentmetadata6 =
+            DokumentMetadata()
+                .withJournalpostId("6")
+                .withBaksystem(Baksystem.HENVENDELSE).withBaksystem(
+                    Baksystem.SAF,
+                )
+                .withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30))
+        val dokumentmetadata7 =
+            DokumentMetadata()
+                .withJournalpostId("7")
+                .withBaksystem(Baksystem.SAF)
+                .withDato(LocalDateTime.of(2010, Month.APRIL, 8, 12, 30))
+        val dokumentmetadata8 =
+            DokumentMetadata()
+                .withJournalpostId("8")
+                .withBaksystem(Baksystem.SAF)
+                .withDato(LocalDateTime.of(2011, Month.APRIL, 8, 12, 30))
 
-        val sakstema1 = Sakstema()
-            .withDokumentMetadata(listOf(dokumentmetadata1, dokumentmetadata2, dokumentmetadata3))
-        val sakstema2 = Sakstema()
-            .withDokumentMetadata(listOf(dokumentmetadata4, dokumentmetadata5, dokumentmetadata6))
-        val sakstema3 = Sakstema()
-            .withDokumentMetadata(listOf(dokumentmetadata7, dokumentmetadata8))
+        val sakstema1 =
+            Sakstema()
+                .withDokumentMetadata(listOf(dokumentmetadata1, dokumentmetadata2, dokumentmetadata3))
+        val sakstema2 =
+            Sakstema()
+                .withDokumentMetadata(listOf(dokumentmetadata4, dokumentmetadata5, dokumentmetadata6))
+        val sakstema3 =
+            Sakstema()
+                .withDokumentMetadata(listOf(dokumentmetadata7, dokumentmetadata8))
 
         return ArrayList(listOf(sakstema1, sakstema2, sakstema3))
     }

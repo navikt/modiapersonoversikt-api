@@ -42,50 +42,54 @@ class FilterTest {
         assertFalse(
             Filter.erFerdigUnder1MndSidenEllerInnsendtSoknad(
                 type = behandling.behandlingsType,
-                behandling = behandling
+                behandling = behandling,
             ),
-            "Skal filtrere bort behandling om behandlingstypen er kvittering men behandlingen er fortsatt under behandling"
+            "Skal filtrere bort behandling om behandlingstypen er kvittering men behandlingen er fortsatt under behandling",
         )
         assertTrue(
             Filter.erFerdigUnder1MndSidenEllerInnsendtSoknad(
                 type = behandling.behandlingsType,
-                behandling.copy(status = Behandling.Status.FERDIG_BEHANDLET)
+                behandling.copy(status = Behandling.Status.FERDIG_BEHANDLET),
             ),
-            "Skal ikke filtrere bort behandlinger med behandlingstype kvittering om behandlingen er ferdig"
+            "Skal ikke filtrere bort behandlinger med behandlingstype kvittering om behandlingen er ferdig",
         )
 
-        behandling = createBehandling().copy(
-            status = Behandling.Status.FERDIG_BEHANDLET,
-            sluttTidspunkt = LocalDateTime.now().minusDays(4),
-            behandlingsType = "asdsad"
-        )
+        behandling =
+            createBehandling().copy(
+                status = Behandling.Status.FERDIG_BEHANDLET,
+                sluttTidspunkt = LocalDateTime.now().minusDays(4),
+                behandlingsType = "asdsad",
+            )
         assertFalse(
             Filter.erFerdigUnder1MndSidenEllerInnsendtSoknad(type = behandling.behandlingsType, behandling),
-            "Skal filtrere bort behandlinger om behandlingen er avsluttet for mindre enn måned siden, men behandlingstypen er ugyldig"
+            "Skal filtrere bort behandlinger om behandlingen er avsluttet for mindre enn måned siden, men behandlingstypen er ugyldig",
         )
 
         behandling = behandling.copy(behandlingsType = "ae0047")
         assertTrue(
             Filter.erFerdigUnder1MndSidenEllerInnsendtSoknad(type = behandling.behandlingsType, behandling),
-            "Skal ikke filtrere bort behandlinger om behandlingen er avsluttet for mindre enn en måned siden og den har lovlig behandlingstype"
+            """
+            Skal ikke filtrere bort behandlinger om behandlingen er avsluttet for mindre enn en måned siden og den har lovlig behandlingstype
+            """,
         )
     }
 
     @Test
     fun `sjekker om saken har utgått status eller er under behandling`() {
-        var behandling = createBehandling().copy(
-            sluttTidspunkt = LocalDateTime.now().minusMonths(2),
-            status = Behandling.Status.FERDIG_BEHANDLET
-        )
+        var behandling =
+            createBehandling().copy(
+                sluttTidspunkt = LocalDateTime.now().minusMonths(2),
+                status = Behandling.Status.FERDIG_BEHANDLET,
+            )
         assertFalse(
             lovligMenUtgaattStatusEllerUnderBehandling(behandling.behandlingsType, behandling),
-            "Om saken er lukket og det er mer enn 1 måned siden skal den filtreres bort"
+            "Om saken er lukket og det er mer enn 1 måned siden skal den filtreres bort",
         )
 
         behandling = createBehandling().copy(status = Behandling.Status.UNDER_BEHANDLING, behandlingsType = "ae0047")
         assertTrue(
             lovligMenUtgaattStatusEllerUnderBehandling(behandling.behandlingsType, behandling),
-            "Skal ikke filtrere bort behandlinger som er under behandling med en gyldig behandlingstype"
+            "Skal ikke filtrere bort behandlinger som er under behandling med en gyldig behandlingstype",
         )
     }
 }

@@ -46,12 +46,13 @@ internal class EnhetligKodeverkServiceImplTest {
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        every { providers.fellesKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
-            "Land",
-            mapOf(
-                "NO" to "Noreg"
+        every { providers.fellesKodeverk.hentKodeverk(any()) } returns
+            EnhetligKodeverk.Kodeverk(
+                "Land",
+                mapOf(
+                    "NO" to "Noreg",
+                ),
             )
-        )
         val landkode = service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")
         assertThat(landkode).isEqualTo("Norge")
 
@@ -99,11 +100,12 @@ internal class EnhetligKodeverkServiceImplTest {
         assertThat(dateSlot.isCaptured).isTrue
         assertThat(dateSlot.captured).hasHourOfDay(1)
 
-        val forventetDato = if (dateSlot.captured.toInstant().isBefore(Instant.now())) {
-            LocalDate.now().dayOfMonth
-        } else {
-            LocalDate.now().plusDays(1).dayOfMonth
-        }
+        val forventetDato =
+            if (dateSlot.captured.toInstant().isBefore(Instant.now())) {
+                LocalDate.now().dayOfMonth
+            } else {
+                LocalDate.now().plusDays(1).dayOfMonth
+            }
         assertThat(dateSlot.captured).hasDayOfMonth(forventetDato)
 
         assertThat(periodeSlot.isCaptured).isTrue
@@ -115,10 +117,11 @@ internal class EnhetligKodeverkServiceImplTest {
         val providers = withProvidersMock()
 
         val clock = MutableClock()
-        val service = EnhetligKodeverkServiceImpl(
-            providers = providers,
-            clock = clock
-        )
+        val service =
+            EnhetligKodeverkServiceImpl(
+                providers = providers,
+                clock = clock,
+            )
 
         val kodeverk = service.hentKodeverk(KodeverkConfig.LAND)
 
@@ -137,60 +140,66 @@ internal class EnhetligKodeverkServiceImplTest {
         val oppgaveApi: KodeverkApi = mockk()
         val machineToMachineTokenClient: MachineToMachineTokenClient = mockk()
         val provider = OppgaveKodeverk.Provider(machineToMachineTokenClient, oppgaveApi)
-        every { provider.oppgaveKodeverk.hentInterntKodeverk(any()) } returns listOf(
-            KodeverkkombinasjonDTO(
-                tema = TemaDTO(
-                    tema = "AAP",
-                    term = "Arbeidsavklaringspenger"
+        every { provider.oppgaveKodeverk.hentInterntKodeverk(any()) } returns
+            listOf(
+                KodeverkkombinasjonDTO(
+                    tema =
+                        TemaDTO(
+                            tema = "AAP",
+                            term = "Arbeidsavklaringspenger",
+                        ),
+                    oppgavetyper =
+                        listOf(
+                            OppgavetypeDTO(
+                                oppgavetype = "VURD_HENV",
+                                term = "Vurder henvendelse",
+                            ),
+                            OppgavetypeDTO(
+                                oppgavetype = "IKKE_STØTTET",
+                                term = "Oppgavetype vi ikke støtter",
+                            ),
+                            OppgavetypeDTO(
+                                oppgavetype = "KONT_BRUK",
+                                term = "Kontakt bruker",
+                            ),
+                        ),
+                    gjelderverdier =
+                        listOf(
+                            GjelderDTO(
+                                behandlingstema = "ab0241",
+                                behandlingstemaTerm = "Dagliglivet",
+                            ),
+                            GjelderDTO(
+                                behandlingstema = "ab0241",
+                                behandlingstemaTerm = "Dagliglivet",
+                                behandlingstype = "ae0007",
+                                behandlingstypeTerm = "Utbetaling",
+                            ),
+                            GjelderDTO(
+                                behandlingstema = "ab0241",
+                                behandlingstemaTerm = "A Underkategori som skal sorteres først",
+                            ),
+                        ),
                 ),
-                oppgavetyper = listOf(
-                    OppgavetypeDTO(
-                        oppgavetype = "VURD_HENV",
-                        term = "Vurder henvendelse"
-                    ),
-                    OppgavetypeDTO(
-                        oppgavetype = "IKKE_STØTTET",
-                        term = "Oppgavetype vi ikke støtter"
-                    ),
-                    OppgavetypeDTO(
-                        oppgavetype = "KONT_BRUK",
-                        term = "Kontakt bruker"
-                    )
+                KodeverkkombinasjonDTO(
+                    tema =
+                        TemaDTO(
+                            tema = "TIL",
+                            term = "Tiltak",
+                        ),
+                    oppgavetyper = emptyList(),
+                    gjelderverdier = null,
                 ),
-                gjelderverdier = listOf(
-                    GjelderDTO(
-                        behandlingstema = "ab0241",
-                        behandlingstemaTerm = "Dagliglivet"
-                    ),
-                    GjelderDTO(
-                        behandlingstema = "ab0241",
-                        behandlingstemaTerm = "Dagliglivet",
-                        behandlingstype = "ae0007",
-                        behandlingstypeTerm = "Utbetaling"
-                    ),
-                    GjelderDTO(
-                        behandlingstema = "ab0241",
-                        behandlingstemaTerm = "A Underkategori som skal sorteres først",
-                    )
-                )
-            ),
-            KodeverkkombinasjonDTO(
-                tema = TemaDTO(
-                    tema = "TIL",
-                    term = "Tiltak"
+                KodeverkkombinasjonDTO(
+                    tema =
+                        TemaDTO(
+                            tema = "AAR",
+                            term = "Aa-registeret, som skal havne foran AAP i lista",
+                        ),
+                    oppgavetyper = emptyList(),
+                    gjelderverdier = null,
                 ),
-                oppgavetyper = emptyList(),
-                gjelderverdier = null
-            ),
-            KodeverkkombinasjonDTO(
-                tema = TemaDTO(
-                    tema = "AAR",
-                    term = "Aa-registeret, som skal havne foran AAP i lista"
-                ),
-                oppgavetyper = emptyList(),
-                gjelderverdier = null
             )
-        )
 
         val kodeverk = provider.hentKodeverk(KodeverkConfig.OPPGAVE.navn)
         val kodeverkVerdier = kodeverk.hentAlleVerdier().toList()
@@ -218,30 +227,34 @@ internal class EnhetligKodeverkServiceImplTest {
 
     private fun withProvidersMock(): KodeverkProviders {
         val providers: KodeverkProviders = mockk()
-        every { providers.fellesKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
-            "Land",
-            mapOf(
-                "NO" to "Norge"
+        every { providers.fellesKodeverk.hentKodeverk(any()) } returns
+            EnhetligKodeverk.Kodeverk(
+                "Land",
+                mapOf(
+                    "NO" to "Norge",
+                ),
             )
-        )
-        every { providers.sfHenvendelseKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
-            "Temagrupper",
-            mapOf(
-                "ARBD" to "Arbeid"
+        every { providers.sfHenvendelseKodeverk.hentKodeverk(any()) } returns
+            EnhetligKodeverk.Kodeverk(
+                "Temagrupper",
+                mapOf(
+                    "ARBD" to "Arbeid",
+                ),
             )
-        )
-        every { providers.oppgaveKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
-            "Oppgave",
-            mapOf(
-                "AAP" to OppgaveKodeverk.Tema(
-                    kode = "AAP",
-                    tekst = "Arbeidsavklaringspenger",
-                    oppgavetyper = emptyList(),
-                    prioriteter = emptyList(),
-                    underkategorier = emptyList()
-                )
+        every { providers.oppgaveKodeverk.hentKodeverk(any()) } returns
+            EnhetligKodeverk.Kodeverk(
+                "Oppgave",
+                mapOf(
+                    "AAP" to
+                        OppgaveKodeverk.Tema(
+                            kode = "AAP",
+                            tekst = "Arbeidsavklaringspenger",
+                            oppgavetyper = emptyList(),
+                            prioriteter = emptyList(),
+                            underkategorier = emptyList(),
+                        ),
+                ),
             )
-        )
 
         return providers
     }

@@ -44,28 +44,31 @@ class SakstemaServiceTest {
                     "FOR" to "Foreldrepenger",
                     "SYK" to "Sykepenger",
                     "SYM" to "Sykemeldinger",
-                )
+                ),
             )
         }
     }
 
     @Test
     fun lagSakstemaMedOppfoling() {
-        val sak = Sak()
-            .withSaksId("123")
-            .withTemakode(Konstanter.DAGPENGER)
-            .withAvsluttet(Optional.empty())
-        val oppfolinging = Sak()
-            .withSaksId("321")
-            .withTemakode(Konstanter.OPPFOLGING)
-            .withAvsluttet(Optional.empty())
+        val sak =
+            Sak()
+                .withSaksId("123")
+                .withTemakode(Konstanter.DAGPENGER)
+                .withAvsluttet(Optional.empty())
+        val oppfolinging =
+            Sak()
+                .withSaksId("321")
+                .withTemakode(Konstanter.OPPFOLGING)
+                .withAvsluttet(Optional.empty())
         val temakoder: Set<String> = setOf(Konstanter.DAGPENGER, Konstanter.OPPFOLGING)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(
-            temakoder,
-            listOf(sak, oppfolinging),
-            emptyList(),
-            emptyMap<String, List<Behandlingskjede>>()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppe(
+                temakoder,
+                listOf(sak, oppfolinging),
+                emptyList(),
+                emptyMap<String, List<Behandlingskjede>>(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Dagpenger")
         assertEquals(wrapper.resultat[1].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat.size, 2)
@@ -73,21 +76,24 @@ class SakstemaServiceTest {
 
     @Test
     fun lagSakstemaMedOppfolgingSoknadsstatus() {
-        val sak = Sak()
-            .withSaksId("123")
-            .withTemakode(Konstanter.DAGPENGER)
-            .withAvsluttet(Optional.empty())
-        val oppfolinging = Sak()
-            .withSaksId("321")
-            .withTemakode(Konstanter.OPPFOLGING)
-            .withAvsluttet(Optional.empty())
+        val sak =
+            Sak()
+                .withSaksId("123")
+                .withTemakode(Konstanter.DAGPENGER)
+                .withAvsluttet(Optional.empty())
+        val oppfolinging =
+            Sak()
+                .withSaksId("321")
+                .withTemakode(Konstanter.OPPFOLGING)
+                .withAvsluttet(Optional.empty())
         val temakoder: Set<String> = setOf(Konstanter.DAGPENGER, Konstanter.OPPFOLGING)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
-            temakoder,
-            listOf(sak, oppfolinging),
-            emptyList(),
-            emptyMap()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
+                temakoder,
+                listOf(sak, oppfolinging),
+                emptyList(),
+                emptyMap(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Dagpenger")
         assertEquals(wrapper.resultat[1].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat.size, 2)
@@ -95,61 +101,66 @@ class SakstemaServiceTest {
 
     @Test
     fun sakstemaMedKunOppfolgingGrupperesIkkeSoknadsstatus() {
-        val oppfolinging = Sak()
-            .withSaksId("321")
-            .withTemakode(Konstanter.OPPFOLGING)
-            .withAvsluttet(Optional.empty())
+        val oppfolinging =
+            Sak()
+                .withSaksId("321")
+                .withTemakode(Konstanter.OPPFOLGING)
+                .withAvsluttet(Optional.empty())
         val temakoder: Set<String> = setOf(Konstanter.OPPFOLGING)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
-            temakoder,
-            listOf(oppfolinging),
-            listOf(
-                DokumentMetadata()
-                    .withTilhorendeSakid("321")
-                    .withMottaker(Entitet.SLUTTBRUKER)
-                    .withAvsender(Entitet.NAV)
-                    .withRetning(Kommunikasjonsretning.UT)
-                    .withDato(LocalDateTime.now())
-                    .withHoveddokument(
-                        Dokument()
-                            .withTittel("TEST")
-                    )
-            ),
-            emptyMap()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
+                temakoder,
+                listOf(oppfolinging),
+                listOf(
+                    DokumentMetadata()
+                        .withTilhorendeSakid("321")
+                        .withMottaker(Entitet.SLUTTBRUKER)
+                        .withAvsender(Entitet.NAV)
+                        .withRetning(Kommunikasjonsretning.UT)
+                        .withDato(LocalDateTime.now())
+                        .withHoveddokument(
+                            Dokument()
+                                .withTittel("TEST"),
+                        ),
+                ),
+                emptyMap(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat.size, 1)
     }
 
     @Test
     fun etSakstemaMedOppfolgingGirEtSakstema() {
-        val oppfolinging = Sak()
-            .withSaksId("321")
-            .withTemakode(Konstanter.OPPFOLGING)
-            .withAvsluttet(Optional.empty())
-        val sak = Sak()
-            .withSaksId("123")
-            .withTemakode(Konstanter.DAGPENGER)
-            .withAvsluttet(Optional.empty())
+        val oppfolinging =
+            Sak()
+                .withSaksId("321")
+                .withTemakode(Konstanter.OPPFOLGING)
+                .withAvsluttet(Optional.empty())
+        val sak =
+            Sak()
+                .withSaksId("123")
+                .withTemakode(Konstanter.DAGPENGER)
+                .withAvsluttet(Optional.empty())
         val temakoder = setOf(Konstanter.DAGPENGER, Konstanter.OPPFOLGING)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(
-            temakoder,
-            listOf(oppfolinging, sak),
-            listOf(
-                DokumentMetadata()
-                    .withTilhorendeSakid("321")
-                    .withMottaker(Entitet.SLUTTBRUKER)
-                    .withAvsender(Entitet.NAV)
-                    .withRetning(Kommunikasjonsretning.UT)
-                    .withDato(LocalDateTime.now())
-                    .withBaksystem(Baksystem.JOARK)
-                    .withHoveddokument(
-                        Dokument()
-                            .withTittel("TEST")
-                    )
-            ),
-            emptyMap<String, List<Behandlingskjede>>()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppe(
+                temakoder,
+                listOf(oppfolinging, sak),
+                listOf(
+                    DokumentMetadata()
+                        .withTilhorendeSakid("321")
+                        .withMottaker(Entitet.SLUTTBRUKER)
+                        .withAvsender(Entitet.NAV)
+                        .withRetning(Kommunikasjonsretning.UT)
+                        .withDato(LocalDateTime.now())
+                        .withBaksystem(Baksystem.JOARK)
+                        .withHoveddokument(
+                            Dokument()
+                                .withTittel("TEST"),
+                        ),
+                ),
+                emptyMap<String, List<Behandlingskjede>>(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Dagpenger")
         assertEquals(wrapper.resultat[1].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat.size, 2)
@@ -157,33 +168,36 @@ class SakstemaServiceTest {
 
     @Test
     fun etSakstemaMedOppfolgingGirEtSakstemaSoknadsstatus() {
-        val oppfolinging = Sak()
-            .withSaksId("321")
-            .withTemakode(Konstanter.OPPFOLGING)
-            .withAvsluttet(Optional.empty())
-        val sak = Sak()
-            .withSaksId("123")
-            .withTemakode(Konstanter.DAGPENGER)
-            .withAvsluttet(Optional.empty())
+        val oppfolinging =
+            Sak()
+                .withSaksId("321")
+                .withTemakode(Konstanter.OPPFOLGING)
+                .withAvsluttet(Optional.empty())
+        val sak =
+            Sak()
+                .withSaksId("123")
+                .withTemakode(Konstanter.DAGPENGER)
+                .withAvsluttet(Optional.empty())
         val temakoder = setOf(Konstanter.DAGPENGER, Konstanter.OPPFOLGING)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
-            temakoder,
-            listOf(oppfolinging, sak),
-            listOf(
-                DokumentMetadata()
-                    .withTilhorendeSakid("321")
-                    .withMottaker(Entitet.SLUTTBRUKER)
-                    .withAvsender(Entitet.NAV)
-                    .withRetning(Kommunikasjonsretning.UT)
-                    .withDato(LocalDateTime.now())
-                    .withBaksystem(Baksystem.JOARK)
-                    .withHoveddokument(
-                        Dokument()
-                            .withTittel("TEST")
-                    )
-            ),
-            emptyMap()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
+                temakoder,
+                listOf(oppfolinging, sak),
+                listOf(
+                    DokumentMetadata()
+                        .withTilhorendeSakid("321")
+                        .withMottaker(Entitet.SLUTTBRUKER)
+                        .withAvsender(Entitet.NAV)
+                        .withRetning(Kommunikasjonsretning.UT)
+                        .withDato(LocalDateTime.now())
+                        .withBaksystem(Baksystem.JOARK)
+                        .withHoveddokument(
+                            Dokument()
+                                .withTittel("TEST"),
+                        ),
+                ),
+                emptyMap(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Dagpenger")
         assertEquals(wrapper.resultat[1].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat.size, 2)
@@ -191,34 +205,37 @@ class SakstemaServiceTest {
 
     @Test
     fun sakMedOppfolgingIHenvendelseSkalGrupperesOgFaaTilhorendeMetadata() {
-        val sak = Sak()
-            .withSaksId("123")
-            .withTemakode(Konstanter.DAGPENGER)
-            .withAvsluttet(Optional.empty())
-        val sak2 = Sak()
-            .withSaksId("1234")
-            .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
-            .withAvsluttet(Optional.empty())
+        val sak =
+            Sak()
+                .withSaksId("123")
+                .withTemakode(Konstanter.DAGPENGER)
+                .withAvsluttet(Optional.empty())
+        val sak2 =
+            Sak()
+                .withSaksId("1234")
+                .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
+                .withAvsluttet(Optional.empty())
         val temakoder =
             setOf(Konstanter.DAGPENGER, Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(
-            temakoder,
-            listOf(sak2, sak),
-            listOf(
-                DokumentMetadata()
-                    .withMottaker(Entitet.SLUTTBRUKER)
-                    .withAvsender(Entitet.NAV)
-                    .withRetning(Kommunikasjonsretning.UT)
-                    .withDato(LocalDateTime.now())
-                    .withBaksystem(Baksystem.HENVENDELSE)
-                    .withTemakode("OPP")
-                    .withHoveddokument(
-                        Dokument()
-                            .withTittel("Tilhorende Oppfolging")
-                    )
-            ),
-            emptyMap<String, List<Behandlingskjede>>()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppe(
+                temakoder,
+                listOf(sak2, sak),
+                listOf(
+                    DokumentMetadata()
+                        .withMottaker(Entitet.SLUTTBRUKER)
+                        .withAvsender(Entitet.NAV)
+                        .withRetning(Kommunikasjonsretning.UT)
+                        .withDato(LocalDateTime.now())
+                        .withBaksystem(Baksystem.HENVENDELSE)
+                        .withTemakode("OPP")
+                        .withHoveddokument(
+                            Dokument()
+                                .withTittel("Tilhorende Oppfolging"),
+                        ),
+                ),
+                emptyMap<String, List<Behandlingskjede>>(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Dagpenger")
         assertEquals(wrapper.resultat[1].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat[2].temanavn, "Arbeidsavklaringspenger")
@@ -227,34 +244,37 @@ class SakstemaServiceTest {
 
     @Test
     fun sakMedOppfolgingIHenvendelseSkalGrupperesOgFaaTilhorendeMetadataSoknadsstatus() {
-        val sak = Sak()
-            .withSaksId("123")
-            .withTemakode(Konstanter.DAGPENGER)
-            .withAvsluttet(Optional.empty())
-        val sak2 = Sak()
-            .withSaksId("1234")
-            .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
-            .withAvsluttet(Optional.empty())
+        val sak =
+            Sak()
+                .withSaksId("123")
+                .withTemakode(Konstanter.DAGPENGER)
+                .withAvsluttet(Optional.empty())
+        val sak2 =
+            Sak()
+                .withSaksId("1234")
+                .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
+                .withAvsluttet(Optional.empty())
         val temakoder =
             setOf(Konstanter.DAGPENGER, Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
-            temakoder,
-            listOf(sak2, sak),
-            listOf(
-                DokumentMetadata()
-                    .withMottaker(Entitet.SLUTTBRUKER)
-                    .withAvsender(Entitet.NAV)
-                    .withRetning(Kommunikasjonsretning.UT)
-                    .withDato(LocalDateTime.now())
-                    .withBaksystem(Baksystem.HENVENDELSE)
-                    .withTemakode("OPP")
-                    .withHoveddokument(
-                        Dokument()
-                            .withTittel("Tilhorende Oppfolging")
-                    )
-            ),
-            emptyMap()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
+                temakoder,
+                listOf(sak2, sak),
+                listOf(
+                    DokumentMetadata()
+                        .withMottaker(Entitet.SLUTTBRUKER)
+                        .withAvsender(Entitet.NAV)
+                        .withRetning(Kommunikasjonsretning.UT)
+                        .withDato(LocalDateTime.now())
+                        .withBaksystem(Baksystem.HENVENDELSE)
+                        .withTemakode("OPP")
+                        .withHoveddokument(
+                            Dokument()
+                                .withTittel("Tilhorende Oppfolging"),
+                        ),
+                ),
+                emptyMap(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Dagpenger")
         assertEquals(wrapper.resultat[1].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat[2].temanavn, "Arbeidsavklaringspenger")
@@ -266,18 +286,19 @@ class SakstemaServiceTest {
         every { safService.hentJournalposter(any()) } answers { ResultatWrapper(emptyList()) }
         every { sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(any()) } answers {
             hashMapOf(
-                "DAG" to listOf(
-                    Behandlingskjede()
-                        .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withSistOppdatert(LocalDateTime.now())
-                )
+                "DAG" to
+                    listOf(
+                        Behandlingskjede()
+                            .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                            .withSistOppdatert(LocalDateTime.now()),
+                    ),
             )
         }
 
         val listResultatWrapper = sakstemaService.hentSakstema(emptyList(), FNR)
         assertEquals(
             listResultatWrapper.resultat.size,
-            1
+            1,
         )
         assertEquals(listResultatWrapper.resultat[0].temakode, "DAG")
     }
@@ -287,18 +308,19 @@ class SakstemaServiceTest {
         every { safService.hentJournalposter(any()) } answers { ResultatWrapper(emptyList()) }
         every { sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(any()) } answers {
             hashMapOf(
-                "DAG" to listOf(
-                    Behandlingskjede()
-                        .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withSistOppdatert(LocalDateTime.now())
-                )
+                "DAG" to
+                    listOf(
+                        Behandlingskjede()
+                            .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                            .withSistOppdatert(LocalDateTime.now()),
+                    ),
             )
         }
 
         val listResultatWrapper = sakstemaService.hentSakstemaSoknadsstatus(emptyList(), FNR)
         assertEquals(
             listResultatWrapper.resultat.size,
-            1
+            1,
         )
         assertEquals(listResultatWrapper.resultat[0].temakode, "DAG")
     }
@@ -308,17 +330,18 @@ class SakstemaServiceTest {
         every { safService.hentJournalposter(any()) } answers {
             ResultatWrapper(
                 listOf(
-                    DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE)
-                )
+                    DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE),
+                ),
             )
         }
         every { sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(any()) } answers {
             hashMapOf(
-                "DAG" to listOf(
-                    Behandlingskjede()
-                        .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withSistOppdatert(LocalDateTime.now())
-                )
+                "DAG" to
+                    listOf(
+                        Behandlingskjede()
+                            .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                            .withSistOppdatert(LocalDateTime.now()),
+                    ),
             )
         }
         val listResultatWrapper = sakstemaService.hentSakstema(emptyList(), FNR)
@@ -331,17 +354,18 @@ class SakstemaServiceTest {
         every { safService.hentJournalposter(any()) } answers {
             ResultatWrapper(
                 listOf(
-                    DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE)
-                )
+                    DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE),
+                ),
             )
         }
         every { sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(any()) } answers {
             hashMapOf(
-                "DAG" to listOf(
-                    Behandlingskjede()
-                        .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withSistOppdatert(LocalDateTime.now())
-                )
+                "DAG" to
+                    listOf(
+                        Behandlingskjede()
+                            .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                            .withSistOppdatert(LocalDateTime.now()),
+                    ),
             )
         }
         val listResultatWrapper = sakstemaService.hentSakstemaSoknadsstatus(emptyList(), FNR)
@@ -354,19 +378,20 @@ class SakstemaServiceTest {
         every { safService.hentJournalposter(any()) } answers {
             ResultatWrapper(
                 listOf(
-                    DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE)
-                )
+                    DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE),
+                ),
             )
         }
         every {
             sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(any())
         } answers {
             hashMapOf(
-                "DAG" to listOf(
-                    Behandlingskjede()
-                        .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withSistOppdatert(LocalDateTime.now())
-                )
+                "DAG" to
+                    listOf(
+                        Behandlingskjede()
+                            .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                            .withSistOppdatert(LocalDateTime.now()),
+                    ),
             )
         }
         val listResultatWrapper = sakstemaService.hentSakstema(emptyList(), FNR)
@@ -378,19 +403,20 @@ class SakstemaServiceTest {
         every { safService.hentJournalposter(any()) } answers {
             ResultatWrapper(
                 listOf(
-                    DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE)
-                )
+                    DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE),
+                ),
             )
         }
         every {
             sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(any())
         } answers {
             hashMapOf(
-                "DAG" to listOf(
-                    Behandlingskjede()
-                        .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withSistOppdatert(LocalDateTime.now())
-                )
+                "DAG" to
+                    listOf(
+                        Behandlingskjede()
+                            .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                            .withSistOppdatert(LocalDateTime.now()),
+                    ),
             )
         }
         val listResultatWrapper = sakstemaService.hentSakstemaSoknadsstatus(emptyList(), FNR)
@@ -398,39 +424,43 @@ class SakstemaServiceTest {
     }
 
     @Test
-    fun FlereSakstemaMedOppfolgingGirFlereSakstemaMedOppfolging() {
-        val oppfolinging = Sak()
-            .withSaksId("321")
-            .withTemakode(Konstanter.OPPFOLGING)
-            .withAvsluttet(Optional.empty())
-        val sak = Sak()
-            .withSaksId("123")
-            .withTemakode(Konstanter.DAGPENGER)
-            .withAvsluttet(Optional.empty())
-        val sak2 = Sak()
-            .withSaksId("122")
-            .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
-            .withAvsluttet(Optional.empty())
+    fun flereSakstemaMedOppfolgingGirFlereSakstemaMedOppfolging() {
+        val oppfolinging =
+            Sak()
+                .withSaksId("321")
+                .withTemakode(Konstanter.OPPFOLGING)
+                .withAvsluttet(Optional.empty())
+        val sak =
+            Sak()
+                .withSaksId("123")
+                .withTemakode(Konstanter.DAGPENGER)
+                .withAvsluttet(Optional.empty())
+        val sak2 =
+            Sak()
+                .withSaksId("122")
+                .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
+                .withAvsluttet(Optional.empty())
         val temakoder =
             setOf(Konstanter.DAGPENGER, Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(
-            temakoder,
-            listOf(oppfolinging, sak, sak2),
-            listOf(
-                DokumentMetadata()
-                    .withTilhorendeSakid("321")
-                    .withMottaker(Entitet.SLUTTBRUKER)
-                    .withAvsender(Entitet.NAV)
-                    .withRetning(Kommunikasjonsretning.UT)
-                    .withDato(LocalDateTime.now())
-                    .withBaksystem(Baksystem.JOARK)
-                    .withHoveddokument(
-                        Dokument()
-                            .withTittel("TEST")
-                    )
-            ),
-            emptyMap<String, List<Behandlingskjede>>()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppe(
+                temakoder,
+                listOf(oppfolinging, sak, sak2),
+                listOf(
+                    DokumentMetadata()
+                        .withTilhorendeSakid("321")
+                        .withMottaker(Entitet.SLUTTBRUKER)
+                        .withAvsender(Entitet.NAV)
+                        .withRetning(Kommunikasjonsretning.UT)
+                        .withDato(LocalDateTime.now())
+                        .withBaksystem(Baksystem.JOARK)
+                        .withHoveddokument(
+                            Dokument()
+                                .withTittel("TEST"),
+                        ),
+                ),
+                emptyMap<String, List<Behandlingskjede>>(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Dagpenger")
         assertEquals(wrapper.resultat[1].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat[2].temanavn, "Arbeidsavklaringspenger")
@@ -438,39 +468,43 @@ class SakstemaServiceTest {
     }
 
     @Test
-    fun FlereSakstemaMedOppfolgingGirFlereSakstemaMedOppfolgingSoknadsstatus() {
-        val oppfolinging = Sak()
-            .withSaksId("321")
-            .withTemakode(Konstanter.OPPFOLGING)
-            .withAvsluttet(Optional.empty())
-        val sak = Sak()
-            .withSaksId("123")
-            .withTemakode(Konstanter.DAGPENGER)
-            .withAvsluttet(Optional.empty())
-        val sak2 = Sak()
-            .withSaksId("122")
-            .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
-            .withAvsluttet(Optional.empty())
+    fun flereSakstemaMedOppfolgingGirFlereSakstemaMedOppfolgingSoknadsstatus() {
+        val oppfolinging =
+            Sak()
+                .withSaksId("321")
+                .withTemakode(Konstanter.OPPFOLGING)
+                .withAvsluttet(Optional.empty())
+        val sak =
+            Sak()
+                .withSaksId("123")
+                .withTemakode(Konstanter.DAGPENGER)
+                .withAvsluttet(Optional.empty())
+        val sak2 =
+            Sak()
+                .withSaksId("122")
+                .withTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER)
+                .withAvsluttet(Optional.empty())
         val temakoder =
             setOf(Konstanter.DAGPENGER, Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER)
-        val wrapper = sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
-            temakoder,
-            listOf(oppfolinging, sak, sak2),
-            listOf(
-                DokumentMetadata()
-                    .withTilhorendeSakid("321")
-                    .withMottaker(Entitet.SLUTTBRUKER)
-                    .withAvsender(Entitet.NAV)
-                    .withRetning(Kommunikasjonsretning.UT)
-                    .withDato(LocalDateTime.now())
-                    .withBaksystem(Baksystem.JOARK)
-                    .withHoveddokument(
-                        Dokument()
-                            .withTittel("TEST")
-                    )
-            ),
-            emptyMap()
-        )
+        val wrapper =
+            sakstemaService.opprettSakstemaForEnTemagruppeSoknadsstatus(
+                temakoder,
+                listOf(oppfolinging, sak, sak2),
+                listOf(
+                    DokumentMetadata()
+                        .withTilhorendeSakid("321")
+                        .withMottaker(Entitet.SLUTTBRUKER)
+                        .withAvsender(Entitet.NAV)
+                        .withRetning(Kommunikasjonsretning.UT)
+                        .withDato(LocalDateTime.now())
+                        .withBaksystem(Baksystem.JOARK)
+                        .withHoveddokument(
+                            Dokument()
+                                .withTittel("TEST"),
+                        ),
+                ),
+                emptyMap(),
+            )
         assertEquals(wrapper.resultat[0].temanavn, "Dagpenger")
         assertEquals(wrapper.resultat[1].temanavn, "Oppfølging")
         assertEquals(wrapper.resultat[2].temanavn, "Arbeidsavklaringspenger")
@@ -493,31 +527,33 @@ class SakstemaServiceTest {
                     DokumentMetadata()
                         .withTilhorendeSakid("789")
                         .withTemakode("OPP")
-                        .withBaksystem(Baksystem.JOARK)
-                )
+                        .withBaksystem(Baksystem.JOARK),
+                ),
             )
         }
         every { sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(any()) } answers {
             hashMapOf(
-                "SYK" to listOf(
-                    Behandlingskjede()
-                        .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withSistOppdatert(LocalDateTime.now())
-                )
+                "SYK" to
+                    listOf(
+                        Behandlingskjede()
+                            .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                            .withSistOppdatert(LocalDateTime.now()),
+                    ),
             )
         }
 
-        val saker = listOf(
-            Sak()
-                .withSaksId("123")
-                .withTemakode("SYM"),
-            Sak()
-                .withSaksId("456")
-                .withTemakode("SYK"),
-            Sak()
-                .withSaksId("789")
-                .withTemakode("OPP")
-        )
+        val saker =
+            listOf(
+                Sak()
+                    .withSaksId("123")
+                    .withTemakode("SYM"),
+                Sak()
+                    .withSaksId("456")
+                    .withTemakode("SYK"),
+                Sak()
+                    .withSaksId("789")
+                    .withTemakode("OPP"),
+            )
         val listResultatWrapper = sakstemaService.hentSakstema(saker, FNR)
         assertEquals(listResultatWrapper.resultat.size, 3)
         assertEquals(listResultatWrapper.resultat[0].temanavn, "Sykepenger")
@@ -539,31 +575,33 @@ class SakstemaServiceTest {
                     DokumentMetadata()
                         .withTilhorendeSakid("789")
                         .withTemakode("OPP")
-                        .withBaksystem(Baksystem.JOARK)
-                )
+                        .withBaksystem(Baksystem.JOARK),
+                ),
             )
         }
         every { sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(any()) } answers {
             hashMapOf(
-                "SYK" to listOf(
-                    Behandlingskjede()
-                        .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withSistOppdatert(LocalDateTime.now())
-                )
+                "SYK" to
+                    listOf(
+                        Behandlingskjede()
+                            .withStatus(BehandlingsStatus.FERDIG_BEHANDLET)
+                            .withSistOppdatert(LocalDateTime.now()),
+                    ),
             )
         }
 
-        val saker = listOf(
-            Sak()
-                .withSaksId("123")
-                .withTemakode("SYM"),
-            Sak()
-                .withSaksId("456")
-                .withTemakode("SYK"),
-            Sak()
-                .withSaksId("789")
-                .withTemakode("OPP")
-        )
+        val saker =
+            listOf(
+                Sak()
+                    .withSaksId("123")
+                    .withTemakode("SYM"),
+                Sak()
+                    .withSaksId("456")
+                    .withTemakode("SYK"),
+                Sak()
+                    .withSaksId("789")
+                    .withTemakode("OPP"),
+            )
         val listResultatWrapper = sakstemaService.hentSakstemaSoknadsstatus(saker, FNR)
         assertEquals(listResultatWrapper.resultat.size, 3)
         assertEquals(listResultatWrapper.resultat[0].temanavn, "Sykemeldinger")
@@ -571,14 +609,15 @@ class SakstemaServiceTest {
 
     @Test
     fun gruppererTemaFraSakerDokumentMetadataOgBehandlingskjeder() {
-        val temakoder = hentAlleTema(
-            lagSaker(Konstanter.DAGPENGER, Konstanter.KONTROLL),
-            lagDokument(
-                listOf(Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER),
-                listOf("KNA", "IND")
-            ),
-            lagBehandlingskjeder(Konstanter.FORELDREPENGER, Konstanter.DAGPENGER, Konstanter.OPPFOLGING)
-        )
+        val temakoder =
+            hentAlleTema(
+                lagSaker(Konstanter.DAGPENGER, Konstanter.KONTROLL),
+                lagDokument(
+                    listOf(Konstanter.OPPFOLGING, Konstanter.ARBEIDSAVKLARINGSPENGER),
+                    listOf("KNA", "IND"),
+                ),
+                lagBehandlingskjeder(Konstanter.FORELDREPENGER, Konstanter.DAGPENGER, Konstanter.OPPFOLGING),
+            )
         MatcherAssert.assertThat(
             temakoder,
             CoreMatchers.hasItems(
@@ -586,23 +625,24 @@ class SakstemaServiceTest {
                 Konstanter.KONTROLL,
                 Konstanter.OPPFOLGING,
                 Konstanter.ARBEIDSAVKLARINGSPENGER,
-                Konstanter.FORELDREPENGER
-            )
+                Konstanter.FORELDREPENGER,
+            ),
         )
         MatcherAssert.assertThat(
             temakoder,
             CoreMatchers.not(
                 CoreMatchers.hasItems(
                     "KNA",
-                    "IND"
-                )
-            )
+                    "IND",
+                ),
+            ),
         )
         MatcherAssert.assertThat(temakoder.size, CoreMatchers.`is`(5))
     }
 
     companion object {
         private const val FNR = "11111111111"
+
         private fun lagSaker(vararg temakoder: String): List<Sak> {
             return temakoder
                 .map { temakode: String? -> Sak().withTemakode(temakode) }
@@ -610,20 +650,22 @@ class SakstemaServiceTest {
 
         private fun lagDokument(
             henvendelseTemakoder: List<String>,
-            joarkTemakoder: List<String>
+            joarkTemakoder: List<String>,
         ): List<DokumentMetadata> {
-            val henvendelseDokument = henvendelseTemakoder
-                .map { temakode: String? ->
-                    DokumentMetadata()
-                        .withTemakode(temakode)
-                        .withBaksystem(Baksystem.HENVENDELSE)
-                }
-            val joarkDokument = joarkTemakoder
-                .map { temakode: String? ->
-                    DokumentMetadata()
-                        .withTemakode(temakode)
-                        .withBaksystem(Baksystem.JOARK)
-                }
+            val henvendelseDokument =
+                henvendelseTemakoder
+                    .map { temakode: String? ->
+                        DokumentMetadata()
+                            .withTemakode(temakode)
+                            .withBaksystem(Baksystem.HENVENDELSE)
+                    }
+            val joarkDokument =
+                joarkTemakoder
+                    .map { temakode: String? ->
+                        DokumentMetadata()
+                            .withTemakode(temakode)
+                            .withBaksystem(Baksystem.JOARK)
+                    }
             return henvendelseDokument + joarkDokument
         }
 

@@ -18,7 +18,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 @CacheConfig(cacheNames = ["endpointCache"], keyGenerator = "userkeygenerator")
 open class SakOgBehandlingServiceImpl(
     private val sakOgBehandlingPortType: SakOgBehandlingV1,
-    private val pdlOppslagService: PdlOppslagService
+    private val pdlOppslagService: PdlOppslagService,
 ) : SakOgBehandlingService {
     @Cacheable
     override fun hentAlleSaker(fnr: String): List<Sak> {
@@ -31,7 +31,7 @@ open class SakOgBehandlingServiceImpl(
         } catch (ex: RuntimeException) {
             logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex)
             throw FeilendeBaksystemException(
-                Baksystem.SAK_OG_BEHANDLING
+                Baksystem.SAK_OG_BEHANDLING,
             )
         }
     }
@@ -57,19 +57,21 @@ open class SakOgBehandlingServiceImpl(
 
     companion object {
         private val logger = LoggerFactory.getLogger(SakOgBehandlingServiceImpl::class.java)
+
         private fun hentBehandlingerFraBehandlingskjeder(behandlingskjedeListe: List<WSBehandlingskjede>): List<Behandling> {
             return behandlingskjedeListe.stream()
                 .map(Transformers::tilBehandling)
                 .collect(Collectors.toList())
         }
 
-        fun tilBehandlingskjede(behandling: Behandling): Behandlingskjede = Behandlingskjede()
-            .withStatus(behandling.getBehandlingsStatus())
-            .withBehandlingId(behandling.behandlingsId)
-            .withSistOppdatert(
-                LocalDateTime.from(
-                    behandling.getBehandlingDato().toGregorianCalendar().toZonedDateTime()
+        fun tilBehandlingskjede(behandling: Behandling): Behandlingskjede =
+            Behandlingskjede()
+                .withStatus(behandling.getBehandlingsStatus())
+                .withBehandlingId(behandling.behandlingsId)
+                .withSistOppdatert(
+                    LocalDateTime.from(
+                        behandling.getBehandlingDato().toGregorianCalendar().toZonedDateTime(),
+                    ),
                 )
-            )
     }
 }

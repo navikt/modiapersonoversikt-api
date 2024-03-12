@@ -26,89 +26,98 @@ import java.time.LocalDate
 
 @RestController
 @RequestMapping("/rest/personsok")
-class PersonsokController @Autowired constructor(
-    private val personsokPortType: PersonsokPortType,
-    private val pdlOppslagService: PdlOppslagService,
-    val tilgangskontroll: Tilgangskontroll
-) {
-    private val sokefelterTrace = Audit.describe<Pair<String, String>>(Audit.Action.READ, AuditResources.Personsok.Sokefelter) { data ->
-        val (enhet, felter) = requireNotNull(data)
-        listOf(
-            AuditIdentifier.ENHET_ID to enhet,
-            AuditIdentifier.SOKEFELTER to felter
-        )
-    }
-    private val auditDescriptor =
-        Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
-            val fnr = resultat?.joinToString(", ") { it.ident.ident } ?: "--"
-            listOf(
-                AuditIdentifier.FNR to fnr
-            )
+class PersonsokController
+    @Autowired
+    constructor(
+        private val personsokPortType: PersonsokPortType,
+        private val pdlOppslagService: PdlOppslagService,
+        val tilgangskontroll: Tilgangskontroll,
+    ) {
+        private val sokefelterTrace =
+            Audit.describe<Pair<String, String>>(Audit.Action.READ, AuditResources.Personsok.Sokefelter) { data ->
+                val (enhet, felter) = requireNotNull(data)
+                listOf(
+                    AuditIdentifier.ENHET_ID to enhet,
+                    AuditIdentifier.SOKEFELTER to felter,
+                )
+            }
+        private val auditDescriptor =
+            Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
+                val fnr = resultat?.joinToString(", ") { it.ident.ident } ?: "--"
+                listOf(
+                    AuditIdentifier.FNR to fnr,
+                )
+            }
+
+        @PostMapping("/v3")
+        fun sokPdlV3(
+            @RequestBody personsokRequestV3: PersonsokRequestV3,
+        ): List<PersonSokResponsDTO> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(auditDescriptor) {
+                    handterFeil {
+                        val enhet = personsokRequestV3.enhet ?: "Ukjent"
+                        if (!personsokRequestV3.kontonummer.isNullOrBlank()) {
+                            sokefelterTrace.log(enhet to "kontonummer")
+                            kontonummerSok(personsokRequestV3.kontonummer)
+                                .mapNotNull(::lagPersonResponse)
+                        } else {
+                            val pdlKriterier = personsokRequestV3.tilPdlKriterier()
+                            val feltnavn =
+                                pdlKriterier
+                                    .filter { it.value.isNullOrEmpty().not() }
+                                    .joinToString(", ") { it.felt.name }
+                            sokefelterTrace.log(enhet to feltnavn)
+                            pdlOppslagService
+                                .sokPerson(pdlKriterier)
+                                .mapNotNull(::lagPersonResponse)
+                        }
+                    }
+                }
         }
 
-    @PostMapping("/v3")
-    fun sokPdlV3(@RequestBody personsokRequestV3: PersonsokRequestV3): List<PersonSokResponsDTO> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(auditDescriptor) {
-                handterFeil {
-                    val enhet = personsokRequestV3.enhet ?: "Ukjent"
-                    if (!personsokRequestV3.kontonummer.isNullOrBlank()) {
-                        sokefelterTrace.log(enhet to "kontonummer")
-                        kontonummerSok(personsokRequestV3.kontonummer)
-                            .mapNotNull(::lagPersonResponse)
-                    } else {
-                        val pdlKriterier = personsokRequestV3.tilPdlKriterier()
-                        val feltnavn = pdlKriterier
-                            .filter { it.value.isNullOrEmpty().not() }
-                            .joinToString(", ") { it.felt.name }
-                        sokefelterTrace.log(enhet to feltnavn)
-                        pdlOppslagService
-                            .sokPerson(pdlKriterier)
-                            .mapNotNull(::lagPersonResponse)
+        private fun kontonummerSok(kontonummer: String): List<Person> {
+            val request =
+                FinnPersonRequest()
+                    .apply {
+                        soekekriterie =
+                            Soekekriterie()
+                                .apply {
+                                    bankkontoNorge = kontonummer
+                                }
                     }
+            return personsokPortType
+                .finnPerson(request)
+                .personListe
+                ?: emptyList()
+        }
+
+        private fun <T> handterFeil(block: () -> T): T =
+            try {
+                block()
+            } catch (ex: Exception) {
+                when {
+                    ex.message == "For mange forekomster funnet" ->
+                        throw ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Søket gav mer enn 200 treff. Forsøk å begrense søket.",
+                        )
+                    ex is GraphQLException ->
+                        throw ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Søket gav feil ved kall til PDL: ${ex.message}",
+                            ex,
+                        )
+                    else ->
+                        throw ResponseStatusException(
+                            HttpStatus.INTERNAL_SERVER_ERROR,
+                            "Feil fra søketjeneste: ${ex.message}",
+                            ex,
+                        )
                 }
             }
     }
-
-    private fun kontonummerSok(kontonummer: String): List<Person> {
-        val request = FinnPersonRequest()
-            .apply {
-                soekekriterie = Soekekriterie()
-                    .apply {
-                        bankkontoNorge = kontonummer
-                    }
-            }
-        return personsokPortType
-            .finnPerson(request)
-            .personListe
-            ?: emptyList()
-    }
-
-    private fun <T> handterFeil(block: () -> T): T = try {
-        block()
-    } catch (ex: Exception) {
-        when {
-            ex.message == "For mange forekomster funnet" ->
-                throw ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Søket gav mer enn 200 treff. Forsøk å begrense søket."
-                )
-            ex is GraphQLException ->
-                throw ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Søket gav feil ved kall til PDL: ${ex.message}",
-                    ex
-                )
-            else ->
-                throw ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Feil fra søketjeneste: ${ex.message}",
-                    ex
-                )
-        }
-    }
-}
 
 fun lagPersonResponse(searchHit: SokPerson.PersonSearchHit): PersonSokResponsDTO? {
     val ident: SokPerson.Folkeregisteridentifikator = searchHit.person?.folkeregisteridentifikator?.firstOrNull() ?: return null
@@ -122,12 +131,13 @@ fun lagPersonResponse(searchHit: SokPerson.PersonSearchHit): PersonSokResponsDTO
         navn = navn,
         postadresse = lagPostadresse(searchHit.person?.kontaktadresse),
         bostedsadresse = lagBostedsadresse(searchHit.person?.bostedsadresse),
-        brukerinfo = BrukerinfoDTO(
-            gjeldendePostadresseType = null,
-            midlertidigPostadresse = null,
-            ansvarligEnhet = null
-        ),
-        utenlandskID = utenlandskID?.map { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland) }
+        brukerinfo =
+            BrukerinfoDTO(
+                gjeldendePostadresseType = null,
+                midlertidigPostadresse = null,
+                ansvarligEnhet = null,
+            ),
+        utenlandskID = utenlandskID?.map { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland) },
     )
 }
 
@@ -145,7 +155,7 @@ private fun lagBostedsadresse(adr: List<SokPerson.Bostedsadresse>?): String? {
                 adresse.matrikkeladresse!!.bruksenhetsnummer,
                 adresse.matrikkeladresse!!.tilleggsnavn,
                 adresse.matrikkeladresse!!.postnummer,
-                adresse.matrikkeladresse!!.kommunenummer
+                adresse.matrikkeladresse!!.kommunenummer,
             ).joinToString(" ")
         }
         adresse.utenlandskAdresse != null -> {
@@ -156,7 +166,7 @@ private fun lagBostedsadresse(adr: List<SokPerson.Bostedsadresse>?): String? {
                 adresse.utenlandskAdresse!!.postboksNummerNavn,
                 adresse.utenlandskAdresse!!.postkode,
                 adresse.utenlandskAdresse!!.bySted,
-                adresse.utenlandskAdresse!!.landkode
+                adresse.utenlandskAdresse!!.landkode,
             )
                 .joinToString(" ")
         }
@@ -168,8 +178,7 @@ private fun lagBostedsadresse(adr: List<SokPerson.Bostedsadresse>?): String? {
                 adresse.vegadresse!!.bruksenhetsnummer,
                 adresse.vegadresse!!.postnummer,
                 adresse.vegadresse!!.bydelsnummer,
-                adresse.vegadresse!!.kommunenummer
-
+                adresse.vegadresse!!.kommunenummer,
             ).joinToString(" ")
         }
         else -> {
@@ -189,7 +198,7 @@ fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
                 adresse.postadresseIFrittFormat!!.adresselinje1,
                 adresse.postadresseIFrittFormat!!.adresselinje2,
                 adresse.postadresseIFrittFormat!!.adresselinje3,
-                adresse.postadresseIFrittFormat!!.postnummer
+                adresse.postadresseIFrittFormat!!.postnummer,
             )
                 .joinToString(" ")
         }
@@ -200,7 +209,7 @@ fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
                 adresse.utenlandskAdresseIFrittFormat!!.adresselinje3,
                 adresse.utenlandskAdresseIFrittFormat!!.postkode,
                 adresse.utenlandskAdresseIFrittFormat!!.byEllerStedsnavn,
-                adresse.utenlandskAdresseIFrittFormat!!.landkode
+                adresse.utenlandskAdresseIFrittFormat!!.landkode,
             )
                 .joinToString(" ")
         }
@@ -208,7 +217,7 @@ fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
             return listOfNotNull(
                 adresse.postboksadresse!!.postbokseier,
                 adresse.postboksadresse!!.postboks,
-                adresse.postboksadresse!!.postnummer
+                adresse.postboksadresse!!.postnummer,
             ).joinToString(" ")
         }
         adresse.utenlandskAdresse != null -> {
@@ -219,7 +228,7 @@ fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
                 adresse.utenlandskAdresse!!.postboksNummerNavn,
                 adresse.utenlandskAdresse!!.postkode,
                 adresse.utenlandskAdresse!!.bySted,
-                adresse.utenlandskAdresse!!.landkode
+                adresse.utenlandskAdresse!!.landkode,
             )
                 .joinToString(" ")
         }
@@ -231,8 +240,7 @@ fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
                 adresse.vegadresse!!.bruksenhetsnummer,
                 adresse.vegadresse!!.postnummer,
                 adresse.vegadresse!!.bydelsnummer,
-                adresse.vegadresse!!.kommunenummer
-
+                adresse.vegadresse!!.kommunenummer,
             ).joinToString(" ")
         }
         else -> {
@@ -250,7 +258,7 @@ fun hentNavn(person: SokPerson.Person?): PersonnavnDTO? {
                 fornavn = it.fornavn,
                 etternavn = it.etternavn,
                 mellomnavn = it.mellomnavn,
-                sammensatt = listOfNotNull(it.fornavn, it.mellomnavn, it.etternavn).joinToString(" ")
+                sammensatt = listOfNotNull(it.fornavn, it.mellomnavn, it.etternavn).joinToString(" "),
             )
         }
 }
@@ -264,7 +272,7 @@ data class PersonSokResponsDTO(
     val kjonn: KodeverdiDTO?,
     val status: KodeverdiDTO?,
     val brukerinfo: BrukerinfoDTO?,
-    val utenlandskID: List<UtenlandskIdDTO>?
+    val utenlandskID: List<UtenlandskIdDTO>?,
 )
 
 fun lagPersonResponse(fimPerson: Person): PersonSokResponsDTO? {
@@ -280,32 +288,36 @@ fun lagPersonResponse(fimPerson: Person): PersonSokResponsDTO? {
         status = fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
         ident = ident,
         brukerinfo = lagBrukerinfo(fimPerson),
-        utenlandskID = null
+        utenlandskID = null,
     )
 }
+
 private fun lagPostadresse(adr: UstrukturertAdresse): String =
     arrayOf(
         adr.adresselinje1,
         adr.adresselinje2,
         adr.adresselinje3,
         adr.adresselinje4,
-        adr.landkode?.value
+        adr.landkode?.value,
     ).filterNotNull().joinToString(" ")
 
 private fun lagBostedsadresse(adr: StrukturertAdresse): String? =
     when (adr) {
-        is Gateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull()
-            .joinToString(" ")
-        is Matrikkeladresse -> arrayOf(
-            adr.matrikkelnummer.bruksnummer,
-            adr.matrikkelnummer.festenummer,
-            adr.matrikkelnummer.gaardsnummer,
-            adr.matrikkelnummer.seksjonsnummer,
-            adr.matrikkelnummer.undernummer,
-            adr.poststed?.value
-        ).filterNotNull().joinToString(" ")
-        is StedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull()
-            .joinToString(" ")
+        is Gateadresse ->
+            arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull()
+                .joinToString(" ")
+        is Matrikkeladresse ->
+            arrayOf(
+                adr.matrikkelnummer.bruksnummer,
+                adr.matrikkelnummer.festenummer,
+                adr.matrikkelnummer.gaardsnummer,
+                adr.matrikkelnummer.seksjonsnummer,
+                adr.matrikkelnummer.undernummer,
+                adr.poststed?.value,
+            ).filterNotNull().joinToString(" ")
+        is StedsadresseNorge ->
+            arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull()
+                .joinToString(" ")
         is PostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
         else -> null
     }
@@ -314,29 +326,31 @@ data class PersonnavnDTO(
     val fornavn: String,
     val etternavn: String,
     val mellomnavn: String?,
-    val sammensatt: String
+    val sammensatt: String,
 )
 
-private fun lagNavn(fimPersonnavn: Personnavn) = PersonnavnDTO(
-    fornavn = fimPersonnavn.fornavn,
-    etternavn = fimPersonnavn.etternavn,
-    mellomnavn = fimPersonnavn.mellomnavn,
-    sammensatt = fimPersonnavn.sammensattNavn
-)
+private fun lagNavn(fimPersonnavn: Personnavn) =
+    PersonnavnDTO(
+        fornavn = fimPersonnavn.fornavn,
+        etternavn = fimPersonnavn.etternavn,
+        mellomnavn = fimPersonnavn.mellomnavn,
+        sammensatt = fimPersonnavn.sammensattNavn,
+    )
 
 data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: String)
 
 data class NorskIdentDTO(val ident: String, val type: KodeverdiDTO?)
 
-private fun lagNorskIdent(fimNorskIdent: NorskIdent) = NorskIdentDTO(
-    fimNorskIdent.ident,
-    fimNorskIdent.type?.let { lagKodeverdi(it) }
-)
+private fun lagNorskIdent(fimNorskIdent: NorskIdent) =
+    NorskIdentDTO(
+        fimNorskIdent.ident,
+        fimNorskIdent.type?.let { lagKodeverdi(it) },
+    )
 
 data class BrukerinfoDTO(
     val gjeldendePostadresseType: KodeverdiDTO?,
     val midlertidigPostadresse: String?,
-    val ansvarligEnhet: String?
+    val ansvarligEnhet: String?,
 )
 
 private fun lagBrukerinfo(fimPerson: Person): BrukerinfoDTO? =
@@ -344,7 +358,7 @@ private fun lagBrukerinfo(fimPerson: Person): BrukerinfoDTO? =
         BrukerinfoDTO(
             gjeldendePostadresseType = fimPerson.gjeldendePostadresseType?.let { lagKodeverdi(it) },
             midlertidigPostadresse = fimPerson.midlertidigPostadresse?.let { lagMidlertidigAdresse(it) },
-            ansvarligEnhet = fimPerson.harAnsvarligEnhet?.enhet?.organisasjonselementID
+            ansvarligEnhet = fimPerson.harAnsvarligEnhet?.enhet?.organisasjonselementID,
         )
     } else {
         null
@@ -371,17 +385,18 @@ data class PersonsokRequestV3(
     val fodselsdatoFra: String?,
     val fodselsdatoTil: String?,
     val kjonn: String?,
-    val adresse: String?
+    val adresse: String?,
 )
 
 fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
     val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
     val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
-    val kjonn = when (this.kjonn) {
-        "M" -> "MANN"
-        "K" -> "KVINNE"
-        else -> null
-    }
+    val kjonn =
+        when (this.kjonn) {
+            "M" -> "MANN"
+            "K" -> "KVINNE"
+            else -> null
+        }
 
     return listOf(
         PdlKriterie(PdlFelt.NAVN, this.navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
@@ -389,14 +404,20 @@ fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone())
         PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
         PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
         PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-        PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE)
+        PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
     )
 }
 
-private fun finnSenesteDatoGittAlder(alderTil: Int, clock: Clock): String {
+private fun finnSenesteDatoGittAlder(
+    alderTil: Int,
+    clock: Clock,
+): String {
     return LocalDate.now(clock).minusYears(alderTil.toLong() + 1).plusDays(1).toString()
 }
 
-private fun finnTidligsteDatoGittAlder(alderFra: Int, clock: Clock): String {
+private fun finnTidligsteDatoGittAlder(
+    alderFra: Int,
+    clock: Clock,
+): String {
     return LocalDate.now(clock).minusYears(alderFra.toLong()).toString()
 }

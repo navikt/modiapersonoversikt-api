@@ -19,11 +19,12 @@ open class BrukernotifikasjonConfig {
         BrukernotifikasjonService(
             BrukernotifikasjonClient(
                 baseUrl = tmsEventApiUrl,
-                authInterceptor = HeadersInterceptor {
-                    val azureAdToken = AuthContextUtils.requireToken()
-                    val oboToken = oboTokenProvider.exchangeOnBehalfOfToken(tmsEventApiApi, azureAdToken)
-                    mapOf("Authorization" to "Bearer $oboToken")
-                }
-            )
+                authInterceptor =
+                    HeadersInterceptor {
+                        val azureAdToken = AuthContextUtils.requireToken()
+                        val oboToken = oboTokenProvider.exchangeOnBehalfOfToken(tmsEventApiApi, azureAdToken)
+                        mapOf("Authorization" to "Bearer $oboToken")
+                    },
+            ),
         )
 }

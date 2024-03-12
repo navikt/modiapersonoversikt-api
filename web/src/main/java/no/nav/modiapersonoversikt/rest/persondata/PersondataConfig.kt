@@ -22,7 +22,7 @@ open class PersondataConfig {
         kontonummerService: KontonummerService,
         oppfolgingConfig: ArbeidsrettetOppfolging.Service,
         policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
-        kodeverk: EnhetligKodeverk.Service
+        kodeverk: EnhetligKodeverk.Service,
     ): PersondataService {
         return PersondataServiceImpl(
             pdl,
@@ -32,7 +32,7 @@ open class PersondataConfig {
             kontonummerService,
             oppfolgingConfig,
             policyEnforcementPoint,
-            kodeverk
+            kodeverk,
         )
     }
 }

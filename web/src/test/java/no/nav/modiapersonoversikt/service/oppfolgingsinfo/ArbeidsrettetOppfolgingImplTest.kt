@@ -32,20 +32,22 @@ class ArbeidsrettetOppfolgingImplTest {
         @RegisterExtension
         val wiremock = WireMockExtension.newInstance().build()
 
-        private const val fnr = "12345678910"
-        private val testSubject = AuthContext(
-            UserRole.INTERN,
-            PlainJWT(JWTClaimsSet.Builder().subject("Z123456").build())
-        )
+        private const val FNR = "12345678910"
+        private val testSubject =
+            AuthContext(
+                UserRole.INTERN,
+                PlainJWT(JWTClaimsSet.Builder().subject("Z123456").build()),
+            )
     }
 
     @Test
     fun `henter ut oppfolgingsstatus for bruker under oppfolging`() {
         val (apiClient) = setup(underOppfolging = true)
 
-        val oppfolgingsinfo: ArbeidsrettetOppfolging.Info = AuthContextUtils.withContext(testSubject) {
-            apiClient.hentOppfolgingsinfo(Fnr(fnr))
-        }
+        val oppfolgingsinfo: ArbeidsrettetOppfolging.Info =
+            AuthContextUtils.withContext(testSubject) {
+                apiClient.hentOppfolgingsinfo(Fnr(FNR))
+            }
 
         assertThat(oppfolgingsinfo.erUnderOppfolging).isTrue
         assertThat(oppfolgingsinfo.veileder?.ident).isEqualTo("ident")
@@ -59,9 +61,10 @@ class ArbeidsrettetOppfolgingImplTest {
     fun `henter ut oppfolgingsstatus for bruker ikke under oppfolging`() {
         val (apiClient, ansattService) = setup(underOppfolging = false)
 
-        val oppfolgingsinfo: ArbeidsrettetOppfolging.Info = AuthContextUtils.withContext(testSubject) {
-            apiClient.hentOppfolgingsinfo(Fnr(fnr))
-        }
+        val oppfolgingsinfo: ArbeidsrettetOppfolging.Info =
+            AuthContextUtils.withContext(testSubject) {
+                apiClient.hentOppfolgingsinfo(Fnr(FNR))
+            }
 
         verify { ansattService wasNot Called }
         assertThat(oppfolgingsinfo.erUnderOppfolging).isFalse
@@ -74,37 +77,40 @@ class ArbeidsrettetOppfolgingImplTest {
         gittOppfolgingStatus()
 
         val ansattService = mockk<AnsattService>()
-        every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns Veileder(
-            "fornavn",
-            "etternavn",
-            "ident"
-        )
+        every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns
+            Veileder(
+                "fornavn",
+                "etternavn",
+                "ident",
+            )
 
         val oboTokenProvider = mockk<BoundedOnBehalfOfTokenClient>()
         every { oboTokenProvider.exchangeOnBehalfOfToken(testSubject.idToken.serialize()) } returns "OBO-TOKEN"
 
-        val apiClient = ArbeidsrettetOppfolgingServiceImpl(
-            apiUrl = "http://localhost:${wiremock.port}",
-            ansattService = ansattService,
-            oboTokenProvider = oboTokenProvider
-        )
+        val apiClient =
+            ArbeidsrettetOppfolgingServiceImpl(
+                apiUrl = "http://localhost:${wiremock.port}",
+                ansattService = ansattService,
+                oboTokenProvider = oboTokenProvider,
+            )
         return Pair(apiClient, ansattService)
     }
 
     private fun gittOppfolgingStatus() {
         @Language("json")
-        val body = """
-        {
-            "oppfolgingsenhet": {
-              "navn": "NAV Enhet",
-              "enhetId": "1234"
-            },
-            "veilederId": "Z999999",
-            "formidlingsgruppe": "IARBS"
-        }
-        """.trimIndent()
+        val body =
+            """
+            {
+                "oppfolgingsenhet": {
+                  "navn": "NAV Enhet",
+                  "enhetId": "1234"
+                },
+                "veilederId": "Z999999",
+                "formidlingsgruppe": "IARBS"
+            }
+            """.trimIndent()
 
-        wiremock.get(urlMatching("/person/$fnr/oppfolgingsstatus")) {
+        wiremock.get(urlMatching("/person/$FNR/oppfolgingsstatus")) {
             status(200)
             json(body)
         }
@@ -112,12 +118,13 @@ class ArbeidsrettetOppfolgingImplTest {
 
     private fun gittUnderOppfolging(underOppfolging: Boolean) {
         @Language("json")
-        val body = """
-        {
-            "erManuell": true,
-            "underOppfolging": $underOppfolging
-        }
-        """.trimIndent()
+        val body =
+            """
+            {
+                "erManuell": true,
+                "underOppfolging": $underOppfolging
+            }
+            """.trimIndent()
 
         wiremock.get(urlMatching("/underoppfolging\\?fnr.*")) {
             status(200)

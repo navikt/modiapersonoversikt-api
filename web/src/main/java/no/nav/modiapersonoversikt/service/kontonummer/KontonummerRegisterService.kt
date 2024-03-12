@@ -6,25 +6,27 @@ import no.nav.modiapersonoversikt.consumer.kontoregister.generated.models.HentAk
 import java.time.LocalDateTime
 
 class KontonummerRegisterService(
-    private val kontoregister: KontoregisterV1Api
+    private val kontoregister: KontoregisterV1Api,
 ) : KontonummerService {
     override fun hentKontonummer(fnr: Fnr): KontonummerService.Konto? {
-        val konto = kontoregister.hentAktivKonto(
-            HentAktivKontoDTO(
-                kontohaver = fnr.get()
+        val konto =
+            kontoregister.hentAktivKonto(
+                HentAktivKontoDTO(
+                    kontohaver = fnr.get(),
+                ),
             )
-        )
         return konto?.let {
             KontonummerService.Konto(
                 kontonummer = it.kontonummer,
                 banknavn = it.utenlandskKontoInfo?.banknavn,
                 sistEndret = LocalDateTime.parse(it.gyldigFom),
                 swift = it.utenlandskKontoInfo?.swiftBicKode,
-                adresse = KontonummerService.Adresse(
-                    linje1 = it.utenlandskKontoInfo?.bankadresse1 ?: "Ukjent adresse",
-                    linje2 = it.utenlandskKontoInfo?.bankadresse2,
-                    linje3 = it.utenlandskKontoInfo?.bankadresse3,
-                ),
+                adresse =
+                    KontonummerService.Adresse(
+                        linje1 = it.utenlandskKontoInfo?.bankadresse1 ?: "Ukjent adresse",
+                        linje2 = it.utenlandskKontoInfo?.bankadresse2,
+                        linje3 = it.utenlandskKontoInfo?.bankadresse3,
+                    ),
                 bankkode = it.utenlandskKontoInfo?.bankkode,
                 landkode = it.utenlandskKontoInfo?.bankLandkode,
                 valutakode = it.utenlandskKontoInfo?.valutakode,

@@ -12,15 +12,20 @@ import no.nav.personoversikt.common.logging.TjenestekallLogg
 interface Tilgangskontroll {
     fun check(policy: PolicyWithAttributes): TilgangskontrollInstance
 }
+
 interface TilgangskontrollInstance : Tilgangskontroll {
-    fun <S> get(audit: Audit.AuditDescriptor<in S>, block: () -> S): S
+    fun <S> get(
+        audit: Audit.AuditDescriptor<in S>,
+        block: () -> S,
+    ): S
+
     fun getDecision(): Decision
 }
 private typealias NoAccessHandler = (String) -> java.lang.RuntimeException
 
 data class PolicyWithAttributes(
     val policy: Kabac.Policy,
-    val attributes: List<AttributeValue<*>>
+    val attributes: List<AttributeValue<*>>,
 )
 
 private class Instance(
@@ -36,12 +41,16 @@ private class Instance(
         return this
     }
 
-    override fun <S> get(audit: Audit.AuditDescriptor<in S>, block: () -> S): S {
+    override fun <S> get(
+        audit: Audit.AuditDescriptor<in S>,
+        block: () -> S,
+    ): S {
         return when (val decision = getDecision()) {
-            is Decision.Permit -> runCatching(block)
-                .onSuccess(audit::log)
-                .onFailure(audit::failed)
-                .getOrThrow()
+            is Decision.Permit ->
+                runCatching(block)
+                    .onSuccess(audit::log)
+                    .onFailure(audit::failed)
+                    .getOrThrow()
             is Decision.Deny -> {
                 audit.denied(decision.message)
                 throw noAccessHandler(decision.message)
@@ -53,17 +62,19 @@ private class Instance(
     }
 
     override fun getDecision(): Decision {
-        val attributes = policies
-            .flatMap { it.attributes }
-            .distinctBy { it.key }
+        val attributes =
+            policies
+                .flatMap { it.attributes }
+                .distinctBy { it.key }
         val ctx = enforcementPoint.createEvaluationContext(attributes)
         val policy = combiningAlgorithm.combine(policies.map { it.policy })
 
-        val (decision, report) = enforcementPoint.evaluatePolicyWithContextWithReport(
-            bias = bias,
-            ctx = ctx,
-            policy = policy
-        )
+        val (decision, report) =
+            enforcementPoint.evaluatePolicyWithContextWithReport(
+                bias = bias,
+                ctx = ctx,
+                policy = policy,
+            )
         Logging.secureLog.info(TjenestekallLogg.format("policy-report: ${getCallId()}", report))
 
         return decision
@@ -72,7 +83,7 @@ private class Instance(
 
 class TilgangskontrollKabac(
     private val enforcementPoint: Kabac.PolicyEnforcementPoint,
-    private val noAccessHandler: NoAccessHandler
+    private val noAccessHandler: NoAccessHandler,
 ) : Tilgangskontroll {
     override fun check(policy: PolicyWithAttributes): TilgangskontrollInstance {
         return Instance(enforcementPoint, noAccessHandler).check(policy)

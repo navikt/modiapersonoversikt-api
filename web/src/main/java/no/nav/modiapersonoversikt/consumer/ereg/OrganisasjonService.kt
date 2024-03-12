@@ -3,8 +3,9 @@ package no.nav.modiapersonoversikt.consumer.ereg
 import java.util.*
 
 data class Organisasjon(
-    val navn: String
+    val navn: String,
 )
+
 interface OrganisasjonService {
     fun hentNoekkelinfo(orgnummer: String): Optional<Organisasjon>
 }
@@ -21,7 +22,7 @@ class OrganisasjonServiceImpl(private val organisasjonV1Client: OrganisasjonV1Cl
             orgNavn.navnelinje2,
             orgNavn.navnelinje3,
             orgNavn.navnelinje4,
-            orgNavn.navnelinje5
+            orgNavn.navnelinje5,
         ).joinToString(" ")
     }
 }

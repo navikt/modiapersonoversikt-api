@@ -10,10 +10,18 @@ object TilgangskontrollMock : TilgangskontrollInstance {
     private var mockDecision: Decision = Decision.Permit()
 
     override fun check(policy: PolicyWithAttributes): TilgangskontrollInstance = this
-    override fun <S> get(audit: Audit.AuditDescriptor<in S>, block: () -> S): S = block()
+
+    override fun <S> get(
+        audit: Audit.AuditDescriptor<in S>,
+        block: () -> S,
+    ): S = block()
+
     override fun getDecision(): Decision = mockDecision
 
-    fun <S> withDecision(decision: Decision, block: () -> S): S {
+    fun <S> withDecision(
+        decision: Decision,
+        block: () -> S,
+    ): S {
         val original = mockDecision
         mockDecision = decision
         val result = block()

@@ -11,20 +11,20 @@ import no.nav.modiapersonoversikt.rest.DATOFORMAT
 
 class PleiepengerUttrekk constructor(
     private val pleiepengerService: PleiepengerService,
-    private val organisasjonService: OrganisasjonService
+    private val organisasjonService: OrganisasjonService,
 ) {
-
     fun hent(fodselsnummer: String): Map<String, Any?> {
         val pleiepenger = pleiepengerService.hentPleiepengerListe(PleiepengerListeRequest(fodselsnummer))
 
         return mapOf(
-            "pleiepenger" to pleiepenger?.pleieepengerettighetListe?.let {
-                if (it.isEmpty()) {
-                    null
-                } else {
-                    hentPleiepenger(it)
-                }
-            }
+            "pleiepenger" to
+                pleiepenger?.pleieepengerettighetListe?.let {
+                    if (it.isEmpty()) {
+                        null
+                    } else {
+                        hentPleiepenger(it)
+                    }
+                },
         )
     }
 
@@ -38,7 +38,7 @@ class PleiepengerUttrekk constructor(
                 "forbrukteDagerTomIDag" to it.forbrukteDagerTOMIDag,
                 "pleiepengedager" to it.pleiepengedager,
                 "restDagerAnvist" to it.restDagerAnvist,
-                "perioder" to it.perioder?.let { perioder -> hentPleiepengePerioder(perioder) }
+                "perioder" to it.perioder?.let { perioder -> hentPleiepengePerioder(perioder) },
             )
         }
     }
@@ -49,7 +49,7 @@ class PleiepengerUttrekk constructor(
                 "fom" to it.fraOgMed?.format(DATOFORMAT),
                 "antallPleiepengedager" to it.antallPleiepengedager,
                 "arbeidsforhold" to it.arbeidsforholdListe?.let { liste -> hentArbeidsforhold(liste) },
-                "vedtak" to it.vedtakListe?.let { liste -> hentVedtak(liste) }
+                "vedtak" to it.vedtakListe?.let { liste -> hentVedtak(liste) },
             )
         }
     }
@@ -64,7 +64,7 @@ class PleiepengerUttrekk constructor(
                 "refusjonTom" to it.refusjonTom?.format(DATOFORMAT),
                 "refusjonstype" to it.refusjonstype,
                 "arbeidsgiverOrgnr" to it.arbeidsgiverOrgnr,
-                "arbeidskategori" to it.arbeidskategori
+                "arbeidskategori" to it.arbeidskategori,
             )
         }
     }
@@ -78,7 +78,7 @@ class PleiepengerUttrekk constructor(
                 "anvistUtbetaling" to it.anvistUtbetaling?.format(DATOFORMAT),
                 "bruttobeløp" to it.bruttoBelop,
                 "dagsats" to it.dagsats,
-                "pleiepengegrad" to it.pleiepengegrad
+                "pleiepengegrad" to it.pleiepengegrad,
             )
         }
     }

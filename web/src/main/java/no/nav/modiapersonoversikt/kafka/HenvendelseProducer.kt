@@ -20,7 +20,7 @@ interface HenvendelseProducer {
 class HenvendelseProducerImpl(
     private val temaSomSkalPubliseres: List<String>,
     private val temagruppeSomSkalPubliseres: List<String>,
-    private val producer: KafkaPersonoversiktProducer<HenvendelseKafkaDTO>
+    private val producer: KafkaPersonoversiktProducer<HenvendelseKafkaDTO>,
 ) : HenvendelseProducer {
     private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
 
@@ -30,13 +30,14 @@ class HenvendelseProducerImpl(
         temagruppe: String,
         traadId: String,
     ) {
-        val message = HenvendelseKafkaDTO(
-            fnr = fnr,
-            tema = tema,
-            temagruppe = temagruppe,
-            traadId = traadId,
-            tidspunkt = Clock.System.now()
-        )
+        val message =
+            HenvendelseKafkaDTO(
+                fnr = fnr,
+                tema = tema,
+                temagruppe = temagruppe,
+                traadId = traadId,
+                tidspunkt = Clock.System.now(),
+            )
 
         if (temaSomSkalPubliseres.contains(message.tema) || temagruppeSomSkalPubliseres.contains(message.temagruppe)) {
             logger.info("Sender henvendelse update med tema $tema og temagruppe $temagruppe")

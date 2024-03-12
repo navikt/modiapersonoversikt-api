@@ -9,7 +9,11 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class AnsattServiceConfig {
     @Bean
-    open fun ansattService(axsysClient: AxsysClient, nomClient: NomClient, ldap: LDAPService): AnsattService {
+    open fun ansattService(
+        axsysClient: AxsysClient,
+        nomClient: NomClient,
+        ldap: LDAPService,
+    ): AnsattService {
         return AnsattServiceImpl(axsysClient, nomClient, ldap)
     }
 }

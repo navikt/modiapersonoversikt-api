@@ -9,13 +9,13 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @EnableCaching
 open class VarslerServiceConfig {
-
     @Bean
     open fun varslerService(
         brukervarselV1: BrukervarselV1,
-        brukernotifikasjonService: Brukernotifikasjon.Service
-    ): VarslerService = VarslerServiceImpl(
-        brukervarselV1,
-        brukernotifikasjonService
-    )
+        brukernotifikasjonService: Brukernotifikasjon.Service,
+    ): VarslerService =
+        VarslerServiceImpl(
+            brukervarselV1,
+            brukernotifikasjonService,
+        )
 }

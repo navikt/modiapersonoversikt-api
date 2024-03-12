@@ -27,34 +27,35 @@ internal class TredjepartspersonMapperTest {
     @Test
     internal fun `skal mapper ulike adresse typer til internt domene`() {
         val tilganger = gittTilganger(kode6 = false, kode7 = false)
-        val person = gittPerson(
-            navn = "Aremark Testfamilien",
-            adressebeskyttelse = AdressebeskyttelseGradering.UGRADERT,
-            bosted = ukjentBosted("Ett sted i Aremark")
-        )
+        val person =
+            gittPerson(
+                navn = "Aremark Testfamilien",
+                adressebeskyttelse = AdressebeskyttelseGradering.UGRADERT,
+                bosted = ukjentBosted("Ett sted i Aremark"),
+            )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
                 person = person,
-                kontaktinformasjonTredjepartsperson = null
-            )
+                kontaktinformasjonTredjepartsperson = null,
+            ),
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
                 person = person.copy(bostedsadresse = vegadresse()),
-                kontaktinformasjonTredjepartsperson = null
-            )
+                kontaktinformasjonTredjepartsperson = null,
+            ),
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
                 person = person.copy(bostedsadresse = matrikkel()),
-                kontaktinformasjonTredjepartsperson = null
-            )
+                kontaktinformasjonTredjepartsperson = null,
+            ),
         )
     }
 
@@ -65,85 +66,98 @@ internal class TredjepartspersonMapperTest {
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
-                person = gittPerson(
-                    adressebeskyttelse = AdressebeskyttelseGradering.FORTROLIG,
-                    bosted = ukjentBosted("Ett sted i Aremark")
-                ),
-                kontaktinformasjonTredjepartsperson = null
-            )
+                person =
+                    gittPerson(
+                        adressebeskyttelse = AdressebeskyttelseGradering.FORTROLIG,
+                        bosted = ukjentBosted("Ett sted i Aremark"),
+                    ),
+                kontaktinformasjonTredjepartsperson = null,
+            ),
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
-                person = gittPerson(
-                    adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG,
-                    bosted = ukjentBosted("Ett sted i Aremark")
-                ),
-                kontaktinformasjonTredjepartsperson = null
-            )
+                person =
+                    gittPerson(
+                        adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                        bosted = ukjentBosted("Ett sted i Aremark"),
+                    ),
+                kontaktinformasjonTredjepartsperson = null,
+            ),
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
                 tilganger = tilganger,
-                person = gittPerson(
-                    adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
-                    bosted = ukjentBosted("Ett sted i Aremark")
-                ),
-                kontaktinformasjonTredjepartsperson = null
-            )
+                person =
+                    gittPerson(
+                        adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+                        bosted = ukjentBosted("Ett sted i Aremark"),
+                    ),
+                kontaktinformasjonTredjepartsperson = null,
+            ),
         )
     }
 
     @Test
     fun `skal mappe kontaktinformasjon for tredjepartsperson`() {
         snapshot.assertMatches(
-            mapper.tilKontaktinformasjonTredjepartsperson(digitalKontaktinformasjon)
+            mapper.tilKontaktinformasjonTredjepartsperson(digitalKontaktinformasjon),
         )
     }
 
     private fun gittPerson(
         navn: String = "Harry Tester Testesen",
         adressebeskyttelse: AdressebeskyttelseGradering = AdressebeskyttelseGradering.UGRADERT,
-        bosted: List<Bostedsadresse> = ukjentBosted("Ingen ved hvor harry bor")
+        bosted: List<Bostedsadresse> = ukjentBosted("Ingen ved hvor harry bor"),
     ) = HentTredjepartspersondata.Person(
-        navn = listOf(
-            gittNavn(navn, "Freg"),
-            gittNavn(navn, "PDL")
-        ),
-        adressebeskyttelse = listOf(
-            HentTredjepartspersondata.Adressebeskyttelse(adressebeskyttelse)
-        ),
+        navn =
+            listOf(
+                gittNavn(navn, "Freg"),
+                gittNavn(navn, "PDL"),
+            ),
+        adressebeskyttelse =
+            listOf(
+                HentTredjepartspersondata.Adressebeskyttelse(adressebeskyttelse),
+            ),
         bostedsadresse = bosted,
         kjoenn = emptyList(),
         foedsel = emptyList(),
-        doedsfall = emptyList()
+        doedsfall = emptyList(),
     )
 
-    private fun gittTilganger(kode6: Boolean, kode7: Boolean) = PersondataService.Tilganger(kode6, kode7)
+    private fun gittTilganger(
+        kode6: Boolean,
+        kode7: Boolean,
+    ) = PersondataService.Tilganger(kode6, kode7)
 
-    private fun gittNavn(navn: String, master: String = "Freg"): HentTredjepartspersondata.Navn {
+    private fun gittNavn(
+        navn: String,
+        master: String = "Freg",
+    ): HentTredjepartspersondata.Navn {
         val split = navn.split(" ")
         return HentTredjepartspersondata.Navn(
             fornavn = "$master __ ${split.first()}",
-            mellomnavn = if (split.size <= 2) {
-                null
-            } else {
-                split.subList(1, split.size - 1).joinToString(" ")
-            },
+            mellomnavn =
+                if (split.size <= 2) {
+                    null
+                } else {
+                    split.subList(1, split.size - 1).joinToString(" ")
+                },
             etternavn = split.last(),
-            metadata = HentTredjepartspersondata.Metadata(master = master)
+            metadata = HentTredjepartspersondata.Metadata(master = master),
         )
     }
 
-    private val adresse = Bostedsadresse(
-        folkeregistermetadata = null,
-        vegadresse = null,
-        matrikkeladresse = null,
-        utenlandskAdresse = null,
-        ukjentBosted = null
-    )
+    private val adresse =
+        Bostedsadresse(
+            folkeregistermetadata = null,
+            vegadresse = null,
+            matrikkeladresse = null,
+            utenlandskAdresse = null,
+            ukjentBosted = null,
+        )
 
     private fun vegadresse(
         husnummer: String? = "13",
@@ -153,41 +167,44 @@ internal class TredjepartspersonMapperTest {
         kommunenummer: String? = "Skauen",
         bydelsnummer: String? = "000001",
         tilleggsnavn: String? = "Gutu Gard",
-        postnummer: String? = "1234"
+        postnummer: String? = "1234",
     ) = listOf(
         adresse.copy(
-            vegadresse = HentTredjepartspersondata.Vegadresse(
-                husnummer = husnummer,
-                husbokstav = husbokstav,
-                bruksenhetsnummer = bruksenhetsnummer,
-                adressenavn = adressenavn,
-                kommunenummer = kommunenummer,
-                bydelsnummer = bydelsnummer,
-                tilleggsnavn = tilleggsnavn,
-                postnummer = postnummer
-            )
-        )
+            vegadresse =
+                HentTredjepartspersondata.Vegadresse(
+                    husnummer = husnummer,
+                    husbokstav = husbokstav,
+                    bruksenhetsnummer = bruksenhetsnummer,
+                    adressenavn = adressenavn,
+                    kommunenummer = kommunenummer,
+                    bydelsnummer = bydelsnummer,
+                    tilleggsnavn = tilleggsnavn,
+                    postnummer = postnummer,
+                ),
+        ),
     )
 
     private fun matrikkel(
         bruksenhetsnummer: String? = "000001",
         tilleggsnavn: String? = "Gutu Gard",
         postnummer: String? = "1234",
-        kommunenummer: String? = "Skauen"
+        kommunenummer: String? = "Skauen",
     ) = listOf(
         adresse.copy(
-            matrikkeladresse = HentTredjepartspersondata.Matrikkeladresse(
-                bruksenhetsnummer = bruksenhetsnummer,
-                tilleggsnavn = tilleggsnavn,
-                postnummer = postnummer,
-                kommunenummer = kommunenummer
-            )
-        )
+            matrikkeladresse =
+                HentTredjepartspersondata.Matrikkeladresse(
+                    bruksenhetsnummer = bruksenhetsnummer,
+                    tilleggsnavn = tilleggsnavn,
+                    postnummer = postnummer,
+                    kommunenummer = kommunenummer,
+                ),
+        ),
     )
 
-    private fun ukjentBosted(bosted: String) = listOf(
-        adresse.copy(
-            ukjentBosted = HentTredjepartspersondata.UkjentBosted(bosted)
+    private fun ukjentBosted(bosted: String) =
+        listOf(
+            adresse.copy(
+                ukjentBosted = HentTredjepartspersondata.UkjentBosted(bosted),
+            ),
         )
-    )
 }

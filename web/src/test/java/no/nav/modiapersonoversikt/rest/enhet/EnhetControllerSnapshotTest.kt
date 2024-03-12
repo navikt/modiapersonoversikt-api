@@ -47,13 +47,14 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
 
     @Test
     internal fun `hent ansatte gitt enhetid`() {
-        every { ansattServiceMock.ansatteForEnhet(any()) } returns listOf(
-            Ansatt(
-                "fornavn",
-                "etternavn",
-                "Z999999"
+        every { ansattServiceMock.ansatteForEnhet(any()) } returns
+            listOf(
+                Ansatt(
+                    "fornavn",
+                    "etternavn",
+                    "Z999999",
+                ),
             )
-        )
 
         mockMvc.getJson("/rest/enheter/1234/ansatte")
             .andExpect {
@@ -64,14 +65,15 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
 
     @Test
     internal fun `hent alle enheter`() {
-        every { norgapiMock.hentEnheter(any(), any(), any()) } returns listOf(
-            NorgDomain.Enhet(
-                "1234",
-                "NAV Test",
-                NorgDomain.EnhetStatus.AKTIV,
-                oppgavebehandler = false
+        every { norgapiMock.hentEnheter(any(), any(), any()) } returns
+            listOf(
+                NorgDomain.Enhet(
+                    "1234",
+                    "NAV Test",
+                    NorgDomain.EnhetStatus.AKTIV,
+                    oppgavebehandler = false,
+                ),
             )
-        )
         mockMvc.getJson("/rest/enheter/oppgavebehandlere/alle")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)

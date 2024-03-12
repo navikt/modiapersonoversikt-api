@@ -28,25 +28,29 @@ open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api,
     override fun hentUtbetalinger(
         fnr: Fnr,
         startDato: LocalDate,
-        sluttDato: LocalDate
+        sluttDato: LocalDate,
     ): List<UtbetalingDomain.Utbetaling> {
-        val fomDato = if (unleash.isEnabled(Feature.UTVIDET_UTBETALINGS_SPORRING.propertyKey)) {
-            startDato
-        } else {
-            leggTilEkstraDagerPaaStartdato(startDato)
-        }
+        val fomDato =
+            if (unleash.isEnabled(Feature.UTVIDET_UTBETALINGS_SPORRING.propertyKey)) {
+                startDato
+            } else {
+                leggTilEkstraDagerPaaStartdato(startDato)
+            }
 
-        val utbetalinger = utbetaldataV2Api.hentUtbetalingsinformasjonIntern(
-            utbetalingsoppslagDTO = UtbetalingsoppslagDTO(
-                ident = fnr.get(),
-                rolle = UtbetalingsoppslagDTO.Rolle.RETTIGHETSHAVER,
-                periode = PeriodeDTO(
-                    fom = fomDato,
-                    tom = sluttDato
-                ),
-                periodetype = UtbetalingsoppslagDTO.Periodetype.UTBETALINGSPERIODE
+        val utbetalinger =
+            utbetaldataV2Api.hentUtbetalingsinformasjonIntern(
+                utbetalingsoppslagDTO =
+                    UtbetalingsoppslagDTO(
+                        ident = fnr.get(),
+                        rolle = UtbetalingsoppslagDTO.Rolle.RETTIGHETSHAVER,
+                        periode =
+                            PeriodeDTO(
+                                fom = fomDato,
+                                tom = sluttDato,
+                            ),
+                        periodetype = UtbetalingsoppslagDTO.Periodetype.UTBETALINGSPERIODE,
+                    ),
             )
-        )
 
         return utbetalinger
             ?.filter(finnUtbetalingerISokeperioden(startDato, sluttDato))
@@ -54,20 +58,23 @@ open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api,
             ?.map(::mapTilDTO).orEmpty()
     }
 
-    private fun finnUtbetalingerISokeperioden(start: LocalDate, slutt: LocalDate) =
-        { utbetaling: UtbetalingDTO ->
-            val dato = listOfNotNull(
+    private fun finnUtbetalingerISokeperioden(
+        start: LocalDate,
+        slutt: LocalDate,
+    ) = { utbetaling: UtbetalingDTO ->
+        val dato =
+            listOfNotNull(
                 utbetaling.utbetalingsdato,
                 utbetaling.forfallsdato,
                 utbetaling.posteringsdato,
             ).firstOrNull()
 
-            if (dato == null) {
-                false
-            } else {
-                dato in start..slutt
-            }
+        if (dato == null) {
+            false
+        } else {
+            dato in start..slutt
         }
+    }
 
     private fun mapTilDTO(utbetaling: RsUtbetaling): UtbetalingDomain.Utbetaling {
         return UtbetalingDomain.Utbetaling(
@@ -83,7 +90,7 @@ open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api,
             metode = utbetaling.utbetalingsmetode.trim(),
             status = utbetaling.utbetalingsstatus.trim(),
             konto = utbetaling.utbetaltTilKonto?.kontonummer?.trim(),
-            ytelser = utbetaling.ytelseListe.map(::hentYtelserForUtbetaling)
+            ytelser = utbetaling.ytelseListe.map(::hentYtelserForUtbetaling),
         )
     }
 
@@ -99,7 +106,7 @@ open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api,
             periode = hentYtelsesperiode(ytelse.ytelsesperiode),
             nettobelop = ytelse.ytelseNettobeloep,
             bilagsnummer = ytelse.bilagsnummer?.trim(),
-            arbeidsgiver = ytelse.refundertForOrg?.let { orgnr -> hentArbeidsgiver(orgnr) }
+            arbeidsgiver = ytelse.refundertForOrg?.let { orgnr -> hentArbeidsgiver(orgnr) },
         )
     }
 
@@ -144,7 +151,8 @@ open class UtbetalingServiceImpl(private val utbetaldataV2Api: UtbetaldataV2Api,
         )
     }
 
-    override fun ping() = SelfTestCheck("Rest Utbetaling", false) {
-        HealthCheckResult.healthy()
-    }
+    override fun ping() =
+        SelfTestCheck("Rest Utbetaling", false) {
+            HealthCheckResult.healthy()
+        }
 }

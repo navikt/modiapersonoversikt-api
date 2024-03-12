@@ -106,6 +106,7 @@ class BehandlingskjedeBuilder {
         this.sisteBehandlingsoppdatering = date
         return this
     }
+
     fun withSisteBehandlingsstatus(sisteBehandlingsstatus: String): BehandlingskjedeBuilder {
         this.sisteBehandlingsstatus = Behandlingsstatuser().apply { value = sisteBehandlingsstatus }
         return this

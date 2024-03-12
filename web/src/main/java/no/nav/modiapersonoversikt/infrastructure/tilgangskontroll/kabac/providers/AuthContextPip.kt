@@ -9,5 +9,6 @@ object AuthContextPip : Kabac.PolicyInformationPoint<AuthContextHolder> {
     private val contextHolder = AuthContextHolderThreadLocal.instance()
 
     override val key = Key<AuthContextHolder>(AuthContextPip)
+
     override fun provide(ctx: Kabac.EvaluationContext): AuthContextHolder = contextHolder
 }

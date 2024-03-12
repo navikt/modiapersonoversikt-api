@@ -12,46 +12,50 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
         ident: String,
         person: HentTredjepartspersondata.Person?,
         tilganger: PersondataService.Tilganger,
-        kontaktinformasjonTredjepartsperson: Persondata.DigitalKontaktinformasjonTredjepartsperson?
+        kontaktinformasjonTredjepartsperson: Persondata.DigitalKontaktinformasjonTredjepartsperson?,
     ): Persondata.TredjepartsPerson? {
         if (person == null) return null
         val fodselsdato = person.foedsel.mapNotNull { it.foedselsdato?.value }
         val harTilgang = person.harTilgang(tilganger)
         return Persondata.TredjepartsPerson(
             fnr = ident,
-            navn = person.navn
-                .prioriterKildesystem()
-                .mapNotNull {
-                    if (harTilgang) {
-                        Persondata.Navn(
-                            fornavn = it.fornavn,
-                            mellomnavn = it.mellomnavn,
-                            etternavn = it.etternavn
-                        )
-                    } else {
-                        null
-                    }
-                },
+            navn =
+                person.navn
+                    .prioriterKildesystem()
+                    .mapNotNull {
+                        if (harTilgang) {
+                            Persondata.Navn(
+                                fornavn = it.fornavn,
+                                mellomnavn = it.mellomnavn,
+                                etternavn = it.etternavn,
+                            )
+                        } else {
+                            null
+                        }
+                    },
             fodselsdato = if (harTilgang) fodselsdato else emptyList(),
             alder = if (harTilgang) hentAlder(fodselsdato) else null,
             kjonn = if (harTilgang) hentKjonn(person) else emptyList(),
             adressebeskyttelse = hentAdressebeskyttelse(person.adressebeskyttelse),
-            bostedAdresse = person.bostedsadresse.mapNotNull {
-                if (harTilgang) {
-                    hentBostedAdresse(it)
-                } else {
-                    null
-                }
-            },
+            bostedAdresse =
+                person.bostedsadresse.mapNotNull {
+                    if (harTilgang) {
+                        hentBostedAdresse(it)
+                    } else {
+                        null
+                    }
+                },
             dodsdato = person.doedsfall.mapNotNull { it.doedsdato?.value },
-            digitalKontaktinformasjon = kontaktinformasjonTredjepartsperson
+            digitalKontaktinformasjon = kontaktinformasjonTredjepartsperson,
         )
     }
 
-    fun tilKontaktinformasjonTredjepartsperson(krrInfo: Krr.DigitalKontaktinformasjon): Persondata.DigitalKontaktinformasjonTredjepartsperson {
+    fun tilKontaktinformasjonTredjepartsperson(
+        krrInfo: Krr.DigitalKontaktinformasjon,
+    ): Persondata.DigitalKontaktinformasjonTredjepartsperson {
         return Persondata.DigitalKontaktinformasjonTredjepartsperson(
             mobiltelefonnummer = krrInfo.mobiltelefonnummer?.value,
-            reservasjon = krrInfo.reservasjon
+            reservasjon = krrInfo.reservasjon,
         )
     }
 
@@ -77,81 +81,101 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
             adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
             adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(adresse.matrikkeladresse!!)
             adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(adresse.utenlandskAdresse!!)
-            adresse.ukjentBosted != null -> Persondata.Adresse(
-                linje1 = adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
-                sistEndret = null
-            )
+            adresse.ukjentBosted != null ->
+                Persondata.Adresse(
+                    linje1 = adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
+                    sistEndret = null,
+                )
             else -> null
         }
     }
 
     private fun lagAdresseFraVegadresse(adresse: HentTredjepartspersondata.Vegadresse): Persondata.Adresse {
         return Persondata.Adresse(
-            linje1 = listOf(
-                adresse.adressenavn,
-                adresse.husnummer,
-                adresse.husbokstav,
-                adresse.bruksenhetsnummer
-            ),
-            linje2 = listOf(
-                adresse.postnummer,
-                adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentVerdi(it, it) }
-            ),
-            sistEndret = null
+            linje1 =
+                listOf(
+                    adresse.adressenavn,
+                    adresse.husnummer,
+                    adresse.husbokstav,
+                    adresse.bruksenhetsnummer,
+                ),
+            linje2 =
+                listOf(
+                    adresse.postnummer,
+                    adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentVerdi(it, it) },
+                ),
+            sistEndret = null,
         )
     }
 
     private fun lagAdresseFraMatrikkeladresse(adresse: HentTredjepartspersondata.Matrikkeladresse): Persondata.Adresse {
         return Persondata.Adresse(
-            linje1 = listOf(
-                adresse.bruksenhetsnummer,
-                adresse.tilleggsnavn
-            ),
-            linje2 = listOf(
-                adresse.postnummer,
-                adresse.kommunenummer
-            ),
-            sistEndret = null
+            linje1 =
+                listOf(
+                    adresse.bruksenhetsnummer,
+                    adresse.tilleggsnavn,
+                ),
+            linje2 =
+                listOf(
+                    adresse.postnummer,
+                    adresse.kommunenummer,
+                ),
+            sistEndret = null,
         )
     }
 
     private fun lagAdresseFraUtenlandskAdresse(adresse: HentTredjepartspersondata.UtenlandskAdresse): Persondata.Adresse {
         return Persondata.Adresse(
-            linje1 = listOf(
-                adresse.postboksNummerNavn,
-                adresse.adressenavnNummer,
-                adresse.bygningEtasjeLeilighet
-            ),
-            linje2 = listOf(
-                adresse.postkode,
-                adresse.bySted,
-                adresse.regionDistriktOmraade
-            ),
-            linje3 = listOf(
-                kodeverk.hentKodeverk(Kodeverk.LAND).hentVerdi(adresse.landkode, adresse.landkode)
-            ),
-            sistEndret = null
+            linje1 =
+                listOf(
+                    adresse.postboksNummerNavn,
+                    adresse.adressenavnNummer,
+                    adresse.bygningEtasjeLeilighet,
+                ),
+            linje2 =
+                listOf(
+                    adresse.postkode,
+                    adresse.bySted,
+                    adresse.regionDistriktOmraade,
+                ),
+            linje3 =
+                listOf(
+                    kodeverk.hentKodeverk(Kodeverk.LAND).hentVerdi(adresse.landkode, adresse.landkode),
+                ),
+            sistEndret = null,
         )
     }
 
-    private fun hentAdressebeskyttelse(adressebeskyttelseListe: List<HentTredjepartspersondata.Adressebeskyttelse>): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
+    private fun hentAdressebeskyttelse(
+        adressebeskyttelseListe: List<HentTredjepartspersondata.Adressebeskyttelse>,
+    ): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
         return adressebeskyttelseListe.map {
-            val kodebeskrivelse = when (it.gradering) {
-                HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND, HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG -> kodeverk.hentKodeBeskrivelse(
-                    Kodeverk.DISKRESJONSKODER,
-                    "SPSF"
-                )
-                HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> kodeverk.hentKodeBeskrivelse(Kodeverk.DISKRESJONSKODER, "SPFO")
-                HentTredjepartspersondata.AdressebeskyttelseGradering.UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
-                else -> Persondata.KodeBeskrivelse("", "Ukjent")
-            }
-            val adressebeskyttelse = when (it.gradering) {
-                HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND -> Persondata.AdresseBeskyttelse.KODE6_UTLAND
-                HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG -> Persondata.AdresseBeskyttelse.KODE6
-                HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> Persondata.AdresseBeskyttelse.KODE7
-                HentTredjepartspersondata.AdressebeskyttelseGradering.UGRADERT -> Persondata.AdresseBeskyttelse.UGRADERT
-                else -> Persondata.AdresseBeskyttelse.UKJENT
-            }
+            val kodebeskrivelse =
+                when (it.gradering) {
+                    HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+                    HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                    ->
+                        kodeverk.hentKodeBeskrivelse(
+                            Kodeverk.DISKRESJONSKODER,
+                            "SPSF",
+                        )
+                    HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG ->
+                        kodeverk.hentKodeBeskrivelse(
+                            Kodeverk.DISKRESJONSKODER,
+                            "SPFO",
+                        )
+                    HentTredjepartspersondata.AdressebeskyttelseGradering.UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
+                    else -> Persondata.KodeBeskrivelse("", "Ukjent")
+                }
+            val adressebeskyttelse =
+                when (it.gradering) {
+                    HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+                    -> Persondata.AdresseBeskyttelse.KODE6_UTLAND
+                    HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG -> Persondata.AdresseBeskyttelse.KODE6
+                    HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> Persondata.AdresseBeskyttelse.KODE7
+                    HentTredjepartspersondata.AdressebeskyttelseGradering.UGRADERT -> Persondata.AdresseBeskyttelse.UGRADERT
+                    else -> Persondata.AdresseBeskyttelse.UKJENT
+                }
             Persondata.KodeBeskrivelse(kode = adressebeskyttelse, beskrivelse = kodebeskrivelse.beskrivelse)
         }
     }

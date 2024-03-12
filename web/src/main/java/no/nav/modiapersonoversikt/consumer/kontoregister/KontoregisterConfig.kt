@@ -22,23 +22,25 @@ open class KontoregisterConfig {
     private val url: String = getRequiredProperty("KONTOREGISTER_REST_URL")
 
     @Bean
-    open fun kontoregisterApi(tokenClient: MachineToMachineTokenClient) = KontoregisterV1Api(
-        basePath = url,
-        httpClient = RestClient.baseClient().newBuilder()
-            .addInterceptor(
-                LoggingInterceptor("Kontoregister") { request ->
-                    requireNotNull(request.header("nav-call-id")) {
-                        "Kall uten \"nav-call-id\" er ikke lov"
-                    }
-                }
-            )
-            .addInterceptor(
-                AuthorizationInterceptor {
-                    tokenClient.createMachineToMachineToken(scope)
-                }
-            )
-            .build()
-    )
+    open fun kontoregisterApi(tokenClient: MachineToMachineTokenClient) =
+        KontoregisterV1Api(
+            basePath = url,
+            httpClient =
+                RestClient.baseClient().newBuilder()
+                    .addInterceptor(
+                        LoggingInterceptor("Kontoregister") { request ->
+                            requireNotNull(request.header("nav-call-id")) {
+                                "Kall uten \"nav-call-id\" er ikke lov"
+                            }
+                        },
+                    )
+                    .addInterceptor(
+                        AuthorizationInterceptor {
+                            tokenClient.createMachineToMachineToken(scope)
+                        },
+                    )
+                    .build(),
+        )
 
     @Bean
     @Conditional(InDevCondition::class)

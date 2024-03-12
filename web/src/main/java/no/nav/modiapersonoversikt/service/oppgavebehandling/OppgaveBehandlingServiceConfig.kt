@@ -17,14 +17,14 @@ open class OppgaveBehandlingServiceConfig {
         ansattService: AnsattService,
         tilgangskontroll: Tilgangskontroll,
         oboTokenClient: OnBehalfOfTokenClient,
-        machineToMachineTokenClient: MachineToMachineTokenClient
+        machineToMachineTokenClient: MachineToMachineTokenClient,
     ): OppgaveBehandlingService {
         return RestOppgaveBehandlingServiceImpl(
             pdlOppslagService = pdlOppslagService,
             ansattService = ansattService,
             tilgangskontroll = tilgangskontroll,
             oboTokenClient = oboTokenClient.bindTo(OppgaveApiFactory.downstreamApi),
-            machineToMachineTokenClient = machineToMachineTokenClient.bindTo(OppgaveApiFactory.downstreamApi)
+            machineToMachineTokenClient = machineToMachineTokenClient.bindTo(OppgaveApiFactory.downstreamApi),
         )
     }
 }

@@ -18,7 +18,7 @@ open class SfHenvendelseConfig {
         norgApi: NorgApi,
         ansattService: AnsattService,
         oboTokenClient: OnBehalfOfTokenClient,
-        machineToMachineTokenClient: MachineToMachineTokenClient
+        machineToMachineTokenClient: MachineToMachineTokenClient,
     ): SfHenvendelseService {
         return SfHenvendelseServiceImpl(
             oboTokenClient = oboTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi()),
@@ -33,7 +33,7 @@ open class SfHenvendelseConfig {
     open fun sfHenvendelseApiPing(service: SfHenvendelseService): ConsumerPingable {
         return ConsumerPingable(
             "Salesforce - Henvendelse",
-            service::ping
+            service::ping,
         )
     }
 }

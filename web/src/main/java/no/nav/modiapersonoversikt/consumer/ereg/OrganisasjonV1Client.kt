@@ -23,18 +23,20 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
     OrganisasjonV1Client {
     private val url = baseUrl + "api/v1/organisasjon/"
     private val log = LoggerFactory.getLogger(OrganisasjonV1ClientImpl::class.java)
-    private val client = RestClient.baseClient()
-        .newBuilder()
-        .addInterceptor(
-            LoggingInterceptor("Saf") { request ->
-                requireNotNull(request.header(RestConstants.NAV_CALL_ID_HEADER)) {
-                    "Kall uten \"${RestConstants.NAV_CALL_ID_HEADER}\" er ikke lov"
-                }
-            }
-        )
-        .build()
-    private val objectMapper = jacksonObjectMapper()
-        .apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
+    private val client =
+        RestClient.baseClient()
+            .newBuilder()
+            .addInterceptor(
+                LoggingInterceptor("Saf") { request ->
+                    requireNotNull(request.header(RestConstants.NAV_CALL_ID_HEADER)) {
+                        "Kall uten \"${RestConstants.NAV_CALL_ID_HEADER}\" er ikke lov"
+                    }
+                },
+            )
+            .build()
+    private val objectMapper =
+        jacksonObjectMapper()
+            .apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
 
     override fun hentNokkelInfo(orgnummer: String): OrganisasjonResponse? {
         val uuid = UUID.randomUUID()
@@ -43,25 +45,27 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
                 "Oppgaver-request: $uuid",
                 mapOf(
                     "orgnummer" to orgnummer,
-                    "callId" to getCallId()
-                )
+                    "callId" to getCallId(),
+                ),
             )
-            val response: Response = client
-                .newCall(
-                    Request.Builder()
-                        .url("$url$orgnummer/noekkelinfo")
-                        .header(RestConstants.NAV_CALL_ID_HEADER, getCallId())
-                        .header(RestConstants.NAV_CONSUMER_ID_HEADER, AppConstants.SYSTEMUSER_USERNAME)
-                        .header("accept", "application/json")
-                        .build()
-                )
-                .execute()
+            val response: Response =
+                client
+                    .newCall(
+                        Request.Builder()
+                            .url("$url$orgnummer/noekkelinfo")
+                            .header(RestConstants.NAV_CALL_ID_HEADER, getCallId())
+                            .header(RestConstants.NAV_CONSUMER_ID_HEADER, AppConstants.SYSTEMUSER_USERNAME)
+                            .header("accept", "application/json")
+                            .build(),
+                    )
+                    .execute()
             val body = response.body()?.string()
-            val tjenestekallInfo = mapOf(
-                "status" to "${response.code()} ${response.message()}",
-                "orgnummer" to orgnummer,
-                "body" to body
-            )
+            val tjenestekallInfo =
+                mapOf(
+                    "status" to "${response.code()} ${response.message()}",
+                    "orgnummer" to orgnummer,
+                    "body" to body,
+                )
 
             return if (response.code() in 200..299 && body != null) {
                 TjenestekallLogg.info("Ereg hent orgnavn-response: $uuid", tjenestekallInfo)
@@ -76,8 +80,8 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
                 "ereg orgnavn-error: $uuid",
                 mapOf(
                     "exception" to exception,
-                    "orgnummer" to orgnummer
-                )
+                    "orgnummer" to orgnummer,
+                ),
             )
             return null
         }
@@ -90,10 +94,10 @@ data class OrgNavn(
     val navnelinje2: String? = null,
     val navnelinje3: String? = null,
     val navnelinje4: String? = null,
-    val navnelinje5: String? = null
+    val navnelinje5: String? = null,
 )
 
 data class OrganisasjonResponse(
     val organisasjonsnummer: String,
-    val navn: OrgNavn
+    val navn: OrgNavn,
 )

@@ -23,40 +23,43 @@ internal class KrrServiceImplTest {
 
     @JvmField
     @RegisterExtension
-    val testenvironment = TestEnvironmentExtension(
-        mapOf(
-            "KRR_REST_URL" to "http://dummy.no",
-            "KRR_SCOPE" to "dev-gcp:team-rocket:digdir-krr-proxy",
+    val testenvironment =
+        TestEnvironmentExtension(
+            mapOf(
+                "KRR_REST_URL" to "http://dummy.no",
+                "KRR_SCOPE" to "dev-gcp:team-rocket:digdir-krr-proxy",
+            ),
         )
-    )
 
     companion object {
         @JvmField
         @RegisterExtension
         val wiremock: WireMockExtension = WireMockExtension.newInstance().build()
-        val testSubject = AuthContext(
-            UserRole.INTERN,
-            PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
-        )
+        val testSubject =
+            AuthContext(
+                UserRole.INTERN,
+                PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build()),
+            )
     }
 
     @Language("json")
-    private val jsonResponse = """
-                {
-                  "personident": "10108000398",
-                  "aktiv": true,
-                  "kanVarsles": false,
-                  "reservert": false,
-                  "spraak": "nb",
-                  "spraakOppdatert": "2000-01-01T09:00:00Z",
-                  "epostadresse": "noreply@nav.no",
-                  "epostadresseOppdatert": "2000-01-01T09:00:00Z",
-                  "epostadresseVerifisert": "2000-01-01T09:00:00Z",
-                  "mobiltelefonnummer": "11111111",
-                  "mobiltelefonnummerOppdatert": "2000-01-01T09:00:00Z",
-                  "mobiltelefonnummerVerifisert": "2000-01-01T09:00:00Z"
-                }
-    """.trimIndent()
+    private val jsonResponse =
+        """
+        {
+          "personident": "10108000398",
+          "aktiv": true,
+          "kanVarsles": false,
+          "reservert": false,
+          "spraak": "nb",
+          "spraakOppdatert": "2000-01-01T09:00:00Z",
+          "epostadresse": "noreply@nav.no",
+          "epostadresseOppdatert": "2000-01-01T09:00:00Z",
+          "epostadresseVerifisert": "2000-01-01T09:00:00Z",
+          "mobiltelefonnummer": "11111111",
+          "mobiltelefonnummerOppdatert": "2000-01-01T09:00:00Z",
+          "mobiltelefonnummerVerifisert": "2000-01-01T09:00:00Z"
+        }
+        """.trimIndent()
 
     @Test
     fun `hent kontaktinformasjon fra KrrRestApi`() {

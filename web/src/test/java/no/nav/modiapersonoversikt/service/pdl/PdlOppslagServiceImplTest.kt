@@ -33,12 +33,13 @@ internal class PdlOppslagServiceImplTest {
 
     @Rule
     @JvmField
-    val subject = AuthContextRule(
-        AuthContext(
-            UserRole.INTERN,
-            userToken
+    val subject =
+        AuthContextRule(
+            AuthContext(
+                UserRole.INTERN,
+                userToken,
+            ),
         )
-    )
     private val systemuserToken = "RND-STS-TOKEN"
     private val stsClient: SystemUserTokenProvider = mockk()
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
@@ -53,10 +54,11 @@ internal class PdlOppslagServiceImplTest {
 
     @Test
     fun `riktige user-headere skal settes på requesten`() {
-        val client = createMockGraphQLClient { request ->
-            verifyUserTokenHeaders(request)
-            respond("{}", HttpStatusCode.OK)
-        }
+        val client =
+            createMockGraphQLClient { request ->
+                verifyUserTokenHeaders(request)
+                respond("{}", HttpStatusCode.OK)
+            }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
             PdlOppslagServiceImpl(stsClient, machineToMachineTokenClient, oboTokenProvider, client).hentIdenter("ident")
@@ -65,46 +67,49 @@ internal class PdlOppslagServiceImplTest {
 
     @Test
     fun `riktige system-headere skal settes på requesten`() {
-        val client = createMockGraphQLClient { request ->
-            verifySystemuserTokenHeaders(request)
-            respond("{}", HttpStatusCode.OK)
-        }
+        val client =
+            createMockGraphQLClient { request ->
+                verifySystemuserTokenHeaders(request)
+                respond("{}", HttpStatusCode.OK)
+            }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
             PdlOppslagServiceImpl(
                 stsClient,
                 machineToMachineTokenClient,
                 oboTokenProvider,
-                client
+                client,
             ).hentAdressebeskyttelse("ident")
         }
     }
 
     @Test
     fun `skal kaste feil om det kommer valideringsfeil på adressebeskyttelse-request`() {
-        val client = createMockGraphQLClient { request ->
-            verifySystemuserTokenHeaders(request)
-            respond(
-                "{\n" +
-                    "  \"errors\": [\n" +
-                    "    {\n" +
-                    "      \"message\": \"Variable 'ident' has an invalid value: Variable 'ident' has coerced Null value for NonNull type 'ID!'\",\n" +
-                    "      \"locations\": [\n" +
-                    "        {\n" +
-                    "          \"line\": 1,\n" +
-                    "          \"column\": 8\n" +
-                    "        }\n" +
-                    "      ],\n" +
-                    "      \"extensions\": {\n" +
-                    "        \"classification\": \"ValidationError\"\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "  ],\n" +
-                    "  \"data\": null\n" +
-                    "}",
-                HttpStatusCode.OK
-            )
-        }
+        val client =
+            createMockGraphQLClient { request ->
+                verifySystemuserTokenHeaders(request)
+                respond(
+                    "{\n" +
+                        "  \"errors\": [\n" +
+                        "    {\n" +
+                        "      \"message\":" +
+                        "\"Variable 'ident' has an invalid value: Variable 'ident' has coerced Null value for NonNull type 'ID!'\",\n" +
+                        "      \"locations\": [\n" +
+                        "        {\n" +
+                        "          \"line\": 1,\n" +
+                        "          \"column\": 8\n" +
+                        "        }\n" +
+                        "      ],\n" +
+                        "      \"extensions\": {\n" +
+                        "        \"classification\": \"ValidationError\"\n" +
+                        "      }\n" +
+                        "    }\n" +
+                        "  ],\n" +
+                        "  \"data\": null\n" +
+                        "}",
+                    HttpStatusCode.OK,
+                )
+            }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
             assertThrows<GraphQLException> {
@@ -112,7 +117,7 @@ internal class PdlOppslagServiceImplTest {
                     stsClient,
                     machineToMachineTokenClient,
                     oboTokenProvider,
-                    client
+                    client,
                 ).hentAdressebeskyttelse("ident")
             }
         }
@@ -138,7 +143,7 @@ internal class PdlOppslagServiceImplTest {
                 engine {
                     addHandler { handler.invoke(this, it) }
                 }
-            }
+            },
         )
     }
 }

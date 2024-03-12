@@ -5,7 +5,10 @@ import kotlin.contracts.contract
 
 object Contracts {
     @ExperimentalContracts
-    inline fun requireNotNullOrBlank(value: String?, lazyMessage: () -> String): String {
+    inline fun requireNotNullOrBlank(
+        value: String?,
+        lazyMessage: () -> String,
+    ): String {
         contract {
             returns() implies (value != null)
         }
@@ -13,7 +16,11 @@ object Contracts {
     }
 
     @ExperimentalContracts
-    inline fun requireNotNullOrBlank(value: String?, exception: (String) -> Exception = { IllegalArgumentException(it) }, lazyMessage: () -> String): String {
+    inline fun requireNotNullOrBlank(
+        value: String?,
+        exception: (String) -> Exception = { IllegalArgumentException(it) },
+        lazyMessage: () -> String,
+    ): String {
         contract {
             returns() implies (value != null)
         }

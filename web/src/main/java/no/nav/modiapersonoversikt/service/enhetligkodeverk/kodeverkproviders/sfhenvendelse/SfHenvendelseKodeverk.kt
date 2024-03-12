@@ -16,16 +16,16 @@ import org.springframework.web.server.ResponseStatusException
 object SfHenvendelseKodeverk {
     class Provider(
         private val machineToMachineTokenClient: MachineToMachineTokenClient,
-        private val sfHenvendelseKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient)
+        private val sfHenvendelseKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient),
     ) : EnhetligKodeverk.KodeverkProvider<String, String> {
-
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, String> {
-            val respons = sfHenvendelseKodeverk.henvendelseKodeverkTemagrupperGet(
-                getCallId()
-            ) ?: throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Feil ved henting av kodverk."
-            )
+            val respons =
+                sfHenvendelseKodeverk.henvendelseKodeverkTemagrupperGet(
+                    getCallId(),
+                ) ?: throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Feil ved henting av kodverk.",
+                )
 
             return EnhetligKodeverk.Kodeverk(kodeverkNavn, parseTilKodeverk(respons))
         }
@@ -39,20 +39,21 @@ object SfHenvendelseKodeverk {
 
     internal fun createKodeverkApi(machineToMachineTokenClient: MachineToMachineTokenClient): KodeverkApi {
         val downstreamApi = SfHenvendelseApiFactory.downstreamApi()
-        val client = RestClient.baseClient().newBuilder()
-            .addInterceptor(
-                LoggingInterceptor("SF-Henvendelse-Kodeverk") { request ->
-                    requireNotNull(request.header("X-Correlation-ID")) {
-                        "Kall uten \"X-Correlation-ID\" er ikke lov"
-                    }
-                }
-            )
-            .addInterceptor(
-                AuthorizationInterceptor {
-                    machineToMachineTokenClient.createMachineToMachineToken(downstreamApi)
-                }
-            )
-            .build()
+        val client =
+            RestClient.baseClient().newBuilder()
+                .addInterceptor(
+                    LoggingInterceptor("SF-Henvendelse-Kodeverk") { request ->
+                        requireNotNull(request.header("X-Correlation-ID")) {
+                            "Kall uten \"X-Correlation-ID\" er ikke lov"
+                        }
+                    },
+                )
+                .addInterceptor(
+                    AuthorizationInterceptor {
+                        machineToMachineTokenClient.createMachineToMachineToken(downstreamApi)
+                    },
+                )
+                .build()
 
         return KodeverkApi(SfHenvendelseApiFactory.url(), client)
     }

@@ -29,7 +29,7 @@ open class TilgangskontrollConfig {
         norg: NorgApi,
         ansattService: AnsattService,
         henvendelseService: SfHenvendelseService,
-        ldap: LDAPService
+        ldap: LDAPService,
     ): Kabac.PolicyDecisionPoint {
         return PolicyDecisionPointImpl().apply {
             install(AuthContextPip)
@@ -54,7 +54,7 @@ open class TilgangskontrollConfig {
     open fun enforcementPoint(decisionPoint: Kabac.PolicyDecisionPoint): Kabac.PolicyEnforcementPoint {
         return PolicyEnforcementPointImpl(
             bias = Decision.Type.DENY,
-            policyDecisionPoint = decisionPoint
+            policyDecisionPoint = decisionPoint,
         )
     }
 

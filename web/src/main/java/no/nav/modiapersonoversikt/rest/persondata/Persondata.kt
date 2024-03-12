@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 object Persondata {
     data class Data(
         val feilendeSystemer: List<String>,
-        val person: Person
+        val person: Person,
     )
 
     data class Person(
@@ -37,7 +37,7 @@ object Persondata {
         val telefonnummer: List<Telefon>,
         val kontaktInformasjon: KontaktInformasjon,
         val bankkonto: Bankkonto?,
-        val forelderBarnRelasjon: List<ForelderBarnRelasjon>
+        val forelderBarnRelasjon: List<ForelderBarnRelasjon>,
     )
 
     data class TredjepartsPerson(
@@ -49,18 +49,18 @@ object Persondata {
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val bostedAdresse: List<Adresse>,
         val dodsdato: List<LocalDate>,
-        val digitalKontaktinformasjon: DigitalKontaktinformasjonTredjepartsperson?
+        val digitalKontaktinformasjon: DigitalKontaktinformasjonTredjepartsperson?,
     )
 
     data class KodeBeskrivelse<T>(
         val kode: T,
-        val beskrivelse: String
+        val beskrivelse: String,
     )
 
     data class Navn(
         val fornavn: String,
         val mellomnavn: String?,
-        val etternavn: String
+        val etternavn: String,
     ) {
         companion object {
             val UKJENT = Navn("", "", "")
@@ -69,13 +69,13 @@ object Persondata {
 
     data class Statsborgerskap(
         val land: KodeBeskrivelse<String>,
-        val gyldighetsPeriode: GyldighetsPeriode?
+        val gyldighetsPeriode: GyldighetsPeriode?,
     )
 
     data class Sivilstand(
         val type: KodeBeskrivelse<SivilstandType>,
         val gyldigFraOgMed: LocalDate?,
-        val sivilstandRelasjon: SivilstandRelasjon?
+        val sivilstandRelasjon: SivilstandRelasjon?,
     )
 
     data class SivilstandRelasjon(
@@ -84,25 +84,25 @@ object Persondata {
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val harSammeAdresse: Boolean,
-        val dodsdato: List<LocalDate>
+        val dodsdato: List<LocalDate>,
     )
 
     data class Sikkerhetstiltak(
         val type: String,
         val beskrivelse: String,
-        val gyldighetsPeriode: GyldighetsPeriode?
+        val gyldighetsPeriode: GyldighetsPeriode?,
     )
 
     data class SistEndret(
         val ident: String,
         val tidspunkt: LocalDateTime,
         val system: String,
-        val kilde: String
+        val kilde: String,
     )
 
     data class GyldighetsPeriode(
         val gyldigFraOgMed: LocalDate?,
-        val gyldigTilOgMed: LocalDate?
+        val gyldigTilOgMed: LocalDate?,
     )
 
     data class Adresse constructor(
@@ -112,7 +112,7 @@ object Persondata {
         val linje3: String? = null,
         val angittFlyttedato: LocalDate? = null,
         val sistEndret: SistEndret?,
-        val gyldighetsPeriode: GyldighetsPeriode? = null
+        val gyldighetsPeriode: GyldighetsPeriode? = null,
     ) {
         constructor(
             coAdresse: String? = null,
@@ -121,7 +121,7 @@ object Persondata {
             linje3: List<String?>? = null,
             angittFlyttedato: LocalDate? = null,
             sistEndret: SistEndret?,
-            gyldighetsPeriode: GyldighetsPeriode? = null
+            gyldighetsPeriode: GyldighetsPeriode? = null,
         ) : this(
             coAdresse,
             vaskLinje(linje1) ?: "",
@@ -129,8 +129,9 @@ object Persondata {
             vaskLinje(linje3),
             angittFlyttedato,
             sistEndret,
-            gyldighetsPeriode
+            gyldighetsPeriode,
         )
+
         companion object {
             private fun vaskLinje(adresseLinje: List<String?>?): String? {
                 if (adresseLinje == null) return null
@@ -146,18 +147,18 @@ object Persondata {
 
     data class Apningstid(
         val ukedag: String,
-        val apningstid: String
+        val apningstid: String,
     )
 
     data class Publikumsmottak(
         val besoksadresse: Adresse,
-        val apningstider: List<Apningstid>
+        val apningstider: List<Apningstid>,
     )
 
     data class Enhet(
         val id: String,
         val navn: String,
-        val publikumsmottak: List<Publikumsmottak>
+        val publikumsmottak: List<Publikumsmottak>,
     )
 
     data class Dodsbo(
@@ -165,31 +166,31 @@ object Persondata {
         val adresse: Adresse,
         val registrert: LocalDate,
         val skifteform: Skifteform,
-        val sistEndret: SistEndret?
+        val sistEndret: SistEndret?,
     )
 
     data class Adressat(
         val advokatSomAdressat: AdvokatSomAdressat?,
         val personSomAdressat: PersonSomAdressat?,
-        val organisasjonSomAdressat: OrganisasjonSomAdressat?
+        val organisasjonSomAdressat: OrganisasjonSomAdressat?,
     )
 
     data class AdvokatSomAdressat(
         val kontaktperson: Navn,
         val organisasjonsnavn: String?,
-        val organisasjonsnummer: String?
+        val organisasjonsnummer: String?,
     )
 
     data class PersonSomAdressat(
         val fnr: String?,
         val navn: List<Navn>,
-        val fodselsdato: LocalDate?
+        val fodselsdato: LocalDate?,
     )
 
     data class OrganisasjonSomAdressat(
         val kontaktperson: Navn?,
         val organisasjonsnavn: String,
-        val organisasjonsnummer: String?
+        val organisasjonsnummer: String?,
     )
 
     data class Bankkonto(
@@ -207,7 +208,7 @@ object Persondata {
 
     data class TilrettelagtKommunikasjon(
         val talesprak: List<KodeBeskrivelse<String>>,
-        val tegnsprak: List<KodeBeskrivelse<String>>
+        val tegnsprak: List<KodeBeskrivelse<String>>,
     )
 
     data class Fullmakt(
@@ -216,19 +217,19 @@ object Persondata {
         val motpartsRolle: FullmaktsRolle,
         val omrade: List<KodeBeskrivelse<String>>,
         val gyldighetsPeriode: GyldighetsPeriode?,
-        val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?
+        val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
     )
 
     data class DigitalKontaktinformasjonTredjepartsperson(
         val reservasjon: String? = null,
-        val mobiltelefonnummer: String? = null
+        val mobiltelefonnummer: String? = null,
     )
 
     data class Telefon(
         val retningsnummer: KodeBeskrivelse<String>?,
         val identifikator: String,
         val sistEndret: SistEndret?,
-        val prioritet: Int = -1
+        val prioritet: Int = -1,
     )
 
     data class Verge(
@@ -237,23 +238,23 @@ object Persondata {
         val vergesakstype: String,
         val omfang: String,
         val embete: String?,
-        val gyldighetsPeriode: GyldighetsPeriode?
+        val gyldighetsPeriode: GyldighetsPeriode?,
     )
 
     data class Foreldreansvar(
         val ansvar: String,
         val ansvarlig: NavnOgIdent?,
-        val ansvarsubject: NavnOgIdent?
+        val ansvarsubject: NavnOgIdent?,
     )
 
     data class NavnOgIdent(
         val navn: Navn?,
-        val ident: String?
+        val ident: String?,
     )
 
     data class DeltBosted(
         val gyldighetsPeriode: GyldighetsPeriode?,
-        val adresse: Adresse?
+        val adresse: Adresse?,
     )
 
     data class KontaktInformasjon(
@@ -278,19 +279,27 @@ object Persondata {
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val harSammeAdresse: Boolean,
-        val dodsdato: List<LocalDate>
+        val dodsdato: List<LocalDate>,
     )
 
     enum class Kjonn {
-        M, K, U
+        M,
+        K,
+        U,
     }
 
     enum class AdresseBeskyttelse {
-        KODE6, KODE6_UTLAND, KODE7, UGRADERT, UKJENT
+        KODE6,
+        KODE6_UTLAND,
+        KODE7,
+        UGRADERT,
+        UKJENT,
     }
 
     enum class EgenAnsatt {
-        JA, NEI, UKJENT
+        JA,
+        NEI,
+        UKJENT,
     }
 
     enum class PersonStatus(val tpsKode: String) {
@@ -303,7 +312,7 @@ object Persondata {
         UTFLYTTET("UTVA"),
         IKKE_BOSATT("UREG"),
         FODSELSREGISTERT("FØDR"),
-        UKJENT("UKJENT")
+        UKJENT("UKJENT"),
     }
 
     enum class SivilstandType(val tpsKode: String) {
@@ -316,17 +325,19 @@ object Persondata {
         REGISTRERT_PARTNER("REPA"),
         SEPARERT_PARTNER("SEPA"),
         SKILT_PARTNER("SKPA"),
-        GJENLEVENDE_PARTNER("GJPA")
+        GJENLEVENDE_PARTNER("GJPA"),
     }
 
     enum class Skifteform {
-        OFFENTLIG, ANNET, UKJENT
+        OFFENTLIG,
+        ANNET,
+        UKJENT,
     }
 
     enum class FullmaktsRolle {
         FULLMAKTSGIVER,
         FULLMEKTIG,
-        UKJENT
+        UKJENT,
     }
 
     enum class ForelderBarnRelasjonRolle {
@@ -334,11 +345,12 @@ object Persondata {
         MOR,
         FAR,
         MEDMOR,
-        UKJENT
+        UKJENT,
     }
 
-    fun TredjepartsPerson?.asNavnOgIdent() = when (this) {
-        null -> null
-        else -> NavnOgIdent(this.navn.firstOrNull(), this.fnr)
-    }
+    fun TredjepartsPerson?.asNavnOgIdent() =
+        when (this) {
+            null -> null
+            else -> NavnOgIdent(this.navn.firstOrNull(), this.fnr)
+        }
 }

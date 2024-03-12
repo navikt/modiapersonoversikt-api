@@ -32,14 +32,15 @@ open class VarslerServiceImpl(
 
     @Cacheable
     override fun hentAlleVarsler(fnr: Fnr): VarslerService.Result {
-        val (varsel, notifikasjoner) = inParallel(
-            makeThreadSwappable { hentBrukervarsel(fnr) },
-            makeThreadSwappable {
-                runCatching {
-                    brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr)
-                }
-            }
-        )
+        val (varsel, notifikasjoner) =
+            inParallel(
+                makeThreadSwappable { hentBrukervarsel(fnr) },
+                makeThreadSwappable {
+                    runCatching {
+                        brukernotifikasjonService.hentAlleBrukernotifikasjoner(fnr)
+                    }
+                },
+            )
 
         if (varsel.exceptionOrNull() != null) {
             TjenestekallLogg.error("Feilet ved uthentig av varsler", fields = mapOf(), throwable = varsel.exceptionOrNull())
@@ -48,18 +49,20 @@ open class VarslerServiceImpl(
             TjenestekallLogg.error("Feilet ved uthentig av notifikasjoner", fields = mapOf(), throwable = notifikasjoner.exceptionOrNull())
         }
 
-        val feil = listOfNotNull(
-            varsel.exceptionOrNull()?.let { "Feil ved uthenting av varsler" },
-            notifikasjoner.exceptionOrNull()?.let { "Feil ved uthenting av notifikasjoner" },
-        )
-        val varsler = listOfNotNull(
-            varsel.getOrDefault(emptyList()),
-            notifikasjoner.getOrDefault(emptyList()),
-        ).flatten()
+        val feil =
+            listOfNotNull(
+                varsel.exceptionOrNull()?.let { "Feil ved uthenting av varsler" },
+                notifikasjoner.exceptionOrNull()?.let { "Feil ved uthenting av notifikasjoner" },
+            )
+        val varsler =
+            listOfNotNull(
+                varsel.getOrDefault(emptyList()),
+                notifikasjoner.getOrDefault(emptyList()),
+            ).flatten()
 
         return VarslerService.Result(
             feil = feil,
-            varsler = varsler
+            varsler = varsler,
         )
     }
 
@@ -75,11 +78,12 @@ open class VarslerServiceImpl(
     }
 
     private fun tilVarselMelding(varsel: WSVarsel): VarslerService.VarselMelding {
-        val utsendingsTidspunkt = when {
-            varsel.distribuert != null -> varsel.distribuert.toGregorianCalendar().toZonedDateTime()
-            varsel.sendt != null -> varsel.sendt.toGregorianCalendar().toZonedDateTime()
-            else -> null
-        }
+        val utsendingsTidspunkt =
+            when {
+                varsel.distribuert != null -> varsel.distribuert.toGregorianCalendar().toZonedDateTime()
+                varsel.sendt != null -> varsel.sendt.toGregorianCalendar().toZonedDateTime()
+                else -> null
+            }
         return VarslerService.VarselMelding(
             kanal = varsel.kanal,
             innhold = varsel.varseltekst,
@@ -88,7 +92,7 @@ open class VarslerServiceImpl(
             feilbeskrivelse = "",
             epostemne = varsel.varseltittel,
             url = varsel.varselURL,
-            erRevarsel = varsel.isReVarsel
+            erRevarsel = varsel.isReVarsel,
         )
     }
 

@@ -16,8 +16,8 @@ open class EnhetligKodeverkConfig {
             KodeverkProviders(
                 fellesKodeverk = FellesKodeverk.Provider(),
                 sfHenvendelseKodeverk = SfHenvendelseKodeverk.Provider(machineToMachineTokenClient),
-                oppgaveKodeverk = OppgaveKodeverk.Provider(machineToMachineTokenClient)
-            )
+                oppgaveKodeverk = OppgaveKodeverk.Provider(machineToMachineTokenClient),
+            ),
         )
     }
 }

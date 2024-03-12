@@ -18,7 +18,6 @@ private const val FNR = "10108000398"
 private const val BARNETS_FNR = "01010012345"
 
 internal class PleiepengerUttrekkTest {
-
     private val pleiepengerV1: PleiepengerV1 = mockk()
     private val service = PleiepengerServiceImpl(pleiepengerV1)
 
@@ -54,16 +53,17 @@ internal class PleiepengerUttrekkTest {
         assertEquals(BARNETS_FNR, pleiepenger["barnet"])
     }
 
-    private fun mockResponse() = WSHentPleiepengerettighetResponse()
-        .withPleiepengerettighetListe(
-            WSPleiepengerettighet()
-                .withBarnet(
-                    WSPerson()
-                        .withIdent(BARNETS_FNR)
-                )
-                .withOmsorgsperson(
-                    WSPerson()
-                        .withIdent(FNR)
-                )
-        )
+    private fun mockResponse() =
+        WSHentPleiepengerettighetResponse()
+            .withPleiepengerettighetListe(
+                WSPleiepengerettighet()
+                    .withBarnet(
+                        WSPerson()
+                            .withIdent(BARNETS_FNR),
+                    )
+                    .withOmsorgsperson(
+                        WSPerson()
+                            .withIdent(FNR),
+                    ),
+            )
 }

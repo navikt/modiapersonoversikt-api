@@ -15,9 +15,10 @@ class BrukersFnrPip(private val pdl: PdlOppslagService) : Kabac.PolicyInformatio
 
     override fun provide(ctx: EvaluationContext): Fnr {
         val aktorId = ctx.getValue(CommonAttributes.AKTOR_ID)
-        val fnr = checkNotNull(pdl.hentFnr(aktorId.get())) {
-            "Fant ikke fnr for $aktorId"
-        }
+        val fnr =
+            checkNotNull(pdl.hentFnr(aktorId.get())) {
+                "Fant ikke fnr for $aktorId"
+            }
         return Fnr(fnr)
     }
 }

@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.*
 class PersondataControllerV2(
     private val persondataService: PersondataService,
     private val tilgangskontroll: Tilgangskontroll,
-    private val pdlOppslagService: PdlOppslagService
+    private val pdlOppslagService: PdlOppslagService,
 ) {
-
     @PostMapping
-    fun hentPersondata(@RequestBody fnrRequest: FnrRequest): Persondata.Data {
+    fun hentPersondata(
+        @RequestBody fnrRequest: FnrRequest,
+    ): Persondata.Data {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnrRequest.fnr)) {
@@ -29,12 +30,16 @@ class PersondataControllerV2(
     }
 
     @PostMapping("/identer")
-    fun hentIdenter(@RequestBody fnrRequest: FnrRequest): HentIdenter.Identliste? {
+    fun hentIdenter(
+        @RequestBody fnrRequest: FnrRequest,
+    ): HentIdenter.Identliste? {
         return pdlOppslagService.hentIdenter(fnrRequest.fnr)
     }
 
     @PostMapping("/aktorid")
-    fun hentAktorId(@RequestBody fnrRequest: FnrRequest): String? {
+    fun hentAktorId(
+        @RequestBody fnrRequest: FnrRequest,
+    ): String? {
         return pdlOppslagService.hentAktorId(fnrRequest.fnr)
     }
 }

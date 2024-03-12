@@ -9,9 +9,8 @@ import java.util.*
 
 class SfLegacyDialogMerkController(
     private val sfHenvendelseService: SfHenvendelseService,
-    private val oppgaveBehandlingService: OppgaveBehandlingService
+    private val oppgaveBehandlingService: OppgaveBehandlingService,
 ) : DialogMerkApi {
-
     override fun merkSomFeilsendt(request: MerkSomFeilsendtRequest): ResponseEntity<Void> {
         require(request.behandlingsidListe.size == 1) {
             "Man forventer en enkelt kjedeId"
@@ -36,14 +35,19 @@ class SfLegacyDialogMerkController(
                 request.oppgaveId,
                 Optional.empty(),
                 request.saksbehandlerValgtEnhet,
-                "Dialog avsluttet fra modiapersonoversikt."
+                "Dialog avsluttet fra modiapersonoversikt.",
             )
         }
         return ResponseEntity(HttpStatus.OK)
     }
 
     override fun avsluttGosysOppgave(request: AvsluttGosysOppgaveRequest): ResponseEntity<Void> {
-        oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse)
+        oppgaveBehandlingService.ferdigstillOppgaveIGsak(
+            request.oppgaveid,
+            Optional.empty(),
+            request.saksbehandlerValgtEnhet,
+            request.beskrivelse,
+        )
         return ResponseEntity(HttpStatus.OK)
     }
 }

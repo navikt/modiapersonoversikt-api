@@ -22,6 +22,7 @@ object ConvertionUtils {
     fun org.joda.time.DateTime.toJavaTime(): LocalDate {
         return this.toLocalDate().toJavaTime()
     }
+
     fun org.joda.time.DateTime.toJavaDateTime(): LocalDateTime {
         return this.toLocalDateTime().toJavaDateTime()
     }

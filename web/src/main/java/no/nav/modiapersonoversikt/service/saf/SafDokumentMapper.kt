@@ -32,7 +32,15 @@ object SafDokumentMapper {
     private fun getAvsender(journalpost: HentBrukersDokumenter.Journalpost): Entitet =
         when (journalpost.journalposttype) {
             SafServiceImpl.JOURNALPOSTTYPE_INTERN -> Entitet.NAV
-            SafServiceImpl.JOURNALPOSTTYPE_INN -> if (sluttbrukerErMottakerEllerAvsender(journalpost)) Entitet.SLUTTBRUKER else Entitet.EKSTERN_PART
+            SafServiceImpl.JOURNALPOSTTYPE_INN ->
+                if (sluttbrukerErMottakerEllerAvsender(
+                        journalpost,
+                    )
+                ) {
+                    Entitet.SLUTTBRUKER
+                } else {
+                    Entitet.EKSTERN_PART
+                }
             SafServiceImpl.JOURNALPOSTTYPE_UT -> Entitet.NAV
             else -> Entitet.UKJENT
         }
@@ -41,7 +49,15 @@ object SafDokumentMapper {
         when (journalpost.journalposttype) {
             SafServiceImpl.JOURNALPOSTTYPE_INTERN -> Entitet.NAV
             SafServiceImpl.JOURNALPOSTTYPE_INN -> Entitet.NAV
-            SafServiceImpl.JOURNALPOSTTYPE_UT -> if (sluttbrukerErMottakerEllerAvsender(journalpost)) Entitet.SLUTTBRUKER else Entitet.EKSTERN_PART
+            SafServiceImpl.JOURNALPOSTTYPE_UT ->
+                if (sluttbrukerErMottakerEllerAvsender(
+                        journalpost,
+                    )
+                ) {
+                    Entitet.SLUTTBRUKER
+                } else {
+                    Entitet.EKSTERN_PART
+                }
             else -> Entitet.UKJENT
         }
 
@@ -59,11 +75,12 @@ object SafDokumentMapper {
     private fun getDato(journalpost: HentBrukersDokumenter.Journalpost): LocalDateTime =
         when (journalpost.journalposttype) {
             HentBrukersDokumenter.Journalposttype.I -> journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_REGISTRERT)
-            HentBrukersDokumenter.Journalposttype.U -> listOfNotNull(
-                journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_EKSPEDERT),
-                journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_SENDT_PRINT),
-                journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_JOURNALFOERT)
-            ).firstOrNull()
+            HentBrukersDokumenter.Journalposttype.U ->
+                listOfNotNull(
+                    journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_EKSPEDERT),
+                    journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_SENDT_PRINT),
+                    journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_JOURNALFOERT),
+                ).firstOrNull()
 
             HentBrukersDokumenter.Journalposttype.N -> journalpost.getRelevantDatoForType(HentBrukersDokumenter.Datotype.DATO_JOURNALFOERT)
             else -> LocalDateTime.now()
@@ -136,10 +153,10 @@ object SafDokumentMapper {
             null -> null
             else -> throw RuntimeException(
                 "Ugyldig tekst for mapping til variantformat. Tekst: ${
-                getVariant(
-                    dokumentInfo
-                )?.variantformat
-                }"
+                    getVariant(
+                        dokumentInfo,
+                    )?.variantformat
+                }",
             )
         }
 

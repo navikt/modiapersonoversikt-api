@@ -72,11 +72,14 @@ class SakerServiceImpl : SakerService {
         private fun SakerService.Resultat.fjernDuplikater(): SakerService.Resultat {
             return this.copy(
                 saker = this.saker.distinctBy { Pair(it.temaKode, it.fagsystemSaksId) }.toMutableList(),
-                feiledeSystemer = this.feiledeSystemer.distinct().toMutableList()
+                feiledeSystemer = this.feiledeSystemer.distinct().toMutableList(),
             )
         }
 
-        private fun SakerService.Resultat.leggTilDataFraKilde(fnr: String, kilde: SakerKilde): SakerService.Resultat {
+        private fun SakerService.Resultat.leggTilDataFraKilde(
+            fnr: String,
+            kilde: SakerKilde,
+        ): SakerService.Resultat {
             try {
                 kilde.leggTilSaker(fnr, this.saker)
             } catch (e: Exception) {
@@ -107,6 +110,7 @@ class SakerServiceImpl : SakerService {
 
             return godkjentType && godkjentSystem && godkjentTema
         }
+
         private fun godkjentGenerellSak(sak: JournalforingSak): Boolean {
             val godkjentType = sak.isSakstypeForVisningGenerell
             val godkjentSystem = JournalforingSak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode)

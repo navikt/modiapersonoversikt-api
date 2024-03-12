@@ -23,11 +23,12 @@ class OrganisasjonServiceImplTest {
 
     @Rule
     @JvmField
-    val testenvironment = TestEnvironmentRule(
-        mapOf(
-            AppConstants.SYSTEMUSER_USERNAME_PROPERTY to "username"
+    val testenvironment =
+        TestEnvironmentRule(
+            mapOf(
+                AppConstants.SYSTEMUSER_USERNAME_PROPERTY to "username",
+            ),
         )
-    )
 
     private val gyldigRespons = "{\"organisasjonsnummer\": \"orgnr\", \"navn\": { \"navnelinje2\": \"NAV\", \"navnelinje5\": \"IT\" }}"
     private val orgNr = "000000000"
@@ -59,7 +60,11 @@ class OrganisasjonServiceImplTest {
         }
     }
 
-    private fun withMockServer(statusCode: Int = 200, body: String? = null, test: (OrganisasjonService) -> Unit) {
+    private fun withMockServer(
+        statusCode: Int = 200,
+        body: String? = null,
+        test: (OrganisasjonService) -> Unit,
+    ) {
         wiremock.get(urlEqualTo("/api/v1/organisasjon/$orgNr/noekkelinfo")) {
             status(statusCode)
             if (body != null) {

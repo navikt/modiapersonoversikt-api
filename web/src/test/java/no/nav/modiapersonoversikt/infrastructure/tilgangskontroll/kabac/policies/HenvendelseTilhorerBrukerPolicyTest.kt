@@ -41,31 +41,34 @@ internal class HenvendelseTilhorerBrukerPolicyTest {
         ).withMessage("Bruker eier ikke henvendelsen")
     }
 
-    private val dummyHenvendelse = HenvendelseDTO(
-        henvendelseType = HenvendelseDTO.HenvendelseType.MELDINGSKJEDE,
-        fnr = "12345678910",
-        aktorId = "00012345678910",
-        opprinneligGT = "010101",
-        opprettetDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
-        kontorsperre = false,
-        feilsendt = false,
-        kjedeId = "ABBA12341010101",
-        gjeldendeTemagruppe = "ARBD",
-        avsluttetDato = null,
-        kasseringsDato = null,
-        gjeldendeTema = null,
-        journalposter = null,
-        meldinger = listOf(
-            MeldingDTO(
-                meldingsId = UUID.randomUUID().toString(),
-                fritekst = "Melding innhold",
-                sendtDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
-                fra = MeldingFraDTO(
-                    identType = MeldingFraDTO.IdentType.NAVIDENT,
-                    ident = "Z123456"
-                )
-            )
-        ),
-        markeringer = null
-    )
+    private val dummyHenvendelse =
+        HenvendelseDTO(
+            henvendelseType = HenvendelseDTO.HenvendelseType.MELDINGSKJEDE,
+            fnr = "12345678910",
+            aktorId = "00012345678910",
+            opprinneligGT = "010101",
+            opprettetDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
+            kontorsperre = false,
+            feilsendt = false,
+            kjedeId = "ABBA12341010101",
+            gjeldendeTemagruppe = "ARBD",
+            avsluttetDato = null,
+            kasseringsDato = null,
+            gjeldendeTema = null,
+            journalposter = null,
+            meldinger =
+                listOf(
+                    MeldingDTO(
+                        meldingsId = UUID.randomUUID().toString(),
+                        fritekst = "Melding innhold",
+                        sendtDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
+                        fra =
+                            MeldingFraDTO(
+                                identType = MeldingFraDTO.IdentType.NAVIDENT,
+                                ident = "Z123456",
+                            ),
+                    ),
+                ),
+            markeringer = null,
+        )
 }

@@ -18,7 +18,6 @@ private const val RESERVASJON = "Reservert"
 private val SIST_OPPDATERT = LocalDate.of(2012, 12, 27)
 
 class KontaktinformasjonControllerTest {
-
     private val krrService: Krr.Service = mockk()
     private val controller = KontaktinformasjonController(krrService, TilgangskontrollMock.get())
 
@@ -28,18 +27,21 @@ class KontaktinformasjonControllerTest {
     }
 
     private fun setupDKIFMock() {
-        every { krrService.hentDigitalKontaktinformasjon(FNR) } returns Krr.DigitalKontaktinformasjon(
-            personident = null,
-            reservasjon = RESERVASJON,
-            epostadresse = Krr.Epostadresse(
-                value = EPOST,
-                sistOppdatert = SIST_OPPDATERT
-            ),
-            mobiltelefonnummer = Krr.MobilTelefon(
-                value = MOBILTELEFON,
-                sistOppdatert = SIST_OPPDATERT
+        every { krrService.hentDigitalKontaktinformasjon(FNR) } returns
+            Krr.DigitalKontaktinformasjon(
+                personident = null,
+                reservasjon = RESERVASJON,
+                epostadresse =
+                    Krr.Epostadresse(
+                        value = EPOST,
+                        sistOppdatert = SIST_OPPDATERT,
+                    ),
+                mobiltelefonnummer =
+                    Krr.MobilTelefon(
+                        value = MOBILTELEFON,
+                        sistOppdatert = SIST_OPPDATERT,
+                    ),
             )
-        )
     }
 
     @Test
@@ -51,13 +53,13 @@ class KontaktinformasjonControllerTest {
         assertAll(
             "Henter epost",
             Executable { assertEquals(EPOST, epost?.value) },
-            Executable { assertEquals(SIST_OPPDATERT, epost?.sistOppdatert) }
+            Executable { assertEquals(SIST_OPPDATERT, epost?.sistOppdatert) },
         )
 
         assertAll(
             "Henter mobiltelefon",
             Executable { assertEquals(MOBILTELEFON, mobiltelefon?.value) },
-            Executable { assertEquals(SIST_OPPDATERT, mobiltelefon?.sistOppdatert) }
+            Executable { assertEquals(SIST_OPPDATERT, mobiltelefon?.sistOppdatert) },
         )
 
         assertEquals(RESERVASJON, response.reservasjon)

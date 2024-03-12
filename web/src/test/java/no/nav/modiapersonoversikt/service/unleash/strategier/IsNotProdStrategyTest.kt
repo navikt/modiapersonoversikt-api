@@ -12,7 +12,10 @@ internal class IsNotProdStrategyTest {
 
     @ParameterizedTest
     @MethodSource("testcases")
-    internal fun `should evaluate strategy`(simulatedEnv: String?, expected: Boolean) {
+    internal fun `should evaluate strategy`(
+        simulatedEnv: String?,
+        expected: Boolean,
+    ) {
         TestEnvironment.withEnvironment(mapOf(ENVIRONMENT_PROPERTY to simulatedEnv)) {
             assertThat(isNotProdStrategy.isEnabled(null)).isEqualTo(expected)
         }
@@ -20,15 +23,16 @@ internal class IsNotProdStrategyTest {
 
     companion object {
         @JvmStatic
-        fun testcases() = listOf(
-            strategyEnabled(simulatedEnv = "t1"),
-            strategyEnabled(simulatedEnv = "q0"),
-            strategyEnabled(simulatedEnv = "u10"),
-            strategyEnabled(simulatedEnv = "local"),
-            strategyEnabled(simulatedEnv = ""),
-            strategyEnabled(simulatedEnv = null),
-            strategyDisabled(simulatedEnv = "p"),
-        )
+        fun testcases() =
+            listOf(
+                strategyEnabled(simulatedEnv = "t1"),
+                strategyEnabled(simulatedEnv = "q0"),
+                strategyEnabled(simulatedEnv = "u10"),
+                strategyEnabled(simulatedEnv = "local"),
+                strategyEnabled(simulatedEnv = ""),
+                strategyEnabled(simulatedEnv = null),
+                strategyDisabled(simulatedEnv = "p"),
+            )
 
         private fun strategyEnabled(simulatedEnv: String?): Arguments {
             return Arguments.of(simulatedEnv, true)

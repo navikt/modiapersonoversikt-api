@@ -18,7 +18,10 @@ internal class ArenaSakerV2(private val arenaSakVedtakService: SakVedtakPortType
     override val kildeNavn: String
         get() = "ARENA"
 
-    override fun leggTilSaker(fnr: String, saker: MutableList<JournalforingSak>) {
+    override fun leggTilSaker(
+        fnr: String,
+        saker: MutableList<JournalforingSak>,
+    ) {
         if (saker.none(JournalforingSak.IS_ARENA_OPPFOLGING::test)) {
             hentOppfolgingssakFraArena(fnr)
                 ?.also { saker.add(it) }
@@ -26,9 +29,10 @@ internal class ArenaSakerV2(private val arenaSakVedtakService: SakVedtakPortType
     }
 
     private fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? {
-        val request = HentSaksInfoListeRequestV2()
-            .withBruker(Bruker().withBrukertypeKode("PERSON").withBrukerId(fnr))
-            .withTema("OPP")
+        val request =
+            HentSaksInfoListeRequestV2()
+                .withBruker(Bruker().withBrukertypeKode("PERSON").withBrukerId(fnr))
+                .withTema("OPP")
 
         val saksInfoListe = SaksInfoListe()
         val bruker = Holder(request.bruker)
@@ -41,7 +45,7 @@ internal class ArenaSakerV2(private val arenaSakVedtakService: SakVedtakPortType
                 request.tomDato,
                 request.tema,
                 request.isLukket,
-                saker
+                saker,
             )
         } catch (e: FaultFeilIInputMsg) {
             log.error("Feil input til hentSaksInfoV2. FaultInfo: ${e.faultInfo}", e)

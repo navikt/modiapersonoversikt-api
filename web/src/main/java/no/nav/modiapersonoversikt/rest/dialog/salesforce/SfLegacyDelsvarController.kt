@@ -10,7 +10,7 @@ class SfLegacyDelsvarController : DialogDelsvarApi {
     override fun svarDelvis(
         httpRequest: HttpServletRequest,
         fnr: String,
-        request: DelsvarRestRequest
+        request: DelsvarRestRequest,
     ): ResponseEntity<Void> {
         throw NotSupportedException("Delsvar er ikke støttet av Salesforce")
     }

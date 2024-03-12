@@ -6,7 +6,6 @@ private typealias Prioriteter = List<OppgaveKodeverk.Prioritet>
 private typealias Frist = Int
 
 object LokalOverstyring {
-
     data class Kodeverk(val frist: Frist, val prioriteter: Prioriteter, val tema: Map<String, Tema>)
 
     data class Tema(val prioriteter: Prioriteter?, val oppgavetyper: Map<String, Oppgavetype>)
@@ -22,28 +21,36 @@ object LokalOverstyring {
         var prioriteter: Prioriteter = mutableListOf()
         private var temaMap: MutableMap<String, Tema> = mutableMapOf()
 
-        fun tema(navn: String, block: TemaBuilder.() -> Unit) {
+        fun tema(
+            navn: String,
+            block: TemaBuilder.() -> Unit,
+        ) {
             temaMap[navn] = TemaBuilder(navn).apply(block).build()
         }
 
-        fun build() = Kodeverk(
-            frist = frist,
-            prioriteter = prioriteter,
-            tema = temaMap
-        )
+        fun build() =
+            Kodeverk(
+                frist = frist,
+                prioriteter = prioriteter,
+                tema = temaMap,
+            )
     }
 
     class TemaBuilder(val navn: String) {
         var prioriteter: Prioriteter? = null
         private var oppgavetyperMap: MutableMap<String, Oppgavetype> = mutableMapOf()
 
-        fun oppgavetype(navn: String, frist: Frist) {
+        fun oppgavetype(
+            navn: String,
+            frist: Frist,
+        ) {
             oppgavetyperMap[navn] = Oppgavetype(frist)
         }
 
-        fun build() = Tema(
-            prioriteter = prioriteter,
-            oppgavetyper = oppgavetyperMap
-        )
+        fun build() =
+            Tema(
+                prioriteter = prioriteter,
+                oppgavetyper = oppgavetyperMap,
+            )
     }
 }

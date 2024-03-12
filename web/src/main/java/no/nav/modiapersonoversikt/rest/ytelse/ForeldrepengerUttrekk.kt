@@ -12,26 +12,27 @@ import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 
 class ForeldrepengerUttrekk constructor(private val forelderpengerService: ForeldrepengerServiceBi) {
-
     fun hent(fodselsnummer: String): Map<String, Any?> {
-        val foreldrepenger = forelderpengerService.hentForeldrepengerListe(
-            ForeldrepengerListeRequest(
-                fodselsnummer,
-                Periode(LocalDate.now().minusYears(2), LocalDate.now())
+        val foreldrepenger =
+            forelderpengerService.hentForeldrepengerListe(
+                ForeldrepengerListeRequest(
+                    fodselsnummer,
+                    Periode(LocalDate.now().minusYears(2), LocalDate.now()),
+                ),
             )
-        )
 
         return mapOf(
-            "foreldrepenger" to foreldrepenger?.foreldrepengerettighet?.let {
-                val fraInfotrygd = hentFraInfotrygd(it)
-                if (fraInfotrygd.isEmpty()) {
-                    null
-                } else {
-                    listOf(
-                        fraInfotrygd
-                    )
-                }
-            }
+            "foreldrepenger" to
+                foreldrepenger?.foreldrepengerettighet?.let {
+                    val fraInfotrygd = hentFraInfotrygd(it)
+                    if (fraInfotrygd.isEmpty()) {
+                        null
+                    } else {
+                        listOf(
+                            fraInfotrygd,
+                        )
+                    }
+                },
         )
     }
 
@@ -60,7 +61,7 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                     is Adopsjon -> "omsorgsovertakelse" to it.omsorgsovertakelse?.toString(JODA_DATOFORMAT)
                     is Foedsel -> "termin" to it.termin?.toString(JODA_DATOFORMAT)
                     else -> throw IllegalArgumentException("Ugyldig foreldrepengetype")
-                }
+                },
             )
         }
     }
@@ -74,7 +75,7 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                 "inntektForPerioden" to it.inntektForPerioden,
                 "sykepengerFom" to it.sykepengerFom?.toString(JODA_DATOFORMAT),
                 "refusjonTom" to it.refusjonTom?.toString(JODA_DATOFORMAT),
-                "refusjonstype" to it.refusjonstype?.termnavn
+                "refusjonstype" to it.refusjonstype?.termnavn,
             )
         }
     }
@@ -102,7 +103,7 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                 "rettTilMødrekvote" to it.isRettTilModrekvote?.termnavn,
                 "stansårsak" to it.stansaarsak?.termnavn,
                 "historiskeUtbetalinger" to it.historiskeUtbetalinger?.let { utbetalinger -> hentHistoriskeUtbetalinger(utbetalinger) },
-                "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { utbetalinger -> hentKommendeUtbetalinger(utbetalinger) }
+                "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { utbetalinger -> hentKommendeUtbetalinger(utbetalinger) },
             )
         }
     }

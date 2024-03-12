@@ -6,25 +6,32 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.DENY_REA
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.FAIL_REASON
 import no.nav.personoversikt.common.logging.Logging
 
-val cefLogger = ArchSightCEFLogger(
-    CEFLoggerConfig(
-        applicationName = "modia",
-        logName = "personoversikt",
-        filter = { (action: Audit.Action, resource: Audit.AuditResource) ->
-            action != Audit.Action.READ || resource == AuditResources.Person.Personalia
-        }
+val cefLogger =
+    ArchSightCEFLogger(
+        CEFLoggerConfig(
+            applicationName = "modia",
+            logName = "personoversikt",
+            filter = { (action: Audit.Action, resource: Audit.AuditResource) ->
+                action != Audit.Action.READ || resource == AuditResources.Person.Personalia
+            },
+        ),
     )
-)
 
 class Audit {
     open class AuditResource(val resource: String)
+
     enum class Action {
-        CREATE, READ, UPDATE, DELETE
+        CREATE,
+        READ,
+        UPDATE,
+        DELETE,
     }
 
     interface AuditDescriptor<T> {
         fun log(resource: T)
+
         fun denied(reason: String)
+
         fun failed(exception: Throwable)
 
         fun Throwable.getFailureReason(): String = this.message ?: this.toString()
@@ -33,7 +40,7 @@ class Audit {
     internal class WithDataDescriptor<T>(
         private val action: Action,
         private val resourceType: AuditResource,
-        private val extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>
+        private val extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>,
     ) : AuditDescriptor<T> {
         override fun log(resource: T) {
             val identifiers = extractIdentifiers(resource).toTypedArray()
@@ -53,14 +60,16 @@ class Audit {
 
     internal class NoopDescriptor<T> : AuditDescriptor<T> {
         override fun log(resource: T) {}
+
         override fun denied(reason: String) {}
+
         override fun failed(exception: Throwable) {}
     }
 
     internal class NothingDescriptor(
         private val action: Action,
         private val resourceType: AuditResource,
-        private val identifiers: Array<Pair<AuditIdentifier, String?>>
+        private val identifiers: Array<Pair<AuditIdentifier, String?>>,
     ) : AuditDescriptor<Any> {
         override fun log(resource: Any) {
             logInternal(action, resourceType, identifiers)
@@ -82,29 +91,43 @@ class Audit {
         fun <T> skipAuditLog(): AuditDescriptor<T> = NoopDescriptor()
 
         @JvmStatic
-        fun describe(action: Action, resourceType: AuditResource, vararg identifiers: Pair<AuditIdentifier, String?>): AuditDescriptor<Any> {
+        fun describe(
+            action: Action,
+            resourceType: AuditResource,
+            vararg identifiers: Pair<AuditIdentifier, String?>,
+        ): AuditDescriptor<Any> {
             return NothingDescriptor(action, resourceType, identifiers as Array<Pair<AuditIdentifier, String?>>)
         }
 
         @JvmStatic
-        fun <T> describe(action: Action, resourceType: AuditResource, extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>): AuditDescriptor<T> {
+        fun <T> describe(
+            action: Action,
+            resourceType: AuditResource,
+            extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>,
+        ): AuditDescriptor<T> {
             return WithDataDescriptor(action, resourceType, extractIdentifiers)
         }
 
         private val auditMarker = Markers.appendEntries(mapOf(Logging.LOGTYPE_KEY to "audit"))
-        private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<Pair<AuditIdentifier, String?>>) {
+
+        private fun logInternal(
+            action: Action,
+            resourceType: AuditResource,
+            identifiers: Array<Pair<AuditIdentifier, String?>>,
+        ) {
             val subject = AuthContextUtils.getIdent()
-            val logline = listOfNotNull(
-                "action='$action'",
-                subject
-                    .map { "subject='$it'" }
-                    .orElse(null),
-                "resource='${resourceType.resource}'",
-                *identifiers
-                    .map { "${it.first}='${it.second ?: "-"}'" }
-                    .toTypedArray()
-            )
-                .joinToString(" ")
+            val logline =
+                listOfNotNull(
+                    "action='$action'",
+                    subject
+                        .map { "subject='$it'" }
+                        .orElse(null),
+                    "resource='${resourceType.resource}'",
+                    *identifiers
+                        .map { "${it.first}='${it.second ?: "-"}'" }
+                        .toTypedArray(),
+                )
+                    .joinToString(" ")
 
             Logging.secureLog.info(auditMarker, logline)
             cefLogger.log(CEFEvent(action, resourceType, subject.orElse("-"), identifiers))

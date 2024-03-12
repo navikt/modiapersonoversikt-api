@@ -35,9 +35,9 @@ fun OppgaveJsonDTO.toPostOppgaveResponseJsonDTO(): PostOppgaveResponseJsonDTO =
         ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
         endretTidspunkt = this.endretTidspunkt,
         status =
-        OppgaveMappingHelpers.convertEnumToPostResp(this.status),
+            OppgaveMappingHelpers.convertEnumToPostResp(this.status),
         prioritet =
-        OppgaveMappingHelpers.convertEnumToPostResp(this.prioritet)
+            OppgaveMappingHelpers.convertEnumToPostResp(this.prioritet),
     )
 
 fun OppgaveJsonDTO.toGetOppgaveResponseJsonDTO(): GetOppgaveResponseJsonDTO =
@@ -73,9 +73,9 @@ fun OppgaveJsonDTO.toGetOppgaveResponseJsonDTO(): GetOppgaveResponseJsonDTO =
         ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
         endretTidspunkt = this.endretTidspunkt,
         status =
-        OppgaveMappingHelpers.convertEnumToGetResp(this.status),
+            OppgaveMappingHelpers.convertEnumToGetResp(this.status),
         prioritet =
-        OppgaveMappingHelpers.convertEnumToGetResp(this.prioritet)
+            OppgaveMappingHelpers.convertEnumToGetResp(this.prioritet),
     )
 
 fun OppgaveJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
@@ -111,9 +111,9 @@ fun OppgaveJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
         ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
         endretTidspunkt = this.endretTidspunkt,
         status =
-        OppgaveMappingHelpers.convertEnumToPutResp(this.status),
+            OppgaveMappingHelpers.convertEnumToPutResp(this.status),
         prioritet =
-        OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet)
+            OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet),
     )
 
 fun PutOppgaveRequestJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
@@ -142,7 +142,7 @@ fun PutOppgaveRequestJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJs
         metadata = this.metadata,
         fristFerdigstillelse = this.fristFerdigstillelse,
         status =
-        OppgaveMappingHelpers.convertEnumToPutResp(this.status),
+            OppgaveMappingHelpers.convertEnumToPutResp(this.status),
         prioritet =
-        OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet)
+            OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet),
     )
