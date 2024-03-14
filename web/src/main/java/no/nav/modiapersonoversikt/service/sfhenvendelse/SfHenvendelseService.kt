@@ -553,6 +553,7 @@ class SfHenvendelseServiceImpl(
             query = mutableMapOf(),
             headers = localVariableHeaders,
             body = patchnote.patches.mapKeys { it.key.name },
+            requiresAuthentication = true,
         )
     }
 

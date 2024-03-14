@@ -37,7 +37,7 @@ class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInte
                 )
                 .execute()
 
-        val bodyContent = checkNotNull(response.body()?.string()) { "No Content" }
+        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
 
         return OkHttpUtils.objectMapper.readValue(bodyContent)
     }
@@ -55,7 +55,7 @@ class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInte
                 )
                 .execute()
 
-        val bodyContent = checkNotNull(response.body()?.string()) { "No Content" }
+        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
 
         return OkHttpUtils.objectMapper.readValue(bodyContent)
     }

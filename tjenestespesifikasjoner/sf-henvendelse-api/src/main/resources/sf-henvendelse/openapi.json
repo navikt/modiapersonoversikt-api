@@ -260,7 +260,6 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
                   "$ref": "#/components/schemas/Henvendelse"
                 }
               }
@@ -315,7 +314,6 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
                   "$ref": "#/components/schemas/Henvendelse"
                 }
               }
