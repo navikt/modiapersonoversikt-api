@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.journalforingsaker.kilder
 
+import jakarta.xml.ws.Holder
 import no.nav.arena.services.lib.sakvedtak.SaksInfoListe
 import no.nav.arena.services.sakvedtakservice.Bruker
 import no.nav.arena.services.sakvedtakservice.FaultFeilIInputMsg
@@ -11,7 +12,6 @@ import no.nav.modiapersonoversikt.service.journalforingsaker.SakerKilde
 import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
 import javax.naming.ServiceUnavailableException
-import javax.xml.ws.Holder
 
 internal class ArenaSakerV2(private val arenaSakVedtakService: SakVedtakPortType) : SakerKilde {
     private val log = LoggerFactory.getLogger(ArenaSakerV2::class.java)

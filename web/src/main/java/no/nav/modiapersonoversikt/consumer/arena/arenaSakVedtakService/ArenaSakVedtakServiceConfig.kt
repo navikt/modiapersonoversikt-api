@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.arena.arenaSakVedtakService
 
+import jakarta.xml.ws.Holder
 import no.nav.arena.services.lib.sakvedtak.SaksInfoListe
 import no.nav.arena.services.sakvedtakservice.Bruker
 import no.nav.arena.services.sakvedtakservice.HentSaksInfoListeRequestV2
@@ -25,7 +26,6 @@ import javax.security.auth.callback.Callback
 import javax.security.auth.callback.CallbackHandler
 import javax.xml.datatype.DatatypeFactory
 import javax.xml.namespace.QName
-import javax.xml.ws.Holder
 
 @Configuration
 open class ArenaSakVedtakServiceConfig {

@@ -6,6 +6,7 @@ import com.nimbusds.jwt.PlainJWT
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import jakarta.xml.ws.Holder
 import no.nav.arena.services.lib.sakvedtak.SaksInfo
 import no.nav.arena.services.lib.sakvedtak.SaksInfoListe
 import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
@@ -35,7 +36,6 @@ import org.junit.jupiter.api.extension.RegisterExtension
 import org.slf4j.MDC
 import java.time.LocalDateTime
 import javax.xml.datatype.DatatypeFactory
-import javax.xml.ws.Holder
 import kotlin.contracts.ExperimentalContracts
 
 @ExperimentalContracts

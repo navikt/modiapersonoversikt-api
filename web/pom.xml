@@ -263,6 +263,12 @@
             <version>8.3.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
         <!--Modia common-->
         <dependency>
             <groupId>com.github.navikt.modia-common-utils</groupId>
