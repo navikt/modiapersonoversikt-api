@@ -40,6 +40,7 @@
         <module>skjermede-personer-pip-api</module>
         <module>modia-soknadsstatus-api</module>
         <module>utbetaling-api</module>
+        <module>arenasakvedtakservice</module>
     </modules>
 
     <dependencyManagement>
