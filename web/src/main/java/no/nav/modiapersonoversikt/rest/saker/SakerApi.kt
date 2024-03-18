@@ -9,7 +9,6 @@ import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
 import java.time.LocalDateTime
 
 object SakerApi {
-
     data class ResultatSoknadsstatus(
         val resultat: List<SoknadsstatusSakstema>,
     )
