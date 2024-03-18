@@ -105,8 +105,6 @@ spec:
       value: "https://saf-q1.nais.preprod.local/rest/hentdokument"
     - name: SAF_SCOPE
       value: "dev-fss:teamdokumenthandtering:saf-q1"
-    - name: SAKOGBEHANDLING_ENDPOINTURL
-      value: "https://modapp-q1.adeo.no/sakogbehandling/ws/SakOgBehandling_v1"
     - name: SERVER_DREK_URL
       value: "https://pdl-web.dev.intern.nav.no/rekvirerdnummer"
     - name: SERVER_NORG2_FRONTEND_URL
