@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.service.sakstema
 
-import kotlinx.datetime.toJavaLocalDateTime
-import kotlinx.datetime.toKotlinLocalDateTime
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.FeilendeBaksystemException
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
@@ -10,18 +8,14 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.FilterUtils.fjernGamleDokumenter
-import no.nav.modiapersonoversikt.service.sakstema.domain.BehandlingsStatus
-import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.function.Function
 import java.util.function.Predicate
 import java.util.stream.Collectors
-import java.util.stream.Stream
 
 interface SakstemaService {
     fun hentSakstemaSoknadsstatus(
@@ -55,8 +49,6 @@ interface SakstemaService {
     ): List<Sak>
 
     fun getTemanavnForTemakode(temakode: String): ResultatWrapper<String>
-
-    fun convertBehandlingskjederToSoknadsstatuser(behandlingskjeder: Map<String, List<Behandlingskjede?>>): Map<String, Soknadsstatus>
 }
 
 class SakstemaServiceImpl
@@ -73,7 +65,6 @@ class SakstemaServiceImpl
             val wrapper = safService.hentJournalposter(fnr)
 
             return try {
-
                 var soknadsstatuser: Map<String, Soknadsstatus>
                 try {
                     soknadsstatuser =
@@ -164,23 +155,6 @@ class SakstemaServiceImpl
         companion object {
             private val LOG = LoggerFactory.getLogger(SakstemaServiceImpl::class.java)
 
-            fun hentAlleTema(
-                saker: List<Sak>,
-                dokumentMetadata: List<DokumentMetadata>,
-                behandlingskjeder: Map<String, List<Behandlingskjede?>?>,
-            ): Set<String> {
-                val sakerTema = saker.stream().map { obj: Sak -> obj.temakode }
-                val dokumentTema =
-                    dokumentMetadata
-                        .stream()
-                        .filter { metadata: DokumentMetadata -> metadata.baksystem.contains(Baksystem.HENVENDELSE) }
-                        .map { obj: DokumentMetadata -> obj.temakode }
-                val behandlingskjedeTema = behandlingskjeder.keys.stream()
-                return Stream.of(sakerTema, dokumentTema, behandlingskjedeTema)
-                    .flatMap(Function.identity())
-                    .collect(Collectors.toSet())
-            }
-
             fun hentAlleTemaSoknadsstatus(
                 saker: List<Sak>,
                 dokumentMetadata: List<DokumentMetadata>,
@@ -203,35 +177,5 @@ class SakstemaServiceImpl
             private fun tilhorendeFraHenvendelse(temakode: String): Predicate<DokumentMetadata> {
                 return Predicate { dm: DokumentMetadata -> dm.baksystem.contains(Baksystem.HENVENDELSE) && dm.temakode == temakode }
             }
-        }
-
-        override fun convertBehandlingskjederToSoknadsstatuser(
-            behandlingskjeder: Map<String, List<Behandlingskjede?>>,
-        ): Map<String, Soknadsstatus> {
-            val res = mutableMapOf<String, Soknadsstatus>()
-            for (behandlingskjede in behandlingskjeder.entries) {
-                val soknadsstatus = Soknadsstatus()
-
-                for (behandling in behandlingskjede.value) {
-                    if (behandling?.status == null) continue
-
-                    when (behandling.status) {
-                        BehandlingsStatus.UNDER_BEHANDLING -> soknadsstatus.underBehandling++
-                        BehandlingsStatus.AVBRUTT -> soknadsstatus.avbrutt++
-                        BehandlingsStatus.FERDIG_BEHANDLET -> soknadsstatus.ferdigBehandlet++
-                    }
-
-                    if (soknadsstatus.sistOppdatert == null ||
-                        behandling.sistOppdatert.isAfter(
-                            soknadsstatus.sistOppdatert!!.toJavaLocalDateTime(),
-                        )
-                    ) {
-                        soknadsstatus.sistOppdatert = behandling.sistOppdatert.toKotlinLocalDateTime()
-                    }
-                }
-                res[behandlingskjede.key] = soknadsstatus
-            }
-
-            return res
         }
     }

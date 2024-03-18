@@ -2,10 +2,7 @@ package no.nav.modiapersonoversikt.service.sakstema
 
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
-import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
-import org.joda.time.DateTime
-import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.LocalDateTime
 
