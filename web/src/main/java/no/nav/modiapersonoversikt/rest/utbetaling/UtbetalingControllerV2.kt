@@ -16,40 +16,44 @@ import java.time.LocalDate
 
 @RestController
 @RequestMapping("/rest/v2/utbetaling")
-class UtbetalingControllerV2 @Autowired constructor(
-    private val service: UtbetalingService,
-    private val tilgangskontroll: Tilgangskontroll,
-) {
-    class UtbetalingerResponseDTO(
-        val utbetalinger: List<UtbetalingDomain.Utbetaling>,
-        val periode: UtbetalingerPeriodeDTO
-    )
-    class UtbetalingerPeriodeDTO(
-        val startDato: LocalDate,
-        val sluttDato: LocalDate
-    )
+class UtbetalingControllerV2
+    @Autowired
+    constructor(
+        private val service: UtbetalingService,
+        private val tilgangskontroll: Tilgangskontroll,
+    ) {
+        class UtbetalingerResponseDTO(
+            val utbetalinger: List<UtbetalingDomain.Utbetaling>,
+            val periode: UtbetalingerPeriodeDTO,
+        )
 
-    @PostMapping
-    fun hent(
-        @RequestBody fnrRequest: FnrRequest,
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        @RequestParam("startDato")
-        start: LocalDate,
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        @RequestParam("sluttDato")
-        slutt: LocalDate
-    ): UtbetalingerResponseDTO {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                val utbetalinger = service.hentUtbetalinger(Fnr(fnrRequest.fnr), start, slutt)
-                UtbetalingerResponseDTO(
-                    utbetalinger = utbetalinger,
-                    periode = UtbetalingerPeriodeDTO(
-                        startDato = start,
-                        sluttDato = slutt,
+        class UtbetalingerPeriodeDTO(
+            val startDato: LocalDate,
+            val sluttDato: LocalDate,
+        )
+
+        @PostMapping
+        fun hent(
+            @RequestBody fnrRequest: FnrRequest,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            @RequestParam("startDato")
+            start: LocalDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            @RequestParam("sluttDato")
+            slutt: LocalDate,
+        ): UtbetalingerResponseDTO {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                    val utbetalinger = service.hentUtbetalinger(Fnr(fnrRequest.fnr), start, slutt)
+                    UtbetalingerResponseDTO(
+                        utbetalinger = utbetalinger,
+                        periode =
+                            UtbetalingerPeriodeDTO(
+                                startDato = start,
+                                sluttDato = slutt,
+                            ),
                     )
-                )
-            }
+                }
+        }
     }
-}

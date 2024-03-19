@@ -14,7 +14,10 @@ class BrukernotifikasjonService(
             }
     }
 
-    override fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Brukernotifikasjon.Event> {
+    override fun hentBrukernotifikasjoner(
+        type: Type,
+        fnr: Fnr,
+    ): List<Brukernotifikasjon.Event> {
         return client.hentBrukernotifikasjoner(type, fnr)
             .filter { producerDenyList.contains(it.produsent).not() }
             .map {

@@ -20,23 +20,20 @@ open class ArbeidsrettetOppfolgingConfig {
     @Bean
     open fun oppfolgingsApi(
         ansattService: AnsattService,
-        onBehalfOfTokenClient: OnBehalfOfTokenClient
+        onBehalfOfTokenClient: OnBehalfOfTokenClient,
     ): ArbeidsrettetOppfolging.Service {
         return ArbeidsrettetOppfolgingServiceImpl(
             apiUrl = url,
             ansattService = ansattService,
-            oboTokenProvider = onBehalfOfTokenClient.bindTo(downstreamApi)
-
+            oboTokenProvider = onBehalfOfTokenClient.bindTo(downstreamApi),
         )
     }
 
     @Bean
-    open fun oppfolgingsApiPing(
-        service: ArbeidsrettetOppfolging.Service
-    ): Pingable {
+    open fun oppfolgingsApiPing(service: ArbeidsrettetOppfolging.Service): Pingable {
         return ConsumerPingable(
             "OppfolgingsInfoApi",
-            service::ping
+            service::ping,
         )
     }
 }

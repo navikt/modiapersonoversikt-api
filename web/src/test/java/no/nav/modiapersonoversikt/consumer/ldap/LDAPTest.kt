@@ -17,22 +17,24 @@ import javax.naming.ldap.LdapContext
 class LDAPTest {
     @JvmField
     @RegisterExtension
-    val testenvironment = TestEnvironmentExtension(
-        mapOf(
-            "NAIS_APP_NAME" to "appname",
-            "NAIS_CLUSTER_NAME" to "cluster",
-            "NAIS_NAMESPACE" to "namespace"
+    val testenvironment =
+        TestEnvironmentExtension(
+            mapOf(
+                "NAIS_APP_NAME" to "appname",
+                "NAIS_CLUSTER_NAME" to "cluster",
+                "NAIS_NAMESPACE" to "namespace",
+            ),
         )
-    )
 
     @Test
     fun `henter veileders roller`() {
-        val ldap = LDAPServiceImpl(
-            createLDAPContext(
-                "0000-GA-Test-Rolle",
-                "0000-GA-Annen-Rolle",
+        val ldap =
+            LDAPServiceImpl(
+                createLDAPContext(
+                    "0000-GA-Test-Rolle",
+                    "0000-GA-Annen-Rolle",
+                ),
             )
-        )
         val roller = ldap.hentRollerForVeileder(NavIdent("123"))
 
         assertThat(roller)
@@ -46,7 +48,7 @@ class LDAPTest {
     @Test
     fun parserADStrengTilRolle() {
         assertThat(
-            LDAP.parseADRolle("CN=MIN_ROLLE,OU=AccountGroups,OU=Groups,OU=NAV,OU=BusinessUnits,DC=test,DC=local")
+            LDAP.parseADRolle("CN=MIN_ROLLE,OU=AccountGroups,OU=Groups,OU=NAV,OU=BusinessUnits,DC=test,DC=local"),
         ).isEqualTo("MIN_ROLLE")
     }
 
@@ -69,20 +71,23 @@ class LDAPTest {
                 null,
                 BasicAttributes()
                     .medNavn("Fornavn", "Etternavn")
-                    .medRoller(roller)
+                    .medRoller(roller),
             )
 
         return object : LDAPContextProvider {
             override fun getContext(): LdapContext = context
+
             override val baseDN: String get() = ""
         }
     }
 
-    private fun BasicAttributes.medNavn(fornavn: String, etternavn: String) =
-        this.apply {
-            put(BasicAttribute("givenname", fornavn))
-            put(BasicAttribute("sn", etternavn))
-        }
+    private fun BasicAttributes.medNavn(
+        fornavn: String,
+        etternavn: String,
+    ) = this.apply {
+        put(BasicAttribute("givenname", fornavn))
+        put(BasicAttribute("sn", etternavn))
+    }
 
     private fun BasicAttributes.medRoller(roller: Array<out String>) =
         this.apply {

@@ -31,20 +31,33 @@ import kotlin.time.toJavaDuration
 
 sealed class EksternBruker(val ident: String) {
     data class AktorId(val aktorId: String) : EksternBruker(aktorId)
+
     data class Fnr(val fnr: String) : EksternBruker(fnr)
 }
 
 interface SfHenvendelseService {
-    fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO>
+    fun hentHenvendelser(
+        bruker: EksternBruker,
+        enhet: String,
+    ): List<HenvendelseDTO>
+
     fun hentHenvendelse(kjedeId: String): HenvendelseDTO
-    fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?)
+
+    fun journalforHenvendelse(
+        enhet: String,
+        kjedeId: String,
+        saksTema: String,
+        saksId: String?,
+        fagsakSystem: String?,
+    )
+
     fun sendSamtalereferat(
         kjedeId: String?,
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
         kanal: SamtalereferatRequestDTO.Kanal,
-        fritekst: String
+        fritekst: String,
     ): HenvendelseDTO
 
     fun opprettNyDialogOgSendMelding(
@@ -52,28 +65,44 @@ interface SfHenvendelseService {
         enhet: String,
         temagruppe: String,
         tilknyttetAnsatt: Boolean,
-        fritekst: String
+        fritekst: String,
     ): HenvendelseDTO
+
     fun sendMeldingPaEksisterendeDialog(
         bruker: EksternBruker,
         kjedeId: String,
         enhet: String,
         tilknyttetAnsatt: Boolean,
-        fritekst: String
+        fritekst: String,
     ): HenvendelseDTO
 
-    fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean
-    fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
+    fun henvendelseTilhorerBruker(
+        bruker: EksternBruker,
+        kjedeId: String,
+    ): Boolean
+
+    fun sjekkEierskap(
+        bruker: EksternBruker,
+        henvendelse: HenvendelseDTO,
+    ): Boolean
+
     fun merkSomFeilsendt(kjedeId: String)
 
-    fun sendTilSladding(kjedeId: String, arsak: String, meldingId: List<String>?)
+    fun sendTilSladding(
+        kjedeId: String,
+        arsak: String,
+        meldingId: List<String>?,
+    )
+
     fun hentSladdeArsaker(kjedeId: String): List<String>
+
     fun lukkTraad(kjedeId: String)
 
     fun ping()
 }
 
 private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.java)
+
 class SfHenvendelseServiceImpl(
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
@@ -84,26 +113,32 @@ class SfHenvendelseServiceImpl(
     private val henvendelseInfoApi: HenvendelseInfoApi = createHenvendelseInfoApi(oboTokenClient),
     private val henvendelseOpprettApi: NyHenvendelseApi = createHenvendelseOpprettApi(oboTokenClient),
 ) : SfHenvendelseService {
-    private val adminKodeverkApiForPing = KodeverkApi(
-        SfHenvendelseApiFactory.url(),
-        SfHenvendelseApiFactory.createClient {
-            machineToMachineTokenClient.createMachineToMachineToken()
-        }
-    )
-
-    override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
-        val enhetOgGTListe = norgApi
-            .runCatching {
-                hentGeografiskTilknyttning(EnhetId(enhet))
-            }
-            .onFailure { logger.error("Kunne ikke hente geografisk tilknyttning", it) }
-            .getOrDefault(emptyList())
-            .mapNotNull { it.geografiskOmraade }
-            .plus(enhet)
-        val tematilganger = ansattService.hentAnsattFagomrader(
-            AuthContextUtils.requireIdent(),
-            enhet
+    private val adminKodeverkApiForPing =
+        KodeverkApi(
+            SfHenvendelseApiFactory.url(),
+            SfHenvendelseApiFactory.createClient {
+                machineToMachineTokenClient.createMachineToMachineToken()
+            },
         )
+
+    override fun hentHenvendelser(
+        bruker: EksternBruker,
+        enhet: String,
+    ): List<HenvendelseDTO> {
+        val enhetOgGTListe =
+            norgApi
+                .runCatching {
+                    hentGeografiskTilknyttning(EnhetId(enhet))
+                }
+                .onFailure { logger.error("Kunne ikke hente geografisk tilknyttning", it) }
+                .getOrDefault(emptyList())
+                .mapNotNull { it.geografiskOmraade }
+                .plus(enhet)
+        val tematilganger =
+            ansattService.hentAnsattFagomrader(
+                AuthContextUtils.requireIdent(),
+                enhet,
+            )
 
         val aktorId = bruker.aktorId()
         val callId = getCallId()
@@ -127,7 +162,7 @@ class SfHenvendelseServiceImpl(
         return henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId)
             ?: throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "Feil ved henting av henvendelse."
+                "Feil ved henting av henvendelse.",
             )
     }
 
@@ -136,20 +171,21 @@ class SfHenvendelseServiceImpl(
         kjedeId: String,
         saksTema: String,
         saksId: String?,
-        fagsakSystem: String?
+        fagsakSystem: String?,
     ) {
         val callId = getCallId()
         val fixKjedeId = kjedeId.fixKjedeId()
 
-        val fagsaksystem = if (saksId != null) {
-            JournalRequestDTO.Fagsaksystem.valueOf(
-                requireNotNull(fagsakSystem) {
-                    "Ved journalføring mot $saksId er det påkrevd å sende med fagsakSystem saken kommer fra"
-                }
-            )
-        } else {
-            null
-        }
+        val fagsaksystem =
+            if (saksId != null) {
+                JournalRequestDTO.Fagsaksystem.valueOf(
+                    requireNotNull(fagsakSystem) {
+                        "Ved journalføring mot $saksId er det påkrevd å sende med fagsakSystem saken kommer fra"
+                    },
+                )
+            } else {
+                null
+            }
 
         return henvendelseBehandlingApi
             .henvendelseJournalPost(
@@ -160,7 +196,7 @@ class SfHenvendelseServiceImpl(
                     temakode = saksTema,
                     fagsakId = if (saksTema == "BID") null else saksId,
                     fagsaksystem = if (saksTema == "BID") null else fagsaksystem,
-                )
+                ),
             )
     }
 
@@ -170,7 +206,7 @@ class SfHenvendelseServiceImpl(
         enhet: String,
         temagruppe: String,
         kanal: SamtalereferatRequestDTO.Kanal,
-        fritekst: String
+        fritekst: String,
     ): HenvendelseDTO {
         val callId = getCallId()
         val fixKjedeId = kjedeId?.fixKjedeId()
@@ -178,17 +214,18 @@ class SfHenvendelseServiceImpl(
 
         return henvendelseOpprettApi.henvendelseNySamtalereferatPost(
             xCorrelationID = callId,
-            samtalereferatRequestDTO = SamtalereferatRequestDTO(
-                aktorId = aktorId,
-                temagruppe = temagruppe,
-                enhet = enhet,
-                kanal = kanal,
-                fritekst = fritekst
-            ),
-            kjedeId = fixKjedeId
+            samtalereferatRequestDTO =
+                SamtalereferatRequestDTO(
+                    aktorId = aktorId,
+                    temagruppe = temagruppe,
+                    enhet = enhet,
+                    kanal = kanal,
+                    fritekst = fritekst,
+                ),
+            kjedeId = fixKjedeId,
         ) ?: throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,
-            "Feil ved opprettelse av ny Samtalereferat."
+            "Feil ved opprettelse av ny Samtalereferat.",
         )
     }
 
@@ -197,7 +234,7 @@ class SfHenvendelseServiceImpl(
         enhet: String,
         temagruppe: String,
         tilknyttetAnsatt: Boolean,
-        fritekst: String
+        fritekst: String,
     ): HenvendelseDTO {
         val callId = getCallId()
         val aktorId = bruker.aktorId()
@@ -205,17 +242,18 @@ class SfHenvendelseServiceImpl(
         return henvendelseOpprettApi.henvendelseNyMeldingPost(
             callId,
             kjedeId = null,
-            meldingRequestDTO = MeldingRequestDTO(
-                aktorId = aktorId,
-                temagruppe = temagruppe,
-                enhet = enhet,
-                tildelMeg = tilknyttetAnsatt,
-                fritekst = fritekst
-            )
+            meldingRequestDTO =
+                MeldingRequestDTO(
+                    aktorId = aktorId,
+                    temagruppe = temagruppe,
+                    enhet = enhet,
+                    tildelMeg = tilknyttetAnsatt,
+                    fritekst = fritekst,
+                ),
         )
             ?: throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "Feil ved opprettelse av ny henvendelse."
+                "Feil ved opprettelse av ny henvendelse.",
             )
     }
 
@@ -224,15 +262,16 @@ class SfHenvendelseServiceImpl(
         kjedeId: String,
         enhet: String,
         tilknyttetAnsatt: Boolean,
-        fritekst: String
+        fritekst: String,
     ): HenvendelseDTO {
         val fixKjedeId = kjedeId.fixKjedeId()
         val aktorId = bruker.aktorId()
         val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId) ?: throw ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
-            "Feil ved henting av ny henvendelseinfo."
-        )
+        val henvendelse =
+            henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av ny henvendelseinfo.",
+            )
 
         val kjedeTilhorerBruker = sjekkEierskap(bruker, henvendelse)
         if (!kjedeTilhorerBruker) {
@@ -242,32 +281,40 @@ class SfHenvendelseServiceImpl(
             .henvendelseNyMeldingPost(
                 callId,
                 kjedeId = kjedeId.fixKjedeId(),
-                meldingRequestDTO = MeldingRequestDTO(
-                    aktorId = aktorId,
-                    temagruppe = henvendelse?.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
-                    enhet = enhet,
-                    fritekst = fritekst,
-                    tildelMeg = tilknyttetAnsatt
-                )
+                meldingRequestDTO =
+                    MeldingRequestDTO(
+                        aktorId = aktorId,
+                        temagruppe = henvendelse?.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
+                        enhet = enhet,
+                        fritekst = fritekst,
+                        tildelMeg = tilknyttetAnsatt,
+                    ),
             ) ?: throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,
-            "Feil ved opprettelse av ny henvendelse."
+            "Feil ved opprettelse av ny henvendelse.",
         )
     }
 
-    override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
+    override fun henvendelseTilhorerBruker(
+        bruker: EksternBruker,
+        kjedeId: String,
+    ): Boolean {
         val fixKjedeId = kjedeId.fixKjedeId()
         val callId = getCallId()
 
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId) ?: throw ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
-            "Feil ved henting av ny henvendelseinfo."
-        )
+        val henvendelse =
+            henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(fixKjedeId, callId) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av ny henvendelseinfo.",
+            )
 
         return sjekkEierskap(bruker, henvendelse)
     }
 
-    override fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean {
+    override fun sjekkEierskap(
+        bruker: EksternBruker,
+        henvendelse: HenvendelseDTO,
+    ): Boolean {
         return when (bruker) {
             is EksternBruker.Fnr -> bruker.ident == henvendelse.fnr
             is EksternBruker.AktorId -> bruker.ident == henvendelse.aktorId
@@ -276,24 +323,30 @@ class SfHenvendelseServiceImpl(
 
     override fun merkSomFeilsendt(kjedeId: String) {
         val fixKjedeId = kjedeId.fixKjedeId()
-        val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            fixKjedeId,
-            PatchNote<HenvendelseDTO>()
-                .set(HenvendelseDTO::feilsendt).to(true)
-        )
+        val request: RequestConfig<Map<String, Any?>> =
+            createPatchRequest(
+                fixKjedeId,
+                PatchNote<HenvendelseDTO>()
+                    .set(HenvendelseDTO::feilsendt).to(true),
+            )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
     }
 
-    override fun sendTilSladding(kjedeId: String, arsak: String, meldingId: List<String>?) {
+    override fun sendTilSladding(
+        kjedeId: String,
+        arsak: String,
+        meldingId: List<String>?,
+    ) {
         val callId = getCallId()
 
         henvendelseBehandlingApi.henvendelseSladdingPost(
             xCorrelationID = callId,
-            sladdeRequestDTO = SladdeRequestDTO(
-                kjedeId = kjedeId,
-                aarsak = arsak,
-                meldingsIder = meldingId
-            )
+            sladdeRequestDTO =
+                SladdeRequestDTO(
+                    kjedeId = kjedeId,
+                    aarsak = arsak,
+                    meldingsIder = meldingId,
+                ),
         )
     }
 
@@ -302,7 +355,7 @@ class SfHenvendelseServiceImpl(
 
         return henvendelseBehandlingApi.henvendelseSladdingAarsakerKjedeIdGet(
             xCorrelationID = callId,
-            kjedeId = kjedeId
+            kjedeId = kjedeId,
         ).orEmpty()
     }
 
@@ -312,7 +365,7 @@ class SfHenvendelseServiceImpl(
 
         henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPost(
             fixKjedeId,
-            callId
+            callId,
         )
     }
 
@@ -323,14 +376,22 @@ class SfHenvendelseServiceImpl(
     }
 
     enum class ApiFeilType {
-        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST, TOM_TRAD, DUPLIKAT_JOURNALPOST, MELDING_ID
+        IDENT,
+        TEMAGRUPPE,
+        JOURNALFORENDE_IDENT,
+        MARKERT_DATO,
+        MARKERT_AV,
+        FRITEKST,
+        TOM_TRAD,
+        DUPLIKAT_JOURNALPOST,
+        MELDING_ID,
     }
 
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
 
     private fun loggFeilSomErSpesialHandtert(
         bruker: EksternBruker,
-        henvendelser: List<HenvendelseDTO>
+        henvendelser: List<HenvendelseDTO>,
     ): List<HenvendelseDTO> {
         val feil = mutableListOf<ApiFeil>()
         val now = OffsetDateTime.now()
@@ -370,14 +431,16 @@ class SfHenvendelseServiceImpl(
                 feil.add(ApiFeil(ApiFeilType.MELDING_ID, henvendelse.kjedeId))
             }
         }
-        val kanJobbesMedIModia = henvendelser
-            .filter { it.gjeldendeTemagruppe != null }
-            .filter { it.meldinger.isNotNullOrEmpty() }
+        val kanJobbesMedIModia =
+            henvendelser
+                .filter { it.gjeldendeTemagruppe != null }
+                .filter { it.meldinger.isNotNullOrEmpty() }
 
         if (feil.isNotEmpty()) {
-            val grupperteFeil = feil
-                .groupBy { it.type }
-                .mapValues { apifeil -> apifeil.value.map { it.kjedeId } }
+            val grupperteFeil =
+                feil
+                    .groupBy { it.type }
+                    .mapValues { apifeil -> apifeil.value.map { it.kjedeId } }
 
             val sb = StringBuilder()
             sb.appendLine("[SF-HENVENDELSE]")
@@ -409,11 +472,12 @@ class SfHenvendelseServiceImpl(
         return { henvendelseDTO ->
             if (henvendelseDTO.kasseringsDato != null && henvendelseDTO.kasseringsDato!!.isBefore(now)) {
                 henvendelseDTO.copy(
-                    meldinger = henvendelseDTO.meldinger?.map { melding ->
-                        melding.copy(
-                            fritekst = "Innholdet i denne henvendelsen er slettet av NAV."
-                        )
-                    }
+                    meldinger =
+                        henvendelseDTO.meldinger?.map { melding ->
+                            melding.copy(
+                                fritekst = "Innholdet i denne henvendelsen er slettet av NAV.",
+                            )
+                        },
                 )
             } else {
                 henvendelseDTO
@@ -423,10 +487,12 @@ class SfHenvendelseServiceImpl(
 
     private fun journalfortTemaTilgang(tematilganger: Set<String>): (HenvendelseDTO) -> HenvendelseDTO {
         return { henvendelseDTO ->
-            val journalforteTemaer = (henvendelseDTO.journalposter ?: emptyList())
-                .map { it.journalfortTema }
-            val harTilgangTilMinstEttAvJournalforteTema: Boolean = journalforteTemaer
-                .any { tema -> tematilganger.contains(tema) }
+            val journalforteTemaer =
+                (henvendelseDTO.journalposter ?: emptyList())
+                    .map { it.journalfortTema }
+            val harTilgangTilMinstEttAvJournalforteTema: Boolean =
+                journalforteTemaer
+                    .any { tema -> tematilganger.contains(tema) }
 
             if (journalforteTemaer.isEmpty() || harTilgangTilMinstEttAvJournalforteTema) {
                 henvendelseDTO
@@ -434,19 +500,23 @@ class SfHenvendelseServiceImpl(
                 val ident = AuthContextUtils.getIdent().orElse("-")
                 logger.info(
                     """
-                    Ikke tilgang til noen av temaene tema. 
+                    Ikke tilgang til noen av temaene tema.
                     Ident: $ident
                     Henvendelse: ${henvendelseDTO.kjedeId}
                     Journalførte: $journalforteTemaer
                     Tilganger: $tematilganger
-                    """.trimIndent()
+                    """.trimIndent(),
                 )
                 henvendelseDTO.copy(
-                    meldinger = henvendelseDTO.meldinger?.map { melding ->
-                        melding.copy(
-                            fritekst = "Du kan ikke se innholdet i denne henvendelsen fordi tråden er journalført på et tema du ikke har tilgang til."
-                        )
-                    }
+                    meldinger =
+                        henvendelseDTO.meldinger?.map { melding ->
+                            melding.copy(
+                                fritekst =
+                                    """
+                                    Du kan ikke se innholdet i denne henvendelsen fordi tråden er journalført på et tema du ikke har tilgang til.
+                                    """.trim(),
+                            )
+                        },
                 )
             }
         }
@@ -454,23 +524,24 @@ class SfHenvendelseServiceImpl(
 
     private fun sorterMeldinger(henvendelse: HenvendelseDTO): HenvendelseDTO {
         return henvendelse.copy(
-            meldinger = henvendelse.meldinger?.sortedBy { it.sendtDato }
+            meldinger = henvendelse.meldinger?.sortedBy { it.sendtDato },
         )
     }
 
     private fun unikeJournalposter(henvendelse: HenvendelseDTO): HenvendelseDTO {
         return henvendelse.copy(
-            journalposter = henvendelse.journalposter?.distinctBy { Pair(it.journalfortTema, it.fagsakId) }
+            journalposter = henvendelse.journalposter?.distinctBy { Pair(it.journalfortTema, it.fagsakId) },
         )
     }
 
     private fun createPatchRequest(
         kjedeId: String,
-        patchnote: PatchNote<HenvendelseDTO>
+        patchnote: PatchNote<HenvendelseDTO>,
     ): RequestConfig<Map<String, Any?>> {
-        val localVariableHeaders: MutableMap<String, String> = mutableMapOf(
-            "X-Correlation-ID" to getCallId()
-        )
+        val localVariableHeaders: MutableMap<String, String> =
+            mutableMapOf(
+                "X-Correlation-ID" to getCallId(),
+            )
 
         patchnote.patches.mapKeys { it.key.name }
         return RequestConfig(
@@ -481,17 +552,18 @@ class SfHenvendelseServiceImpl(
             path = "/henvendelse/behandling/$kjedeId",
             query = mutableMapOf(),
             headers = localVariableHeaders,
-            body = patchnote.patches.mapKeys { it.key.name }
+            body = patchnote.patches.mapKeys { it.key.name },
         )
     }
 
     internal class PatchNote<CLS> {
         val patches: MutableMap<KProperty1<CLS, Any?>, Any?> = mutableMapOf()
+
         fun <TYPE> set(field: KProperty1<CLS, TYPE>) = PatchNoteEntry(this, field)
 
         internal class PatchNoteEntry<CLS, TYPE>(
             private val collector: PatchNote<CLS>,
-            val field: KProperty1<CLS, TYPE>
+            val field: KProperty1<CLS, TYPE>,
         ) {
             fun to(value: TYPE): PatchNote<CLS> {
                 collector.patches[field] = value
@@ -503,9 +575,10 @@ class SfHenvendelseServiceImpl(
     private fun EksternBruker.aktorId(): String {
         return when (this) {
             is EksternBruker.AktorId -> this.ident
-            is EksternBruker.Fnr -> requireNotNull(pdlOppslagService.hentAktorId(this.ident)) {
-                "Fant ikke aktørid for ${this.ident}"
-            }
+            is EksternBruker.Fnr ->
+                requireNotNull(pdlOppslagService.hentAktorId(this.ident)) {
+                    "Fant ikke aktørid for ${this.ident}"
+                }
         }
     }
 
@@ -516,7 +589,7 @@ class SfHenvendelseServiceImpl(
                 throw ClientException(
                     "Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}",
                     localVarError.statusCode,
-                    this
+                    this,
                 )
             }
             ResponseType.ServerError -> {
@@ -524,7 +597,7 @@ class SfHenvendelseServiceImpl(
                 throw ServerException(
                     "Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}",
                     localVarError.statusCode,
-                    this
+                    this,
                 )
             }
             ResponseType.Informational -> {
@@ -548,27 +621,35 @@ fun String.fixKjedeId(): String {
 
 object SfHenvendelseApiFactory {
     fun url(): String = getRequiredProperty("SF_HENVENDELSE_URL")
+
     fun downstreamApi(): DownstreamApi = DownstreamApi.parse(getRequiredProperty("SF_HENVENDELSE_SCOPE"))
 
-    fun createClient(tokenProvider: () -> String): OkHttpClient = RestClient.baseClient().newBuilder()
-        .addInterceptor(
-            LoggingInterceptor("SF-Henvendelse") { request ->
-                requireNotNull(request.header("X-Correlation-ID")) {
-                    "Kall uten \"X-Correlation-ID\" er ikke lov"
-                }
-            }
-        )
-        .addInterceptor(
-            AuthorizationInterceptor(tokenProvider)
-        )
-        .readTimeout(15.seconds.toJavaDuration())
-        .build()
+    fun createClient(tokenProvider: () -> String): OkHttpClient =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(
+                LoggingInterceptor("SF-Henvendelse") { request ->
+                    requireNotNull(request.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
+                },
+            )
+            .addInterceptor(
+                AuthorizationInterceptor(tokenProvider),
+            )
+            .readTimeout(15.seconds.toJavaDuration())
+            .build()
 
-    fun createHenvendelseBehandlingApi(oboClient: BoundedOnBehalfOfTokenClient) = HenvendelseBehandlingApi(url(), createClient(oboClient.asTokenProvider()))
-    fun createHenvendelseInfoApi(oboClient: BoundedOnBehalfOfTokenClient) = HenvendelseInfoApi(url(), createClient(oboClient.asTokenProvider()))
-    fun createHenvendelseOpprettApi(oboClient: BoundedOnBehalfOfTokenClient) = NyHenvendelseApi(url(), createClient(oboClient.asTokenProvider()))
+    fun createHenvendelseBehandlingApi(oboClient: BoundedOnBehalfOfTokenClient) =
+        HenvendelseBehandlingApi(url(), createClient(oboClient.asTokenProvider()))
 
-    fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String = {
-        AuthContextUtils.requireBoundedClientOboToken(this)
-    }
+    fun createHenvendelseInfoApi(oboClient: BoundedOnBehalfOfTokenClient) =
+        HenvendelseInfoApi(url(), createClient(oboClient.asTokenProvider()))
+
+    fun createHenvendelseOpprettApi(oboClient: BoundedOnBehalfOfTokenClient) =
+        NyHenvendelseApi(url(), createClient(oboClient.asTokenProvider()))
+
+    fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String =
+        {
+            AuthContextUtils.requireBoundedClientOboToken(this)
+        }
 }

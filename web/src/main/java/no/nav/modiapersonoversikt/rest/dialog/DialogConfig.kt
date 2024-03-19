@@ -47,7 +47,7 @@ open class DialogConfig {
     open fun dialogMerkApi(): DialogMerkApi {
         return SfLegacyDialogMerkController(
             sfHenvendelseService,
-            oppgaveBehandlingService
+            oppgaveBehandlingService,
         )
     }
 

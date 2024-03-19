@@ -18,17 +18,16 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 object OppgaveKodeverk {
-
     class Provider(
         private val machineToMachineTokenClient: MachineToMachineTokenClient,
-        val oppgaveKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient)
+        val oppgaveKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient),
     ) : EnhetligKodeverk.KodeverkProvider<String, Tema> {
-
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, Tema> {
-            val respons = oppgaveKodeverk.hentInterntKodeverk(getCallId()) ?: throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Feil ved henting av kodverk."
-            )
+            val respons =
+                oppgaveKodeverk.hentInterntKodeverk(getCallId()) ?: throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Feil ved henting av kodverk.",
+                )
 
             return EnhetligKodeverk.Kodeverk(kodeverkNavn, parseTilKodeverk(respons))
         }
@@ -39,47 +38,48 @@ object OppgaveKodeverk {
         val tekst: String,
         val oppgavetyper: List<Oppgavetype>,
         val prioriteter: List<Prioritet>,
-        val underkategorier: List<Underkategori>
+        val underkategorier: List<Underkategori>,
     )
 
     data class Oppgavetype(
         val kode: String,
         val tekst: String,
-        val dagerFrist: Int
+        val dagerFrist: Int,
     )
 
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     enum class Prioritet(
         val kode: String,
-        val tekst: String
+        val tekst: String,
     ) {
         HOY("HOY", "Høy"),
         NORM("NORM", "Normal"),
-        LAV("LAV", "Lav")
+        LAV("LAV", "Lav"),
     }
 
     data class Underkategori(
         val kode: String,
         val tekst: String,
-        val erGyldig: Boolean
+        val erGyldig: Boolean,
     )
 
     fun createKodeverkApi(machineToMachineTokenClient: MachineToMachineTokenClient): KodeverkApi {
-        val client = RestClient.baseClient().newBuilder()
-            .addInterceptor(XCorrelationIdInterceptor())
-            .addInterceptor(
-                LoggingInterceptor("OppgaveKodeverk") { request ->
-                    requireNotNull(request.header("X-Correlation-ID")) {
-                        "Kall uten \"X-Correlation-ID\" er ikke lov"
-                    }
-                }
-            )
-            .addInterceptor(
-                AuthorizationInterceptor {
-                    machineToMachineTokenClient.createMachineToMachineToken(OppgaveApiFactory.downstreamApi)
-                }
-            )
-            .build()
+        val client =
+            RestClient.baseClient().newBuilder()
+                .addInterceptor(XCorrelationIdInterceptor())
+                .addInterceptor(
+                    LoggingInterceptor("OppgaveKodeverk") { request ->
+                        requireNotNull(request.header("X-Correlation-ID")) {
+                            "Kall uten \"X-Correlation-ID\" er ikke lov"
+                        }
+                    },
+                )
+                .addInterceptor(
+                    AuthorizationInterceptor {
+                        machineToMachineTokenClient.createMachineToMachineToken(OppgaveApiFactory.downstreamApi)
+                    },
+                )
+                .build()
 
         return KodeverkApi(OppgaveApiFactory.url, client)
     }
@@ -91,7 +91,7 @@ object OppgaveKodeverk {
                 tekst = it.tema.term,
                 oppgavetyper = hentOppgavetyper(it.oppgavetyper, it.tema.tema),
                 prioriteter = hentPrioriteter(it),
-                underkategorier = hentUnderkategorier(it.gjelderverdier)
+                underkategorier = hentUnderkategorier(it.gjelderverdier),
             )
         }.sortedBy { it.tekst }.associateBy { it.kode }
     }
@@ -106,23 +106,29 @@ object OppgaveKodeverk {
             Underkategori(
                 kode = listOf(gjelder.behandlingstema, gjelder.behandlingstype).joinToString(":") { it ?: "" },
                 tekst = listOfNotNull(gjelder.behandlingstemaTerm, gjelder.behandlingstypeTerm).joinToString(" - "),
-                erGyldig = true
+                erGyldig = true,
             )
         }?.sortedBy { it.tekst }
             ?: emptyList()
     }
 
-    private fun hentOppgavetyper(oppgavetyper: List<OppgavetypeDTO>, tema: String): List<Oppgavetype> {
+    private fun hentOppgavetyper(
+        oppgavetyper: List<OppgavetypeDTO>,
+        tema: String,
+    ): List<Oppgavetype> {
         return oppgavetyper.filter { OppgaveOverstyring.godkjenteOppgavetyper.contains(it.oppgavetype) }.map {
             Oppgavetype(
                 kode = it.oppgavetype,
                 tekst = it.term,
-                dagerFrist = hentFrist(tema, it.oppgavetype)
+                dagerFrist = hentFrist(tema, it.oppgavetype),
             )
         }.sortedBy { it.tekst }
     }
 
-    private fun hentFrist(tema: String, oppgavetype: String): Int {
+    private fun hentFrist(
+        tema: String,
+        oppgavetype: String,
+    ): Int {
         return OppgaveOverstyring.overstyrtKodeverk.tema[tema]?.oppgavetyper?.get(oppgavetype)?.frist
             ?: OppgaveOverstyring.overstyrtKodeverk.frist
     }

@@ -47,36 +47,39 @@ class VarslerServiceImplTest {
 
     @Test
     internal fun `skal hente varsler fra brukervarsel og brukernotifikasjon`() {
-        every { brukervarselV1.hentVarselForBruker(any()) } returns WSHentVarselForBrukerResponse().withBrukervarsel(
-            WSBrukervarsel().withVarselbestillingListe(
-                WSVarselbestilling(),
-                WSVarselbestilling(),
-                WSVarselbestilling(),
+        every { brukervarselV1.hentVarselForBruker(any()) } returns
+            WSHentVarselForBrukerResponse().withBrukervarsel(
+                WSBrukervarsel().withVarselbestillingListe(
+                    WSVarselbestilling(),
+                    WSVarselbestilling(),
+                    WSVarselbestilling(),
+                ),
             )
-        )
-        every { brukernotifikasjonService.hentAlleBrukernotifikasjoner(any()) } returns listOf(
-            event.copy(eventId = "1"),
-            event.copy(eventId = "2"),
-            event.copy(eventId = "3"),
-        )
+        every { brukernotifikasjonService.hentAlleBrukernotifikasjoner(any()) } returns
+            listOf(
+                event.copy(eventId = "1"),
+                event.copy(eventId = "2"),
+                event.copy(eventId = "3"),
+            )
 
         val varsler = varselService.hentAlleVarsler(Fnr("12345678910"))
         assertThat(varsler.varsler).hasSize(6)
         assertThat(varsler.feil).isEmpty()
     }
 
-    private val event = Brukernotifikasjon.Event(
-        fodselsnummer = "12345679810",
-        grupperingsId = "987",
-        eventId = "123",
-        forstBehandlet = ZonedDateTime.now(clock),
-        produsent = "srvappname",
-        sikkerhetsnivaa = 4,
-        sistOppdatert = ZonedDateTime.now(clock),
-        tekst = "Dette er en tekst",
-        link = "http://dummy.io/",
-        aktiv = true,
-        eksternVarslingSendt = false,
-        eksternVarslingKanaler = emptyList()
-    )
+    private val event =
+        Brukernotifikasjon.Event(
+            fodselsnummer = "12345679810",
+            grupperingsId = "987",
+            eventId = "123",
+            forstBehandlet = ZonedDateTime.now(clock),
+            produsent = "srvappname",
+            sikkerhetsnivaa = 4,
+            sistOppdatert = ZonedDateTime.now(clock),
+            tekst = "Dette er en tekst",
+            link = "http://dummy.io/",
+            aktiv = true,
+            eksternVarslingSendt = false,
+            eksternVarslingKanaler = emptyList(),
+        )
 }

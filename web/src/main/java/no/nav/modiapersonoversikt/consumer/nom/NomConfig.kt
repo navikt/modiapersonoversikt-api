@@ -22,15 +22,16 @@ import org.springframework.context.annotation.Configuration
 open class NomConfig {
     private val scope = DownstreamApi.parse(getRequiredProperty("NOM_SCOPE"))
     private val url: String = getRequiredProperty("NOM_URL")
-    private val httpClient: OkHttpClient = RestClient.baseClient()
-        .newBuilder()
-        .addInterceptor(
-            LoggingInterceptor("Nom") {
-                // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til Nom
-                getCallId()
-            }
-        )
-        .build()
+    private val httpClient: OkHttpClient =
+        RestClient.baseClient()
+            .newBuilder()
+            .addInterceptor(
+                LoggingInterceptor("Nom") {
+                    // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til Nom
+                    getCallId()
+                },
+            )
+            .build()
 
     @Autowired
     lateinit var tokenProvider: MachineToMachineTokenClient

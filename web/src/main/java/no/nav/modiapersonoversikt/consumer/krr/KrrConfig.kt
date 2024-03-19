@@ -14,7 +14,7 @@ open class KrrConfig {
     open fun krrService(machineToMachineTokenClient: MachineToMachineTokenClient): Krr.Service {
         return KrrServiceImpl(
             EnvironmentUtils.getRequiredProperty("KRR_REST_URL"),
-            machineToMachineTokenClient
+            machineToMachineTokenClient,
         )
     }
 }

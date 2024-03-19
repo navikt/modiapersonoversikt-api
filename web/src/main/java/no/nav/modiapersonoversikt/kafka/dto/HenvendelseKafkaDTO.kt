@@ -8,5 +8,5 @@ data class HenvendelseKafkaDTO(
     val tema: String?,
     val temagruppe: String,
     val traadId: String,
-    val tidspunkt: Instant
+    val tidspunkt: Instant,
 )

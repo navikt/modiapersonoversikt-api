@@ -8,6 +8,7 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 class VeiledersRegionEnheterPip(private val norgApi: NorgApi) : Kabac.PolicyInformationPoint<List<EnhetId>> {
     override val key = Companion.key
+
     companion object : Kabac.AttributeKey<List<EnhetId>> {
         override val key = Key<List<EnhetId>>(VeiledersRegionEnheterPip::class.java.simpleName)
     }

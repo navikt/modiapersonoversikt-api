@@ -19,56 +19,59 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/enheter")
-class EnhetController @Autowired
-constructor(
-    private val norgApi: NorgApi,
-    private val arbeidsfordeling: ArbeidsfordelingService,
-    private val ansattService: AnsattService,
-    private val tilgangskontroll: Tilgangskontroll
-) {
-    @GetMapping("/{enhetId}/ansatte")
-    fun hentAnsattePaaEnhet(@PathVariable("enhetId") enhetId: String): List<Ansatt> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
-                ansattService.ansatteForEnhet(
-                    AnsattEnhet(
-                        enhetId,
-                        ""
+class EnhetController
+    @Autowired
+    constructor(
+        private val norgApi: NorgApi,
+        private val arbeidsfordeling: ArbeidsfordelingService,
+        private val ansattService: AnsattService,
+        private val tilgangskontroll: Tilgangskontroll,
+    ) {
+        @GetMapping("/{enhetId}/ansatte")
+        fun hentAnsattePaaEnhet(
+            @PathVariable("enhetId") enhetId: String,
+        ): List<Ansatt> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
+                    ansattService.ansatteForEnhet(
+                        AnsattEnhet(
+                            enhetId,
+                            "",
+                        ),
                     )
-                )
-            }
-    }
+                }
+        }
 
-    @GetMapping("/oppgavebehandlere/alle")
-    fun hentAlleEnheterForOppgave(): List<NorgDomain.Enhet> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.describe(READ, Enhet.OppgaveBehandlere)) {
-                norgApi.hentEnheter(
-                    enhetId = null,
-                    oppgaveBehandlende = OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE,
-                    enhetStatuser = listOf(NorgDomain.EnhetStatus.AKTIV)
-                )
-            }
-    }
+        @GetMapping("/oppgavebehandlere/alle")
+        fun hentAlleEnheterForOppgave(): List<NorgDomain.Enhet> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.describe(READ, Enhet.OppgaveBehandlere)) {
+                    norgApi.hentEnheter(
+                        enhetId = null,
+                        oppgaveBehandlende = OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE,
+                        enhetStatuser = listOf(NorgDomain.EnhetStatus.AKTIV),
+                    )
+                }
+        }
 
-    @GetMapping("/oppgavebehandlere/v2/foreslatte")
-    fun hentBehandlendeEnhet(
-        @RequestParam("fnr") fnr: String,
-        @RequestParam("temakode") temakode: String,
-        @RequestParam("typekode") typekode: String,
-        @RequestParam("underkategori") underkategorikode: String?
-    ): List<NorgDomain.Enhet> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, Enhet.Foreslatte)) {
-                arbeidsfordeling.hentBehandlendeEnheter(
-                    brukerIdent = Fnr.of(fnr),
-                    fagomrade = temakode,
-                    oppgavetype = typekode,
-                    underkategori = underkategorikode
-                )
-            }
+        @GetMapping("/oppgavebehandlere/v2/foreslatte")
+        fun hentBehandlendeEnhet(
+            @RequestParam("fnr") fnr: String,
+            @RequestParam("temakode") temakode: String,
+            @RequestParam("typekode") typekode: String,
+            @RequestParam("underkategori") underkategorikode: String?,
+        ): List<NorgDomain.Enhet> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnr)))
+                .get(Audit.describe(READ, Enhet.Foreslatte)) {
+                    arbeidsfordeling.hentBehandlendeEnheter(
+                        brukerIdent = Fnr.of(fnr),
+                        fagomrade = temakode,
+                        oppgavetype = typekode,
+                        underkategori = underkategorikode,
+                    )
+                }
+        }
     }
-}

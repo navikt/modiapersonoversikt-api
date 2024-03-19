@@ -13,21 +13,20 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 object FellesKodeverk {
-
     class Provider(
-        private val fellesKodeverk: KodeverkApi = createKodeverkApi()
+        private val fellesKodeverk: KodeverkApi = createKodeverkApi(),
     ) : EnhetligKodeverk.KodeverkProvider<String, String> {
-
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, String> {
-            val respons = fellesKodeverk.betydningUsingGET(
-                navCallId = getCallId(),
-                navConsumerId = AppConstants.SYSTEMUSER_USERNAME,
-                kodeverksnavn = kodeverkNavn,
-                spraak = listOf("nb")
-            ) ?: throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Feil ved henting av kodverk."
-            )
+            val respons =
+                fellesKodeverk.betydningUsingGET(
+                    navCallId = getCallId(),
+                    navConsumerId = AppConstants.SYSTEMUSER_USERNAME,
+                    kodeverksnavn = kodeverkNavn,
+                    spraak = listOf("nb"),
+                ) ?: throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Feil ved henting av kodverk.",
+                )
 
             return EnhetligKodeverk.Kodeverk(kodeverkNavn, parseTilKodeverk(respons))
         }
@@ -41,16 +40,17 @@ object FellesKodeverk {
 
     internal fun createKodeverkApi(): KodeverkApi {
         val url = EnvironmentUtils.getRequiredProperty("FELLES_KODEVERK_URL")
-        val client = RestClient.baseClient().newBuilder()
-            .addInterceptor(XCorrelationIdInterceptor())
-            .addInterceptor(
-                LoggingInterceptor("Felleskodeverk") { request ->
-                    requireNotNull(request.header("X-Correlation-ID")) {
-                        "Kall uten \"X-Correlation-ID\" er ikke lov"
-                    }
-                }
-            )
-            .build()
+        val client =
+            RestClient.baseClient().newBuilder()
+                .addInterceptor(XCorrelationIdInterceptor())
+                .addInterceptor(
+                    LoggingInterceptor("Felleskodeverk") { request ->
+                        requireNotNull(request.header("X-Correlation-ID")) {
+                            "Kall uten \"X-Correlation-ID\" er ikke lov"
+                        }
+                    },
+                )
+                .build()
 
         return KodeverkApi(url, client)
     }

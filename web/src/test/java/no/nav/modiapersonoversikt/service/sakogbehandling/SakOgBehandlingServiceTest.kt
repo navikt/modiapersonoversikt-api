@@ -15,15 +15,17 @@ class SakOgBehandlingServiceTest {
 
     @Test
     internal fun `tre ws-saker skal gi liste med tre elementer`() {
-        val saker = listOf(
-            MockCreationUtil.createWSSak(),
-            MockCreationUtil.createWSSak(),
-            MockCreationUtil.createWSSak(),
-        )
+        val saker =
+            listOf(
+                MockCreationUtil.createWSSak(),
+                MockCreationUtil.createWSSak(),
+                MockCreationUtil.createWSSak(),
+            )
 
         every { pdlOppslagService.hentAktorId(any()) } returns "321654987"
-        every { sakOgBehandling.finnSakOgBehandlingskjedeListe(any()) } returns FinnSakOgBehandlingskjedeListeResponse()
-            .apply { this.sak.addAll(saker) }
+        every { sakOgBehandling.finnSakOgBehandlingskjedeListe(any()) } returns
+            FinnSakOgBehandlingskjedeListeResponse()
+                .apply { this.sak.addAll(saker) }
 
         Assertions.assertThat(sakOgBehandlingService.hentAlleSaker("12345678910")).hasSize(3)
     }

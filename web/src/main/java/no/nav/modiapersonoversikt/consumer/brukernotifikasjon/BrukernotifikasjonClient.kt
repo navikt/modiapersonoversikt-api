@@ -8,29 +8,34 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInterceptor) : Brukernotifikasjon.Client {
-    private val httpClient: OkHttpClient = RestClient.baseClient().newBuilder()
-        .addInterceptor(XCorrelationIdInterceptor())
-        .addInterceptor(
-            LoggingInterceptor("Brukernotifikasjon") { request ->
-                requireNotNull(request.header("X-Correlation-ID")) {
-                    "Kall uten \"X-Correlation-ID\" er ikke lov"
-                }
-            }
-        )
-        .addInterceptor(authInterceptor)
-        .build()
-
-    override fun hentBrukernotifikasjoner(type: Brukernotifikasjon.Type, fnr: Fnr): List<Brukernotifikasjon.Event> {
-        val response = httpClient
-            .newCall(
-                Request
-                    .Builder()
-                    .get()
-                    .url("$baseUrl/${type.name.lowercase()}/all")
-                    .header("fodselsnummer", fnr.get())
-                    .build()
+    private val httpClient: OkHttpClient =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(XCorrelationIdInterceptor())
+            .addInterceptor(
+                LoggingInterceptor("Brukernotifikasjon") { request ->
+                    requireNotNull(request.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
+                },
             )
-            .execute()
+            .addInterceptor(authInterceptor)
+            .build()
+
+    override fun hentBrukernotifikasjoner(
+        type: Brukernotifikasjon.Type,
+        fnr: Fnr,
+    ): List<Brukernotifikasjon.Event> {
+        val response =
+            httpClient
+                .newCall(
+                    Request
+                        .Builder()
+                        .get()
+                        .url("$baseUrl/${type.name.lowercase()}/all")
+                        .header("fodselsnummer", fnr.get())
+                        .build(),
+                )
+                .execute()
 
         val bodyContent = checkNotNull(response.body()?.string()) { "No Content" }
 
@@ -38,16 +43,17 @@ class BrukernotifikasjonClient(val baseUrl: String, authInterceptor: HeadersInte
     }
 
     override fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Brukernotifikasjon.EventV2> {
-        val response = httpClient
-            .newCall(
-                Request
-                    .Builder()
-                    .get()
-                    .url("$baseUrl/varsel/alle")
-                    .header("fodselsnummer", fnr.get())
-                    .build()
-            )
-            .execute()
+        val response =
+            httpClient
+                .newCall(
+                    Request
+                        .Builder()
+                        .get()
+                        .url("$baseUrl/varsel/alle")
+                        .header("fodselsnummer", fnr.get())
+                        .build(),
+                )
+                .execute()
 
         val bodyContent = checkNotNull(response.body()?.string()) { "No Content" }
 

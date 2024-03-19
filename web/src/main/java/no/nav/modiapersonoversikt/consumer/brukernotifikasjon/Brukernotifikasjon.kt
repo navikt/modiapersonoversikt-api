@@ -27,7 +27,7 @@ object Brukernotifikasjon {
         val renotifikasjonSendt: Boolean,
         val prefererteKanaler: List<String>,
         val sendteKanaler: List<String>,
-        val historikk: List<HistorikkEntry>
+        val historikk: List<HistorikkEntry>,
     )
 
     data class HistorikkEntry(
@@ -49,13 +49,13 @@ object Brukernotifikasjon {
         val harFeilteVarslinger: Boolean,
         val harFeilteRevarslinger: Boolean,
         val feilteVarsliner: List<FeiletVarsling>,
-        val feilteRevarslinger: List<FeiletVarsling>
+        val feilteRevarslinger: List<FeiletVarsling>,
     )
 
     data class FeiletVarsling(
         val tidspunkt: ZonedDateTime,
         val feilmelding: String,
-        val kanal: String?
+        val kanal: String?,
     )
 
     data class EventV2(
@@ -92,11 +92,17 @@ object Brukernotifikasjon {
     )
 
     enum class Type {
-        OPPGAVE, INNBOKS, BESKJED
+        OPPGAVE,
+        INNBOKS,
+        BESKJED,
     }
 
     interface Client {
-        fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
+        fun hentBrukernotifikasjoner(
+            type: Type,
+            fnr: Fnr,
+        ): List<Event>
+
         fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<EventV2>
     }
 
@@ -127,8 +133,8 @@ object Brukernotifikasjon {
                         FeiletVarsling(
                             tidspunkt = entry.tidspunkt,
                             feilmelding = entry.melding,
-                            kanal = entry.kanal
-                        )
+                            kanal = entry.kanal,
+                        ),
                     )
                 }
             }
@@ -143,18 +149,19 @@ object Brukernotifikasjon {
             val feilteVarsliner = finnFeilteVarslinger(varslinger)
             val feilteRevarslinger = finnFeilteVarslinger(revarslinger)
 
-            val varslingsTidspunkt = VarslingsTidspunkt(
-                sendt = eksternVarsling.sendt,
-                tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
-                renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
-                renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
-                sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
-                renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
-                feilteVarsliner = feilteVarsliner,
-                harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
-                feilteRevarslinger = feilteRevarslinger,
-                harFeilteRevarslinger = feilteRevarslinger.isNotEmpty()
-            )
+            val varslingsTidspunkt =
+                VarslingsTidspunkt(
+                    sendt = eksternVarsling.sendt,
+                    tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
+                    renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
+                    renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
+                    sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
+                    renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
+                    feilteVarsliner = feilteVarsliner,
+                    harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
+                    feilteRevarslinger = feilteRevarslinger,
+                    harFeilteRevarslinger = feilteRevarslinger.isNotEmpty(),
+                )
 
             return Event(
                 fodselsnummer = event.fodselsnummer,
@@ -173,43 +180,48 @@ object Brukernotifikasjon {
             )
         }
 
-        fun byggVarslingsTidspunktV2(fnr: String, eventV2: EventV2): Event {
+        fun byggVarslingsTidspunktV2(
+            fnr: String,
+            eventV2: EventV2,
+        ): Event {
             val eksternVarsling = eventV2.eksternVarsling
-            val event = Event(
-                fodselsnummer = fnr,
-                eventId = eventV2.varselId,
-                forstBehandlet = eventV2.opprettet,
-                produsent = eventV2.produsent.appnavn,
-                sikkerhetsnivaa = toSikkerhetsnivaa(eventV2.sensitivitet),
-                sistOppdatert = eventV2.opprettet,
-                tekst = eventV2.innhold.tekst,
-                link = eventV2.innhold.link ?: "",
-                aktiv = eventV2.aktiv,
-                eksternVarslingSendt = eventV2.eksternVarsling?.sendt ?: false,
-                eksternVarslingKanaler = eventV2.eksternVarsling?.kanaler ?: listOf()
-            )
+            val event =
+                Event(
+                    fodselsnummer = fnr,
+                    eventId = eventV2.varselId,
+                    forstBehandlet = eventV2.opprettet,
+                    produsent = eventV2.produsent.appnavn,
+                    sikkerhetsnivaa = toSikkerhetsnivaa(eventV2.sensitivitet),
+                    sistOppdatert = eventV2.opprettet,
+                    tekst = eventV2.innhold.tekst,
+                    link = eventV2.innhold.link ?: "",
+                    aktiv = eventV2.aktiv,
+                    eksternVarslingSendt = eventV2.eksternVarsling?.sendt ?: false,
+                    eksternVarslingKanaler = eventV2.eksternVarsling?.kanaler ?: listOf(),
+                )
 
             if (eksternVarsling != null) {
                 val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)
                 val feilteVarsliner = finnFeilteVarslinger(varslinger)
                 val feilteRevarslinger = finnFeilteVarslinger(revarslinger)
 
-                val varslingsTidspunkt = VarslingsTidspunkt(
-                    sendt = eksternVarsling.sendt,
-                    tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
-                    renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
-                    renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
-                    sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
-                    renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
-                    feilteVarsliner = feilteVarsliner,
-                    harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
-                    feilteRevarslinger = feilteRevarslinger,
-                    harFeilteRevarslinger = feilteRevarslinger.isNotEmpty()
-                )
+                val varslingsTidspunkt =
+                    VarslingsTidspunkt(
+                        sendt = eksternVarsling.sendt,
+                        tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
+                        renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
+                        renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
+                        sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
+                        renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
+                        feilteVarsliner = feilteVarsliner,
+                        harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
+                        feilteRevarslinger = feilteRevarslinger,
+                        harFeilteRevarslinger = feilteRevarslinger.isNotEmpty(),
+                    )
 
                 return event.copy(
                     sistOppdatert = eksternVarsling.sistOppdatert,
-                    varslingsTidspunkt = varslingsTidspunkt
+                    varslingsTidspunkt = varslingsTidspunkt,
                 )
             }
 
@@ -226,6 +238,10 @@ object Brukernotifikasjon {
 
     interface Service {
         fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Event>
-        fun hentBrukernotifikasjoner(type: Type, fnr: Fnr): List<Event>
+
+        fun hentBrukernotifikasjoner(
+            type: Type,
+            fnr: Fnr,
+        ): List<Event>
     }
 }

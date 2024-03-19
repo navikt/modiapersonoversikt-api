@@ -40,11 +40,20 @@ object AuthContextUtils {
     }
 
     @JvmStatic
-    fun withContext(authContext: AuthContext?, block: UnsafeRunnable) = authContextHolder.withContext(authContext, block)
+    fun withContext(
+        authContext: AuthContext?,
+        block: UnsafeRunnable,
+    ) = authContextHolder.withContext(authContext, block)
 
     @JvmStatic
-    fun <T> withContext(authContext: AuthContext?, block: UnsafeSupplier<T>): T = authContextHolder.withContext(authContext, block)
+    fun <T> withContext(
+        authContext: AuthContext?,
+        block: UnsafeSupplier<T>,
+    ): T = authContextHolder.withContext(authContext, block)
 
     @JvmStatic
-    fun <T> withContext(authContext: AuthContext?, block: () -> T): T = authContextHolder.withContext(authContext, UnsafeSupplier { block() })
+    fun <T> withContext(
+        authContext: AuthContext?,
+        block: () -> T,
+    ): T = authContextHolder.withContext(authContext, UnsafeSupplier { block() })
 }

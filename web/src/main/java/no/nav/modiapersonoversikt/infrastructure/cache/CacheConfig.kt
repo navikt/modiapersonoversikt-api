@@ -37,12 +37,19 @@ open class CacheConfig {
     @Bean("methodawarekeygenerator")
     open fun methodAwareKeyGenerator() = MethodAwareKeyGenerator()
 
-    private fun CaffeineCacheManager.cache(name: String, time: Long, maximumSize: Long = 1000) {
+    private fun CaffeineCacheManager.cache(
+        name: String,
+        time: Long,
+        maximumSize: Long = 1000,
+    ) {
         this.registerCustomCache(name, createCache(time, maximumSize).build())
     }
 
     companion object {
-        fun createCache(time: Long, maximumSize: Long = 1000) = Caffeine.newBuilder()
+        fun createCache(
+            time: Long,
+            maximumSize: Long = 1000,
+        ) = Caffeine.newBuilder()
             .recordStats()
             .expireAfterAccess(Duration.ofSeconds(time))
             .expireAfterWrite(Duration.ofSeconds(time))

@@ -19,12 +19,13 @@ internal class KanBrukeInternalPolicyTest {
     companion object {
         @JvmField
         @RegisterExtension
-        val subject = AuthContextExtension(
-            AuthContext(
-                UserRole.INTERN,
-                PlainJWT(JWTClaimsSet.Builder().subject("Z000001").build())
+        val subject =
+            AuthContextExtension(
+                AuthContext(
+                    UserRole.INTERN,
+                    PlainJWT(JWTClaimsSet.Builder().subject("Z000001").build()),
+                ),
             )
-        )
     }
 
     @Test
@@ -43,8 +44,8 @@ internal class KanBrukeInternalPolicyTest {
         subject.setContext(
             AuthContext(
                 UserRole.INTERN,
-                PlainJWT(JWTClaimsSet.Builder().subject("Z000002").build())
-            )
+                PlainJWT(JWTClaimsSet.Builder().subject("Z000002").build()),
+            ),
         )
 
         TestUtils.withEnv("INTERNAL_TILGANG", "Z000001,Z000003") {

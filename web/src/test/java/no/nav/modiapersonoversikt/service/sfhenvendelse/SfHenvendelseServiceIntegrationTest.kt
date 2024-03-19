@@ -24,10 +24,11 @@ internal class SfHenvendelseServiceIntegrationTest {
         @RegisterExtension
         val wiremock = WireMockExtension.newInstance().build()
 
-        private val testSubject = AuthContext(
-            UserRole.INTERN,
-            PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
-        )
+        private val testSubject =
+            AuthContext(
+                UserRole.INTERN,
+                PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build()),
+            )
     }
 
     private val meldinger: String = SfHenvendelseServiceIntegrationTest.readResource("mock-sf-meldinger.json")

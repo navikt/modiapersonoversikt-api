@@ -10,6 +10,7 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 class HenvendelseEierPip(private val henvendelseService: SfHenvendelseService) : Kabac.PolicyInformationPoint<Fnr> {
     override val key = Companion.key
+
     companion object : Kabac.AttributeKey<Fnr> {
         override val key = Key<Fnr>(HenvendelseEierPip::class.java.simpleName)
     }

@@ -18,23 +18,25 @@ internal class ConcurrencyUtilsTest {
         MDC.put(MDCConstants.MDC_CALL_ID, "CallId")
         MDC.put("TestKey", "TestValue")
 
-        val result = ConcurrencyUtils.makeThreadSwappable {
-            getCallId() to MDC.get("TestKey")
-        }.invoke()
+        val result =
+            ConcurrencyUtils.makeThreadSwappable {
+                getCallId() to MDC.get("TestKey")
+            }.invoke()
 
         assertThat(result).isEqualTo("CallId" to "TestValue")
     }
 
     @Test
     internal fun `should copy subject`() {
-        val result = AuthContextTestUtils.withIdent(
-            "Z999999",
-            UnsafeSupplier {
-                ConcurrencyUtils.makeThreadSwappable {
-                    AuthContextUtils.requireIdent()
-                }.invoke()
-            }
-        )
+        val result =
+            AuthContextTestUtils.withIdent(
+                "Z999999",
+                UnsafeSupplier {
+                    ConcurrencyUtils.makeThreadSwappable {
+                        AuthContextUtils.requireIdent()
+                    }.invoke()
+                },
+            )
         assertThat(result).isEqualTo("Z999999")
     }
 
@@ -42,9 +44,10 @@ internal class ConcurrencyUtilsTest {
     internal fun `should copy requestContext`() {
         val attributes = ServletWebRequest(mockk())
         RequestContextHolder.setRequestAttributes(attributes)
-        val result = ConcurrencyUtils.makeThreadSwappable {
-            RequestContextHolder.getRequestAttributes()
-        }.invoke()
+        val result =
+            ConcurrencyUtils.makeThreadSwappable {
+                RequestContextHolder.getRequestAttributes()
+            }.invoke()
         RequestContextHolder.setRequestAttributes(null)
 
         assertThat(result).isEqualTo(attributes)

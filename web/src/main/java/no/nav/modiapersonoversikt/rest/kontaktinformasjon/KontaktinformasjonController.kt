@@ -16,43 +16,46 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/rest/person/{fnr}/kontaktinformasjon")
-class KontaktinformasjonController @Autowired constructor(
-    private val krrService: Krr.Service,
-    private val tilgangskontroll: Tilgangskontroll
-) {
+class KontaktinformasjonController
+    @Autowired
+    constructor(
+        private val krrService: Krr.Service,
+        private val tilgangskontroll: Tilgangskontroll,
+    ) {
+        @GetMapping
+        fun hentKontaktinformasjon(
+            @PathVariable("fnr") fnr: String,
+        ): KontaktinformasjonApi.Kontaktinformasjon {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnr)))
+                .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
+                    val response = krrService.hentDigitalKontaktinformasjon(fnr)
 
-    @GetMapping
-    fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): KontaktinformasjonApi.Kontaktinformasjon {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
-                val response = krrService.hentDigitalKontaktinformasjon(fnr)
+                    KontaktinformasjonApi.Kontaktinformasjon(
+                        epost = getEpost(response),
+                        mobiltelefon = getMobiltelefon(response),
+                        reservasjon = response.reservasjon,
+                    )
+                }
+        }
 
-                KontaktinformasjonApi.Kontaktinformasjon(
-                    epost = getEpost(response),
-                    mobiltelefon = getMobiltelefon(response),
-                    reservasjon = response.reservasjon
-                )
+        private fun getEpost(response: Krr.DigitalKontaktinformasjon): KontaktinformasjonApi.Verdi? {
+            if (response.epostadresse?.value.isNullOrEmpty()) {
+                return null
             }
-    }
-
-    private fun getEpost(response: Krr.DigitalKontaktinformasjon): KontaktinformasjonApi.Verdi? {
-        if (response.epostadresse?.value.isNullOrEmpty()) {
-            return null
+            return KontaktinformasjonApi.Verdi(
+                value = requireNotNull(response.epostadresse?.value),
+                sistOppdatert = response.epostadresse?.sistOppdatert,
+            )
         }
-        return KontaktinformasjonApi.Verdi(
-            value = requireNotNull(response.epostadresse?.value),
-            sistOppdatert = response.epostadresse?.sistOppdatert
-        )
-    }
 
-    private fun getMobiltelefon(response: Krr.DigitalKontaktinformasjon): KontaktinformasjonApi.Verdi? {
-        if (response.mobiltelefonnummer?.value.isNullOrEmpty()) {
-            return null
+        private fun getMobiltelefon(response: Krr.DigitalKontaktinformasjon): KontaktinformasjonApi.Verdi? {
+            if (response.mobiltelefonnummer?.value.isNullOrEmpty()) {
+                return null
+            }
+            return KontaktinformasjonApi.Verdi(
+                value = requireNotNull(response.mobiltelefonnummer?.value),
+                sistOppdatert = response.mobiltelefonnummer?.sistOppdatert,
+            )
         }
-        return KontaktinformasjonApi.Verdi(
-            value = requireNotNull(response.mobiltelefonnummer?.value),
-            sistOppdatert = response.mobiltelefonnummer?.sistOppdatert
-        )
     }
-}

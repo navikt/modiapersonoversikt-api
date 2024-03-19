@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 import java.time.LocalDate
 
 data class OpprettOppgaveResponse(
-    val id: String
+    val id: String,
 )
 
 data class OpprettOppgaveRequest(
@@ -22,7 +22,7 @@ data class OpprettOppgaveRequest(
     val behandlingskjedeId: String,
     val dagerFrist: Int,
     val ansvarligEnhetId: String,
-    val ansvarligIdent: String?
+    val ansvarligIdent: String?,
 )
 
 data class OpprettSkjermetOppgaveRequest(
@@ -36,5 +36,5 @@ data class OpprettSkjermetOppgaveRequest(
     val prioritet: String,
     val underkategoriKode: String?,
     val opprettetavenhetsnummer: String,
-    val oppgaveFrist: LocalDate
+    val oppgaveFrist: LocalDate,
 )

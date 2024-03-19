@@ -29,7 +29,10 @@ class SfLegacyDialogController(
     private val kodeverk: EnhetligKodeverk.Service,
     private val meldingProducer: HenvendelseProducer,
 ) : DialogApi {
-    override fun hentMeldinger(fnr: String, enhet: String): List<TraadDTO> {
+    override fun hentMeldinger(
+        fnr: String,
+        enhet: String,
+    ): List<TraadDTO> {
         val bruker = EksternBruker.Fnr(fnr)
 
         val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, enhet)
@@ -38,7 +41,10 @@ class SfLegacyDialogController(
         return sfHenvendelser.map { dialogMappingContext.mapSfHenvendelserTilLegacyFormat(it) }
     }
 
-    override fun sendMelding(fnr: String, meldingRequest: SendMelding): TraadDTO {
+    override fun sendMelding(
+        fnr: String,
+        meldingRequest: SendMelding,
+    ): TraadDTO {
         return if (meldingRequest.traadId != null) {
             fortsettPaEksisterendeDialog(fnr, meldingRequest)
         } else {
@@ -51,13 +57,14 @@ class SfLegacyDialogController(
         infomeldingRequest: Infomelding,
     ): TraadDTO {
         val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode)
-        val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
-            bruker = EksternBruker.Fnr(fnr),
-            enhet = infomeldingRequest.enhet,
-            temagruppe = temagruppe,
-            tilknyttetAnsatt = false,
-            fritekst = infomeldingRequest.fritekst,
-        )
+        val henvendelse =
+            sfHenvendelseService.opprettNyDialogOgSendMelding(
+                bruker = EksternBruker.Fnr(fnr),
+                enhet = infomeldingRequest.enhet,
+                temagruppe = temagruppe,
+                tilknyttetAnsatt = false,
+                fritekst = infomeldingRequest.fritekst,
+            )
 
         sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
         sfHenvendelseService.journalforHenvendelse(
@@ -130,20 +137,23 @@ class SfLegacyDialogController(
 
     private fun lagMappingContext(henvendelser: List<HenvendelseDTO>): DialogMappingContext {
         val temakodeMap = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).asMap()
-        val identer = henvendelser
-            .flatMap { henvendelse ->
-                val journalportIdenter: List<String>? =
-                    henvendelse.journalposter?.mapNotNull { it.journalforerNavIdent } // TODO SF bør ikke svare med null for ident her. Rapportert feil
-                val markeringIdenter: List<String>? = henvendelse.markeringer?.mapNotNull { it.markertAv }
-                val meldingFraIdenter: List<String>? = henvendelse.meldinger
-                    ?.filter { it.fra.identType == MeldingFraDTO.IdentType.NAVIDENT }
-                    ?.mapNotNull { it.fra.ident }
-                (journalportIdenter ?: emptyList())
-                    .plus(markeringIdenter ?: emptyList())
-                    .plus(meldingFraIdenter ?: emptyList())
-            }
-            .distinct()
-            .map(::NavIdent)
+        val identer =
+            henvendelser
+                .flatMap { henvendelse ->
+                    // TODO SF bør ikke svare med null for ident her. Rapportert feil
+                    val journalportIdenter: List<String>? =
+                        henvendelse.journalposter?.mapNotNull { it.journalforerNavIdent }
+                    val markeringIdenter: List<String>? = henvendelse.markeringer?.mapNotNull { it.markertAv }
+                    val meldingFraIdenter: List<String>? =
+                        henvendelse.meldinger
+                            ?.filter { it.fra.identType == MeldingFraDTO.IdentType.NAVIDENT }
+                            ?.mapNotNull { it.fra.ident }
+                    (journalportIdenter ?: emptyList())
+                        .plus(markeringIdenter ?: emptyList())
+                        .plus(meldingFraIdenter ?: emptyList())
+                }
+                .distinct()
+                .map(::NavIdent)
 
         val identMap = ansattService.hentVeiledere(identer).mapKeys { (key, _) -> key.get() }
 
@@ -151,9 +161,10 @@ class SfLegacyDialogController(
     }
 
     private fun DialogMappingContext.mapSfHenvendelserTilLegacyFormat(henvendelse: HenvendelseDTO): TraadDTO {
-        val journalposter = henvendelse.journalposter
-            ?.map { tilJournalpostDTO(it) }
-            ?: emptyList()
+        val journalposter =
+            henvendelse.journalposter
+                ?.map { tilJournalpostDTO(it) }
+                ?: emptyList()
 
         val kontorsperre: MarkeringDTO? = henvendelse.markeringer.getForType(MarkeringDTO.Markeringstype.KONTORSPERRE)
         val kontorsperretEnhet: String? = kontorsperre?.kontorsperreGT ?: kontorsperre?.kontorsperreEnhet
@@ -163,32 +174,34 @@ class SfLegacyDialogController(
         val markertSomFeilsendtAv = getVeileder(markertSomFeilsendt?.markertAv)
 
         val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
-        val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
-            val skrevetAv = getIdent(melding.fra.ident, melding.fra.identType)
-            val status = when {
-                melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
-                melding.lestDato != null -> Status.LEST_AV_BRUKER
-                else -> Status.IKKE_LEST_AV_BRUKER
-            }
+        val meldinger: List<MeldingDTO> =
+            (henvendelse.meldinger ?: emptyList()).map { melding ->
+                val skrevetAv = getIdent(melding.fra.ident, melding.fra.identType)
+                val status =
+                    when {
+                        melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
+                        melding.lestDato != null -> Status.LEST_AV_BRUKER
+                        else -> Status.IKKE_LEST_AV_BRUKER
+                    }
 
-            MeldingDTO(
-                id = "${henvendelse.kjedeId}---${(melding.hashCode())}",
-                meldingsId = melding.meldingsId,
-                meldingstype = meldingstypeFraSfTyper(henvendelse, melding),
-                temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe), // TODO error in api-spec
-                skrevetAvTekst = skrevetAv,
-                fritekst = hentFritekstFraMelding(henvendelseErKassert, melding),
-                lestDato = melding.lestDato,
-                status = status,
-                opprettetDato = melding.sendtDato,
-                avsluttetDato = henvendelse.avsluttetDato,
-                ferdigstiltDato = melding.sendtDato,
-                kontorsperretEnhet = kontorsperretEnhet,
-                kontorsperretAv = kontorsperretAv,
-                sendtTilSladding = (henvendelse.sladding ?: false),
-                markertSomFeilsendtAv = markertSomFeilsendtAv,
-            )
-        }
+                MeldingDTO(
+                    id = "${henvendelse.kjedeId}---${(melding.hashCode())}",
+                    meldingsId = melding.meldingsId,
+                    meldingstype = meldingstypeFraSfTyper(henvendelse, melding),
+                    temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe), // TODO error in api-spec
+                    skrevetAvTekst = skrevetAv,
+                    fritekst = hentFritekstFraMelding(henvendelseErKassert, melding),
+                    lestDato = melding.lestDato,
+                    status = status,
+                    opprettetDato = melding.sendtDato,
+                    avsluttetDato = henvendelse.avsluttetDato,
+                    ferdigstiltDato = melding.sendtDato,
+                    kontorsperretEnhet = kontorsperretEnhet,
+                    kontorsperretAv = kontorsperretAv,
+                    sendtTilSladding = (henvendelse.sladding ?: false),
+                    markertSomFeilsendtAv = markertSomFeilsendtAv,
+                )
+            }
         return TraadDTO(
             traadId = henvendelse.kjedeId,
             fnr = henvendelse.fnr,
@@ -210,30 +223,36 @@ class SfLegacyDialogController(
         return this?.find { it.markeringstype == type }
     }
 
-    private fun DialogMappingContext.getIdent(ident: String?, identType: MeldingFraDTO.IdentType) = when (identType) {
-        MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> getVeileder(ident)
-            ?.let { "${it.navn} (${it.ident})" }
-            ?: "($ident)"
+    private fun DialogMappingContext.getIdent(
+        ident: String?,
+        identType: MeldingFraDTO.IdentType,
+    ) = when (identType) {
+        MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID ->
+            getVeileder(ident)
+                ?.let { "${it.navn} (${it.ident})" }
+                ?: "($ident)"
 
         MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
     }
 
-    private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) = DialogApi.Journalpost(
-        journalfortDato = journalpost.journalfortDato,
-        journalfortTema = journalpost.journalfortTema,
-        journalfortTemanavn = temakodeMap[journalpost.journalfortTema] ?: journalpost.journalfortTema,
-        journalfortSaksid = journalpost.fagsakId,
-        journalfortAv = identMap[journalpost.journalforerNavIdent ?: ""]
-            ?.let {
-                DialogApi.Veileder(
-                    ident = it.ident,
-                    navn = "${it.fornavn} ${it.etternavn}",
-                )
-            }
-            ?: DialogApi.Veileder.UKJENT,
-        journalforendeEnhet = journalpost.journalforendeEnhet,
-        journalfortFagsaksystem = journalpost.fagsaksystem?.value
-    )
+    private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) =
+        DialogApi.Journalpost(
+            journalfortDato = journalpost.journalfortDato,
+            journalfortTema = journalpost.journalfortTema,
+            journalfortTemanavn = temakodeMap[journalpost.journalfortTema] ?: journalpost.journalfortTema,
+            journalfortSaksid = journalpost.fagsakId,
+            journalfortAv =
+                identMap[journalpost.journalforerNavIdent ?: ""]
+                    ?.let {
+                        DialogApi.Veileder(
+                            ident = it.ident,
+                            navn = "${it.fornavn} ${it.etternavn}",
+                        )
+                    }
+                    ?: DialogApi.Veileder.UKJENT,
+            journalforendeEnhet = journalpost.journalforendeEnhet,
+            journalfortFagsaksystem = journalpost.fagsaksystem?.value,
+        )
 
     private fun hentFritekstFraMelding(
         erKassert: Boolean,
@@ -262,8 +281,18 @@ class SfLegacyDialogController(
 
             HenvendelseDTO.HenvendelseType.MELDINGSKJEDE -> {
                 when (melding.fra.identType) {
-                    MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) Meldingstype.SPORSMAL_SKRIFTLIG else Meldingstype.SVAR_SBL_INNGAAENDE
-                    MeldingFraDTO.IdentType.NAVIDENT -> if (erForsteMelding) Meldingstype.SPORSMAL_MODIA_UTGAAENDE else Meldingstype.SVAR_SKRIFTLIG
+                    MeldingFraDTO.IdentType.AKTORID ->
+                        if (erForsteMelding) {
+                            Meldingstype.SPORSMAL_SKRIFTLIG
+                        } else {
+                            Meldingstype.SVAR_SBL_INNGAAENDE
+                        }
+                    MeldingFraDTO.IdentType.NAVIDENT ->
+                        if (erForsteMelding) {
+                            Meldingstype.SPORSMAL_MODIA_UTGAAENDE
+                        } else {
+                            Meldingstype.SVAR_SKRIFTLIG
+                        }
                     MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.SVAR_SKRIFTLIG
                 }
             }
@@ -278,29 +307,34 @@ class SfLegacyDialogController(
         }
     }
 
-    private fun opprettNyDialog(fnr: String, meldingRequest: SendMelding): TraadDTO {
+    private fun opprettNyDialog(
+        fnr: String,
+        meldingRequest: SendMelding,
+    ): TraadDTO {
         if (meldingRequest.traadType == TraadType.SAMTALEREFERAT) {
-            val henvendelse = sfHenvendelseService.sendSamtalereferat(
-                kjedeId = null,
-                bruker = EksternBruker.Fnr(fnr),
-                enhet = meldingRequest.enhet,
-                temagruppe = meldingRequest.temagruppe!!,
-                kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
-                fritekst = meldingRequest.fritekst,
-            )
+            val henvendelse =
+                sfHenvendelseService.sendSamtalereferat(
+                    kjedeId = null,
+                    bruker = EksternBruker.Fnr(fnr),
+                    enhet = meldingRequest.enhet,
+                    temagruppe = meldingRequest.temagruppe!!,
+                    kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
+                    fritekst = meldingRequest.fritekst,
+                )
 
             return parseFraHenvendelseTilTraad(henvendelse)
         } else {
             val sak = meldingRequest.sak!!
             val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sak.temaKode)
 
-            val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
-                bruker = EksternBruker.Fnr(fnr),
-                enhet = meldingRequest.enhet,
-                temagruppe = temagruppe,
-                tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
-                fritekst = meldingRequest.fritekst,
-            )
+            val henvendelse =
+                sfHenvendelseService.opprettNyDialogOgSendMelding(
+                    bruker = EksternBruker.Fnr(fnr),
+                    enhet = meldingRequest.enhet,
+                    temagruppe = temagruppe,
+                    tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
+                    fritekst = meldingRequest.fritekst,
+                )
 
             meldingProducer.sendHenvendelseUpdate(
                 fnr = henvendelse.fnr,
@@ -325,7 +359,10 @@ class SfLegacyDialogController(
         }
     }
 
-    override fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMelding): TraadDTO {
+    override fun fortsettPaEksisterendeDialog(
+        fnr: String,
+        meldingRequest: SendMelding,
+    ): TraadDTO {
         val kjedeId = meldingRequest.traadId!!
         val oppgaveId = meldingRequest.oppgaveId
 
@@ -354,17 +391,19 @@ class SfLegacyDialogController(
         }
 
         if (meldingRequest.traadType == TraadType.SAMTALEREFERAT) {
-            henvendelse = sfHenvendelseService.sendSamtalereferat(
-                kjedeId = kjedeId,
-                bruker = bruker,
-                enhet = enhet,
-                temagruppe = henvendelse.gjeldendeTemagruppe!!,
-                kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
-                fritekst = meldingRequest.fritekst,
-            )
+            henvendelse =
+                sfHenvendelseService.sendSamtalereferat(
+                    kjedeId = kjedeId,
+                    bruker = bruker,
+                    enhet = enhet,
+                    temagruppe = henvendelse.gjeldendeTemagruppe!!,
+                    kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
+                    fritekst = meldingRequest.fritekst,
+                )
 
-            val journalposter = (henvendelse.journalposter ?: emptyList())
-                .distinctBy { it.fagsakId }
+            val journalposter =
+                (henvendelse.journalposter ?: emptyList())
+                    .distinctBy { it.fagsakId }
             journalposter.forEach {
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
@@ -376,13 +415,14 @@ class SfLegacyDialogController(
             }
         } else {
             val sak = meldingRequest.sak
-            henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
-                bruker = bruker,
-                kjedeId = kjedeId,
-                enhet = enhet,
-                tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
-                fritekst = meldingRequest.fritekst,
-            )
+            henvendelse =
+                sfHenvendelseService.sendMeldingPaEksisterendeDialog(
+                    bruker = bruker,
+                    kjedeId = kjedeId,
+                    enhet = enhet,
+                    tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
+                    fritekst = meldingRequest.fritekst,
+                )
 
             meldingProducer.sendHenvendelseUpdate(
                 fnr = henvendelse.fnr,

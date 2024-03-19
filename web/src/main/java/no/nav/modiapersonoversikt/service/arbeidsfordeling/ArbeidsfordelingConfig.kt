@@ -12,12 +12,12 @@ open class ArbeidsfordelingConfig {
     open fun arbeidsfordelingService(
         norgApi: NorgApi,
         pdlOppslagService: PdlOppslagService,
-        skjermedePersonerApi: SkjermedePersonerApi
+        skjermedePersonerApi: SkjermedePersonerApi,
     ): ArbeidsfordelingService {
         return ArbeidsfordelingServiceImpl(
             norgApi,
             pdlOppslagService,
-            skjermedePersonerApi
+            skjermedePersonerApi,
         )
     }
 }

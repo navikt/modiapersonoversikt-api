@@ -8,6 +8,7 @@ object ArbeidsrettetOppfolging {
         fun hentOppfolgingsinfo(fodselsnummer: Fnr): Info
 
         fun hentOppfolgingStatus(fodselsnummer: Fnr): Status
+
         fun ping()
     }
 
@@ -20,16 +21,16 @@ object ArbeidsrettetOppfolging {
         val erUnderOppfolging: Boolean,
         val erManuell: Boolean,
         val veileder: Veileder?,
-        val oppfolgingsenhet: Enhet?
+        val oppfolgingsenhet: Enhet?,
     )
 
     data class EnhetOgVeileder(
         val oppfolgingsenhet: Enhet?,
-        val veilederId: String?
+        val veilederId: String?,
     )
 
     data class Enhet(
         val enhetId: String,
-        val navn: String
+        val navn: String,
     )
 }

@@ -7,7 +7,7 @@ interface DialogDelsvarApi {
     fun svarDelvis(
         httpRequest: HttpServletRequest,
         fnr: String,
-        request: DelsvarRestRequest
+        request: DelsvarRestRequest,
     ): ResponseEntity<Void>
 }
 
@@ -17,5 +17,5 @@ data class DelsvarRestRequest(
     val traadId: String,
     val behandlingsId: String,
     val temagruppe: String,
-    val oppgaveId: String
+    val oppgaveId: String,
 )

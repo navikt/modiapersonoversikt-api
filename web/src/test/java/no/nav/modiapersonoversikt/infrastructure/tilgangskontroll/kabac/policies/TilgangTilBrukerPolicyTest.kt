@@ -13,7 +13,8 @@ import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
-import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
@@ -179,11 +180,12 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtBrukerIkkeHarAdressebeskyttelse() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns listOf(
-            HentAdressebeskyttelse.Adressebeskyttelse(
-                HentAdressebeskyttelse.AdressebeskyttelseGradering.UGRADERT
+        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+            listOf(
+                Adressebeskyttelse(
+                    AdressebeskyttelseGradering.UGRADERT,
+                ),
             )
-        )
     }
 
     private fun gittAtBrukerIkkeErSkjermet() {
@@ -195,19 +197,21 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtBrukerHarKode6() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns listOf(
-            HentAdressebeskyttelse.Adressebeskyttelse(
-                HentAdressebeskyttelse.AdressebeskyttelseGradering.STRENGT_FORTROLIG
+        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+            listOf(
+                Adressebeskyttelse(
+                    AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                ),
             )
-        )
     }
 
     private fun gittAtBrukerHarKode7() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns listOf(
-            HentAdressebeskyttelse.Adressebeskyttelse(
-                HentAdressebeskyttelse.AdressebeskyttelseGradering.FORTROLIG
+        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+            listOf(
+                Adressebeskyttelse(
+                    AdressebeskyttelseGradering.FORTROLIG,
+                ),
             )
-        )
     }
 
     private fun gittAtBrukerHarEnhet(enhetId: EnhetId?) {
@@ -217,12 +221,13 @@ internal class TilgangTilBrukerPolicyTest {
         if (enhetId == null) {
             every { norg.finnNavKontor(geografiskTilknyttning, null) } returns null
         } else {
-            every { norg.finnNavKontor(geografiskTilknyttning, null) } returns NorgDomain.Enhet(
-                enhetId = enhetId.get(),
-                enhetNavn = "Navn",
-                status = NorgDomain.EnhetStatus.AKTIV,
-                oppgavebehandler = false
-            )
+            every { norg.finnNavKontor(geografiskTilknyttning, null) } returns
+                NorgDomain.Enhet(
+                    enhetId = enhetId.get(),
+                    enhetNavn = "Navn",
+                    status = NorgDomain.EnhetStatus.AKTIV,
+                    oppgavebehandler = false,
+                )
         }
     }
 
@@ -269,7 +274,7 @@ internal class TilgangTilBrukerPolicyTest {
             BrukersRegionEnhetPip(norg),
             VeiledersRollerPip(ansattService),
             VeiledersEnheterPip(ansattService),
-            VeiledersRegionEnheterPip(norg)
+            VeiledersRegionEnheterPip(norg),
         )
     }
 }

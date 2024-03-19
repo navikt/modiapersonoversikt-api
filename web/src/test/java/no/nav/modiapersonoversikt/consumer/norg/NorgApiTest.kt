@@ -14,7 +14,8 @@ internal class NorgApiTest {
 
     @Test
     internal fun `skal kunne deserialisere postboksadresse`() {
-        val postboksadresseJson = """
+        val postboksadresseJson =
+            """
             {
                 "type": "postboksadresse",
                 "postnummer": "5807",
@@ -22,7 +23,7 @@ internal class NorgApiTest {
                 "postboksnummer": "2303",
                 "postboksanlegg": "Solheimsviken"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val adresse = jackson.readValue(postboksadresseJson, object : TypeReference<RsAdresseDTO>() {})
         assertTrue(adresse is RsPostboksadresseDTO)
@@ -30,7 +31,8 @@ internal class NorgApiTest {
 
     @Test
     internal fun `skal kunne deserialisere stedsadresse`() {
-        val stedsadresse = """
+        val stedsadresse =
+            """
             {
                 "type": "stedsadresse",
                 "postnummer": "5058",
@@ -40,7 +42,7 @@ internal class NorgApiTest {
                 "husbokstav": null,
                 "adresseTilleggsnavn": null
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val adresse = jackson.readValue(stedsadresse, object : TypeReference<RsAdresseDTO>() {})
         assertTrue(adresse is RsStedsadresseDTO)
@@ -48,57 +50,58 @@ internal class NorgApiTest {
 
     @Test
     internal fun `skal kunne mappe komplett kontaktinfo for enhet`() {
-        val json = """
-             {
-                "enhet": {
-                  "enhetId": 100000123,
-                  "navn": "NAV Enhet",
-                  "enhetNr": "1234",
-                  "antallRessurser": 0,
-                  "status": "Under avvikling",
-                  "orgNivaa": "EN",
-                  "type": "TILTAK",
-                  "organisasjonsnummer": null,
-                  "underEtableringDato": "1970-01-01",
-                  "aktiveringsdato": "1970-01-01",
-                  "underAvviklingDato": null,
-                  "nedleggelsesdato": null,
-                  "oppgavebehandler": true,
-                  "versjon": 8,
-                  "sosialeTjenester": "",
-                  "kanalstrategi": null,
-                  "orgNrTilKommunaltNavKontor": null
-                },
-                "overordnetEnhet": null,
-                "habilitetskontor": null,
-                "kontaktinformasjon": {
-                  "id": 100000123,
-                  "enhetNr": "1234",
-                  "telefonnummer": "12345678",
-                  "telefonnummerKommentar": null,
-                  "faksnummer": "12345678",
-                  "epost": null,
-                  "postadresse": {
-                    "type": "postboksadresse",
-                    "postnummer": "1234",
-                    "poststed": "STED",
-                    "postboksnummer": "6547",
-                    "postboksanlegg": "Gate"
-                  },
-                  "besoeksadresse": {
-                    "type": "stedsadresse",
-                    "postnummer": "1234",
-                    "poststed": "STED",
-                    "gatenavn": "Gate",
-                    "husnummer": "1",
-                    "husbokstav": null,
-                    "adresseTilleggsnavn": null
-                  },
-                  "spesielleOpplysninger": null,
-                  "publikumsmottak": []
-                }
-              }
-        """.trimIndent()
+        val json =
+            """
+            {
+               "enhet": {
+                 "enhetId": 100000123,
+                 "navn": "NAV Enhet",
+                 "enhetNr": "1234",
+                 "antallRessurser": 0,
+                 "status": "Under avvikling",
+                 "orgNivaa": "EN",
+                 "type": "TILTAK",
+                 "organisasjonsnummer": null,
+                 "underEtableringDato": "1970-01-01",
+                 "aktiveringsdato": "1970-01-01",
+                 "underAvviklingDato": null,
+                 "nedleggelsesdato": null,
+                 "oppgavebehandler": true,
+                 "versjon": 8,
+                 "sosialeTjenester": "",
+                 "kanalstrategi": null,
+                 "orgNrTilKommunaltNavKontor": null
+               },
+               "overordnetEnhet": null,
+               "habilitetskontor": null,
+               "kontaktinformasjon": {
+                 "id": 100000123,
+                 "enhetNr": "1234",
+                 "telefonnummer": "12345678",
+                 "telefonnummerKommentar": null,
+                 "faksnummer": "12345678",
+                 "epost": null,
+                 "postadresse": {
+                   "type": "postboksadresse",
+                   "postnummer": "1234",
+                   "poststed": "STED",
+                   "postboksnummer": "6547",
+                   "postboksanlegg": "Gate"
+                 },
+                 "besoeksadresse": {
+                   "type": "stedsadresse",
+                   "postnummer": "1234",
+                   "poststed": "STED",
+                   "gatenavn": "Gate",
+                   "husnummer": "1",
+                   "husbokstav": null,
+                   "adresseTilleggsnavn": null
+                 },
+                 "spesielleOpplysninger": null,
+                 "publikumsmottak": []
+               }
+             }
+            """.trimIndent()
 
         val enhetKontaktinformasjonDTO = jackson.readValue(json, object : TypeReference<RsEnhetInkludertKontaktinformasjonDTO>() {})
         val enhetKontaktinformasjon = NorgApiImpl.toInternalDomain(enhetKontaktinformasjonDTO)

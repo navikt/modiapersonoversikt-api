@@ -14,7 +14,7 @@ open class SakstemaServiceConfig {
         safService: SafService,
         sakOgBehandlingService: SakOgBehandlingService,
         kodeverk: EnhetligKodeverk.Service,
-        soknadsstatusService: SoknadsstatusService
+        soknadsstatusService: SoknadsstatusService,
     ): SakstemaServiceImpl {
         return SakstemaServiceImpl(safService, sakOgBehandlingService, kodeverk, soknadsstatusService)
     }

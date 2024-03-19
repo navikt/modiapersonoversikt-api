@@ -23,21 +23,22 @@ open class SkjermedePersonerConfig {
 
     @Bean
     open fun skjermedePersoner(): SkjermedePersonerApi {
-        val httpClient: OkHttpClient = RestClient.baseClient().newBuilder()
-            .addInterceptor(XCorrelationIdInterceptor())
-            .addInterceptor(
-                LoggingInterceptor("SkjermedePersoner") { request ->
-                    requireNotNull(request.header("X-Correlation-ID")) {
-                        "Kall uten \"X-Correlation-ID\" er ikke lov"
-                    }
-                }
-            )
-            .addInterceptor(
-                AuthorizationInterceptor {
-                    tokenProvider.createMachineToMachineToken(scope)
-                }
-            )
-            .build()
+        val httpClient: OkHttpClient =
+            RestClient.baseClient().newBuilder()
+                .addInterceptor(XCorrelationIdInterceptor())
+                .addInterceptor(
+                    LoggingInterceptor("SkjermedePersoner") { request ->
+                        requireNotNull(request.header("X-Correlation-ID")) {
+                            "Kall uten \"X-Correlation-ID\" er ikke lov"
+                        }
+                    },
+                )
+                .addInterceptor(
+                    AuthorizationInterceptor {
+                        tokenProvider.createMachineToMachineToken(scope)
+                    },
+                )
+                .build()
         return SkjermedePersonerApiImpl(url, httpClient)
     }
 }

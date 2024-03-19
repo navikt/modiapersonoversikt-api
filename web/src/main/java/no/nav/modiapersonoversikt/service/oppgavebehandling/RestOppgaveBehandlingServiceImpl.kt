@@ -40,13 +40,15 @@ class RestOppgaveBehandlingServiceImpl(
     private val tilgangskontroll: Tilgangskontroll,
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
-    private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
-        AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
-    },
-    private val systemApiClient: OppgaveApi = OppgaveApiFactory.createClient {
-        machineToMachineTokenClient.createMachineToMachineToken()
-    },
-    private val clock: Clock = Clock.systemDefaultZone()
+    private val apiClient: OppgaveApi =
+        OppgaveApiFactory.createClient {
+            AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
+        },
+    private val systemApiClient: OppgaveApi =
+        OppgaveApiFactory.createClient {
+            machineToMachineTokenClient.createMachineToMachineToken()
+        },
+    private val clock: Clock = Clock.systemDefaultZone(),
 ) : OppgaveBehandlingService {
     private val tjenestekallLogg = Logging.secureLog
 
@@ -54,38 +56,43 @@ class RestOppgaveBehandlingServiceImpl(
         requireNotNull(request)
         val ident: NavIdent = AuthContextUtils.requireNavIdent()
         val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
-        val aktorId = pdlOppslagService.hentAktorId(request.fnr)
-            ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
+        val aktorId =
+            pdlOppslagService.hentAktorId(request.fnr)
+                ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
-        val response = apiClient.opprettOppgave(
-            xCorrelationID = correlationId(),
-            postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
-                opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
-                aktoerId = aktorId,
-                behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
-                tildeltEnhetsnr = request.ansvarligEnhetId.coerceBlankToNull(),
-                tilordnetRessurs = request.ansvarligIdent.coerceBlankToNull(),
-                beskrivelse = beskrivelseInnslag(
-                    ident = ident,
-                    navn = ansattService.hentVeileder(ident).navn,
-                    enhet = request.opprettetavenhetsnummer,
-                    innhold = request.beskrivelse,
-                    clock = clock
-                ),
-                tema = request.tema,
-                oppgavetype = request.oppgavetype,
-                behandlingstema = behandling?.behandlingstema,
-                behandlingstype = behandling?.behandlingstype,
-                aktivDato = LocalDate.now(clock),
-                fristFerdigstillelse = request.oppgaveFrist,
-                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
-                metadata = request.behandlingskjedeId.coerceBlankToNull()
-                    ?.let { mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to it) }
+        val response =
+            apiClient.opprettOppgave(
+                xCorrelationID = correlationId(),
+                postOppgaveRequestJsonDTO =
+                    PostOppgaveRequestJsonDTO(
+                        opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
+                        aktoerId = aktorId,
+                        behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
+                        tildeltEnhetsnr = request.ansvarligEnhetId.coerceBlankToNull(),
+                        tilordnetRessurs = request.ansvarligIdent.coerceBlankToNull(),
+                        beskrivelse =
+                            beskrivelseInnslag(
+                                ident = ident,
+                                navn = ansattService.hentVeileder(ident).navn,
+                                enhet = request.opprettetavenhetsnummer,
+                                innhold = request.beskrivelse,
+                                clock = clock,
+                            ),
+                        tema = request.tema,
+                        oppgavetype = request.oppgavetype,
+                        behandlingstema = behandling?.behandlingstema,
+                        behandlingstype = behandling?.behandlingstype,
+                        aktivDato = LocalDate.now(clock),
+                        fristFerdigstillelse = request.oppgaveFrist,
+                        prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
+                        metadata =
+                            request.behandlingskjedeId.coerceBlankToNull()
+                                ?.let { mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to it) },
+                    ),
+            ) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved opprettelse av oppgave.",
             )
-        ) ?: throw ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
-            "Feil ved opprettelse av oppgave."
-        )
 
         val oppgaveId = response.id ?: throw IllegalStateException("Response inneholdt ikke oppgaveId")
         return OpprettOppgaveResponse(oppgaveId.toString())
@@ -95,34 +102,38 @@ class RestOppgaveBehandlingServiceImpl(
         requireNotNull(request)
         val ident: NavIdent = AuthContextUtils.requireNavIdent()
         val behandling: Behandling? = request.underkategoriKode?.parseV2BehandlingString()
-        val aktorId = pdlOppslagService.hentAktorId(request.fnr)
-            ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
+        val aktorId =
+            pdlOppslagService.hentAktorId(request.fnr)
+                ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
-        val response = systemApiClient.opprettOppgave(
-            xCorrelationID = correlationId(),
-            postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
-                opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
-                aktoerId = aktorId,
-                behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
-                beskrivelse = beskrivelseInnslag(
-                    ident = ident,
-                    navn = ansattService.hentVeileder(ident).navn,
-                    enhet = request.opprettetavenhetsnummer,
-                    innhold = request.beskrivelse,
-                    clock = clock
-                ),
-                tema = request.tema,
-                oppgavetype = request.oppgavetype,
-                behandlingstema = behandling?.behandlingstema,
-                behandlingstype = behandling?.behandlingstype,
-                aktivDato = LocalDate.now(clock),
-                fristFerdigstillelse = request.oppgaveFrist,
-                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
+        val response =
+            systemApiClient.opprettOppgave(
+                xCorrelationID = correlationId(),
+                postOppgaveRequestJsonDTO =
+                    PostOppgaveRequestJsonDTO(
+                        opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
+                        aktoerId = aktorId,
+                        behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
+                        beskrivelse =
+                            beskrivelseInnslag(
+                                ident = ident,
+                                navn = ansattService.hentVeileder(ident).navn,
+                                enhet = request.opprettetavenhetsnummer,
+                                innhold = request.beskrivelse,
+                                clock = clock,
+                            ),
+                        tema = request.tema,
+                        oppgavetype = request.oppgavetype,
+                        behandlingstema = behandling?.behandlingstema,
+                        behandlingstype = behandling?.behandlingstype,
+                        aktivDato = LocalDate.now(clock),
+                        fristFerdigstillelse = request.oppgaveFrist,
+                        prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
+                    ),
+            ) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved opprettelse av oppgave.",
             )
-        ) ?: throw ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
-            "Feil ved opprettelse av oppgave."
-        )
 
         val oppgaveId = response.id ?: throw IllegalStateException("Response inneholdt ikke oppgaveId")
         return OpprettOppgaveResponse(oppgaveId.toString())
@@ -139,7 +150,7 @@ class RestOppgaveBehandlingServiceImpl(
         oppgaveId: String?,
         temagruppe: Temagruppe?,
         saksbehandlersValgteEnhet: String?,
-        tvungenTilordning: Boolean
+        tvungenTilordning: Boolean,
     ) {
         requireNotNull(oppgaveId)
         val ident: String = AuthContextUtils.requireIdent()
@@ -148,7 +159,9 @@ class RestOppgaveBehandlingServiceImpl(
         if (oppgave.tilordnetRessurs == ident) {
             return
         } else if (tvungenTilordning) {
-            tjenestekallLogg.warn("[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}")
+            tjenestekallLogg.warn(
+                "[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}",
+            )
         } else if (oppgave.tilordnetRessurs != null) {
             throw AlleredeTildeltAnnenSaksbehandler("Oppgaven er allerede tildelt ${oppgave.tilordnetRessurs}. Vil du overstyre dette?")
         }
@@ -158,8 +171,8 @@ class RestOppgaveBehandlingServiceImpl(
             oppgaveId.toLong(),
             oppgave.copy(
                 tilordnetRessurs = ident,
-                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet)
-            ).toPutOppgaveRequestJsonDTO()
+                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet),
+            ).toPutOppgaveRequestJsonDTO(),
         )
     }
 
@@ -175,18 +188,19 @@ class RestOppgaveBehandlingServiceImpl(
                 aktivDatoTom = LocalDate.now(clock).toString(),
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
-                offset = offset
+                offset = offset,
             ) ?: throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "Feil ved henting av oppgave."
+                "Feil ved henting av oppgave.",
             )
         }
     }
 
     override fun finnTildelteOppgaverIGsak(fnr: String): MutableList<Oppgave> {
         val ident: String = AuthContextUtils.requireIdent()
-        val aktorId = pdlOppslagService.hentAktorId(fnr)
-            ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
+        val aktorId =
+            pdlOppslagService.hentAktorId(fnr)
+                ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
         val correlationId = correlationId()
 
         return hentOppgaverPaginertOgTilgangskontroll { offset ->
@@ -197,10 +211,10 @@ class RestOppgaveBehandlingServiceImpl(
                 aktivDatoTom = LocalDate.now(clock).toString(),
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
-                offset = offset
+                offset = offset,
             ) ?: throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "Feil ved henting av oppgave."
+                "Feil ved henting av oppgave.",
             )
         }
     }
@@ -208,7 +222,7 @@ class RestOppgaveBehandlingServiceImpl(
     override fun ferdigstillOppgaveIGsak(
         oppgaveId: String?,
         temagruppe: Temagruppe?,
-        saksbehandlersValgteEnhet: String?
+        saksbehandlersValgteEnhet: String?,
     ) {
         ferdigstillOppgaveIGsak(oppgaveId, ofNullable(temagruppe), saksbehandlersValgteEnhet)
     }
@@ -216,7 +230,7 @@ class RestOppgaveBehandlingServiceImpl(
     override fun ferdigstillOppgaveIGsak(
         oppgaveId: String?,
         temagruppe: Optional<Temagruppe>?,
-        saksbehandlersValgteEnhet: String?
+        saksbehandlersValgteEnhet: String?,
     ) {
         ferdigstillOppgaveIGsak(oppgaveId, temagruppe, saksbehandlersValgteEnhet, "")
     }
@@ -225,7 +239,7 @@ class RestOppgaveBehandlingServiceImpl(
         oppgaveId: String?,
         temagruppe: Optional<Temagruppe>?,
         saksbehandlersValgteEnhet: String?,
-        beskrivelse: String?
+        beskrivelse: String?,
     ) {
         requireNotNull(oppgaveId)
         val ident: NavIdent = AuthContextUtils.requireNavIdent()
@@ -236,25 +250,26 @@ class RestOppgaveBehandlingServiceImpl(
             oppgaveId.toLong(),
             oppgave.copy(
                 status = OppgaveJsonDTO.Status.FERDIGSTILT,
-                beskrivelse = leggTilBeskrivelse(
-                    oppgave.beskrivelse,
-                    beskrivelseInnslag(
-                        ident = ident,
-                        navn = ansattService.hentVeileder(ident).navn,
-                        enhet = saksbehandlersValgteEnhet,
-                        innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
-                        clock = clock
-                    )
-                ),
-                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe?.orElse(null), saksbehandlersValgteEnhet)
-            ).toPutOppgaveRequestJsonDTO()
+                beskrivelse =
+                    leggTilBeskrivelse(
+                        oppgave.beskrivelse,
+                        beskrivelseInnslag(
+                            ident = ident,
+                            navn = ansattService.hentVeileder(ident).navn,
+                            enhet = saksbehandlersValgteEnhet,
+                            innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
+                            clock = clock,
+                        ),
+                    ),
+                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe?.orElse(null), saksbehandlersValgteEnhet),
+            ).toPutOppgaveRequestJsonDTO(),
         )
     }
 
     override fun ferdigstillOppgaverIGsak(
         oppgaveIder: MutableList<String?>?,
         temagruppe: Optional<Temagruppe>?,
-        saksbehandlersValgteEnhet: String?
+        saksbehandlersValgteEnhet: String?,
     ) {
         requireNotNull(oppgaveIder)
         for (oppgaveId in oppgaveIder) {
@@ -273,35 +288,37 @@ class RestOppgaveBehandlingServiceImpl(
         henvendelseId: String,
         temagruppe: Temagruppe?,
         enhet: String?,
-        tvungenTilordning: Boolean
+        tvungenTilordning: Boolean,
     ): Oppgave? {
-        val aktorId = pdlOppslagService.hentAktorId(fnr)
-            ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
+        val aktorId =
+            pdlOppslagService.hentAktorId(fnr)
+                ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
 
         val correlationId = correlationId()
 
-        val oppgaver = hentOppgaverPaginertOgTilgangskontroll { offset ->
-            apiClient.finnOppgaver(
-                aktoerId = listOf(aktorId),
-                xCorrelationID = correlationId,
-                tema = listOf(Utils.KONTAKT_NAV),
-                oppgavetype = listOf(SPORSMAL_OG_SVAR),
-                aktivDatoTom = LocalDate.now(clock).toString(),
-                statuskategori = "AAPEN",
-                limit = OPPGAVE_MAX_LIMIT,
-                offset = offset
-            ) ?: throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Feil ved henting av oppgave."
-            )
-        }
+        val oppgaver =
+            hentOppgaverPaginertOgTilgangskontroll { offset ->
+                apiClient.finnOppgaver(
+                    aktoerId = listOf(aktorId),
+                    xCorrelationID = correlationId,
+                    tema = listOf(Utils.KONTAKT_NAV),
+                    oppgavetype = listOf(SPORSMAL_OG_SVAR),
+                    aktivDatoTom = LocalDate.now(clock).toString(),
+                    statuskategori = "AAPEN",
+                    limit = OPPGAVE_MAX_LIMIT,
+                    offset = offset,
+                ) ?: throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Feil ved henting av oppgave.",
+                )
+            }
         val henvendelseOppgave = oppgaver.firstOrNull { it.henvendelseId == henvendelseId }
         if (henvendelseOppgave != null) {
             tilordneOppgaveIGsak(
                 henvendelseOppgave.oppgaveId,
                 temagruppe,
                 enhet,
-                tvungenTilordning
+                tvungenTilordning,
             )
         }
 
@@ -309,55 +326,62 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     private fun hentOppgaveJsonDTO(oppgaveId: String): OppgaveJsonDTO {
-        val oppgave = apiClient.hentOppgave(
-            xCorrelationID = correlationId(),
-            id = oppgaveId.toLong()
-        ) ?: throw ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
-            "Feil ved henting av oppgave."
-        )
+        val oppgave =
+            apiClient.hentOppgave(
+                xCorrelationID = correlationId(),
+                id = oppgaveId.toLong(),
+            ) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Feil ved henting av oppgave.",
+            )
 
         return oppgave.toOppgaveJsonDTO()
     }
 
     private fun hentOppgaverPaginertOgTilgangskontroll(action: (offset: Long) -> GetOppgaverResponseJsonDTO): MutableList<Oppgave> {
-        val response = paginering(
-            total = { it.antallTreffTotalt ?: 0 },
-            data = { it.oppgaver ?: emptyList() },
-            action = action
-        )
+        val response =
+            paginering(
+                total = { it.antallTreffTotalt ?: 0 },
+                data = { it.oppgaver ?: emptyList() },
+                action = action,
+            )
 
-        val oppgaver = response
-            .filter { oppgaveJson ->
-                val erTilknyttetHenvendelse =
-                    oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
-                val harAktorId = !oppgaveJson.aktoerId.isNullOrBlank()
-                erTilknyttetHenvendelse && harAktorId
-            }
+        val oppgaver =
+            response
+                .filter { oppgaveJson ->
+                    val erTilknyttetHenvendelse =
+                        oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
+                    val harAktorId = !oppgaveJson.aktoerId.isNullOrBlank()
+                    erTilknyttetHenvendelse && harAktorId
+                }
 
         val aktorIdTilganger: Map<String?, Decision.Type> = hentAktorIdTilgang(oppgaver)
         return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
             .filter { aktorIdTilganger[it.aktoerId] == Decision.Type.PERMIT }
             .fold(
                 transformSuccess = this::mapTilOppgave,
-                transformFailure = { it }
+                transformFailure = { it },
             )
             .getWithFailureHandling { failures ->
                 val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
-                tjenestekallLogg.warn("[OPPGAVE] hentOppgaverPaginertOgTilgangskontroll la tilbake oppgaver pga manglende tilgang: $oppgaveIds")
+                tjenestekallLogg.warn(
+                    "[OPPGAVE] hentOppgaverPaginertOgTilgangskontroll la tilbake oppgaver pga manglende tilgang: $oppgaveIds",
+                )
                 systemLeggTilbakeOppgaver(failures)
             }
             .toMutableList()
     }
 
     private fun mapTilOppgave(oppgave: OppgaveJsonDTO): Oppgave {
-        val oppgaveId = requireNotNull(oppgave.id) {
-            "OppgaveId må være satt for konvertering til Oppgave"
-        }
+        val oppgaveId =
+            requireNotNull(oppgave.id) {
+                "OppgaveId må være satt for konvertering til Oppgave"
+            }
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val fnr = requireNotNull(pdlOppslagService.hentFnr(aktorId)) {
-            "Fant ikke fnr for aktorId $aktorId"
-        }
+        val fnr =
+            requireNotNull(pdlOppslagService.hentFnr(aktorId)) {
+                "Fant ikke fnr for aktorId $aktorId"
+            }
         val henvendelseId = oppgave.metadata?.get(MetadataKey.EKSTERN_HENVENDELSE_ID.name)
         val erSTO = oppgave.oppgavetype == SPORSMAL_OG_SVAR
 
@@ -365,7 +389,7 @@ class RestOppgaveBehandlingServiceImpl(
             oppgaveId.toString(),
             fnr,
             henvendelseId,
-            erSTO
+            erSTO,
         )
     }
 
@@ -396,14 +420,16 @@ class RestOppgaveBehandlingServiceImpl(
                 oppgave
                     .copy(
                         tilordnetRessurs = null,
-                        endretAvEnhetsnr = defaultEnhetGittTemagruppe(null, "4100")
+                        endretAvEnhetsnr = defaultEnhetGittTemagruppe(null, "4100"),
                     )
-                    .toPutOppgaveRequestJsonDTO()
+                    .toPutOppgaveRequestJsonDTO(),
             )
         }
     }
 
     private fun correlationId() = getCallId()
+
     private fun stripTemakode(prioritet: String) = prioritet.substringBefore("_")
+
     private fun String?.coerceBlankToNull() = if (this.isNullOrBlank()) null else this
 }

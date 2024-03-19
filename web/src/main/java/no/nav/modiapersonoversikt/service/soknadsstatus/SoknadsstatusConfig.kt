@@ -23,41 +23,40 @@ private val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProp
 
 @Configuration
 open class SoknadsstatusConfig {
-
     @Bean
-    open fun soknadsstatusService(
-        tokenClient: OnBehalfOfTokenClient,
-    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi))
+    open fun soknadsstatusService(tokenClient: OnBehalfOfTokenClient) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi))
 }
 
 object SoknadsstatusApiFactory {
-    fun createClient(tokenProvider: () -> String): OkHttpClient = RestClient.baseClient().newBuilder()
-        .addInterceptor(
-            HeadersInterceptor {
-                mapOf(
-                    "nav-call-id" to getCallId()
-                )
-            }
-        )
-        .addInterceptor(
-            LoggingInterceptor("ModiaSoknadsstatusV1") { request ->
-                requireNotNull(request.header("nav-call-id")) {
-                    "Kall uten \"nav-call-id\" er ikke lov"
-                }
-            }
-        )
-        .addInterceptor(
-            AuthorizationInterceptor {
-                tokenProvider()
-            }
-        )
-        .readTimeout(15.seconds.toJavaDuration())
-        .build()
+    fun createClient(tokenProvider: () -> String): OkHttpClient =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(
+                HeadersInterceptor {
+                    mapOf(
+                        "nav-call-id" to getCallId(),
+                    )
+                },
+            )
+            .addInterceptor(
+                LoggingInterceptor("ModiaSoknadsstatusV1") { request ->
+                    requireNotNull(request.header("nav-call-id")) {
+                        "Kall uten \"nav-call-id\" er ikke lov"
+                    }
+                },
+            )
+            .addInterceptor(
+                AuthorizationInterceptor {
+                    tokenProvider()
+                },
+            )
+            .readTimeout(15.seconds.toJavaDuration())
+            .build()
 
     fun createSoknadsstatusApi(oboClient: BoundedOnBehalfOfTokenClient) =
         SoknadsstatusControllerApi(url, createClient(oboClient.asTokenProvider()))
 
-    private fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String = {
-        AuthContextUtils.requireBoundedClientOboToken(this)
-    }
+    private fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String =
+        {
+            AuthContextUtils.requireBoundedClientOboToken(this)
+        }
 }

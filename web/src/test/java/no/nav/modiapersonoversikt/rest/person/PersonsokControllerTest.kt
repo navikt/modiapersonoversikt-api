@@ -1,9 +1,14 @@
 package no.nav.modiapersonoversikt.rest.person
 
-import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Matrikkeladresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Person
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Bostedsadresse
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Kjoenn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -12,6 +17,8 @@ import java.math.BigInteger
 import java.time.*
 import javax.xml.datatype.DatatypeFactory
 import javax.xml.datatype.XMLGregorianCalendar
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Bostedsadresse as PdlBostedsadresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Kjoenn as PdlKjoenn
 
 class PersonsokControllerTest {
     @Nested
@@ -20,171 +27,204 @@ class PersonsokControllerTest {
         @RegisterExtension
         val snapshot = SnapshotExtension()
 
-        private val fixedDate: XMLGregorianCalendar = DatatypeFactory
-            .newInstance()
-            .newXMLGregorianCalendarDate(2020, 10, 12, 0)
+        private val fixedDate: XMLGregorianCalendar =
+            DatatypeFactory
+                .newInstance()
+                .newXMLGregorianCalendarDate(2020, 10, 12, 0)
 
         @Test
         internal fun `should map tps response`() {
-            val person = Bruker().apply {
-                diskresjonskode = Diskresjonskoder().apply {
-                    kodeverksRef = "kodeverkref"
-                    kodeRef = "SPSF"
-                    value = "SPSF"
-                }
-                postadresse = Postadresse().apply {
-                    ustrukturertAdresse = UstrukturertAdresse().apply {
-                        adresselinje1 = "adresselinje1"
-                        adresselinje2 = "adresselinje2"
-                        adresselinje3 = "adresselinje3"
-                        adresselinje4 = "adresselinje4"
-                        landkode = Landkoder().apply {
-                            kodeverksRef = "landkodeRef"
-                            kodeRef = "NOR"
-                            value = "NOR"
+            val person =
+                Bruker().apply {
+                    diskresjonskode =
+                        Diskresjonskoder().apply {
+                            kodeverksRef = "kodeverkref"
+                            kodeRef = "SPSF"
+                            value = "SPSF"
                         }
-                    }
-                }
-                bostedsadresse = Bostedsadresse().apply {
-                    strukturertAdresse = Gateadresse().apply {
-                        gatenummer = BigInteger.TWO
-                        gatenavn = "Supervegen"
-                        husnummer = BigInteger.TEN
-                        husbokstav = "Z"
-                        poststed = Postnummer().apply {
-                            kodeverksRef = "postnummerRef"
-                            kodeRef = "1234"
-                            value = "Svingen"
+                    postadresse =
+                        Postadresse().apply {
+                            ustrukturertAdresse =
+                                UstrukturertAdresse().apply {
+                                    adresselinje1 = "adresselinje1"
+                                    adresselinje2 = "adresselinje2"
+                                    adresselinje3 = "adresselinje3"
+                                    adresselinje4 = "adresselinje4"
+                                    landkode =
+                                        Landkoder().apply {
+                                            kodeverksRef = "landkodeRef"
+                                            kodeRef = "NOR"
+                                            value = "NOR"
+                                        }
+                                }
                         }
-                        bolignummer = "1234"
-                        kommunenummer = "654321"
-                    }
-                }
-                kjoenn = Kjoenn().apply {
-                    kjoenn = Kjoennstyper().apply {
-                        kodeverksRef = "kjonnRef"
-                        kodeRef = "M"
-                        value = "M"
-                    }
-                }
-                personnavn = Personnavn().apply {
-                    fornavn = "fornavn"
-                    mellomnavn = "mellomnavn"
-                    etternavn = "etternavn"
-                    sammensattNavn = "fornavn mellomnavn etternavn"
-                }
-                personstatus = Personstatus().apply {
-                    personstatus = Personstatuser().apply {
-                        kodeverksRef = "personstatusRef"
-                        kodeRef = "DOD"
-                        value = "DOD"
-                    }
-                }
-                ident = NorskIdent().apply {
-                    ident = "12345679810"
-                    type = Personidenter().apply {
-                        kodeverksRef = "personidenterRef"
-                        kodeRef = "FNR"
-                        value = "FNR"
-                    }
-                }
-                gjeldendePostadresseType = Postadressetyper().apply {
-                    kodeverksRef = "postadresseRef"
-                    kodeRef = "postadresseRef"
-                    value = "NA"
-                }
-                midlertidigPostadresse = MidlertidigPostadresseNorge().apply {
-                    ustrukturertAdresse = UstrukturertAdresse().apply {
-                        adresselinje1 = "adresselinje1"
-                        adresselinje2 = "adresselinje2"
-                        adresselinje3 = "adresselinje3"
-                        adresselinje4 = "adresselinje4"
-                        landkode = Landkoder().apply {
-                            kodeverksRef = "landkodeRef"
-                            kodeRef = "NOR"
-                            value = "NOR"
+                    bostedsadresse =
+                        Bostedsadresse().apply {
+                            strukturertAdresse =
+                                Gateadresse().apply {
+                                    gatenummer = BigInteger.TWO
+                                    gatenavn = "Supervegen"
+                                    husnummer = BigInteger.TEN
+                                    husbokstav = "Z"
+                                    poststed =
+                                        Postnummer().apply {
+                                            kodeverksRef = "postnummerRef"
+                                            kodeRef = "1234"
+                                            value = "Svingen"
+                                        }
+                                    bolignummer = "1234"
+                                    kommunenummer = "654321"
+                                }
                         }
-                    }
-                    postleveringsPeriode = Gyldighetsperiode().apply {
-                        fom = fixedDate
-                        tom = fixedDate
-                    }
+                    kjoenn =
+                        Kjoenn().apply {
+                            kjoenn =
+                                Kjoennstyper().apply {
+                                    kodeverksRef = "kjonnRef"
+                                    kodeRef = "M"
+                                    value = "M"
+                                }
+                        }
+                    personnavn =
+                        Personnavn().apply {
+                            fornavn = "fornavn"
+                            mellomnavn = "mellomnavn"
+                            etternavn = "etternavn"
+                            sammensattNavn = "fornavn mellomnavn etternavn"
+                        }
+                    personstatus =
+                        Personstatus().apply {
+                            personstatus =
+                                Personstatuser().apply {
+                                    kodeverksRef = "personstatusRef"
+                                    kodeRef = "DOD"
+                                    value = "DOD"
+                                }
+                        }
+                    ident =
+                        NorskIdent().apply {
+                            ident = "12345679810"
+                            type =
+                                Personidenter().apply {
+                                    kodeverksRef = "personidenterRef"
+                                    kodeRef = "FNR"
+                                    value = "FNR"
+                                }
+                        }
+                    gjeldendePostadresseType =
+                        Postadressetyper().apply {
+                            kodeverksRef = "postadresseRef"
+                            kodeRef = "postadresseRef"
+                            value = "NA"
+                        }
+                    midlertidigPostadresse =
+                        MidlertidigPostadresseNorge().apply {
+                            ustrukturertAdresse =
+                                UstrukturertAdresse().apply {
+                                    adresselinje1 = "adresselinje1"
+                                    adresselinje2 = "adresselinje2"
+                                    adresselinje3 = "adresselinje3"
+                                    adresselinje4 = "adresselinje4"
+                                    landkode =
+                                        Landkoder().apply {
+                                            kodeverksRef = "landkodeRef"
+                                            kodeRef = "NOR"
+                                            value = "NOR"
+                                        }
+                                }
+                            postleveringsPeriode =
+                                Gyldighetsperiode().apply {
+                                    fom = fixedDate
+                                    tom = fixedDate
+                                }
+                        }
+                    harAnsvarligEnhet =
+                        AnsvarligEnhet().apply {
+                            enhet =
+                                Organisasjonsenhet().apply {
+                                    organisasjonselementID = "1234"
+                                }
+                        }
                 }
-                harAnsvarligEnhet = AnsvarligEnhet().apply {
-                    enhet = Organisasjonsenhet().apply {
-                        organisasjonselementID = "1234"
-                    }
-                }
-            }
 
             snapshot.assertMatches(lagPersonResponse(person))
         }
 
         @Test
         internal fun `should map pdl response`() {
-            val person = SokPerson.PersonSearchHit(
-                score = 1.0f,
-                person = SokPerson.Person(
-                    navn = listOf(
-                        SokPerson.Navn(
-                            fornavn = "fornavn",
-                            mellomnavn = "mellomnavn",
-                            etternavn = "etternavn",
-                            originaltNavn = null
-                        )
-                    ),
-                    kjoenn = listOf(
-                        SokPerson.Kjoenn(
-                            SokPerson.KjoennType.KVINNE
-                        )
-                    ),
-                    utenlandskIdentifikasjonsnummer = listOf(
-                        SokPerson.UtenlandskIdentifikasjonsnummer(
-                            identifikasjonsnummer = "987654-987",
-                            utstederland = "SWE",
-                            opphoert = false
-                        )
-                    ),
-                    folkeregisteridentifikator = listOf(
-                        SokPerson.Folkeregisteridentifikator(
-                            identifikasjonsnummer = "12345678910",
-                            status = "AKTIV",
-                            type = "FNR"
-                        )
-                    ),
-                    kontaktadresse = listOf(
-                        SokPerson.Kontaktadresse(
-                            vegadresse = SokPerson.Vegadresse(
-                                husbokstav = "Z",
-                                husnummer = "10",
-                                bruksenhetsnummer = null,
-                                adressenavn = "Supervegen",
-                                kommunenummer = "654321",
-                                postnummer = "1234",
-                                bydelsnummer = null,
-                                tilleggsnavn = null
-                            ),
-                            postboksadresse = null,
-                            postadresseIFrittFormat = null,
-                            utenlandskAdresse = null,
-                            utenlandskAdresseIFrittFormat = null
-                        )
-                    ),
-                    bostedsadresse = listOf(
-                        SokPerson.Bostedsadresse(
-                            matrikkeladresse = SokPerson.Matrikkeladresse(
-                                bruksenhetsnummer = "123101",
-                                tilleggsnavn = "Supergården",
-                                postnummer = "1234",
-                                kommunenummer = "654321"
-                            ),
-                            vegadresse = null,
-                            utenlandskAdresse = null,
-                            ukjentBosted = null
-                        )
-                    )
+            val person =
+                PersonSearchHit(
+                    score = 1.0,
+                    person =
+                        Person(
+                            navn =
+                                listOf(
+                                    Navn(
+                                        fornavn = "fornavn",
+                                        mellomnavn = "mellomnavn",
+                                        etternavn = "etternavn",
+                                        originaltNavn = null,
+                                    ),
+                                ),
+                            kjoenn =
+                                listOf(
+                                    PdlKjoenn(
+                                        KjoennType.KVINNE,
+                                    ),
+                                ),
+                            utenlandskIdentifikasjonsnummer =
+                                listOf(
+                                    UtenlandskIdentifikasjonsnummer(
+                                        identifikasjonsnummer = "987654-987",
+                                        utstederland = "SWE",
+                                        opphoert = false,
+                                    ),
+                                ),
+                            folkeregisteridentifikator =
+                                listOf(
+                                    Folkeregisteridentifikator(
+                                        identifikasjonsnummer = "12345678910",
+                                        status = "AKTIV",
+                                        type = "FNR",
+                                    ),
+                                ),
+                            kontaktadresse =
+                                listOf(
+                                    Kontaktadresse(
+                                        vegadresse =
+                                            Vegadresse(
+                                                husbokstav = "Z",
+                                                husnummer = "10",
+                                                bruksenhetsnummer = null,
+                                                adressenavn = "Supervegen",
+                                                kommunenummer = "654321",
+                                                postnummer = "1234",
+                                                bydelsnummer = null,
+                                                tilleggsnavn = null,
+                                            ),
+                                        postboksadresse = null,
+                                        postadresseIFrittFormat = null,
+                                        utenlandskAdresse = null,
+                                        utenlandskAdresseIFrittFormat = null,
+                                    ),
+                                ),
+                            bostedsadresse =
+                                listOf(
+                                    PdlBostedsadresse(
+                                        matrikkeladresse =
+                                            Matrikkeladresse(
+                                                bruksenhetsnummer = "123101",
+                                                tilleggsnavn = "Supergården",
+                                                postnummer = "1234",
+                                                kommunenummer = "654321",
+                                            ),
+                                        vegadresse = null,
+                                        utenlandskAdresse = null,
+                                        ukjentBosted = null,
+                                    ),
+                                ),
+                        ),
                 )
-            )
 
             snapshot.assertMatches(lagPersonResponse(person))
         }
@@ -192,83 +232,94 @@ class PersonsokControllerTest {
 
     @Nested
     inner class PdlKriterierMapper {
-        private val clock: Clock = Clock.fixed(
-            Instant.parse("2020-12-02T12:00:00.00Z"),
-            ZoneId.systemDefault()
-        )
+        private val clock: Clock =
+            Clock.fixed(
+                Instant.parse("2020-12-02T12:00:00.00Z"),
+                ZoneId.systemDefault(),
+            )
 
         @Test
         internal fun `regner ut tidligste dato basert på alderFra`() {
-            val kriterier = requestV3
-                .copy(alderFra = 30)
-                .tilPdlKriterier(clock)
+            val kriterier =
+                requestV3
+                    .copy(alderFra = 30)
+                    .tilPdlKriterier(clock)
 
             assertThat(kriterier).contains(PdlKriterie(PdlFelt.FODSELSDATO_TIL, "1990-12-02", searchHistorical = PdlSokeOmfang.GJELDENDE))
         }
 
         @Test
         internal fun `regner ut seneste dato basert på alderTil`() {
-            val kriterier = requestV3
-                .copy(alderTil = 32)
-                .tilPdlKriterier(clock)
+            val kriterier =
+                requestV3
+                    .copy(alderTil = 32)
+                    .tilPdlKriterier(clock)
 
             assertThat(kriterier).contains(PdlKriterie(PdlFelt.FODSELSDATO_FRA, "1987-12-03", searchHistorical = PdlSokeOmfang.GJELDENDE))
         }
 
         @Test
         internal fun `mapper kjønn til pdl-format`() {
-            val mann = requestV3
-                .copy(kjonn = "M")
-                .tilPdlKriterier(clock)
+            val mann =
+                requestV3
+                    .copy(kjonn = "M")
+                    .tilPdlKriterier(clock)
 
             assertThat(mann).contains(PdlKriterie(PdlFelt.KJONN, "MANN", searchHistorical = PdlSokeOmfang.GJELDENDE))
 
-            val kvinne = requestV3
-                .copy(kjonn = "K")
-                .tilPdlKriterier(clock)
+            val kvinne =
+                requestV3
+                    .copy(kjonn = "K")
+                    .tilPdlKriterier(clock)
 
             assertThat(kvinne).contains(PdlKriterie(PdlFelt.KJONN, "KVINNE", searchHistorical = PdlSokeOmfang.GJELDENDE))
 
-            val ukjent = requestV3
-                .copy(kjonn = "U")
-                .tilPdlKriterier(clock)
+            val ukjent =
+                requestV3
+                    .copy(kjonn = "U")
+                    .tilPdlKriterier(clock)
 
             assertThat(ukjent).contains(PdlKriterie(PdlFelt.KJONN, null, searchHistorical = PdlSokeOmfang.GJELDENDE))
         }
 
         @Test
         internal fun `mapper adresse til pdl-format`() {
-            val kriterier = requestV3
-                .copy(
-                    adresse = "Gatenavn 1 A 0100"
-                )
-                .tilPdlKriterier(clock)
+            val kriterier =
+                requestV3
+                    .copy(
+                        adresse = "Gatenavn 1 A 0100",
+                    )
+                    .tilPdlKriterier(clock)
 
             assertThat(kriterier).contains(PdlKriterie(PdlFelt.ADRESSE, "Gatenavn 1 A 0100", searchHistorical = PdlSokeOmfang.GJELDENDE))
         }
 
         @Test
         internal fun `mapper navn til pdl-format`() {
-            val kriterier = requestV3
-                .copy(
-                    navn = "Fornavn Etternavn"
-                )
-                .tilPdlKriterier(clock)
+            val kriterier =
+                requestV3
+                    .copy(
+                        navn = "Fornavn Etternavn",
+                    )
+                    .tilPdlKriterier(clock)
 
-            assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
+            assertThat(
+                kriterier,
+            ).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
         }
 
-        private val requestV3 = PersonsokRequestV3(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
+        private val requestV3 =
+            PersonsokRequestV3(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+            )
     }
 }

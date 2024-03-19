@@ -16,10 +16,11 @@ internal class NullCachingNomClientTest {
     private val navIdent1 = NavIdent("1")
     private val navIdent2 = NavIdent("2")
     private val navIdent3 = NavIdent("3")
-    private val veiledere = listOf(
-        VeilederNavn().setNavIdent(navIdent1),
-        VeilederNavn().setNavIdent(navIdent3),
-    )
+    private val veiledere =
+        listOf(
+            VeilederNavn().setNavIdent(navIdent1),
+            VeilederNavn().setNavIdent(navIdent3),
+        )
 
     @Test
     internal fun `should not cache errors from underlying service`() {

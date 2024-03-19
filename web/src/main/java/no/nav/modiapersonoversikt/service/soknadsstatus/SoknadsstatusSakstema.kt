@@ -10,5 +10,5 @@ data class SoknadsstatusSakstema(
     val soknadsstatus: Soknadsstatus = Soknadsstatus(),
     val dokumentMetadata: List<DokumentMetadata> = emptyList(),
     val tilhorendeSaker: List<Sak> = emptyList(),
-    val feilkoder: List<Int> = emptyList()
+    val feilkoder: List<Int> = emptyList(),
 )

@@ -17,7 +17,7 @@
         <cxf.version>3.3.0</cxf.version>
         <cxf-xjc-boolean.version>3.1.0</cxf-xjc-boolean.version>
         <org.jvnet.jaxb2.version>0.11.1</org.jvnet.jaxb2.version>
-        <jackson-annotations.version>2.9.0</jackson-annotations.version>
+        <jackson-annotations.version>2.16.1</jackson-annotations.version>
         <joda-time.version>2.10</joda-time.version>
         <jaxb2-maven-plugin.version>1.5</jaxb2-maven-plugin.version>
         <jaxb2-value-constructor.version>3.0</jaxb2-value-constructor.version>
@@ -79,7 +79,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

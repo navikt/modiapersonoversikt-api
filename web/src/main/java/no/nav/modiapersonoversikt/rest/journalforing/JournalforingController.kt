@@ -18,52 +18,56 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/rest/journalforing/{fnr}")
-class JournalforingController @Autowired constructor(
-    private val sakerService: SakerService,
-    private val sfHenvendelseService: SfHenvendelseService,
-    private val tilgangskontroll: Tilgangskontroll,
-) {
-    @GetMapping("/saker/")
-    fun hentSaker(@PathVariable("fnr") fnr: String): SakerService.Resultat {
-        return tilgangskontroll
-            .check(tilgangTilBruker(Fnr.of(fnr)))
-            .get(describe(Audit.Action.READ, AuditResources.Person.GsakSaker, FNR to fnr)) {
-                sakerService.hentSaker(fnr)
-            }
-    }
-
-    @PostMapping("/{traadId}")
-    fun knyttTilSak(
-        @PathVariable("fnr") fnr: String,
-        @PathVariable("traadId") traadId: String,
-        @RequestBody sak: JournalforingSak,
-        @RequestParam(value = "enhet") enhet: String?
+class JournalforingController
+    @Autowired
+    constructor(
+        private val sakerService: SakerService,
+        private val sfHenvendelseService: SfHenvendelseService,
+        private val tilgangskontroll: Tilgangskontroll,
     ) {
-        val auditIdentifier = arrayOf(FNR to fnr, TRAAD_ID to traadId, SAK_ID to sak.saksId)
-        return tilgangskontroll
-            .check(tilgangTilBruker(Fnr.of(fnr)))
-            .check(henvendelseTilhorerBruker(Fnr.of(fnr), traadId))
-            .get(describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Journalfor, *auditIdentifier)) {
-                if (enhet == null) {
-                    throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FEILMELDING_UTEN_ENHET)
+        @GetMapping("/saker/")
+        fun hentSaker(
+            @PathVariable("fnr") fnr: String,
+        ): SakerService.Resultat {
+            return tilgangskontroll
+                .check(tilgangTilBruker(Fnr.of(fnr)))
+                .get(describe(Audit.Action.READ, AuditResources.Person.GsakSaker, FNR to fnr)) {
+                    sakerService.hentSaker(fnr)
                 }
-                try {
-                    sfHenvendelseService.journalforHenvendelse(
-                        enhet = enhet,
-                        kjedeId = traadId,
-                        saksTema = sak.temaKode,
-                        fagsakSystem = sak.fagsystemKode,
-                        saksId = sak.fagsystemSaksId
-                    )
-                } catch (exception: Exception) {
-                    throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, UKJENT_FEIL, exception)
-                }
-            }
-    }
+        }
 
-    companion object {
-        const val FEILMELDING_UTEN_ENHET =
-            "Det er dessverre ikke mulig å journalføre henvendelsen. Du må velge enhet du jobber på vegne av på nytt. Bekreft enhet med å trykke på \"Velg\"-knappen."
-        const val UKJENT_FEIL = "Ukjent feil"
+        @PostMapping("/{traadId}")
+        fun knyttTilSak(
+            @PathVariable("fnr") fnr: String,
+            @PathVariable("traadId") traadId: String,
+            @RequestBody sak: JournalforingSak,
+            @RequestParam(value = "enhet") enhet: String?,
+        ) {
+            val auditIdentifier = arrayOf(FNR to fnr, TRAAD_ID to traadId, SAK_ID to sak.saksId)
+            return tilgangskontroll
+                .check(tilgangTilBruker(Fnr.of(fnr)))
+                .check(henvendelseTilhorerBruker(Fnr.of(fnr), traadId))
+                .get(describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Journalfor, *auditIdentifier)) {
+                    if (enhet == null) {
+                        throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FEILMELDING_UTEN_ENHET)
+                    }
+                    try {
+                        sfHenvendelseService.journalforHenvendelse(
+                            enhet = enhet,
+                            kjedeId = traadId,
+                            saksTema = sak.temaKode,
+                            fagsakSystem = sak.fagsystemKode,
+                            saksId = sak.fagsystemSaksId,
+                        )
+                    } catch (exception: Exception) {
+                        throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, UKJENT_FEIL, exception)
+                    }
+                }
+        }
+
+        companion object {
+            const val FEILMELDING_UTEN_ENHET =
+                "Det er dessverre ikke mulig å journalføre henvendelsen. Du må velge enhet du jobber på vegne av på nytt. Bekreft enhet med å trykke på \"Velg\"-knappen."
+            const val UKJENT_FEIL = "Ukjent feil"
+        }
     }
-}

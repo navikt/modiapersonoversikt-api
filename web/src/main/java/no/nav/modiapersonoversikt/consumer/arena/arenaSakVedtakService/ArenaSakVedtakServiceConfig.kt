@@ -38,7 +38,7 @@ open class ArenaSakVedtakServiceConfig {
         return MetricsFactory.createTimerProxyForWebService(
             "SakVedtakPortType",
             prod,
-            SakVedtakPortType::class.java
+            SakVedtakPortType::class.java,
         )
     }
 
@@ -46,33 +46,35 @@ open class ArenaSakVedtakServiceConfig {
     open fun sakVedtakPortTypePing(sakVedtakPortType: SakVedtakPortType): Pingable {
         val dagensDato = LocalDate.now()
         val xmlDato = DatatypeFactory.newInstance().newXMLGregorianCalendar(dagensDato.toString())
-        val hentSaksInfoListeRequestV2 = HentSaksInfoListeRequestV2()
-            .withBruker(Bruker().withBrukertypeKode("PERSON").withBrukerId("10108000398"))
-            .withFomDato(xmlDato)
-            .withTomDato(xmlDato)
+        val hentSaksInfoListeRequestV2 =
+            HentSaksInfoListeRequestV2()
+                .withBruker(Bruker().withBrukertypeKode("PERSON").withBrukerId("10108000398"))
+                .withFomDato(xmlDato)
+                .withTomDato(xmlDato)
         val saksInfoListe = SaksInfoListe()
         val sak: Holder<SaksInfoListe> = Holder(saksInfoListe)
 
-        val selftest = SelfTestCheck(
-            String.format("SakVedtakService via %s", address),
-            false
-        ) {
-            try {
-                sakVedtakPortType.hentSaksInfoListeV2(
-                    Holder(hentSaksInfoListeRequestV2.bruker),
-                    hentSaksInfoListeRequestV2.saksId,
-                    hentSaksInfoListeRequestV2.fomDato,
-                    hentSaksInfoListeRequestV2.tomDato,
-                    hentSaksInfoListeRequestV2.tema,
-                    hentSaksInfoListeRequestV2.isLukket,
-                    sak
-                )
-                HealthCheckResult.healthy()
-            } catch (e: Exception) {
-                log.error("Ukjent ved under kall på sakVedtakPortTypePing: ${e.message} ${e.cause}", e)
-                HealthCheckResult.unhealthy(e)
+        val selftest =
+            SelfTestCheck(
+                String.format("SakVedtakService via %s", address),
+                false,
+            ) {
+                try {
+                    sakVedtakPortType.hentSaksInfoListeV2(
+                        Holder(hentSaksInfoListeRequestV2.bruker),
+                        hentSaksInfoListeRequestV2.saksId,
+                        hentSaksInfoListeRequestV2.fomDato,
+                        hentSaksInfoListeRequestV2.tomDato,
+                        hentSaksInfoListeRequestV2.tema,
+                        hentSaksInfoListeRequestV2.isLukket,
+                        sak,
+                    )
+                    HealthCheckResult.healthy()
+                } catch (e: Exception) {
+                    log.error("Ukjent ved under kall på sakVedtakPortTypePing: ${e.message} ${e.cause}", e)
+                    HealthCheckResult.unhealthy(e)
+                }
             }
-        }
 
         return Pingable { selftest }
     }
@@ -80,7 +82,7 @@ open class ArenaSakVedtakServiceConfig {
     private fun createSakVedtakPortType(): SakVedtakPortType {
         return Utils.withProperty(
             "disable.ssl.cn.check",
-            "true"
+            "true",
         ) {
             CXFClient(SakVedtakPortType::class.java)
                 .address(address)
@@ -93,22 +95,25 @@ open class ArenaSakVedtakServiceConfig {
     }
 
     private fun getSecurityProps(): Map<String, Any> {
-        val user: String = EnvironmentUtils.getRequiredProperty(
-            "service_user.username",
-            AppConstants.SYSTEMUSER_USERNAME_PROPERTY
-        )
-        val password: String = EnvironmentUtils.getRequiredProperty(
-            "service_user.password",
-            AppConstants.SYSTEMUSER_PASSWORD_PROPERTY
-        )
+        val user: String =
+            EnvironmentUtils.getRequiredProperty(
+                "service_user.username",
+                AppConstants.SYSTEMUSER_USERNAME_PROPERTY,
+            )
+        val password: String =
+            EnvironmentUtils.getRequiredProperty(
+                "service_user.password",
+                AppConstants.SYSTEMUSER_PASSWORD_PROPERTY,
+            )
         val props: MutableMap<String, Any> = HashMap()
         props[WSHandlerConstants.ACTION] = WSHandlerConstants.USERNAME_TOKEN
         props[WSHandlerConstants.USER] = user
         props[WSHandlerConstants.PASSWORD_TYPE] = WSConstants.PW_TEXT
-        props[WSHandlerConstants.PW_CALLBACK_REF] = CallbackHandler { callbacks: Array<Callback> ->
-            val passwordCallback = callbacks[0] as WSPasswordCallback
-            passwordCallback.password = password
-        }
+        props[WSHandlerConstants.PW_CALLBACK_REF] =
+            CallbackHandler { callbacks: Array<Callback> ->
+                val passwordCallback = callbacks[0] as WSPasswordCallback
+                passwordCallback.password = password
+            }
         return props
     }
 }

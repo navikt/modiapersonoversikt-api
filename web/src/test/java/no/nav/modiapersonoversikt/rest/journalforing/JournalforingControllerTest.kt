@@ -18,18 +18,20 @@ import kotlin.test.assertEquals
 
 internal class JournalforingControllerTest {
     val ident = "Z999643"
-    val sak = JournalforingSak().apply {
-        temaKode = "DAG"
-        fagsystemKode = "IT01"
-        fagsystemSaksId = "987654"
-    }
+    val sak =
+        JournalforingSak().apply {
+            temaKode = "DAG"
+            fagsystemKode = "IT01"
+            fagsystemSaksId = "987654"
+        }
     val sakerService: SakerService = mockk()
     val sfHenvendelseService: SfHenvendelseService = mockk()
-    val controller = JournalforingController(
-        sakerService,
-        sfHenvendelseService,
-        TilgangskontrollMock.get()
-    )
+    val controller =
+        JournalforingController(
+            sakerService,
+            sfHenvendelseService,
+            TilgangskontrollMock.get(),
+        )
 
     @Test
     fun `knytter til sak og returnerer 200 OK`() {
@@ -39,22 +41,31 @@ internal class JournalforingControllerTest {
             ident,
             UnsafeSupplier {
                 controller.knyttTilSak("10108000398", "traad-id", sak, "1234")
-            }
+            },
         )
     }
 
     @Test
     fun `forespørsler som fieler kaster 500 Internal Server Error`() {
-        every { sfHenvendelseService.journalforHenvendelse(any(), any(), any(), any(), any()) } throws IllegalStateException("Something went wrong")
-
-        val exception = assertThrows<ResponseStatusException> {
-            AuthContextTestUtils.withIdent(
-                ident,
-                UnsafeSupplier {
-                    controller.knyttTilSak("10108000398", "traad-id", sak, "1234")
-                }
+        every {
+            sfHenvendelseService.journalforHenvendelse(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
             )
-        }
+        } throws IllegalStateException("Something went wrong")
+
+        val exception =
+            assertThrows<ResponseStatusException> {
+                AuthContextTestUtils.withIdent(
+                    ident,
+                    UnsafeSupplier {
+                        controller.knyttTilSak("10108000398", "traad-id", sak, "1234")
+                    },
+                )
+            }
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.status)
         assertEquals(JournalforingController.UKJENT_FEIL, exception.reason)
@@ -64,14 +75,15 @@ internal class JournalforingControllerTest {
     fun `forespørsler uten enhet kaster 500 Internal Server Error med message satt i body`() {
         every { sfHenvendelseService.journalforHenvendelse(any(), any(), any(), any(), any()) } just runs
 
-        val exception = assertThrows<ResponseStatusException> {
-            AuthContextTestUtils.withIdent(
-                ident,
-                UnsafeSupplier {
-                    controller.knyttTilSak("10108000398", "traad-id", sak, null)
-                }
-            )
-        }
+        val exception =
+            assertThrows<ResponseStatusException> {
+                AuthContextTestUtils.withIdent(
+                    ident,
+                    UnsafeSupplier {
+                        controller.knyttTilSak("10108000398", "traad-id", sak, null)
+                    },
+                )
+            }
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.status)
         assertEquals(JournalforingController.FEILMELDING_UTEN_ENHET, exception.reason)

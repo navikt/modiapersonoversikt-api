@@ -19,7 +19,8 @@ enum class Fagsystem(private val systemnavn: String) : EnumKodeverk.WithValue<St
     HJELPEMIDLER("Hjelpemidler"),
     OMSORGSPENGER("Omsorgspenger"),
     SUPSTONAD("Supplerende Stønad"),
-    KONT("Kontantstøtte");
+    KONT("Kontantstøtte"),
+    ;
 
     override fun getValue(): String = this.systemnavn
 }

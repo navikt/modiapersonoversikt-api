@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration
 @EnableCaching
 open class UtbetalingServiceConfig {
     @Bean
-    open fun utbetalingerService(restClient: UtbetaldataV2Api, unleash: UnleashService): UtbetalingService =
-        UtbetalingServiceImpl(restClient, unleash)
+    open fun utbetalingerService(
+        restClient: UtbetaldataV2Api,
+        unleash: UnleashService,
+    ): UtbetalingService = UtbetalingServiceImpl(restClient, unleash)
 }

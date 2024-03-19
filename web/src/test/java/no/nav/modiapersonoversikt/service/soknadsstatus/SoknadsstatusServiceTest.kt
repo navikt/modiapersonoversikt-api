@@ -16,11 +16,12 @@ class SoknadsstatusServiceTest {
 
     @Test
     fun `tre behandlinger skal gi liste med tre elementer`() {
-        val behandlinger = listOf(
-            createBehandling(),
-            createBehandling().copy(behandlingId = "beha", sakstema = "123456", status = Behandling.Status.UNDER_BEHANDLING),
-            createBehandling().copy(behandlingId = "hsfe", sakstema = "4321")
-        )
+        val behandlinger =
+            listOf(
+                createBehandling(),
+                createBehandling().copy(behandlingId = "beha", sakstema = "123456", status = Behandling.Status.UNDER_BEHANDLING),
+                createBehandling().copy(behandlingId = "hsfe", sakstema = "4321"),
+            )
 
         every { soknadsstatusApi.hentAlleBehandlinger(any(), true) } returns behandlinger
 

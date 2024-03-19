@@ -12,35 +12,38 @@ import kotlin.test.assertEquals
 
 internal class OppgaveControllerTest {
     private val oppgavebehandlingService: OppgaveBehandlingService = mockk()
-    private val oppgaveController: OppgaveController = OppgaveController(
-        oppgavebehandlingService,
-        TilgangskontrollMock.get()
-    )
+    private val oppgaveController: OppgaveController =
+        OppgaveController(
+            oppgavebehandlingService,
+            TilgangskontrollMock.get(),
+        )
 
     @Test
     fun `Returnerer tildelte oppgaver`() {
-        val oppgaveliste = listOf(
-            Oppgave(
-                OPPGAVE_ID_1,
-                "fnr",
-                "traadId",
-                true
-            ),
-            Oppgave(
-                OPPGAVE_ID_2,
-                "fnr",
-                "traadId",
-                true
+        val oppgaveliste =
+            listOf(
+                Oppgave(
+                    OPPGAVE_ID_1,
+                    "fnr",
+                    "traadId",
+                    true,
+                ),
+                Oppgave(
+                    OPPGAVE_ID_2,
+                    "fnr",
+                    "traadId",
+                    true,
+                ),
             )
-        )
 
         every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
-        val resultat = AuthContextTestUtils.withIdent(
-            SAKSBEHANDLERS_IDENT,
-            UnsafeSupplier {
-                oppgaveController.finnTildelte()
-            }
-        )
+        val resultat =
+            AuthContextTestUtils.withIdent(
+                SAKSBEHANDLERS_IDENT,
+                UnsafeSupplier {
+                    oppgaveController.finnTildelte()
+                },
+            )
 
         assertEquals(oppgaveliste.size, resultat.size)
         assertEquals(oppgaveliste[0].oppgaveId, resultat[0].oppgaveId)

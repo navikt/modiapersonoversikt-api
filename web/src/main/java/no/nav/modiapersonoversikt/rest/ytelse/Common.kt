@@ -21,7 +21,7 @@ fun hentHistoriskeUtbetalinger(historiskeUtbetalinger: List<HistoriskUtbetaling>
             "arbeidsgiverOrgNr" to it.arbeidsgiverOrgNr,
             "dagsats" to it.dagsats,
             "type" to it.type,
-            "trekk" to it.trekk?.let { trekk -> hentKreditorTrekk(trekk) }
+            "trekk" to it.trekk?.let { trekk -> hentKreditorTrekk(trekk) },
         )
     }
 
@@ -37,7 +37,7 @@ fun hentKommendeUtbetalinger(kommendeUtbetalinger: List<KommendeUtbetaling>) =
             "arbeidsgiverOrgNr" to it.arbeidsgiverOrgnr,
             "dagsats" to it.dagsats,
             "saksbehandler" to it.saksbehandler,
-            "type" to it.type?.termnavn
+            "type" to it.type?.termnavn,
         )
     }
 
@@ -45,20 +45,24 @@ private fun hentKreditorTrekk(kreditortrekk: List<Kreditortrekk>): List<Map<Stri
     return kreditortrekk.map {
         mapOf(
             "kreditorsNavn" to it.kreditorsNavn,
-            "beløp" to it.belop
+            "beløp" to it.belop,
         )
     }
 }
 
-fun hentArbeidsgiverNavn(organisasjonService: OrganisasjonService, orgnr: String): String =
-    organisasjonService.hentNoekkelinfo(orgnr).orElse(null).navn
+fun hentArbeidsgiverNavn(
+    organisasjonService: OrganisasjonService,
+    orgnr: String,
+): String = organisasjonService.hentNoekkelinfo(orgnr).orElse(null).navn
 
-fun lagPeriode(periode: Periode) = mapOf(
-    "fra" to periode.from?.toString(JODA_DATOFORMAT),
-    "til" to periode.to?.toString(JODA_DATOFORMAT)
-)
+fun lagPeriode(periode: Periode) =
+    mapOf(
+        "fra" to periode.from?.toString(JODA_DATOFORMAT),
+        "til" to periode.to?.toString(JODA_DATOFORMAT),
+    )
 
-fun lagPleiepengePeriode(periode: no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Periode) = mapOf(
-    "fom" to periode.fraOgMed?.format(DATOFORMAT),
-    "tom" to periode.tilOgMed?.format(DATOFORMAT)
-)
+fun lagPleiepengePeriode(periode: no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Periode) =
+    mapOf(
+        "fom" to periode.fraOgMed?.format(DATOFORMAT),
+        "tom" to periode.tilOgMed?.format(DATOFORMAT),
+    )

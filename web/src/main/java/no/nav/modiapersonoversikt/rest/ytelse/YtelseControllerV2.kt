@@ -19,44 +19,51 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/rest/v2/ytelse")
-class YtelseControllerV2 @Autowired constructor(
-    private val sykepengerService: SykepengerServiceBi,
-    private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
-    private val pleiepengerService: PleiepengerService,
-    private val tilgangskontroll: Tilgangskontroll,
-    private val organisasjonService: OrganisasjonService
-) {
+class YtelseControllerV2
+    @Autowired
+    constructor(
+        private val sykepengerService: SykepengerServiceBi,
+        private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
+        private val pleiepengerService: PleiepengerService,
+        private val tilgangskontroll: Tilgangskontroll,
+        private val organisasjonService: OrganisasjonService,
+    ) {
+        @PostMapping("sykepenger")
+        fun hentSykepenger(
+            @RequestBody fnrRequest: FnrRequest,
+        ): Map<String, Any?> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                    SykepengerUttrekk(sykepengerService).hent(fnrRequest.fnr)
+                }
+        }
 
-    @PostMapping("sykepenger")
-    fun hentSykepenger(@RequestBody fnrRequest: FnrRequest): Map<String, Any?> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                SykepengerUttrekk(sykepengerService).hent(fnrRequest.fnr)
+        @PostMapping("foreldrepenger")
+        fun hentForeldrepenger(
+            @RequestBody fnrRequest: FnrRequest,
+        ): Map<String, Any?> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                    ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnrRequest.fnr)
+                }
+        }
+
+        @PostMapping("pleiepenger")
+        fun hentPleiepenger(
+            @RequestBody fnrRequest: FnrRequest,
+        ): Map<String, Any?> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                    PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnrRequest.fnr)
+                }
+        }
+
+        private fun getForeldrepengerService(): ForeldrepengerServiceBi {
+            return ForeldrepengerServiceBi { request ->
+                foreldrepengerServiceDefault.hentForeldrepengerListe(request)
             }
-    }
-
-    @PostMapping("foreldrepenger")
-    fun hentForeldrepenger(@RequestBody fnrRequest: FnrRequest): Map<String, Any?> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnrRequest.fnr)
-            }
-    }
-
-    @PostMapping("pleiepenger")
-    fun hentPleiepenger(@RequestBody fnrRequest: FnrRequest): Map<String, Any?> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnrRequest.fnr)
-            }
-    }
-
-    private fun getForeldrepengerService(): ForeldrepengerServiceBi {
-        return ForeldrepengerServiceBi { request ->
-            foreldrepengerServiceDefault.hentForeldrepengerListe(request)
         }
     }
-}

@@ -17,28 +17,37 @@ object Policies {
     val tilgangTilModia = TilgangTilModiaPolicy.withAttributes()
 
     @JvmStatic
-    fun tilgangTilBruker(eksternBrukerId: EksternBrukerId) = TilgangTilBrukerPolicy.withAttributes(
-        eksternBrukerId.toAttributeValue()
-    )
+    fun tilgangTilBruker(eksternBrukerId: EksternBrukerId) =
+        TilgangTilBrukerPolicy.withAttributes(
+            eksternBrukerId.toAttributeValue(),
+        )
 
     @JvmStatic
-    fun tilgangTilTema(enhet: EnhetId, tema: String) = TilgangTilTemaPolicy.withAttributes(
+    fun tilgangTilTema(
+        enhet: EnhetId,
+        tema: String,
+    ) = TilgangTilTemaPolicy.withAttributes(
         CommonAttributes.ENHET.withValue(enhet),
-        CommonAttributes.TEMA.withValue(tema)
+        CommonAttributes.TEMA.withValue(tema),
     )
 
     @JvmStatic
-    fun henvendelseTilhorerBruker(eksternBrukerId: EksternBrukerId, kjedeId: String) = HenvendelseTilhorerBrukerPolicy.withAttributes(
+    fun henvendelseTilhorerBruker(
+        eksternBrukerId: EksternBrukerId,
+        kjedeId: String,
+    ) = HenvendelseTilhorerBrukerPolicy.withAttributes(
         eksternBrukerId.toAttributeValue(),
-        CommonAttributes.HENVENDELSE_KJEDE_ID.withValue(kjedeId)
+        CommonAttributes.HENVENDELSE_KJEDE_ID.withValue(kjedeId),
     )
 
     val kanBrukeInternal = KanBrukeInternalPolicy.withAttributes()
 
     private fun Kabac.Policy.withAttributes(vararg attributes: AttributeValue<*>) = PolicyWithAttributes(this, attributes.toList())
-    private fun EksternBrukerId.toAttributeValue() = when (this) {
-        is Fnr -> CommonAttributes.FNR.withValue(this)
-        is AktorId -> CommonAttributes.AKTOR_ID.withValue(this)
-        else -> throw IllegalArgumentException("Unsupported EksternBrukerID")
-    }
+
+    private fun EksternBrukerId.toAttributeValue() =
+        when (this) {
+            is Fnr -> CommonAttributes.FNR.withValue(this)
+            is AktorId -> CommonAttributes.AKTOR_ID.withValue(this)
+            else -> throw IllegalArgumentException("Unsupported EksternBrukerID")
+        }
 }

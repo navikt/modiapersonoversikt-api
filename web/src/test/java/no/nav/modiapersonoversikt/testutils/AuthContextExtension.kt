@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtensionContext
 
 class AuthContextExtension(var authcontext: AuthContext? = null) :
     BeforeTestExecutionCallback, AfterTestExecutionCallback {
-
     private var original: AuthContext? = null
     private val threadlocal: AuthContextHolder = AuthContextHolderThreadLocal.instance()
 

@@ -9,6 +9,7 @@ class AuditResources {
             val Pdlsok = AuditResource("introspection.pdlsok")
         }
     }
+
     class Enhet {
         companion object {
             val Kontaktinformasjon = AuditResource("enhet.kontaktinformasjon")

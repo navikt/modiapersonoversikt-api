@@ -29,7 +29,10 @@ interface DialogApi {
         opprettHenvendelseRequest: OpprettHenvendelse,
     ): FortsettDialogDTO
 
-    fun fortsettPaEksisterendeDialog(fnr: String, meldingRequest: SendMelding): TraadDTO
+    fun fortsettPaEksisterendeDialog(
+        fnr: String,
+        meldingRequest: SendMelding,
+    ): TraadDTO
 
     data class Journalpost(
         val journalfortAv: Veileder?,
@@ -66,6 +69,7 @@ data class TraadDTO(
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogApi.Journalpost>,
 )
+
 data class MeldingDTO(
     val id: String,
     val meldingsId: String?,

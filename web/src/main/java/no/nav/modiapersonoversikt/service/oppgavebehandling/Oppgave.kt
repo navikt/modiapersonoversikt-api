@@ -4,5 +4,5 @@ data class Oppgave(
     val oppgaveId: String,
     val fnr: String,
     val henvendelseId: String?,
-    val erSTOOppgave: Boolean
+    val erSTOOppgave: Boolean,
 )

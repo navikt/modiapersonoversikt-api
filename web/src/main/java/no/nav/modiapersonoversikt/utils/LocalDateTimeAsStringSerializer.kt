@@ -6,7 +6,11 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import kotlinx.datetime.*
 
 object LocalDateTimeAsStringSerializer : JsonSerializer<LocalDateTime>() {
-    override fun serialize(value: LocalDateTime?, gen: JsonGenerator?, serializers: SerializerProvider?) {
+    override fun serialize(
+        value: LocalDateTime?,
+        gen: JsonGenerator?,
+        serializers: SerializerProvider?,
+    ) {
         gen?.writeString(value.toString())
     }
 }

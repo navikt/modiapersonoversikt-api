@@ -19,58 +19,63 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/v2/enheter")
-class EnhetControllerV2 @Autowired
-constructor(
-    private val norgApi: NorgApi,
-    private val arbeidsfordeling: ArbeidsfordelingService,
-    private val ansattService: AnsattService,
-    private val tilgangskontroll: Tilgangskontroll
-) {
-    @GetMapping("/{enhetId}/ansatte")
-    fun hentAnsattePaaEnhet(@PathVariable("enhetId") enhetId: String): List<Ansatt> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
-                ansattService.ansatteForEnhet(
-                    AnsattEnhet(
-                        enhetId,
-                        ""
+class EnhetControllerV2
+    @Autowired
+    constructor(
+        private val norgApi: NorgApi,
+        private val arbeidsfordeling: ArbeidsfordelingService,
+        private val ansattService: AnsattService,
+        private val tilgangskontroll: Tilgangskontroll,
+    ) {
+        @GetMapping("/{enhetId}/ansatte")
+        fun hentAnsattePaaEnhet(
+            @PathVariable("enhetId") enhetId: String,
+        ): List<Ansatt> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
+                    ansattService.ansatteForEnhet(
+                        AnsattEnhet(
+                            enhetId,
+                            "",
+                        ),
                     )
-                )
-            }
-    }
+                }
+        }
 
-    @GetMapping("/oppgavebehandlere/alle")
-    fun hentAlleEnheterForOppgave(): List<NorgDomain.Enhet> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.describe(READ, Enhet.OppgaveBehandlere)) {
-                norgApi.hentEnheter(
-                    enhetId = null,
-                    oppgaveBehandlende = OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE,
-                    enhetStatuser = listOf(NorgDomain.EnhetStatus.AKTIV)
-                )
-            }
-    }
+        @GetMapping("/oppgavebehandlere/alle")
+        fun hentAlleEnheterForOppgave(): List<NorgDomain.Enhet> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.describe(READ, Enhet.OppgaveBehandlere)) {
+                    norgApi.hentEnheter(
+                        enhetId = null,
+                        oppgaveBehandlende = OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE,
+                        enhetStatuser = listOf(NorgDomain.EnhetStatus.AKTIV),
+                    )
+                }
+        }
 
-    @PostMapping("/oppgavebehandlere/v2/foreslatte")
-    fun hentBehandlendeEnhet(@RequestBody request: BehandlendeEnhetRequest): List<NorgDomain.Enhet> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
-            .get(Audit.describe(READ, Enhet.Foreslatte)) {
-                arbeidsfordeling.hentBehandlendeEnheter(
-                    brukerIdent = Fnr.of(request.fnr),
-                    fagomrade = request.temakode,
-                    oppgavetype = request.typekode,
-                    underkategori = request.underkategorikode
-                )
-            }
+        @PostMapping("/oppgavebehandlere/v2/foreslatte")
+        fun hentBehandlendeEnhet(
+            @RequestBody request: BehandlendeEnhetRequest,
+        ): List<NorgDomain.Enhet> {
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
+                .get(Audit.describe(READ, Enhet.Foreslatte)) {
+                    arbeidsfordeling.hentBehandlendeEnheter(
+                        brukerIdent = Fnr.of(request.fnr),
+                        fagomrade = request.temakode,
+                        oppgavetype = request.typekode,
+                        underkategori = request.underkategorikode,
+                    )
+                }
+        }
     }
-}
 
 data class BehandlendeEnhetRequest(
     val fnr: String,
     val temakode: String,
     val typekode: String,
-    val underkategorikode: String?
+    val underkategorikode: String?,
 )

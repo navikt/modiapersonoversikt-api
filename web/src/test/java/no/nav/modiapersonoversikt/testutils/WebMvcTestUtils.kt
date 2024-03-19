@@ -10,7 +10,7 @@ object WebMvcTestUtils {
         return this.perform(
             MockMvcRequestBuilders.get(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
     }
 }

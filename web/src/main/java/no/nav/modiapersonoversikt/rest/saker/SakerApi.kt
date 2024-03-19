@@ -15,7 +15,7 @@ object SakerApi {
     )
 
     data class ResultatSoknadsstatus(
-        val resultat: List<SoknadsstatusSakstema>
+        val resultat: List<SoknadsstatusSakstema>,
     )
 
     data class Sakstema(
@@ -37,7 +37,7 @@ object SakerApi {
         val dokumentMetadata: List<Dokumentmetadata>,
         val tilhorendeSaker: List<Sak>,
         val feilkoder: List<Int>,
-        val harTilgang: Boolean
+        val harTilgang: Boolean,
     )
 
     data class Behandlingskjede(
