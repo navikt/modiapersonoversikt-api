@@ -18,12 +18,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
-            <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- NAV Common -->
         <dependency>
             <groupId>no.nav.common</groupId>
@@ -306,24 +300,32 @@
 
         <!-- tjenester -->
         <dependency>
-            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-            <artifactId>arenasakvedtakservice</artifactId>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
+            <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-            <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
+            <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
             <artifactId>person-v3-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
             <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
             <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
@@ -352,8 +354,8 @@
             <artifactId>nocommons</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock-jre8</artifactId>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

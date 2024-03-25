@@ -67,7 +67,7 @@ internal class JournalforingControllerTest {
                 )
             }
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.status)
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.statusCode)
         assertEquals(JournalforingController.UKJENT_FEIL, exception.reason)
     }
 
@@ -85,7 +85,7 @@ internal class JournalforingControllerTest {
                 )
             }
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.status)
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.statusCode)
         assertEquals(JournalforingController.FEILMELDING_UTEN_ENHET, exception.reason)
     }
 }

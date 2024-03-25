@@ -40,6 +40,9 @@
         <module>modia-soknadsstatus-api</module>
         <module>utbetaling-api</module>
         <module>arenasakvedtakservice</module>
+        <module>pleiepenger-v1-tjenestespesifikasjon</module>
+        <module>oppfoelging-v1-tjenestespesifikasjon</module>
+        <module>brukervarsel-v1-tjenestespesifikasjon</module>
     </modules>
 
     <dependencyManagement>

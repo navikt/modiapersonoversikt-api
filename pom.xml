@@ -25,9 +25,10 @@
         <kotlin.version>1.9.23</kotlin.version>
         <serialization.version>1.5.1</serialization.version>
         <mockk.version>1.13.2</mockk.version>
+        <wiremock.version>3.4.2</wiremock.version>
 
         <common.version>3.2024.02.21_11.18-8f9b43befae1</common.version>
-        <modia-common-utils.version>1.2022.12.13-14.31-5b35ebe08f61</modia-common-utils.version>
+        <modia-common-utils.version>1.2024.03.25-10.55-91a4892349d0</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2618.0448179</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb.version>3.0.1</org.jvnet.jaxb.version>
         <graphql-kotlin.version>7.0.2</graphql-kotlin.version>
@@ -155,17 +156,7 @@
             </dependency>
             <dependency>
                 <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>person-v3-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
 
@@ -252,9 +243,9 @@
                 <version>${org.jvnet.jaxb.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.tomakehurst</groupId>
-                <artifactId>wiremock-jre8</artifactId>
-                <version>2.35.1</version>
+                <groupId>org.wiremock</groupId>
+                <artifactId>wiremock-standalone</artifactId>
+                <version>${wiremock.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
