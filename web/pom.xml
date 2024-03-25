@@ -311,10 +311,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-            <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
             <artifactId>person-v3-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
