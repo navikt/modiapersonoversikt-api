@@ -56,7 +56,6 @@
                             <packageName>no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
-                            <skipValidateSpec>true</skipValidateSpec>
                             <configOptions>
                                 <enumPropertyNaming>original</enumPropertyNaming>
                                 <serializationLibrary>jackson</serializationLibrary>

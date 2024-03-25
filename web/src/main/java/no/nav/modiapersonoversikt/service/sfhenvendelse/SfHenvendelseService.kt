@@ -187,7 +187,7 @@ class SfHenvendelseServiceImpl(
                 null
             }
 
-        return henvendelseBehandlingApi
+        henvendelseBehandlingApi
             .henvendelseJournalPost(
                 callId,
                 JournalRequestDTO(
