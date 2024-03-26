@@ -78,7 +78,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         RestClient.baseClient()
             .newCall(request)
             .execute()
-            .body()
+            .body
             ?.string()
     }
 
@@ -95,8 +95,8 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     ): T {
         val request = Request.Builder().url(url).build()
         val response = this.newCall(request).execute()
-        val statusCode = response.code()
-        val body = response.body()?.string()
+        val statusCode = response.code
+        val body = response.body?.string()
 
         if (statusCode in 200 until 300) {
             return objectMapper.readValue(body, type.java)

@@ -1,0 +1,31 @@
+  <jaxb:bindings version="3.0"
+                xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+                jaxb:extensionBindingPrefixes="xjc">
+
+  <jxb:globalBindings xmlns:jxb="https://jakarta.ee/xml/ns/jaxb"
+                      xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <jxb:serializable />
+  </jxb:globalBindings>
+
+  <jaxb:bindings schemaLocation="no/nav/tjeneste/virksomhet/oppfoelging/v1/informasjon/oppfoelging/oppfoelging.xsd" node="/xs:schema" >
+    <jaxb:schemaBindings>
+      <jaxb:nameXmlTransform>
+        <jaxb:typeName prefix="WS"/>
+        <jaxb:anonymousTypeName prefix="WS"/>
+      </jaxb:nameXmlTransform>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+
+  <jaxb:bindings schemaLocation="no/nav/tjeneste/virksomhet/oppfoelging/v1/meldinger/meldinger.xsd" node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:nameXmlTransform>
+        <jaxb:typeName prefix="WS"/>
+        <jaxb:anonymousTypeName prefix="WS"/>
+      </jaxb:nameXmlTransform>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+
+
+</jaxb:bindings>

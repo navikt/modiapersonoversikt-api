@@ -2,6 +2,7 @@
 
 package no.nav.modiapersonoversikt.service.journalforingsaker
 
+import jakarta.annotation.PostConstruct
 import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
@@ -10,7 +11,6 @@ import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.utils.Contracts
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
 
 private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
@@ -31,7 +31,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var generelleSaker: GenerelleSaker
     private lateinit var oppfolgingsSaker: OppfolgingsSaker
 
-    @PostConstruct
+    @jakarta.annotation.PostConstruct
     fun setup() {
         safSaker = SafSaker(safService)
         arenaSaker = ArenaSakerV2(arenaSakVedtakService)

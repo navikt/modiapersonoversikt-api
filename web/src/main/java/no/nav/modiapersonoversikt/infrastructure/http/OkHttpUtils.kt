@@ -12,6 +12,7 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
 import okio.Buffer
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -38,7 +39,7 @@ object OkHttpUtils {
             }
 
     object MediaTypes {
-        val JSON: MediaType = requireNotNull(MediaType.parse("application/json; charset=utf-8"))
+        val JSON: MediaType = requireNotNull("application/json; charset=utf-8".toMediaType())
     }
 }
 
@@ -63,7 +64,7 @@ class LoggingInterceptor(
         if (config.ignoreRequestBody) return "IGNORED"
         val copy = this.newBuilder().build()
         val buffer = Buffer()
-        copy.body()?.writeTo(buffer)
+        copy.body?.writeTo(buffer)
 
         return buffer.readUtf8()
     }
@@ -72,7 +73,7 @@ class LoggingInterceptor(
         if (config.ignoreResponseBody) return "IGNORED"
         return when {
             this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
-            this.code() == 204 -> "StatusCode: 204, didn't try to peek at body"
+            this.code == 204 -> "StatusCode: 204, didn't try to peek at body"
             else -> this.peekBody(Long.MAX_VALUE).string()
         }
     }
@@ -86,8 +87,8 @@ class LoggingInterceptor(
         TjenestekallLogg.info(
             "$name-request: $callId ($requestId)",
             mapOf(
-                "url" to request.url().toString(),
-                "headers" to request.headers().names().joinToString(", "),
+                "url" to request.url.toString(),
+                "headers" to request.headers.names().joinToString(", "),
                 "body" to requestBody,
             ),
         )
@@ -115,12 +116,12 @@ class LoggingInterceptor(
 
         val responseBody = response.peekContent(config)
 
-        if (response.code() in 200..299) {
+        if (response.code in 200..299) {
             TjenestekallLogg.info(
                 header = "$name-response: $callId ($requestId)",
                 fields =
                     mapOf(
-                        "status" to "${response.code()} ${response.message()}",
+                        "status" to "${response.code} ${response.message}",
                         "time" to timer.measure(),
                         "body" to responseBody,
                     ),
@@ -134,7 +135,7 @@ class LoggingInterceptor(
                 header = "$name-response-error: $callId ($requestId)",
                 fields =
                     mapOf(
-                        "status" to "${response.code()} ${response.message()}",
+                        "status" to "${response.code} ${response.message}",
                         "time" to timer.measure(),
                         "body" to responseBody,
                     ),

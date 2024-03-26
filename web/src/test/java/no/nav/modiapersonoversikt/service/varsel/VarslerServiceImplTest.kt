@@ -2,6 +2,8 @@ package no.nav.modiapersonoversikt.service.varsel
 
 import io.mockk.every
 import io.mockk.mockk
+import jakarta.xml.soap.SOAPFault
+import jakarta.xml.ws.soap.SOAPFaultException
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1
@@ -14,8 +16,6 @@ import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import javax.xml.soap.SOAPFault
-import javax.xml.ws.soap.SOAPFaultException
 
 class VarslerServiceImplTest {
     private val clock: Clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())

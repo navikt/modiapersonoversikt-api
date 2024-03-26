@@ -133,12 +133,12 @@ class SafServiceImpl(
             client.newCall(
                 Request.Builder().url(url).build(),
             ).execute()
-        return when (response.code()) {
+        return when (response.code) {
             200 ->
                 TjenesteResultatWrapper(
-                    response.body()?.bytes(),
+                    response.body?.bytes(),
                 )
-            else -> handterDokumentFeilKoder(response.code())
+            else -> handterDokumentFeilKoder(response.code)
         }
     }
 

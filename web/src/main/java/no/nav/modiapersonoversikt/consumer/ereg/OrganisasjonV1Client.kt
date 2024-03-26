@@ -59,15 +59,15 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
                             .build(),
                     )
                     .execute()
-            val body = response.body()?.string()
+            val body = response.body?.string()
             val tjenestekallInfo =
                 mapOf(
-                    "status" to "${response.code()} ${response.message()}",
+                    "status" to "${response.code} ${response.message}",
                     "orgnummer" to orgnummer,
                     "body" to body,
                 )
 
-            return if (response.code() in 200..299 && body != null) {
+            return if (response.code in 200..299 && body != null) {
                 TjenestekallLogg.info("Ereg hent orgnavn-response: $uuid", tjenestekallInfo)
                 objectMapper.readValue(body)
             } else {

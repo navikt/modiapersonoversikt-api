@@ -133,7 +133,14 @@
         "responses": {
           "200": {
             "description": "OK",
-            "$ref": "#/components/schemas/Henvendelse"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -178,7 +185,14 @@
         "responses": {
           "200": {
             "description": "OK",
-            "$ref": "#/components/schemas/Henvendelse"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -454,7 +468,7 @@
             "example": "3410"
           }
         },
-        "required": ["markeringstype"]
+        "required": ["markeringstype", "markertDato", "markertAv"]
       },
       "MeldingRequest": {
         "type": "object",
@@ -632,7 +646,11 @@
             "example": "509934220"
           }
         },
-        "required": ["journalfortDato", "journalfortTema"]
+        "required": [
+          "journalforerNavIdent",
+          "journalfortDato",
+          "journalfortTema"
+        ]
       },
       "MeldingFra": {
         "type": "object",
@@ -695,7 +713,7 @@
             "$ref": "#/components/schemas/MeldingFra"
           }
         },
-        "required": ["sendtDato", "fra"]
+        "required": ["sendtDato", "fra", "meldingsId"]
       },
       "Henvendelse": {
         "type": "object",
@@ -795,7 +813,8 @@
           "opprettetDato",
           "kontorsperre",
           "feilsendt",
-          "kjedeId"
+          "kjedeId",
+          "gjeldendeTemagruppe"
         ]
       },
       "Temagruppe": {

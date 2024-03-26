@@ -32,7 +32,7 @@ open class MetricsConfig() {
         }
 
         private fun buildUriMap(req: Request): String {
-            return UrlMaskingUtils.maskSensitiveInfo(req.url().encodedPath())
+            return UrlMaskingUtils.maskSensitiveInfo(req.url.encodedPath)
         }
     }
 

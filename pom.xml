@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.6</version>
+        <version>3.2.3</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -25,11 +25,12 @@
         <kotlin.version>1.9.23</kotlin.version>
         <serialization.version>1.5.1</serialization.version>
         <mockk.version>1.13.2</mockk.version>
+        <wiremock.version>3.4.2</wiremock.version>
 
-        <common.version>2.2023.01.09_08.56-ae38750bc0d9</common.version>
-        <modia-common-utils.version>1.2022.12.13-14.31-5b35ebe08f61</modia-common-utils.version>
+        <common.version>3.2024.02.21_11.18-8f9b43befae1</common.version>
+        <modia-common-utils.version>1.2024.03.25-10.55-91a4892349d0</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2618.0448179</tjenestespesifikasjoner.version>
-        <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
+        <org.jvnet.jaxb.version>3.0.1</org.jvnet.jaxb.version>
         <graphql-kotlin.version>7.0.2</graphql-kotlin.version>
         <kotlin-coroutines.version>1.7.3</kotlin-coroutines.version>
 
@@ -155,17 +156,7 @@
             </dependency>
             <dependency>
                 <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>person-v3-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
 
@@ -247,14 +238,14 @@
 
             <!-- kjerneinfo/personsok -->
             <dependency>
-                <groupId>org.jvnet.jaxb2_commons</groupId>
-                <artifactId>jaxb2-basics-runtime</artifactId>
-                <version>${org.jvnet.jaxb2_commons.version}</version>
+                <groupId>org.jvnet.jaxb</groupId>
+                <artifactId>jaxb-plugins-runtime</artifactId>
+                <version>${org.jvnet.jaxb.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.tomakehurst</groupId>
-                <artifactId>wiremock-jre8</artifactId>
-                <version>2.35.1</version>
+                <groupId>org.wiremock</groupId>
+                <artifactId>wiremock-standalone</artifactId>
+                <version>${wiremock.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -307,6 +298,10 @@
             <id>central</id>
             <name>Central Repository</name>
             <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>github</id>
+            <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
