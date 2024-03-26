@@ -5,38 +5,13 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
-import no.nav.modiapersonoversikt.service.sakstema.domain.Behandlingskjede
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
-import no.nav.modiapersonoversikt.service.sakstema.domain.Sakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
 import no.nav.personoversikt.common.kabac.Decision
 import java.util.*
 
 object SakerApiMapper {
-    fun createMappingContext(
-        tilgangskontroll: Tilgangskontroll,
-        enhet: EnhetId,
-        sakstemaer: List<Sakstema>,
-    ): MappingContext {
-        val tematilgang =
-            sakstemaer
-                .map { it.temakode }
-                .distinct()
-                .associateWith { tema ->
-                    val decision =
-                        tilgangskontroll
-                            .check(Policies.tilgangTilTema(enhet, tema))
-                            .getDecision()
-
-                    decision.type == Decision.Type.PERMIT
-                }
-
-        return MappingContext(
-            tematilgang = tematilgang,
-        )
-    }
-
     @JvmName("createMappingContextSoknadsstatus")
     fun createMappingContext(
         tilgangskontroll: Tilgangskontroll,
@@ -64,24 +39,6 @@ object SakerApiMapper {
     class MappingContext(
         private val tematilgang: Map<String, Boolean>,
     ) {
-        fun mapTilResultat(sakstemaer: List<Sakstema>) =
-            SakerApi.Resultat(
-                sakstemaer.map { sakstema ->
-                    val harTilgang = tematilgang[sakstema.temakode] ?: false
-                    val tilhorendeSaker = sakstema.tilhorendeSaker.map(::mapTilTilhorendeSak)
-                    SakerApi.Sakstema(
-                        temakode = sakstema.temakode,
-                        temanavn = sakstema.temanavn,
-                        erGruppert = sakstema.erGruppert,
-                        behandlingskjeder = sakstema.behandlingskjeder.map(::mapTilBehandlingskjede),
-                        dokumentMetadata = sakstema.dokumentMetadata.map(::mapTilDokumentMetadata),
-                        tilhorendeSaker = tilhorendeSaker,
-                        feilkoder = sakstema.feilkoder,
-                        harTilgang = harTilgang,
-                    )
-                },
-            )
-
         fun mapTilResultat(sakstemaer: List<SoknadsstatusSakstema>) =
             SakerApi.ResultatSoknadsstatus(
                 sakstemaer.map { sakstema ->
@@ -98,12 +55,6 @@ object SakerApiMapper {
                         harTilgang = harTilgang,
                     )
                 },
-            )
-
-        private fun mapTilBehandlingskjede(behandlingskjede: Behandlingskjede) =
-            SakerApi.Behandlingskjede(
-                status = behandlingskjede.status,
-                sistOppdatert = behandlingskjede.sistOppdatert,
             )
 
         private fun mapTilDokumentMetadata(behandlingskjede: DokumentMetadata) =

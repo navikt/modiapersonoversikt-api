@@ -36,29 +36,6 @@ class SakerController
         private val safService: SafService,
         val tilgangskontroll: Tilgangskontroll,
     ) {
-        @GetMapping("/sakstema")
-        fun hentSakstema(
-            request: HttpServletRequest,
-            @PathVariable("fnr") fnr: String,
-            @RequestParam(value = "enhet") enhet: String,
-        ): SakerApi.Resultat {
-            return tilgangskontroll
-                .check(Policies.tilgangTilBruker(Fnr(fnr)))
-                .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
-                    val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
-                    val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr)
-
-                    val mappingContext =
-                        SakerApiMapper.createMappingContext(
-                            tilgangskontroll = tilgangskontroll,
-                            enhet = EnhetId(enhet),
-                            sakstemaer = sakstemaWrapper.resultat,
-                        )
-
-                    mappingContext.mapTilResultat(sakstemaWrapper.resultat)
-                }
-        }
-
         @GetMapping("/v2/sakstema")
         fun hentSakstemaSoknadsstatus(
             request: HttpServletRequest,

@@ -140,11 +140,6 @@
             <!--Tjenestespesifikasjon-->
             <dependency>
                 <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
                 <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
