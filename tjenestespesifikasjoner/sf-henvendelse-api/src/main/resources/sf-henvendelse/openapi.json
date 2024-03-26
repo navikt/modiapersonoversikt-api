@@ -468,7 +468,7 @@
             "example": "3410"
           }
         },
-        "required": ["markeringstype", "markertDato", "markertAv"]
+        "required": ["markeringstype"]
       },
       "MeldingRequest": {
         "type": "object",
@@ -647,7 +647,6 @@
           }
         },
         "required": [
-          "journalforerNavIdent",
           "journalfortDato",
           "journalfortTema"
         ]
@@ -713,7 +712,7 @@
             "$ref": "#/components/schemas/MeldingFra"
           }
         },
-        "required": ["sendtDato", "fra", "meldingsId"]
+        "required": ["sendtDato", "fra"]
       },
       "Henvendelse": {
         "type": "object",
@@ -813,8 +812,7 @@
           "opprettetDato",
           "kontorsperre",
           "feilsendt",
-          "kjedeId",
-          "gjeldendeTemagruppe"
+          "kjedeId"
         ]
       },
       "Temagruppe": {
