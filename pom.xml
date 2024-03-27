@@ -226,7 +226,7 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-inline</artifactId>
                 <!-- should match mockito-core version -->
-                <version>4.0.0</version>
+                <version>5.2.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
