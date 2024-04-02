@@ -33,12 +33,6 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>openapi-generator-maven-plugin</artifactId>
-            <version>5.3.1</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -55,7 +49,7 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/norg/openapi-fixed.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
-                            <library>jvm-okhttp3</library>
+                            <library>jvm-okhttp4</library>
                             <packageName>no.nav.modiapersonoversikt.consumer.norg.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>

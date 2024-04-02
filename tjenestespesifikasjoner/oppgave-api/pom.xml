@@ -49,7 +49,7 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/oppgave/openapi.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
-                            <library>jvm-okhttp3</library>
+                            <library>jvm-okhttp4</library>
                             <packageName>no.nav.modiapersonoversikt.consumer.oppgave.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>

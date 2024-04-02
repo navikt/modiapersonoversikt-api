@@ -107,7 +107,7 @@ public class ForeldrepengerMapperTest {
         assertThat(resforeldrepengerettighetA.getArbeidskategori().getTermnavn(), equalTo(foreldrepengerettighetA.getArbeidskategori().getTermnavn()));
 
         compareDates(resperiode.getForeldrepengerFom(), periode.getForeldrepengerFom());
-        assertThat(resperiode.isErFedrekvote(), equalTo(periode.getErFedrekvote()));
+        assertThat(resperiode.isErFedrekvote(), equalTo(periode.isErFedrekvote()));
         snapshot.assertMatches(response);
     }
 
@@ -148,7 +148,7 @@ public class ForeldrepengerMapperTest {
         assertThat(resforeldrepengerettighetF.getArbeidskategori().getTermnavn(), equalTo(foreldrepengerettighetF.getArbeidskategori().getTermnavn()));
 
         compareDates(resperiode.getForeldrepengerFom(), periode.getForeldrepengerFom());
-        assertThat(resperiode.isErFedrekvote(), equalTo(periode.getErFedrekvote()));
+        assertThat(resperiode.isErFedrekvote(), equalTo(periode.isErFedrekvote()));
 
         compareDates(resperiode.getKommendeUtbetalinger().get(0).getVedtak().getFrom(), periode.getVedtakListe().get(0).getVedtak().getFom());
         snapshot.assertMatches(response);

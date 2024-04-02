@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest
 
 import com.nimbusds.jwt.JWTClaimsSet
+import jakarta.servlet.http.HttpServletRequest
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/rest/v2/tilgang")

@@ -171,11 +171,11 @@ public class ForeldrepengerMapper {
         Foreldrepengeperiode periode = new Foreldrepengeperiode();
 
         periode.setFodselsnummer(null);
-        if (source.getHarAleneomsorgFar() != null) {
-            periode.setHarAleneomsorgFar(source.getHarAleneomsorgFar());
+        if (source.isHarAleneomsorgFar() != null) {
+            periode.setHarAleneomsorgFar(source.isHarAleneomsorgFar());
         }
-        if (source.getHarAleneomsorgMor() != null) {
-            periode.setHarAleneomsorgMor(source.getHarAleneomsorgMor());
+        if (source.isHarAleneomsorgMor() != null) {
+            periode.setHarAleneomsorgMor(source.isHarAleneomsorgMor());
         }
         if (source.getArbeidsprosentMor() != null) {
             periode.setArbeidsprosentMor(source.getArbeidsprosentMor().doubleValue());
@@ -185,8 +185,8 @@ public class ForeldrepengerMapper {
         if (source.getDisponibelGradering() != null) {
             periode.setDisponibelGradering(source.getDisponibelGradering().doubleValue());
         }
-        if (source.getErFedrekvote() != null) {
-            periode.setErFedrekvote(source.getErFedrekvote());
+        if (source.isErFedrekvote() != null) {
+            periode.setErFedrekvote(source.isErFedrekvote());
         }
         periode.setForskyvelsesaarsak1(map(source.getForskyvelsesaarsak1()));
         periode.setForskyvelsesaarsak2(map(source.getForskyvelsesaarsak2()));
@@ -195,8 +195,8 @@ public class ForeldrepengerMapper {
         periode.setForeldrepengerFom(map(source.getForeldrepengerFom()));
 //      Var ikke del av orika-mapping
 //      periode.setMidlertidigStansDato(map(source.getMidlertidigStanset()));
-        if (source.getErMoedrekvote() != null) {
-            periode.setErModrekvote(source.getErMoedrekvote());
+        if (source.isErMoedrekvote() != null) {
+            periode.setErModrekvote(source.isErMoedrekvote());
         }
         periode.setMorSituasjon(map(source.getMorSituasjon()));
         periode.setRettTilFedrekvote(map(source.getRettTilFedrekvote()));

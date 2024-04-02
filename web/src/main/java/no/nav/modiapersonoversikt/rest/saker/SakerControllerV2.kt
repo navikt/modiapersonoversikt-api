@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.saker
 
+import jakarta.servlet.http.HttpServletRequest
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.FnrRequest
@@ -25,7 +26,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/rest/v2/saker")

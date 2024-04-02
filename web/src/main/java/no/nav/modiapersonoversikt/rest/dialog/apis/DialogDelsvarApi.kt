@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.dialog.apis
 
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
-import javax.servlet.http.HttpServletRequest
 
 interface DialogDelsvarApi {
     fun svarDelvis(

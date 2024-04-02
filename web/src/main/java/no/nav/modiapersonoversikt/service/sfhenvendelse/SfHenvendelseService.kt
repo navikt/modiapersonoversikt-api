@@ -187,7 +187,7 @@ class SfHenvendelseServiceImpl(
                 null
             }
 
-        return henvendelseBehandlingApi
+        henvendelseBehandlingApi
             .henvendelseJournalPost(
                 callId,
                 JournalRequestDTO(
@@ -553,6 +553,7 @@ class SfHenvendelseServiceImpl(
             query = mutableMapOf(),
             headers = localVariableHeaders,
             body = patchnote.patches.mapKeys { it.key.name },
+            requiresAuthentication = true,
         )
     }
 

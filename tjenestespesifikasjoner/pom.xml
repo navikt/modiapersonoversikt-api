@@ -14,15 +14,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cxf.version>3.3.0</cxf.version>
+        <cxf.version>4.0.4</cxf.version>
         <cxf-xjc-boolean.version>3.1.0</cxf-xjc-boolean.version>
-        <org.jvnet.jaxb2.version>0.11.1</org.jvnet.jaxb2.version>
+        <org.jvnet.jaxb.version>3.0.1</org.jvnet.jaxb.version>
         <jackson-annotations.version>2.16.1</jackson-annotations.version>
         <joda-time.version>2.10</joda-time.version>
-        <jaxb2-maven-plugin.version>1.5</jaxb2-maven-plugin.version>
+        <jaxb2-maven-plugin.version>3.1.0</jaxb2-maven-plugin.version>
         <jaxb2-value-constructor.version>3.0</jaxb2-value-constructor.version>
-        <jaxb-fluent-api.version>2.1.8</jaxb-fluent-api.version>
-        <jaxb.version>2.3.0</jaxb.version>
+        <jaxws.version>4.0.2</jaxws.version>
     </properties>
 
     <modules>
@@ -40,6 +39,10 @@
         <module>skjermede-personer-pip-api</module>
         <module>modia-soknadsstatus-api</module>
         <module>utbetaling-api</module>
+        <module>arenasakvedtakservice</module>
+        <module>pleiepenger-v1-tjenestespesifikasjon</module>
+        <module>oppfoelging-v1-tjenestespesifikasjon</module>
+        <module>brukervarsel-v1-tjenestespesifikasjon</module>
     </modules>
 
     <dependencyManagement>
@@ -50,14 +53,14 @@
                 <version>${joda-time.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.jaxb2_commons</groupId>
-                <artifactId>jaxb2-basics</artifactId>
-                <version>${org.jvnet.jaxb2.version}</version>
+                <groupId>org.jvnet.jaxb</groupId>
+                <artifactId>jaxb-plugins</artifactId>
+                <version>${org.jvnet.jaxb.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.jaxb2_commons</groupId>
-                <artifactId>jaxb2-basics-runtime</artifactId>
-                <version>${org.jvnet.jaxb2.version}</version>
+                <groupId>org.jvnet.jaxb</groupId>
+                <artifactId>jaxb-plugins-runtime</artifactId>
+                <version>${org.jvnet.jaxb.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -67,7 +70,7 @@
             <dependency>
                 <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-ri</artifactId>
-                <version>2.3.2</version>
+                <version>${jaxws.version}</version>
                 <type>pom</type>
             </dependency>
         </dependencies>
@@ -118,13 +121,6 @@
                         <extension>true</extension>
                         <arguments>-Xvalue-constructor -Xfluent-api</arguments>
                     </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>net.java.dev.jaxb2-commons</groupId>
-                            <artifactId>jaxb-fluent-api</artifactId>
-                            <version>${jaxb-fluent-api.version}</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.cxf</groupId>
@@ -139,38 +135,11 @@
                             </goals>
                         </execution>
                     </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>net.java.dev.jaxb2-commons</groupId>
-                            <artifactId>jaxb-fluent-api</artifactId>
-                            <version>${jaxb-fluent-api.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.jvnet.jaxb2_commons</groupId>
-                            <artifactId>jaxb2-basics</artifactId>
-                            <version>${org.jvnet.jaxb2.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                            <artifactId>jaxb-adapters</artifactId>
-                            <version>${tjenestespesifikasjoner.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>joda-time</groupId>
-                            <artifactId>joda-time</artifactId>
-                            <version>${joda-time.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.cxf.xjcplugins</groupId>
-                            <artifactId>cxf-xjc-boolean</artifactId>
-                            <version>${cxf-xjc-boolean.version}</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.openapitools</groupId>
                     <artifactId>openapi-generator-maven-plugin</artifactId>
-                    <version>5.3.1</version>
+                    <version>7.4.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

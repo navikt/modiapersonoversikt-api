@@ -133,7 +133,14 @@
         "responses": {
           "200": {
             "description": "OK",
-            "$ref": "#/components/schemas/Henvendelse"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -178,7 +185,14 @@
         "responses": {
           "200": {
             "description": "OK",
-            "$ref": "#/components/schemas/Henvendelse"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -632,7 +646,10 @@
             "example": "509934220"
           }
         },
-        "required": ["journalfortDato", "journalfortTema"]
+        "required": [
+          "journalfortDato",
+          "journalfortTema"
+        ]
       },
       "MeldingFra": {
         "type": "object",
