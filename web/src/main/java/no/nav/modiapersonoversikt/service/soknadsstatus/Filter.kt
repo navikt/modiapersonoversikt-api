@@ -53,11 +53,16 @@ object Filter {
     }
 
     internal fun harLovligBehandlingstypeEllerAvsluttetKvittering(behandling: Behandling): Boolean {
-        return erFerdigUnder1MndSidenEllerInnsendtSoknad(behandling.behandlingsType, behandling) ||
-            lovligMenUtgaattStatusEllerUnderBehandling(
-                behandling.behandlingsType,
-                behandling,
-            )
+        val behandlingsType = behandling.behandlingsType
+        if (behandlingsType != null) {
+            return erFerdigUnder1MndSidenEllerInnsendtSoknad(behandlingsType, behandling) ||
+                lovligMenUtgaattStatusEllerUnderBehandling(
+                    behandlingsType,
+                    behandling,
+                )
+        }
+
+        return false
     }
 
     internal fun erFerdigUnder1MndSidenEllerInnsendtSoknad(

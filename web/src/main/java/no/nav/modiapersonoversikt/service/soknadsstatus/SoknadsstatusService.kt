@@ -64,7 +64,8 @@ open class SoknadsstatusServiceImpl(
     ): Map<String, Soknadsstatus> {
         val temamap = mutableMapOf<String, Soknadsstatus>()
         for (behandling in behandlinger) {
-            if (behandlingerSomAlleredeErInkludert.contains(behandling.behandlingId)) continue
+            val sakstema = behandling.sakstema
+            if (behandlingerSomAlleredeErInkludert.contains(behandling.behandlingId) || sakstema == null) continue
             val temastatus = temamap[behandling.sakstema] ?: Soknadsstatus()
             when (behandling.status) {
                 Behandling.Status.UNDER_BEHANDLING -> temastatus.underBehandling++
@@ -75,7 +76,7 @@ open class SoknadsstatusServiceImpl(
                 temastatus.sistOppdatert = behandling.sistOppdatert.toKotlinLocalDateTime()
             }
 
-            temamap[behandling.sakstema] = temastatus
+            temamap[sakstema] = temastatus
         }
         return temamap
     }
