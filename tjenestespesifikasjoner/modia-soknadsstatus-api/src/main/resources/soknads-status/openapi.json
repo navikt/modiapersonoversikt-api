@@ -260,11 +260,7 @@
         "type": "object",
         "required": [
           "behandlingId",
-          "startTidspunkt",
           "sistOppdatert",
-          "sakstema",
-          "behandlingsTema",
-          "behandlingsType",
           "status"
         ],
         "properties": {
