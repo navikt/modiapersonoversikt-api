@@ -45,6 +45,6 @@ public class Main {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilder()  {
-        return builder -> builder.modules(new JodaModule()).build();
+        return builder -> builder.modulesToInstall(new JodaModule()).build();
     }
 }
