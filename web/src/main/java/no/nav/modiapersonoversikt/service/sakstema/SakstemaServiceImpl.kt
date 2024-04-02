@@ -71,7 +71,7 @@ class SakstemaServiceImpl
                         soknadsstatusService.hentBehandlingerGruppertPaaTema(fnr)
                 } catch (e: Exception) {
                     soknadsstatuser = emptyMap()
-                    LOG.error("Klarte ikke å hente ut soknadsstatus")
+                    LOG.error("Klarte ikke å hente ut soknadsstatus", e)
                 }
 
                 val temakoder = hentAlleTemaSoknadsstatus(saker, wrapper.resultat, soknadsstatuser)
