@@ -32,7 +32,7 @@
         <tjenestespesifikasjoner.version>2618.0448179</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb.version>3.0.1</org.jvnet.jaxb.version>
         <graphql-kotlin.version>7.0.2</graphql-kotlin.version>
-        <kotlin-coroutines.version>1.7.3</kotlin-coroutines.version>
+        <kotlin-coroutines.version>1.8.0</kotlin-coroutines.version>
 
     </properties>
 
