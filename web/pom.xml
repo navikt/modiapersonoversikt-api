@@ -183,7 +183,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-datetime-jvm</artifactId>
-            <version>0.4.0</version>
+            <version>0.5.0</version>
         </dependency>
 
 
@@ -243,10 +243,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-            <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>skjermede-personer-pip-api</artifactId>
             <version>${project.version}</version>
@@ -300,6 +296,11 @@
 
         <!-- tjenester -->
         <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
+            <version>dev</version>
+        </dependency>
+        <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
             <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
@@ -308,10 +309,6 @@
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
             <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-            <artifactId>person-v3-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
@@ -333,6 +330,8 @@
             <artifactId>nav-sykepenger-v2-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--  -->
+
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
