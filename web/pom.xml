@@ -311,10 +311,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-            <artifactId>person-v3-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
             <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
@@ -334,6 +330,8 @@
             <artifactId>nav-sykepenger-v2-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--  -->
+
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>

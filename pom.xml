@@ -144,16 +144,6 @@
                 <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                <artifactId>arenasakvedtakservice</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                <artifactId>person-v3-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
 
             <!--Modia common-->
             <dependency>
