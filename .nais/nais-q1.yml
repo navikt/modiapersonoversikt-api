@@ -35,7 +35,7 @@ spec:
       cpu: 2000m
       memory: 8192Mi
   ingresses:
-    - https://modiapersonoversikt-api-q1.nais.preprod.local
+    - https://modiapersonoversikt-api-q1.intern.dev.nav.no
     - https://app-q1.adeo.no/modiapersonoversikt-api
     - https://modapp-q1.adeo.no/modiapersonoversikt-api
   replicas:
