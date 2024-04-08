@@ -50,7 +50,7 @@ class LoggingInterceptor(
 ) : Interceptor {
     data class Config(
         val ignoreRequestBody: Boolean = false,
-        val ignoreResponseBody: Boolean = false,
+        val ignoreResponseBody: Boolean = true,
     )
 
     companion object {
