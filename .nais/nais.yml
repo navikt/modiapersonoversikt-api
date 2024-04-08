@@ -35,7 +35,7 @@ spec:
       cpu: 2000m
       memory: 8192Mi
   ingresses:
-    - https://modiapersonoversikt-api.nais.adeo.no
+    - https://modiapersonoversikt-api.intern.nav.no
     - https://app.adeo.no/modiapersonoversikt-api
     - https://modapp.adeo.no/modiapersonoversikt-api
   replicas:

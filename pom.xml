@@ -30,7 +30,7 @@
         <common.version>3.2024.02.21_11.18-8f9b43befae1</common.version>
         <modia-common-utils.version>1.2024.03.25-10.55-91a4892349d0</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2618.0448179</tjenestespesifikasjoner.version>
-        <org.jvnet.jaxb.version>3.0.1</org.jvnet.jaxb.version>
+        <org.jvnet.jaxb.version>4.0.3</org.jvnet.jaxb.version>
         <graphql-kotlin.version>7.0.2</graphql-kotlin.version>
         <kotlin-coroutines.version>1.8.0</kotlin-coroutines.version>
 
@@ -130,12 +130,12 @@
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.2</version>
+                <version>2.12.7</version>
             </dependency>
             <dependency>
                 <groupId>no.bekk.bekkopen</groupId>
                 <artifactId>nocommons</artifactId>
-                <version>0.6</version>
+                <version>0.16.0</version>
             </dependency>
 
             <!--Tjenestespesifikasjon-->
