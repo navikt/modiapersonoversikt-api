@@ -30,7 +30,7 @@
         <common.version>3.2024.02.21_11.18-8f9b43befae1</common.version>
         <modia-common-utils.version>1.2024.03.25-10.55-91a4892349d0</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2618.0448179</tjenestespesifikasjoner.version>
-        <org.jvnet.jaxb.version>4.0.3</org.jvnet.jaxb.version>
+        <org.jvnet.jaxb.version>4.0.6</org.jvnet.jaxb.version>
         <graphql-kotlin.version>7.0.2</graphql-kotlin.version>
         <kotlin-coroutines.version>1.8.0</kotlin-coroutines.version>
 
