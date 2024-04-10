@@ -7,7 +7,7 @@ on:
 jobs:
   deploy-topic-to-dev:
     if: github.ref == 'refs/heads/dev'
-    name: Deploy topic to dev-fss
+    name: Deploy topic to dev-gcp
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,7 +24,7 @@ jobs:
 
   deploy-topic-to-prod:
     if: github.ref == 'refs/heads/master'
-    name: Deploy topic to prod-fss
+    name: Deploy topic to prod-gcp
     runs-on: ubuntu-latest
     permissions:
       contents: read

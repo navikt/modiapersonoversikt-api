@@ -57,6 +57,15 @@ jobs:
           RESOURCE: .nais/nais-q1.yml
           VAR: version=${{ github.sha }},image=${{ steps.docker-build-push.outputs.image }}
 
+      - name: Deploy to Q2 (Test branch)
+        uses: nais/deploy/actions/deploy@v2
+        if: github.ref == env.Q1_TEST_BRANCH
+        env:
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/dev.yml
+          VAR: version=${{ github.sha }},image=${{ steps.docker-build-push.outputs.image }}
+
   deploy-qa:
     name: Deploy to preprod
     needs: build
@@ -76,7 +85,8 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: .nais/nais-${{ matrix.namespace }}.yml
           VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
-  deploy-dev:
+
+  deploy-gcp-dev:
     name: Deploy to prod
     needs: build
     if: github.ref == 'refs/heads/dev'
