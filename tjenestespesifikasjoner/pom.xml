@@ -19,7 +19,7 @@
         <org.jvnet.jaxb.version>4.0.6</org.jvnet.jaxb.version>
         <jackson-annotations.version>2.17.0</jackson-annotations.version>
         <joda-time.version>2.12.7</joda-time.version>
-        <jaxb2-maven-plugin.version>3.1.0</jaxb2-maven-plugin.version>
+        <jaxb2-maven-plugin.version>3.2.0</jaxb2-maven-plugin.version>
         <jaxb2-value-constructor.version>3.0</jaxb2-value-constructor.version>
         <jaxws.version>4.0.2</jaxws.version>
     </properties>
