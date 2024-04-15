@@ -2,13 +2,10 @@ package no.nav.modiapersonoversikt.service.pdl
 
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import io.ktor.client.request.*
-import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.IdentGruppe
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
 import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Paging
@@ -19,24 +16,19 @@ import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
-import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import java.net.URL
 
 @CacheConfig(cacheNames = ["pdlCache"], keyGenerator = "userkeygenerator")
-open class PdlOppslagServiceImpl constructor(
-    private val stsService: SystemUserTokenProvider,
-    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
+open class PdlOppslagServiceImpl(
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val pdlClient: GraphQLKtorClient,
 ) : PdlOppslagService {
     constructor(
-        stsService: SystemUserTokenProvider,
-        machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
         oboTokenClient: BoundedOnBehalfOfTokenClient,
-    ) : this(stsService, machineToMachineTokenClient, oboTokenClient, createClient())
+    ) : this(oboTokenClient, createClient())
 
     @Cacheable(unless = "#result == null")
     override fun hentPersondata(fnr: String): HentPersondata.Result? =
@@ -53,7 +45,7 @@ open class PdlOppslagServiceImpl constructor(
             } else {
                 pdlClient.execute(
                     HentTredjepartspersondata(HentTredjepartspersondata.Variables(fnrs)),
-                    systemTokenAuthorizationHeaders,
+                    userTokenAuthorizationHeaders,
                 ).assertNoErrors()
                     .data
                     ?.hentPersonBolk
@@ -131,17 +123,6 @@ open class PdlOppslagServiceImpl constructor(
             }
         }
 
-    @Cacheable(unless = "#result == null")
-    override fun hentAdressebeskyttelse(fnr: String): List<Adressebeskyttelse> =
-        runBlocking {
-            pdlClient
-                .execute(HentAdressebeskyttelse(HentAdressebeskyttelse.Variables(fnr)), systemTokenAuthorizationHeaders).assertNoErrors()
-                .data
-                ?.hentPerson
-                ?.adressebeskyttelse
-                ?: emptyList()
-        }
-
     private fun hentAktivIdent(
         ident: String,
         gruppe: IdentGruppe,
@@ -161,12 +142,6 @@ open class PdlOppslagServiceImpl constructor(
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + oboTokenClient.exchangeOnBehalfOfToken(azureToken))
         header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
         header(BEHANDLINGSNUMMER_HEADER, BEHANDLINGSNUMMER_HEADERVERDI)
-    }
-
-    private val systemTokenAuthorizationHeaders: HeadersBuilder = {
-        val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken()
-        header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
-        header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
     }
 
     companion object {

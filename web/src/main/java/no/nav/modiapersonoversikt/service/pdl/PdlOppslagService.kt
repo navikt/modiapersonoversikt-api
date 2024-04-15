@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.pdl
 
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
 import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Criterion
@@ -25,8 +24,6 @@ interface PdlOppslagService {
     fun hentAktorId(fnr: String): String?
 
     fun hentFnr(aktorid: String): String?
-
-    fun hentAdressebeskyttelse(fnr: String): List<Adressebeskyttelse>
 
     enum class SokKriterieRule {
         EQUALS,
