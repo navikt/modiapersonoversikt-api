@@ -5,6 +5,9 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentAdressebeskyttelse;
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering;
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse;
+import no.nav.modiapersonoversikt.consumer.pdlPip.PdlPipApi;
+import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipAdressebeskyttelse;
+import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipGeografiskTilknytning;
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService.ArbeidsfordelingException;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService;
@@ -35,6 +38,7 @@ class ArbeidsfordelingServiceTest {
 
     private final PdlOppslagService pdlOppslagService = mock(PdlOppslagService.class);
     private final NorgApi norgApi = mock(NorgApi.class);
+    private final PdlPipApi pdlPip = mock(PdlPipApi.class);
     private final SkjermedePersonerApi egenAnsattService = mock(SkjermedePersonerApi.class);
     private ArbeidsfordelingService arbeidsfordelingService;
 
@@ -45,7 +49,7 @@ class ArbeidsfordelingServiceTest {
                 norgApi,
                 egenAnsattService
         );
-        arbeidsfordelingService = new ArbeidsfordelingServiceImpl(norgApi, pdlOppslagService, egenAnsattService);
+        arbeidsfordelingService = new ArbeidsfordelingServiceImpl(norgApi, pdlPip, egenAnsattService);
     }
 
     @Test
@@ -81,13 +85,13 @@ class ArbeidsfordelingServiceTest {
     }
 
     private void gitt_at_alt_fungerer() {
-        ArrayList<Adressebeskyttelse> adressebeskyttelseMock = new ArrayList<>();
-        adressebeskyttelseMock.add(new Adressebeskyttelse(
-                AdressebeskyttelseGradering.UGRADERT
+        ArrayList<PipAdressebeskyttelse> adressebeskyttelseMock = new ArrayList<>();
+        adressebeskyttelseMock.add(new PipAdressebeskyttelse(
+                AdressebeskyttelseGradering.UGRADERT.toString()
         ));
         sneaky(() -> {
-            when(pdlOppslagService.hentGeografiskTilknyttning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
-            when(pdlOppslagService.hentAdressebeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
+            when(pdlPip.hentGeografiskTilknytning(anyString())).thenReturn(new PipGeografiskTilknytning(null, GEOGRAFISK_TILKNYTNING,  null, null, null));
+            when(pdlPip.hentAdresseBeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
 
             when(egenAnsattService.erSkjermetPerson(any())).thenReturn(false);
         });
@@ -98,7 +102,7 @@ class ArbeidsfordelingServiceTest {
     }
 
     private void gitt_feil_ved_henting_av_geografisk_tilknytning() {
-        when(pdlOppslagService.hentGeografiskTilknyttning(PERSON.get())).thenThrow(new RuntimeException());
+        when(pdlPip.hentGeografiskTilknytning(PERSON.get())).thenThrow(new RuntimeException());
     }
 
     private void gitt_feil_ved_henting_av_enheter() {

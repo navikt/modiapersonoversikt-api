@@ -6,9 +6,9 @@ import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering.*
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.pdlPip.PdlPipApi
+import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipAdressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
-import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -25,7 +25,7 @@ interface ArbeidsfordelingService {
 
 class ArbeidsfordelingServiceImpl(
     private val norgApi: NorgApi,
-    private val pdlOppslagService: PdlOppslagService,
+    private val pdlPip: PdlPipApi,
     private val skjermedePersonerApi: SkjermedePersonerApi,
 ) : ArbeidsfordelingService {
     val log: Logger = LoggerFactory.getLogger(ArbeidsfordelingService::class.java)
@@ -38,10 +38,13 @@ class ArbeidsfordelingServiceImpl(
     ): List<NorgDomain.Enhet> {
         return runCatching {
             val behandling: Behandling? = underkategori?.parseV2BehandlingString()
-            val geografiskTilknyttning = brukerIdent?.get()?.let(pdlOppslagService::hentGeografiskTilknyttning)
+            val geografiskTilknyttning =
+                brukerIdent?.get()?.let(pdlPip::hentGeografiskTilknytning)?.run {
+                    gtBydel ?: gtKommune ?: gtLand
+                }
             val diskresjonskode =
                 brukerIdent?.get()
-                    ?.let(pdlOppslagService::hentAdressebeskyttelse)
+                    ?.let(pdlPip::hentAdresseBeskyttelse)
                     ?.let { if (it.isEmpty()) null else it.first().toNorgDiskresjonsKode() }
 
             val erEgenAnsatt =
@@ -70,10 +73,10 @@ class ArbeidsfordelingServiceImpl(
     }
 }
 
-private fun Adressebeskyttelse.toNorgDiskresjonsKode(): NorgDomain.DiskresjonsKode {
+private fun PipAdressebeskyttelse.toNorgDiskresjonsKode(): NorgDomain.DiskresjonsKode {
     return when (this.gradering) {
-        STRENGT_FORTROLIG, STRENGT_FORTROLIG_UTLAND -> NorgDomain.DiskresjonsKode.SPSF
-        FORTROLIG -> NorgDomain.DiskresjonsKode.SPFO
-        UGRADERT, __UNKNOWN_VALUE -> NorgDomain.DiskresjonsKode.ANY
+        STRENGT_FORTROLIG.toString(), STRENGT_FORTROLIG_UTLAND.toString() -> NorgDomain.DiskresjonsKode.SPSF
+        FORTROLIG.toString() -> NorgDomain.DiskresjonsKode.SPFO
+        else -> NorgDomain.DiskresjonsKode.ANY
     }
 }
