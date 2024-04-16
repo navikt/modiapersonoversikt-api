@@ -22,7 +22,7 @@ open class PdlPipConfig {
     lateinit var tokenProvider: MachineToMachineTokenClient
 
     @Bean
-    open fun skjermedePersoner(): PdlPipApi {
+    open fun pdlPip(): PdlPipApi {
         val httpClient: OkHttpClient =
             RestClient.baseClient().newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
