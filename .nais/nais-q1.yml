@@ -149,6 +149,10 @@ spec:
       value: "https://pdl-api-q1.dev.intern.nav.no/graphql"
     - name: PDL_SCOPE
       value: "dev-fss:pdl:pdl-api-q1"
+    - name: PDL_PIP_URL
+      value: "https://pdl-pip-api-q1.dev.intern.nav.no"
+    - name: PDL_PIP_SCOPE
+      value: "dev-fss:pdl:pdl-pip-api-q1"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL

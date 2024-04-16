@@ -148,6 +148,10 @@ spec:
       value: "https://pdl-api.nais.adeo.no/graphql"
     - name: PDL_SCOPE
       value: "prod-fss:pdl:pdl-api"
+    - name: PDL_PIP_URL
+      value: "https://pdl-pip-api.intern.nav.no"
+    - name: PDL_PIP_SCOPE
+      value: "prod-fss:pdl:pdl-pip-api"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
