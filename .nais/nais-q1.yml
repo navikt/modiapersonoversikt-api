@@ -35,6 +35,7 @@ spec:
       cpu: 2000m
       memory: 8192Mi
   ingresses:
+    - https://modiapersonoversikt-api-q1.dev-fss-pub.nais.io
     - https://modiapersonoversikt-api-q1.nais.preprod.local
     - https://app-q1.adeo.no/modiapersonoversikt-api
     - https://modapp-q1.adeo.no/modiapersonoversikt-api
@@ -72,6 +73,9 @@ spec:
         - application: modiapersonoversikt-q1
           namespace: personoversikt
           cluster: dev-fss
+        - application: modiapersonoversikt
+          namespace: personoversikt
+          cluster: dev-gcp
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q1"
