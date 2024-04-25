@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.pdl
 
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.utils.DownstreamApi
@@ -12,8 +13,12 @@ import org.springframework.context.annotation.Configuration
 @EnableCaching
 open class PdlOppslagServiceConfig {
     @Bean
-    open fun pdlOppslagService(oboTokenClient: OnBehalfOfTokenClient): PdlOppslagService =
+    open fun pdlOppslagService(
+        machineToMachineTokenClient: MachineToMachineTokenClient,
+        oboTokenClient: OnBehalfOfTokenClient,
+    ): PdlOppslagService =
         PdlOppslagServiceImpl(
+            machineToMachineTokenClient.bindTo(downstreamApi),
             oboTokenClient.bindTo(downstreamApi),
         )
 
