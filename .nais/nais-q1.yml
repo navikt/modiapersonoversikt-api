@@ -72,6 +72,9 @@ spec:
         - application: modiapersonoversikt-q1
           namespace: personoversikt
           cluster: dev-fss
+        - application: modiapersonoversikt
+          namespace: personoversikt
+          cluster: dev-gcp
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q1"
