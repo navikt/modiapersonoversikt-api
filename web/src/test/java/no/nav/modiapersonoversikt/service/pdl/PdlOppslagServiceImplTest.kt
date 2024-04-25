@@ -15,6 +15,7 @@ import no.nav.common.auth.context.UserRole
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.infrastructure.RestConstants.ALLE_TEMA_HEADERVERDI
 import no.nav.modiapersonoversikt.testutils.AuthContextRule
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.TestUtils
 import org.junit.Assert.assertEquals
@@ -38,10 +39,12 @@ internal class PdlOppslagServiceImplTest {
         )
     private val systemuserToken = "RND-STS-TOKEN"
     private val oboTokenProvider: BoundedOnBehalfOfTokenClient = mockk()
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
 
     @Before
     fun before() {
         every { oboTokenProvider.exchangeOnBehalfOfToken(any()) } returns userToken.serialize()
+        every { machineToMachineTokenClient.createMachineToMachineToken() } returns systemuserToken
     }
 
     @Test
@@ -53,13 +56,36 @@ internal class PdlOppslagServiceImplTest {
             }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(oboTokenProvider, client).hentIdenter("ident")
+            PdlOppslagServiceImpl(machineToMachineTokenClient, oboTokenProvider, client).hentIdenter("ident")
+        }
+    }
+
+    @Test
+    fun `riktige system-headere skal settes på requesten`() {
+        val client =
+            createMockGraphQLClient { request ->
+                verifySystemuserTokenHeaders(request)
+                respond("{}", HttpStatusCode.OK)
+            }
+
+        TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
+            PdlOppslagServiceImpl(
+                machineToMachineTokenClient,
+                oboTokenProvider,
+                client,
+            ).hentTredjepartspersondata(listOf("ident"))
         }
     }
 
     private fun verifyUserTokenHeaders(request: HttpRequestData) {
         assertNotNull(request.headers[RestConstants.NAV_CALL_ID_HEADER], "NAV_CALL_ID_HEADER missing")
         assertEquals("Bearer ${userToken.serialize()}", request.headers[RestConstants.AUTHORIZATION])
+        assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
+    }
+
+    private fun verifySystemuserTokenHeaders(request: HttpRequestData) {
+        assertNotNull(request.headers[RestConstants.NAV_CALL_ID_HEADER], "NAV_CALL_ID_HEADER missing")
+        assertEquals("Bearer $systemuserToken", request.headers[RestConstants.AUTHORIZATION])
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }
 
