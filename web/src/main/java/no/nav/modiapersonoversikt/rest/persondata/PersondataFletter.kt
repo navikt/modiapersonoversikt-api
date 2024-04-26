@@ -867,6 +867,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 navn = motpart?.firstOrNull() ?: navn,
                 vergesakstype = hentVergemalType(vergemal.type),
                 omfang = hentVergemalOmfang(vergemal.vergeEllerFullmektig.omfang),
+                tjenesteOppgaver = hentTjenesteOppgaver(vergemal.vergeEllerFullmektig.tjenesteomraade),
                 embete = hentVergemalEmbete(vergemal.embete),
                 gyldighetsPeriode =
                     hentGyldighetsperiode(
@@ -874,6 +875,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         vergemal.folkeregistermetadata?.opphoerstidspunkt,
                     ),
             )
+        }
+    }
+
+    private fun hentTjenesteOppgaver(tjenesteOmraader: List<Tjenesteomraade>?): List<String>? {
+        if (tjenesteOmraader == null) return null
+
+        return tjenesteOmraader.filter { it.tjenestevirksomhet == "nav" }.mapNotNull {
+            when (it.tjenesteoppgave) {
+                "arbeid" -> "Arbeid"
+                "familie" -> "Familie"
+                "hjelpemidler" -> "Hjelpemidler"
+                "pensjon" -> "Pensjon"
+                "sosialeTjenester" -> "Sosiale Tjenester"
+                else -> it.tjenesteoppgave
+            }
         }
     }
 
