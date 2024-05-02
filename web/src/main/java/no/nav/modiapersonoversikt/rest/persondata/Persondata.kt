@@ -237,6 +237,7 @@ object Persondata {
         val navn: Navn?,
         val vergesakstype: String,
         val omfang: String,
+        val tjenesteOppgaver: List<String>?,
         val embete: String?,
         val gyldighetsPeriode: GyldighetsPeriode?,
     )
