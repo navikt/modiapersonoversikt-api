@@ -35,7 +35,8 @@ spec:
       cpu: 2000m
       memory: 8192Mi
   ingresses:
-    - https://modiapersonoversikt-api-q1.intern.dev.nav.no
+    - https://modiapersonoversikt-api-q1.dev-fss-pub.nais.io
+    - https://modiapersonoversikt-api-q1.nais.preprod.local
     - https://app-q1.adeo.no/modiapersonoversikt-api
     - https://modapp-q1.adeo.no/modiapersonoversikt-api
   replicas:
@@ -72,6 +73,9 @@ spec:
         - application: modiapersonoversikt-q1
           namespace: personoversikt
           cluster: dev-fss
+        - application: modiapersonoversikt
+          namespace: personoversikt
+          cluster: dev-gcp
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q1"
@@ -149,6 +153,10 @@ spec:
       value: "https://pdl-api-q1.dev.intern.nav.no/graphql"
     - name: PDL_SCOPE
       value: "dev-fss:pdl:pdl-api-q1"
+    - name: PDL_PIP_URL
+      value: "https://pdl-pip-api-q1.dev.intern.nav.no"
+    - name: PDL_PIP_SCOPE
+      value: "dev-fss:pdl:pdl-pip-api-q1"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL

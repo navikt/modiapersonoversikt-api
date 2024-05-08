@@ -2,13 +2,10 @@ package no.nav.modiapersonoversikt.service.pdl
 
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import io.ktor.client.request.*
-import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.IdentGruppe
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
 import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Paging
@@ -26,17 +23,15 @@ import org.springframework.cache.annotation.Cacheable
 import java.net.URL
 
 @CacheConfig(cacheNames = ["pdlCache"], keyGenerator = "userkeygenerator")
-open class PdlOppslagServiceImpl constructor(
-    private val stsService: SystemUserTokenProvider,
+open class PdlOppslagServiceImpl(
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val pdlClient: GraphQLKtorClient,
 ) : PdlOppslagService {
     constructor(
-        stsService: SystemUserTokenProvider,
         machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
         oboTokenClient: BoundedOnBehalfOfTokenClient,
-    ) : this(stsService, machineToMachineTokenClient, oboTokenClient, createClient())
+    ) : this(machineToMachineTokenClient, oboTokenClient, createClient())
 
     @Cacheable(unless = "#result == null")
     override fun hentPersondata(fnr: String): HentPersondata.Result? =
@@ -129,17 +124,6 @@ open class PdlOppslagServiceImpl constructor(
                     ?.hits
                     ?: emptyList()
             }
-        }
-
-    @Cacheable(unless = "#result == null")
-    override fun hentAdressebeskyttelse(fnr: String): List<Adressebeskyttelse> =
-        runBlocking {
-            pdlClient
-                .execute(HentAdressebeskyttelse(HentAdressebeskyttelse.Variables(fnr)), systemTokenAuthorizationHeaders).assertNoErrors()
-                .data
-                ?.hentPerson
-                ?.adressebeskyttelse
-                ?: emptyList()
         }
 
     private fun hentAktivIdent(

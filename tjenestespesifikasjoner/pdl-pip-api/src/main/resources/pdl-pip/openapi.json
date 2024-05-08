@@ -1,0 +1,506 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PDL-PIP API",
+    "description": "API Dokumentasjon for PDL-PIP",
+    "contact": {
+      "name": "Team Persondata",
+      "url": "https://pdl-docs.dev.intern.nav.no/"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://pdl-pip-api.dev.intern.nav.no",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "Authorization": []
+    }
+  ],
+  "paths": {
+    "/api/v1/personBolk": {
+      "post": {
+        "tags": [
+          "PIP tjeneste for PDL data (kun for Systemer)"
+        ],
+        "summary": "Bolk oppslag",
+        "description": "Støtter oppslag på Folkeregisteridentifikator, Npid og aktørId.\nUnder normale omstendigheter vil dette endepunktet  alltid returnere 200 OK.\nmerk at personer/identer som ikke blir funnet vil få Value = null\n",
+        "operationId": "lookupIdentBolk",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "examples": {
+                "Liste med Id-nummer": {
+                  "description": "Liste med Id-nummer",
+                  "value": [
+                    12345678901,
+                    1122334455667
+                  ]
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Map med key = idnummer som ble sendt inn i requesten og value = data eventuelt null dersom idnummeret ikke ga treff",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipPersondataResponseList"
+                },
+                "example": {
+                  "12345678901": {
+                    "person": {
+                      "adressebeskyttelse": [],
+                      "foedsel": [
+                        {
+                          "foedselsdato": "1998-05-09"
+                        }
+                      ],
+                      "doedsfall": [
+                        {
+                          "doedsdato": "2020-04-22"
+                        }
+                      ],
+                      "familierelasjoner": [
+                        {
+                          "relatertPersonsIdent": "03087021016",
+                          "relatertPersonsRolle": "MEDMOR",
+                          "minRolleForPerson": "BARN"
+                        },
+                        {
+                          "relatertPersonsIdent": "07309574189",
+                          "relatertPersonsRolle": "MOR",
+                          "minRolleForPerson": "BARN"
+                        }
+                      ]
+                    },
+                    "identer": {
+                      "identer": [
+                        {
+                          "ident": "2052090676205",
+                          "historisk": false,
+                          "gruppe": "AKTORID"
+                        },
+                        {
+                          "ident": "12345678901",
+                          "historisk": false,
+                          "gruppe": "FOLKEREGISTERIDENT"
+                        }
+                      ]
+                    },
+                    "geografiskTilknytning": {
+                      "gtType": "KOMMUNE",
+                      "gtKommune": "4644",
+                      "gtBydel": null,
+                      "gtLand": null,
+                      "regel": "18"
+                    }
+                  },
+                  "10111111111": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AzureAD OBO token er ikke tillat",
+            "content": {
+              "*/*": {
+                "example": "Kun tilgjengelig for systemer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/skjerming": {
+      "get": {
+        "tags": [
+          "PIP tjeneste for PDL tilgangsstyring (kun for PDL systemer)"
+        ],
+        "summary": "Enkelt oppslag",
+        "description": "Støtter oppslag på idnummer (fnummer).\nReturnerer 200 OK og data med mindre en feil oppstår.\n",
+        "operationId": "lookupSkjerming",
+        "parameters": [
+          {
+            "name": "idnummer",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "AzureAD OBO token er ikke tillat, kun PDL system har tilgang",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipSkjermingResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "idnummer med tilhørende opplysningstyper",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipSkjermingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/person": {
+      "get": {
+        "tags": [
+          "PIP tjeneste for PDL data (kun for Systemer)"
+        ],
+        "summary": "Enkelt oppslag",
+        "description": "Støtter oppslag på Folkeregisteridentifikator, Npid og aktørId.\nReturnerer 200 OK og data hvis personen blir funnet,\n404 Not found dersom ingen data på Id nummeret blir funnet\n",
+        "operationId": "lookupIdent",
+        "parameters": [
+          {
+            "name": "ident",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pip data for gitt person",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipPersondataResponse"
+                },
+                "example": {
+                  "person": {
+                    "adressebeskyttelse": [
+                      {
+                        "gradering": "STRENGT_FORTROLIG_UTLAND"
+                      }
+                    ],
+                    "foedsel": [
+                      {
+                        "foedselsdato": "1911-01-01"
+                      }
+                    ],
+                    "doedsfall": [
+                      {
+                        "doedsdato": "1977-07-07"
+                      }
+                    ],
+                    "familierelasjoner": [
+                      {
+                        "relatertPersonsIdent": "11223344550"
+                      }
+                    ]
+                  },
+                  "identer": {
+                    "identer": [
+                      {
+                        "ident": "1234567890123",
+                        "historisk": false,
+                        "gruppe": "AKTORID"
+                      },
+                      {
+                        "ident": "9876543210987",
+                        "historisk": true,
+                        "gruppe": "AKTORID"
+                      },
+                      {
+                        "ident": "12345678901",
+                        "historisk": false,
+                        "gruppe": "AKTORID"
+                      },
+                      {
+                        "ident": "98765432109",
+                        "historisk": true,
+                        "gruppe": "AKTORID"
+                      }
+                    ]
+                  },
+                  "geografiskTilknytning": {
+                    "gtType": null,
+                    "gtKommune": "kommune",
+                    "gtBydel": "bydel",
+                    "gtLand": "sørlandet",
+                    "regel": "42"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipPersondataResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AzureAD OBO token er ikke tillat",
+            "content": {
+              "*/*": {
+                "example": "Kun tilgjengelig for systemer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/behandling": {
+      "get": {
+        "tags": [
+          "PIP tjeneste for PDL tilgangsstyring (kun for PDL systemer)"
+        ],
+        "summary": "Enkelt oppslag",
+        "description": "Støtter oppslag på behandlingsId (ex. B113).\nReturnerer 200 OK og data hvis behandling blir funnet,\n404 Not found dersom ingen data på behandlingsId blir funnet\n",
+        "operationId": "lookupBehandling",
+        "parameters": [
+          {
+            "name": "behandlingsId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "AzureAD OBO token er ikke tillat, kun PDL system har tilgang",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipBehandlingResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipBehandlingResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "behandlingsId med tilhørende opplysningstyper",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipBehandlingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PipAdressebeskyttelse": {
+        "type": "object",
+        "properties": {
+          "gradering": {
+            "type": "string"
+          }
+        }
+      },
+      "PipDoedsfall": {
+        "type": "object",
+        "properties": {
+          "doedsdato": {
+            "type": "string"
+          }
+        }
+      },
+      "PipFamilierelasjoner": {
+        "type": "object",
+        "properties": {
+          "relatertPersonsIdent": {
+            "type": "string"
+          }
+        }
+      },
+      "PipFoedsel": {
+        "type": "object",
+        "properties": {
+          "foedselsdato": {
+            "type": "string"
+          }
+        }
+      },
+      "PipGeografiskTilknytning": {
+        "type": "object",
+        "properties": {
+          "gtType": {
+            "type": "string"
+          },
+          "gtKommune": {
+            "type": "string"
+          },
+          "gtBydel": {
+            "type": "string"
+          },
+          "gtLand": {
+            "type": "string"
+          },
+          "regel": {
+            "type": "string"
+          }
+        }
+      },
+      "PipIdent": {
+        "type": "object",
+        "properties": {
+          "ident": {
+            "type": "string"
+          },
+          "historisk": {
+            "type": "boolean"
+          },
+          "gruppe": {
+            "type": "string"
+          }
+        }
+      },
+      "PipIdenter": {
+        "type": "object",
+        "properties": {
+          "identer": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipIdent"
+            }
+          }
+        }
+      },
+      "PipPerson": {
+        "type": "object",
+        "properties": {
+          "adressebeskyttelse": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipAdressebeskyttelse"
+            }
+          },
+          "foedsel": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipFoedsel"
+            }
+          },
+          "doedsfall": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipDoedsfall"
+            }
+          },
+          "familierelasjoner": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipFamilierelasjoner"
+            }
+          }
+        }
+      },
+      "PipPersondataResponse": {
+        "type": "object",
+        "properties": {
+          "aktoerId": {
+            "type": "string"
+          },
+          "person": {
+            "$ref": "#/components/schemas/PipPerson"
+          },
+          "identer": {
+            "$ref": "#/components/schemas/PipIdenter"
+          },
+          "geografiskTilknytning": {
+            "$ref": "#/components/schemas/PipGeografiskTilknytning"
+          }
+        }
+      },
+      "PipPersondataResponseList": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": {
+          "$ref": "#/components/schemas/PipPersondataResponse"
+        }
+      },
+      "PipSkjermingResponse": {
+        "type": "object",
+        "properties": {
+          "idnummer": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "skjermet": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PipBehandlingResponse": {
+        "type": "object",
+        "properties": {
+          "navn": {
+            "type": "string"
+          },
+          "behandlingsId": {
+            "type": "string"
+          },
+          "opplysningstyper": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "token": {
+        "type": "http",
+        "name": "Authorization",
+        "in": "header",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

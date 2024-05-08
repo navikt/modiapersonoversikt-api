@@ -194,6 +194,10 @@ query hentPersondata($ident: ID!){
                 motpartsPersonident
                 omfang
                 omfangetErInnenPersonligOmraade
+                tjenesteomraade {
+                    tjenestevirksomhet
+                    tjenesteoppgave
+                }
             }
             folkeregistermetadata {
                 gyldighetstidspunkt

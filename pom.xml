@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -22,16 +22,16 @@
 
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.9.23</kotlin.version>
+        <kotlin.version>1.9.24</kotlin.version>
         <serialization.version>1.6.3</serialization.version>
         <mockk.version>1.13.10</mockk.version>
-        <wiremock.version>3.5.2</wiremock.version>
+        <wiremock.version>3.5.4</wiremock.version>
 
         <common.version>3.2024.02.21_11.18-8f9b43befae1</common.version>
-        <modia-common-utils.version>1.2024.03.25-10.55-91a4892349d0</modia-common-utils.version>
-        <tjenestespesifikasjoner.version>2618.0448179</tjenestespesifikasjoner.version>
-        <org.jvnet.jaxb.version>4.0.3</org.jvnet.jaxb.version>
-        <graphql-kotlin.version>7.0.2</graphql-kotlin.version>
+        <modia-common-utils.version>1.2024.04.10-14.01-f285b3119abf</modia-common-utils.version>
+        <tjenestespesifikasjoner.version>2633.1685ed5</tjenestespesifikasjoner.version>
+        <org.jvnet.jaxb.version>4.0.6</org.jvnet.jaxb.version>
+        <graphql-kotlin.version>7.1.1</graphql-kotlin.version>
         <kotlin-coroutines.version>1.8.0</kotlin-coroutines.version>
 
     </properties>

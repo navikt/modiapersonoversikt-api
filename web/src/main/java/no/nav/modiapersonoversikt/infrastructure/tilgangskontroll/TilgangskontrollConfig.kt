@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.pdlPip.PdlPipApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
@@ -25,6 +26,7 @@ open class TilgangskontrollConfig {
     @Bean
     open fun decisionPoint(
         pdl: PdlOppslagService,
+        pdlPip: PdlPipApi,
         skjermingApi: SkjermedePersonerApi,
         norg: NorgApi,
         ansattService: AnsattService,
@@ -34,9 +36,9 @@ open class TilgangskontrollConfig {
         return PolicyDecisionPointImpl().apply {
             install(AuthContextPip)
             install(NavIdentPip)
-            install(BrukersFnrPip(pdl))
-            install(BrukersAktorIdPip(pdl))
-            install(BrukersDiskresjonskodePip(pdl))
+            install(BrukersFnrPip(pdlPip))
+            install(BrukersAktorIdPip(pdlPip))
+            install(BrukersDiskresjonskodePip(pdlPip))
             install(BrukersSkjermingPip(skjermingApi))
             install(BrukersEnhetPip(norg))
             install(BrukersGeografiskeTilknyttningPip(pdl))

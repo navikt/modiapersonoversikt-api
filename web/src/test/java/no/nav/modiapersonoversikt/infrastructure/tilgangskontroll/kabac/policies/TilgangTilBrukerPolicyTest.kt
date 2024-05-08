@@ -14,7 +14,8 @@ import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentadressebeskyttelse.Adressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.pdlPip.PdlPipApi
+import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipAdressebeskyttelse
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
@@ -29,6 +30,7 @@ internal class TilgangTilBrukerPolicyTest {
     private val policy = KabacTestUtils.PolicyTester(TilgangTilBrukerPolicy)
     private val ldap = mockk<LDAPService>()
     private val pdl = mockk<PdlOppslagService>()
+    private val pdlPip = mockk<PdlPipApi>()
     private val norg = mockk<NorgApi>()
     private val nom = mockk<NomClient>()
     private val axsys = mockk<AxsysClient>()
@@ -180,10 +182,10 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtBrukerIkkeHarAdressebeskyttelse() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+        every { pdlPip.hentAdresseBeskyttelse(fnr.get()) } returns
             listOf(
-                Adressebeskyttelse(
-                    AdressebeskyttelseGradering.UGRADERT,
+                PipAdressebeskyttelse(
+                    AdressebeskyttelseGradering.UGRADERT.toString(),
                 ),
             )
     }
@@ -197,19 +199,19 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtBrukerHarKode6() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+        every { pdlPip.hentAdresseBeskyttelse(fnr.get()) } returns
             listOf(
-                Adressebeskyttelse(
-                    AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                PipAdressebeskyttelse(
+                    AdressebeskyttelseGradering.STRENGT_FORTROLIG.toString(),
                 ),
             )
     }
 
     private fun gittAtBrukerHarKode7() {
-        every { pdl.hentAdressebeskyttelse(fnr.get()) } returns
+        every { pdlPip.hentAdresseBeskyttelse(fnr.get()) } returns
             listOf(
-                Adressebeskyttelse(
-                    AdressebeskyttelseGradering.FORTROLIG,
+                PipAdressebeskyttelse(
+                    AdressebeskyttelseGradering.FORTROLIG.toString(),
                 ),
             )
     }
@@ -242,11 +244,11 @@ internal class TilgangTilBrukerPolicyTest {
     private fun gittFnrAktorIdMapping(vararg fnraktoridMapping: Pair<Fnr, AktorId>) {
         val fnrmap = fnraktoridMapping.toMap()
         val aktormap = fnraktoridMapping.associate { Pair(it.second, it.first) }
-        every { pdl.hentFnr(any()) } answers {
-            aktormap[AktorId(arg<String>(0))]?.get()
+        every { pdlPip.hentFnr(any()) } answers {
+            aktormap[arg<AktorId>(0)]?.get()
         }
-        every { pdl.hentAktorId(any()) } answers {
-            fnrmap[Fnr(arg<String>(0))]?.get()
+        every { pdlPip.hentAktorId(any()) } answers {
+            fnrmap[arg<Fnr>(0)]?.get()
         }
     }
 
@@ -265,11 +267,11 @@ internal class TilgangTilBrukerPolicyTest {
     private fun fellesPipTjenester(): Array<Kabac.PolicyInformationPoint<*>> {
         return arrayOf(
             NavIdentPip.key.withValue(ident),
-            BrukersAktorIdPip(pdl),
-            BrukersFnrPip(pdl),
+            BrukersAktorIdPip(pdlPip),
+            BrukersFnrPip(pdlPip),
             BrukersGeografiskeTilknyttningPip(pdl),
             BrukersEnhetPip(norg),
-            BrukersDiskresjonskodePip(pdl),
+            BrukersDiskresjonskodePip(pdlPip),
             BrukersSkjermingPip(skjermedePersoner),
             BrukersRegionEnhetPip(norg),
             VeiledersRollerPip(ansattService),
