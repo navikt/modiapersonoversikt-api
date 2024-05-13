@@ -37,12 +37,12 @@ open class PdlPipApiImpl(
 
     @Cacheable
     override fun hentFnr(aktorId: AktorId): String? {
-        return hentIdenter(aktorId.get())?.identer?.identer?.find { it.gruppe === IdentGruppe.FOLKEREGISTERIDENT.toString() }?.ident
+        return hentIdenter(aktorId.get())?.identer?.identer?.find { it.gruppe == IdentGruppe.FOLKEREGISTERIDENT.toString() }?.ident
     }
 
     @Cacheable
     override fun hentAktorId(fnr: Fnr): String? {
-        return hentIdenter(fnr.get())?.identer?.identer?.find { it.gruppe === IdentGruppe.AKTORID.toString() }?.ident
+        return hentIdenter(fnr.get())?.identer?.identer?.find { it.gruppe == IdentGruppe.AKTORID.toString() }?.ident
     }
 
     @Cacheable
