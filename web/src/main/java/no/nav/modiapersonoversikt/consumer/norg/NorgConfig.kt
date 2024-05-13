@@ -7,12 +7,14 @@ import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.util.concurrent.TimeUnit
 
 @Configuration
 open class NorgConfig {
     private val url: String = EnvironmentUtils.getRequiredProperty("NORG2_BASEURL")
     private val httpClient: OkHttpClient =
         RestClient.baseClient().newBuilder()
+            .connectTimeout(30L, TimeUnit.SECONDS)
             .addInterceptor(XCorrelationIdInterceptor())
             .addInterceptor(
                 LoggingInterceptor("Norg2") { request ->
