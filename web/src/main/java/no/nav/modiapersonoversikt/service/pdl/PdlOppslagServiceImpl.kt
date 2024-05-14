@@ -151,6 +151,7 @@ open class PdlOppslagServiceImpl(
         val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken()
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
         header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
+        header(BEHANDLINGSNUMMER_HEADER, BEHANDLINGSNUMMER_HEADERVERDI)
     }
 
     companion object {
