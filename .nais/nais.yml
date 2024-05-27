@@ -41,6 +41,8 @@ spec:
     min: 2
     max: 4
     cpuThresholdPercentage: 60
+  maskinporten:
+    enabled: true
   vault:
     enabled: true
     paths:
