@@ -45,6 +45,7 @@
         <module>brukervarsel-v1-tjenestespesifikasjon</module>
         <module>nav-fim-personsok-v1-tjenestespesifikasjon</module>
         <module>pdl-pip-api</module>
+        <module>skatteetaten-innkreving-api</module>
     </modules>
 
     <dependencyManagement>
