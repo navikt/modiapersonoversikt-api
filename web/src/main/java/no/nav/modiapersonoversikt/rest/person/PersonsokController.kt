@@ -10,22 +10,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.PdlFelt
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.PdlKriterie
-import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Bruker
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Gateadresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Kodeverdi
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Matrikkeladresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseNorge
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseUtland
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.NorskIdent
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Personnavn
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.PostboksadresseNorsk
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.StedsadresseNorge
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.StrukturertAdresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.UstrukturertAdresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
@@ -35,14 +19,12 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
 import java.time.LocalDate
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person as VirksomhetPerson
 
 @RestController
 @RequestMapping("/rest/personsok")
 class PersonsokController
     @Autowired
     constructor(
-        private val personsokPortType: PersonsokPortType,
         private val pdlOppslagService: PdlOppslagService,
         val tilgangskontroll: Tilgangskontroll,
     ) {
@@ -71,39 +53,17 @@ class PersonsokController
                 .get(auditDescriptor) {
                     handterFeil {
                         val enhet = personsokRequestV3.enhet ?: "Ukjent"
-                        if (!personsokRequestV3.kontonummer.isNullOrBlank()) {
-                            sokefelterTrace.log(enhet to "kontonummer")
-                            kontonummerSok(personsokRequestV3.kontonummer)
-                                .mapNotNull(::lagPersonResponse)
-                        } else {
-                            val pdlKriterier = personsokRequestV3.tilPdlKriterier()
-                            val feltnavn =
-                                pdlKriterier
-                                    .filter { it.value.isNullOrEmpty().not() }
-                                    .joinToString(", ") { it.felt.name }
-                            sokefelterTrace.log(enhet to feltnavn)
-                            pdlOppslagService
-                                .sokPerson(pdlKriterier)
-                                .mapNotNull(::lagPersonResponse)
-                        }
+                        val pdlKriterier = personsokRequestV3.tilPdlKriterier()
+                        val feltnavn =
+                            pdlKriterier
+                                .filter { it.value.isNullOrEmpty().not() }
+                                .joinToString(", ") { it.felt.name }
+                        sokefelterTrace.log(enhet to feltnavn)
+                        pdlOppslagService
+                            .sokPerson(pdlKriterier)
+                            .mapNotNull(::lagPersonResponse)
                     }
                 }
-        }
-
-        private fun kontonummerSok(kontonummer: String): List<VirksomhetPerson> {
-            val request =
-                FinnPersonRequest()
-                    .apply {
-                        soekekriterie =
-                            Soekekriterie()
-                                .apply {
-                                    bankkontoNorge = kontonummer
-                                }
-                    }
-            return personsokPortType
-                .finnPerson(request)
-                .personListe
-                ?: emptyList()
         }
 
         private fun <T> handterFeil(block: () -> T): T =
@@ -288,53 +248,6 @@ data class PersonSokResponsDTO(
     val utenlandskID: List<UtenlandskIdDTO>?,
 )
 
-fun lagPersonResponse(fimPerson: VirksomhetPerson): PersonSokResponsDTO? {
-    val ident = fimPerson.ident?.let(::lagNorskIdent) ?: return null
-    val navn = fimPerson.personnavn?.let(::lagNavn) ?: return null
-
-    return PersonSokResponsDTO(
-        diskresjonskode = fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
-        postadresse = fimPerson.postadresse?.ustrukturertAdresse?.let { lagPostadresse(it) },
-        bostedsadresse = fimPerson.bostedsadresse?.strukturertAdresse?.let { lagBostedsadresse(it) },
-        kjonn = fimPerson.kjoenn?.kjoenn?.let { lagKodeverdi(it) },
-        navn = navn,
-        status = fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
-        ident = ident,
-        brukerinfo = lagBrukerinfo(fimPerson),
-        utenlandskID = null,
-    )
-}
-
-private fun lagPostadresse(adr: UstrukturertAdresse): String =
-    arrayOf(
-        adr.adresselinje1,
-        adr.adresselinje2,
-        adr.adresselinje3,
-        adr.adresselinje4,
-        adr.landkode?.value,
-    ).filterNotNull().joinToString(" ")
-
-private fun lagBostedsadresse(adr: StrukturertAdresse): String? =
-    when (adr) {
-        is Gateadresse ->
-            arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull()
-                .joinToString(" ")
-        is Matrikkeladresse ->
-            arrayOf(
-                adr.matrikkelnummer.bruksnummer,
-                adr.matrikkelnummer.festenummer,
-                adr.matrikkelnummer.gaardsnummer,
-                adr.matrikkelnummer.seksjonsnummer,
-                adr.matrikkelnummer.undernummer,
-                adr.poststed?.value,
-            ).filterNotNull().joinToString(" ")
-        is StedsadresseNorge ->
-            arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull()
-                .joinToString(" ")
-        is PostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
-        else -> null
-    }
-
 data class PersonnavnDTO(
     val fornavn: String,
     val etternavn: String,
@@ -342,23 +255,9 @@ data class PersonnavnDTO(
     val sammensatt: String,
 )
 
-private fun lagNavn(fimPersonnavn: Personnavn) =
-    PersonnavnDTO(
-        fornavn = fimPersonnavn.fornavn,
-        etternavn = fimPersonnavn.etternavn,
-        mellomnavn = fimPersonnavn.mellomnavn,
-        sammensatt = fimPersonnavn.sammensattNavn,
-    )
-
 data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: String)
 
 data class NorskIdentDTO(val ident: String, val type: KodeverdiDTO?)
-
-private fun lagNorskIdent(fimNorskIdent: NorskIdent) =
-    NorskIdentDTO(
-        fimNorskIdent.ident,
-        fimNorskIdent.type?.let { lagKodeverdi(it) },
-    )
 
 data class BrukerinfoDTO(
     val gjeldendePostadresseType: KodeverdiDTO?,
@@ -366,32 +265,11 @@ data class BrukerinfoDTO(
     val ansvarligEnhet: String?,
 )
 
-private fun lagBrukerinfo(fimPerson: VirksomhetPerson): BrukerinfoDTO? =
-    if (fimPerson is Bruker) {
-        BrukerinfoDTO(
-            gjeldendePostadresseType = fimPerson.gjeldendePostadresseType?.let { lagKodeverdi(it) },
-            midlertidigPostadresse = fimPerson.midlertidigPostadresse?.let { lagMidlertidigAdresse(it) },
-            ansvarligEnhet = fimPerson.harAnsvarligEnhet?.enhet?.organisasjonselementID,
-        )
-    } else {
-        null
-    }
-
-private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: MidlertidigPostadresse): String? =
-    when (fimMidlertidigPostadresse) {
-        is MidlertidigPostadresseNorge -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-        is MidlertidigPostadresseUtland -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-        else -> null
-    }
-
 data class KodeverdiDTO(val kodeRef: String?, val beskrivelse: String?)
-
-private fun lagKodeverdi(fimKodeverdi: Kodeverdi) = KodeverdiDTO(fimKodeverdi.kodeRef, fimKodeverdi.value)
 
 data class PersonsokRequestV3(
     val enhet: String?,
     val navn: String?,
-    val kontonummer: String?,
     val utenlandskID: String?,
     val alderFra: Int?,
     val alderTil: Int?,

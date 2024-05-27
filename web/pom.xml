@@ -301,11 +301,6 @@
 
         <!-- tjenester -->
         <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
-            <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
-            <version>dev</version>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
             <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
