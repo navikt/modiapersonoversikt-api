@@ -312,11 +312,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
-            <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
             <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
         </dependency>
