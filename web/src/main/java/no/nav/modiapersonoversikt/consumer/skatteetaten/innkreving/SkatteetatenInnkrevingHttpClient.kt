@@ -4,11 +4,13 @@ import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class SkatteetatenInnkrevingHttpClient(
     private val kravdetaljerApi: KravdetaljerApi,
+    @Value("\${skatteetaten.api.client.id}") private val clientId: String,
 ) : SkatteetatenInnkrevingClient, Pingable {
     override fun getKravdetaljer(
         kravidentifikator: String,
@@ -16,7 +18,7 @@ class SkatteetatenInnkrevingHttpClient(
     ): Result<Unit> =
         runCatching {
             kravdetaljerApi.getKravdetaljer(
-                klientid = "NAV/1.0",
+                klientid = clientId,
                 accept = "application/json",
                 kravidentifikator = kravidentifikator,
                 kravidentifikatortype = kravidentifikatorType.name,

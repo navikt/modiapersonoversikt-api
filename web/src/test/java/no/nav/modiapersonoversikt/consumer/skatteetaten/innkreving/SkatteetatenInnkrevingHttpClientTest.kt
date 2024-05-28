@@ -24,7 +24,7 @@ class SkatteetatenInnkrevingHttpClientTest {
     private val apiClient = skatteetatenInnkrevingConfig.apiClient(wm.baseUrl(), httpClient)
     private val kravdetaljerApi = skatteetatenInnkrevingConfig.kravdetaljerApi(apiClient)
 
-    private val skatteetatenInnkrevingClient = SkatteetatenInnkrevingHttpClient(kravdetaljerApi)
+    private val skatteetatenInnkrevingClient = SkatteetatenInnkrevingHttpClient(kravdetaljerApi, "NAV/1.0")
 
     @Test
     fun `get kravdetaljer with auth header should return successfull result`() {

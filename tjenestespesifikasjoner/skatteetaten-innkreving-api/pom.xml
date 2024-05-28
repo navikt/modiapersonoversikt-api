@@ -58,7 +58,7 @@
                                 <enumPropertyNaming>original</enumPropertyNaming>
                                 <serializationLibrary>jackson</serializationLibrary>
                             </configOptions>
-                            <!-- For å tillate bruk av det norske alfabetet i OpenAPI specen -->
+                            <!-- For å tillate bruk av det æøå i OpenAPI specen -->
                             <skipValidateSpec>true</skipValidateSpec>
                         </configuration>
                     </execution>
