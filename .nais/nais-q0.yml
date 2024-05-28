@@ -42,6 +42,10 @@ spec:
     min: 2
     max: 4
     cpuThresholdPercentage: 60
+  maskinporten:
+    enabled: true
+    scopes:
+      - name: "skatteetaten:innkrevingsoppdrag"
   vault:
     enabled: true
     paths:
@@ -193,3 +197,5 @@ spec:
       value: "dev-gcp:personoversikt:modia-soknadsstatus-api"
     - name: UNLEASH_ENVIRONMENT
       value: "development"
+    - name: SKATTEETATEN_INNKREVINGSOPPDRAG_API_BASE_URL
+      value: "https://api-test.sits.no"

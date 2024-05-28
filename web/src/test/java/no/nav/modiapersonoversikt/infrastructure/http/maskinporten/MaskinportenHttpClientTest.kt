@@ -6,8 +6,8 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.github.tomakehurst.wiremock.stubbing.Scenario
 import com.nimbusds.jose.jwk.RSAKey
+import no.nav.common.rest.client.RestClient
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
-import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ class MaskinportenHttpClientTest {
     private val clientJwk = generateTestRsaJwk().toJSONString()
 
     private val maskinportenHttpClient = MaskinportenHttpClient(
-        "${wm.baseUrl()}/token", "clientId", clientJwk, "issuer", OkHttpClient(), OkHttpUtils.objectMapper
+        "${wm.baseUrl()}/token", "clientId", clientJwk, "issuer", RestClient.baseClient(), OkHttpUtils.objectMapper
     )
 
     @Test

@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.json.Maskinpo
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -16,8 +15,8 @@ open class MaskinportenHttpClient(
     @Value("\${MASKINPORTEN_CLIENT_ID}") private val clientId: String,
     @Value("\${MASKINPORTEN_CLIENT_JWK}") private val clientJwk: String,
     @Value("\${MASKINPORTEN_ISSUER}") private val issuer: String,
-    @Autowired private val httpClient: OkHttpClient,
-    @Autowired private val objectMapper: ObjectMapper,
+    private val httpClient: OkHttpClient,
+    private val objectMapper: ObjectMapper,
 ) : MaskinportenClient {
     private var cachedToken: CachedToken? = null
 
