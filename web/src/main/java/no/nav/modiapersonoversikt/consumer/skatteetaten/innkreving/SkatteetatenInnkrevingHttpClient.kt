@@ -19,7 +19,6 @@ class SkatteetatenInnkrevingHttpClient(
     private val kravdetaljerApi: KravdetaljerApi,
     @Value("\${skatteetaten.api.client.id}") private val clientId: String,
 ) : SkatteetatenInnkrevingClient, Pingable {
-
     override fun getKravdetaljer(
         kravidentifikator: String,
         kravidentifikatorType: KravidentifikatorType,
