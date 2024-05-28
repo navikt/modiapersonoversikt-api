@@ -42,8 +42,6 @@
         <module>arenasakvedtakservice</module>
         <module>pleiepenger-v1-tjenestespesifikasjon</module>
         <module>oppfoelging-v1-tjenestespesifikasjon</module>
-        <module>brukervarsel-v1-tjenestespesifikasjon</module>
-        <module>nav-fim-personsok-v1-tjenestespesifikasjon</module>
         <module>pdl-pip-api</module>
     </modules>
 
@@ -138,7 +136,7 @@
                 <plugin>
                     <groupId>org.openapitools</groupId>
                     <artifactId>openapi-generator-maven-plugin</artifactId>
-                    <version>7.5.0</version>
+                    <version>7.6.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -85,8 +85,6 @@ spec:
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/ws/samltoken"
-    - name: BRUKERVARSELV1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: FELLES_KODEVERK_URL
       value: "https://kodeverk-api.nav.no"
     - name: LDAP_BASEDN
@@ -131,10 +129,6 @@ spec:
       value: "https://sokos-kontoregister-person.intern.dev.nav.no/api/system"
     - name: KONTOREGISTER_SCOPE
       value: "dev-gcp:okonomi:sokos-kontoregister-person"
-    - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: "https://tpsws-q0.intern.dev.nav.no/ws/Person/v3"
-    - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
-      value: "https://tpsws-q0.intern.dev.nav.no/ws/Personsok/v1"
     - name: VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/infotrygd-ws/Pleiepenger/v1"
     - name: VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL

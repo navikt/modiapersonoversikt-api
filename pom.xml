@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.3.0</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -22,10 +22,10 @@
 
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.9.24</kotlin.version>
+        <kotlin.version>2.0.0</kotlin.version>
         <serialization.version>1.6.3</serialization.version>
-        <mockk.version>1.13.10</mockk.version>
-        <wiremock.version>3.5.4</wiremock.version>
+        <mockk.version>1.13.11</mockk.version>
+        <wiremock.version>3.6.0</wiremock.version>
 
         <common.version>3.2024.02.21_11.18-8f9b43befae1</common.version>
         <modia-common-utils.version>1.2024.04.10-14.01-f285b3119abf</modia-common-utils.version>
@@ -136,13 +136,6 @@
                 <groupId>no.bekk.bekkopen</groupId>
                 <artifactId>nocommons</artifactId>
                 <version>0.16.0</version>
-            </dependency>
-
-            <!--Tjenestespesifikasjon-->
-            <dependency>
-                <groupId>com.github.navikt.tjenestespesifikasjoner</groupId>
-                <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
 
             <!--Modia common-->

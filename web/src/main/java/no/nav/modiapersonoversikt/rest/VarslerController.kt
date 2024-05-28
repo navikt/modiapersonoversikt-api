@@ -19,17 +19,6 @@ class VarslerController(
     private val varslerService: VarslerService,
     private val tilgangskontroll: Tilgangskontroll,
 ) {
-    @GetMapping("/varsler/{fnr}")
-    fun hentLegacyVarsler(
-        @PathVariable("fnr") fnr: String,
-    ): List<VarslerService.Varsel> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnr)))
-            .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnr)) {
-                varslerService.hentLegacyVarsler(Fnr(fnr))
-            }
-    }
-
     @GetMapping("/v2/varsler/{fnr}")
     fun hentAlleVarsler(
         @PathVariable("fnr") fnr: String,
