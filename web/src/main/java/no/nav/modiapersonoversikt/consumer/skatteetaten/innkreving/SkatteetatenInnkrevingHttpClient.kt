@@ -7,11 +7,19 @@ import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+interface SkatteetatenInnkrevingClient {
+    fun getKravdetaljer(
+        kravidentifikator: String,
+        kravidentifikatorType: KravidentifikatorType,
+    ): Result<Unit>
+}
+
 @Component
 class SkatteetatenInnkrevingHttpClient(
     private val kravdetaljerApi: KravdetaljerApi,
     @Value("\${skatteetaten.api.client.id}") private val clientId: String,
 ) : SkatteetatenInnkrevingClient, Pingable {
+
     override fun getKravdetaljer(
         kravidentifikator: String,
         kravidentifikatorType: KravidentifikatorType,
