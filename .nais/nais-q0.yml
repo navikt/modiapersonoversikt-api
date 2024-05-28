@@ -85,8 +85,6 @@ spec:
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/ws/samltoken"
-    - name: BRUKERVARSELV1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: FELLES_KODEVERK_URL
       value: "https://kodeverk-api.nav.no"
     - name: LDAP_BASEDN
