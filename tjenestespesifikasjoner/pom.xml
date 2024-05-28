@@ -42,7 +42,6 @@
         <module>arenasakvedtakservice</module>
         <module>pleiepenger-v1-tjenestespesifikasjon</module>
         <module>oppfoelging-v1-tjenestespesifikasjon</module>
-        <module>nav-fim-personsok-v1-tjenestespesifikasjon</module>
         <module>pdl-pip-api</module>
     </modules>
 

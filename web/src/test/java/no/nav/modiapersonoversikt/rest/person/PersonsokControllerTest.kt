@@ -6,17 +6,11 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Matrikkeladre
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Person
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Bostedsadresse
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Kjoenn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
-import java.math.BigInteger
 import java.time.*
-import javax.xml.datatype.DatatypeFactory
-import javax.xml.datatype.XMLGregorianCalendar
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Bostedsadresse as PdlBostedsadresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Kjoenn as PdlKjoenn
 
@@ -26,129 +20,6 @@ class PersonsokControllerTest {
         @JvmField
         @RegisterExtension
         val snapshot = SnapshotExtension()
-
-        private val fixedDate: XMLGregorianCalendar =
-            DatatypeFactory
-                .newInstance()
-                .newXMLGregorianCalendarDate(2020, 10, 12, 0)
-
-        @Test
-        internal fun `should map tps response`() {
-            val person =
-                Bruker().apply {
-                    diskresjonskode =
-                        Diskresjonskoder().apply {
-                            kodeverksRef = "kodeverkref"
-                            kodeRef = "SPSF"
-                            value = "SPSF"
-                        }
-                    postadresse =
-                        Postadresse().apply {
-                            ustrukturertAdresse =
-                                UstrukturertAdresse().apply {
-                                    adresselinje1 = "adresselinje1"
-                                    adresselinje2 = "adresselinje2"
-                                    adresselinje3 = "adresselinje3"
-                                    adresselinje4 = "adresselinje4"
-                                    landkode =
-                                        Landkoder().apply {
-                                            kodeverksRef = "landkodeRef"
-                                            kodeRef = "NOR"
-                                            value = "NOR"
-                                        }
-                                }
-                        }
-                    bostedsadresse =
-                        Bostedsadresse().apply {
-                            strukturertAdresse =
-                                Gateadresse().apply {
-                                    gatenummer = BigInteger.TWO
-                                    gatenavn = "Supervegen"
-                                    husnummer = BigInteger.TEN
-                                    husbokstav = "Z"
-                                    poststed =
-                                        Postnummer().apply {
-                                            kodeverksRef = "postnummerRef"
-                                            kodeRef = "1234"
-                                            value = "Svingen"
-                                        }
-                                    bolignummer = "1234"
-                                    kommunenummer = "654321"
-                                }
-                        }
-                    kjoenn =
-                        Kjoenn().apply {
-                            kjoenn =
-                                Kjoennstyper().apply {
-                                    kodeverksRef = "kjonnRef"
-                                    kodeRef = "M"
-                                    value = "M"
-                                }
-                        }
-                    personnavn =
-                        Personnavn().apply {
-                            fornavn = "fornavn"
-                            mellomnavn = "mellomnavn"
-                            etternavn = "etternavn"
-                            sammensattNavn = "fornavn mellomnavn etternavn"
-                        }
-                    personstatus =
-                        Personstatus().apply {
-                            personstatus =
-                                Personstatuser().apply {
-                                    kodeverksRef = "personstatusRef"
-                                    kodeRef = "DOD"
-                                    value = "DOD"
-                                }
-                        }
-                    ident =
-                        NorskIdent().apply {
-                            ident = "12345679810"
-                            type =
-                                Personidenter().apply {
-                                    kodeverksRef = "personidenterRef"
-                                    kodeRef = "FNR"
-                                    value = "FNR"
-                                }
-                        }
-                    gjeldendePostadresseType =
-                        Postadressetyper().apply {
-                            kodeverksRef = "postadresseRef"
-                            kodeRef = "postadresseRef"
-                            value = "NA"
-                        }
-                    midlertidigPostadresse =
-                        MidlertidigPostadresseNorge().apply {
-                            ustrukturertAdresse =
-                                UstrukturertAdresse().apply {
-                                    adresselinje1 = "adresselinje1"
-                                    adresselinje2 = "adresselinje2"
-                                    adresselinje3 = "adresselinje3"
-                                    adresselinje4 = "adresselinje4"
-                                    landkode =
-                                        Landkoder().apply {
-                                            kodeverksRef = "landkodeRef"
-                                            kodeRef = "NOR"
-                                            value = "NOR"
-                                        }
-                                }
-                            postleveringsPeriode =
-                                Gyldighetsperiode().apply {
-                                    fom = fixedDate
-                                    tom = fixedDate
-                                }
-                        }
-                    harAnsvarligEnhet =
-                        AnsvarligEnhet().apply {
-                            enhet =
-                                Organisasjonsenhet().apply {
-                                    organisasjonselementID = "1234"
-                                }
-                        }
-                }
-
-            snapshot.assertMatches(lagPersonResponse(person))
-        }
 
         @Test
         internal fun `should map pdl response`() {
@@ -310,7 +181,6 @@ class PersonsokControllerTest {
 
         private val requestV3 =
             PersonsokRequestV3(
-                null,
                 null,
                 null,
                 null,
