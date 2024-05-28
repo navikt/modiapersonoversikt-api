@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving
 
-import no.nav.modiapersonoversikt.consumer.ske.oppdragsinnkreving.api.generated.apis.KravdetaljerApi
-import no.nav.modiapersonoversikt.consumer.ske.oppdragsinnkreving.api.generated.infrastructure.ApiClient
+import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
+import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ApiClient
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Qualifier

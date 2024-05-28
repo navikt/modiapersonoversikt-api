@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving
 
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
-import no.nav.modiapersonoversikt.consumer.ske.oppdragsinnkreving.api.generated.apis.KravdetaljerApi
+import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import org.springframework.stereotype.Component
 
