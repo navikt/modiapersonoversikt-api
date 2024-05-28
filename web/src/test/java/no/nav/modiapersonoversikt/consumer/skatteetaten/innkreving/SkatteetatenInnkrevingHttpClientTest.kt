@@ -40,10 +40,11 @@ class SkatteetatenInnkrevingHttpClientTest {
             statusCode = 200
         }
 
-        val result = skatteetatenInnkrevingClient.getKravdetaljer(
-            "kravidentifikator",
-            KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR
-        )
+        val result =
+            skatteetatenInnkrevingClient.getKravdetaljer(
+                "kravidentifikator",
+                KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
+            )
 
         assertTrue(result.isSuccess)
     }
@@ -58,10 +59,11 @@ class SkatteetatenInnkrevingHttpClientTest {
             statusCode = 500
         }
 
-        val result = skatteetatenInnkrevingClient.getKravdetaljer(
-            "kravidentifikator",
-            KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR
-        )
+        val result =
+            skatteetatenInnkrevingClient.getKravdetaljer(
+                "kravidentifikator",
+                KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
+            )
 
         assertTrue(result.isFailure)
     }

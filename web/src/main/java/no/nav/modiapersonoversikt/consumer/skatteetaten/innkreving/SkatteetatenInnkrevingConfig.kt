@@ -12,7 +12,10 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class SkatteetatenInnkrevingConfig {
     @Bean("skatteetatenOppdragsinnkrevingClient")
-    open fun httpClient(httpClient: OkHttpClient, maskinportenClient: MaskinportenClient): OkHttpClient =
+    open fun httpClient(
+        httpClient: OkHttpClient,
+        maskinportenClient: MaskinportenClient,
+    ): OkHttpClient =
         httpClient.newBuilder().addInterceptor { chain ->
             val maskinportenToken = maskinportenClient.getAccessToken()
 
@@ -25,7 +28,7 @@ open class SkatteetatenInnkrevingConfig {
     @Bean
     open fun apiClient(
         @Value("\${SKATTEETATEN_INNKREVINGSOPPDRAG_API_BASE_URL}") basePath: String,
-        @Qualifier("skatteetatenOppdragsinnkrevingClient") httpClient: OkHttpClient
+        @Qualifier("skatteetatenOppdragsinnkrevingClient") httpClient: OkHttpClient,
     ): ApiClient = ApiClient(basePath, httpClient)
 
     @Bean

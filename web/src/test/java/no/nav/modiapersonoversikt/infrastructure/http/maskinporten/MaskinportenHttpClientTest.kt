@@ -24,9 +24,15 @@ class MaskinportenHttpClientTest {
 
     private val clientJwk = generateTestRsaJwk().toJSONString()
 
-    private val maskinportenHttpClient = MaskinportenHttpClient(
-        "${wm.baseUrl()}/token", "clientId", clientJwk, "issuer", RestClient.baseClient(), OkHttpUtils.objectMapper
-    )
+    private val maskinportenHttpClient =
+        MaskinportenHttpClient(
+            "${wm.baseUrl()}/token",
+            "clientId",
+            clientJwk,
+            "issuer",
+            RestClient.baseClient(),
+            OkHttpUtils.objectMapper,
+        )
 
     @Test
     fun `get access token should return access token`() {
@@ -39,8 +45,8 @@ class MaskinportenHttpClientTest {
                       "access_token": "accessToken",
                       "expires_in": 3600
                     }
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
         )
 
         val token = maskinportenHttpClient.getAccessToken()
@@ -59,8 +65,8 @@ class MaskinportenHttpClientTest {
                       "access_token": "accessToken",
                       "expires_in": 3600
                     }
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
         )
 
         val token = maskinportenHttpClient.getAccessToken()
@@ -83,8 +89,8 @@ class MaskinportenHttpClientTest {
                       "access_token": "accessToken",
                       "expires_in": -1
                     }
-                    """.trimIndent()
-                ).inScenario("getAccessToken").whenScenarioStateIs(Scenario.STARTED).willSetStateTo("cachedToken")
+                    """.trimIndent(),
+                ).inScenario("getAccessToken").whenScenarioStateIs(Scenario.STARTED).willSetStateTo("cachedToken"),
         )
         wm.stubFor(
             post("/token").validateTokenRequest()
@@ -95,8 +101,8 @@ class MaskinportenHttpClientTest {
                       "access_token": "newAccessToken",
                       "expires_in": 3600
                     }
-                    """.trimIndent()
-                ).inScenario("getAccessToken").whenScenarioStateIs("cachedToken")
+                    """.trimIndent(),
+                ).inScenario("getAccessToken").whenScenarioStateIs("cachedToken"),
         )
 
         val firstToken = maskinportenHttpClient.getAccessToken()
@@ -120,10 +126,12 @@ class MaskinportenHttpClientTest {
 
     private fun MappingBuilder.validateTokenRequest(): MappingBuilder =
         withHeader("Content-Type", equalTo("application/x-www-form-urlencoded")).withFormParam(
-            "grant_type", equalTo("urn:ietf:params:oauth:grant-type:jwt-bearer")
+            "grant_type",
+            equalTo("urn:ietf:params:oauth:grant-type:jwt-bearer"),
         ).withFormParam("assertion", matching(".*"))
 
-    private fun MappingBuilder.willReturnJson(body: String): MappingBuilder = willReturn(
-        aResponse().withHeader("Content-Type", "application/json").withBody(body)
-    )
+    private fun MappingBuilder.willReturnJson(body: String): MappingBuilder =
+        willReturn(
+            aResponse().withHeader("Content-Type", "application/json").withBody(body),
+        )
 }

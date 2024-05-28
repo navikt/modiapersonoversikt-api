@@ -29,27 +29,31 @@ open class MaskinportenHttpClient(
 
         val clientAssertionJwt = createClientAssertionJwt(clientJwk, clientId, issuer, emptySet())
 
-        val requestBody = FormBody.Builder().apply {
-            add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
-            add("assertion", clientAssertionJwt)
-        }.build()
+        val requestBody =
+            FormBody.Builder().apply {
+                add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
+                add("assertion", clientAssertionJwt)
+            }.build()
 
-        val request = Request.Builder()
-            .url(maskinportenUrl)
-            .addHeader("Content-Type", "application/x-www-form-urlencoded")
-            .post(requestBody)
-            .build()
+        val request =
+            Request.Builder()
+                .url(maskinportenUrl)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .post(requestBody)
+                .build()
 
         return httpClient.newCall(request).execute().use { response ->
-            val responseBody = response.body?.string()
-                ?: return@use null
+            val responseBody =
+                response.body?.string()
+                    ?: return@use null
 
             val maskinportenJson = objectMapper.readValue(responseBody, MaskinportenJsonResponse::class.java)
 
-            cachedToken = CachedToken(
-                accessToken = maskinportenJson.accessToken,
-                expiresAt = Instant.now().plusSeconds(maskinportenJson.expiresIn.toLong())
-            )
+            cachedToken =
+                CachedToken(
+                    accessToken = maskinportenJson.accessToken,
+                    expiresAt = Instant.now().plusSeconds(maskinportenJson.expiresIn.toLong()),
+                )
 
             maskinportenJson.accessToken
         }
