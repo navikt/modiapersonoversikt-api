@@ -45,7 +45,8 @@ spec:
   maskinporten:
     enabled: true
     scopes:
-      - name: "skatteetaten:innkrevingsoppdrag"
+      consumes:
+        - name: "skatteetaten:innkrevingsoppdrag"
   vault:
     enabled: true
     paths:
