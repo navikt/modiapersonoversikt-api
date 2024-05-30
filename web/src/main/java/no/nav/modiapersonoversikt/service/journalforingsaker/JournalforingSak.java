@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.journalforingsaker;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.joda.time.DateTime;
 
@@ -48,6 +49,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
             && FAGSYSTEMKODE_ARENA.equals(sak.fagsystemKode)
             && SAKSTYPE_MED_FAGSAK.equals(sak.sakstype);
 
+    @JsonGetter
     public String getSaksIdVisning() {
         if(fagsystemSaksId != null) return fagsystemSaksId;
         else if (saksId != null) return saksId;
