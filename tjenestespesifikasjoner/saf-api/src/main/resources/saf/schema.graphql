@@ -297,6 +297,12 @@ type Journalpost {
     # * Returneres kun for utgående journalposter
     utsendingsinfo: Utsendingsinfo
 
+    # Regel for innsyn for denne journalposten. Verdi er "BRUK_STANDARDREGLER" om innsyn ikke er overstyrt.
+    innsynsregel: String!
+
+    # Menneskevennlig beskrivelse av aktuell innsynsregel.
+    innsynsregelBeskrivelse: String!
+
     # Liste over fagspesifikke metadata som er tilknyttet journalpost.
     tilleggsopplysninger: [Tilleggsopplysning]
 

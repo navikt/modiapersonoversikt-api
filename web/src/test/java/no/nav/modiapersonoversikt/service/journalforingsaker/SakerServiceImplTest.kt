@@ -232,6 +232,7 @@ class SakerServiceImplTest {
         private val SakId_3 = "3"
         private val FagsystemSakId_3 = "33"
         private val SakId_4 = "4"
+        private val SakId_5 = "5"
 
         private fun earlierDateTimeWithOffSet(offset: Long) = LocalDateTime.now().minusDays(offset)
 
@@ -276,6 +277,15 @@ class SakerServiceImplTest {
                                     fagsakId = null,
                                     sakstype = Sakstype.GENERELL_SAK,
                                     tema = Tema.STO,
+                                ),
+                                Sak(
+                                    arkivsaksnummer = SakId_5,
+                                    arkivsaksystem = null,
+                                    datoOpprettet = earlierDateTimeWithOffSet(5),
+                                    fagsaksystem = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK,
+                                    fagsakId = null,
+                                    sakstype = Sakstype.GENERELL_SAK,
+                                    tema = Tema.BIL,
                                 ),
                             ),
                     ),
