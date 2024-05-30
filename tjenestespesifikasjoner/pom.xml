@@ -43,6 +43,7 @@
         <module>pleiepenger-v1-tjenestespesifikasjon</module>
         <module>oppfoelging-v1-tjenestespesifikasjon</module>
         <module>pdl-pip-api</module>
+        <module>skatteetaten-innkreving-api</module>
     </modules>
 
     <dependencyManagement>

@@ -1,0 +1,1341 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Tjenester for innkreving av krav for offentlige oppdragsgivere",
+    "description" : "### Beskrivelse\n\nOpenAPI-dokumentasjon for Skatteetatens tjenester for oppdragsinnkreving. Løsningen dekker tjenester for å opprette,\nendre og avskrive innkrevingsoppdrag. I tillegg finnes tjenester for å avstemme hva som er oversendt til APIene, se\nmottaksstatus og å hente eventuelle valideringsfeil.\n\n### Lenker\n\n- [Teknisk dokumentasjon](https://skatteetaten.github.io/beta-apier/innkrevingsoppdrag)\n- [Systemdokumentasjon](https://wiki.sits.no/display/IKOPPDRAG/) (intern Skatteetaten-ressurs)\n\n",
+    "version" : "1.15.12"
+  },
+  "servers" : [ {
+    "url" : "https://api-test.sits.no/"
+  } ],
+  "tags" : [ {
+    "name" : "Innkrevingsoppdrag"
+  }, {
+    "name" : "Mottaksstatus"
+  }, {
+    "name" : "Valideringsfeil"
+  }, {
+    "name" : "Grensesnittavstemming"
+  }, {
+    "name" : "Kravdetaljer"
+  }, {
+    "name" : "Endring"
+  } ],
+  "paths" : {
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/{kravidentifikator}/renter" : {
+      "put" : {
+        "tags" : [ "Endring" ],
+        "summary" : "Endre rentebeløp",
+        "operationId" : "endreRentebeloep",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "Settes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\n                    Bump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\n                    Denne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Content-Type",
+          "in" : "header",
+          "description" : "Angir medietypen for innholdet som sendes.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "Korrelasjonsid",
+          "in" : "header",
+          "description" : "Identifikator for sporing av kall. Må være en gyldig UUID,\n                    og skal være unik ved hvert kall til tjenesten.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikator",
+          "in" : "path",
+          "description" : "Kravidentifikatoren til innkrevingsoppdraget som det skal endres rentebeløp for.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikatortype",
+          "in" : "query",
+          "description" : "Hvilken type kravidentifikator som blir brukt i denne forespørselen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "SKATTEETATENS_KRAVIDENTIFIKATOR", "OPPDRAGSGIVERS_KRAVIDENTIFIKATOR" ]
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/EndreRentebeloepRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Vellykket forespørsel. Rentebeløp ble endret.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MottakskvitteringEndring"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/{kravidentifikator}/oppdragsgiversreferanse" : {
+      "put" : {
+        "tags" : [ "Endring" ],
+        "summary" : "Endre oppdragsgivers referanse",
+        "operationId" : "nyOppdragsgiversReferanse",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "Settes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\n                    Bump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\n                    Denne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Content-Type",
+          "in" : "header",
+          "description" : "Angir medietypen for innholdet som sendes.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "Korrelasjonsid",
+          "in" : "header",
+          "description" : "Identifikator for sporing av kall. Må være en gyldig UUID,\n                    og skal være unik ved hvert kall til tjenesten.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikator",
+          "in" : "path",
+          "description" : "Kravidentifikatoren for innkrevingsoppdraget der oppdragsgivers referanse skal endres.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikatortype",
+          "in" : "query",
+          "description" : "Hvilken type kravidentifikator som blir brukt i denne forespørselen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "SKATTEETATENS_KRAVIDENTIFIKATOR", "OPPDRAGSGIVERS_KRAVIDENTIFIKATOR" ]
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NyOppdragsgiversReferanseRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Vellykket forespørsel. Oppdragsgivers referanse ble endret.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MottakskvitteringEndring"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/{kravidentifikator}/hovedstol" : {
+      "put" : {
+        "tags" : [ "Endring" ],
+        "summary" : "Endre hovedstol",
+        "operationId" : "endreHovedstol",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "Settes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\n                    Bump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\n                    Denne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Content-Type",
+          "in" : "header",
+          "description" : "Angir medietypen for innholdet som sendes.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "Korrelasjonsid",
+          "in" : "header",
+          "description" : "Identifikator for sporing av kall. Må være en gyldig UUID,\n                    og skal være unik ved hvert kall til tjenesten.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikator",
+          "in" : "path",
+          "description" : "Kravidentifikatoren til innkrevingsoppdraget som det skal endres hovedstol for.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikatortype",
+          "in" : "query",
+          "description" : "Hvilken type kravidentifikator som blir brukt i denne forespørselen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "SKATTEETATENS_KRAVIDENTIFIKATOR", "OPPDRAGSGIVERS_KRAVIDENTIFIKATOR" ]
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NyHovedstolRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Vellykket forespørsel. Hovedstol ble endret.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MottakskvitteringEndring"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag" : {
+      "post" : {
+        "tags" : [ "Innkrevingsoppdrag" ],
+        "summary" : "Opprett et innkrevingsoppdrag",
+        "operationId" : "opprettInnkrevingsoppdrag",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "Settes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\n                    Bump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\n                    Denne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Content-Type",
+          "in" : "header",
+          "description" : "Angir medietypen for innholdet som sendes.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "Korrelasjonsid",
+          "in" : "header",
+          "description" : "Identifikator for sporing av kall. Må være en gyldig UUID,\n                    og skal være unik ved hvert kall til tjenesten.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OpprettInnkrevingsoppdragRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Innkrevingsoppdrag mottatt ok",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OpprettInnkrevingsoppdragResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/avskriving" : {
+      "post" : {
+        "tags" : [ "Innkrevingsoppdrag" ],
+        "summary" : "Avskriv et innkrevingsoppdrag",
+        "operationId" : "avskrivInnkrevingsoppdrag",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "Settes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\n                    Bump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\n                    Denne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Content-Type",
+          "in" : "header",
+          "description" : "Angir medietypen for innholdet som sendes.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "Korrelasjonsid",
+          "in" : "header",
+          "description" : "Identifikator for sporing av kall. Må være en gyldig UUID,\n                    og skal være unik ved hvert kall til tjenesten.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AvskrivingRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Vellykket forespørsel. Innkrevingsoppdraget ble avskrevet",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MottakskvitteringAvskriving"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/{kravidentifikator}" : {
+      "get" : {
+        "tags" : [ "Kravdetaljer" ],
+        "summary" : "Hent detaljer om et innkrevingsoppdrag. (Endepunktet er under utvikling og returner kun 200 (OK))",
+        "operationId" : "getKravdetaljer",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "Settes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\n                    Bump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\n                    Denne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Angir formatet klienten aksepterer i responsen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "kravidentifikator",
+          "in" : "path",
+          "description" : "Kravidentifikatoren til innkrevingsoppdraget som det skal hentes detaljer for.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikatortype",
+          "in" : "query",
+          "description" : "Hvilken type kravidentifikator som blir brukt i denne forespørselen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "SKATTEETATENS_KRAVIDENTIFIKATOR", "OPPDRAGSGIVERS_KRAVIDENTIFIKATOR" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Vellykket forespørsel. Detaljer om innkrevingsoppdraget ble returnert."
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/{kravidentifikator}/valideringsfeil" : {
+      "get" : {
+        "tags" : [ "Valideringsfeil" ],
+        "summary" : "Hent valideringsfeil for et innkrevingsoppdrag",
+        "operationId" : "getValideringsfeil",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "\nSettes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\nBump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\nDenne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Angir formatet klienten aksepterer i responsen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "Korrelasjonsid",
+          "in" : "header",
+          "description" : "Identifikator for sporing av kall. Må være en gyldig UUID,\n                    og skal være unik ved hvert kall til tjenesten.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikator",
+          "in" : "path",
+          "description" : "\nKravidentifikatoren til innkrevingsoppdraget som det skal hentes valideringsfeil for.\nKravidentifikatoren må tilhøre et innkrevingsoppdrag som er reskontroført hos Skatteetaten.\n                    ",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikatortype",
+          "in" : "query",
+          "description" : "Hvilken type kravidentifikator som blir brukt i denne forespørselen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "SKATTEETATENS_KRAVIDENTIFIKATOR", "OPPDRAGSGIVERS_KRAVIDENTIFIKATOR" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Vellykket forespørsel. Valideringsfeil ble returnert.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValideringsfeilResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/{kravidentifikator}/mottaksstatus" : {
+      "get" : {
+        "tags" : [ "Mottaksstatus" ],
+        "summary" : "Hent mottaksstatus for et innkrevingsoppdrag",
+        "operationId" : "getMottaksstatus",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "Settes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\n                    Bump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\n                    Denne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Angir formatet klienten aksepterer i responsen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "Korrelasjonsid",
+          "in" : "header",
+          "description" : "Identifikator for sporing av kall. Må være en gyldig UUID,\n                    og skal være unik ved hvert kall til tjenesten.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikator",
+          "in" : "path",
+          "description" : "Kravidentifikatoren til innkrevingsoppdraget som det skal hentes mottaksstatus for.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikatortype",
+          "in" : "query",
+          "description" : "Hvilken type kravidentifikator som blir brukt i denne forespørselen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "SKATTEETATENS_KRAVIDENTIFIKATOR", "OPPDRAGSGIVERS_KRAVIDENTIFIKATOR" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Vellykket forespørsel. Mottaksstatus ble returnert.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MottaksstatusResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/{kravidentifikator}/avstemming" : {
+      "get" : {
+        "tags" : [ "Grensesnittavstemming" ],
+        "summary" : "Grensesnittavstem et innkrevingsoppdrag",
+        "operationId" : "getGrensesnittavstemming",
+        "parameters" : [ {
+          "name" : "Klientid",
+          "in" : "header",
+          "description" : "Settes til \"\\<oppdragsgiver\\>/\\<versjon\\>\", eks. \"NAV/1.0\".\n                    Bump gjerne versjonsnummer ved endringer i kallende system hos oppdragsgiver.\n                    Denne headeren benyttes kun for sporbarhet.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Angir formatet klienten aksepterer i responsen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "application/json" ]
+          }
+        }, {
+          "name" : "Korrelasjonsid",
+          "in" : "header",
+          "description" : "Identifikator for sporing av kall. Må være en gyldig UUID,\n                    og skal være unik ved hvert kall til tjenesten.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikator",
+          "in" : "path",
+          "description" : "Kravidentifikatoren til innkrevingsoppdraget som skal grensesnittavstemmes.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "kravidentifikatortype",
+          "in" : "query",
+          "description" : "Hvilken type kravidentifikator som blir brukt i denne forespørselen.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "SKATTEETATENS_KRAVIDENTIFIKATOR", "OPPDRAGSGIVERS_KRAVIDENTIFIKATOR" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Vellykket forespørsel. Grensesnittavstemming ble returnert.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GrensesnittavstemmingResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
+          },
+          "401" : {
+            "description" : "Autentisering kreves. Klienten er ikke autentisert."
+          },
+          "403" : {
+            "description" : "Ingen tilgang. Klienten er ikke autorisert til å utføre forespørselen."
+          },
+          "404" : {
+            "description" : "Finner ikke ressursen. Ressursen som ble forespurt finnes ikke."
+          },
+          "406" : {
+            "description" : "Tjeneren aksepterer ikke medietypen som er oppgitt i forespørselen."
+          },
+          "409" : {
+            "description" : "Konflikt oppstått. Forespørselen er i konflikt med tjenerens nåværende tilstand."
+          },
+          "422" : {
+            "description" : "Valideringsfeil. Forespørselen inneholder ugyldige data."
+          },
+          "500" : {
+            "description" : "Intern tjenerfeil. Noe gikk galt på tjenerens side."
+          },
+          "503" : {
+            "description" : "Tjenesten er midlertidig utilgjengelig. Tjeneren kan for øyeblikket ikke håndtere forespørselen."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "EndreRentebeloepRequest" : {
+        "required" : [ "renter" ],
+        "type" : "object",
+        "properties" : {
+          "renter" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/RenteBeloep"
+            }
+          }
+        },
+        "description" : "\nNy fasit for renter påløpt hos oppdragsgiver for overføring til innkrevingsmyndighet. De nye rentebeløpene som sendes\ninn vil erstatte alle eksisterende rentebeløp.\n        "
+      },
+      "RenteBeloep" : {
+        "required" : [ "beloep", "rentetype", "valuta" ],
+        "type" : "object",
+        "properties" : {
+          "valuta" : {
+            "type" : "string",
+            "description" : "Kun norske kroner støttes per nå.",
+            "enum" : [ "NOK" ]
+          },
+          "beloep" : {
+            "type" : "integer",
+            "description" : "Heltall, desimaler støttes ikke. Avrunding må i så fall gjøres hos oppdragsgiver.\nAngis som hovedenhet i valutaen, dvs. kroner ikke ører, euro ikke cent, osv.\n",
+            "format" : "int64"
+          },
+          "renterIlagtDato" : {
+            "type" : "string",
+            "description" : "\nFormat: YYYY-MM-DD\nDato rentene ble ilagt/fastsatt, dvs. datoen det begynte å løpe renter fra.\nBenyttes bl.a. til vurdering av dekningsrekkefølge.\n            ",
+            "format" : "date"
+          },
+          "rentetype" : {
+            "type" : "string",
+            "description" : "Hvilken type renter som oppgis i beloep-feltet.",
+            "enum" : [ "STRAFFERENTE" ]
+          }
+        }
+      },
+      "MottakskvitteringEndring" : {
+        "required" : [ "transaksjonsid" ],
+        "type" : "object",
+        "properties" : {
+          "transaksjonsid" : {
+            "type" : "string",
+            "description" : "Skatteetatens unike referanse for endringen."
+          }
+        },
+        "description" : "Kvittering for mottatt endring med transaksjonsid.",
+        "example" : {
+          "transaksjonsid" : "791e5955-af86-42fe-b609-d4fc2754e35e"
+        }
+      },
+      "NyOppdragsgiversReferanseRequest" : {
+        "required" : [ "nyOppdragsgiversReferanse" ],
+        "type" : "object",
+        "properties" : {
+          "nyOppdragsgiversReferanse" : {
+            "type" : "string"
+          }
+        },
+        "description" : "Ny oppdragsgivers referanse."
+      },
+      "HovedstolBeloep" : {
+        "required" : [ "beloep", "valuta" ],
+        "type" : "object",
+        "properties" : {
+          "valuta" : {
+            "type" : "string",
+            "description" : "Kun norske kroner støttes per nå.",
+            "enum" : [ "NOK" ]
+          },
+          "beloep" : {
+            "type" : "integer",
+            "description" : "Heltall, desimaler støttes ikke. Avrunding må i så fall gjøres hos oppdragsgiver.\nAngis som hovedenhet i valutaen, dvs. kroner ikke ører, euro ikke cent, osv.\n",
+            "format" : "int64"
+          }
+        },
+        "description" : "\nHvor mye skyldner skal betale. Eventuelle renter og omkostninger kommer i tillegg, i egne felter.\n        "
+      },
+      "NyHovedstolRequest" : {
+        "required" : [ "hovedstol" ],
+        "type" : "object",
+        "properties" : {
+          "hovedstol" : {
+            "$ref" : "#/components/schemas/HovedstolBeloep"
+          }
+        },
+        "description" : "\nNy hovedstol med oppdatert beløp for hvor mye skyldner skal betale. Ny hovedstol må være lavere enn gjeldende hovedstol.\n        "
+      },
+      "OpprettInnkrevingsoppdragRequest" : {
+        "required" : [ "fastsettelsesdato", "hovedstol", "kravtype", "oppdragsgiversReferanse", "skyldner" ],
+        "type" : "object",
+        "properties" : {
+          "kravtype" : {
+            "type" : "string",
+            "description" : "\nKravtypen for innkrevingsoppdrag. Må være en av kravtypene oppdragsgiver har avtalt med\ninnkrevingsmyndigheten at den skal kreve inn for oppdragsgiver.\n        ",
+            "enum" : [ "TILBAKEKREVING_BARNETRYGD", "TILBAKEKREVING_OMSORGSPENGER", "TILBAKEKREVING_PLEIEPENGER_BARN", "TILBAKEKREVING_PLEIEPENGER_NAERSTAAENDE", "TILBAKEKREVING_STOENAD_TIL_BARNETILSYN", "TILBAKEKREVING_OVERGANGSSTOENAD", "TILBAKEKREVING_ENGANGSSTOENAD_VED_FOEDSEL", "TILBAKEKREVING_FORELDREPENGER", "TILBAKEKREVING_SVANGERSKAPSPENGER", "TILBAKEKREVING_FORSKUTTERTE_DAGPENGER", "TILBAKEKREVING_KOMPENSASJON_NAERING_OG_FRILANS", "TILBAKEKREVING_SYKEPENGER", "TILBAKEKREVING_PERMITTERINGSPENGER_KORONA", "TILBAKEKREVING_LOENNSKOMPENSASJON", "TILBAKEKREVING_AVTALEFESTET_PENSJON_PRIVATSEKTOR", "TILBAKEKREVING_ALDERSPENSJON", "TILBAKEKREVING_BARNEPENSJON", "TILBAKEKREVING_GJENLEVENDE_PENSJON", "TILBAKEKREVING_GJENLEVENDE_PENSJON_AVREGNING", "TILBAKEKREVING_KRIGSPENSJON", "TILBAKEKREVING_UFOEREPENSJON", "TILBAKEKREVING_UFOEREPENSJON_UTBETALT_TIL_FEIL_MOTTAKER", "TILBAKEKREVING_UFOERETRYGD", "TILBAKEKREVING_UFOERETRYGD_ETTEROPPGJOER", "TILBAKEKREVING_UFOERETRYGD_AVREGNING", "TILBAKEKREVING_UFOERETRYGD_UTBETALT_TIL_FEIL_MOTTAKER", "TILBAKEKREVING_AVTALEFESTET_PENSJON", "TILBAKEKREVING_SUPPLERENDE_STOENAD", "TILBAKEKREVING_OPPLAERINGSPENGER", "TILBAKEKREVING_UTDANNINGSSTOENAD", "TILBAKEKREVING_KONTANTSTOETTE", "TILBAKEKREVING_TIDLIGERE_FAMILIEPLEIER_PENSJON", "TILBAKEKREVING_GAMMEL_YRKESSKADEPENSJON", "TVANGSMULKT_RETTIGHETSHAVERREGISTERLOVEN", "FORSIKRINGSPREMIE_SELVSTENDIG_NAERINGSDRIVENDE" ]
+          },
+          "skyldner" : {
+            "$ref" : "#/components/schemas/Skyldner"
+          },
+          "hovedstol" : {
+            "$ref" : "#/components/schemas/HovedstolBeloep"
+          },
+          "renteBeloep" : {
+            "type" : "array",
+            "description" : "Renter påløpt hos oppdragsgiver for overføring til innkrevingsmyndighet.",
+            "items" : {
+              "$ref" : "#/components/schemas/RenteBeloep"
+            }
+          },
+          "oppdragsgiversReferanse" : {
+            "type" : "string",
+            "description" : "\nReferanse hos oppdragsgiver for innkrevingsoppdraget. Benyttes ved kommunikasjon fra\ninnkrevingsmyndigheten til oppdragsgiver. Flere innkrevingsoppdrag kan ha samme oppdragsgiversReferanse\n        "
+          },
+          "oppdragsgiversKravidentifikator" : {
+            "type" : "string",
+            "description" : "\nKravidentifikator hos oppdragsgiver. Benyttes først og fremst til sporing. Må være unik,\nopprettelse av flere krav med samme oppdragsgiversKravidentifikator vil feile. Ikke påkrevd.\n        "
+          },
+          "fastsettelsesdato" : {
+            "type" : "string",
+            "description" : "\nFormat: YYYY-MM-DD\nFelles betegnelse for når kravet er fastsatt, hos forskjellige oppdragsgivere er dette hhv. vedtaksdato,\nrettskraftig dato, e.l.\n        ",
+            "format" : "date"
+          },
+          "foreldelsesfristensUtgangspunkt" : {
+            "type" : "string",
+            "description" : "\nFormat: YYYY-MM-DD\nDenne skal angis når den avviker fra fastsettelsesdato, og må da være tidligere i tid enn fastsettelsesdato.\nNår den er den samme som fastsettelsesdato skal den følgelig ikke angis. Den skal heller ikke angis dersom\ntilleggsfristEtterForeldelsesloven er angitt.\n        ",
+            "format" : "date"
+          },
+          "tilleggsfristEtterForeldelsesloven" : {
+            "type" : "string",
+            "description" : "\nFormat: YYYY-MM-DD\nAngis dersom foreldelsesfristen skal utvides som følge av at ny kunnskap om kravet har blitt tilgjengelig.\nHvis den angis skal foreldelsesfristensUtgangspunkt ikke angis.\nDatoen kan ikke være lengre tilbake i tid enn 10 måneder fra dagens dato.\n",
+            "format" : "date"
+          },
+          "tilleggsinformasjon" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/TilleggsinformasjonBrønnøysundregistrene"
+            }, {
+              "$ref" : "#/components/schemas/TilleggsinformasjonNav"
+            } ]
+          }
+        },
+        "description" : "Forespørsel om opprettelse av nytt innkrevingsoppdrag"
+      },
+      "Periode" : {
+        "required" : [ "fom", "tom" ],
+        "type" : "object",
+        "properties" : {
+          "fom" : {
+            "type" : "string",
+            "description" : "\nFormat: YYYY-MM-DD\nFra og med dato for tilbakekrevingsperioden.\n        ",
+            "format" : "date"
+          },
+          "tom" : {
+            "type" : "string",
+            "description" : "\nFormat: YYYY-MM-DD\nTil og med dato for tilbakekrevingsperioden.\n        ",
+            "format" : "date"
+          }
+        },
+        "description" : "\nTidsperioden hvor det ble foretatt utbetalinger som senere er avdekket som feilaktige, og som det derfor kreves\ntilbakebetaling for.\n        "
+      },
+      "Skyldner" : {
+        "required" : [ "identifikator", "identifikatortype" ],
+        "type" : "object",
+        "properties" : {
+          "identifikatortype" : {
+            "type" : "string",
+            "description" : "\nPer nå støttes kun PERSON og ORGANISASJON som aktuelle typer parter innkrevingsmyndighet\nkan kreve inn fra.\n        ",
+            "enum" : [ "PERSON", "ORGANISASJON" ]
+          },
+          "identifikator" : {
+            "type" : "string",
+            "description" : "Må være et gyldig fnr/dnr, eller orgnr."
+          }
+        },
+        "description" : "Hvem som skylder penger."
+      },
+      "Tilleggsinformasjon" : {
+        "type" : "object",
+        "description" : "\nTilleggsinformasjon spesifikt per oppdragsgiver, angis etter avtale med Skatteetaten.\nSe egne objekter for det som gjelder per oppdragsgiver.\n        "
+      },
+      "TilleggsinformasjonBrønnøysundregistrene" : {
+        "required" : [ "tilbakekrevingsperiode" ],
+        "type" : "object",
+        "description" : "Tilleggsinformasjon spesifikt for Brønnøysundregistrene",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Tilleggsinformasjon"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "tilbakekrevingsperiode" : {
+              "$ref" : "#/components/schemas/Periode"
+            },
+            "stoppdatoForLøpendeMulkt" : {
+              "type" : "string",
+              "description" : "\nFormat: YYYY-MM-DD\nDatoen settes dersom den løpende tvangsmulkten er avsluttet av oppdragsgiver. Ikke påkrevd. Kan ikke være i fremtiden.\n        "
+            }
+          }
+        } ]
+      },
+      "TilleggsinformasjonNav" : {
+        "required" : [ "tilbakekrevingsperiode" ],
+        "type" : "object",
+        "description" : "Tilleggsinformasjon spesifikt for NAV",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Tilleggsinformasjon"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "ytelserForAvregning" : {
+              "$ref" : "#/components/schemas/YtelseForAvregningBeloep"
+            },
+            "tilbakekrevingsperiode" : {
+              "$ref" : "#/components/schemas/Periode"
+            }
+          }
+        } ]
+      },
+      "YtelseForAvregningBeloep" : {
+        "required" : [ "beloep", "valuta" ],
+        "type" : "object",
+        "properties" : {
+          "valuta" : {
+            "type" : "string",
+            "description" : "Kun norske kroner støttes per nå.",
+            "enum" : [ "NOK" ]
+          },
+          "beloep" : {
+            "type" : "integer",
+            "description" : "Heltall, desimaler støttes ikke. Avrunding må i så fall gjøres hos oppdragsgiver.\nAngis som hovedenhet i valutaen, dvs. kroner ikke ører, euro ikke cent, osv.\n",
+            "format" : "int64"
+          }
+        },
+        "description" : "\nTotal ytelse tilgjengelig for avregning, om noe. Benyttes av innkrevingsmyndigheten ved \"avregning\"\nsom innkrevingstiltak.\n        "
+      },
+      "OpprettInnkrevingsoppdragResponse" : {
+        "required" : [ "kravidentifikator" ],
+        "type" : "object",
+        "properties" : {
+          "kravidentifikator" : {
+            "type" : "string",
+            "description" : "Kravidentifikator innkrevingsoppdraget fikk hos Skatteetaten."
+          }
+        },
+        "description" : "Simpelt resultatobjekt for vellykket opprettelse av nytt innkrevingsoppdrag"
+      },
+      "AvskrivingRequest" : {
+        "required" : [ "kravidentifikator", "kravidentifikatortype" ],
+        "type" : "object",
+        "properties" : {
+          "kravidentifikatortype" : {
+            "type" : "string",
+            "description" : "Hvilken type kravidentifikator som blir brukt i denne forespørselen.",
+            "enum" : [ "SKATTEETATENS_KRAVIDENTIFIKATOR", "OPPDRAGSGIVERS_KRAVIDENTIFIKATOR" ]
+          },
+          "kravidentifikator" : {
+            "type" : "string",
+            "description" : "\nKravidentifikatoren til innkrevingsoppdraget som skal avskrives. Kravidentifikatoren må tilhøre et\ninnkrevingsoppdrag som er reskontroført hos Skatteetaten.\n        "
+          }
+        }
+      },
+      "MottakskvitteringAvskriving" : {
+        "required" : [ "transaksjonsid" ],
+        "type" : "object",
+        "properties" : {
+          "transaksjonsid" : {
+            "type" : "string",
+            "description" : "Skatteetatens unike referanse for avskrivingen."
+          }
+        },
+        "description" : "Kvittering for mottatt avskriving med transaksjonsid.",
+        "example" : {
+          "transaksjonsid" : "791e5955-af86-42fe-b609-d4fc2754e35e"
+        }
+      },
+      "ValideringsfeilDTO" : {
+        "required" : [ "error", "message" ],
+        "type" : "object",
+        "properties" : {
+          "error" : {
+            "type" : "string",
+            "description" : "Feilkode for valderingsfeilen"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "Utfyllende beskrivelse av valideringsfeilen"
+          }
+        },
+        "description" : "\nListe over alle eventuelle valideringsfeil som oppstod ved forespørsel om nytt innkrevingsoppdrag.\nGir tom liste dersom ingen finnes for gitt kravidentifikator.\n        "
+      },
+      "ValideringsfeilResponse" : {
+        "required" : [ "valideringsfeil" ],
+        "type" : "object",
+        "properties" : {
+          "valideringsfeil" : {
+            "type" : "array",
+            "description" : "\nListe over alle eventuelle valideringsfeil som oppstod ved forespørsel om nytt innkrevingsoppdrag.\nGir tom liste dersom ingen finnes for gitt kravidentifikator.\n        ",
+            "items" : {
+              "$ref" : "#/components/schemas/ValideringsfeilDTO"
+            }
+          }
+        },
+        "description" : "Simpelt resultatobjekt for henting av valideringsfeil"
+      },
+      "MottaksstatusResponse" : {
+        "required" : [ "kravidentifikator", "mottaksstatus", "statusOppdatert" ],
+        "type" : "object",
+        "properties" : {
+          "kravidentifikator" : {
+            "type" : "string",
+            "description" : "Skatteetatens kravidentifikator til innkrevingsoppdraget"
+          },
+          "oppdragsgiversKravidentifikator" : {
+            "type" : "string",
+            "description" : "Oppdragsgiverens kravidentifikator til innkrevingsoppdraget"
+          },
+          "mottaksstatus" : {
+            "type" : "string",
+            "description" : "* `MOTTATT_UNDER_BEHANDLING` - Innkrevingsoppdraget behandles av Skatteetaten\n* `VALIDERINGSFEIL` - Innkrevingsoppdraget passerte ikke validering\n* `RESKONTROFOERT` - Innkrevingsoppdraget er reskontroført\n",
+            "enum" : [ "MOTTATT_UNDER_BEHANDLING", "VALIDERINGSFEIL", "RESKONTROFOERT", "MIGRERT" ]
+          },
+          "statusOppdatert" : {
+            "type" : "string",
+            "description" : "Tidspunktet for når den nåværende mottaksstatusen ble oppdatert",
+            "format" : "date-time"
+          }
+        },
+        "description" : "Objekt som representer mottaksstatus for et innkrevingsoppdrag med relevant metadata"
+      },
+      "GrensesnittavstemmingResponse" : {
+        "required" : [ "endringer", "kravidentifikator" ],
+        "type" : "object",
+        "properties" : {
+          "kravidentifikator" : {
+            "type" : "string",
+            "description" : "Skatteetatens kravidentifikator for innkrevingsoppdraget"
+          },
+          "oppdragsgiversKravidentifikator" : {
+            "type" : "string",
+            "description" : "Oppdragsgivers kravidentifikator for innkrevingsoppdraget"
+          },
+          "opprinneligInnkrevingsoppdrag" : {
+            "$ref" : "#/components/schemas/MottattInnkrevingsoppdrag"
+          },
+          "endringer" : {
+            "$ref" : "#/components/schemas/MottatteEndringer"
+          },
+          "avskriving" : {
+            "$ref" : "#/components/schemas/MottattAvskriving"
+          }
+        },
+        "description" : "\nInneholder innsendt innkrevingsoppdrag, eventuelle endringer og eventuell avskriving til bruk for grensesnittavstemming.\n"
+      },
+      "MottattAvskriving" : {
+        "required" : [ "mottattAvskriving", "mottattTidspunkt", "transaksjonsid" ],
+        "type" : "object",
+        "properties" : {
+          "mottattAvskriving" : {
+            "$ref" : "#/components/schemas/AvskrivingRequest"
+          },
+          "mottattTidspunkt" : {
+            "type" : "string",
+            "description" : "Tidspunkt for mottatt forespørsel.",
+            "format" : "date-time"
+          },
+          "transaksjonsid" : {
+            "type" : "string",
+            "description" : "Skatteetatens unike referanse for avskrivingen."
+          }
+        },
+        "description" : "Eventuell mottatt avskriving av innkrevingsoppdraget."
+      },
+      "MottattHovedstolEndring" : {
+        "required" : [ "mottattEndring", "mottattTidspunkt", "transaksjonsid" ],
+        "type" : "object",
+        "properties" : {
+          "mottattEndring" : {
+            "$ref" : "#/components/schemas/NyHovedstolRequest"
+          },
+          "mottattTidspunkt" : {
+            "type" : "string",
+            "description" : "Tidspunkt for mottatt forespørsel.",
+            "format" : "date-time"
+          },
+          "transaksjonsid" : {
+            "type" : "string",
+            "description" : "Skatteetatens unike referanse for endringen av hovedstol."
+          }
+        },
+        "description" : "Eventuelle endringer av hovedstol."
+      },
+      "MottattInnkrevingsoppdrag" : {
+        "required" : [ "mottattInnkrevingsoppdrag", "mottattTidspunkt" ],
+        "type" : "object",
+        "properties" : {
+          "mottattInnkrevingsoppdrag" : {
+            "$ref" : "#/components/schemas/OpprettInnkrevingsoppdragRequest"
+          },
+          "mottattTidspunkt" : {
+            "type" : "string",
+            "description" : "Tidspunkt for mottatt forespørsel.",
+            "format" : "date-time"
+          }
+        },
+        "description" : "Opprinnelig innsendt forespørsel om opprettelse av innkrevingsoppdrag."
+      },
+      "MottattNyOppdragsgiversReferanse" : {
+        "required" : [ "mottattEndring", "mottattTidspunkt", "transaksjonsid" ],
+        "type" : "object",
+        "properties" : {
+          "mottattEndring" : {
+            "$ref" : "#/components/schemas/NyOppdragsgiversReferanseRequest"
+          },
+          "mottattTidspunkt" : {
+            "type" : "string",
+            "description" : "Tidspunkt for mottatt forespørsel.",
+            "format" : "date-time"
+          },
+          "transaksjonsid" : {
+            "type" : "string",
+            "description" : "Skatteetatens unike referanse for endringen av oppdragsgivers referanse."
+          }
+        },
+        "description" : "Eventuelle endringer av oppdragsgivers referanse."
+      },
+      "MottattRentebeloepEndring" : {
+        "required" : [ "mottattEndring", "mottattTidspunkt", "transaksjonsid" ],
+        "type" : "object",
+        "properties" : {
+          "mottattEndring" : {
+            "$ref" : "#/components/schemas/EndreRentebeloepRequest"
+          },
+          "mottattTidspunkt" : {
+            "type" : "string",
+            "description" : "Tidspunkt for mottatt forespørsel.",
+            "format" : "date-time"
+          },
+          "transaksjonsid" : {
+            "type" : "string",
+            "description" : "Skatteetatens unike referanse for endringen av rentebeløp."
+          }
+        },
+        "description" : "Eventuelle endringer av rentebeløp."
+      },
+      "MottatteEndringer" : {
+        "required" : [ "hovedstol", "oppdragsgiversReferanse", "renter" ],
+        "type" : "object",
+        "properties" : {
+          "hovedstol" : {
+            "type" : "array",
+            "description" : "Eventuelle endringer av hovedstol.",
+            "items" : {
+              "$ref" : "#/components/schemas/MottattHovedstolEndring"
+            }
+          },
+          "renter" : {
+            "type" : "array",
+            "description" : "Eventuelle endringer av rentebeløp.",
+            "items" : {
+              "$ref" : "#/components/schemas/MottattRentebeloepEndring"
+            }
+          },
+          "oppdragsgiversReferanse" : {
+            "type" : "array",
+            "description" : "Eventuelle endringer av oppdragsgivers referanse.",
+            "items" : {
+              "$ref" : "#/components/schemas/MottattNyOppdragsgiversReferanse"
+            }
+          }
+        },
+        "description" : "Eventuelle endringer av innkrevingsoppdraget"
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "description" : "Lim inn et gyldig JWT-token i tekst-feltet under.",
+        "name" : "Authorization",
+        "in" : "header",
+        "scheme" : "bearer"
+      }
+    }
+  }
+}
