@@ -43,7 +43,7 @@ class SkatteetatenInnkrevingHttpClient(
 
             // Midlertidig ping som kun fungerer i test.
             getKravdetaljer(
-                "99ea4fbc-9777-4fdf-8d8d-75c76a5a45e0",
+                "87b5a5c6-17ea-413a-ad80-b6c3406188fa",
                 KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
             ).fold(
                 { HealthCheckResult.healthy() },

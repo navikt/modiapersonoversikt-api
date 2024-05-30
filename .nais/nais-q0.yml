@@ -72,6 +72,7 @@ spec:
     outbound:
       external:
         - host: personoversikt-unleash-api.nav.cloud.nais.io
+        - host: api-test.sits.no # Skatteetaten
     inbound:
       rules:
         - application: modiapersonoversikt-q0
