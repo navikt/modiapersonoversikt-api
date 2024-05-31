@@ -15,7 +15,7 @@ open class MaskinportenHttpClient(
     @Value("\${MASKINPORTEN_CLIENT_ID}") private val clientId: String,
     @Value("\${MASKINPORTEN_CLIENT_JWK}") private val clientJwk: String,
     @Value("\${MASKINPORTEN_ISSUER}") private val issuer: String,
-    @Value("\${MASKINPORTEN_SCOPES") private val scopes: String,
+    @Value("\${MASKINPORTEN_SCOPES}") private val scopes: String,
     private val httpClient: OkHttpClient,
     private val objectMapper: ObjectMapper,
 ) : MaskinportenClient {
