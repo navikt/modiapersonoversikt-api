@@ -14,7 +14,7 @@ fun createClientAssertionJwt(
     clientJwk: String,
     clientId: String,
     issuer: String,
-    scopes: Set<String>,
+    scopes: String,
 ): String {
     val rsaKey: RSAKey = RSAKey.parse(clientJwk)
     val signer = RSASSASigner(rsaKey.toPrivateKey())
@@ -31,7 +31,7 @@ fun createClientAssertionJwt(
     val claims: JWTClaimsSet =
         JWTClaimsSet.Builder().apply {
             if (scopes.isNotEmpty()) {
-                claim("scope", scopes.joinToString(" "))
+                claim("scope", scopes)
             }
 
             issuer(clientId)

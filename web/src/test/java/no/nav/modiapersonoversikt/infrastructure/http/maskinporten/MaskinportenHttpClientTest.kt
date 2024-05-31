@@ -30,6 +30,7 @@ class MaskinportenHttpClientTest {
             "clientId",
             clientJwk,
             "issuer",
+            "scope",
             RestClient.baseClient(),
             OkHttpUtils.objectMapper,
         )
