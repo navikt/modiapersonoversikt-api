@@ -1,21 +1,55 @@
-name: modiapersonoversikt-proxy
+name: Modiapersonoversikt-proxy build, push, and deploy
 
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - .github/workflows/.build.yaml
-      - .github/workflows/proxy.yaml
-      - proxy/**
+on: [push]
+
+concurrency:
+  group: proxy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+  TZ: Europe/Oslo
+  Q1_TEST_BRANCH: 'refs/heads/fix/spring-version'
 
 jobs:
   build:
-    uses: ./.github/workflows/.build.yaml
-    secrets: inherit
+    name: Build and test
+    runs-on: ubuntu-latest
     permissions:
       packages: write
       contents: read
       id-token: write
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'maven'
+      - uses: nbadal/action-ktlint-setup@v1
+        with:
+          ktlint_version: '1.2.1'
+      - name: Ktlint
+        run: bash ./linting.sh
+      - name: Build using maven
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mvn -P ci -B test --settings .github/maven-settings.xml
+          mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
+      - name: Publish Dev Image
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/feature/arena_infortrygd_proxy_app'
+
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: personoversikt
+          image_suffix: proxy
+          dockerfile: proxy/Dockerfile
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
   deploy-qa:
     name: Deploy to preprod
@@ -27,7 +61,7 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        namespace: [ q0, q1 ]
+        namespace: [q0, q1]
     steps:
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v2
@@ -36,4 +70,3 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: proxy/.nais/nais-${{ matrix.namespace }}.yml
           VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
-
