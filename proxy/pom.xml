@@ -9,14 +9,15 @@
         <version>dev</version>
     </parent>
 
-    <artifactId>modiabrukerdialog-web</artifactId>
+    <artifactId>modiabrukerdialog-proxy</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-
-    </properties>
-
     <dependencies>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- NAV Common -->
         <dependency>
             <groupId>no.nav.common</groupId>

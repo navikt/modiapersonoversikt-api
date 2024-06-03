@@ -1,0 +1,90 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: modiapersonoversikt-api-proxy-q0
+  namespace: personoversikt
+  labels:
+    team: personoversikt
+  annotations:
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
+spec:
+  image: "{{image}}"
+  port: 8080
+  liveness:
+    path: /internal/isAlive
+    initialDelay: 50
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /internal/isReady
+    initialDelay: 50
+    timeout: 1
+  startup:
+    path: /internal/isReady
+    failureThreshold: 30
+    periodSeconds: 10
+  prometheus:
+    enabled: true
+    path: /internal/metrics
+  secureLogs:
+    enabled: true
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 4096Mi
+    limits:
+      cpu: 2000m
+      memory: 8192Mi
+  ingresses:
+    - https://modiapersonoversikt-api-proxy-q0.intern.dev.nav.no
+  replicas:
+    min: 2
+    max: 4
+    cpuThresholdPercentage: 60
+  vault:
+    enabled: true
+    paths:
+      - kvPath: /serviceuser/data/dev/srvmodiabrukerdialog
+        mountPath: /var/run/secrets/nais.io/service_user
+      - kvPath: /serviceuser/data/dev/srvssolinux
+        mountPath: /var/run/secrets/nais.io/srvssolinux
+      - kvPath: /apikey/appdynamics/dev
+        mountPath: /var/run/secrets/nais.io/vault
+  leaderElection: true
+  webproxy: true
+  azure:
+    application:
+      enabled: true
+      tenant: trygdeetaten.no
+      allowAllUsers: true
+      claims:
+        extra:
+          - "NAVident"
+  kafka:
+    pool: nav-dev
+  accessPolicy:
+    inbound:
+      rules:
+        - application: modiapersonoversikt-api
+          namespace: personoversikt
+          cluster: dev-gcp
+  env:
+    - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
+      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
+    - name: SECURITYTOKENSERVICE_URL
+      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/ws/samltoken"
+    - name: EREG_ENDPOINTURL
+      value: "https://ereg-services-q0.intern.dev.nav.no/"
+    - name: VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL
+      value: "https://modapp-q0.adeo.no/infotrygd-ws/ForeldrepengerService/v2"
+    - name: VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL
+      value: "https://arena-q0.adeo.no/ail_ws/Oppfoelging_v1"
+    - name: VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL
+      value: "https://modapp-q0.adeo.no/infotrygd-ws/Pleiepenger/v1"
+    - name: VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL
+      value: "https://modapp-q0.adeo.no/infotrygd-ws/SykepengerService/v2"
+    - name: VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL
+      value: "https://arena-q0.adeo.no/ail_ws/Ytelseskontrakt_v3"
+    - name: ARENA_SAK_VEDTAK_URL
+      value: "https://arena-q0.adeo.no/arena_ws/services/ArenaSakVedtakService"

@@ -1,0 +1,39 @@
+name: modiapersonoversikt-proxy
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/.build.yaml
+      - .github/workflows/proxy.yaml
+      - proxy/**
+
+jobs:
+  build:
+    uses: ./.github/workflows/.build.yaml
+    secrets: inherit
+    permissions:
+      packages: write
+      contents: read
+      id-token: write
+
+  deploy-qa:
+    name: Deploy to preprod
+    needs: build
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      matrix:
+        namespace: [ q0, q1 ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: proxy/.nais/nais-${{ matrix.namespace }}.yml
+          VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
+
