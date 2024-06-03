@@ -193,5 +193,9 @@ spec:
       value: "https://modia-soknadsstatus-api.intern.dev.nav.no"
     - name: MODIA_SOKNADSSTATUS_SCOPE
       value: "dev-gcp:personoversikt:modia-soknadsstatus-api"
+    - name: MODIAPERSONOVERSIKT_API_PROXY_URL
+      value: "https://modiapersonoversikt-api-proxy-q1.intern.dev.nav.no"
+    - name: MODIAPERSONOVERSIKT_API_PROXY_SCOPE
+      value: "dev-fss:personoversikt:modiapersonoversikt-api-proxy"
     - name: UNLEASH_ENVIRONMENT
       value: "development"
