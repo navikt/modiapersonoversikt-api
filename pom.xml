@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>proxy</module>
         <module>web</module>
         <module>tjenestespesifikasjoner</module>
     </modules>

@@ -9,14 +9,15 @@
         <version>dev</version>
     </parent>
 
-    <artifactId>modiabrukerdialog-web</artifactId>
+    <artifactId>modiabrukerdialog-proxy</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-
-    </properties>
-
     <dependencies>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- NAV Common -->
         <dependency>
             <groupId>no.nav.common</groupId>
@@ -136,17 +137,6 @@
             <artifactId>junit-platform-launcher</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.wiremock</groupId>
-            <artifactId>wiremock-standalone</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.marcinziolo</groupId>
-            <artifactId>kotlin-wiremock</artifactId>
-            <version>2.1.1</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -263,13 +253,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>skatteetaten-innkreving-api</artifactId>
-            <version>dev</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>io.getunleash</groupId>
             <artifactId>unleash-client-java</artifactId>
             <version>9.2.2</version>
@@ -318,6 +301,11 @@
 
         <!-- tjenester -->
         <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
+            <version>dev</version>
+        </dependency>
+        <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
             <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
@@ -359,6 +347,11 @@
         <dependency>
             <groupId>no.bekk.bekkopen</groupId>
             <artifactId>nocommons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
