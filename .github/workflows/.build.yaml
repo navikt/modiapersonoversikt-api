@@ -2,6 +2,11 @@ name: ..build.yaml
 
 on: [workflow_call]
 
+env:
+  CI: true
+  TZ: Europe/Oslo
+  Q1_TEST_BRANCH: 'refs/heads/fix/spring-version'
+
 jobs:
   build:
     name: Build & publish

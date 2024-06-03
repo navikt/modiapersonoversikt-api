@@ -1,4 +1,4 @@
-package no.modiapersonoversikt.common
+package no.nav.modiapersonoversiktproxy.utils
 
 import no.nav.common.utils.EnvironmentUtils
 

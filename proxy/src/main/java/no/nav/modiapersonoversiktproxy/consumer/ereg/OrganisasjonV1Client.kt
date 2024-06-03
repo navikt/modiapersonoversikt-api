@@ -3,12 +3,12 @@ package no.nav.modiapersonoversiktproxy.consumer.ereg
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.modiapersonoversikt.common.AppConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversiktproxy.infrastructure.RestConstants
 import no.nav.modiapersonoversiktproxy.infrastructure.LoggingInterceptor
+import no.nav.modiapersonoversiktproxy.infrastructure.RestConstants
 import no.nav.modiapersonoversiktproxy.infrastructure.getCallId
+import no.nav.modiapersonoversiktproxy.utils.AppConstants
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.Request
 import okhttp3.Response

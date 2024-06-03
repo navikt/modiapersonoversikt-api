@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversiktproxy.rest.ytelse
 
 import no.nav.modiapersonoversiktproxy.consumer.ereg.OrganisasjonService
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.PleiepengerService
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeRequest
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.pleiepenger.Arbeidsforhold
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.pleiepenger.Pleiepengeperiode
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.pleiepenger.Pleiepengerrettighet
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.pleiepenger.Vedtak
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.PleiepengerService
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeRequest
 import no.nav.modiapersonoversiktproxy.rest.DATOFORMAT
 
 class PleiepengerUttrekk constructor(

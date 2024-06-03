@@ -3,9 +3,9 @@ package no.nav.modiapersonoversiktproxy.config
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.common.cxf.StsConfig
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversiktproxy.utils.AppConstants
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import no.modiapersonoversikt.common.AppConstants
 
 @Configuration
 open class StsTokenProviderConfig {

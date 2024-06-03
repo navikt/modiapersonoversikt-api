@@ -1,4 +1,4 @@
-package no.modiapersonoversikt.common
+package no.nav.modiapersonoversiktproxy.utils
 
 object UrlMaskingUtils {
     private val replacements =

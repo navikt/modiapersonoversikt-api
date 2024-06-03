@@ -1,13 +1,13 @@
 package no.nav.modiapersonoversiktproxy.rest.ytelse
 
 import no.nav.modiapersonoversiktproxy.commondomain.Periode
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.ForeldrepengerServiceBi
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.to.ForeldrepengerListeRequest
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.Arbeidsforhold
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.foreldrepenger.Adopsjon
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.foreldrepenger.Foedsel
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.foreldrepenger.Foreldrepengeperiode
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.foreldrepenger.Foreldrepengerettighet
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.ForeldrepengerServiceBi
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.to.ForeldrepengerListeRequest
 import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 

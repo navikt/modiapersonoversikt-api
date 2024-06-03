@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversiktproxy.rest.ytelse
 
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.SykepengerServiceBi
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.to.SykepengerRequest
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.Arbeidsforhold
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.UtbetalingPaVent
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.sykepenger.Gradering
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.sykepenger.Sykmelding
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.sykepenger.Sykmeldingsperiode
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.SykepengerServiceBi
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.to.SykepengerRequest
 import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 

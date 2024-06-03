@@ -1,4 +1,4 @@
-package no.modiapersonoversikt.common
+package no.nav.modiapersonoversiktproxy.utils
 
 import io.micrometer.core.instrument.Clock
 import io.micrometer.core.instrument.binder.okhttp3.OkHttpMetricsEventListener

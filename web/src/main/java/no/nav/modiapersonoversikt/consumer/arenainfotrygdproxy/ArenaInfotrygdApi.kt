@@ -21,24 +21,17 @@ interface ArenaInfotrygdApi {
         slutt: String?,
     ): OppfolgingskontraktResponse
 
-    fun hentSykepenger(
-        fnr: String,
-    ): Map<String, Any?>
+    fun hentSykepenger(fnr: String): Map<String, Any?>
 
-    fun hentForeldrepenger(
-        fnr: String,
-    ): Map<String, Any?>
+    fun hentForeldrepenger(fnr: String): Map<String, Any?>
 
-    fun hentPleiepenger(
-        fnr: String,
-    ): Map<String, Any?>
+    fun hentPleiepenger(fnr: String): Map<String, Any?>
 }
 
 class ArenaInfotrygdApiImpl(
     private val baseUrl: String,
     private val httpClient: OkHttpClient,
 ) : ArenaInfotrygdApi {
-
     override fun hentYtelseskontrakter(
         fnr: String,
         start: String?,
@@ -69,7 +62,11 @@ class ArenaInfotrygdApiImpl(
         return OkHttpUtils.objectMapper.readValue(bodyContent)
     }
 
-    override fun hentOppfolgingskontrakter(fnr: String, start: String?, slutt: String?): OppfolgingskontraktResponse {
+    override fun hentOppfolgingskontrakter(
+        fnr: String,
+        start: String?,
+        slutt: String?,
+    ): OppfolgingskontraktResponse {
         val builder = FormBody.Builder()
         builder.add("fnr", fnr)
         if (start != null) {

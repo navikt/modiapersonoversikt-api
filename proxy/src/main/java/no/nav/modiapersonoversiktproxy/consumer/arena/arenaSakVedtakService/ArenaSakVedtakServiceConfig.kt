@@ -9,10 +9,10 @@ import no.nav.common.cxf.CXFClient
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.utils.EnvironmentUtils
-import no.modiapersonoversikt.common.AppConstants
-import no.modiapersonoversikt.common.Utils
 import no.nav.modiapersonoversiktproxy.infrastructure.metrics.MetricsFactory
 import no.nav.modiapersonoversiktproxy.infrastructure.ping.Pingable
+import no.nav.modiapersonoversiktproxy.utils.AppConstants
+import no.nav.modiapersonoversiktproxy.utils.Utils
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor
 import org.apache.wss4j.common.ext.WSPasswordCallback
 import org.apache.wss4j.dom.WSConstants
