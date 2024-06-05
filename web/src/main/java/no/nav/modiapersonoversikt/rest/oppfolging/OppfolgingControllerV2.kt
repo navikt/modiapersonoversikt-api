@@ -3,14 +3,13 @@ package no.nav.modiapersonoversikt.rest.oppfolging
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.commondomain.Veileder
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.SYFOPunkt
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Dagpengeytelse
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Vedtak
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest
+import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -29,10 +28,9 @@ import org.springframework.web.bind.annotation.*
 class OppfolgingControllerV2
     @Autowired
     constructor(
+        private val arenaInfotrygdApi: ArenaInfotrygdApi,
         private val service: ArbeidsrettetOppfolging.Service,
         private val tilgangskontroll: Tilgangskontroll,
-        private val ytelseskontraktService: YtelseskontraktService,
-        private val oppfolgingskontraktService: OppfolgingskontraktService,
     ) {
         @PostMapping
         fun hent(
@@ -73,16 +71,12 @@ class OppfolgingControllerV2
                     ),
                 ) {
                     val kontraktResponse =
-                        oppfolgingskontraktService.hentOppfolgingskontrakter(
-                            lagOppfolgingskontraktRequest(fnrRequest.fnr, start, slutt),
-                        )
+                        arenaInfotrygdApi.hentOppfolgingskontrakter(fnrRequest.fnr, start, slutt)
                     val ytelserResponse =
-                        ytelseskontraktService.hentYtelseskontrakter(
-                            lagYtelseRequest(
-                                fnrRequest.fnr,
-                                start,
-                                slutt,
-                            ),
+                        arenaInfotrygdApi.hentYtelseskontrakter(
+                            fnrRequest.fnr,
+                            start,
+                            slutt,
                         )
                     val oppfolgingstatus = runCatching { hent(fnrRequest) }
 

@@ -61,8 +61,6 @@ spec:
       claims:
         extra:
           - "NAVident"
-  kafka:
-    pool: nav-dev
   accessPolicy:
     inbound:
       rules:
