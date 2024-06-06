@@ -44,6 +44,7 @@
         <module>oppfoelging-v1-tjenestespesifikasjon</module>
         <module>pdl-pip-api</module>
         <module>skatteetaten-innkreving-api</module>
+        <module>pdl-fullmakt-api</module>
     </modules>
 
     <dependencyManagement>

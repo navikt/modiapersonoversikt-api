@@ -7,6 +7,8 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.PdlFullmaktApi
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDetails
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
@@ -30,6 +32,7 @@ interface PersondataService {
 
 class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
+    private val pdlFullmakt: PdlFullmaktApi,
     private val krrService: Krr.Service,
     private val norgApi: NorgApi,
     private val skjermedePersonerApi: SkjermedePersonerApi,
@@ -65,9 +68,14 @@ class PersondataServiceImpl(
             PersondataResult
                 .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
                 .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
+
+        val fullmektige =
+            PersondataResult.runCatching(InformasjonElement.FULLMAKT) {
+                pdlFullmakt.hentFullmakterForFullmaktsgiver(Fnr(personIdent)) ?: emptyList()
+            }
         val kontaktinformasjonTredjepartsperson =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
-                persondata
+                fullmektige
                     .findKontaktinformasjonTredjepartspersoner()
                     .associateWith { krrService.hentDigitalKontaktinformasjon(it) }
                     .mapValues { tredjepartspersonMapper.tilKontaktinformasjonTredjepartsperson(it.value) }
@@ -76,7 +84,7 @@ class PersondataServiceImpl(
         val tredjepartsPerson =
             PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
                 persondata
-                    .findTredjepartsPersoner()
+                    .findTredjepartsPersoner(fullmektige.findKontaktinformasjonTredjepartspersoner())
                     .let { pdl.hentTredjepartspersondata(it) }
                     .mapNotNull {
                         tredjepartspersonMapper.lagTredjepartsperson(
@@ -104,6 +112,7 @@ class PersondataServiceImpl(
             PersondataFletter.Data(
                 personIdent,
                 persondata,
+                fullmektige,
                 geografiskeTilknytning,
                 erEgenAnsatt,
                 navEnhet,
@@ -183,9 +192,8 @@ class PersondataServiceImpl(
             }
     }
 
-    private fun Person.findTredjepartsPersoner(): List<String> {
+    private fun Person.findTredjepartsPersoner(andrePersoner: List<String>?): List<String> {
         return setOf(
-            *this.fullmakt.map { it.motpartsPersonident }.toTypedArray(),
             *this.vergemaalEllerFremtidsfullmakt.mapNotNull {
                 it.vergeEllerFullmektig.motpartsPersonident
             }.toTypedArray(),
@@ -194,13 +202,16 @@ class PersondataServiceImpl(
             *this.sivilstand.mapNotNull { it.relatertVedSivilstand }.toTypedArray(),
             *this.forelderBarnRelasjon.mapNotNull { it.relatertPersonsIdent }.toTypedArray(),
             *this.kontaktinformasjonForDoedsbo.mapNotNull { it.personSomKontakt?.identifikasjonsnummer }.toTypedArray(),
+            *(andrePersoner ?: emptyList()).toTypedArray(),
         ).toList()
     }
 
-    private fun Person.findKontaktinformasjonTredjepartspersoner(): List<String> {
-        return setOf(
-            *this.fullmakt.map { it.motpartsPersonident }.toTypedArray(),
-        ).toList()
+    private fun PersondataResult<List<FullmaktDetails>>.findKontaktinformasjonTredjepartspersoner(): List<String> {
+        return this.fold(
+            onSuccess = { it.mapNotNull { it.fullmaktsgiver } },
+            onFailure = { system, cause -> emptyList<String>() },
+            onNotRelevant = { emptyList<String>() },
+        ).toSet().toList()
     }
 
     private fun hentTilganger(): PersondataService.Tilganger {
