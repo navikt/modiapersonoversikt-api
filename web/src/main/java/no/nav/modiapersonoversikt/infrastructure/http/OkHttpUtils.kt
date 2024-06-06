@@ -165,8 +165,4 @@ class AuthorizationInterceptor(val tokenProvider: () -> String) : HeadersInterce
     mapOf("Authorization" to "Bearer ${tokenProvider()}")
 })
 
-class BasicAuthorizationInterceptor(private val username: String, private val password: String) : HeadersInterceptor({
-    mapOf("Authorization" to Credentials.basic(username, password))
-})
-
 fun getCallId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
