@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse
+import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.OppfolgingskontraktResponse
+import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.YtelseskontraktResponse
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
+import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -26,6 +27,8 @@ interface ArenaInfotrygdApi {
     fun hentForeldrepenger(fnr: String): Map<String, Any?>
 
     fun hentPleiepenger(fnr: String): Map<String, Any?>
+
+    fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak?
 }
 
 class ArenaInfotrygdApiImpl(
@@ -83,6 +86,25 @@ class ArenaInfotrygdApiImpl(
                         .Builder()
                         .post(formBody)
                         .url("$baseUrl/rest/Oppfolgingskontrakter")
+                        .build(),
+                )
+                .execute()
+
+        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
+        return OkHttpUtils.objectMapper.readValue(bodyContent)
+    }
+
+    override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? {
+        val builder = FormBody.Builder()
+        builder.add("fnr", fnr)
+        val formBody = builder.build()
+        val response =
+            httpClient
+                .newCall(
+                    Request
+                        .Builder()
+                        .post(formBody)
+                        .url("$baseUrl/rest/sakvedtak")
                         .build(),
                 )
                 .execute()

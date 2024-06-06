@@ -201,15 +201,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.navikt.modia-common-utils</groupId>
-            <artifactId>science</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.navikt.modia-common-utils</groupId>
-            <artifactId>kabac</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.navikt.modia-common-utils</groupId>
             <artifactId>test-utils</artifactId>
             <scope>test</scope>
         </dependency>

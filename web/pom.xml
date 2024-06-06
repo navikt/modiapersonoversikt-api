@@ -204,11 +204,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>arenasakvedtakservice</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>norg-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -314,35 +309,6 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
-
-        <!-- tjenester -->
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
-            <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
-            <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
-            <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
-            <artifactId>nav-foreldrepenger-v2-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
-            <artifactId>nav-sykepenger-v2-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!--  -->
 
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>

@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.config.endpoint.util;
 
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktServiceImpl;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
 import no.nav.modiapersonoversikt.consumer.ldap.LDAPServiceImpl;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
@@ -16,11 +14,6 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 public class CacheTestConfig {
-
-    @Bean
-    public OppfolgingskontraktService oppfolgingskontraktService() {
-        return mock(OppfolgingskontraktServiceImpl.class);
-    }
 
     @Bean
     public NorgApi norgApi() {

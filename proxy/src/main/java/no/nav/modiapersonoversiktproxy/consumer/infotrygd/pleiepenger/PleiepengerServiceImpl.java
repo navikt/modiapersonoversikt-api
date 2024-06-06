@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger;
 
 import kotlin.Pair;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.PleiepengerMapper;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeRequest;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.AuditResources;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.PleiepengerMapper;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeRequest;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetUgyldigIdentNr;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1;

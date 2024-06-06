@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger;
 
 import kotlin.Pair;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.SykepengerMapper;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.to.SykepengerRequest;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.to.SykepengerResponse;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.AuditResources;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.SykepengerMapper;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.to.SykepengerRequest;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.to.SykepengerResponse;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.HentSykepengerListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykBruker;

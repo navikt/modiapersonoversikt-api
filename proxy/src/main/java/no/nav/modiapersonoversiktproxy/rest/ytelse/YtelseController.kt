@@ -8,6 +8,7 @@ import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.Foreldr
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.PleiepengerService
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.SykepengerServiceBi
 import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
+import no.nav.modiapersonoversiktproxy.rest.RequestBodyContent
 import no.nav.modiapersonoversiktproxy.utils.FnrRequest
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
@@ -27,24 +28,22 @@ class YtelseController
     ) {
         @PostMapping("/ytelseskontrakter")
         fun hentYtelseskontrakter(
-            @RequestBody fnrRequest: FnrRequest,
-            @RequestParam("startDato") start: String?,
-            @RequestParam("sluttDato") slutt: String?,
+            @RequestBody body: RequestBodyContent,
         ): YtelseskontraktResponse {
             return ytelseskontraktService.hentYtelseskontrakter(
                 lagYtelseRequest(
-                    fnrRequest.fnr,
-                    start,
-                    slutt,
+                    body.fnr,
+                    body.start,
+                    body.slutt,
                 ),
             )
         }
 
         @PostMapping("sykepenger")
         fun hentSykepenger(
-            @RequestBody fnrRequest: FnrRequest,
+            @RequestBody fnr: String,
         ): Map<String, Any?> {
-            return SykepengerUttrekk(sykepengerService).hent(fnrRequest.fnr)
+            return SykepengerUttrekk(sykepengerService).hent(fnr)
         }
 
         @PostMapping("foreldrepenger")
@@ -56,9 +55,9 @@ class YtelseController
 
         @PostMapping("pleiepenger")
         fun hentPleiepenger(
-            @RequestBody fnrRequest: FnrRequest,
+            @RequestBody fnr: String,
         ): Map<String, Any?> {
-            return PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnrRequest.fnr)
+            return PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
         }
 
         private fun getForeldrepengerService(): ForeldrepengerServiceBi {

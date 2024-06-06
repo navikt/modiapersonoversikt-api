@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversiktproxy.consumer.arena.ytelseskontrakt;
 
 import kotlin.Pair;
-import no.nav.modiapersonoversiktproxy.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest;
-import no.nav.modiapersonoversiktproxy.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.AuditResources;
+import no.nav.modiapersonoversiktproxy.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest;
+import no.nav.modiapersonoversiktproxy.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.HentYtelseskontraktListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.YtelseskontraktV3;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;

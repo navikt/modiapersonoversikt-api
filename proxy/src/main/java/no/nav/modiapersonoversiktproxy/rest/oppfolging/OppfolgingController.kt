@@ -4,7 +4,7 @@ import no.nav.modiapersonoversiktproxy.consumer.arena.oppfolgingskontrakt.Oppfol
 import no.nav.modiapersonoversiktproxy.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest
 import no.nav.modiapersonoversiktproxy.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse
 import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
-import no.nav.modiapersonoversiktproxy.utils.FnrRequest
+import no.nav.modiapersonoversiktproxy.rest.RequestBodyContent
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,12 +19,10 @@ class OppfolgingController
     ) {
         @PostMapping("/Oppfolgingskontrakter")
         fun hentOppfolgingskontrakter(
-            @RequestBody fnrRequest: FnrRequest,
-            @RequestParam("startDato") start: String?,
-            @RequestParam("sluttDato") slutt: String?,
+            @RequestBody body: RequestBodyContent,
         ): OppfolgingskontraktResponse {
             return oppfolgingskontraktService.hentOppfolgingskontrakter(
-                lagOppfolgingskontraktRequest(fnrRequest.fnr, start, slutt),
+                lagOppfolgingskontraktRequest(body.fnr, body.start, body.slutt),
             )
         }
 

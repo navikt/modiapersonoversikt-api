@@ -5,9 +5,9 @@ import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.pleiepenger.Ved
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPeriode;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSVedtak;
 
-class VedtaksMapper extends Mapper {
+public class VedtaksMapper extends Mapper {
 
-    VedtaksMapper() {
+    public VedtaksMapper() {
         registererVedtaksMapper();
         registrerPeriodeMapper();
     }

@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger;
 
 import kotlin.Pair;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.ForeldrepengerMapper;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
-import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.AuditIdentifier;
 import no.nav.modiapersonoversiktproxy.infrastructure.naudit.AuditResources;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.ForeldrepengerMapper;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
+import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.ForeldrepengerV2;
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.HentForeldrepengerettighetSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.informasjon.FimPerson;
