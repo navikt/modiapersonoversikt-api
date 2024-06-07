@@ -48,9 +48,9 @@ class YtelseController
 
         @PostMapping("foreldrepenger")
         fun hentForeldrepenger(
-            @RequestBody fnrRequest: FnrRequest,
+            @RequestBody fnr: String,
         ): Map<String, Any?> {
-            return ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnrRequest.fnr)
+            return ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
         }
 
         @PostMapping("pleiepenger")
@@ -67,13 +67,13 @@ class YtelseController
         }
 
         private fun lagYtelseRequest(
-            fodselsnummer: String,
+            fnr: String,
             start: String?,
             slutt: String?,
         ): YtelseskontraktRequest {
             val request =
                 YtelseskontraktRequest()
-            request.fodselsnummer = fodselsnummer
+            request.fodselsnummer = fnr
             request.from = lagRiktigDato(start)
             request.to = lagRiktigDato(slutt)
             return request
