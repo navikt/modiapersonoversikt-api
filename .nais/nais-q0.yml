@@ -153,6 +153,10 @@ spec:
       value: "https://pdl-pip-api-q0.dev.intern.nav.no"
     - name: PDL_PIP_SCOPE
       value: "dev-fss:pdl:pdl-pip-api-q0"
+    - name: PDL_FULLMAKT_URL
+      value: "https://pdl-fullmakt.dev.intern.nav.no"
+    - name: PDL_FULLMAKT_SCOPE
+      value: "dev-fss:pdl:pdl-fullmakt"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL

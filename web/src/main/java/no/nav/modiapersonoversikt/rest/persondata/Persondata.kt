@@ -211,11 +211,18 @@ object Persondata {
         val tegnsprak: List<KodeBeskrivelse<String>>,
     )
 
+    enum class Handling { LES, KOMMUNISER, SKRIV }
+
+    data class OmraadeMedHandling<T>(
+        val omraade: KodeBeskrivelse<T>,
+        val handling: List<Handling>,
+    )
+
     data class Fullmakt(
         val motpartsPersonident: String,
         val motpartsPersonNavn: Navn,
         val motpartsRolle: FullmaktsRolle,
-        val omrade: List<KodeBeskrivelse<String>>,
+        val omrade: List<OmraadeMedHandling<String>>,
         val gyldighetsPeriode: GyldighetsPeriode?,
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
     )
