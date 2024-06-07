@@ -5,9 +5,9 @@ import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Oppfolging
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.YtelseskontraktResponse
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 interface ArenaInfotrygdApi {
     fun hentYtelseskontrakter(
@@ -40,29 +40,8 @@ class ArenaInfotrygdApiImpl(
         start: String?,
         slutt: String?,
     ): YtelseskontraktResponse {
-        val builder = FormBody.Builder()
-        builder.add("fnr", fnr)
-        if (start != null) {
-            builder.add("start", start)
-        }
-        if (slutt != null) {
-            builder.add("slutt", slutt)
-        }
-        val formBody = builder.build()
-        val response =
-            httpClient
-                .newCall(
-                    Request
-                        .Builder()
-                        .post(formBody)
-                        .url("$baseUrl/rest/ytelseskontrakter")
-                        .build(),
-                )
-                .execute()
-
-        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
-
-        return OkHttpUtils.objectMapper.readValue(bodyContent)
+        val json = "{\"fnr\":$fnr,\"start\":$start,\"slutt\":$slutt}"
+        return sendRequest("ytelseskontrakter", json)
     }
 
     override fun hentOppfolgingskontrakter(
@@ -70,103 +49,46 @@ class ArenaInfotrygdApiImpl(
         start: String?,
         slutt: String?,
     ): OppfolgingskontraktResponse {
-        val builder = FormBody.Builder()
-        builder.add("fnr", fnr)
-        if (start != null) {
-            builder.add("start", start)
-        }
-        if (slutt != null) {
-            builder.add("slutt", slutt)
-        }
-        val formBody = builder.build()
-        val response =
-            httpClient
-                .newCall(
-                    Request
-                        .Builder()
-                        .post(formBody)
-                        .url("$baseUrl/rest/Oppfolgingskontrakter")
-                        .build(),
-                )
-                .execute()
-
-        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
-        return OkHttpUtils.objectMapper.readValue(bodyContent)
+        val json = "{\"fnr\":$fnr,\"start\":$start,\"slutt\":$slutt}"
+        return sendRequest("Oppfolgingskontrakter", json)
     }
 
     override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? {
-        val builder = FormBody.Builder()
-        builder.add("fnr", fnr)
-        val formBody = builder.build()
-        val response =
-            httpClient
-                .newCall(
-                    Request
-                        .Builder()
-                        .post(formBody)
-                        .url("$baseUrl/rest/sakvedtak")
-                        .build(),
-                )
-                .execute()
-
-        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
-        return OkHttpUtils.objectMapper.readValue(bodyContent)
+        return sendRequest("sakvedtak", fnr)
     }
 
     override fun hentSykepenger(fnr: String): Map<String, Any?> {
-        val builder = FormBody.Builder()
-        builder.add("fnr", fnr)
-        val formBody = builder.build()
-        val response =
-            httpClient
-                .newCall(
-                    Request
-                        .Builder()
-                        .post(formBody)
-                        .url("$baseUrl/rest/sykepenger")
-                        .build(),
-                )
-                .execute()
-
-        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
-        return OkHttpUtils.objectMapper.readValue(bodyContent)
+        return sendRequest("sykepenger", fnr)
     }
 
     override fun hentForeldrepenger(fnr: String): Map<String, Any?> {
-        val builder = FormBody.Builder()
-        builder.add("fnr", fnr)
-        val formBody = builder.build()
-        val response =
-            httpClient
-                .newCall(
-                    Request
-                        .Builder()
-                        .post(formBody)
-                        .url("$baseUrl/rest/foreldrepenger")
-                        .build(),
-                )
-                .execute()
-
-        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
-        return OkHttpUtils.objectMapper.readValue(bodyContent)
+        return sendRequest("foreldrepenger", fnr)
     }
 
     override fun hentPleiepenger(fnr: String): Map<String, Any?> {
-        val builder = FormBody.Builder()
-        builder.add("fnr", fnr)
-        val formBody = builder.build()
+        return sendRequest("pleiepenger", fnr)
+    }
+
+    private inline fun <reified T> sendRequest(
+        url: String,
+        json: String,
+    ): T {
+        val body =
+            json
+                .toRequestBody("application/json".toMediaTypeOrNull())
         val response =
             httpClient
                 .newCall(
                     Request
                         .Builder()
-                        .post(formBody)
-                        .url("$baseUrl/rest/pleiepenger")
+                        .url("$baseUrl/rest/$url")
+                        .post(body)
                         .build(),
                 )
                 .execute()
 
         val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
+
         return OkHttpUtils.objectMapper.readValue(bodyContent)
     }
 }
