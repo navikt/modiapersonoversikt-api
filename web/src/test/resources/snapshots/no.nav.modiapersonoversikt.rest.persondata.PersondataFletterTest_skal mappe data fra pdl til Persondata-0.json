@@ -204,8 +204,11 @@
       "motpartsPersonident" : "55555666000",
       "motpartsRolle" : "FULLMEKTIG",
       "omrade" : [ "java.util.ArrayList", [ {
-        "beskrivelse" : "SAP",
-        "kode" : "SAP"
+        "handling" : [ "java.util.ArrayList", [ "LES" ] ],
+        "omraade" : {
+          "beskrivelse" : "SAP",
+          "kode" : "SAP"
+        }
       } ] ]
     } ] ],
     "geografiskTilknytning" : "0123",

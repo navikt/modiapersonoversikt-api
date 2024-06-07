@@ -858,9 +858,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    // TODO: Legg ved informasjon om fullmaktens innsyn (LES,KOMMUNISER,SKRIV)
-    private fun hentOmrade(omraader: List<OmraadeMedHandling>): List<Persondata.KodeBeskrivelse<String>> {
-        return omraader.map { omrade -> kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade.tema as String) }
+    private fun hentOmrade(omraader: List<OmraadeMedHandling>): List<Persondata.OmraadeMedHandling<String>> {
+        return omraader.map { omrade ->
+            val omraadeBeskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade.tema as String)
+            Persondata.OmraadeMedHandling(
+                omraade = omraadeBeskrivelse,
+                handling =
+                    omrade.handling?.map {
+                        when (it) {
+                            OmraadeMedHandling.Handling.LES -> Persondata.Handling.LES
+                            OmraadeMedHandling.Handling.KOMMUNISER -> Persondata.Handling.KOMMUNISER
+                            OmraadeMedHandling.Handling.SKRIV -> Persondata.Handling.SKRIV
+                        }
+                    } ?: emptyList(),
+            )
+        }
     }
 
     private fun hentVergemal(data: Data): List<Persondata.Verge> {
@@ -994,8 +1006,22 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return Persondata.KontaktInformasjon(
             erManuell = oppfolging?.erManuell,
             erReservert = krrData?.reservasjon?.toBooleanStrictOrNull(),
-            epost = krrData?.epostadresse?.let { Persondata.KontaktInformasjon.Verdi(it.value, it.sistOppdatert, it.sistVerifisert) },
-            mobil = krrData?.mobiltelefonnummer?.let { Persondata.KontaktInformasjon.Verdi(it.value, it.sistOppdatert, it.sistVerifisert) },
+            epost =
+                krrData?.epostadresse?.let {
+                    Persondata.KontaktInformasjon.Verdi(
+                        it.value,
+                        it.sistOppdatert,
+                        it.sistVerifisert,
+                    )
+                },
+            mobil =
+                krrData?.mobiltelefonnummer?.let {
+                    Persondata.KontaktInformasjon.Verdi(
+                        it.value,
+                        it.sistOppdatert,
+                        it.sistVerifisert,
+                    )
+                },
         )
     }
 
