@@ -30,7 +30,7 @@ open class PdlFullmaktConfig {
             RestClient.baseClient().newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor("PdlFullmaktApi") { request ->
+                    LoggingInterceptor("PdlFullmaktApi", LoggingInterceptor.Config(ignoreResponseBody = false)) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
