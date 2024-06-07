@@ -843,11 +843,11 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return data.fullmektige.map { fullmakter ->
             fullmakter.map {
                 val tredjepartsPerson =
-                    data.tredjepartsPerson.map { personer -> personer[it.fullmaktsgiver as String] }.getOrNull()
+                    data.tredjepartsPerson.map { personer -> personer[it.fullmektig as String] }.getOrNull()
                 val navn = tredjepartsPerson?.navn
 
                 Persondata.Fullmakt(
-                    motpartsPersonident = it.fullmaktsgiver as String,
+                    motpartsPersonident = it.fullmektig as String,
                     motpartsPersonNavn = navn?.firstOrNull() ?: Persondata.Navn.UKJENT,
                     motpartsRolle = Persondata.FullmaktsRolle.FULLMEKTIG,
                     omrade = hentOmrade(it.omraade ?: emptyList()),
