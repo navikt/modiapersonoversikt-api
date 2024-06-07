@@ -23,7 +23,7 @@ open class PdlFullmaktConfig {
     lateinit var tokenProvider: OnBehalfOfTokenClient
 
     @Bean
-    open fun pdlPip(): PdlFullmaktApi {
+    open fun pdlFullmakt(): PdlFullmaktApi {
         val oboTokenProvider = tokenProvider.bindTo(scope)
 
         val httpClient: OkHttpClient =
