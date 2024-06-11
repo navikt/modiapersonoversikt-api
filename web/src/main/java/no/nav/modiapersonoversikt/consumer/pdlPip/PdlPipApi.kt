@@ -64,7 +64,7 @@ open class PdlPipApiImpl(
                 TjenestekallLogg.error(
                     header = "Greide ikke å hente data fra pdl-pip-api",
                     fields = mapOf("ident" to ident),
-                    throwable = it
+                    throwable = it,
                 )
                 null
             }
