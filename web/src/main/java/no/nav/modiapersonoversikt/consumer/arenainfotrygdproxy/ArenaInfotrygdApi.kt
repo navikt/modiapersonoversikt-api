@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.OppfolgingskontraktResponse
@@ -33,6 +34,7 @@ interface ArenaInfotrygdApi {
     fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak?
 }
 
+@Serializable
 data class RequestBodyContent(
     val fnr: String,
     val start: String?,

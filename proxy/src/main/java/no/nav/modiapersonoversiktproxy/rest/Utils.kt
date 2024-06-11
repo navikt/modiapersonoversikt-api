@@ -1,9 +1,11 @@
 package no.nav.modiapersonoversiktproxy.rest
 
+import kotlinx.serialization.Serializable
 import org.joda.time.format.DateTimeFormat
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 
+@Serializable
 data class RequestBodyContent(
     val fnr: String,
     val start: String?,
