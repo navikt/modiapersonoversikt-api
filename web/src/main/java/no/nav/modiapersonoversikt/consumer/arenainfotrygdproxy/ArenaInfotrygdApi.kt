@@ -1,6 +1,8 @@
 package no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.OppfolgingskontraktResponse
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.YtelseskontraktResponse
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
@@ -31,6 +33,12 @@ interface ArenaInfotrygdApi {
     fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak?
 }
 
+data class RequestBodyContent(
+    val fnr: String,
+    val start: String?,
+    val slutt: String?,
+)
+
 class ArenaInfotrygdApiImpl(
     private val baseUrl: String,
     private val httpClient: OkHttpClient,
@@ -40,7 +48,7 @@ class ArenaInfotrygdApiImpl(
         start: String?,
         slutt: String?,
     ): YtelseskontraktResponse {
-        val json = "{\"fnr\":$fnr,\"start\":$start,\"slutt\":$slutt}"
+        val json = Json.encodeToString(RequestBodyContent(fnr, start, slutt))
         return sendRequest("ytelseskontrakter", json)
     }
 
@@ -49,7 +57,7 @@ class ArenaInfotrygdApiImpl(
         start: String?,
         slutt: String?,
     ): OppfolgingskontraktResponse {
-        val json = "{\"fnr\":$fnr,\"start\":$start,\"slutt\":$slutt}"
+        val json = Json.encodeToString(RequestBodyContent(fnr, start, slutt))
         return sendRequest("Oppfolgingskontrakter", json)
     }
 
