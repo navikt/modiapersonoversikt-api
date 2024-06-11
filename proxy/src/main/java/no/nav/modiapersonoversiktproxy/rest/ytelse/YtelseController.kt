@@ -9,7 +9,6 @@ import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.Pleiepenge
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.SykepengerServiceBi
 import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import no.nav.modiapersonoversiktproxy.rest.RequestBodyContent
-import no.nav.modiapersonoversiktproxy.utils.FnrRequest
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.springframework.beans.factory.annotation.Autowired
