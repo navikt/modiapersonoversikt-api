@@ -36,7 +36,6 @@ spec:
       memory: 8192Mi
   ingresses:
     - https://modiapersonoversikt-api.intern.dev.nav.no
-    - https://intern.dev.nav.no/modiapersonoversikt-api
   replicas:
     min: 1
     max: 1
