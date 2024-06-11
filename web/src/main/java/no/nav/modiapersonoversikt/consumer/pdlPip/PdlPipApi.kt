@@ -13,8 +13,8 @@ import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipGeograf
 import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipPersondataResponse
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.OkHttpClient
-import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 
@@ -35,7 +35,6 @@ open class PdlPipApiImpl(
     private val cache: Cache<String, PipPersondataResponse?> = CacheUtils.createCache(),
 ) : PdlPipApi {
     private val pdlPipApi = PIPTjenesteForPDLDataKunForSystemerApi(url, client)
-    private val logger = LoggerFactory.getLogger(this::class.java)
 
     @Cacheable
     override fun hentFnr(aktorId: AktorId): String? {
@@ -62,7 +61,11 @@ open class PdlPipApiImpl(
             runCatching {
                 pdlPipApi.lookupIdent(ident)
             }.getOrElse {
-                logger.error("Failed to fetch data from pdl-pip-api", it)
+                TjenestekallLogg.error(
+                    header = "Greide ikke å hente data fra pdl-pip-api",
+                    fields = mapOf("ident" to ident),
+                    throwable = it
+                )
                 null
             }
         }
