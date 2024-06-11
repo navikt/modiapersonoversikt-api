@@ -19,7 +19,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-fss
-          RESOURCE: .nais/unleash/unleash-apitoken-preprod.yaml
+          RESOURCE: web/.nais/unleash/unleash-apitoken-preprod.yaml
 
   deploy-unleash-api-token-to-prod:
     if: github.ref == 'refs/heads/master'
@@ -35,7 +35,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-fss
-          RESOURCE: .nais/unleash/unleash-apitoken-prod.yaml
+          RESOURCE: web/.nais/unleash/unleash-apitoken-prod.yaml
 
   deploy-unleash-api-token-to-dev-gcp:
     if: github.ref == 'refs/heads/feature/arena_infortrygd_proxy_app'
@@ -51,7 +51,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
-          RESOURCE: .nais/unleash/unleash-apitoken-preprod.yaml
+          RESOURCE: web/.nais/unleash/unleash-apitoken-preprod.yaml
 
   deploy-unleash-api-token-to-prod-gcp:
     if: github.ref == 'refs/heads/master'
@@ -67,4 +67,4 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
-          RESOURCE: .nais/unleash/unleash-apitoken-prod.yaml
+          RESOURCE: web/.nais/unleash/unleash-apitoken-prod.yaml
