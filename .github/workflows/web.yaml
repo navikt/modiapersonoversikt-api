@@ -71,7 +71,7 @@ jobs:
           VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
 
   deploy-gcp-dev:
-    name: Deploy to prod
+    name: Deploy to gcp
     needs: build
     if: github.ref == 'refs/heads/feature/arena_infortrygd_proxy_app'
     runs-on: ubuntu-latest
