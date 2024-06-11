@@ -24,10 +24,6 @@ open class CacheConfig {
             cache("oppfolgingCache", 600)
             cache("foreldrePengerCache", 300)
             cache("hentSykmeldingsperioderCache", 300)
-            cache("utbetalingCache", 1800, 10000)
-            cache("pdlCache", 3600, 100000)
-            cache("ldap", 3600, 20000)
-            cache("varslingCache", 180, 10000)
         }
     }
 

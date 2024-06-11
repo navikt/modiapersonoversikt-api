@@ -69,3 +69,20 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: web/.nais/nais-${{ matrix.namespace }}.yml
           VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
+
+  deploy-gcp-dev:
+    name: Deploy to prod
+    needs: build
+    if: github.ref == 'refs/heads/feature/arena_infortrygd_proxy_app'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-gcp
+          RESOURCE: web/.nais/dev.yml
+          VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}

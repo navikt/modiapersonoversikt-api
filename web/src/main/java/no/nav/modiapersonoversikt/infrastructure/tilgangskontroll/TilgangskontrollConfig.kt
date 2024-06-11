@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.pdlPip.PdlPipApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.service.azure.AzureADService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import no.nav.personoversikt.common.kabac.Decision
@@ -31,7 +31,7 @@ open class TilgangskontrollConfig {
         norg: NorgApi,
         ansattService: AnsattService,
         henvendelseService: SfHenvendelseService,
-        ldap: LDAPService,
+        azureADService: AzureADService,
     ): Kabac.PolicyDecisionPoint {
         return PolicyDecisionPointImpl().apply {
             install(AuthContextPip)

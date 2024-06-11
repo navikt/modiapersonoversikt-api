@@ -10,7 +10,6 @@ import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering
@@ -20,6 +19,7 @@ import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerAp
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl
+import no.nav.modiapersonoversikt.service.azure.AzureADService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.KabacTestUtils
@@ -28,14 +28,14 @@ import java.util.*
 
 internal class TilgangTilBrukerPolicyTest {
     private val policy = KabacTestUtils.PolicyTester(TilgangTilBrukerPolicy)
-    private val ldap = mockk<LDAPService>()
+    private val azureADService = mockk<AzureADService>()
     private val pdl = mockk<PdlOppslagService>()
     private val pdlPip = mockk<PdlPipApi>()
     private val norg = mockk<NorgApi>()
     private val nom = mockk<NomClient>()
     private val axsys = mockk<AxsysClient>()
     private val skjermedePersoner = mockk<SkjermedePersonerApi>()
-    private val ansattService = AnsattServiceImpl(axsys, nom, ldap)
+    private val ansattService = AnsattServiceImpl(axsys, nom, azureADService)
 
     private val ident = NavIdent("Z999999")
     private val fnr = Fnr("10108000398")
@@ -234,7 +234,7 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtVeilederHarRoller(vararg roller: String) {
-        every { ldap.hentRollerForVeileder(ident) } returns roller.toList()
+        every { azureADService.hentRollerForVeileder(any(), ident) } returns roller.toList()
     }
 
     private fun gittAtVeilederHarTilgangTilEnhet(enhetId: EnhetId) {

@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.config.endpoint.util;
 
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPService;
-import no.nav.modiapersonoversikt.consumer.ldap.LDAPServiceImpl;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging;
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolgingServiceImpl;
@@ -18,12 +16,6 @@ public class CacheTestConfig {
     @Bean
     public NorgApi norgApi() {
         return mock(NorgApi.class);
-    }
-
-    @Bean
-    public LDAPService ldapService() {
-
-        return mock(LDAPServiceImpl.class);
     }
 
     @Bean

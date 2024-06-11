@@ -7,7 +7,6 @@ import no.nav.common.utils.NaisUtils;
 
 import no.nav.common.utils.SslUtils;
 import no.nav.modiapersonoversikt.config.MetricsConfig;
-import no.nav.modiapersonoversikt.consumer.ldap.LDAP;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -37,10 +36,6 @@ public class Main {
         Credentials serviceUser = NaisUtils.getCredentials("service_user");
         EnvironmentUtils.setProperty(SYSTEMUSER_USERNAME_PROPERTY, serviceUser.username, PUBLIC);
         EnvironmentUtils.setProperty(SYSTEMUSER_PASSWORD_PROPERTY, serviceUser.password, SECRET);
-
-        Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
-        EnvironmentUtils.setProperty(LDAP.USERNAME, ldapUser.username, PUBLIC);
-        EnvironmentUtils.setProperty(LDAP.PASSWORD, ldapUser.password, SECRET);
     }
 
     @Bean

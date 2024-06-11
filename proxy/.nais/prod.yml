@@ -86,3 +86,5 @@ spec:
       value: "https://arena.adeo.no/ail_ws/Ytelseskontrakt_v3"
     - name: ARENA_SAK_VEDTAK_URL
       value: "https://arena.adeo.no/arena_ws/services/ArenaSakVedtakService"
+    - name: CXF_SECURE_LOG
+      value: "enabled"
