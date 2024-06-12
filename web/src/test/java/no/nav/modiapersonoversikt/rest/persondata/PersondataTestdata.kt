@@ -5,8 +5,6 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDetails
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraadeMedHandling
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -325,10 +323,10 @@ internal val tilrettelagtKommunikasjonData =
     )
 
 internal val fullmaktPerson =
-    FullmaktDetails(
-        fullmaktId = 1232133123,
-        fullmaktsgiver = "55555666000",
-        omraade = listOf(OmraadeMedHandling(tema = "SAP", handling = listOf(OmraadeMedHandling.Handling.LES))),
+    Fullmakt(
+        motpartsPersonident = "55555666000",
+        motpartsRolle = FullmaktsRolle.FULLMEKTIG,
+        omraader = emptyList(),
         gyldigFraOgMed = gittDato("2018-01-03"),
         gyldigTilOgMed = gittDato("2018-10-03"),
     )
@@ -488,6 +486,7 @@ internal val testPerson =
         sikkerhetstiltak = listOf(sikkerhetstiltakData),
         kontaktinformasjonForDoedsbo = listOf(kontaktinformasjonDodsbo),
         tilrettelagtKommunikasjon = listOf(tilrettelagtKommunikasjonData),
+        fullmakt = listOf(fullmaktPerson),
         telefonnummer = listOf(Telefonnummer("47", "90909090", 1, metadata)),
         vergemaalEllerFremtidsfullmakt = listOf(vergemal),
         foreldreansvar = listOf(foreldreansvarData),
@@ -528,6 +527,5 @@ internal val testData =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
                 kontaktinformasjonTredjepartspersonMap
             },
-        fullmektige = PersondataResult.runCatching(InformasjonElement.FULLMAKT) { listOf(fullmaktPerson) },
         harTilgangTilSkjermetPerson = false,
     )

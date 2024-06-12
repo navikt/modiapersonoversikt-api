@@ -265,11 +265,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>pdl-fullmakt-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>skatteetaten-innkreving-api</artifactId>
             <version>dev</version>
             <scope>compile</scope>

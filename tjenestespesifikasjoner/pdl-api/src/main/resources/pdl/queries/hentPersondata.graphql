@@ -162,6 +162,13 @@ query hentPersondata($ident: ID!){
                 spraak
             }
         }
+        fullmakt {
+            motpartsPersonident
+            motpartsRolle
+            omraader
+            gyldigFraOgMed
+            gyldigTilOgMed
+        }
         telefonnummer {
             landskode
             nummer

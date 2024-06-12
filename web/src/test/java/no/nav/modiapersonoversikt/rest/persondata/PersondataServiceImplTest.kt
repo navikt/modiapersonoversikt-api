@@ -23,7 +23,6 @@ internal class PersondataServiceImplTest {
             oppfolgingService = mockk(),
             policyEnforcementPoint = mockk(),
             kodeverk = mockk(),
-            pdlFullmakt = mockk(),
         )
 
     @Test
