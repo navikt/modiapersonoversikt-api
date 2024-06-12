@@ -23,14 +23,14 @@ open class PdlFullmaktConfig {
     lateinit var tokenProvider: OnBehalfOfTokenClient
 
     @Bean
-    open fun pdlFullmakt(): PdlFullmaktApi {
+    open fun pdlPip(): PdlFullmaktApi {
         val oboTokenProvider = tokenProvider.bindTo(scope)
 
         val httpClient: OkHttpClient =
             RestClient.baseClient().newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor("PdlFullmaktApi", LoggingInterceptor.Config(ignoreResponseBody = false)) { request ->
+                    LoggingInterceptor("PdlFullmaktApi") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

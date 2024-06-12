@@ -20,8 +20,6 @@ import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
@@ -45,8 +43,6 @@ class PersondataServiceImpl(
 ) : PersondataService {
     private val persondataFletter = PersondataFletter(kodeverk)
     private val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
-
-    private val log: Logger = LoggerFactory.getLogger(PersondataService::class.java)
 
     override fun hentPerson(personIdent: String): Persondata.Data {
         val persondataResult = pdl.hentPersondata(personIdent)
@@ -213,11 +209,8 @@ class PersondataServiceImpl(
     private fun PersondataResult<List<FullmaktDetails>>.findKontaktinformasjonTredjepartspersoner(): List<String> {
         return this.fold(
             onSuccess = { it.mapNotNull { it.fullmaktsgiver } },
-            onFailure = { system, cause ->
-                log.error("Kunne ikke hente kontaktinfo for tredjeparter fra $system", cause)
-                emptyList()
-            },
-            onNotRelevant = { emptyList() },
+            onFailure = { system, cause -> emptyList<String>() },
+            onNotRelevant = { emptyList<String>() },
         ).toSet().toList()
     }
 

@@ -327,7 +327,7 @@ internal val tilrettelagtKommunikasjonData =
 internal val fullmaktPerson =
     FullmaktDetails(
         fullmaktId = 1232133123,
-        fullmektig = "55555666000",
+        fullmaktsgiver = "55555666000",
         omraade = listOf(OmraadeMedHandling(tema = "SAP", handling = listOf(OmraadeMedHandling.Handling.LES))),
         gyldigFraOgMed = gittDato("2018-01-03"),
         gyldigTilOgMed = gittDato("2018-10-03"),

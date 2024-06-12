@@ -36,7 +36,7 @@ open class PdlFullmaktApiImpl(
         return pdlFullmaktApi.getFullmaktForFullmaktsgiver(fullmaktRequest(fnr.get()))
     }
 
-    private fun fullmaktRequest(ident: String) = FullmakIdentRequest(ident = "\"$ident\"".encodeBase64())
+    private fun fullmaktRequest(ident: String) = FullmakIdentRequest(ident = ident.encodeBase64())
 
     override fun ping() =
         SelfTestCheck(
