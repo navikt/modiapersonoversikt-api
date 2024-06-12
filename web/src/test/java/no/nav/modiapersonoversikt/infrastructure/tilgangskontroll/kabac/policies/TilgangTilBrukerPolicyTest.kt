@@ -234,7 +234,7 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtVeilederHarRoller(vararg roller: String) {
-        every { azureADService.hentRollerForVeileder(any(), ident) } returns roller.toList()
+        every { azureADService.hentRollerForVeileder(ident) } returns roller.toList()
     }
 
     private fun gittAtVeilederHarTilgangTilEnhet(enhetId: EnhetId) {

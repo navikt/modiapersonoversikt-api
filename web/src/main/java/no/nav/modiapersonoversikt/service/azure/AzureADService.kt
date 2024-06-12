@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import no.nav.common.types.identer.AzureObjectId
 import no.nav.common.types.identer.NavIdent
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,10 +15,7 @@ import okhttp3.Response
 import org.slf4j.LoggerFactory
 
 interface AzureADService {
-    fun hentRollerForVeileder(
-        userToken: String,
-        veilederIdent: NavIdent,
-    ): List<String>
+    fun hentRollerForVeileder(veilederIdent: NavIdent): List<String>
 }
 
 class AzureADServiceImpl(
@@ -28,10 +26,8 @@ class AzureADServiceImpl(
     private val json = Json { ignoreUnknownKeys = true }
     private val log = LoggerFactory.getLogger(AzureADServiceImpl::class.java)
 
-    override fun hentRollerForVeileder(
-        userToken: String,
-        veilederIdent: NavIdent,
-    ): List<String> {
+    override fun hentRollerForVeileder(veilederIdent: NavIdent): List<String> {
+        val userToken = AuthContextUtils.requireToken()
         val url =
             URLBuilder(graphUrl)
                 .apply {

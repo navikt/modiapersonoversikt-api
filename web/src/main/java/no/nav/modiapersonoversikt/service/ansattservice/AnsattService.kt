@@ -74,8 +74,7 @@ class AnsattServiceImpl
         }
 
         override fun hentVeilederRoller(ident: NavIdent): RolleListe {
-            val token = AuthContextUtils.getToken().orElse("")
-            return RolleListe(azureADService.hentRollerForVeileder(token, ident))
+            return RolleListe(azureADService.hentRollerForVeileder(ident))
         }
 
         override fun hentAnsattFagomrader(
