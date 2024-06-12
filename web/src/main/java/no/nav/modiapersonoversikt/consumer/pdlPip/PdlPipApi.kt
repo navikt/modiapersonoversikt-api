@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipGeograf
 import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipPersondataResponse
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.OkHttpClient
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -57,7 +58,16 @@ open class PdlPipApiImpl(
 
     private fun hentIdenter(ident: String): PipPersondataResponse? {
         return cache.get(ident) {
-            pdlPipApi.lookupIdent(ident)
+            runCatching {
+                pdlPipApi.lookupIdent(ident)
+            }.getOrElse {
+                TjenestekallLogg.error(
+                    header = "Greide ikke å hente data fra pdl-pip-api",
+                    fields = mapOf("ident" to ident),
+                    throwable = it,
+                )
+                null
+            }
         }
     }
 
