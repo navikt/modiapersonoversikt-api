@@ -39,7 +39,7 @@ class AzureADServiceImpl(
             runBlocking {
                 val response = handleRequest(url, userToken, veilederIdent)
                 response.value.map {
-                    requireNotNull(it.id)
+                    requireNotNull(it.displayName)
                 }
             }
         } catch (e: Exception) {
