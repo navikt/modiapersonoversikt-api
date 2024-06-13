@@ -79,7 +79,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     kjonn = hentKjonn(data.persondata.kjoenn),
                     fodselsdato = hentFodselsdato(data),
                     geografiskTilknytning = hentGeografiskTilknytning(data),
-                    alder = hentAlder(data.persondata.foedsel.firstOrNull()?.foedselsdato, clock),
+                    alder = hentAlder(data.persondata.foedselsdato.firstOrNull()?.foedselsdato, clock),
                     dodsdato = hentDodsdato(data),
                     bostedAdresse = hentBostedAdresse(data),
                     kontaktAdresse = hentKontaktAdresse(data),
@@ -153,7 +153,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun hentFodselsdato(data: Data): List<LocalDate> {
-        return data.persondata.foedsel.mapNotNull { it.foedselsdato }
+        return data.persondata.foedselsdato.mapNotNull { it.foedselsdato }
     }
 
     private fun hentDodsdato(data: Data): List<LocalDate> {

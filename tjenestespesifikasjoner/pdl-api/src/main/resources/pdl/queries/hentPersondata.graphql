@@ -85,8 +85,13 @@ query hentPersondata($ident: ID!){
         kjoenn {
             kjoenn
         }
-        foedsel {
+        foedselsdato {
             foedselsdato
+        }
+        foedested {
+            foedeland
+            foedested
+            foedekommune
         }
         adressebeskyttelse {
             gradering

@@ -474,7 +474,8 @@ internal val testPerson =
     Person(
         navn = gittHentPersondataNavn("Teste Ruud McTestesen"),
         kjoenn = listOf(Kjoenn(KjoennType.MANN)),
-        foedsel = listOf(Foedsel(gittDato("2000-01-02"))),
+        foedselsdato = listOf(Foedselsdato(gittDato("2000-01-02"))),
+        foedested = listOf(Foedested("Foedested")),
         adressebeskyttelse =
             listOf(
                 Adressebeskyttelse(AdressebeskyttelseGradering.UGRADERT),
