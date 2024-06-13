@@ -74,7 +74,9 @@ spec:
     - name: MS_GRAPH_SCOPE
       value: "https://graph.microsoft.com/.default"
     - name: FELLES_KODEVERK_URL
-      value: "https://kodeverk-api.nav.no"
+      value: "https://kodeverk-api.intern.dev.nav.no"
+    - name: FELLES_KODEVERK_SCOPE
+      value: "dev-gcp:team-rocket:kodeverk-api"
     - name: SAF_GRAPHQL_URL
       value: "https://saf-q1.dev.intern.nav.no/graphql"
     - name: SAF_HENTDOKUMENT_URL
@@ -106,19 +108,19 @@ spec:
     - name: SF_HENVENDELSE_SCOPE
       value: "dev-fss:teamnks:sf-henvendelse-api-proxy"
     - name: PDL_API_URL
-      value: "https://pdl-api-q1.dev.intern.nav.no/graphql"
+      value: "https://pdl-api.dev.intern.nav.no/graphql"
     - name: PDL_SCOPE
-      value: "dev-fss:pdl:pdl-api-q1"
+      value: "dev-fss:pdl:pdl-api"
     - name: PDL_PIP_URL
-      value: "https://pdl-pip-api-q1.dev.intern.nav.no"
+      value: "https://pdl-pip-api.dev.intern.nav.no"
     - name: PDL_PIP_SCOPE
       value: "dev-fss:pdl:pdl-pip-api-q1"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
-      value: "https://oppgave-q1.dev.intern.nav.no"
+      value: "https://oppgave.dev.intern.nav.no"
     - name: OPPGAVE_SCOPE
-      value: "dev-fss:oppgavehandtering:oppgave-q1"
+      value: "dev-fss:oppgavehandtering:oppgave"
     - name: NORG2_BASEURL
       value: "https://norg2.intern.dev.nav.no"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
@@ -128,7 +130,7 @@ spec:
     - name: CXF_SECURE_LOG
       value: "enabled"
     - name: AXSYS_URL
-      value: "https://axsys.dev.adeo.no"
+      value: "https://axsys.dev.intern.nav.no"
     - name: AXSYS_SCOPE
       value: "dev-fss:org:axsys"
     - name: NOM_URL
