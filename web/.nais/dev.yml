@@ -59,6 +59,24 @@ spec:
   accessPolicy:
     outbound:
       external:
+        - host: graph.microsoft.com
+        - host: kodeverk-api.intern.dev.nav.no
+        - host: saf-q1.dev.intern.nav.no
+        - host: sokos-utbetaldata.dev.intern.nav.no
+        - host: veilarboppfolging.dev.intern.nav.no
+        - host: digdir-krr-proxy.intern.dev.nav.no
+        - host: sokos-kontoregister-person.intern.dev.nav.no
+        - host: sf-henvendelse-api-proxy.dev.intern.nav.no
+        - host: pdl-api.dev.intern.nav.no
+        - host: pdl-pip-api.dev.intern.nav.no
+        - host: oppgave-q2-q2.dev.intern.nav.no
+        - host: norg2.intern.dev.nav.no
+        - host: axsys.dev.intern.nav.no
+        - host: nom-api.intern.dev.nav.no
+        - host: skjermede-personer-pip.intern.dev.nav.no
+        - host: tms-event-api.ekstern.dev.nav.no
+        - host: modia-soknadsstatus-api.intern.dev.nav.no
+        - host: modiapersonoversikt-api-proxy-q1.intern.dev.nav.no
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: api-test.sits.no # Skatteetaten
     inbound:
@@ -118,7 +136,7 @@ spec:
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
-      value: "https://oppgave.dev.intern.nav.no"
+      value: "https://oppgave-q2-q2.dev.intern.nav.no"
     - name: OPPGAVE_SCOPE
       value: "dev-fss:oppgavehandtering:oppgave"
     - name: NORG2_BASEURL
