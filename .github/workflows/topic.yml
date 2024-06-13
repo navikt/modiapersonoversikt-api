@@ -38,3 +38,20 @@ jobs:
           CLUSTER: prod-gcp
           RESOURCE: .nais/topics/henvendelse-oppdatering-melding.yml
           VARS: .nais/topics/prod.json
+
+  deploy-topic-to-dev-gcp:
+    if: github.ref == 'refs/heads/feature/arena_infortrygd_proxy_app'
+    name: Deploy topic to dev-gcp
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Deploy henvendelse-oppdatering-melding topic
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: web/.nais/topics/henvendelse-oppdatering-melding.yml
+          VARS: web/.nais/topics/dev.json
