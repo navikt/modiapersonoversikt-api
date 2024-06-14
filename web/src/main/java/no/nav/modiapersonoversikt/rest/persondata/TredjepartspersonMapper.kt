@@ -17,7 +17,7 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
         kontaktinformasjonTredjepartsperson: Persondata.DigitalKontaktinformasjonTredjepartsperson?,
     ): Persondata.TredjepartsPerson? {
         if (person == null) return null
-        val fodselsdato = person.foedsel.mapNotNull { it.foedselsdato }
+        val fodselsdato = person.foedselsdato.mapNotNull { it.foedselsdato }
         val harTilgang = person.harTilgang(tilganger)
         return Persondata.TredjepartsPerson(
             fnr = ident,
