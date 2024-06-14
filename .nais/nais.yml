@@ -37,6 +37,7 @@ spec:
   ingresses:
     - https://app.adeo.no/modiapersonoversikt-api
     - https://modapp.adeo.no/modiapersonoversikt-api
+    - https://modiapersonoversikt-api.prod-fss-pub.nais.io
   replicas:
     min: 2
     max: 4
