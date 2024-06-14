@@ -208,7 +208,8 @@ internal class AdresseMappingTest {
         Person(
             navn = emptyList(),
             kjoenn = emptyList(),
-            foedsel = emptyList(),
+            foedselsdato = emptyList(),
+            foedested = emptyList(),
             adressebeskyttelse = emptyList(),
             bostedsadresse = emptyList(),
             doedsfall = emptyList(),

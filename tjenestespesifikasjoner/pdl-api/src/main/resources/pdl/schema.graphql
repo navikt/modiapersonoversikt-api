@@ -137,7 +137,7 @@ type Person {
     doedfoedtBarn: [DoedfoedtBarn!]!
     doedsfall: [Doedsfall!]!
     falskIdentitet: FalskIdentitet
-    foedsel: [Foedsel!]!
+    foedsel: [Foedsel!]! @deprecated(reason: "Erstattet av foedselsdato & foedested")
     foedselsdato: [Foedselsdato!]!
     foedested: [Foedested!]!
     folkeregisteridentifikator(historikk: Boolean = false): [Folkeregisteridentifikator!]!
@@ -907,6 +907,3 @@ input CompletionFieldValue {
     fieldName: String!
     fieldValue: String
 }
-
-
-

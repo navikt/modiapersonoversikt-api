@@ -122,7 +122,8 @@ internal class TredjepartspersonMapperTest {
             ),
         bostedsadresse = bosted,
         kjoenn = emptyList(),
-        foedsel = emptyList(),
+        foedselsdato = emptyList(),
+        foedested = emptyList(),
         doedsfall = emptyList(),
     )
 

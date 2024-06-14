@@ -13,8 +13,13 @@ query hentTredjepartspersondata($identer: [ID!]!){
             kjoenn {
                 kjoenn
             }
-            foedsel {
+            foedselsdato {
                 foedselsdato
+            }
+            foedested {
+                foedeland
+                foedested
+                foedekommune
             }
             doedsfall {
                 doedsdato

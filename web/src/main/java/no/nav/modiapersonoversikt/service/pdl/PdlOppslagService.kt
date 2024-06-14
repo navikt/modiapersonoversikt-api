@@ -43,8 +43,8 @@ interface PdlOppslagService {
         NAVN("fritekst.navn", FUZZY_MATCH),
         ADRESSE("fritekst.adresser", CONTAINS),
         UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", EQUALS),
-        FODSELSDATO_FRA("person.foedsel.foedselsdato", AFTER),
-        FODSELSDATO_TIL("person.foedsel.foedselsdato", BEFORE),
+        FODSELSDATO_FRA("person.foedselsdato.foedselsdato", AFTER),
+        FODSELSDATO_TIL("person.foedselsdato.foedselsdato", BEFORE),
         KJONN("person.kjoenn.kjoenn", EQUALS),
     }
 

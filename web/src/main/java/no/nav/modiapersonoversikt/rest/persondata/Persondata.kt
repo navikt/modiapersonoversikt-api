@@ -15,6 +15,7 @@ object Persondata {
         val navn: List<Navn>,
         val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val fodselsdato: List<LocalDate>,
+        val fodested: List<Fodested>,
         val geografiskTilknytning: String?,
         val alder: Int?,
         val dodsdato: List<LocalDate>,
@@ -70,6 +71,12 @@ object Persondata {
     data class Statsborgerskap(
         val land: KodeBeskrivelse<String>,
         val gyldighetsPeriode: GyldighetsPeriode?,
+    )
+
+    data class Fodested(
+        val land: KodeBeskrivelse<String>?,
+        val kommune: String?,
+        val fodested: String?,
     )
 
     data class Sivilstand(
