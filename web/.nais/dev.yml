@@ -136,11 +136,13 @@ spec:
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
-      value: "https://oppgave-q2-q2.dev.intern.nav.no"
+      value: "https://oppgave.dev.intern.nav.no"
     - name: OPPGAVE_SCOPE
       value: "dev-fss:oppgavehandtering:oppgave"
     - name: NORG2_BASEURL
       value: "https://norg2.intern.dev.nav.no"
+    - name: NORG2_SCOPE
+      value: "dev-fss:org:norg2"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
       value: "2016-06-04"
     - name: INTERNAL_TILGANG
