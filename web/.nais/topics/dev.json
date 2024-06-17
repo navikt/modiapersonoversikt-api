@@ -12,6 +12,11 @@
       "access": "write"
     },
     {
+      "team": "personoversikt",
+      "application": "modiapersonoversikt-api",
+      "access": "write"
+    },
+    {
       "team": "flex",
       "application": "flex-modia-kontakt-metrikk",
       "access": "read"
