@@ -61,22 +61,22 @@ spec:
       external:
         - host: graph.microsoft.com
         - host: kodeverk-api.intern.dev.nav.no
-        - host: saf-q1.dev.intern.nav.no
-        - host: sokos-utbetaldata.dev.intern.nav.no
-        - host: veilarboppfolging.dev.intern.nav.no
+        - host: saf-q1.dev-fss-pub.nais.io
+        - host: sokos-utbetaldata.dev-fss-pub.nais.io
+        - host: veilarboppfolging.dev-fss-pub.nais.io
         - host: digdir-krr-proxy.intern.dev.nav.no
         - host: sokos-kontoregister-person.intern.dev.nav.no
-        - host: sf-henvendelse-api-proxy.dev.intern.nav.no
-        - host: pdl-api.dev.intern.nav.no
-        - host: pdl-pip-api.dev.intern.nav.no
-        - host: oppgave-q2-q2.dev.intern.nav.no
-        - host: norg2.intern.dev.nav.no
-        - host: axsys.dev.intern.nav.no
+        - host: sf-henvendelse-api-proxy.dev-fss-pub.nais.io
+        - host: pdl-api.dev-fss-pub.nais.io
+        - host: pdl-pip-api.dev-fss-pub.nais.io
+        - host: oppgave.dev-fss-pub.nais.io
+        - host: norg2.dev-fss-pub.nais.io
+        - host: axsys.dev-fss-pub.nais.io
         - host: nom-api.intern.dev.nav.no
         - host: skjermede-personer-pip.intern.dev.nav.no
         - host: tms-event-api.ekstern.dev.nav.no
         - host: modia-soknadsstatus-api.intern.dev.nav.no
-        - host: modiapersonoversikt-api-proxy-q1.intern.dev.nav.no
+        - host: modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: api-test.sits.no # Skatteetaten
     inbound:
@@ -98,7 +98,7 @@ spec:
     - name: SAF_GRAPHQL_URL
       value: "https://saf-q1.dev.intern.nav.no/graphql"
     - name: SAF_HENTDOKUMENT_URL
-      value: "https://saf-q1.dev.intern.nav.no/rest/hentdokument"
+      value: "https://saf-q1.dev-fss-pub.nais.io/rest/hentdokument"
     - name: SAF_SCOPE
       value: "dev-fss:teamdokumenthandtering:saf-q1"
     - name: SERVER_DREK_URL
@@ -106,11 +106,11 @@ spec:
     - name: SERVER_NORG2_FRONTEND_URL
       value: "https://norg2-frontend.intern.dev.nav.no"
     - name: REST_UTBETALING_ENDPOINTURL
-      value: "https://sokos-utbetaldata.dev.intern.nav.no/utbetaldata/api"
+      value: "https://sokos-utbetaldata.dev-fss-pub.nais.io/utbetaldata/api"
     - name: UTBETALING_SCOPE
       value: "dev-fss:okonomi:sokos-utbetaldata"
     - name: VEILARBOPPFOLGINGAPI_URL
-      value: "https://veilarboppfolging.dev.intern.nav.no/veilarboppfolging/api"
+      value: "https://veilarboppfolging.dev-fss-pub.nais.io/veilarboppfolging/api"
     - name: VEILARBOPPFOLGINGAPI_SCOPE
       value: "dev-fss:pto:veilarboppfolging"
     - name: KRR_REST_URL
@@ -122,25 +122,25 @@ spec:
     - name: KONTOREGISTER_SCOPE
       value: "dev-gcp:okonomi:sokos-kontoregister-person"
     - name: SF_HENVENDELSE_URL
-      value: "https://sf-henvendelse-api-proxy.dev.intern.nav.no/api"
+      value: "https://sf-henvendelse-api-proxy.dev-fss-pub.nais.io/api"
     - name: SF_HENVENDELSE_SCOPE
       value: "dev-fss:teamnks:sf-henvendelse-api-proxy"
     - name: PDL_API_URL
-      value: "https://pdl-api.dev.intern.nav.no/graphql"
+      value: "https://pdl-api.dev-fss-pub.nais.io/graphql"
     - name: PDL_SCOPE
       value: "dev-fss:pdl:pdl-api"
     - name: PDL_PIP_URL
-      value: "https://pdl-pip-api.dev.intern.nav.no"
+      value: "https://pdl-pip-api.dev-fss-pub.nais.io"
     - name: PDL_PIP_SCOPE
       value: "dev-fss:pdl:pdl-pip-api-q1"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
-      value: "https://oppgave.dev.intern.nav.no"
+      value: "https://oppgave.dev-fss-pub.nais.io"
     - name: OPPGAVE_SCOPE
       value: "dev-fss:oppgavehandtering:oppgave"
     - name: NORG2_BASEURL
-      value: "https://norg2.intern.dev.nav.no"
+      value: "https://norg2.dev-fss-pub.nais.io"
     - name: NORG2_SCOPE
       value: "dev-fss:org:norg2"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
@@ -150,7 +150,7 @@ spec:
     - name: CXF_SECURE_LOG
       value: "enabled"
     - name: AXSYS_URL
-      value: "https://axsys.dev.intern.nav.no"
+      value: "https://axsys.dev-fss-pub.nais.io"
     - name: AXSYS_SCOPE
       value: "dev-fss:org:axsys"
     - name: NOM_URL
@@ -172,7 +172,7 @@ spec:
     - name: MODIA_SOKNADSSTATUS_SCOPE
       value: "dev-gcp:personoversikt:modia-soknadsstatus-api"
     - name: MODIAPERSONOVERSIKT_API_PROXY_URL
-      value: "https://modiapersonoversikt-api-proxy-q1.intern.dev.nav.no"
+      value: "https://modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io"
     - name: MODIAPERSONOVERSIKT_API_PROXY_SCOPE
       value: "dev-fss:personoversikt:modiapersonoversikt-api-proxy-q1"
     - name: UNLEASH_ENVIRONMENT
