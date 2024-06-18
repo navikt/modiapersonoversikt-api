@@ -38,6 +38,7 @@ spec:
       memory: 8192Mi
   ingresses:
     - https://modiapersonoversikt-api-proxy-q0.intern.dev.nav.no
+    - https://modiapersonoversikt-api-proxy-q0.dev-fss-pub.nais.io
   replicas:
     min: 2
     max: 4
