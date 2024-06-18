@@ -65,8 +65,6 @@ spec:
       claims:
         extra:
           - "NAVident"
-  kafka:
-    pool: nav-prod
   accessPolicy:
     outbound:
       external:
@@ -153,8 +151,6 @@ spec:
       value: "https://person.nav.no/tms-event-api"
     - name: TMS_EVENT_API_SCOPE
       value: "prod-gcp:min-side:tms-event-api"
-    - name: KAFKA_HENVENDELSE_OPPDATERING_TOPIC
-      value: "personoversikt.henvendelse-oppdatering-melding"
     - name: MODIA_SOKNADSSTATUS_API_URL
       value: "https://modia-soknadsstatus-api.intern.nav.no"
     - name: MODIA_SOKNADSSTATUS_SCOPE
