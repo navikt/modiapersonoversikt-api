@@ -138,9 +138,7 @@ spec:
     - name: OPPGAVE_SCOPE
       value: "dev-fss:oppgavehandtering:oppgave"
     - name: NORG2_BASEURL
-      value: "https://norg2.dev-fss-pub.nais.io"
-    - name: NORG2_SCOPE
-      value: "dev-fss:org:norg2"
+      value: "https://norg2.dev-fss-pub.nais.io/norg2"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
       value: "2016-06-04"
     - name: INTERNAL_TILGANG
