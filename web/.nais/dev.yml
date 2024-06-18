@@ -130,7 +130,7 @@ spec:
     - name: PDL_PIP_URL
       value: "https://pdl-pip-api.dev-fss-pub.nais.io"
     - name: PDL_PIP_SCOPE
-      value: "dev-fss:pdl:pdl-pip-api-q1"
+      value: "dev-fss:pdl:pdl-pip-api"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
