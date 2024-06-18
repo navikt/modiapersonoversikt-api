@@ -13,18 +13,18 @@ spec:
   image: "{{image}}"
   port: 8080
   liveness:
-    path: /internal/isAlive
+    path: /modiapersonoversikt-api/internal/isAlive
     initialDelay: 50
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /internal/isReady
+    path: /modiapersonoversikt-api/internal/isReady
     initialDelay: 50
     timeout: 1
   prometheus:
     enabled: true
-    path: /internal/prometheus
+    path: /modiapersonoversikt-api/internal/prometheus
   secureLogs:
     enabled: true
   resources:
