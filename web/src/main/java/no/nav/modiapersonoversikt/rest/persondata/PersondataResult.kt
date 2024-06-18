@@ -14,6 +14,7 @@ sealed class PersondataResult<T>(val system: InformasjonElement) {
         VEILEDER_ROLLER,
         NORG_NAVKONTOR,
         NORG_KONTAKTINFORMASJON,
+        FULLMAKT,
     }
 
     fun <S> map(
