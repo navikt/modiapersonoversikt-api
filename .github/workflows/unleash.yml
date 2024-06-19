@@ -18,8 +18,8 @@ jobs:
       - name: Deploy unleash api token
         uses: nais/deploy/actions/deploy@v2
         env:
-          CLUSTER: dev-fss
-          RESOURCE: .nais/unleash/unleash-apitoken-preprod.yaml
+          CLUSTER: dev-gcp
+          RESOURCE: web/.nais/unleash/unleash-apitoken-preprod.yaml
 
   deploy-unleash-api-token-to-prod:
     if: github.ref == 'refs/heads/master'
@@ -34,5 +34,5 @@ jobs:
       - name: Deploy unleash api token
         uses: nais/deploy/actions/deploy@v2
         env:
-          CLUSTER: prod-fss
-          RESOURCE: .nais/unleash/unleash-apitoken-prod.yaml
+          CLUSTER: prod-gcp
+          RESOURCE: web/.nais/unleash/unleash-apitoken-prod.yaml

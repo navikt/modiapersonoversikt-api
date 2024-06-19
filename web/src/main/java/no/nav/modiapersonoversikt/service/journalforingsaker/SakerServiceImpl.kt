@@ -2,8 +2,7 @@
 
 package no.nav.modiapersonoversikt.service.journalforingsaker
 
-import jakarta.annotation.PostConstruct
-import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
+import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.journalforingsaker.kilder.*
@@ -23,7 +22,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var safService: SafService
 
     @Autowired
-    private lateinit var arenaSakVedtakService: SakVedtakPortType
+    private lateinit var arenaInfotrygdApi: ArenaInfotrygdApi
 
     private lateinit var safSaker: SafSaker
     private lateinit var arenaSaker: SakerKilde
@@ -34,7 +33,7 @@ class SakerServiceImpl : SakerService {
     @jakarta.annotation.PostConstruct
     fun setup() {
         safSaker = SafSaker(safService)
-        arenaSaker = ArenaSakerV2(arenaSakVedtakService)
+        arenaSaker = ArenaSakerV2(arenaInfotrygdApi)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
         oppfolgingsSaker = OppfolgingsSaker()
