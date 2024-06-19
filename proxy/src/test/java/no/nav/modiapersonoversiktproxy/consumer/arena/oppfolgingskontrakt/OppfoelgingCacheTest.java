@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 class OppfoelgingCacheTest extends CacheTest {
 
-    private static final String OPPFOELGING_CACHE = "oppfolgingCache";
+    private static final String OPPFOELGING_CACHE = "oppfolgingskontraktCache";
     private static final String FODSELSNUMMER_AREMARK = "10108000398";
     private static final String FODSELSNUMMER_TROGSTAD = "06128074978";
 

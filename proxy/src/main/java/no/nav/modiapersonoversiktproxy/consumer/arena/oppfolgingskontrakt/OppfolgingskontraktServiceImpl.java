@@ -22,7 +22,7 @@ import static java.util.Optional.ofNullable;
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten for oppfolgingskontraker.
  */
-@CacheConfig(cacheNames=("oppfolgingCache"), keyGenerator = "userkeygenerator")
+@CacheConfig(cacheNames=("oppfolgingskontraktCache"), keyGenerator = "userkeygenerator")
 public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktService {
     private static final Audit.AuditDescriptor<WSHentOppfoelgingskontraktListeRequest> auditLogger = Audit.describe(
             Audit.Action.READ,

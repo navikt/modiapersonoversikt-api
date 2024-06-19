@@ -8,6 +8,6 @@ import org.springframework.cache.annotation.Cacheable;
  * Interface for tjenesten for ytelseskontrakter.
  */
 public interface YtelseskontraktService {
-    @Cacheable(value = "ytelseskontrakter")
+    @Cacheable(value = "ytelseskontrakterCache")
     YtelseskontraktResponse hentYtelseskontrakter(YtelseskontraktRequest request);
 }

@@ -8,9 +8,11 @@ import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Oppfolging
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.YtelseskontraktResponse
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
-import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.springframework.cache.annotation.Cacheable
 
 interface ArenaInfotrygdApi {
     fun hentYtelseskontrakter(
@@ -41,10 +43,11 @@ data class RequestBodyContent(
     val slutt: String?,
 )
 
-class ArenaInfotrygdApiImpl(
+open class ArenaInfotrygdApiImpl(
     private val baseUrl: String,
     private val httpClient: OkHttpClient,
 ) : ArenaInfotrygdApi {
+    @Cacheable(value = ["ytelseskontrakterCache"])
     override fun hentYtelseskontrakter(
         fnr: String,
         start: String?,
@@ -54,6 +57,7 @@ class ArenaInfotrygdApiImpl(
         return sendRequest("ytelseskontrakter", json)
     }
 
+    @Cacheable(value = ["OppfolgingskontrakterCache"])
     override fun hentOppfolgingskontrakter(
         fnr: String,
         start: String?,
@@ -63,18 +67,22 @@ class ArenaInfotrygdApiImpl(
         return sendRequest("Oppfolgingskontrakter", json)
     }
 
+    @Cacheable(value = ["oppfolgingssakFraArenaCache"])
     override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? {
         return sendRequest("sakvedtak", fnr)
     }
 
+    @Cacheable(value = ["sykePengerCache"])
     override fun hentSykepenger(fnr: String): Map<String, Any?> {
         return sendRequest("sykepenger", fnr)
     }
 
+    @Cacheable(value = ["foreldrePengerCache"])
     override fun hentForeldrepenger(fnr: String): Map<String, Any?> {
         return sendRequest("foreldrepenger", fnr)
     }
 
+    @Cacheable(value = ["pleiePengerCache"])
     override fun hentPleiepenger(fnr: String): Map<String, Any?> {
         return sendRequest("pleiepenger", fnr)
     }

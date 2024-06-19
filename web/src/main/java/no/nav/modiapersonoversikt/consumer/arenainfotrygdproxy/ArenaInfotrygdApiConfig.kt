@@ -10,10 +10,12 @@ import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
+@EnableCaching
 open class ArenaInfotrygdApiConfig {
     private val scope = DownstreamApi.parse(getRequiredProperty("MODIAPERSONOVERSIKT_API_PROXY_SCOPE"))
     private val url: String = getRequiredProperty("MODIAPERSONOVERSIKT_API_PROXY_URL")

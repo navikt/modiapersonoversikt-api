@@ -1,4 +1,4 @@
-name: Modiapersonoversikt-api build, push, and deploy
+name: modiapersonoversikt-api build, push, and deploy
 
 on: [push]
 
@@ -40,7 +40,7 @@ jobs:
           mvn -P ci -B test --settings .github/maven-settings.xml
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Dev Image
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/feature/arena_infortrygd_proxy_app'
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -50,30 +50,10 @@ jobs:
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
-  deploy-qa:
+  deploy-dev:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/feature/arena_infortrygd_proxy_app'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    strategy:
-      matrix:
-        namespace: [q0, q1]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@v2
-        env:
-          PRINT_PAYLOAD: true
-          CLUSTER: dev-fss
-          RESOURCE: web/.nais/nais-${{ matrix.namespace }}.yml
-          VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
-
-  deploy-gcp-dev:
-    name: Deploy to gcp
-    needs: build
-    if: github.ref == 'refs/heads/feature/arena_infortrygd_proxy_app'
+    if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -85,4 +65,21 @@ jobs:
           PRINT_PAYLOAD: true
           CLUSTER: dev-gcp
           RESOURCE: web/.nais/dev.yml
+          VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
+
+  deploy-prod:
+    name: Deploy to prod
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          PRINT_PAYLOAD: true
+          CLUSTER: prod-gcp
+          RESOURCE: web/.nais/prod.yml
           VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}

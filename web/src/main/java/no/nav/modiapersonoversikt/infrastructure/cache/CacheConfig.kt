@@ -18,15 +18,14 @@ open class CacheConfig {
     open fun cacheManager(): CacheManager {
         return CaffeineCacheManager().apply {
             cache("endpointCache", 3, 10000)
-            cache("ytelseskontrakter", 600)
             cache("pleiePengerCache", 300)
             cache("oppfolgingsinfoCache", 300)
-            cache("oppfolgingCache", 600)
+            cache("oppfolgingskontraktCache", 600)
             cache("foreldrePengerCache", 300)
-            cache("hentSykmeldingsperioderCache", 300)
+            cache("sykePengerCache", 300)
             cache("utbetalingCache", 1800, 10000)
             cache("pdlCache", 3600, 100000)
-            cache("ldap", 3600, 20000)
+            cache("azureAdCache", 3600, 20000)
             cache("varslingCache", 180, 10000)
         }
     }

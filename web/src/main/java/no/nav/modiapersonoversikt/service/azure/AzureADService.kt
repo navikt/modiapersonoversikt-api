@@ -13,12 +13,15 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 
 interface AzureADService {
     fun hentRollerForVeileder(veilederIdent: NavIdent): List<String>
 }
 
-class AzureADServiceImpl(
+@CacheConfig(cacheNames = ["azureAdCache"], keyGenerator = "methodawarekeygenerator")
+open class AzureADServiceImpl(
     private val httpClient: OkHttpClient = OkHttpClient(),
     private val tokenClient: BoundedOnBehalfOfTokenClient,
     private val graphUrl: Url,
@@ -26,6 +29,7 @@ class AzureADServiceImpl(
     private val json = Json { ignoreUnknownKeys = true }
     private val log = LoggerFactory.getLogger(AzureADServiceImpl::class.java)
 
+    @Cacheable
     override fun hentRollerForVeileder(veilederIdent: NavIdent): List<String> {
         val userToken = AuthContextUtils.requireToken()
         val url =

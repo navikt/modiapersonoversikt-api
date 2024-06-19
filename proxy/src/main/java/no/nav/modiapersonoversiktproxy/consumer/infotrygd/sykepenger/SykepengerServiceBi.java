@@ -9,6 +9,6 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public interface SykepengerServiceBi {
 
-    @Cacheable(value = "hentSykmeldingsperioderCache")
+    @Cacheable(value = "sykePengerCache")
     SykepengerResponse hentSykmeldingsperioder(SykepengerRequest request);
 }
