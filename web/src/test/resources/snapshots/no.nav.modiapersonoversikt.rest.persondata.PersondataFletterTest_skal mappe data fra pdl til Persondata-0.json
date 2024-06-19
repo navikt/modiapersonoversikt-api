@@ -115,6 +115,14 @@
     "dodsdato" : [ "java.util.ArrayList", [ ] ],
     "erEgenAnsatt" : "NEI",
     "fnr" : "12345678910",
+    "fodested" : [ "java.util.ArrayList", [ {
+      "fodested" : null,
+      "kommune" : null,
+      "land" : {
+        "beskrivelse" : "Foedested",
+        "kode" : "Foedested"
+      }
+    } ] ],
     "fodselsdato" : [ "java.util.ArrayList", [ "2000-01-02" ] ],
     "forelderBarnRelasjon" : [ "java.util.Arrays$ArrayList", [ {
       "adressebeskyttelse" : [ "java.util.Collections$SingletonList", [ {

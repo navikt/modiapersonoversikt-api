@@ -37,6 +37,7 @@ spec:
   ingresses:
     - https://app.adeo.no/modiapersonoversikt-api
     - https://modapp.adeo.no/modiapersonoversikt-api
+    - https://modiapersonoversikt-api.prod-fss-pub.nais.io
   replicas:
     min: 2
     max: 4
@@ -74,6 +75,9 @@ spec:
         - application: modiapersonoversikt
           namespace: personoversikt
           cluster: prod-fss
+        - application: modiapersonoversikt
+          namespace: personoversikt
+          cluster: prod-gcp
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "p"
