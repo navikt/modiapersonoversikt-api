@@ -72,7 +72,7 @@ spec:
         - host: axsys.prod-fss-pub.nais.io
         - host: nom-api.intern.nav.no
         - host: skjermede-personer-pip.intern.nav.no
-        - host: tms-event-api.ekstern.nav.no
+        - host: person.nav.no
         - host: modia-soknadsstatus-api.intern.nav.no
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
@@ -94,13 +94,13 @@ spec:
     - name: FELLES_KODEVERK_SCOPE
       value: "prod-gcp:team-rocket:kodeverk-api"
     - name: SAF_GRAPHQL_URL
-      value: "https://saf.dev.intern.nav.no/graphql"
+      value: "https://saf.prod-fss-pub.nais.io/graphql"
     - name: SAF_HENTDOKUMENT_URL
       value: "https://saf.prod-fss-pub.nais.io/rest/hentdokument"
     - name: SAF_SCOPE
       value: "prod-fss:teamdokumenthandtering:saf"
     - name: SERVER_DREK_URL
-      value: "https://pdl-web.dev.intern.nav.no/rekvirerdnummer"
+      value: "https://pdl-web.intern.nav.no/rekvirerdnummer"
     - name: SERVER_NORG2_FRONTEND_URL
       value: "https://norg2-frontend.intern.nav.no"
     - name: REST_UTBETALING_ENDPOINTURL
@@ -132,7 +132,7 @@ spec:
     - name: PDL_PIP_SCOPE
       value: "prod-fss:pdl:pdl-pip-api"
     - name: PERSONFORVALTER_URL
-      value: "https://pdl-web.dev.intern.nav.no/endreperson"
+      value: "https://pdl-web.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
       value: "https://oppgave.prod-fss-pub.nais.io"
     - name: OPPGAVE_SCOPE
@@ -158,7 +158,7 @@ spec:
     - name: SKJERMEDE_PERSONER_SCOPE
       value: "prod-gcp:nom:skjermede-personer-pip"
     - name: TMS_EVENT_API_URL
-      value: "https://tms-event-api.ekstern.nav.no/tms-event-api"
+      value: "https://person.nav.no/tms-event-api"
     - name: TMS_EVENT_API_SCOPE
       value: "prod-gcp:min-side:tms-event-api"
     - name: MODIA_SOKNADSSTATUS_API_URL
