@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.util.concurrent.TimeUnit
 
 @Configuration
 @EnableCaching
@@ -28,6 +29,7 @@ open class ArenaInfotrygdApiConfig {
         val httpClient: OkHttpClient =
             RestClient.baseClient().newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
+                .connectTimeout(30L, TimeUnit.SECONDS)
                 .addInterceptor(
                     LoggingInterceptor("SkjermedePersoner") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {

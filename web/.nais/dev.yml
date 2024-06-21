@@ -94,9 +94,9 @@ spec:
     - name: FELLES_KODEVERK_SCOPE
       value: "dev-gcp:team-rocket:kodeverk-api"
     - name: SAF_GRAPHQL_URL
-      value: "https://saf-q1.dev-fss-pub.nais.io/graphql"
+      value: "https://saf.dev-fss-pub.nais.io/graphql"
     - name: SAF_HENTDOKUMENT_URL
-      value: "https://saf-q1.dev-fss-pub.nais.io/rest/hentdokument"
+      value: "https://saf.dev-fss-pub.nais.io/rest/hentdokument"
     - name: SAF_SCOPE
       value: "dev-fss:teamdokumenthandtering:saf-q1"
     - name: SERVER_DREK_URL
