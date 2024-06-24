@@ -15,8 +15,9 @@ internal class ArenaSakerV2(private val arenaInfotrygdApi: ArenaInfotrygdApi) : 
         saker: MutableList<JournalforingSak>,
     ) {
         if (saker.none(JournalforingSak.IS_ARENA_OPPFOLGING::test)) {
-            arenaInfotrygdApi.hentOppfolgingssakFraArena(fnr)
-                ?.also { saker.add(it) }
+            val response = arenaInfotrygdApi.hentOppfolgingssakFraArena(fnr)
+            log.debug("Response: $response")
+            response?.let { saker.add(it) }
         }
     }
 }
