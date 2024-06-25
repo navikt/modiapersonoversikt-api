@@ -27,7 +27,7 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
         RestClient.baseClient()
             .newBuilder()
             .addInterceptor(
-                LoggingInterceptor("Saf") { request ->
+                LoggingInterceptor("Ereg-services") { request ->
                     requireNotNull(request.header(RestConstants.NAV_CALL_ID_HEADER)) {
                         "Kall uten \"${RestConstants.NAV_CALL_ID_HEADER}\" er ikke lov"
                     }
@@ -42,7 +42,7 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
         val uuid = UUID.randomUUID()
         try {
             TjenestekallLogg.info(
-                "Oppgaver-request: $uuid",
+                "Organisasjon-request: $uuid",
                 mapOf(
                     "orgnummer" to orgnummer,
                     "callId" to getCallId(),

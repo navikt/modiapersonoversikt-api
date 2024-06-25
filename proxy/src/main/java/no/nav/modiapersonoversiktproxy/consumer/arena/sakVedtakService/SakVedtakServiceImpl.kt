@@ -43,16 +43,11 @@ class SakVedtakServiceImpl(private val arenaSakVedtakService: SakVedtakPortType)
             log.error("Ukjent ved under kall på hentSaksInfoV2: ${e.message} ${e.cause}", e)
         }
 
-        val response =
-            saker
-                .value
-                .saksInfo
-                .firstOrNull()
-                ?.let(TIL_SAK)
-
-        log.debug("Response: $response")
-
-        return response
+        return saker
+            .value
+            .saksInfo
+            .firstOrNull()
+            ?.let(TIL_SAK)
     }
 
     companion object {

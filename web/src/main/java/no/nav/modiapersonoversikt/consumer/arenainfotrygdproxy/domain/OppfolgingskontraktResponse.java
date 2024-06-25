@@ -13,6 +13,10 @@ public class OppfolgingskontraktResponse implements Serializable {
     public OppfolgingskontraktResponse() {
     }
 
+    public OppfolgingskontraktResponse(List<SYFOPunkt> syfoPunkter)  {
+        this.syfoPunkter = syfoPunkter;
+    }
+
     public Bruker getBruker() {
         return bruker;
     }

@@ -53,8 +53,8 @@ open class ArenaInfotrygdApiImpl(
         start: String?,
         slutt: String?,
     ): YtelseskontraktResponse {
-        val json = Json.encodeToString(RequestBodyContent(fnr, start, slutt))
-        return sendRequest("ytelseskontrakter", json)
+        val requestContent = Json.encodeToString(RequestBodyContent(fnr, start, slutt))
+        return sendRequest("ytelseskontrakter", requestContent) ?: YtelseskontraktResponse(listOf())
     }
 
     @Cacheable(value = ["OppfolgingskontrakterCache"])
@@ -63,8 +63,8 @@ open class ArenaInfotrygdApiImpl(
         start: String?,
         slutt: String?,
     ): OppfolgingskontraktResponse {
-        val json = Json.encodeToString(RequestBodyContent(fnr, start, slutt))
-        return sendRequest("Oppfolgingskontrakter", json)
+        val requestContent = Json.encodeToString(RequestBodyContent(fnr, start, slutt))
+        return sendRequest("Oppfolgingskontrakter", requestContent) ?: OppfolgingskontraktResponse(listOf())
     }
 
     @Cacheable(value = ["oppfolgingssakFraArenaCache"])
@@ -74,39 +74,40 @@ open class ArenaInfotrygdApiImpl(
 
     @Cacheable(value = ["sykePengerCache"])
     override fun hentSykepenger(fnr: String): Map<String, Any?> {
-        return sendRequest("sykepenger", fnr)
+        return sendRequest("sykepenger", fnr) ?: mapOf()
     }
 
     @Cacheable(value = ["foreldrePengerCache"])
     override fun hentForeldrepenger(fnr: String): Map<String, Any?> {
-        return sendRequest("foreldrepenger", fnr)
+        return sendRequest("foreldrepenger", fnr) ?: mapOf()
     }
 
     @Cacheable(value = ["pleiePengerCache"])
     override fun hentPleiepenger(fnr: String): Map<String, Any?> {
-        return sendRequest("pleiepenger", fnr)
+        return sendRequest("pleiepenger", fnr) ?: mapOf()
     }
 
     private inline fun <reified T> sendRequest(
         url: String,
-        json: String,
-    ): T {
-        val body =
-            json
+        requestContent: String,
+    ): T? {
+        val requestBody =
+            requestContent
                 .toRequestBody("application/json".toMediaTypeOrNull())
+
         val response =
             httpClient
                 .newCall(
                     Request
                         .Builder()
                         .url("$baseUrl/rest/$url")
-                        .post(body)
+                        .post(requestBody)
                         .build(),
                 )
                 .execute()
 
-        val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
+        if (response.body?.contentLength() == 0L) return null
 
-        return OkHttpUtils.objectMapper.readValue(bodyContent)
+        return response.body?.let { OkHttpUtils.objectMapper.readValue(it.string()) }
     }
 }

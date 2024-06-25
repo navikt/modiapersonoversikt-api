@@ -20,11 +20,10 @@ class OppfolgingController
         @PostMapping("/Oppfolgingskontrakter")
         fun hentOppfolgingskontrakter(
             @RequestBody body: RequestBodyContent,
-        ): OppfolgingskontraktResponse {
-            return oppfolgingskontraktService.hentOppfolgingskontrakter(
+        ): OppfolgingskontraktResponse =
+            oppfolgingskontraktService.hentOppfolgingskontrakter(
                 lagOppfolgingskontraktRequest(body.fnr, body.start, body.slutt),
             )
-        }
 
         private fun lagOppfolgingskontraktRequest(
             fodselsnummer: String,

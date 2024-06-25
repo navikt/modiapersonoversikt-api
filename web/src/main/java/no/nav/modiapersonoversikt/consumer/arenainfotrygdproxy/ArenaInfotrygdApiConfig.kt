@@ -31,7 +31,7 @@ open class ArenaInfotrygdApiConfig {
                 .addInterceptor(XCorrelationIdInterceptor())
                 .connectTimeout(30L, TimeUnit.SECONDS)
                 .addInterceptor(
-                    LoggingInterceptor("SkjermedePersoner") { request ->
+                    LoggingInterceptor("ArenaInfotrygdApi", LoggingInterceptor.Config(ignoreResponseBody = false)) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

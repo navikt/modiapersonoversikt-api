@@ -28,36 +28,29 @@ class YtelseController
         @PostMapping("/ytelseskontrakter")
         fun hentYtelseskontrakter(
             @RequestBody body: RequestBodyContent,
-        ): YtelseskontraktResponse {
-            return ytelseskontraktService.hentYtelseskontrakter(
+        ): YtelseskontraktResponse =
+            ytelseskontraktService.hentYtelseskontrakter(
                 lagYtelseRequest(
                     body.fnr,
                     body.start,
                     body.slutt,
                 ),
             )
-        }
 
         @PostMapping("sykepenger")
         fun hentSykepenger(
             @RequestBody fnr: String,
-        ): Map<String, Any?> {
-            return SykepengerUttrekk(sykepengerService).hent(fnr)
-        }
+        ): Map<String, Any?> = SykepengerUttrekk(sykepengerService).hent(fnr)
 
         @PostMapping("foreldrepenger")
         fun hentForeldrepenger(
             @RequestBody fnr: String,
-        ): Map<String, Any?> {
-            return ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
-        }
+        ): Map<String, Any?> = ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
 
         @PostMapping("pleiepenger")
         fun hentPleiepenger(
             @RequestBody fnr: String,
-        ): Map<String, Any?> {
-            return PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
-        }
+        ): Map<String, Any?> = PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
 
         private fun getForeldrepengerService(): ForeldrepengerServiceBi {
             return ForeldrepengerServiceBi { request ->
