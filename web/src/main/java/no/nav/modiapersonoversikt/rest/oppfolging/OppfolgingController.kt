@@ -2,11 +2,14 @@ package no.nav.modiapersonoversikt.rest.oppfolging
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.Veileder
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Dagpengeytelse
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.SYFOPunkt
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Vedtak
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Ytelse
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.SYFOPunkt
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Dagpengeytelse
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Vedtak
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
@@ -16,6 +19,8 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import no.nav.modiapersonoversikt.rest.Typeanalyzers
+import org.joda.time.IllegalFieldValueException
+import org.joda.time.LocalDate
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -25,9 +30,10 @@ import org.springframework.web.bind.annotation.*
 class OppfolgingController
     @Autowired
     constructor(
-        private val arenaInfotrygdApi: ArenaInfotrygdApi,
         private val service: ArbeidsrettetOppfolging.Service,
         private val tilgangskontroll: Tilgangskontroll,
+        private val ytelseskontraktService: YtelseskontraktService,
+        private val oppfolgingskontraktService: OppfolgingskontraktService,
     ) {
         private val logger = LoggerFactory.getLogger(OppfolgingController::class.java)
 
@@ -58,8 +64,10 @@ class OppfolgingController
                 .check(Policies.tilgangTilBruker(Fnr(fodselsnummer)))
                 .get(Audit.describe(READ, Person.YtelserOgKontrakter, AuditIdentifier.FNR to fodselsnummer)) {
                     val kontraktResponse =
-                        arenaInfotrygdApi.hentOppfolgingskontrakter(fodselsnummer, start, slutt)
-                    val ytelserResponse = arenaInfotrygdApi.hentYtelseskontrakter(fodselsnummer, start, slutt)
+                        oppfolgingskontraktService.hentOppfolgingskontrakter(
+                            lagOppfolgingskontraktRequest(fodselsnummer, start, slutt),
+                        )
+                    val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
                     val oppfolgingstatus = runCatching { hent(fodselsnummer) }
 
                     mapOf(
@@ -153,3 +161,38 @@ private fun hentEnhet(enhet: ArbeidsrettetOppfolging.Enhet?): Map<String, Any?>?
         )
     }
 }
+
+private fun lagYtelseRequest(
+    fodselsnummer: String,
+    start: String?,
+    slutt: String?,
+): YtelseskontraktRequest {
+    val request =
+        YtelseskontraktRequest()
+    request.fodselsnummer = fodselsnummer
+    request.from = lagRiktigDato(start)
+    request.to = lagRiktigDato(slutt)
+    return request
+}
+
+private fun lagOppfolgingskontraktRequest(
+    fodselsnummer: String,
+    start: String?,
+    slutt: String?,
+): OppfolgingskontraktRequest {
+    val request =
+        OppfolgingskontraktRequest()
+    request.fodselsnummer = fodselsnummer
+    request.from = lagRiktigDato(start)
+    request.to = lagRiktigDato(slutt)
+    return request
+}
+
+private fun lagRiktigDato(dato: String?): LocalDate? =
+    dato?.let {
+        try {
+            LocalDate.parse(dato, JODA_DATOFORMAT)
+        } catch (exception: IllegalFieldValueException) {
+            throw RuntimeException(exception.message)
+        }
+    }

@@ -6,11 +6,14 @@ import com.nimbusds.jwt.PlainJWT
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import jakarta.xml.ws.Holder
+import no.nav.arena.services.lib.sakvedtak.SaksInfo
+import no.nav.arena.services.lib.sakvedtak.SaksInfoListe
+import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
 import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Sakstype
 import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Tema
@@ -25,7 +28,6 @@ import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -45,7 +47,7 @@ class SakerServiceImplTest {
     private lateinit var safService: SafService
 
     @MockK
-    private lateinit var arenaInfotrygdApi: ArenaInfotrygdApi
+    private lateinit var arenaSakVedtakService: SakVedtakPortType
 
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
@@ -96,25 +98,24 @@ class SakerServiceImplTest {
     @Test
     fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i sak`() {
         every { safService.hentSaker(any()) } returns GenericGraphQlResponse()
-        val sakId = "123456"
+        val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
         val xmlDato = DatatypeFactory.newInstance().newXMLGregorianCalendar(dato.toString())
 
-        every { arenaInfotrygdApi.hentOppfolgingssakFraArena(any()) } answers {
-            JournalforingSak().apply {
-                saksId = sakId
-                fagsystemSaksId = saksId
-                fagsystemKode = JournalforingSak.FAGSYSTEMKODE_ARENA
-                sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
-                temaKode = TEMAKODE_OPPFOLGING
-                opprettetDato = DateTime(xmlDato.toGregorianCalendar().time)
-                finnesIGsak = false
-            }
+        every { arenaSakVedtakService.hentSaksInfoListeV2(any(), any(), any(), any(), any(), any(), any()) } answers {
+            val sakslisteholder = arg<Holder<SaksInfoListe>>(6)
+            sakslisteholder.value.withSaksInfo(
+                SaksInfo()
+                    .withSaksId(saksId)
+                    .withSakstypekode("ARBEID")
+                    .withSakOpprettet(xmlDato)
+                    .withTema(TEMAKODE_OPPFOLGING),
+            )
         }
 
         val saker = sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
-        assertThat(saker[0].saksIdVisning, `is`(sakId))
+        assertThat(saker[0].saksIdVisning, `is`(saksId))
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
         assertThat(saker[0].fagsystemKode, `is`(FAGSYSTEMKODE_ARENA))
         assertThat(saker[0].finnesIGsak, `is`(false))

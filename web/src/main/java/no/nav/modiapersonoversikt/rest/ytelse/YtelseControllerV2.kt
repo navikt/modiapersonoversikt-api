@@ -2,7 +2,10 @@ package no.nav.modiapersonoversikt.rest.ytelse
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.FnrRequest
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
+import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.foreldrepenger.ForeldrepengerServiceBi
+import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.pleiepenger.PleiepengerService
+import no.nav.modiapersonoversikt.consumer.infotrygd.consumer.sykepenger.SykepengerServiceBi
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -19,8 +22,11 @@ import org.springframework.web.bind.annotation.RestController
 class YtelseControllerV2
     @Autowired
     constructor(
-        private val arenaInfotrygdApi: ArenaInfotrygdApi,
+        private val sykepengerService: SykepengerServiceBi,
+        private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
+        private val pleiepengerService: PleiepengerService,
         private val tilgangskontroll: Tilgangskontroll,
+        private val organisasjonService: OrganisasjonService,
     ) {
         @PostMapping("sykepenger")
         fun hentSykepenger(
@@ -29,7 +35,7 @@ class YtelseControllerV2
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr)
+                    SykepengerUttrekk(sykepengerService).hent(fnrRequest.fnr)
                 }
         }
 
@@ -40,7 +46,7 @@ class YtelseControllerV2
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr)
+                    ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnrRequest.fnr)
                 }
         }
 
@@ -51,7 +57,13 @@ class YtelseControllerV2
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr)
+                    PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnrRequest.fnr)
                 }
+        }
+
+        private fun getForeldrepengerService(): ForeldrepengerServiceBi {
+            return ForeldrepengerServiceBi { request ->
+                foreldrepengerServiceDefault.hentForeldrepengerListe(request)
+            }
         }
     }

@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>modiabrukerdialog-web</artifactId>
+    <name>${project.artifactId}</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -204,6 +205,11 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>arenasakvedtakservice</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>norg-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -310,6 +316,35 @@
             <scope>test</scope>
         </dependency>
 
+
+        <!-- tjenester -->
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
+            <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>nav-foreldrepenger-v2-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>nav-sykepenger-v2-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!--  -->
+
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
@@ -329,13 +364,19 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client-mock-jvm</artifactId>
-            <version>2.3.12</version>
+            <version>2.3.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-serialization-json</artifactId>
             <version>${serialization.version}</version>
+        </dependency>
+
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
     </dependencies>
 
@@ -375,9 +416,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>no.nav.modiapersonoversikt.Main</mainClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>

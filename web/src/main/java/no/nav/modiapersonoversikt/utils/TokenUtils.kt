@@ -53,8 +53,3 @@ fun OnBehalfOfTokenClient.bindTo(api: DownstreamApi) =
     object : BoundedOnBehalfOfTokenClient {
         override fun exchangeOnBehalfOfToken(accesstoken: String) = exchangeOnBehalfOfToken(api.tokenscope(), accesstoken)
     }
-
-fun OnBehalfOfTokenClient.bindTo(api: String) =
-    object : BoundedOnBehalfOfTokenClient {
-        override fun exchangeOnBehalfOfToken(accesstoken: String) = exchangeOnBehalfOfToken(api, accesstoken)
-    }

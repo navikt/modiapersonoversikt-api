@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.service.ansattservice
 
 import no.nav.common.client.axsys.AxsysClient
 import no.nav.common.client.nom.NomClient
-import no.nav.modiapersonoversikt.service.azure.AzureADService
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -12,8 +12,8 @@ open class AnsattServiceConfig {
     open fun ansattService(
         axsysClient: AxsysClient,
         nomClient: NomClient,
-        azureADService: AzureADService,
+        ldap: LDAPService,
     ): AnsattService {
-        return AnsattServiceImpl(axsysClient, nomClient, azureADService)
+        return AnsattServiceImpl(axsysClient, nomClient, ldap)
     }
 }
