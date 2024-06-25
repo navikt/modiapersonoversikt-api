@@ -1,0 +1,175 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: modiapersonoversikt-api
+  namespace: personoversikt
+  labels:
+    team: personoversikt
+  annotations:
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
+spec:
+  envFrom:
+    - secret: modiapersonoversikt-api-unleash-api-token
+  image: "{{image}}"
+  port: 8080
+  liveness:
+    path: /modiapersonoversikt-api/internal/isAlive
+    initialDelay: 50
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /modiapersonoversikt-api/internal/isReady
+    initialDelay: 50
+    timeout: 1
+  prometheus:
+    enabled: true
+    path: /modiapersonoversikt-api/internal/prometheus
+  secureLogs:
+    enabled: true
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 4096Mi
+    limits:
+      cpu: 2000m
+      memory: 8192Mi
+  ingresses:
+    - https://modiapersonoversikt-api.intern.nav.no
+  replicas:
+    min: 2
+    max: 4
+    cpuThresholdPercentage: 60
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+        - name: "skatteetaten:innkrevingsoppdrag"
+  leaderElection: true
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+      allowAllUsers: true
+      claims:
+        extra:
+          - "NAVident"
+  accessPolicy:
+    outbound:
+      external:
+        - host: graph.microsoft.com
+        - host: kodeverk-api.intern.nav.no
+        - host: saf.prod-fss-pub.nais.io
+        - host: sokos-utbetaldata.prod-fss-pub.nais.io
+        - host: veilarboppfolging.prod-fss-pub.nais.io
+        - host: digdir-krr-proxy.intern.nav.no
+        - host: sokos-kontoregister-person.intern.nav.no
+        - host: sf-henvendelse-api-proxy.prod-fss-pub.nais.io
+        - host: pdl-api.prod-fss-pub.nais.io
+        - host: pdl-pip-api.prod-fss-pub.nais.io
+        - host: oppgave.prod-fss-pub.nais.io
+        - host: norg2.prod-fss-pub.nais.io
+        - host: axsys.prod-fss-pub.nais.io
+        - host: nom-api.intern.nav.no
+        - host: skjermede-personer-pip.intern.nav.no
+        - host: person.nav.no
+        - host: modia-soknadsstatus-api.intern.nav.no
+        - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
+        - host: personoversikt-unleash-api.nav.cloud.nais.io
+        - host: api-test.sits.no # Skatteetaten
+    inbound:
+      rules:
+        - application: modiapersonoversikt
+          namespace: personoversikt
+          cluster: prod-gcp
+  env:
+    - name: APP_ENVIRONMENT_NAME
+      value: "p"
+    - name: MS_GRAPH_URL
+      value: "https://graph.microsoft.com/"
+    - name: MS_GRAPH_SCOPE
+      value: "https://graph.microsoft.com/.default"
+    - name: FELLES_KODEVERK_URL
+      value: "https://kodeverk-api.intern.nav.no"
+    - name: FELLES_KODEVERK_SCOPE
+      value: "prod-gcp:team-rocket:kodeverk-api"
+    - name: SAF_GRAPHQL_URL
+      value: "https://saf.prod-fss-pub.nais.io/graphql"
+    - name: SAF_HENTDOKUMENT_URL
+      value: "https://saf.prod-fss-pub.nais.io/rest/hentdokument"
+    - name: SAF_SCOPE
+      value: "prod-fss:teamdokumenthandtering:saf"
+    - name: SERVER_DREK_URL
+      value: "https://pdl-web.intern.nav.no/rekvirerdnummer"
+    - name: SERVER_NORG2_FRONTEND_URL
+      value: "https://norg2-frontend.intern.nav.no"
+    - name: REST_UTBETALING_ENDPOINTURL
+      value: "https://sokos-utbetaldata.prod-fss-pub.nais.io/utbetaldata/api"
+    - name: UTBETALING_SCOPE
+      value: "prod-fss:okonomi:sokos-utbetaldata"
+    - name: VEILARBOPPFOLGINGAPI_URL
+      value: "https://veilarboppfolging.prod-fss-pub.nais.io/veilarboppfolging/api"
+    - name: VEILARBOPPFOLGINGAPI_SCOPE
+      value: "prod-fss:pto:veilarboppfolging"
+    - name: KRR_REST_URL
+      value: "https://digdir-krr-proxy.intern.nav.no/"
+    - name: KRR_SCOPE
+      value: "prod-gcp:team-rocket:digdir-krr-proxy"
+    - name: KONTOREGISTER_REST_URL
+      value: "https://sokos-kontoregister-person.intern.nav.no/api/system"
+    - name: KONTOREGISTER_SCOPE
+      value: "prod-gcp:okonomi:sokos-kontoregister-person"
+    - name: SF_HENVENDELSE_URL
+      value: "https://sf-henvendelse-api-proxy.prod-fss-pub.nais.io/api"
+    - name: SF_HENVENDELSE_SCOPE
+      value: "prod-fss:teamnks:sf-henvendelse-api-proxy"
+    - name: PDL_API_URL
+      value: "https://pdl-api.prod-fss-pub.nais.io/graphql"
+    - name: PDL_SCOPE
+      value: "prod-fss:pdl:pdl-api"
+    - name: PDL_PIP_URL
+      value: "https://pdl-pip-api.prod-fss-pub.nais.io"
+    - name: PDL_PIP_SCOPE
+      value: "prod-fss:pdl:pdl-pip-api"
+    - name: PERSONFORVALTER_URL
+      value: "https://pdl-web.intern.nav.no/endreperson"
+    - name: OPPGAVE_BASEURL
+      value: "https://oppgave.prod-fss-pub.nais.io"
+    - name: OPPGAVE_SCOPE
+      value: "prod-fss:oppgavehandtering:oppgave"
+    - name: NORG2_BASEURL
+      value: "https://norg2.prod-fss-pub.nais.io/norg2"
+    - name: SAKSOVERSIKT_PRODSETTNINGSDATO
+      value: "2016-06-04"
+    - name: INTERNAL_TILGANG
+      value: "U143410"
+    - name: CXF_SECURE_LOG
+      value: "enabled"
+    - name: AXSYS_URL
+      value: "https://axsys.prod-fss-pub.nais.io"
+    - name: AXSYS_SCOPE
+      value: "prod-fss:org:axsys"
+    - name: NOM_URL
+      value: "https://nom-api.intern.nav.no"
+    - name: NOM_SCOPE
+      value: "prod-gcp:nom:nom-api"
+    - name: SKJERMEDE_PERSONER_PIP_URL
+      value: "https://skjermede-personer-pip.intern.nav.no"
+    - name: SKJERMEDE_PERSONER_SCOPE
+      value: "prod-gcp:nom:skjermede-personer-pip"
+    - name: TMS_EVENT_API_URL
+      value: "https://person.nav.no/tms-event-api"
+    - name: TMS_EVENT_API_SCOPE
+      value: "prod-gcp:min-side:tms-event-api"
+    - name: MODIA_SOKNADSSTATUS_API_URL
+      value: "https://modia-soknadsstatus-api.intern.nav.no"
+    - name: MODIA_SOKNADSSTATUS_SCOPE
+      value: "prod-gcp:personoversikt:modia-soknadsstatus-api"
+    - name: MODIAPERSONOVERSIKT_API_PROXY_URL
+      value: "https://modiapersonoversikt-api-proxy.prod-fss-pub.nais.io"
+    - name: MODIAPERSONOVERSIKT_API_PROXY_SCOPE
+      value: "prod-fss:personoversikt:modiapersonoversikt-api-proxy"
+    - name: UNLEASH_ENVIRONMENT
+      value: "development"
+    - name: SKATTEETATEN_INNKREVINGSOPPDRAG_API_BASE_URL
+      value: "https://api-test.sits.no"
