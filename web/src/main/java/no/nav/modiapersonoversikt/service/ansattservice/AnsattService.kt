@@ -5,11 +5,11 @@ import no.nav.common.client.nom.NomClient
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Veileder
+import no.nav.modiapersonoversikt.consumer.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
 import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet
-import no.nav.modiapersonoversikt.service.azure.AzureADService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import kotlin.Exception
@@ -38,7 +38,7 @@ class AnsattServiceImpl
     constructor(
         private val axsys: AxsysClient,
         private val nomClient: NomClient,
-        private val azureADService: AzureADService,
+        private val ldap: LDAPService,
     ) : AnsattService {
         private val log = LoggerFactory.getLogger(AnsattServiceImpl::class.java)
 
@@ -74,7 +74,7 @@ class AnsattServiceImpl
         }
 
         override fun hentVeilederRoller(ident: NavIdent): RolleListe {
-            return RolleListe(azureADService.hentRollerForVeileder(ident))
+            return RolleListe(ldap.hentRollerForVeileder(ident))
         }
 
         override fun hentAnsattFagomrader(

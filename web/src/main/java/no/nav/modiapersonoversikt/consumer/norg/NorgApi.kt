@@ -232,7 +232,7 @@ class NorgApiImpl(
                 cache =
                     enhetKontaktInfoApi
                         .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
-                            consumerId = AppConstants.APP_NAME,
+                            consumerId = AppConstants.SYSTEMUSER_USERNAME,
                         )
                         ?.mapNotNull {
                             try {

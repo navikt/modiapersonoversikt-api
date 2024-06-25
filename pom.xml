@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.1</version>
+        <version>3.3.0</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -16,7 +16,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>proxy</module>
         <module>web</module>
         <module>tjenestespesifikasjoner</module>
     </modules>
@@ -26,7 +25,7 @@
         <kotlin.version>2.0.0</kotlin.version>
         <serialization.version>1.7.0</serialization.version>
         <mockk.version>1.13.11</mockk.version>
-        <wiremock.version>3.7.0</wiremock.version>
+        <wiremock.version>3.6.0</wiremock.version>
 
         <common.version>3.2024.02.21_11.18-8f9b43befae1</common.version>
         <modia-common-utils.version>1.2024.06.07-08.12-d0197775eca3</modia-common-utils.version>

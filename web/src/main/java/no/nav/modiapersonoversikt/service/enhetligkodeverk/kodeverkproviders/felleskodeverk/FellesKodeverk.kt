@@ -20,7 +20,7 @@ object FellesKodeverk {
             val respons =
                 fellesKodeverk.betydningUsingGET(
                     navCallId = getCallId(),
-                    navConsumerId = AppConstants.APP_NAME,
+                    navConsumerId = AppConstants.SYSTEMUSER_USERNAME,
                     kodeverksnavn = kodeverkNavn,
                     spraak = listOf("nb"),
                 ) ?: throw ResponseStatusException(

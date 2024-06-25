@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
+import no.nav.modiapersonoversikt.kafka.HenvendelseProducer
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogMerkApi
@@ -28,6 +29,9 @@ open class DialogConfig {
     @Autowired
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
+    @Autowired
+    private lateinit var henvendelseProducer: HenvendelseProducer
+
     @Bean
     open fun dialogApi(): DialogApi {
         return SfLegacyDialogController(
@@ -35,6 +39,7 @@ open class DialogConfig {
             oppgaveBehandlingService,
             ansattService,
             kodeverk,
+            henvendelseProducer,
         )
     }
 
