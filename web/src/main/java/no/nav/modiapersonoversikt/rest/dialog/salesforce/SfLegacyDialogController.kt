@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
-import no.nav.modiapersonoversikt.kafka.HenvendelseProducer
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
@@ -27,7 +26,6 @@ class SfLegacyDialogController(
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ansattService: AnsattService,
     private val kodeverk: EnhetligKodeverk.Service,
-    private val meldingProducer: HenvendelseProducer,
 ) : DialogApi {
     override fun hentMeldinger(
         fnr: String,
@@ -336,13 +334,6 @@ class SfLegacyDialogController(
                     fritekst = meldingRequest.fritekst,
                 )
 
-            meldingProducer.sendHenvendelseUpdate(
-                fnr = henvendelse.fnr,
-                tema = sak.temaKode,
-                temagruppe = henvendelse.gjeldendeTemagruppe!!,
-                traadId = henvendelse.kjedeId,
-            )
-
             if (meldingRequest.avsluttet == true) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
@@ -423,13 +414,6 @@ class SfLegacyDialogController(
                     tilknyttetAnsatt = meldingRequest.erOppgaveTilknyttetAnsatt!!,
                     fritekst = meldingRequest.fritekst,
                 )
-
-            meldingProducer.sendHenvendelseUpdate(
-                fnr = henvendelse.fnr,
-                tema = sak?.temaKode,
-                temagruppe = henvendelse.gjeldendeTemagruppe!!,
-                traadId = henvendelse.kjedeId,
-            )
 
             if (meldingRequest.avsluttet == true) {
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
