@@ -46,11 +46,11 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: /serviceuser/data/dev/srvmodiabrukerdialog
+      - kvPath: /serviceuser/data/prod/srvmodiabrukerdialog
         mountPath: /var/run/secrets/nais.io/service_user
-      - kvPath: /serviceuser/data/dev/srvssolinux
+      - kvPath: /serviceuser/data/prod/srvssolinux
         mountPath: /var/run/secrets/nais.io/srvssolinux
-      - kvPath: /apikey/appdynamics/dev
+      - kvPath: /apikey/appdynamics/prod
         mountPath: /var/run/secrets/nais.io/vault
   leaderElection: true
   webproxy: true
