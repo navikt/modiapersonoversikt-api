@@ -29,7 +29,7 @@
         <wiremock.version>3.7.0</wiremock.version>
 
         <common.version>3.2024.02.21_11.18-8f9b43befae1</common.version>
-        <modia-common-utils.version>1.2024.06.07-08.12-d0197775eca3</modia-common-utils.version>
+        <modia-common-utils.version>1.2024.06.26-10.11-d6295491fb9f</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2633.1685ed5</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb.version>4.0.6</org.jvnet.jaxb.version>
         <graphql-kotlin.version>7.1.1</graphql-kotlin.version>
