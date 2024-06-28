@@ -107,7 +107,7 @@ jobs:
   deploy-prod-gcp:
     name: Deploy to prod
     needs: build
-    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
       contents: read
