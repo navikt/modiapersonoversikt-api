@@ -152,6 +152,27 @@ internal class SfHenvendelseServiceImplTest {
     }
 
     @Test
+    internal fun `skal ikke fjerne henvendelse om den ikke har temagruppe`() {
+        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
+        every { norgApi.hentGeografiskTilknyttning(any()) } returns
+            listOf(
+                EnhetGeografiskTilknyttning(
+                    enhetId = "5678",
+                    geografiskOmraade = "005678",
+                ),
+            )
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns
+            listOf(
+                dummyHenvendelse.copy(gjeldendeTemagruppe = null),
+            )
+
+        val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")
+
+        assertThat(henvendelser).hasSize(1)
+        assertThat(henvendelser[0].gjeldendeTemagruppe).isEqualTo("UKJENT")
+    }
+
+    @Test
     internal fun `skal sortere meldinger kronologisk`() {
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns
