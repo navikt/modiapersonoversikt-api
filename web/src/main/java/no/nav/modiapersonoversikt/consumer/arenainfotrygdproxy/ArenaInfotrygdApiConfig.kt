@@ -27,22 +27,24 @@ open class ArenaInfotrygdApiConfig {
     @Bean
     open fun arenaInfotrygdApi(): ArenaInfotrygdApi {
         val httpClient: OkHttpClient =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
-                .connectTimeout(30L, TimeUnit.SECONDS)
+                .connectTimeout(15L, TimeUnit.SECONDS)
+                .readTimeout(15L, TimeUnit.SECONDS)
+                .writeTimeout(15L, TimeUnit.SECONDS)
                 .addInterceptor(
                     LoggingInterceptor("ArenaInfotrygdApi", LoggingInterceptor.Config(ignoreResponseBody = false)) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(
+                ).addInterceptor(
                     AuthorizationInterceptor {
                         tokenProvider.createMachineToMachineToken(scope)
                     },
-                )
-                .build()
+                ).build()
         return ArenaInfotrygdApiImpl(url, httpClient)
     }
 }

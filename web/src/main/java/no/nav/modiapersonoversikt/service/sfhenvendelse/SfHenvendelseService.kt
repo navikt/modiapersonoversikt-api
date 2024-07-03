@@ -29,10 +29,16 @@ import kotlin.reflect.KProperty1
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
-sealed class EksternBruker(val ident: String) {
-    data class AktorId(val aktorId: String) : EksternBruker(aktorId)
+sealed class EksternBruker(
+    val ident: String,
+) {
+    data class AktorId(
+        val aktorId: String,
+    ) : EksternBruker(aktorId)
 
-    data class Fnr(val fnr: String) : EksternBruker(fnr)
+    data class Fnr(
+        val fnr: String,
+    ) : EksternBruker(fnr)
 }
 
 interface SfHenvendelseService {
@@ -129,8 +135,7 @@ class SfHenvendelseServiceImpl(
             norgApi
                 .runCatching {
                     hentGeografiskTilknyttning(EnhetId(enhet))
-                }
-                .onFailure { logger.error("Kunne ikke hente geografisk tilknyttning", it) }
+                }.onFailure { logger.error("Kunne ikke hente geografisk tilknyttning", it) }
                 .getOrDefault(emptyList())
                 .mapNotNull { it.geografiskOmraade }
                 .plus(enhet)
@@ -152,7 +157,8 @@ class SfHenvendelseServiceImpl(
             ?.map(journalfortTemaTilgang(tematilganger))
             ?.map(::sorterMeldinger)
             ?.map(::unikeJournalposter)
-            ?.toList().orEmpty()
+            ?.toList()
+            .orEmpty()
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
@@ -314,12 +320,11 @@ class SfHenvendelseServiceImpl(
     override fun sjekkEierskap(
         bruker: EksternBruker,
         henvendelse: HenvendelseDTO,
-    ): Boolean {
-        return when (bruker) {
+    ): Boolean =
+        when (bruker) {
             is EksternBruker.Fnr -> bruker.ident == henvendelse.fnr
             is EksternBruker.AktorId -> bruker.ident == henvendelse.aktorId
         }
-    }
 
     override fun merkSomFeilsendt(kjedeId: String) {
         val fixKjedeId = kjedeId.fixKjedeId()
@@ -327,7 +332,8 @@ class SfHenvendelseServiceImpl(
             createPatchRequest(
                 fixKjedeId,
                 PatchNote<HenvendelseDTO>()
-                    .set(HenvendelseDTO::feilsendt).to(true),
+                    .set(HenvendelseDTO::feilsendt)
+                    .to(true),
             )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
     }
@@ -353,10 +359,11 @@ class SfHenvendelseServiceImpl(
     override fun hentSladdeArsaker(kjedeId: String): List<String> {
         val callId = getCallId()
 
-        return henvendelseBehandlingApi.henvendelseSladdingAarsakerKjedeIdGet(
-            xCorrelationID = callId,
-            kjedeId = kjedeId,
-        ).orEmpty()
+        return henvendelseBehandlingApi
+            .henvendelseSladdingAarsakerKjedeIdGet(
+                xCorrelationID = callId,
+                kjedeId = kjedeId,
+            ).orEmpty()
     }
 
     override fun lukkTraad(kjedeId: String) {
@@ -387,7 +394,10 @@ class SfHenvendelseServiceImpl(
         MELDING_ID,
     }
 
-    data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
+    data class ApiFeil(
+        val type: ApiFeilType,
+        val kjedeId: String,
+    )
 
     private fun loggFeilSomErSpesialHandtert(
         bruker: EksternBruker,
@@ -433,7 +443,7 @@ class SfHenvendelseServiceImpl(
         }
         val kanJobbesMedIModia =
             henvendelser
-                .filter { it.gjeldendeTemagruppe != null }
+                .map { if (it.gjeldendeTemagruppe == null) it.copy(gjeldendeTemagruppe = "UKJENT") else it }
                 .filter { it.meldinger.isNotNullOrEmpty() }
 
         if (feil.isNotEmpty()) {
@@ -455,8 +465,8 @@ class SfHenvendelseServiceImpl(
         return kanJobbesMedIModia
     }
 
-    private fun kontorsperreTilgang(enhetOgGTListe: List<String>): (HenvendelseDTO) -> Boolean {
-        return { henvendelseDTO ->
+    private fun kontorsperreTilgang(enhetOgGTListe: List<String>): (HenvendelseDTO) -> Boolean =
+        { henvendelseDTO ->
             if (!henvendelseDTO.kontorsperre) {
                 true
             } else {
@@ -466,10 +476,9 @@ class SfHenvendelseServiceImpl(
                 enhetEllerGT == null || enhetOgGTListe.any { it == enhetEllerGT }
             }
         }
-    }
 
-    private fun kassertInnhold(now: OffsetDateTime): (HenvendelseDTO) -> HenvendelseDTO {
-        return { henvendelseDTO ->
+    private fun kassertInnhold(now: OffsetDateTime): (HenvendelseDTO) -> HenvendelseDTO =
+        { henvendelseDTO ->
             if (henvendelseDTO.kasseringsDato != null && henvendelseDTO.kasseringsDato!!.isBefore(now)) {
                 henvendelseDTO.copy(
                     meldinger =
@@ -483,10 +492,9 @@ class SfHenvendelseServiceImpl(
                 henvendelseDTO
             }
         }
-    }
 
-    private fun journalfortTemaTilgang(tematilganger: Set<String>): (HenvendelseDTO) -> HenvendelseDTO {
-        return { henvendelseDTO ->
+    private fun journalfortTemaTilgang(tematilganger: Set<String>): (HenvendelseDTO) -> HenvendelseDTO =
+        { henvendelseDTO ->
             val journalforteTemaer =
                 (henvendelseDTO.journalposter ?: emptyList())
                     .map { it.journalfortTema }
@@ -520,19 +528,16 @@ class SfHenvendelseServiceImpl(
                 )
             }
         }
-    }
 
-    private fun sorterMeldinger(henvendelse: HenvendelseDTO): HenvendelseDTO {
-        return henvendelse.copy(
+    private fun sorterMeldinger(henvendelse: HenvendelseDTO): HenvendelseDTO =
+        henvendelse.copy(
             meldinger = henvendelse.meldinger?.sortedBy { it.sendtDato },
         )
-    }
 
-    private fun unikeJournalposter(henvendelse: HenvendelseDTO): HenvendelseDTO {
-        return henvendelse.copy(
+    private fun unikeJournalposter(henvendelse: HenvendelseDTO): HenvendelseDTO =
+        henvendelse.copy(
             journalposter = henvendelse.journalposter?.distinctBy { Pair(it.journalfortTema, it.fagsakId) },
         )
-    }
 
     private fun createPatchRequest(
         kjedeId: String,
@@ -573,15 +578,14 @@ class SfHenvendelseServiceImpl(
         }
     }
 
-    private fun EksternBruker.aktorId(): String {
-        return when (this) {
+    private fun EksternBruker.aktorId(): String =
+        when (this) {
             is EksternBruker.AktorId -> this.ident
             is EksternBruker.Fnr ->
                 requireNotNull(pdlOppslagService.hentAktorId(this.ident)) {
                     "Fant ikke aktørid for ${this.ident}"
                 }
         }
-    }
 
     private fun <T> ApiResponse<T>.throwIfError() {
         when (this.responseType) {
@@ -626,18 +630,18 @@ object SfHenvendelseApiFactory {
     fun downstreamApi(): DownstreamApi = DownstreamApi.parse(getRequiredProperty("SF_HENVENDELSE_SCOPE"))
 
     fun createClient(tokenProvider: () -> String): OkHttpClient =
-        RestClient.baseClient().newBuilder()
+        RestClient
+            .baseClient()
+            .newBuilder()
             .addInterceptor(
                 LoggingInterceptor("SF-Henvendelse") { request ->
                     requireNotNull(request.header("X-Correlation-ID")) {
                         "Kall uten \"X-Correlation-ID\" er ikke lov"
                     }
                 },
-            )
-            .addInterceptor(
+            ).addInterceptor(
                 AuthorizationInterceptor(tokenProvider),
-            )
-            .readTimeout(15.seconds.toJavaDuration())
+            ).readTimeout(15.seconds.toJavaDuration())
             .build()
 
     fun createHenvendelseBehandlingApi(oboClient: BoundedOnBehalfOfTokenClient) =

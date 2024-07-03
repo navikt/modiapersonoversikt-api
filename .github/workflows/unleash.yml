@@ -7,7 +7,7 @@ on:
 jobs:
   deploy-unleash-api-token-to-dev:
     if: github.ref == 'refs/heads/dev'
-    name: Deploy unleash api token to dev-fss
+    name: Deploy unleash api token to dev-gcp
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -23,7 +23,7 @@ jobs:
 
   deploy-unleash-api-token-to-prod:
     if: github.ref == 'refs/heads/master'
-    name: Deploy unleash api-token to prod-fss
+    name: Deploy unleash api-token to prod-gcp
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,4 +35,20 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
+          RESOURCE: web/.nais/unleash/unleash-apitoken-prod.yaml
+
+  deploy-unleash-api-token-to-fss-prod:
+    if: github.ref == 'refs/heads/master'
+    name: Deploy unleash api-token to prod-fss
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Deploy unleash api token
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-fss
           RESOURCE: web/.nais/unleash/unleash-apitoken-prod.yaml
