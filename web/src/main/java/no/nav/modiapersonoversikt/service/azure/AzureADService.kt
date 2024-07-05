@@ -37,6 +37,8 @@ open class AzureADServiceImpl(
                 .apply {
                     path("v1.0/me/memberOf/microsoft.graph.group")
                     parameters.append("\$count", "true")
+                    parameters.append("\$top", "200")
+                    parameters.append("\$select", "displayName")
                 }.buildString()
 
         return try {
