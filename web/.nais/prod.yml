@@ -86,6 +86,9 @@ spec:
         - application: modiapersonoversikt
           namespace: personoversikt
           cluster: prod-gcp
+        - application: modiapersonoversikt
+          namespace: personoversikt
+          cluster: prod-fss
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "p"
