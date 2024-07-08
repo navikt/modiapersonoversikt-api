@@ -20,7 +20,7 @@ interface AzureADService {
     fun hentRollerForVeileder(veilederIdent: NavIdent): List<String>
 }
 
-@CacheConfig(cacheNames = ["azureAdCache"], keyGenerator = "methodawarekeygenerator")
+@CacheConfig(cacheNames = ["azureAdCache"], keyGenerator = "userkeygenerator")
 open class AzureADServiceImpl(
     private val httpClient: OkHttpClient = OkHttpClient(),
     private val tokenClient: BoundedOnBehalfOfTokenClient,
@@ -37,13 +37,16 @@ open class AzureADServiceImpl(
                 .apply {
                     path("v1.0/me/memberOf/microsoft.graph.group")
                     parameters.append("\$count", "true")
-                    parameters.append("\$top", "200")
+                    parameters.append("\$top", "500")
                     parameters.append("\$select", "displayName")
                 }.buildString()
 
         return try {
             runBlocking {
                 val response = handleRequest(url, userToken, veilederIdent)
+                if (response.value.isEmpty()) {
+                    log.warn("Bruker $veilederIdent har ingen AzureAD group")
+                }
                 response.value.map {
                     requireNotNull(it.displayName)
                 }
