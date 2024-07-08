@@ -5,11 +5,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.AzureObjectId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory
@@ -20,12 +22,19 @@ interface AzureADService {
     fun hentRollerForVeileder(veilederIdent: NavIdent): List<String>
 }
 
-@CacheConfig(cacheNames = ["azureAdCache"], keyGenerator = "methodawarekeygenerator")
+@CacheConfig(cacheNames = ["azureAdCache"], keyGenerator = "userkeygenerator")
 open class AzureADServiceImpl(
-    private val httpClient: OkHttpClient = OkHttpClient(),
     private val tokenClient: BoundedOnBehalfOfTokenClient,
     private val graphUrl: Url,
 ) : AzureADService {
+    private val httpClient =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(
+                LoggingInterceptor("AzureAd") {
+                    getCallId()
+                },
+            )
+            .build()
     private val json = Json { ignoreUnknownKeys = true }
     private val log = LoggerFactory.getLogger(AzureADServiceImpl::class.java)
 
@@ -37,13 +46,16 @@ open class AzureADServiceImpl(
                 .apply {
                     path("v1.0/me/memberOf/microsoft.graph.group")
                     parameters.append("\$count", "true")
-                    parameters.append("\$top", "200")
+                    parameters.append("\$top", "500")
                     parameters.append("\$select", "displayName")
                 }.buildString()
 
         return try {
             runBlocking {
                 val response = handleRequest(url, userToken, veilederIdent)
+                if (response.value.isEmpty()) {
+                    log.warn("Bruker $veilederIdent har ingen AzureAD group")
+                }
                 response.value.map {
                     requireNotNull(it.displayName)
                 }
