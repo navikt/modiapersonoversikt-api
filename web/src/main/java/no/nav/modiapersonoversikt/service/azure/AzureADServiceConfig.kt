@@ -14,7 +14,7 @@ open class AzureADServiceConfig {
     @Bean
     open fun azureADService(oboflowTokenProvider: OnBehalfOfTokenClient) =
         AzureADServiceImpl(
-            graphUrl = Url(EnvironmentUtils.getRequiredProperty("MS_GRAPH_URL")),
             tokenClient = oboflowTokenProvider.bindTo(EnvironmentUtils.getRequiredProperty("MS_GRAPH_SCOPE")),
+            graphUrl = Url(EnvironmentUtils.getRequiredProperty("MS_GRAPH_URL")),
         )
 }
