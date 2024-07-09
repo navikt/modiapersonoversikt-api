@@ -30,7 +30,7 @@ open class AzureADServiceImpl(
     private val httpClient =
         RestClient.baseClient().newBuilder()
             .addInterceptor(
-                LoggingInterceptor("AzureAd") {
+                LoggingInterceptor("AzureAd", LoggingInterceptor.Config(ignoreResponseBody = false)) {
                     getCallId()
                 },
             )
