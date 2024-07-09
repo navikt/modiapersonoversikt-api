@@ -38,7 +38,7 @@ open class AzureADServiceImpl(
     private val json = Json { ignoreUnknownKeys = true }
     private val log = LoggerFactory.getLogger(AzureADServiceImpl::class.java)
 
-    @Cacheable
+    @Cacheable(unless = "#result.size()==0")
     override fun hentRollerForVeileder(veilederIdent: NavIdent): List<String> {
         val userToken = AuthContextUtils.requireToken()
         val url =
