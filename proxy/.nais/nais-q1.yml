@@ -68,9 +68,6 @@ spec:
         - application: modiapersonoversikt-api
           namespace: personoversikt
           cluster: dev-gcp
-        - application: modiapersonoversikt-api-q1
-          namespace: personoversikt
-          cluster: dev-fss
   env:
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"

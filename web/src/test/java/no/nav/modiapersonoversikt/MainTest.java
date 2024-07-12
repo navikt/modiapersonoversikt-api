@@ -16,7 +16,7 @@ public class MainTest {
         setupRestClient();
         System.setProperty("NAIS_APP_NAME", "modiapersonoversikt-api");
         SystemProperties.setFrom(".vault.properties");
-        NaisYamlUtils.loadFromYaml(".nais/nais-q0.yml");
+        NaisYamlUtils.loadFromYaml(".nais/dev.yml");
         SSLTestUtils.disableCertificateChecks();
     }
 
