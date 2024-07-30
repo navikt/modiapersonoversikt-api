@@ -21,7 +21,7 @@ open class AxsysConfig {
     private val httpClient: OkHttpClient =
         RestClient.baseClient().newBuilder()
             .addInterceptor(
-                LoggingInterceptor("Axsys", LoggingInterceptor.Config(ignoreResponseBody = false)) {
+                LoggingInterceptor("Axsys") {
                     // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til axsys
                     getCallId()
                 },
