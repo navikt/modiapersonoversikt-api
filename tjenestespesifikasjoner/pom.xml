@@ -21,7 +21,7 @@
         <joda-time.version>2.12.7</joda-time.version>
         <jaxb2-maven-plugin.version>3.2.0</jaxb2-maven-plugin.version>
         <jaxb2-value-constructor.version>3.0</jaxb2-value-constructor.version>
-        <jaxws.version>4.0.2</jaxws.version>
+        <jaxws.version>4.0.3</jaxws.version>
     </properties>
 
     <modules>
