@@ -1,8 +1,6 @@
 import com.github.benmanes.caffeine.cache.Cache
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
-import no.nav.common.rest.client.RestClient
-import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.krr.Krr
@@ -10,11 +8,7 @@ import no.nav.modiapersonoversikt.consumer.krr.generated.apis.PersonControllerAp
 import no.nav.modiapersonoversikt.consumer.krr.generated.apis.PingControllerApi
 import no.nav.modiapersonoversikt.consumer.krr.generated.models.DigitalKontaktinformasjonDTO
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
-import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.utils.DownstreamApi
-import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.OkHttpClient
 import java.time.ZoneId
@@ -22,25 +16,9 @@ import java.time.ZonedDateTime
 
 class KrrServiceImpl(
     baseUrl: String = EnvironmentUtils.getRequiredProperty("KRR_REST_URL"),
-    machineToMachineTokenClient: MachineToMachineTokenClient,
+    httpClient: OkHttpClient,
     private val cache: Cache<Fnr, Krr.DigitalKontaktinformasjon> = CacheUtils.createCache(),
 ) : Krr.Service {
-    private val scope = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("KRR_SCOPE"))
-
-    private val httpClient: OkHttpClient =
-        RestClient.baseClient().newBuilder()
-            .addInterceptor(
-                LoggingInterceptor("digdir-krr-proxy") { request ->
-                    requireNotNull(request.header("Nav-Call-Id"))
-                },
-            )
-            .addInterceptor(
-                AuthorizationInterceptor {
-                    machineToMachineTokenClient.createMachineToMachineToken(scope)
-                },
-            )
-            .build()
-
     private val client = PersonControllerApi(basePath = baseUrl, httpClient = httpClient)
     private val pingApi = PingControllerApi(baseUrl, httpClient)
 
