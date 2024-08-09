@@ -10,15 +10,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okio.Buffer
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
-import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 object OkHttpUtils {
@@ -51,11 +48,8 @@ class LoggingInterceptor(
     val config: Config = DEFAULT_CONFIG,
     val callIdExtractor: (Request) -> String,
 ) : Interceptor {
-    @Autowired
-    lateinit var unleashService: UnleashService
-
     data class Config(
-        val ignoreRequestBody: Boolean = true,
+        val ignoreRequestBody: Boolean = false,
         val ignoreResponseBody: Boolean = true,
     )
 
@@ -67,8 +61,7 @@ class LoggingInterceptor(
     private val log = LoggerFactory.getLogger(LoggingInterceptor::class.java)
 
     private fun Request.peekContent(config: Config): String? {
-        val logRequestBody = unleashService.isEnabled(Feature.LOG_REQUEST_BODY.propertyKey)
-        if (config.ignoreRequestBody && !logRequestBody) return "IGNORED"
+        if (config.ignoreRequestBody) return "IGNORED"
         val copy = this.newBuilder().build()
         val buffer = Buffer()
         copy.body?.writeTo(buffer)
@@ -77,8 +70,7 @@ class LoggingInterceptor(
     }
 
     private fun Response.peekContent(config: Config): String? {
-        val logResponseBody = unleashService.isEnabled(Feature.LOG_RESPONSE_BODY.propertyKey)
-        if (config.ignoreResponseBody && !logResponseBody) return "IGNORED"
+        if (config.ignoreResponseBody) return "IGNORED"
         return when {
             this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
             this.code == 204 -> "StatusCode: 204, didn't try to peek at body"
