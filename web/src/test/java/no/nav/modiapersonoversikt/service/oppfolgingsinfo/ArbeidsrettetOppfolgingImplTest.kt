@@ -17,13 +17,10 @@ import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfol
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolgingServiceImpl
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
-import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
@@ -35,7 +32,6 @@ class ArbeidsrettetOppfolgingImplTest {
         @RegisterExtension
         val wiremock = WireMockExtension.newInstance().build()
 
-        private val httpClient = OkHttpClient()
         private const val FNR = "12345678910"
         private val testSubject =
             AuthContext(
@@ -80,10 +76,6 @@ class ArbeidsrettetOppfolgingImplTest {
         gittUnderOppfolging(underOppfolging)
         gittOppfolgingStatus()
 
-        val unleashService = mockk<UnleashService>()
-        every { unleashService.isEnabled(Feature.LOG_REQUEST_BODY.propertyKey) } returns true
-        every { unleashService.isEnabled(Feature.LOG_REQUEST_BODY.propertyKey) } returns true
-
         val ansattService = mockk<AnsattService>()
         every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns
             Veileder(
@@ -99,7 +91,7 @@ class ArbeidsrettetOppfolgingImplTest {
             ArbeidsrettetOppfolgingServiceImpl(
                 apiUrl = "http://localhost:${wiremock.port}",
                 ansattService = ansattService,
-                httpClient = httpClient,
+                oboTokenProvider = oboTokenProvider,
             )
         return Pair(apiClient, ansattService)
     }

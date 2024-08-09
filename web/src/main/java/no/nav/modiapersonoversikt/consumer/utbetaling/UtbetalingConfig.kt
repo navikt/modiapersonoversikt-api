@@ -29,7 +29,7 @@ open class UtbetalingConfig {
                         },
                     )
                     .addInterceptor(
-                        LoggingInterceptor("UtbetaldataV2") { request ->
+                        LoggingInterceptor("UtbetaldataV2", LoggingInterceptor.Config(ignoreResponseBody = false)) { request ->
                             requireNotNull(request.header("nav-call-id")) {
                                 "Kall uten \"nav-call-id\" er ikke lov"
                             }

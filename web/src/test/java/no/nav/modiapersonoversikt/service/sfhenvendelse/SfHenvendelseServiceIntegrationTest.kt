@@ -14,7 +14,6 @@ import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
 import no.nav.modiapersonoversikt.utils.readResource
-import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -25,7 +24,6 @@ internal class SfHenvendelseServiceIntegrationTest {
         @RegisterExtension
         val wiremock = WireMockExtension.newInstance().build()
 
-        private val httpClient = OkHttpClient()
         private val testSubject =
             AuthContext(
                 UserRole.INTERN,
@@ -46,7 +44,7 @@ internal class SfHenvendelseServiceIntegrationTest {
             every { oboTokenProvider.exchangeOnBehalfOfToken(testSubject.idToken.serialize()) } returns "OBO-TOKEN"
 
             AuthContextUtils.withContext(testSubject) {
-                val api = SfHenvendelseApiFactory.createHenvendelseInfoApi(httpClient)
+                val api = SfHenvendelseApiFactory.createHenvendelseInfoApi(oboTokenProvider)
                 val result = api.henvendelseinfoHenvendelselisteGet("aktorid", "coorId")
                 assertThat(result).hasSize(1)
             }

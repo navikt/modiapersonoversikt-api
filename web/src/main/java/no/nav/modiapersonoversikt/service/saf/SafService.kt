@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.saf
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
+import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
@@ -42,9 +43,23 @@ private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL)
 
 class SafServiceImpl(
     private val oboTokenProvider: BoundedOnBehalfOfTokenClient,
-    private val httpClient: OkHttpClient,
 ) : SafService {
     private val log = LoggerFactory.getLogger(SafService::class.java)
+    private val client: OkHttpClient =
+        RestClient.baseClient().newBuilder()
+            .addInterceptor(
+                HeadersInterceptor {
+                    this.httpHeaders(oboTokenProvider)
+                },
+            )
+            .addInterceptor(
+                LoggingInterceptor("Saf") { request ->
+                    requireNotNull(request.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
+                },
+            )
+            .build()
 
     companion object {
         const val VEDLEGG_START_INDEX = 1
@@ -115,7 +130,7 @@ class SafServiceImpl(
     ): TjenesteResultatWrapper {
         val url = "$SAF_HENTDOKUMENT_BASEURL/$journalpostId/$dokumentInfoId/${variantFormat.name}"
         val response =
-            httpClient.newCall(
+            client.newCall(
                 Request.Builder().url(url).build(),
             ).execute()
         return when (response.code) {

@@ -2,22 +2,44 @@ package no.nav.modiapersonoversikt.service.krr
 
 import KrrServiceImpl
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
+import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.PlainJWT
+import io.mockk.every
+import io.mockk.mockk
+import no.nav.common.auth.context.AuthContext
+import no.nav.common.auth.context.UserRole
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
-import okhttp3.OkHttpClient
+import no.nav.personoversikt.common.test.testenvironment.TestEnvironmentExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
 internal class KrrServiceImplTest {
-    private val httpClient = OkHttpClient()
+    private val machineToMachineTokenClient: MachineToMachineTokenClient = mockk()
+
+    @JvmField
+    @RegisterExtension
+    val testenvironment =
+        TestEnvironmentExtension(
+            mapOf(
+                "KRR_REST_URL" to "http://dummy.no",
+                "KRR_SCOPE" to "dev-gcp:team-rocket:digdir-krr-proxy",
+            ),
+        )
 
     companion object {
         @JvmField
         @RegisterExtension
         val wiremock: WireMockExtension = WireMockExtension.newInstance().build()
+        val testSubject =
+            AuthContext(
+                UserRole.INTERN,
+                PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build()),
+            )
     }
 
     @Language("json")
@@ -41,11 +63,12 @@ internal class KrrServiceImplTest {
 
     @Test
     fun `hent kontaktinformasjon fra KrrRestApi`() {
+        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "KRR-TOKEN"
         wiremock.get {
             status(200)
             json(jsonResponse)
         }
-        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient)
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000398")
         assertThat(response.personident).isEqualTo("10108000398")
         assertThat(response.epostadresse?.value).isEqualTo("noreply@nav.no")
@@ -54,8 +77,9 @@ internal class KrrServiceImplTest {
 
     @Test
     fun `trigg feil ved henting av kontaktinformasjon fra KrrRestApi`() {
+        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "KRR-TOKEN"
         wiremock.get { status(404) }
-        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient)
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
 
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
@@ -66,8 +90,9 @@ internal class KrrServiceImplTest {
 
     @Test
     fun `trigg server-feil ved henting av kontaktinformasjon fra KrrRestApi`() {
+        every { machineToMachineTokenClient.createMachineToMachineToken(any()) } returns "KRR-TOKEN"
         wiremock.get { status(500) }
-        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient)
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", machineToMachineTokenClient)
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
         assertThat(response.reservasjon).isEqualTo("")
