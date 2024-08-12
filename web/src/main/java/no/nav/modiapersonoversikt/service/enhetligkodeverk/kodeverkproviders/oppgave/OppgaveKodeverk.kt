@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveApiFactory
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -20,7 +21,8 @@ import org.springframework.web.server.ResponseStatusException
 object OppgaveKodeverk {
     class Provider(
         private val machineToMachineTokenClient: MachineToMachineTokenClient,
-        val oppgaveKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient),
+        private val unleashService: UnleashService,
+        val oppgaveKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient, unleashService),
     ) : EnhetligKodeverk.KodeverkProvider<String, Tema> {
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, Tema> {
             val respons =
@@ -63,12 +65,15 @@ object OppgaveKodeverk {
         val erGyldig: Boolean,
     )
 
-    fun createKodeverkApi(machineToMachineTokenClient: MachineToMachineTokenClient): KodeverkApi {
+    fun createKodeverkApi(
+        machineToMachineTokenClient: MachineToMachineTokenClient,
+        unleashService: UnleashService,
+    ): KodeverkApi {
         val client =
             RestClient.baseClient().newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor("OppgaveKodeverk") { request ->
+                    LoggingInterceptor(unleashService, "OppgaveKodeverk") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

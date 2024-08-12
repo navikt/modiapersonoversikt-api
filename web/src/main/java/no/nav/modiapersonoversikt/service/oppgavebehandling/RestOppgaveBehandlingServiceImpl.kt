@@ -22,6 +22,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGi
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
@@ -40,14 +41,15 @@ class RestOppgaveBehandlingServiceImpl(
     private val tilgangskontroll: Tilgangskontroll,
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
+    private val unleashService: UnleashService,
     private val apiClient: OppgaveApi =
-        OppgaveApiFactory.createClient {
+        OppgaveApiFactory.createClient({
             AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
-        },
+        }, unleashService),
     private val systemApiClient: OppgaveApi =
-        OppgaveApiFactory.createClient {
+        OppgaveApiFactory.createClient({
             machineToMachineTokenClient.createMachineToMachineToken()
-        },
+        }, unleashService),
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : OppgaveBehandlingService {
     private val tjenestekallLogg = Logging.secureLog

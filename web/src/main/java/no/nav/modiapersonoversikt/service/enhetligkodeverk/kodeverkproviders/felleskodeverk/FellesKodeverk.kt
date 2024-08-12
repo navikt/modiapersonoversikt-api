@@ -9,12 +9,14 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 object FellesKodeverk {
     class Provider(
-        private val fellesKodeverk: KodeverkApi = createKodeverkApi(),
+        private val unleashService: UnleashService,
+        private val fellesKodeverk: KodeverkApi = createKodeverkApi(unleashService),
     ) : EnhetligKodeverk.KodeverkProvider<String, String> {
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, String> {
             val respons =
@@ -38,13 +40,13 @@ object FellesKodeverk {
         }
     }
 
-    internal fun createKodeverkApi(): KodeverkApi {
+    internal fun createKodeverkApi(unleashService: UnleashService): KodeverkApi {
         val url = EnvironmentUtils.getRequiredProperty("FELLES_KODEVERK_URL")
         val client =
             RestClient.baseClient().newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor("Felleskodeverk") { request ->
+                    LoggingInterceptor(unleashService, "Felleskodeverk") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

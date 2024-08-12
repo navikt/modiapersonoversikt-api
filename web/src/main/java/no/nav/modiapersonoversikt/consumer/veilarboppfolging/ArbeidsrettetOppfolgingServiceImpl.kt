@@ -3,13 +3,8 @@ package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
-import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
-import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
-import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.cache.annotation.CacheConfig
@@ -20,25 +15,9 @@ import kotlin.reflect.KClass
 open class ArbeidsrettetOppfolgingServiceImpl(
     apiUrl: String,
     private val ansattService: AnsattService,
-    private val oboTokenProvider: BoundedOnBehalfOfTokenClient,
+    private val httpClient: OkHttpClient,
 ) : ArbeidsrettetOppfolging.Service {
     private val url = apiUrl.removeSuffix("/")
-    private val client =
-        RestClient.baseClient().newBuilder()
-            .addInterceptor(XCorrelationIdInterceptor())
-            .addInterceptor(
-                LoggingInterceptor("Oppfolging") {
-                    requireNotNull(it.header("X-Correlation-ID")) {
-                        "Kall uten \"X-Correlation-ID\" er ikke lov"
-                    }
-                },
-            )
-            .addInterceptor(
-                AuthorizationInterceptor {
-                    AuthContextUtils.requireBoundedClientOboToken(oboTokenProvider)
-                },
-            )
-            .build()
 
     @Cacheable
     override fun hentOppfolgingsinfo(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Info {
@@ -63,7 +42,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
 
     @Cacheable
     override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
-        return client.fetchJson(
+        return httpClient.fetchJson(
             url = "$url/underoppfolging?fnr=${fodselsnummer.get()}",
             type = ArbeidsrettetOppfolging.Status::class,
         )
@@ -83,7 +62,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     }
 
     private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder {
-        return client.fetchJson(
+        return httpClient.fetchJson(
             url = "$url/person/${fodselsnummer.get()}/oppfolgingsstatus",
             type = ArbeidsrettetOppfolging.EnhetOgVeileder::class,
         )

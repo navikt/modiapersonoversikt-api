@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgavetypeD
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.TemaDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.MutableClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -138,8 +139,9 @@ internal class EnhetligKodeverkServiceImplTest {
     @Test
     internal fun `skal overstyre oppgavekodeverk på frister og prioriteter`() {
         val oppgaveApi: KodeverkApi = mockk()
+        val unleashService: UnleashService = mockk()
         val machineToMachineTokenClient: MachineToMachineTokenClient = mockk()
-        val provider = OppgaveKodeverk.Provider(machineToMachineTokenClient, oppgaveApi)
+        val provider = OppgaveKodeverk.Provider(machineToMachineTokenClient, unleashService, oppgaveApi)
         every { provider.oppgaveKodeverk.hentInterntKodeverk(any()) } returns
             listOf(
                 KodeverkkombinasjonDTO(

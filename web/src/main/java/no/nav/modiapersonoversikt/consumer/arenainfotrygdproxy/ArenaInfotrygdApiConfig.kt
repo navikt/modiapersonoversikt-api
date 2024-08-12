@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
 import okhttp3.OkHttpClient
@@ -22,7 +23,10 @@ open class ArenaInfotrygdApiConfig {
     private val url: String = getRequiredProperty("MODIAPERSONOVERSIKT_API_PROXY_URL")
 
     @Bean
-    open fun arenaInfotrygdApi(oboTokenProvider: OnBehalfOfTokenClient): ArenaInfotrygdApi {
+    open fun arenaInfotrygdApi(
+        oboTokenProvider: OnBehalfOfTokenClient,
+        unleashService: UnleashService,
+    ): ArenaInfotrygdApi {
         val httpClient: OkHttpClient =
             RestClient
                 .baseClient()
@@ -32,7 +36,7 @@ open class ArenaInfotrygdApiConfig {
                 .readTimeout(15L, TimeUnit.SECONDS)
                 .writeTimeout(15L, TimeUnit.SECONDS)
                 .addInterceptor(
-                    LoggingInterceptor("ArenaInfotrygdApi", LoggingInterceptor.Config(ignoreResponseBody = false)) { request ->
+                    LoggingInterceptor(unleashService, "ArenaInfotrygdApi") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

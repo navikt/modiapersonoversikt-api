@@ -10,6 +10,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -44,24 +46,15 @@ object OkHttpUtils {
 }
 
 class LoggingInterceptor(
+    val unleashService: UnleashService,
     val name: String,
-    val config: Config = DEFAULT_CONFIG,
     val callIdExtractor: (Request) -> String,
 ) : Interceptor {
-    data class Config(
-        val ignoreRequestBody: Boolean = false,
-        val ignoreResponseBody: Boolean = true,
-    )
-
-    companion object {
-        @JvmField
-        val DEFAULT_CONFIG = Config()
-    }
-
     private val log = LoggerFactory.getLogger(LoggingInterceptor::class.java)
 
-    private fun Request.peekContent(config: Config): String? {
-        if (config.ignoreRequestBody) return "IGNORED"
+    private fun Request.peekContent(): String? {
+        val logRequestBody = unleashService.isEnabled(Feature.LOG_REQUEST_BODY.propertyKey)
+        if (logRequestBody) return "IGNORED"
         val copy = this.newBuilder().build()
         val buffer = Buffer()
         copy.body?.writeTo(buffer)
@@ -69,8 +62,9 @@ class LoggingInterceptor(
         return buffer.readUtf8()
     }
 
-    private fun Response.peekContent(config: Config): String? {
-        if (config.ignoreResponseBody) return "IGNORED"
+    private fun Response.peekContent(): String? {
+        val logResponseBody = unleashService.isEnabled(Feature.LOG_RESPONSE_BODY.propertyKey)
+        if (!logResponseBody) return "IGNORED"
         return when {
             this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
             this.code == 204 -> "StatusCode: 204, didn't try to peek at body"
@@ -82,7 +76,7 @@ class LoggingInterceptor(
         val request = chain.request()
         val callId = callIdExtractor(request)
         val requestId = IdUtils.generateId()
-        val requestBody = request.peekContent(config)
+        val requestBody = request.peekContent()
 
         TjenestekallLogg.info(
             "$name-request: $callId ($requestId)",
@@ -114,7 +108,7 @@ class LoggingInterceptor(
                 }
                 .getOrThrow()
 
-        val responseBody = response.peekContent(config)
+        val responseBody = response.peekContent()
 
         if (response.code in 200..299) {
             TjenestekallLogg.info(
