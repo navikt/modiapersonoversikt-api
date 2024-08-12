@@ -636,6 +636,7 @@
               "SUPSTONAD",
               "OMSORGSPENGER",
               "HJELPEMIDLER",
+              "TILLEGGSSTONADER",
               "NEESSI"
             ],
             "description": "Fagsystemet som saken behandles i.",
