@@ -7,7 +7,6 @@ import io.getunleash.repository.HttpFeatureFetcher;
 import io.getunleash.strategy.Strategy;
 import io.getunleash.util.UnleashConfig;
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.service.unleash.strategier.ByEnhetStrategy;
 import no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy;
 import no.nav.modiapersonoversikt.service.unleash.strategier.IsNotProdStrategy;
@@ -67,9 +66,8 @@ public class UnleashEndpointConfig {
     }
 
     @Bean
-    @Autowired
-    public UnleashContextProvider unleashContextProvider(AnsattService ansattService) {
-        return new UnleashContextProviderImpl(ansattService);
+    public UnleashContextProvider unleashContextProvider() {
+        return new UnleashContextProviderImpl();
     }
 
 }
