@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
+import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
@@ -7,12 +8,15 @@ import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.infrastructure.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseBehandlingApi
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseInfoApi
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.createHenvendelseOpprettApi
+import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.isNotNullOrEmpty
@@ -22,6 +26,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
 import kotlin.reflect.KProperty1
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 sealed class EksternBruker(
     val ident: String,
@@ -104,18 +110,21 @@ interface SfHenvendelseService {
 private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.java)
 
 class SfHenvendelseServiceImpl(
+    private val oboTokenClient: BoundedOnBehalfOfTokenClient,
+    private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val pdlOppslagService: PdlOppslagService,
     private val norgApi: NorgApi,
     private val ansattService: AnsattService,
-    private val httpClient: OkHttpClient,
-    private val henvendelseBehandlingApi: HenvendelseBehandlingApi = createHenvendelseBehandlingApi(httpClient),
-    private val henvendelseInfoApi: HenvendelseInfoApi = createHenvendelseInfoApi(httpClient),
-    private val henvendelseOpprettApi: NyHenvendelseApi = createHenvendelseOpprettApi(httpClient),
+    private val henvendelseBehandlingApi: HenvendelseBehandlingApi = createHenvendelseBehandlingApi(oboTokenClient),
+    private val henvendelseInfoApi: HenvendelseInfoApi = createHenvendelseInfoApi(oboTokenClient),
+    private val henvendelseOpprettApi: NyHenvendelseApi = createHenvendelseOpprettApi(oboTokenClient),
 ) : SfHenvendelseService {
     private val adminKodeverkApiForPing =
         KodeverkApi(
             SfHenvendelseApiFactory.url(),
-            httpClient,
+            SfHenvendelseApiFactory.createClient {
+                machineToMachineTokenClient.createMachineToMachineToken()
+            },
         )
 
     override fun hentHenvendelser(
@@ -620,11 +629,29 @@ object SfHenvendelseApiFactory {
 
     fun downstreamApi(): DownstreamApi = DownstreamApi.parse(getRequiredProperty("SF_HENVENDELSE_SCOPE"))
 
-    fun createHenvendelseBehandlingApi(httpClient: OkHttpClient) = HenvendelseBehandlingApi(url(), httpClient)
+    fun createClient(tokenProvider: () -> String): OkHttpClient =
+        RestClient
+            .baseClient()
+            .newBuilder()
+            .addInterceptor(
+                LoggingInterceptor("SF-Henvendelse") { request ->
+                    requireNotNull(request.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
+                },
+            ).addInterceptor(
+                AuthorizationInterceptor(tokenProvider),
+            ).readTimeout(15.seconds.toJavaDuration())
+            .build()
 
-    fun createHenvendelseInfoApi(httpClient: OkHttpClient) = HenvendelseInfoApi(url(), httpClient)
+    fun createHenvendelseBehandlingApi(oboClient: BoundedOnBehalfOfTokenClient) =
+        HenvendelseBehandlingApi(url(), createClient(oboClient.asTokenProvider()))
 
-    fun createHenvendelseOpprettApi(httpClient: OkHttpClient) = NyHenvendelseApi(url(), httpClient)
+    fun createHenvendelseInfoApi(oboClient: BoundedOnBehalfOfTokenClient) =
+        HenvendelseInfoApi(url(), createClient(oboClient.asTokenProvider()))
+
+    fun createHenvendelseOpprettApi(oboClient: BoundedOnBehalfOfTokenClient) =
+        NyHenvendelseApi(url(), createClient(oboClient.asTokenProvider()))
 
     fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String =
         {
