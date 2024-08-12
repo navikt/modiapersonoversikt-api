@@ -6,6 +6,7 @@ import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
@@ -22,12 +23,12 @@ open class SkjermedePersonerConfig {
     lateinit var tokenProvider: MachineToMachineTokenClient
 
     @Bean
-    open fun skjermedePersoner(): SkjermedePersonerApi {
+    open fun skjermedePersoner(unleashService: UnleashService): SkjermedePersonerApi {
         val httpClient: OkHttpClient =
             RestClient.baseClient().newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor("SkjermedePersoner") { request ->
+                    LoggingInterceptor(unleashService, "SkjermedePersoner") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.apis.
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Behandling
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.FnrRequest
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Hendelse
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -28,9 +29,11 @@ interface SoknadsstatusService {
 @CacheConfig(cacheNames = ["soknadsstatusCache"], keyGenerator = "userkeygenerator")
 open class SoknadsstatusServiceImpl(
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
+    private val unleashService: UnleashService,
     private val soknadsstatusApi: SoknadsstatusControllerApi =
         SoknadsstatusApiFactory.createSoknadsstatusApi(
             oboTokenClient,
+            unleashService,
         ),
 ) : SoknadsstatusService {
     @Cacheable

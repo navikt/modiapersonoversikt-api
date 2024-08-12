@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.bindTo
@@ -24,11 +25,17 @@ private val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProp
 @Configuration
 open class SoknadsstatusConfig {
     @Bean
-    open fun soknadsstatusService(tokenClient: OnBehalfOfTokenClient) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi))
+    open fun soknadsstatusService(
+        tokenClient: OnBehalfOfTokenClient,
+        unleashService: UnleashService,
+    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi), unleashService)
 }
 
 object SoknadsstatusApiFactory {
-    fun createClient(tokenProvider: () -> String): OkHttpClient =
+    fun createClient(
+        tokenProvider: () -> String,
+        unleashService: UnleashService,
+    ): OkHttpClient =
         RestClient.baseClient().newBuilder()
             .addInterceptor(
                 HeadersInterceptor {
@@ -38,7 +45,7 @@ object SoknadsstatusApiFactory {
                 },
             )
             .addInterceptor(
-                LoggingInterceptor("ModiaSoknadsstatusV1") { request ->
+                LoggingInterceptor(unleashService, "ModiaSoknadsstatusV1") { request ->
                     requireNotNull(request.header("nav-call-id")) {
                         "Kall uten \"nav-call-id\" er ikke lov"
                     }
@@ -52,8 +59,10 @@ object SoknadsstatusApiFactory {
             .readTimeout(15.seconds.toJavaDuration())
             .build()
 
-    fun createSoknadsstatusApi(oboClient: BoundedOnBehalfOfTokenClient) =
-        SoknadsstatusControllerApi(url, createClient(oboClient.asTokenProvider()))
+    fun createSoknadsstatusApi(
+        oboClient: BoundedOnBehalfOfTokenClient,
+        unleashService: UnleashService,
+    ) = SoknadsstatusControllerApi(url, createClient(oboClient.asTokenProvider(), unleashService))
 
     private fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String =
         {

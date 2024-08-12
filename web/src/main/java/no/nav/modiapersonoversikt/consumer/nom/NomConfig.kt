@@ -11,10 +11,10 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -22,22 +22,22 @@ import org.springframework.context.annotation.Configuration
 open class NomConfig {
     private val scope = DownstreamApi.parse(getRequiredProperty("NOM_SCOPE"))
     private val url: String = getRequiredProperty("NOM_URL")
-    private val httpClient: OkHttpClient =
-        RestClient.baseClient()
-            .newBuilder()
-            .addInterceptor(
-                LoggingInterceptor("Nom") {
-                    // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til Nom
-                    getCallId()
-                },
-            )
-            .build()
-
-    @Autowired
-    lateinit var tokenProvider: MachineToMachineTokenClient
 
     @Bean
-    open fun nom(): NomClient {
+    open fun nom(
+        tokenProvider: MachineToMachineTokenClient,
+        unleashService: UnleashService,
+    ): NomClient {
+        val httpClient: OkHttpClient =
+            RestClient.baseClient()
+                .newBuilder()
+                .addInterceptor(
+                    LoggingInterceptor(unleashService, "Nom") {
+                        // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til Nom
+                        getCallId()
+                    },
+                )
+                .build()
         if (EnvironmentUtils.isDevelopment().orElse(false)) {
             return DevNomClient()
         }

@@ -5,6 +5,7 @@ import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.apis.SoknadsstatusControllerApi
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Behandling
 import no.nav.modiapersonoversikt.service.soknadsstatus.BehandlingMockUtils.createBehandling
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -12,7 +13,8 @@ import kotlin.test.assertEquals
 class SoknadsstatusServiceTest {
     private val soknadsstatusApi = mockk<SoknadsstatusControllerApi>()
     private val oboTokenClient: BoundedOnBehalfOfTokenClient = mockk()
-    private val service = SoknadsstatusServiceImpl(oboTokenClient, soknadsstatusApi)
+    private val unleashService: UnleashService = mockk()
+    private val service = SoknadsstatusServiceImpl(oboTokenClient, unleashService, soknadsstatusApi)
 
     @Test
     fun `tre behandlinger skal gi liste med tre elementer`() {

@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.Kontoreg
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.springframework.context.annotation.Bean
@@ -22,25 +23,27 @@ open class KontoregisterConfig {
     private val url: String = getRequiredProperty("KONTOREGISTER_REST_URL")
 
     @Bean
-    open fun kontoregisterApi(tokenClient: MachineToMachineTokenClient) =
-        KontoregisterV1Api(
-            basePath = url,
-            httpClient =
-                RestClient.baseClient().newBuilder()
-                    .addInterceptor(
-                        LoggingInterceptor("Kontoregister") { request ->
-                            requireNotNull(request.header("nav-call-id")) {
-                                "Kall uten \"nav-call-id\" er ikke lov"
-                            }
-                        },
-                    )
-                    .addInterceptor(
-                        AuthorizationInterceptor {
-                            tokenClient.createMachineToMachineToken(scope)
-                        },
-                    )
-                    .build(),
-        )
+    open fun kontoregisterApi(
+        tokenClient: MachineToMachineTokenClient,
+        unleashService: UnleashService,
+    ) = KontoregisterV1Api(
+        basePath = url,
+        httpClient =
+            RestClient.baseClient().newBuilder()
+                .addInterceptor(
+                    LoggingInterceptor(unleashService, "Kontoregister") { request ->
+                        requireNotNull(request.header("nav-call-id")) {
+                            "Kall uten \"nav-call-id\" er ikke lov"
+                        }
+                    },
+                )
+                .addInterceptor(
+                    AuthorizationInterceptor {
+                        tokenClient.createMachineToMachineToken(scope)
+                    },
+                )
+                .build(),
+    )
 
     @Bean
     @Conditional(InDevCondition::class)

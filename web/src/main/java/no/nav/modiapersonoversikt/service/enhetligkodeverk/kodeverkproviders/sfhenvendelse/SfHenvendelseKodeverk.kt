@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -16,7 +17,8 @@ import org.springframework.web.server.ResponseStatusException
 object SfHenvendelseKodeverk {
     class Provider(
         private val machineToMachineTokenClient: MachineToMachineTokenClient,
-        private val sfHenvendelseKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient),
+        private val unleashService: UnleashService,
+        private val sfHenvendelseKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient, unleashService),
     ) : EnhetligKodeverk.KodeverkProvider<String, String> {
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, String> {
             val respons =
@@ -37,12 +39,15 @@ object SfHenvendelseKodeverk {
         }
     }
 
-    internal fun createKodeverkApi(machineToMachineTokenClient: MachineToMachineTokenClient): KodeverkApi {
+    internal fun createKodeverkApi(
+        machineToMachineTokenClient: MachineToMachineTokenClient,
+        unleashService: UnleashService,
+    ): KodeverkApi {
         val downstreamApi = SfHenvendelseApiFactory.downstreamApi()
         val client =
             RestClient.baseClient().newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor("SF-Henvendelse-Kodeverk") { request ->
+                    LoggingInterceptor(unleashService, "SF-Henvendelse-Kodeverk") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

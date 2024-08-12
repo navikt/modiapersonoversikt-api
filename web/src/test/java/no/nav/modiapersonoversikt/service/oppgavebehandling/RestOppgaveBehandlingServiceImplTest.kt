@@ -12,6 +12,7 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
@@ -27,6 +28,7 @@ import java.time.ZoneId
 import java.util.*
 
 class RestOppgaveBehandlingServiceImplTest {
+    private val unleashService: UnleashService = mockk()
     private val apiClient: OppgaveApi = mockk()
     private val systemApiClient: OppgaveApi = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
@@ -43,6 +45,7 @@ class RestOppgaveBehandlingServiceImplTest {
             tilgangskontroll,
             oboTokenClient,
             machineToMachineTokenClient,
+            unleashService,
             apiClient,
             systemApiClient,
             fixedClock,
