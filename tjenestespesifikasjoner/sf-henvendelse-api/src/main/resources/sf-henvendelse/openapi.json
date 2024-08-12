@@ -568,6 +568,7 @@
               "SUPSTONAD",
               "OMSORGSPENGER",
               "HJELPEMIDLER",
+              "TILLEGGSSTONADER",
               "NEESSI"
             ],
             "description": "Fagsystemet som saken behandles i, required hvis saksId er definert",
