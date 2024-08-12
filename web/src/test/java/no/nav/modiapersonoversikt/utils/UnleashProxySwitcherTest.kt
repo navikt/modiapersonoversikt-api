@@ -2,9 +2,6 @@ package no.nav.modiapersonoversikt.utils
 
 import io.getunleash.DefaultUnleash
 import io.getunleash.util.UnleashConfig
-import io.mockk.every
-import io.mockk.mockk
-import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashContextProviderImpl
 import no.nav.modiapersonoversikt.service.unleash.UnleashServiceImpl
@@ -18,8 +15,7 @@ internal class UnleashProxySwitcherTest {
 
     @Test
     internal fun name() {
-        val ansattService = createAnsattServiceMock()
-        val unleashService = createUnleashService(ansattService)
+        val unleashService = createUnleashService()
         val (instance1, instance2) = createInstances()
 
         val proxy =
@@ -35,14 +31,8 @@ internal class UnleashProxySwitcherTest {
         }
     }
 
-    private fun createAnsattServiceMock(): AnsattService {
-        val ansattService = mockk<AnsattService>()
-        every { ansattService.hentEnhetsliste() } returns emptyList()
-        return ansattService
-    }
-
-    private fun createUnleashService(ansattService: AnsattService): UnleashServiceImpl {
-        val unleashContextProvider = UnleashContextProviderImpl(ansattService)
+    private fun createUnleashService(): UnleashServiceImpl {
+        val unleashContextProvider = UnleashContextProviderImpl()
         val unleashConfig =
             UnleashConfig.builder()
                 .appName("modiapersonoversikt-api")

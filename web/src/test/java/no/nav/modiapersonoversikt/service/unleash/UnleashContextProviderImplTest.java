@@ -2,8 +2,6 @@ package no.nav.modiapersonoversikt.service.unleash;
 
 import io.getunleash.UnleashContext;
 import io.getunleash.UnleashContextProvider;
-import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet;
-import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +12,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
 
-import static java.util.Arrays.asList;
-import static no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.ENHETER_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -35,12 +31,9 @@ class UnleashContextProviderImplTest {
     private MockHttpServletRequest request;
     private UnleashContextProvider contextProvider;
     private HttpSession session;
-    private AnsattService ansattService;
 
     @BeforeEach
     void init() {
-        ansattService = mock(AnsattService.class);
-
         request = new MockHttpServletRequest();
         session = mock(HttpSession.class);
         request.setSession(session);
@@ -50,23 +43,17 @@ class UnleashContextProviderImplTest {
 
         RequestContextHolder.setRequestAttributes(requestAttributes);
 
-        contextProvider = new UnleashContextProviderImpl(ansattService);
+        contextProvider = new UnleashContextProviderImpl();
     }
 
     @Test
     void getContextPopulatesAllFieldsCorrectly() {
         when(session.getId()).thenReturn(SESSION_ID);
-        when(ansattService.hentEnhetsliste())
-                .thenReturn(asList(
-                        new AnsattEnhet("1234", "NAV Bærum"),
-                        new AnsattEnhet("0000", "NAV Test")));
 
         UnleashContext context = AuthContextTestUtils.withIdent(IDENT, () -> contextProvider.getContext());
 
         assertThat(context.getUserId().get(), is(IDENT));
         assertThat(context.getRemoteAddress().get(), is(REMOTE_ADDR));
-        assertThat(context.getProperties().size(), is(1));
-        assertThat(context.getProperties().get(ENHETER_PROPERTY), is("1234,0000"));
 
     }
 }
