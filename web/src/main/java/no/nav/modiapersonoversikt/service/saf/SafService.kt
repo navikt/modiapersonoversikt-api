@@ -38,7 +38,7 @@ interface SafService {
 private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
 private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
 
-private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
+private val graphQLClient = LoggingGraphqlClient("SAF-GQL", URL(SAF_GRAPHQL_BASEURL))
 
 class SafServiceImpl(
     private val oboTokenProvider: BoundedOnBehalfOfTokenClient,
