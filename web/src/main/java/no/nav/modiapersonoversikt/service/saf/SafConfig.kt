@@ -1,12 +1,13 @@
 package no.nav.modiapersonoversikt.service.saf
 
-import io.ktor.client.request.*
-import io.ktor.http.*
+import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -16,10 +17,12 @@ import no.nav.modiapersonoversikt.utils.bindTo
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.net.URL
 
 @Configuration
 open class SafConfig {
     val downstreamapi = DownstreamApi.parse(getRequiredProperty("SAF_SCOPE"))
+    val safGraphQLBaseUrl: String = getRequiredProperty("SAF_GRAPHQL_URL")
 
     @Bean
     open fun safService(
@@ -27,24 +30,41 @@ open class SafConfig {
         oboTokenClient: OnBehalfOfTokenClient,
     ): SafService {
         val client: OkHttpClient =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(
                     HeadersInterceptor {
                         this.httpHeaders(oboTokenClient.bindTo(downstreamapi))
                     },
-                )
-                .addInterceptor(
+                ).addInterceptor(
                     LoggingInterceptor(unleashService, "Saf") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .build()
+                ).build()
+
+        val gqlHttpClient =
+            HttpClient(engineFactory = OkHttp) {
+                engine {
+                    config {
+                    }
+                    addInterceptor(
+                        LoggingInterceptor(unleashService, "saf-gql") { request ->
+                            requireNotNull(request.header("X-Correlation-ID")) {
+                                "Kall uten \"X-Correlation-ID\" er ikke lov"
+                            }
+                        },
+                    )
+                }
+            }
+        val graphQlClient = LoggingGraphqlClient("SAF", URL(safGraphQLBaseUrl), gqlHttpClient)
 
         return SafServiceImpl(
             oboTokenClient.bindTo(downstreamapi),
             client,
+            graphQlClient,
         )
     }
 
