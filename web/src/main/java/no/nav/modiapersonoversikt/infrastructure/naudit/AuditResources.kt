@@ -94,6 +94,9 @@ class AuditResources {
             val Sykepenger = AuditResource("person.sykepenger")
 
             @JvmField
+            val Tiltakspenger = AuditResource("person.tiltakspenger")
+
+            @JvmField
             val Foreldrepenger = AuditResource("person.foreldrepenger")
 
             @JvmField

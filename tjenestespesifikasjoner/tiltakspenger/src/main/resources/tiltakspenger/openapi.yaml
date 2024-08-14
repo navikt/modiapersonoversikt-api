@@ -1,0 +1,170 @@
+openapi: "3.1.0"
+info:
+  title: "tiltakspenger_datadeling API"
+  description: "tiltakspenger_datadeling API"
+  version: "1.0.0"
+servers:
+  - url: "https://tiltakspenger_datadeling"
+security:
+  - Authorization: []
+paths:
+  /isalive:
+    get:
+      tags:
+        - HealthCheck
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "ALIVE"
+  /isready:
+    get:
+      tags:
+        - HealthCheck
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "READY"
+  /vedtak/detaljer:
+    post:
+      tags:
+        - Vedtak
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VedtakReqDTO"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MappingError"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Vedtak"
+  /vedtak/perioder:
+    post:
+      tags:
+        - Vedtak
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VedtakReqDTO"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MappingError"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Periode"
+components:
+  schemas:
+    ExceptionResponse:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+      required:
+        - "message"
+    VedtakReqDTO:
+      type: "object"
+      properties:
+        ident:
+          type: "string"
+        fom:
+          type: "string"
+        tom:
+          type: "string"
+    MappingError:
+      type: "object"
+      properties:
+        feilmelding:
+          type: "string"
+      required:
+        - "feilmelding"
+    Vedtak:
+      type: "object"
+      properties:
+        fom:
+          type: "string"
+          format: "date"
+        tom:
+          type: "string"
+          format: "date"
+        antallDager:
+          type: "number"
+          format: "double"
+        dagsatsTiltakspenger:
+          type: "integer"
+          format: "int32"
+        dagsatsBarnetillegg:
+          type: "integer"
+          format: "int32"
+        antallBarn:
+          type: "integer"
+          format: "int32"
+        relaterteTiltak:
+          type: "string"
+        rettighet:
+          type: "string"
+          enum:
+            - "TILTAKSPENGER"
+            - "BARNETILLEGG"
+            - "TILTAKSPENGER_OG_BARNETILLEGG"
+            - "INGENTING"
+        vedtakId:
+          type: "string"
+        sakId:
+          type: "string"
+      required:
+        - "fom"
+        - "tom"
+        - "relaterteTiltak"
+        - "rettighet"
+        - "vedtakId"
+        - "sakId"
+    Periode:
+      type: "object"
+      properties:
+        fom:
+          type: "string"
+          format: "date"
+        tom:
+          type: "string"
+          format: "date"
+      required:
+        - "fom"
+        - "tom"
