@@ -1,6 +1,9 @@
 package no.nav.modiapersonoversikt.service.saf
 
+import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
+import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.utils.EnvironmentUtils
@@ -13,7 +16,8 @@ import no.nav.modiapersonoversikt.consumer.saf.generated.enums.BrukerIdType
 import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Journalposttype
 import no.nav.modiapersonoversikt.consumer.saf.generated.inputs.BrukerIdInput
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
-import no.nav.modiapersonoversikt.infrastructure.http.*
+import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.saf.SafDokumentMapper.fraSafJournalpost
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
@@ -21,7 +25,6 @@ import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory
-import java.net.URL
 
 interface SafService {
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>>
@@ -35,14 +38,12 @@ interface SafService {
     fun hentSaker(ident: String): GraphQLClientResponse<HentBrukersSaker.Result>
 }
 
-private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
 private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
-
-private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
 
 class SafServiceImpl(
     private val oboTokenProvider: BoundedOnBehalfOfTokenClient,
     private val httpClient: OkHttpClient,
+    private val graphQLClient: GraphQLKtorClient,
 ) : SafService {
     private val log = LoggerFactory.getLogger(SafService::class.java)
 

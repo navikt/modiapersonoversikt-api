@@ -56,7 +56,7 @@ internal class PdlOppslagServiceImplTest {
             }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(machineToMachineTokenClient, oboTokenProvider, client).hentIdenter("ident")
+            PdlOppslagServiceImpl(client, machineToMachineTokenClient, oboTokenProvider).hentIdenter("ident")
         }
     }
 
@@ -70,9 +70,9 @@ internal class PdlOppslagServiceImplTest {
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
             PdlOppslagServiceImpl(
+                client,
                 machineToMachineTokenClient,
                 oboTokenProvider,
-                client,
             ).hentTredjepartspersondata(listOf("ident"))
         }
     }

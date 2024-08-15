@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.service.pdl
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.pdl.generated.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.IdentGruppe
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
@@ -13,26 +12,19 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.PersonSearchH
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants.*
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
-import java.net.URL
 
 @CacheConfig(cacheNames = ["pdlCache"], keyGenerator = "userkeygenerator")
 open class PdlOppslagServiceImpl(
+    private val pdlClient: GraphQLKtorClient,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
-    private val pdlClient: GraphQLKtorClient,
 ) : PdlOppslagService {
-    constructor(
-        machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
-        oboTokenClient: BoundedOnBehalfOfTokenClient,
-    ) : this(machineToMachineTokenClient, oboTokenClient, createClient())
-
     @Cacheable(unless = "#result == null")
     override fun hentPersondata(fnr: String): HentPersondata.Result? =
         runBlocking {
@@ -152,11 +144,5 @@ open class PdlOppslagServiceImpl(
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
         header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
         header(BEHANDLINGSNUMMER_HEADER, BEHANDLINGSNUMMER_HEADERVERDI)
-    }
-
-    companion object {
-        private val pdlApiUrl: URL = EnvironmentUtils.getRequiredProperty("PDL_API_URL").let(::URL)
-
-        fun createClient() = LoggingGraphqlClient("PDL", pdlApiUrl)
     }
 }

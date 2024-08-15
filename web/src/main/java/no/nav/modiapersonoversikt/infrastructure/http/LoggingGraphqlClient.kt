@@ -6,6 +6,7 @@ import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.ktor.client.*
 import io.ktor.client.request.*
 import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
@@ -15,7 +16,10 @@ import java.net.URL
 
 typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
 
-class GraphQLException(override val message: String, val errors: List<GraphQLClientError>) : RuntimeException(message)
+class GraphQLException(
+    override val message: String,
+    val errors: List<GraphQLClientError>,
+) : RuntimeException(message)
 
 fun <T> GraphQLClientResponse<T>.assertNoErrors(): GraphQLClientResponse<T> {
     if (this.errors.isNullOrEmpty()) {
@@ -34,7 +38,8 @@ private val mapper =
 class LoggingGraphqlClient(
     private val name: String,
     url: URL,
-) : GraphQLKtorClient(url) {
+    httpClient: HttpClient,
+) : GraphQLKtorClient(url, httpClient) {
     private val log = LoggerFactory.getLogger(LoggingGraphqlClient::class.java)
 
     override suspend fun <T : Any> execute(
