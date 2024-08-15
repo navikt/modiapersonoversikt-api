@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.saf
 
-import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty

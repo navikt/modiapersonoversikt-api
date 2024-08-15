@@ -7,7 +7,6 @@ import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
