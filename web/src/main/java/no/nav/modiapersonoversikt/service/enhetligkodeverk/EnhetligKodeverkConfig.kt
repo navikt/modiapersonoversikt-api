@@ -18,7 +18,7 @@ open class EnhetligKodeverkConfig {
     ): EnhetligKodeverk.Service {
         return EnhetligKodeverkServiceImpl(
             KodeverkProviders(
-                fellesKodeverk = FellesKodeverk.Provider(unleashService),
+                fellesKodeverk = FellesKodeverk.Provider(machineToMachineTokenClient, unleashService),
                 sfHenvendelseKodeverk = SfHenvendelseKodeverk.Provider(machineToMachineTokenClient, unleashService),
                 oppgaveKodeverk = OppgaveKodeverk.Provider(machineToMachineTokenClient, unleashService),
             ),
