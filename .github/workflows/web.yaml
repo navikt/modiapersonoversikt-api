@@ -9,7 +9,6 @@ concurrency:
 env:
   CI: true
   TZ: Europe/Oslo
-  Q1_TEST_BRANCH: 'refs/heads/fix/spring-version'
 
 jobs:
   build:
@@ -39,8 +38,8 @@ jobs:
         run: |
           mvn -P ci -B test --settings .github/maven-settings.xml
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
-      - name: Publish Dev Image
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
+      - name: Publish Image
+        if: github.ref == 'refs/heads/master'
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -53,7 +52,8 @@ jobs:
   deploy-dev:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/master'
+    environment: dev-gcp
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -71,6 +71,7 @@ jobs:
     name: Deploy to prod
     needs: build
     if: github.ref == 'refs/heads/master'
+    environment: prod-gcp
     runs-on: ubuntu-latest
     permissions:
       contents: read
