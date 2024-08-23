@@ -3,7 +3,7 @@
   "info" : {
     "title" : "Tjenester for innkreving av krav for offentlige oppdragsgivere",
     "description" : "### Beskrivelse\n\nOpenAPI-dokumentasjon for Skatteetatens tjenester for oppdragsinnkreving. Løsningen dekker tjenester for å opprette,\nendre og avskrive innkrevingsoppdrag. I tillegg finnes tjenester for å avstemme hva som er oversendt til APIene, se\nmottaksstatus og å hente eventuelle valideringsfeil.\n\n### Lenker\n\n- [Teknisk dokumentasjon](https://skatteetaten.github.io/beta-apier/innkrevingsoppdrag)\n- [Systemdokumentasjon](https://wiki.sits.no/display/IKOPPDRAG/) (intern Skatteetaten-ressurs)\n\n",
-    "version" : "1.15.12"
+    "version" : "1.15.57"
   },
   "servers" : [ {
     "url" : "https://api-test.sits.no/"
@@ -501,7 +501,7 @@
     "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/{kravidentifikator}" : {
       "get" : {
         "tags" : [ "Kravdetaljer" ],
-        "summary" : "Hent detaljer om et innkrevingsoppdrag. (Endepunktet er under utvikling og returner kun 200 (OK))",
+        "summary" : "Hent detaljer om et krav basert på kravidentifikator. Foreløpig kun tilgjengelig for NAV.Returnerer per nå kun samme mock-data uavhengig av kravidentifikator som oppgis.",
         "operationId" : "getKravdetaljer",
         "parameters" : [ {
           "name" : "Klientid",
@@ -540,7 +540,14 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "Vellykket forespørsel. Detaljer om innkrevingsoppdraget ble returnert."
+            "description" : "Vellykket forespørsel. Detaljer om innkrevingsoppdraget ble returnert.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/KravdetaljerResponse"
+                }
+              }
+            }
           },
           "400" : {
             "description" : "Ugyldig forespørsel. Tjeneren kan ikke behandle innholdet i forespørselen."
@@ -951,7 +958,7 @@
           "kravtype" : {
             "type" : "string",
             "description" : "\nKravtypen for innkrevingsoppdrag. Må være en av kravtypene oppdragsgiver har avtalt med\ninnkrevingsmyndigheten at den skal kreve inn for oppdragsgiver.\n        ",
-            "enum" : [ "TILBAKEKREVING_BARNETRYGD", "TILBAKEKREVING_OMSORGSPENGER", "TILBAKEKREVING_PLEIEPENGER_BARN", "TILBAKEKREVING_PLEIEPENGER_NAERSTAAENDE", "TILBAKEKREVING_STOENAD_TIL_BARNETILSYN", "TILBAKEKREVING_OVERGANGSSTOENAD", "TILBAKEKREVING_ENGANGSSTOENAD_VED_FOEDSEL", "TILBAKEKREVING_FORELDREPENGER", "TILBAKEKREVING_SVANGERSKAPSPENGER", "TILBAKEKREVING_FORSKUTTERTE_DAGPENGER", "TILBAKEKREVING_KOMPENSASJON_NAERING_OG_FRILANS", "TILBAKEKREVING_SYKEPENGER", "TILBAKEKREVING_PERMITTERINGSPENGER_KORONA", "TILBAKEKREVING_LOENNSKOMPENSASJON", "TILBAKEKREVING_AVTALEFESTET_PENSJON_PRIVATSEKTOR", "TILBAKEKREVING_ALDERSPENSJON", "TILBAKEKREVING_BARNEPENSJON", "TILBAKEKREVING_GJENLEVENDE_PENSJON", "TILBAKEKREVING_GJENLEVENDE_PENSJON_AVREGNING", "TILBAKEKREVING_KRIGSPENSJON", "TILBAKEKREVING_UFOEREPENSJON", "TILBAKEKREVING_UFOEREPENSJON_UTBETALT_TIL_FEIL_MOTTAKER", "TILBAKEKREVING_UFOERETRYGD", "TILBAKEKREVING_UFOERETRYGD_ETTEROPPGJOER", "TILBAKEKREVING_UFOERETRYGD_AVREGNING", "TILBAKEKREVING_UFOERETRYGD_UTBETALT_TIL_FEIL_MOTTAKER", "TILBAKEKREVING_AVTALEFESTET_PENSJON", "TILBAKEKREVING_SUPPLERENDE_STOENAD", "TILBAKEKREVING_OPPLAERINGSPENGER", "TILBAKEKREVING_UTDANNINGSSTOENAD", "TILBAKEKREVING_KONTANTSTOETTE", "TILBAKEKREVING_TIDLIGERE_FAMILIEPLEIER_PENSJON", "TILBAKEKREVING_GAMMEL_YRKESSKADEPENSJON", "TVANGSMULKT_RETTIGHETSHAVERREGISTERLOVEN", "FORSIKRINGSPREMIE_SELVSTENDIG_NAERINGSDRIVENDE" ]
+            "enum" : [ "TILBAKEKREVING_BARNETRYGD", "TILBAKEKREVING_OMSORGSPENGER", "TILBAKEKREVING_PLEIEPENGER_BARN", "TILBAKEKREVING_PLEIEPENGER_NAERSTAAENDE", "TILBAKEKREVING_STOENAD_TIL_BARNETILSYN", "TILBAKEKREVING_OVERGANGSSTOENAD", "TILBAKEKREVING_ENGANGSSTOENAD_VED_FOEDSEL", "TILBAKEKREVING_FORELDREPENGER", "TILBAKEKREVING_SVANGERSKAPSPENGER", "TILBAKEKREVING_FORSKUTTERTE_DAGPENGER", "TILBAKEKREVING_KOMPENSASJON_NAERING_OG_FRILANS", "TILBAKEKREVING_SYKEPENGER", "TILBAKEKREVING_PERMITTERINGSPENGER_KORONA", "TILBAKEKREVING_LOENNSKOMPENSASJON", "TILBAKEKREVING_AVTALEFESTET_PENSJON_PRIVATSEKTOR", "TILBAKEKREVING_ALDERSPENSJON", "TILBAKEKREVING_BARNEPENSJON", "TILBAKEKREVING_GJENLEVENDE_PENSJON", "TILBAKEKREVING_GJENLEVENDE_PENSJON_AVREGNING", "TILBAKEKREVING_KRIGSPENSJON", "TILBAKEKREVING_UFOEREPENSJON", "TILBAKEKREVING_UFOEREPENSJON_UTBETALT_TIL_FEIL_MOTTAKER", "TILBAKEKREVING_UFOERETRYGD", "TILBAKEKREVING_UFOERETRYGD_ETTEROPPGJOER", "TILBAKEKREVING_UFOERETRYGD_AVREGNING", "TILBAKEKREVING_UFOERETRYGD_UTBETALT_TIL_FEIL_MOTTAKER", "TILBAKEKREVING_AVTALEFESTET_PENSJON", "TILBAKEKREVING_SUPPLERENDE_STOENAD", "TILBAKEKREVING_OPPLAERINGSPENGER", "TILBAKEKREVING_UTDANNINGSSTOENAD", "TILBAKEKREVING_KONTANTSTOETTE", "TILBAKEKREVING_TIDLIGERE_FAMILIEPLEIER_PENSJON", "TILBAKEKREVING_GAMMEL_YRKESSKADEPENSJON", "TVANGSMULKT_RETTIGHETSHAVERREGISTERLOVEN" ]
           },
           "skyldner" : {
             "$ref" : "#/components/schemas/Skyldner"
@@ -999,22 +1006,22 @@
         },
         "description" : "Forespørsel om opprettelse av nytt innkrevingsoppdrag"
       },
-      "Periode" : {
+      "PeriodeMedTvangsmulkt" : {
         "required" : [ "fom", "tom" ],
         "type" : "object",
         "properties" : {
           "fom" : {
             "type" : "string",
-            "description" : "\nFormat: YYYY-MM-DD\nFra og med dato for tilbakekrevingsperioden.\n        ",
+            "description" : "Format: YYYY-MM-DD. Fra og med dato for perioden med påløpt tvangsmulkt.",
             "format" : "date"
           },
           "tom" : {
             "type" : "string",
-            "description" : "\nFormat: YYYY-MM-DD\nTil og med dato for tilbakekrevingsperioden.\n        ",
+            "description" : "Format: YYYY-MM-DD. Til og med dato for perioden med påløpt tvangsmulkt.",
             "format" : "date"
           }
         },
-        "description" : "\nTidsperioden hvor det ble foretatt utbetalinger som senere er avdekket som feilaktige, og som det derfor kreves\ntilbakebetaling for.\n        "
+        "description" : "Periode som angir tidsintervallet for fastsatt og påløpt tvangsmulkt."
       },
       "Skyldner" : {
         "required" : [ "identifikator", "identifikatortype" ],
@@ -1032,12 +1039,29 @@
         },
         "description" : "Hvem som skylder penger."
       },
+      "Tilbakekrevingsperiode" : {
+        "required" : [ "fom", "tom" ],
+        "type" : "object",
+        "properties" : {
+          "fom" : {
+            "type" : "string",
+            "description" : "Format: YYYY-MM-DD. Fra og med dato for perioden",
+            "format" : "date"
+          },
+          "tom" : {
+            "type" : "string",
+            "description" : "Format: YYYY-MM-DD. Til og med dato for perioden",
+            "format" : "date"
+          }
+        },
+        "description" : "\nTidsperioden hvor det ble foretatt utbetalinger som senere er avdekket som feilaktige, og som det derfor kreves\ntilbakebetaling for.\n        "
+      },
       "Tilleggsinformasjon" : {
         "type" : "object",
         "description" : "\nTilleggsinformasjon spesifikt per oppdragsgiver, angis etter avtale med Skatteetaten.\nSe egne objekter for det som gjelder per oppdragsgiver.\n        "
       },
       "TilleggsinformasjonBrønnøysundregistrene" : {
-        "required" : [ "tilbakekrevingsperiode" ],
+        "required" : [ "periode" ],
         "type" : "object",
         "description" : "Tilleggsinformasjon spesifikt for Brønnøysundregistrene",
         "allOf" : [ {
@@ -1045,12 +1069,12 @@
         }, {
           "type" : "object",
           "properties" : {
-            "tilbakekrevingsperiode" : {
-              "$ref" : "#/components/schemas/Periode"
+            "periode" : {
+              "$ref" : "#/components/schemas/PeriodeMedTvangsmulkt"
             },
             "stoppdatoForLøpendeMulkt" : {
               "type" : "string",
-              "description" : "\nFormat: YYYY-MM-DD\nDatoen settes dersom den løpende tvangsmulkten er avsluttet av oppdragsgiver. Ikke påkrevd. Kan ikke være i fremtiden.\n        "
+              "description" : "\nFormat: YYYY-MM-DD\nDatoen settes dersom den løpende tvangsmulkten er avsluttet av oppdragsgiver. Ikke påkrevd. Kan ikke være i fremtiden.\n"
             }
           }
         } ]
@@ -1068,7 +1092,7 @@
               "$ref" : "#/components/schemas/YtelseForAvregningBeloep"
             },
             "tilbakekrevingsperiode" : {
-              "$ref" : "#/components/schemas/Periode"
+              "$ref" : "#/components/schemas/Tilbakekrevingsperiode"
             }
           }
         } ]
@@ -1128,6 +1152,47 @@
         "description" : "Kvittering for mottatt avskriving med transaksjonsid.",
         "example" : {
           "transaksjonsid" : "791e5955-af86-42fe-b609-d4fc2754e35e"
+        }
+      },
+      "KravdetaljerResponse" : {
+        "required" : [ "kravgrunnlag" ],
+        "type" : "object",
+        "properties" : {
+          "kravgrunnlag" : {
+            "$ref" : "#/components/schemas/Kravgrunnlag"
+          },
+          "kravlinjer" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Kravlinje"
+            }
+          }
+        }
+      },
+      "Kravgrunnlag" : {
+        "type" : "object",
+        "properties" : {
+          "datoNaarKravVarBesluttetHosOppdragsgiver" : {
+            "type" : "string",
+            "format" : "date"
+          }
+        }
+      },
+      "Kravlinje" : {
+        "required" : [ "kravlinjetype", "opprinneligBeloep" ],
+        "type" : "object",
+        "properties" : {
+          "kravlinjetype" : {
+            "type" : "string"
+          },
+          "opprinneligBeloep" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "gjenstaaendeBeloep" : {
+            "type" : "number",
+            "format" : "double"
+          }
         }
       },
       "ValideringsfeilDTO" : {

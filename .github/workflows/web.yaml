@@ -1,6 +1,9 @@
 name: modiapersonoversikt-api build, push, and deploy
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - 'proxy/**'
 
 concurrency:
   group: web-${{ github.ref }}
