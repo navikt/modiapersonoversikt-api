@@ -96,6 +96,10 @@ query sokPerson($paging: Paging, $criteria: [Criterion]) {
                         bostedskommune
                     }
                 }
+                telefonnummer {
+                    landskode,
+                    nummer
+                }
             }
         }
         pageNumber,

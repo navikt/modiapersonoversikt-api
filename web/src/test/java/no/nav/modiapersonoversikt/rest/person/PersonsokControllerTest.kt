@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.person
 
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Telefonnummer
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Matrikkeladresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Person
@@ -94,6 +95,13 @@ class PersonsokControllerTest {
                                         ukjentBosted = null,
                                     ),
                                 ),
+                            telefonnummer =
+                            listOf(
+                                Telefonnummer(
+                                    nummer = "000000",
+                                    landskode = "47"
+                                ),
+                            ),
                         ),
                 )
 
@@ -190,6 +198,7 @@ class PersonsokControllerTest {
                 null,
                 null,
                 null,
+                null
             )
     }
 }
