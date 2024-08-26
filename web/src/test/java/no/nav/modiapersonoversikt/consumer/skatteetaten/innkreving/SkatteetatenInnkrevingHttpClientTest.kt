@@ -2,13 +2,24 @@ package no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
-import com.marcinziolo.kotlin.wiremock.*
+import com.marcinziolo.kotlin.wiremock.contains
+import com.marcinziolo.kotlin.wiremock.equalTo
+import com.marcinziolo.kotlin.wiremock.get
+import com.marcinziolo.kotlin.wiremock.like
+import com.marcinziolo.kotlin.wiremock.returns
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import no.nav.common.rest.client.RestClient
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravgrunnlag
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import kotlin.test.assertTrue
@@ -28,11 +39,24 @@ class SkatteetatenInnkrevingHttpClientTest {
     private val apiClient = skatteetatenInnkrevingConfig.apiClient(wm.baseUrl(), httpClient)
     private val kravdetaljerApi = skatteetatenInnkrevingConfig.kravdetaljerApi(apiClient)
 
-    private val skatteetatenInnkrevingClient = SkatteetatenInnkrevingHttpClient(kravdetaljerApi, "NAV/1.0", unleashService)
+    private val skatteetatenInnkrevingClient =
+        SkatteetatenInnkrevingHttpClient(kravdetaljerApi, "NAV/1.0", unleashService)
 
     @Test
     fun `get kravdetaljer with auth header should return successfull result`() {
         every { maskinportenClient.getAccessToken() } returns "token"
+        val iDag = Clock.System.todayIn(TimeZone.currentSystemDefault())
+        val kravdetaljer =
+            Kravdetaljer(
+                Kravgrunnlag(iDag),
+                listOf(
+                    Krav(
+                        "kravType",
+                        200.0,
+                        100.0,
+                    ),
+                ),
+            )
 
         wm.get {
             urlPath like "/api/innkreving/innkrevingsoppdrag/v1/innkrevingsoppdrag/.*"
@@ -41,7 +65,25 @@ class SkatteetatenInnkrevingHttpClientTest {
             headers contains "Accept" equalTo "application/json"
             headers contains "Klientid"
         } returns {
+            header = "Content-Type" to "application/json"
             statusCode = 200
+            // language=json
+            body =
+                """
+                {
+                    "kravgrunnlag": {
+                        "datoNaarKravVarBesluttetHosOppdragsgiver": "$iDag"
+                    },
+                    "kravlinjer": [
+                        {
+                            "kravlinjetype": "kravType",
+                            "opprinneligBeloep": 200.0,
+                            "gjenstaaendeBeloep": 100.0
+                        }
+                    ]
+                }
+                
+                """.trimIndent()
         }
 
         val result =
@@ -51,6 +93,7 @@ class SkatteetatenInnkrevingHttpClientTest {
             )
 
         assertTrue(result.isSuccess)
+        assertThat(result.getOrNull()).isNotNull.isEqualTo(kravdetaljer)
     }
 
     @Test
