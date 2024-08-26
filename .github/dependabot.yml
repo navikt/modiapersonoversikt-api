@@ -5,10 +5,16 @@ updates:
     schedule:
       interval: daily
       time: "05:00"
-      timezone: UTC
-  - package-ecosystem:  github-actions
+      timezone: Europe/Oslo
+  - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
       time: "05:00"
-      timezone: UTC
+      timezone: Europe/Oslo
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
+      time: "05:00"
+      timezone: Europe/Oslo
