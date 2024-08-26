@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.rest.person
 
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
-import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Telefonnummer
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Matrikkeladresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Person
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Telefonnummer
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.assertj.core.api.Assertions.assertThat
@@ -96,12 +96,12 @@ class PersonsokControllerTest {
                                     ),
                                 ),
                             telefonnummer =
-                            listOf(
-                                Telefonnummer(
-                                    nummer = "000000",
-                                    landskode = "47"
+                                listOf(
+                                    Telefonnummer(
+                                        nummer = "000000",
+                                        landskode = "47",
+                                    ),
                                 ),
-                            ),
                         ),
                 )
 
@@ -198,7 +198,7 @@ class PersonsokControllerTest {
                 null,
                 null,
                 null,
-                null
+                null,
             )
     }
 }
