@@ -277,6 +277,7 @@ data class PersonsokRequestV3(
     val fodselsdatoTil: String?,
     val kjonn: String?,
     val adresse: String?,
+    val telefonnummer: String?,
 )
 
 fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
@@ -292,6 +293,7 @@ fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone())
     return listOf(
         PdlKriterie(PdlFelt.NAVN, this.navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
         PdlKriterie(PdlFelt.ADRESSE, this.adresse, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        PdlKriterie(PdlFelt.TELEFON_NUMMER, this.telefonnummer, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
         PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
         PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
         PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),

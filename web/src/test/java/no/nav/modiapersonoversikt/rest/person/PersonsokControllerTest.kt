@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Matrikkeladresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Person
+import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Telefonnummer
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.assertj.core.api.Assertions.assertThat
@@ -94,6 +95,13 @@ class PersonsokControllerTest {
                                         ukjentBosted = null,
                                     ),
                                 ),
+                            telefonnummer =
+                                listOf(
+                                    Telefonnummer(
+                                        nummer = "000000",
+                                        landskode = "47",
+                                    ),
+                                ),
                         ),
                 )
 
@@ -181,6 +189,7 @@ class PersonsokControllerTest {
 
         private val requestV3 =
             PersonsokRequestV3(
+                null,
                 null,
                 null,
                 null,
