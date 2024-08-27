@@ -16,13 +16,10 @@ import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.SkatteetatenIn
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
 
-@Component
 class SkatteetatenInnkrevingHttpClient(
     private val kravdetaljerApi: KravdetaljerApi,
-    @Value("\${skatteetaten.api.client.id}") private val clientId: String,
+    private val clientId: String,
     private val unleashService: UnleashService,
 ) : SkatteetatenInnkrevingClient,
     Pingable {
