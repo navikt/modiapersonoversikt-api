@@ -79,6 +79,9 @@ spec:
         - host: modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: api-test.sits.no # Skatteetaten
+      rules:
+        - namespace: tpts
+          application: tiltakspenger-datadeling
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -177,3 +180,7 @@ spec:
       value: "development"
     - name: SKATTEETATEN_INNKREVINGSOPPDRAG_API_BASE_URL
       value: "https://api-test.sits.no"
+    - name: TILTAKSPENGER_URL
+      value: "http://tiltakspenger-datadeling.tpts"
+    - name: TILTAKSPENGER_SCOPE
+      value: "dev-gcp:tpts:tiltakspenger-datadeling"

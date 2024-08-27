@@ -1,8 +1,11 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.commondomain.FnrDatoRangeRequest
 import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
+import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
+import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.Vedtak
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -21,6 +24,7 @@ class YtelseControllerV2
     constructor(
         private val arenaInfotrygdApi: ArenaInfotrygdApi,
         private val tilgangskontroll: Tilgangskontroll,
+        private val tiltakspengerService: TiltakspengerService,
     ) {
         @PostMapping("sykepenger")
         fun hentSykepenger(
@@ -52,6 +56,16 @@ class YtelseControllerV2
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
                     arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr)
+                }
+        }
+
+        @PostMapping("tiltakspenger")
+        fun hentTiltakspenger(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): List<Vedtak> {
+            return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Tiltakspenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                    tiltakspengerService.hentVedtakDetaljer(Fnr(fnrRequest.fnr), fnrRequest.fom, fnrRequest.tom)
                 }
         }
     }
