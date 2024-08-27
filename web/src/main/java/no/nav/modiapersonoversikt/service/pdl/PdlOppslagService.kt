@@ -41,7 +41,7 @@ interface PdlOppslagService {
 
     enum class PdlFelt(val feltnavn: String, val rule: SokKriterieRule) {
         NAVN("fritekst.navn", FUZZY_MATCH),
-        TELEFON_NUMMER("fritekst.telefonnummer.nummer", EQUALS),
+        TELEFON_NUMMER("person.telefonnummer.nummer", EQUALS),
         ADRESSE("fritekst.adresser", CONTAINS),
         UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", EQUALS),
         FODSELSDATO_FRA("person.foedselsdato.foedselsdato", AFTER),
