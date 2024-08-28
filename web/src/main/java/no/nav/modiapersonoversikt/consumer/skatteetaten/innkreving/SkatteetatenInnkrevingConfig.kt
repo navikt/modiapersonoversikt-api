@@ -3,6 +3,8 @@ package no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ApiClient
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.SkatteetatenInnkrevingClient
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -16,14 +18,20 @@ open class SkatteetatenInnkrevingConfig {
         httpClient: OkHttpClient,
         maskinportenClient: MaskinportenClient,
     ): OkHttpClient =
-        httpClient.newBuilder().addInterceptor { chain ->
-            val maskinportenToken = maskinportenClient.getAccessToken()
+        httpClient
+            .newBuilder()
+            .addInterceptor { chain ->
+                val maskinportenToken = maskinportenClient.getAccessToken()
 
-            val request =
-                chain.request().newBuilder().addHeader("Authorization", "Bearer $maskinportenToken").build()
+                val request =
+                    chain
+                        .request()
+                        .newBuilder()
+                        .addHeader("Authorization", "Bearer $maskinportenToken")
+                        .build()
 
-            chain.proceed(request)
-        }.build()
+                chain.proceed(request)
+            }.build()
 
     @Bean
     open fun apiClient(
@@ -33,4 +41,16 @@ open class SkatteetatenInnkrevingConfig {
 
     @Bean
     open fun kravdetaljerApi(apiClient: ApiClient): KravdetaljerApi = KravdetaljerApi(apiClient)
+
+    @Bean
+    open fun skatteetatenInnkrevingClient(
+        kravdetaljerApi: KravdetaljerApi,
+        @Value("\${skatteetaten.api.client.id}") clientId: String,
+        unleashService: UnleashService,
+    ): SkatteetatenInnkrevingClient =
+        SkatteetatenInnkrevingHttpClient(
+            kravdetaljerApi = kravdetaljerApi,
+            clientId = clientId,
+            unleashService = unleashService,
+        )
 }

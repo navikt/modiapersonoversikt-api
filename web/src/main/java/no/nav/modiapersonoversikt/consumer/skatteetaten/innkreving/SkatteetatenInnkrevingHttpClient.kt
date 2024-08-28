@@ -4,6 +4,8 @@ import kotlinx.datetime.toKotlinLocalDate
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
+import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ClientException
+import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ServerException
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.KravdetaljerResponse
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.Kravlinje
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
@@ -13,20 +15,20 @@ import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravgrunnlag
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.SkatteetatenInnkrevingClient
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import org.slf4j.LoggerFactory
 
-@Component
 class SkatteetatenInnkrevingHttpClient(
     private val kravdetaljerApi: KravdetaljerApi,
-    @Value("\${skatteetaten.api.client.id}") private val clientId: String,
+    private val clientId: String,
     private val unleashService: UnleashService,
 ) : SkatteetatenInnkrevingClient,
     Pingable {
+    private val log = LoggerFactory.getLogger(SkatteetatenInnkrevingHttpClient::class.java)
+
     override fun getKravdetaljer(
         kravidentifikator: String,
         kravidentifikatorType: KravidentifikatorType,
-    ): Result<Kravdetaljer?> =
+    ): Kravdetaljer? =
         runCatching {
             kravdetaljerApi
                 .getKravdetaljer(
@@ -35,6 +37,15 @@ class SkatteetatenInnkrevingHttpClient(
                     kravidentifikator = kravidentifikator,
                     kravidentifikatortype = kravidentifikatorType.name,
                 )?.toDomain()
+        }.getOrElse {
+            when (it) {
+                is UnsupportedOperationException, is ClientException, is ServerException -> {
+                    log.error("Feil ved henting av kravdetaljer", it)
+                    null
+                }
+
+                else -> throw it
+            }
         }
 
     override fun ping(): SelfTestCheck =
@@ -44,13 +55,17 @@ class SkatteetatenInnkrevingHttpClient(
             }
 
             // Midlertidig ping som kun fungerer i test.
-            getKravdetaljer(
-                "87b5a5c6-17ea-413a-ad80-b6c3406188fa",
-                KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
-            ).fold(
-                { HealthCheckResult.healthy() },
-                { HealthCheckResult.unhealthy(it) },
-            )
+            val kravdetaljer =
+                getKravdetaljer(
+                    "87b5a5c6-17ea-413a-ad80-b6c3406188fa",
+                    KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
+                )
+
+            if (kravdetaljer == null) {
+                HealthCheckResult.unhealthy("Feil ved henting av kravdetaljer")
+            } else {
+                HealthCheckResult.healthy()
+            }
         }
 }
 

@@ -42,10 +42,29 @@ class SkatteetatenInnkrevingHttpClientTest {
     private val skatteetatenInnkrevingClient =
         SkatteetatenInnkrevingHttpClient(kravdetaljerApi, "NAV/1.0", unleashService)
 
+    private val iDag = Clock.System.todayIn(TimeZone.currentSystemDefault())
+
+    // language=json
+    private val kravdetaljerJson =
+        """
+        {
+            "kravgrunnlag": {
+                "datoNaarKravVarBesluttetHosOppdragsgiver": "$iDag"
+            },
+            "kravlinjer": [
+                {
+                    "kravlinjetype": "kravType",
+                    "opprinneligBeloep": 200.0,
+                    "gjenstaaendeBeloep": 100.0
+                }
+            ]
+        }
+        
+        """.trimIndent()
+
     @Test
     fun `get kravdetaljer with auth header should return successfull result`() {
         every { maskinportenClient.getAccessToken() } returns "token"
-        val iDag = Clock.System.todayIn(TimeZone.currentSystemDefault())
         val kravdetaljer =
             Kravdetaljer(
                 Kravgrunnlag(iDag),
@@ -67,23 +86,7 @@ class SkatteetatenInnkrevingHttpClientTest {
         } returns {
             header = "Content-Type" to "application/json"
             statusCode = 200
-            // language=json
-            body =
-                """
-                {
-                    "kravgrunnlag": {
-                        "datoNaarKravVarBesluttetHosOppdragsgiver": "$iDag"
-                    },
-                    "kravlinjer": [
-                        {
-                            "kravlinjetype": "kravType",
-                            "opprinneligBeloep": 200.0,
-                            "gjenstaaendeBeloep": 100.0
-                        }
-                    ]
-                }
-                
-                """.trimIndent()
+            body = kravdetaljerJson
         }
 
         val result =
@@ -92,12 +95,11 @@ class SkatteetatenInnkrevingHttpClientTest {
                 KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
             )
 
-        assertTrue(result.isSuccess)
-        assertThat(result.getOrNull()).isNotNull.isEqualTo(kravdetaljer)
+        assertThat(result).isNotNull.isEqualTo(kravdetaljer)
     }
 
     @Test
-    fun `get kravdetaljer should return error when request fails`() {
+    fun `get kravdetaljer should return null when request fails`() {
         every { maskinportenClient.getAccessToken() } returns "token"
 
         wm.get {
@@ -112,7 +114,7 @@ class SkatteetatenInnkrevingHttpClientTest {
                 KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
             )
 
-        assertTrue(result.isFailure)
+        assertThat(result).isNull()
     }
 
     @Test
@@ -127,7 +129,9 @@ class SkatteetatenInnkrevingHttpClientTest {
             headers contains "Accept" equalTo "application/json"
             headers contains "Klientid"
         } returns {
+            header = "Content-Type" to "application/json"
             statusCode = 200
+            body = kravdetaljerJson
         }
 
         val result = skatteetatenInnkrevingClient.ping()

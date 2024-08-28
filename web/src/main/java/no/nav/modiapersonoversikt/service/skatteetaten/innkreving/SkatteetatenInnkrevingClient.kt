@@ -6,5 +6,5 @@ interface SkatteetatenInnkrevingClient {
     fun getKravdetaljer(
         kravidentifikator: String,
         kravidentifikatorType: KravidentifikatorType,
-    ): Result<Kravdetaljer?>
+    ): Kravdetaljer?
 }
