@@ -16,6 +16,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravdetaljerId
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravgrunnlag
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -90,9 +91,8 @@ class SkatteetatenInnkrevingHttpClientTest {
         }
 
         val result =
-            skatteetatenInnkrevingClient.getKravdetaljer(
-                "kravidentifikator",
-                KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
+            skatteetatenInnkrevingClient.hentKravdetaljer(
+                KravdetaljerId("kravidentifikator"),
             )
 
         assertThat(result).isNotNull.isEqualTo(kravdetaljer)
@@ -109,9 +109,8 @@ class SkatteetatenInnkrevingHttpClientTest {
         }
 
         val result =
-            skatteetatenInnkrevingClient.getKravdetaljer(
-                "kravidentifikator",
-                KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
+            skatteetatenInnkrevingClient.hentKravdetaljer(
+                KravdetaljerId("kravidentifikator"),
             )
 
         assertThat(result).isNull()

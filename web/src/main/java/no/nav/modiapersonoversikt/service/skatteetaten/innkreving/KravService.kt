@@ -1,14 +1,17 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
-import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.KravidentifikatorType
+import no.nav.common.types.identer.Fnr
 
 class KravService(
     private val skatteetatenInnkrevingClient: SkatteetatenInnkrevingClient,
 ) {
-    fun hentKrav(kravId: KravId) =
+    fun hentKravdetaljer(kravdetaljerId: KravdetaljerId) =
         skatteetatenInnkrevingClient
-            .getKravdetaljer(
-                kravId.value,
-                KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR,
+            .hentKravdetaljer(
+                kravdetaljerId,
             )
+
+    fun hentAlleKravdetaljer(fnr: Fnr) =
+        skatteetatenInnkrevingClient
+            .hentAlleKravdetaljer(fnr)
 }
