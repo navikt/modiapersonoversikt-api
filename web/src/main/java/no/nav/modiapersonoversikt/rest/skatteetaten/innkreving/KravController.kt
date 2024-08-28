@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.rest.skatteetaten.innkreving
 
+import no.nav.modiapersonoversikt.rest.skatteetaten.innkreving.json.KravDetaljerJsonResponse
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravId
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravService
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -17,13 +17,13 @@ class KravController(
     @GetMapping("/kravdetaljer/{kravidentifikator}")
     fun getKravdetaljer(
         @PathVariable kravidentifikator: String,
-    ): ResponseEntity<Kravdetaljer> {
+    ): ResponseEntity<KravDetaljerJsonResponse> {
         val kravdetaljer = kravService.hentKrav(KravId(kravidentifikator))
 
         return if (kravdetaljer == null) {
             ResponseEntity.notFound().build()
         } else {
-            ResponseEntity.ok(kravdetaljer)
+            ResponseEntity.ok(KravDetaljerJsonResponse.fromDomain(kravdetaljer))
         }
     }
 }
