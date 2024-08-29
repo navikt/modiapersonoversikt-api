@@ -4,10 +4,10 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravService
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravService
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravgrunnlag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -18,17 +18,17 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
-@WebMvcTest(KravController::class)
-class KravControllerTest {
+@WebMvcTest(InnkrevingskravController::class)
+class InnkrevingskravControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
     @Autowired
-    lateinit var kravService: KravService
+    lateinit var innkrevingskravService: InnkrevingskravService
 
-    private val kravdetaljer =
-        Kravdetaljer(
-            Kravgrunnlag(null),
+    private val innkrevingskrav =
+        Innkrevingskrav(
+            Grunnlag(null),
             listOf(
                 Krav(
                     "kravType",
@@ -40,10 +40,10 @@ class KravControllerTest {
 
     @Test
     fun `get kravdetaljer med eksisterende krav returnerer kravdetaljer`() {
-        every { kravService.hentKravdetaljer(any()) } returns kravdetaljer
+        every { innkrevingskravService.hentInnkrevingskrav(any()) } returns innkrevingskrav
 
         mockMvc
-            .get("/rest/skatteetaten/innkreving/kravdetaljer/kravidentifikator") {
+            .get("/rest/skatteetaten/innkrevingskrav/kravidentifikator") {
                 contentType = MediaType.APPLICATION_JSON
             }.andExpect {
                 status { isOk() }
@@ -72,7 +72,7 @@ class KravControllerTest {
 
     @Test
     fun `get kravdetaljer med ikke eksisterende krav returnerer null`() {
-        every { kravService.hentKravdetaljer(any()) } returns null
+        every { innkrevingskravService.hentInnkrevingskrav(any()) } returns null
 
         mockMvc
             .get("/rest/skatteetaten/innkreving/kravdetaljer/kravidentifikator") {
@@ -84,10 +84,10 @@ class KravControllerTest {
 
     @Test
     fun `get alle krav for en person returnerer liste med alle krav`() {
-        every { kravService.hentAlleKravdetaljer(any()) } returns listOf(kravdetaljer)
+        every { innkrevingskravService.hentAlleInnkrevingskrav(any()) } returns listOf(innkrevingskrav)
 
         mockMvc
-            .post("/rest/skatteetaten/innkreving/kravdetaljer") {
+            .post("/rest/skatteetaten/innkrevingskrav") {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(FnrRequest("12345678910"))
             }.andExpect {
@@ -120,7 +120,7 @@ class KravControllerTest {
     @Test
     fun `get alle krav for en person returnerer 400 hvis personident ikke er gyldig`() {
         mockMvc
-            .post("/rest/skatteetaten/innkreving/kravdetaljer") {
+            .post("/rest/skatteetaten/innkrevingskrav") {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(FnrRequest("1"))
             }.andExpect {
@@ -131,6 +131,6 @@ class KravControllerTest {
     @TestConfiguration
     open class TestConfig {
         @Bean
-        open fun kravService(): KravService = mockk()
+        open fun kravService(): InnkrevingskravService = mockk()
     }
 }

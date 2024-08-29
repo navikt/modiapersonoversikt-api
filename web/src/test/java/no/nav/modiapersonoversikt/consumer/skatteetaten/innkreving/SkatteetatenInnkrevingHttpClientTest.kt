@@ -14,10 +14,10 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import no.nav.common.rest.client.RestClient
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravId
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravdetaljerId
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravgrunnlag
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.assertj.core.api.Assertions.assertThat
@@ -41,7 +41,7 @@ class SkatteetatenInnkrevingHttpClientTest {
     private val kravdetaljerApi = skatteetatenInnkrevingConfig.kravdetaljerApi(apiClient)
 
     private val skatteetatenInnkrevingClient =
-        SkatteetatenInnkrevingHttpClient(kravdetaljerApi, "NAV/1.0", unleashService)
+        SkatteetatenHttpInnkrevingskravClient(kravdetaljerApi, "NAV/1.0", unleashService)
 
     private val iDag = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
@@ -66,9 +66,9 @@ class SkatteetatenInnkrevingHttpClientTest {
     @Test
     fun `get kravdetaljer with auth header should return successfull result`() {
         every { maskinportenClient.getAccessToken() } returns "token"
-        val kravdetaljer =
-            Kravdetaljer(
-                Kravgrunnlag(iDag),
+        val innkrevingskrav =
+            Innkrevingskrav(
+                Grunnlag(iDag),
                 listOf(
                     Krav(
                         "kravType",
@@ -91,11 +91,11 @@ class SkatteetatenInnkrevingHttpClientTest {
         }
 
         val result =
-            skatteetatenInnkrevingClient.hentKravdetaljer(
-                KravdetaljerId("kravidentifikator"),
+            skatteetatenInnkrevingClient.hentInnkrevingskrav(
+                InnkrevingskravId("kravidentifikator"),
             )
 
-        assertThat(result).isNotNull.isEqualTo(kravdetaljer)
+        assertThat(result).isNotNull.isEqualTo(innkrevingskrav)
     }
 
     @Test
@@ -109,8 +109,8 @@ class SkatteetatenInnkrevingHttpClientTest {
         }
 
         val result =
-            skatteetatenInnkrevingClient.hentKravdetaljer(
-                KravdetaljerId("kravidentifikator"),
+            skatteetatenInnkrevingClient.hentInnkrevingskrav(
+                InnkrevingskravId("kravidentifikator"),
             )
 
         assertThat(result).isNull()

@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ApiClient
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.SkatteetatenInnkrevingClient
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravClient
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Qualifier
@@ -47,8 +47,8 @@ open class SkatteetatenInnkrevingConfig {
         kravdetaljerApi: KravdetaljerApi,
         @Value("\${skatteetaten.api.client.id}") clientId: String,
         unleashService: UnleashService,
-    ): SkatteetatenInnkrevingClient =
-        SkatteetatenInnkrevingHttpClient(
+    ): InnkrevingskravClient =
+        SkatteetatenHttpInnkrevingskravClient(
             kravdetaljerApi = kravdetaljerApi,
             clientId = clientId,
             unleashService = unleashService,

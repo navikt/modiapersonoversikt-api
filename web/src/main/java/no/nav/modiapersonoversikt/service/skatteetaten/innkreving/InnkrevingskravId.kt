@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
 @JvmInline
-value class KravdetaljerId(
+value class InnkrevingskravId(
     val value: String,
 )
