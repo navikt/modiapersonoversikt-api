@@ -1,13 +1,13 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -24,12 +24,12 @@ class DialogControllerV2
         fun hentMeldinger(
             @RequestParam(value = "enhet") enhet: String,
             @RequestBody fnrRequest: FnrRequest,
-        ): List<TraadDTO> {
-            return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+        ): List<TraadDTO> =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnrRequest.fnr)) {
                     dialogapi.hentMeldinger(fnrRequest.fnr, enhet)
                 }
-        }
 
         @PostMapping("/sendmelding")
         fun sendMeldinger(
@@ -41,7 +41,8 @@ class DialogControllerV2
                     AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
                     AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId,
                 )
-            return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
                     dialogapi.sendMelding(meldingRequest.fnr, meldingRequest)
                 }
@@ -57,7 +58,8 @@ class DialogControllerV2
                     AuditIdentifier.FNR to opprettHenvendelseRequest.fnr,
                     AuditIdentifier.TRAAD_ID to opprettHenvendelseRequest.traadId,
                 )
-            return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(opprettHenvendelseRequest.fnr)))
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(opprettHenvendelseRequest.fnr)))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
                     dialogapi.startFortsettDialog(opprettHenvendelseRequest.fnr, ignorerConflict, opprettHenvendelseRequest)
                 }
@@ -73,7 +75,8 @@ class DialogControllerV2
                     AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
                     AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId,
                 )
-            return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
+            return tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
                     dialogapi.fortsettPaEksisterendeDialog(meldingRequest.fnr, meldingRequest)
                 }

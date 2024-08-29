@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.rest.oppgave
 
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.Henvendelse
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +26,8 @@ class OppgaveControllerV2
             tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    oppgaveBehandlingService
+                        .finnTildelteOppgaverIGsak()
                         .map { mapOppgave(it) }
                 }
 
@@ -37,7 +38,8 @@ class OppgaveControllerV2
             tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak(fnrRequest.fnr)
+                    oppgaveBehandlingService
+                        .finnTildelteOppgaverIGsak(fnrRequest.fnr)
                         .map { mapOppgave(it) }
                 }
 

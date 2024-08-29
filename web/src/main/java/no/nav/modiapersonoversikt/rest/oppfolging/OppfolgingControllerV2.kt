@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Dagpengeytelse
@@ -16,6 +15,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import no.nav.modiapersonoversikt.rest.Typeanalyzers
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -31,8 +31,8 @@ class OppfolgingControllerV2
         @PostMapping
         fun hent(
             @RequestBody fnrRequest: FnrRequest,
-        ): Map<String, Any?> {
-            return tilgangskontroll
+        ): Map<String, Any?> =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
                     Audit.describe(
@@ -49,15 +49,14 @@ class OppfolgingControllerV2
                         "enhet" to hentEnhet(oppfolging.oppfolgingsenhet),
                     ).also(Typeanalyzers.OPPFOLGING_STATUS.analyzer::capture)
                 }
-        }
 
         @PostMapping("/ytelserogkontrakter")
         fun hentUtvidetOppf(
             @RequestBody fnrRequest: FnrRequest,
             @RequestParam("startDato") start: String?,
             @RequestParam("sluttDato") slutt: String?,
-        ): Map<String, Any?> {
-            return tilgangskontroll
+        ): Map<String, Any?> =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
                     Audit.describe(
@@ -88,7 +87,6 @@ class OppfolgingControllerV2
                         "ytelser" to hentYtelser(ytelserResponse.ytelser),
                     ).also(Typeanalyzers.OPPFOLGING_YTELSER.analyzer::capture)
                 }
-        }
 
         private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
             if (ytelser == null) return emptyList()
@@ -108,8 +106,8 @@ class OppfolgingControllerV2
             }
         }
 
-        private fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> {
-            return when (ytelse) {
+        private fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> =
+            when (ytelse) {
                 is Dagpengeytelse ->
                     arrayOf(
                         "dagerIgjenPermittering" to ytelse.antallDagerIgjenPermittering,
@@ -120,7 +118,6 @@ class OppfolgingControllerV2
 
                 else -> emptyArray()
             }
-        }
 
         private fun hentVedtak(vedtak: List<Vedtak>?): List<Map<String, Any?>> {
             if (vedtak == null) return emptyList()
@@ -149,22 +146,20 @@ class OppfolgingControllerV2
             }
         }
 
-        private fun hentVeileder(veileder: Veileder?): Map<String, Any?>? {
-            return veileder?.let {
+        private fun hentVeileder(veileder: Veileder?): Map<String, Any?>? =
+            veileder?.let {
                 mapOf(
                     "ident" to it.ident,
                     "navn" to it.navn,
                 )
             }
-        }
 
-        private fun hentEnhet(enhet: ArbeidsrettetOppfolging.Enhet?): Map<String, Any?>? {
-            return enhet?.let {
+        private fun hentEnhet(enhet: ArbeidsrettetOppfolging.Enhet?): Map<String, Any?>? =
+            enhet?.let {
                 mapOf(
                     "id" to it.enhetId,
                     "navn" to it.navn,
                     "status" to null, // TODO Ubrukt i frontend, men lar feltet være frem til det er fjernet fra domenemodellen der
                 )
             }
-        }
     }

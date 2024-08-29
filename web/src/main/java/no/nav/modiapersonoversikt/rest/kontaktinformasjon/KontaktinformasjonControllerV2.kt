@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
@@ -9,6 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -23,8 +23,8 @@ class KontaktinformasjonControllerV2
         @PostMapping
         fun hentKontaktinformasjon(
             @RequestBody fnrRequest: FnrRequest,
-        ): KontaktinformasjonApi.Kontaktinformasjon {
-            return tilgangskontroll
+        ): KontaktinformasjonApi.Kontaktinformasjon =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnrRequest.fnr)) {
                     val response = krrService.hentDigitalKontaktinformasjon(fnrRequest.fnr)
@@ -35,7 +35,6 @@ class KontaktinformasjonControllerV2
                         reservasjon = response.reservasjon,
                     )
                 }
-        }
 
         private fun getEpost(response: Krr.DigitalKontaktinformasjon): KontaktinformasjonApi.Verdi? {
             if (response.epostadresse?.value.isNullOrEmpty()) {

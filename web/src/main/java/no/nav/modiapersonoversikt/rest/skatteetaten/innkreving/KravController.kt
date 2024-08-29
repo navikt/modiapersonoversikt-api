@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.skatteetaten.innkreving
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.rest.skatteetaten.innkreving.json.KravdetaljerForPersonJsonRequest
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.rest.skatteetaten.innkreving.json.KravdetaljerJsonResponse
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravService
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravdetaljerId
@@ -33,9 +33,9 @@ class KravController(
 
     @PostMapping("/kravdetaljer")
     fun hentAlleKravdetaljer(
-        @RequestBody kravdetaljerForPersonJsonRequest: KravdetaljerForPersonJsonRequest,
+        @RequestBody fnrRequest: FnrRequest,
     ): ResponseEntity<List<KravdetaljerJsonResponse>> {
-        val fnr = Fnr(kravdetaljerForPersonJsonRequest.personident)
+        val fnr = Fnr(fnrRequest.fnr)
 
         if (!Fnr.isValid(fnr.get())) {
             return ResponseEntity.badRequest().build()

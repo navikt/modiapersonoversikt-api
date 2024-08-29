@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.rest.skatteetaten.innkreving
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
-import no.nav.modiapersonoversikt.rest.skatteetaten.innkreving.json.KravdetaljerForPersonJsonRequest
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravService
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
@@ -89,7 +89,7 @@ class KravControllerTest {
         mockMvc
             .post("/rest/skatteetaten/innkreving/kravdetaljer") {
                 contentType = MediaType.APPLICATION_JSON
-                content = objectMapper.writeValueAsString(KravdetaljerForPersonJsonRequest("12345678910"))
+                content = objectMapper.writeValueAsString(FnrRequest("12345678910"))
             }.andExpect {
                 status { isOk() }
                 content { contentType("application/json") }
@@ -122,7 +122,7 @@ class KravControllerTest {
         mockMvc
             .post("/rest/skatteetaten/innkreving/kravdetaljer") {
                 contentType = MediaType.APPLICATION_JSON
-                content = objectMapper.writeValueAsString(KravdetaljerForPersonJsonRequest("1"))
+                content = objectMapper.writeValueAsString(FnrRequest("1"))
             }.andExpect {
                 status { isBadRequest() }
             }

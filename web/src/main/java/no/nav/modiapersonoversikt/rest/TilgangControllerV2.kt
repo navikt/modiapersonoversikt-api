@@ -3,13 +3,13 @@ package no.nav.modiapersonoversikt.rest
 import com.nimbusds.jwt.JWTClaimsSet
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 
 @RestController
 @RequestMapping("/rest/v2/tilgang")
@@ -42,8 +41,8 @@ class TilgangControllerV2
             @RequestBody fnrRequest: FnrRequest,
             @RequestParam("enhet", required = false) enhet: String?,
             request: HttpServletRequest,
-        ): TilgangDTO {
-            return tilgangskontroll
+        ): TilgangDTO =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .getDecision()
                 .makeResponse()
@@ -52,31 +51,30 @@ class TilgangControllerV2
                 .also {
                     enhetTrace.log(enhet ?: "IKKE SATT")
                 }
-        }
 
         @GetMapping
-        fun harTilgang(): TilgangDTO {
-            return tilgangskontroll
+        fun harTilgang(): TilgangDTO =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .getDecision()
                 .makeResponse()
-        }
 
         @GetMapping("/auth")
-        fun authIntropection(): AuthIntropectionDTO {
-            return AuthContextUtils.getClaims()
+        fun authIntropection(): AuthIntropectionDTO =
+            AuthContextUtils
+                .getClaims()
                 .map(JWTClaimsSet::getExpirationDate)
                 .orElse(AuthIntropectionDTO.INVALID)
-        }
 
-        private fun TilgangDTO.sjekkAktivFolkeregistrIden(fnr: String): TilgangDTO {
-            return if (this.harTilgang) {
+        private fun TilgangDTO.sjekkAktivFolkeregistrIden(fnr: String): TilgangDTO =
+            if (this.harTilgang) {
                 val aktivIdent =
-                    pdlOppslagService.hentFolkeregisterIdenter(fnr)
-                        ?.identer?.find { !it.historisk }
+                    pdlOppslagService
+                        .hentFolkeregisterIdenter(fnr)
+                        ?.identer
+                        ?.find { !it.historisk }
                 this.copy(aktivIdent = aktivIdent?.ident)
             } else {
                 this
             }
-        }
     }
