@@ -5,13 +5,13 @@ import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravgrunnlag
 
-data class KravDetaljerJsonResponse(
+data class KravdetaljerJsonResponse(
     val kravgrunnlag: KravgrunnlagJson,
     val krav: List<KravJson>,
 ) {
     companion object {
-        fun fromDomain(kravdetaljer: Kravdetaljer): KravDetaljerJsonResponse =
-            KravDetaljerJsonResponse(
+        fun fromDomain(kravdetaljer: Kravdetaljer): KravdetaljerJsonResponse =
+            KravdetaljerJsonResponse(
                 kravgrunnlag = KravgrunnlagJson.fromDomain(kravdetaljer.kravgrunnlag),
                 krav = kravdetaljer.krav.map(KravJson::fromDomain),
             )

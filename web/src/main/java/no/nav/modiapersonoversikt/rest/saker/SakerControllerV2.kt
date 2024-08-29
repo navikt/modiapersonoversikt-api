@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.rest.saker
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.Feilmelding
 import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
@@ -14,6 +13,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument.Variantformat
@@ -42,8 +42,9 @@ class SakerControllerV2
             request: HttpServletRequest,
             @RequestBody fnrRequest: FnrRequest,
             @RequestParam(value = "enhet") enhet: String,
-        ): SakerApi.ResultatSoknadsstatus {
-            return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+        ): SakerApi.ResultatSoknadsstatus =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnrRequest.fnr)) {
                     val sakerWrapper = sakerService.hentSafSaker(fnrRequest.fnr).asWrapper()
                     val sakstemaWrapper = sakstemaService.hentSakstemaSoknadsstatus(sakerWrapper.resultat, fnrRequest.fnr)
@@ -56,7 +57,6 @@ class SakerControllerV2
 
                     mappingContext.mapTilResultat(sakstemaWrapper.resultat)
                 }
-        }
 
         @PostMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"], produces = ["application/pdf"])
         fun hentDokument(
@@ -64,8 +64,8 @@ class SakerControllerV2
             @RequestBody fnrRequest: FnrRequest,
             @PathVariable("journalpostId") journalpostId: String,
             @PathVariable("dokumentreferanse") dokumentreferanse: String,
-        ): ResponseEntity<Any?> {
-            return tilgangskontroll
+        ): ResponseEntity<Any?> =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
                     Audit.describe(
@@ -97,13 +97,12 @@ class SakerControllerV2
                         }
                     }
                 }
-        }
 
         private fun harTilgangTilDokument(
             fnrRequest: FnrRequest,
             dokument: DokumentMetadata,
-        ): TjenesteResultatWrapper {
-            return if (!dokument.isErJournalfort) {
+        ): TjenesteResultatWrapper =
+            if (!dokument.isErJournalfort) {
                 TjenesteResultatWrapper(
                     Feilmelding.IKKE_JOURNALFORT,
                     mapOf(
@@ -117,13 +116,13 @@ class SakerControllerV2
             } else {
                 TjenesteResultatWrapper(true)
             }
-        }
 
         private fun finnVariantformat(
             journalpostMetadata: DokumentMetadata,
             dokumentreferanse: String,
         ): Variantformat =
-            journalpostMetadata.vedlegg.plus(journalpostMetadata.hoveddokument)
+            journalpostMetadata.vedlegg
+                .plus(journalpostMetadata.hoveddokument)
                 .find { dok -> dok.dokumentreferanse == dokumentreferanse }
                 ?.variantformat
                 ?: ARKIV
@@ -131,19 +130,19 @@ class SakerControllerV2
         private fun hentDokumentMetadata(
             journalpostId: String,
             fnr: String,
-        ): DokumentMetadata {
-            return safService.hentJournalposter(fnr).resultat
+        ): DokumentMetadata =
+            safService
+                .hentJournalposter(fnr)
+                .resultat
                 .firstOrNull { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
                 ?: throw RuntimeException("Fant ikke metadata om journalpostId $journalpostId. Dette bør ikke skje.")
-        }
 
         private fun finnesDokumentReferansenIMetadata(
             dokumentMetadata: DokumentMetadata,
             dokumentreferanse: String,
-        ): Boolean {
-            return dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
+        ): Boolean =
+            dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
                 dokumentMetadata.vedlegg.any { dokument -> dokument.dokumentreferanse == dokumentreferanse }
-        }
 
         private fun SakerService.Resultat.asWrapper(): ResultatWrapper<List<Sak>> {
             val saker =
@@ -161,8 +160,7 @@ class SakerControllerV2
                         runCatching {
                             Baksystem.valueOf(it)
                         }.getOrNull()
-                    }
-                    .toSet()
+                    }.toSet()
 
             return ResultatWrapper(
                 saker,

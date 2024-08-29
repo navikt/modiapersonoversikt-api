@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest.journalforing
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.commondomain.FnrRequest
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Companion.describe
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.*
@@ -9,6 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies.henvendelseTilhorerBruker
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies.tilgangTilBruker
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
@@ -29,13 +29,12 @@ class JournalforingControllerV2
         @PostMapping("/saker/")
         fun hentSaker(
             @RequestBody fnrRequest: FnrRequest,
-        ): SakerService.Resultat {
-            return tilgangskontroll
+        ): SakerService.Resultat =
+            tilgangskontroll
                 .check(tilgangTilBruker(Fnr.of(fnrRequest.fnr)))
                 .get(describe(Audit.Action.READ, AuditResources.Person.GsakSaker, FNR to fnrRequest.fnr)) {
                     sakerService.hentSaker(fnrRequest.fnr)
                 }
-        }
 
         @PostMapping("/{traadId}")
         fun knyttTilSak(

@@ -1,10 +1,9 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
-import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.KravidentifikatorType
+import no.nav.common.types.identer.Fnr
 
 interface SkatteetatenInnkrevingClient {
-    fun getKravdetaljer(
-        kravidentifikator: String,
-        kravidentifikatorType: KravidentifikatorType,
-    ): Kravdetaljer?
+    fun hentKravdetaljer(kravdetaljerId: KravdetaljerId): Kravdetaljer?
+
+    fun hentAlleKravdetaljer(fnr: Fnr): List<Kravdetaljer>
 }
