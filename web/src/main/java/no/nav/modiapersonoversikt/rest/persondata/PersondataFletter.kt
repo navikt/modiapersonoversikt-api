@@ -4,12 +4,13 @@ import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.ForelderBarnRelasjonRolle
-import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.FullmaktsRolle
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KontaktinformasjonForDoedsboSkifteform.ANNET
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDetails
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraadeMedHandling
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
@@ -31,6 +32,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     data class Data(
         val personIdent: String,
         val persondata: Person,
+        val fullmektige: PersondataResult<List<FullmaktDetails>>,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
@@ -95,7 +97,16 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     foreldreansvar = hentForeldreansvar(data),
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
-                    fullmakt = hentFullmakt(data),
+                    fullmakt =
+                        hentFullmakt(data).fold(
+                            onSuccess = { it },
+                            onNotRelevant = { emptyList() },
+                            onFailure = { system, cause ->
+                                feilendeSystemer.add(system.name)
+                                Logging.secureLog.error("Persondata feilet system: $system", cause)
+                                emptyList()
+                            },
+                        ),
                     vergemal = hentVergemal(data),
                     tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                     telefonnummer = hentTelefonnummer(data),
@@ -842,30 +853,40 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentFullmakt(data: Data): List<Persondata.Fullmakt> {
-        return data.persondata.fullmakt.map {
-            val tredjepartsPerson =
-                data.tredjepartsPerson.map { personer -> personer[it.motpartsPersonident] }.getOrNull()
-            val navn = tredjepartsPerson?.navn
+    private fun hentFullmakt(data: Data): PersondataResult<List<Persondata.Fullmakt>> {
+        return data.fullmektige.map { fullmakter ->
+            fullmakter.map {
+                val tredjepartsPerson =
+                    data.tredjepartsPerson.map { personer -> personer[it.fullmektig as String] }.getOrNull()
+                val navn = tredjepartsPerson?.navn
 
-            Persondata.Fullmakt(
-                motpartsPersonident = it.motpartsPersonident,
-                motpartsPersonNavn = navn?.firstOrNull() ?: Persondata.Navn.UKJENT,
-                motpartsRolle =
-                    when (it.motpartsRolle) {
-                        FullmaktsRolle.FULLMAKTSGIVER -> Persondata.FullmaktsRolle.FULLMAKTSGIVER
-                        FullmaktsRolle.FULLMEKTIG -> Persondata.FullmaktsRolle.FULLMEKTIG
-                        else -> Persondata.FullmaktsRolle.UKJENT
-                    },
-                omrade = hentOmrade(it.omraader),
-                gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
-                digitalKontaktinformasjonTredjepartsperson = tredjepartsPerson?.digitalKontaktinformasjon,
-            )
+                Persondata.Fullmakt(
+                    motpartsPersonident = it.fullmektig as String,
+                    motpartsPersonNavn = navn?.firstOrNull() ?: Persondata.Navn.UKJENT,
+                    motpartsRolle = Persondata.FullmaktsRolle.FULLMEKTIG,
+                    omrade = hentOmrade(it.omraade ?: emptyList()),
+                    gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
+                    digitalKontaktinformasjonTredjepartsperson = tredjepartsPerson?.digitalKontaktinformasjon,
+                )
+            }
         }
     }
 
-    private fun hentOmrade(omraader: List<String>): List<Persondata.KodeBeskrivelse<String>> {
-        return omraader.map { omrade -> kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade) }
+    private fun hentOmrade(omraader: List<OmraadeMedHandling>): List<Persondata.OmraadeMedHandling<String>> {
+        return omraader.map { omrade ->
+            val omraadeBeskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade.tema as String)
+            Persondata.OmraadeMedHandling(
+                omraade = omraadeBeskrivelse,
+                handling =
+                    omrade.handling?.map {
+                        when (it) {
+                            OmraadeMedHandling.Handling.LES -> Persondata.Handling.LES
+                            OmraadeMedHandling.Handling.KOMMUNISER -> Persondata.Handling.KOMMUNISER
+                            OmraadeMedHandling.Handling.SKRIV -> Persondata.Handling.SKRIV
+                        }
+                    } ?: emptyList(),
+            )
+        }
     }
 
     private fun hentVergemal(data: Data): List<Persondata.Verge> {
@@ -999,8 +1020,22 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return Persondata.KontaktInformasjon(
             erManuell = oppfolging?.erManuell,
             erReservert = krrData?.reservasjon?.toBooleanStrictOrNull(),
-            epost = krrData?.epostadresse?.let { Persondata.KontaktInformasjon.Verdi(it.value, it.sistOppdatert, it.sistVerifisert) },
-            mobil = krrData?.mobiltelefonnummer?.let { Persondata.KontaktInformasjon.Verdi(it.value, it.sistOppdatert, it.sistVerifisert) },
+            epost =
+                krrData?.epostadresse?.let {
+                    Persondata.KontaktInformasjon.Verdi(
+                        it.value,
+                        it.sistOppdatert,
+                        it.sistVerifisert,
+                    )
+                },
+            mobil =
+                krrData?.mobiltelefonnummer?.let {
+                    Persondata.KontaktInformasjon.Verdi(
+                        it.value,
+                        it.sistOppdatert,
+                        it.sistVerifisert,
+                    )
+                },
         )
     }
 

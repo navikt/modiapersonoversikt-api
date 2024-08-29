@@ -45,6 +45,7 @@
         <module>pdl-pip-api</module>
         <module>skatteetaten-innkreving-api</module>
         <module>tiltakspenger</module>
+        <module>pdl-fullmakt-api</module>
     </modules>
 
     <dependencyManagement>

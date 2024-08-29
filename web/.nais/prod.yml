@@ -80,6 +80,7 @@ spec:
         - host: modia-soknadsstatus-api.intern.nav.no
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
+        - host: pdl-fullmakt.dev-fss-pub.nais.io
         - host: api-test.sits.no # Skatteetaten
       rules:
         - namespace: tpts
@@ -141,6 +142,10 @@ spec:
       value: "https://pdl-pip-api.prod-fss-pub.nais.io"
     - name: PDL_PIP_SCOPE
       value: "prod-fss:pdl:pdl-pip-api"
+    - name: PDL_FULLMAKT_URL
+      value: "https://pdl-fullmakt.prod-fss-pub.nais.io"
+    - name: PDL_FULLMAKT_SCOPE
+      value: "prod-fss:pdl:pdl-fullmakt"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
