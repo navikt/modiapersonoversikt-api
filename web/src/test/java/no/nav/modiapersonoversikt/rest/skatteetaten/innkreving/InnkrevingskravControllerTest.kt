@@ -43,7 +43,7 @@ class InnkrevingskravControllerTest {
         every { innkrevingskravService.hentInnkrevingskrav(any()) } returns innkrevingskrav
 
         mockMvc
-            .get("/rest/skatteetaten/innkrevingskrav/kravidentifikator") {
+            .get("/rest/innkrevingskrav/kravidentifikator") {
                 contentType = MediaType.APPLICATION_JSON
             }.andExpect {
                 status { isOk() }
@@ -75,7 +75,7 @@ class InnkrevingskravControllerTest {
         every { innkrevingskravService.hentInnkrevingskrav(any()) } returns null
 
         mockMvc
-            .get("/rest/skatteetaten/innkreving/kravdetaljer/kravidentifikator") {
+            .get("/rest/innkreving/kravdetaljer/kravidentifikator") {
                 contentType = MediaType.APPLICATION_JSON
             }.andExpect {
                 status { isNotFound() }
@@ -87,7 +87,7 @@ class InnkrevingskravControllerTest {
         every { innkrevingskravService.hentAlleInnkrevingskrav(any()) } returns listOf(innkrevingskrav)
 
         mockMvc
-            .post("/rest/skatteetaten/innkrevingskrav") {
+            .post("/rest/innkrevingskrav") {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(FnrRequest("12345678910"))
             }.andExpect {
@@ -120,7 +120,7 @@ class InnkrevingskravControllerTest {
     @Test
     fun `get alle krav for en person returnerer 400 hvis personident ikke er gyldig`() {
         mockMvc
-            .post("/rest/skatteetaten/innkrevingskrav") {
+            .post("/rest/innkrevingskrav") {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(FnrRequest("1"))
             }.andExpect {
