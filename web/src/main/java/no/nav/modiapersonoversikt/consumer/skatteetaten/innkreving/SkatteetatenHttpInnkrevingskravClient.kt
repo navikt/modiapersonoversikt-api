@@ -11,34 +11,35 @@ import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ClientException
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ServerException
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.KravdetaljerResponse
+import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.Kravgrunnlag
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.Kravlinje
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravClient
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravId
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.KravdetaljerId
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravgrunnlag
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.SkatteetatenInnkrevingClient
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
 import kotlin.math.round
 
-class SkatteetatenInnkrevingHttpClient(
+class SkatteetatenHttpInnkrevingskravClient(
     private val kravdetaljerApi: KravdetaljerApi,
     private val clientId: String,
     private val unleashService: UnleashService,
-) : SkatteetatenInnkrevingClient,
+) : InnkrevingskravClient,
     Pingable {
-    private val log = LoggerFactory.getLogger(SkatteetatenInnkrevingHttpClient::class.java)
+    private val log = LoggerFactory.getLogger(SkatteetatenHttpInnkrevingskravClient::class.java)
 
-    override fun hentKravdetaljer(kravdetaljerId: KravdetaljerId): Kravdetaljer? =
+    override fun hentInnkrevingskrav(innkrevingskravId: InnkrevingskravId): Innkrevingskrav? =
         runCatching {
             kravdetaljerApi
                 .getKravdetaljer(
                     klientid = clientId,
                     accept = "application/json",
-                    kravidentifikator = kravdetaljerId.value,
-                    kravidentifikatortype = KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR.name,
+                    kravidentifikator = innkrevingskravId.value,
+                    kravidentifikatortype = InnkrevingskravType.SKATTEETATENS_KRAVIDENTIFIKATOR.name,
                 )?.toDomain()
         }.getOrElse {
             when (it) {
@@ -52,14 +53,14 @@ class SkatteetatenInnkrevingHttpClient(
         }
 
     // Lager en liste med opptil 10 mockede kravdetaljer
-    override fun hentAlleKravdetaljer(fnr: Fnr): List<Kravdetaljer> =
+    override fun hentAlleInnkrevingskrav(fnr: Fnr): List<Innkrevingskrav> =
         (1..(1..10).random()).map {
             val opprinneligBeløp = round(Math.random() * 100.0)
             val gjenståendeBeløp = round(opprinneligBeløp * Math.random())
 
-            Kravdetaljer(
-                kravgrunnlag =
-                    Kravgrunnlag(
+            Innkrevingskrav(
+                grunnlag =
+                    Grunnlag(
                         datoNaarKravVarBesluttetHosOppdragsgiver = Clock.System.todayIn(TimeZone.currentSystemDefault()),
                     ),
                 krav =
@@ -81,8 +82,8 @@ class SkatteetatenInnkrevingHttpClient(
 
             // Midlertidig ping som kun fungerer i test.
             val kravdetaljer =
-                hentKravdetaljer(
-                    KravdetaljerId("87b5a5c6-17ea-413a-ad80-b6c3406188fa"),
+                hentInnkrevingskrav(
+                    InnkrevingskravId("87b5a5c6-17ea-413a-ad80-b6c3406188fa"),
                 )
 
             if (kravdetaljer == null) {
@@ -93,8 +94,8 @@ class SkatteetatenInnkrevingHttpClient(
         }
 }
 
-private fun KravdetaljerResponse.toDomain(): Kravdetaljer =
-    Kravdetaljer(kravgrunnlag.toDomain(), kravlinjer?.map(Kravlinje::toDomain) ?: emptyList())
+private fun KravdetaljerResponse.toDomain(): Innkrevingskrav =
+    Innkrevingskrav(kravgrunnlag.toDomain(), kravlinjer?.map(Kravlinje::toDomain) ?: emptyList())
 
 private fun Kravlinje.toDomain(): Krav =
     Krav(
@@ -103,7 +104,7 @@ private fun Kravlinje.toDomain(): Krav =
         gjenståendeBeløp = gjenstaaendeBeloep,
     )
 
-private fun no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.Kravgrunnlag.toDomain(): Kravgrunnlag =
-    Kravgrunnlag(
+private fun Kravgrunnlag.toDomain(): Grunnlag =
+    Grunnlag(
         datoNaarKravVarBesluttetHosOppdragsgiver = datoNaarKravVarBesluttetHosOppdragsgiver?.toKotlinLocalDate(),
     )

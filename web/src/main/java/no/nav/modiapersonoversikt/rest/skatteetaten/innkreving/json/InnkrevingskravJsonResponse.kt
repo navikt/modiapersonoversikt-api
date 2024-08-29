@@ -1,19 +1,19 @@
 package no.nav.modiapersonoversikt.rest.skatteetaten.innkreving.json
 
 import kotlinx.datetime.LocalDate
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravdetaljer
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Kravgrunnlag
 
-data class KravdetaljerJsonResponse(
+data class InnkrevingskravJsonResponse(
     val kravgrunnlag: KravgrunnlagJson,
     val krav: List<KravJson>,
 ) {
     companion object {
-        fun fromDomain(kravdetaljer: Kravdetaljer): KravdetaljerJsonResponse =
-            KravdetaljerJsonResponse(
-                kravgrunnlag = KravgrunnlagJson.fromDomain(kravdetaljer.kravgrunnlag),
-                krav = kravdetaljer.krav.map(KravJson::fromDomain),
+        fun fromDomain(innkrevingskrav: Innkrevingskrav): InnkrevingskravJsonResponse =
+            InnkrevingskravJsonResponse(
+                kravgrunnlag = KravgrunnlagJson.fromDomain(innkrevingskrav.grunnlag),
+                krav = innkrevingskrav.krav.map(KravJson::fromDomain),
             )
     }
 }
@@ -22,9 +22,9 @@ data class KravgrunnlagJson(
     val datoNaarKravVarBesluttetHosOppdragsgiver: LocalDate?,
 ) {
     companion object {
-        fun fromDomain(kravgrunnlag: Kravgrunnlag): KravgrunnlagJson =
+        fun fromDomain(grunnlag: Grunnlag): KravgrunnlagJson =
             KravgrunnlagJson(
-                datoNaarKravVarBesluttetHosOppdragsgiver = kravgrunnlag.datoNaarKravVarBesluttetHosOppdragsgiver,
+                datoNaarKravVarBesluttetHosOppdragsgiver = grunnlag.datoNaarKravVarBesluttetHosOppdragsgiver,
             )
     }
 }

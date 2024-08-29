@@ -6,6 +6,6 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class KravConfig {
     @Bean
-    open fun kravService(skatteetatenInnkrevingClient: SkatteetatenInnkrevingClient): KravService =
-        KravService(skatteetatenInnkrevingClient)
+    open fun kravService(innkrevingskravClient: InnkrevingskravClient): InnkrevingskravService =
+        InnkrevingskravService(innkrevingskravClient)
 }

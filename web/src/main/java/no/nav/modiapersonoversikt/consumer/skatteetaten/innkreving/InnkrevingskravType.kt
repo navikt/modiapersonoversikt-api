@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving
 
-enum class KravidentifikatorType {
+enum class InnkrevingskravType {
     SKATTEETATENS_KRAVIDENTIFIKATOR,
     OPPDRAGSGIVERS_KRAVIDENTIFIKATOR,
 }
