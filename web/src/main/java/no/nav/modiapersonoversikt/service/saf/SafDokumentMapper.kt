@@ -10,9 +10,12 @@ import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukersdokumenter.L
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.saf.domain.Kommunikasjonsretning
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
 object SafDokumentMapper {
+    private val log = LoggerFactory.getLogger(SafService::class.java)
+
     fun fraSafJournalpost(journalpost: Journalpost): DokumentMetadata? {
         val hovedDokument = fraSafDokumentInfo(getHoveddokumentet(journalpost)) ?: return null
         return DokumentMetadata().apply {
@@ -152,7 +155,10 @@ object SafDokumentMapper {
             Variantformat.FULLVERSJON -> Dokument.Variantformat.FULLVERSJON
             Variantformat.PRODUKSJON -> Dokument.Variantformat.PRODUKSJON
             Variantformat.PRODUKSJON_DLF -> Dokument.Variantformat.PRODUKSJON_DLF
-            null -> null
+            null -> {
+                log.warn("SAF dokument tilfredstiller ikke krav til variantFormat (SLADDET,ARKIV)")
+                null
+            }
             else -> throw RuntimeException(
                 "Ugyldig tekst for mapping til variantformat. Tekst: ${
                     getVariant(
