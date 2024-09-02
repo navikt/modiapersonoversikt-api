@@ -72,7 +72,6 @@ spec:
         - host: pdl-api.prod-fss-pub.nais.io
         - host: pdl-pip-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
-        - host: norg2.prod-fss-pub.nais.io
         - host: axsys.prod-fss-pub.nais.io
         - host: nom-api.intern.nav.no
         - host: skjermede-personer-pip.intern.nav.no
@@ -85,6 +84,8 @@ spec:
       rules:
         - namespace: tpts
           application: tiltakspenger-datadeling
+        - namespace: org
+          application: norg2
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -153,7 +154,7 @@ spec:
     - name: OPPGAVE_SCOPE
       value: "prod-fss:oppgavehandtering:oppgave"
     - name: NORG2_BASEURL
-      value: "https://norg2.prod-fss-pub.nais.io/norg2"
+      value: "http://norg2.org/norg2"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
       value: "2016-06-04"
     - name: INTERNAL_TILGANG
