@@ -12,7 +12,6 @@ import io.mockk.mockk
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
-import no.nav.common.rest.client.RestClient
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
@@ -21,6 +20,7 @@ import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import kotlin.test.assertTrue
@@ -36,7 +36,7 @@ class SkatteetatenInnkrevingHttpClientTest {
     private val maskinportenClient = mockk<MaskinportenClient>()
     private val unleashService = mockk<UnleashService>()
 
-    private val httpClient = skatteetatenInnkrevingConfig.httpClient(RestClient.baseClient(), maskinportenClient)
+    private val httpClient = skatteetatenInnkrevingConfig.httpClient(maskinportenClient, unleashService)
     private val apiClient = skatteetatenInnkrevingConfig.apiClient(wm.baseUrl(), httpClient)
     private val kravdetaljerApi = skatteetatenInnkrevingConfig.kravdetaljerApi(apiClient)
 
@@ -62,6 +62,12 @@ class SkatteetatenInnkrevingHttpClientTest {
         }
         
         """.trimIndent()
+
+    @BeforeEach
+    fun setup() {
+        every { unleashService.isEnabled(Feature.LOG_REQUEST_BODY) } returns false
+        every { unleashService.isEnabled(Feature.LOG_RESPONSE_BODY) } returns false
+    }
 
     @Test
     fun `get kravdetaljer with auth header should return successfull result`() {

@@ -53,7 +53,7 @@ class LoggingInterceptor(
     private val log = LoggerFactory.getLogger(LoggingInterceptor::class.java)
 
     private fun Request.peekContent(): String? {
-        val logRequestBodyEnabled = unleashService.isEnabled(Feature.LOG_REQUEST_BODY.propertyKey)
+        val logRequestBodyEnabled = unleashService.isEnabled(Feature.LOG_REQUEST_BODY)
         if (!logRequestBodyEnabled) return "IGNORED"
         val copy = this.newBuilder().build()
         val buffer = Buffer()
@@ -63,7 +63,7 @@ class LoggingInterceptor(
     }
 
     private fun Response.peekContent(): String? {
-        val logResponseBodyEnabled = unleashService.isEnabled(Feature.LOG_RESPONSE_BODY.propertyKey)
+        val logResponseBodyEnabled = unleashService.isEnabled(Feature.LOG_RESPONSE_BODY)
         if (!logResponseBodyEnabled) return "IGNORED"
         return when {
             this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
