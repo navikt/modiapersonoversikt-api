@@ -1,7 +1,10 @@
 package no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving
 
+import no.nav.common.rest.client.RestClient
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ApiClient
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravClient
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -15,12 +18,20 @@ import org.springframework.context.annotation.Configuration
 open class SkatteetatenInnkrevingConfig {
     @Bean("skatteetatenOppdragsinnkrevingClient")
     open fun httpClient(
-        httpClient: OkHttpClient,
         maskinportenClient: MaskinportenClient,
+        unleashService: UnleashService,
     ): OkHttpClient =
-        httpClient
+        RestClient
+            .baseClient()
             .newBuilder()
-            .addInterceptor { chain ->
+            .addInterceptor(XCorrelationIdInterceptor())
+            .addInterceptor(
+                LoggingInterceptor(unleashService, "SkatteetatenInnkreving") { request ->
+                    requireNotNull(request.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
+                },
+            ).addInterceptor { chain ->
                 val maskinportenToken = maskinportenClient.getAccessToken()
 
                 val request =
