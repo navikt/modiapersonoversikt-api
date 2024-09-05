@@ -27,11 +27,23 @@ interface ArenaInfotrygdApi {
         slutt: String?,
     ): OppfolgingskontraktResponse
 
-    fun hentSykepenger(fnr: String): Map<String, Any?>
+    fun hentSykepenger(
+        fnr: String,
+        fom: String,
+        tom: String,
+    ): Map<String, Any?>
 
-    fun hentForeldrepenger(fnr: String): Map<String, Any?>
+    fun hentForeldrepenger(
+        fnr: String,
+        fom: String,
+        tom: String,
+    ): Map<String, Any?>
 
-    fun hentPleiepenger(fnr: String): Map<String, Any?>
+    fun hentPleiepenger(
+        fnr: String,
+        fom: String,
+        tom: String,
+    ): Map<String, Any?>
 
     fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak?
 }
@@ -73,18 +85,33 @@ open class ArenaInfotrygdApiImpl(
     }
 
     @Cacheable(value = ["sykePengerCache"])
-    override fun hentSykepenger(fnr: String): Map<String, Any?> {
-        return sendRequest("sykepenger", fnr) ?: mapOf()
+    override fun hentSykepenger(
+        fnr: String,
+        fom: String,
+        tom: String,
+    ): Map<String, Any?> {
+        val requestContent = Json.encodeToString(RequestBodyContent(fnr, fom, tom))
+        return sendRequest("sykepenger", requestContent) ?: mapOf()
     }
 
     @Cacheable(value = ["foreldrePengerCache"])
-    override fun hentForeldrepenger(fnr: String): Map<String, Any?> {
-        return sendRequest("foreldrepenger", fnr) ?: mapOf()
+    override fun hentForeldrepenger(
+        fnr: String,
+        fom: String,
+        tom: String,
+    ): Map<String, Any?> {
+        val requestContent = Json.encodeToString(RequestBodyContent(fnr, fom, tom))
+        return sendRequest("foreldrepenger", requestContent) ?: mapOf()
     }
 
     @Cacheable(value = ["pleiePengerCache"])
-    override fun hentPleiepenger(fnr: String): Map<String, Any?> {
-        return sendRequest("pleiepenger", fnr) ?: mapOf()
+    override fun hentPleiepenger(
+        fnr: String,
+        fom: String,
+        tom: String,
+    ): Map<String, Any?> {
+        val requestContent = Json.encodeToString(RequestBodyContent(fnr, fom, tom))
+        return sendRequest("pleiepenger", requestContent) ?: mapOf()
     }
 
     private inline fun <reified T> sendRequest(

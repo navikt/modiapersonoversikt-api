@@ -12,12 +12,16 @@ import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 
 class ForeldrepengerUttrekk constructor(private val forelderpengerService: ForeldrepengerServiceBi) {
-    fun hent(fodselsnummer: String): Map<String, Any?> {
+    fun hent(
+        fnr: String,
+        start: LocalDate?,
+        slutt: LocalDate?,
+    ): Map<String, Any?> {
         val foreldrepenger =
             forelderpengerService.hentForeldrepengerListe(
                 ForeldrepengerListeRequest(
-                    fodselsnummer,
-                    Periode(LocalDate.now().minusYears(2), LocalDate.now()),
+                    fnr,
+                    Periode(start ?: LocalDate.now().minusYears(2), slutt ?: LocalDate.now()),
                 ),
             )
 

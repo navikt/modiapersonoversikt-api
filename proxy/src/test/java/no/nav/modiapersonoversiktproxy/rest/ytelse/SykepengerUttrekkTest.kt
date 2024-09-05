@@ -11,6 +11,7 @@ import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykBruker
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykStansaarsak
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykSykmeldingsperiode
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeResponse
+import org.joda.time.LocalDate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import javax.xml.datatype.DatatypeFactory
@@ -19,6 +20,8 @@ import kotlin.test.assertFailsWith
 
 private const val FNR = "10108000398"
 private const val STANS = "STANS"
+private val from = LocalDate.now().minusMonths(2)
+private val to = LocalDate.now()
 
 internal class SykepengerUttrekkTest {
     private val sykepengerV2: SykepengerV2 = mockk()
@@ -37,7 +40,7 @@ internal class SykepengerUttrekkTest {
     fun`Kaster Auth exception`() {
         every { sykepengerV2.hentSykepengerListe(any()) } throws HentSykepengerListeSikkerhetsbegrensning()
 
-        assertFailsWith<RuntimeException> { uttrekk.hent(FNR) }
+        assertFailsWith<RuntimeException> { uttrekk.hent(FNR, from, to) }
     }
 
     @Test
@@ -59,7 +62,7 @@ internal class SykepengerUttrekkTest {
     }
 
     private fun unwrapResponse(): Map<String, Any?> {
-        val response = uttrekk.hent(FNR)
+        val response = uttrekk.hent(FNR, from, to)
         val perioderListe = response["sykepenger"] as List<*>
         return perioderListe[0] as Map<String, Any?>
     }

@@ -10,7 +10,6 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.common.FnrDatoRangeRequest
-import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,32 +27,32 @@ class YtelseControllerV2
     ) {
         @PostMapping("sykepenger")
         fun hentSykepenger(
-            @RequestBody fnrRequest: FnrRequest,
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
         ): Map<String, Any?> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr)
+                    arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
         @PostMapping("foreldrepenger")
         fun hentForeldrepenger(
-            @RequestBody fnrRequest: FnrRequest,
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
         ): Map<String, Any?> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr)
+                    arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
         @PostMapping("pleiepenger")
         fun hentPleiepenger(
-            @RequestBody fnrRequest: FnrRequest,
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
         ): Map<String, Any?> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr)
+                    arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
         @PostMapping("tiltakspenger")

@@ -9,6 +9,7 @@ import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPerson
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPleiepengerettighet
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.meldinger.WSHentPleiepengerettighetResponse
+import org.joda.time.LocalDate
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -16,6 +17,8 @@ import kotlin.test.assertNull
 
 private const val FNR = "10108000398"
 private const val BARNETS_FNR = "01010012345"
+private val from = LocalDate.now().minusMonths(2)
+private val to = LocalDate.now()
 
 internal class PleiepengerUttrekkTest {
     private val pleiepengerV1: PleiepengerV1 = mockk()
@@ -29,14 +32,14 @@ internal class PleiepengerUttrekkTest {
     fun `Kaster Auth exception`() {
         every { pleiepengerV1.hentPleiepengerettighet(any()) } throws HentPleiepengerettighetSikkerhetsbegrensning()
 
-        assertFailsWith<RuntimeException> { uttrekk.hent(FNR) }
+        assertFailsWith<RuntimeException> { uttrekk.hent(FNR, from, to) }
     }
 
     @Test
     fun `Tom liste returnerer null`() {
         every { pleiepengerV1.hentPleiepengerettighet(any()) } returns WSHentPleiepengerettighetResponse()
 
-        val response = uttrekk.hent(FNR)
+        val response = uttrekk.hent(FNR, from, to)
         val pleiepenger = response["pleiepenger"]
 
         assertNull(pleiepenger)
@@ -46,7 +49,7 @@ internal class PleiepengerUttrekkTest {
     fun `Test på om felter blir satt`() {
         every { pleiepengerV1.hentPleiepengerettighet(any()) } returns mockResponse()
 
-        val response = uttrekk.hent(FNR)
+        val response = uttrekk.hent(FNR, from, to)
         val pleiepengerListe = response["pleiepenger"] as List<*>
         val pleiepenger = pleiepengerListe[0] as Map<*, *>
 

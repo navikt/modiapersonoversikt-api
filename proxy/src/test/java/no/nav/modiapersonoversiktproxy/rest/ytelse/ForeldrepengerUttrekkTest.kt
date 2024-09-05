@@ -8,6 +8,7 @@ import no.nav.tjeneste.virksomhet.foreldrepenger.v2.ForeldrepengerV2
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.HentForeldrepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.informasjon.FimFoedsel
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.meldinger.FimHentForeldrepengerettighetResponse
+import org.joda.time.LocalDate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.math.BigInteger
@@ -16,6 +17,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 private const val FNR = "10108000398"
+private val from = LocalDate.now().minusMonths(2)
+private val to = LocalDate.now()
 
 internal class ForeldrepengerUttrekkTest {
     private val foreldrepengerServiceV2: ForeldrepengerV2 = mockk()
@@ -34,14 +37,14 @@ internal class ForeldrepengerUttrekkTest {
     fun `Kaster Auth exception`() {
         every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } throws HentForeldrepengerettighetSikkerhetsbegrensning()
 
-        assertFailsWith<RuntimeException> { uttrekk.hent(FNR) }
+        assertFailsWith<RuntimeException> { uttrekk.hent(FNR, from, to) }
     }
 
     @Test
     fun `Test på om felter blir satt`() {
         every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } returns mockResponse()
 
-        val response = uttrekk.hent(FNR)
+        val response = uttrekk.hent(FNR, from, to)
         val foreldrepengerListe = response["foreldrepenger"] as List<*>
         val foreldrepenger = foreldrepengerListe[0] as Map<*, *>
 
@@ -52,7 +55,7 @@ internal class ForeldrepengerUttrekkTest {
     fun `Tester datosetting`() {
         every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } returns mockResponse()
 
-        val response = uttrekk.hent(FNR)
+        val response = uttrekk.hent(FNR, from, to)
         val foreldrepengerListe = response["foreldrepenger"] as List<*>
         val foreldrepenger = foreldrepengerListe[0] as Map<*, *>
 

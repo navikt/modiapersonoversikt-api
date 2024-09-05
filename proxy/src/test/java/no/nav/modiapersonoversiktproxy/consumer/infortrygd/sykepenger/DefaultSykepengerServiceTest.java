@@ -34,7 +34,7 @@ public class DefaultSykepengerServiceTest {
     @BeforeClass
     public static void setUpOnce() {
         mapper = SykepengerMapper.getInstance();
-        request = new SykepengerRequest(from, IDENT, to);
+        request = new SykepengerRequest(IDENT, from, to);
         rawResponse = SykepengerMockFactory.createFimHentSykepengerResponse();
     }
 

@@ -11,10 +11,14 @@ import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 
 class SykepengerUttrekk constructor(private val sykepengerService: SykepengerServiceBi) {
-    fun hent(fodselsnummer: String): Map<String, Any?> {
+    fun hent(
+        fnr: String,
+        start: LocalDate?,
+        slutt: LocalDate?,
+    ): Map<String, Any?> {
         val sykepenger =
             sykepengerService.hentSykmeldingsperioder(
-                SykepengerRequest(LocalDate.now().minusYears(2).plusDays(1), fodselsnummer, LocalDate.now()),
+                SykepengerRequest(fnr, start ?: LocalDate.now().minusYears(2).plusDays(1), slutt ?: LocalDate.now()),
             )
 
         return mapOf(
