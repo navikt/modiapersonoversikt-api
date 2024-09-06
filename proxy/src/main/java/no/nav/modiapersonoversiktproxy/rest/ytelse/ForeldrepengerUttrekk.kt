@@ -10,6 +10,7 @@ import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.Foreldr
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.foreldrepenger.mapping.to.ForeldrepengerListeRequest
 import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
+import org.joda.time.Years
 
 class ForeldrepengerUttrekk constructor(private val forelderpengerService: ForeldrepengerServiceBi) {
     fun hent(
@@ -17,13 +18,18 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
         start: LocalDate?,
         slutt: LocalDate?,
     ): Map<String, Any?> {
+        val from = start ?: LocalDate.now().minusYears(2)
+        val to = slutt ?: LocalDate.now()
+        val diff = Years.yearsBetween(from, to)
+        val period =
+            if (diff.years < 2) {
+                Periode(to.minusYears(2), to)
+            } else {
+                Periode(from, to)
+            }
+
         val foreldrepenger =
-            forelderpengerService.hentForeldrepengerListe(
-                ForeldrepengerListeRequest(
-                    fnr,
-                    Periode(start ?: LocalDate.now().minusYears(2), slutt ?: LocalDate.now()),
-                ),
-            )
+            forelderpengerService.hentForeldrepengerListe(ForeldrepengerListeRequest(fnr, period))
 
         return mapOf(
             "foreldrepenger" to
@@ -106,8 +112,18 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                 "rettTilFedrekvote" to it.rettTilFedrekvote?.termnavn,
                 "rettTilMødrekvote" to it.isRettTilModrekvote?.termnavn,
                 "stansårsak" to it.stansaarsak?.termnavn,
-                "historiskeUtbetalinger" to it.historiskeUtbetalinger?.let { utbetalinger -> hentHistoriskeUtbetalinger(utbetalinger) },
-                "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { utbetalinger -> hentKommendeUtbetalinger(utbetalinger) },
+                "historiskeUtbetalinger" to
+                    it.historiskeUtbetalinger?.let { utbetalinger ->
+                        hentHistoriskeUtbetalinger(
+                            utbetalinger,
+                        )
+                    },
+                "kommendeUtbetalinger" to
+                    it.kommendeUtbetalinger?.let { utbetalinger ->
+                        hentKommendeUtbetalinger(
+                            utbetalinger,
+                        )
+                    },
             )
         }
     }

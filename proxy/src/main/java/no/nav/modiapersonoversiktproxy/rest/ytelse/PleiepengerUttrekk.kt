@@ -10,6 +10,7 @@ import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.Pleiepenge
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeRequest
 import no.nav.modiapersonoversiktproxy.rest.DATOFORMAT
 import org.joda.time.LocalDate
+import org.joda.time.Years
 
 class PleiepengerUttrekk constructor(
     private val pleiepengerService: PleiepengerService,
@@ -20,11 +21,20 @@ class PleiepengerUttrekk constructor(
         start: LocalDate?,
         slutt: LocalDate?,
     ): Map<String, Any?> {
+        val from = start ?: LocalDate.now().minusYears(2)
+        val to = slutt ?: LocalDate.now()
+        val diff = Years.yearsBetween(from, to)
+        val period =
+            if (diff.years < 2) {
+                Periode(to.minusYears(2), to)
+            } else {
+                Periode(from, to)
+            }
         val pleiepenger =
             pleiepengerService.hentPleiepengerListe(
                 PleiepengerListeRequest(
                     fnr,
-                    Periode(start ?: LocalDate.now().minusYears(2), slutt ?: LocalDate.now()),
+                    period,
                 ),
             )
 
