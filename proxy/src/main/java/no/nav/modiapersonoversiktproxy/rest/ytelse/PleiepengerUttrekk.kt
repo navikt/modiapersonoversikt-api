@@ -25,7 +25,7 @@ class PleiepengerUttrekk constructor(
         val to = slutt ?: LocalDate.now()
         val diff = Years.yearsBetween(from, to)
         val period =
-            if (diff.years < 2) {
+            if (diff.years > 2) {
                 Periode(to.minusYears(2), to)
             } else {
                 Periode(from, to)
