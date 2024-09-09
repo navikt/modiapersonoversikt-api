@@ -989,11 +989,11 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val tegnsprak: MutableList<Persondata.KodeBeskrivelse<String>> = mutableListOf()
 
         data.persondata.tilrettelagtKommunikasjon.map {
-            if (it.talespraaktolk != null && it.talespraaktolk!!.spraak != null) {
-                talesprak.add(kodeverk.hentKodeBeskrivelse(Kodeverk.SPRAK, it.talespraaktolk!!.spraak!!))
+            if (it.talespraaktolk != null) {
+                talesprak.add(kodeverk.hentKodeBeskrivelse(Kodeverk.SPRAK, it.talespraaktolk?.spraak ?: "ukjent"))
             }
-            if (it.tegnspraaktolk != null && it.tegnspraaktolk!!.spraak != null) {
-                tegnsprak.add(kodeverk.hentKodeBeskrivelse(Kodeverk.SPRAK, it.tegnspraaktolk!!.spraak!!))
+            if (it.tegnspraaktolk != null) {
+                tegnsprak.add(kodeverk.hentKodeBeskrivelse(Kodeverk.SPRAK, it.tegnspraaktolk?.spraak ?: "ukjent"))
             }
         }
 
