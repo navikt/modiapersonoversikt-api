@@ -39,18 +39,33 @@ class YtelseController
 
         @PostMapping("sykepenger")
         fun hentSykepenger(
-            @RequestBody fnr: String,
-        ): Map<String, Any?> = SykepengerUttrekk(sykepengerService).hent(fnr)
+            @RequestBody body: RequestBodyContent,
+        ): Map<String, Any?> =
+            SykepengerUttrekk(sykepengerService).hent(
+                body.fnr,
+                body.start?.let { lagRiktigDato(it) },
+                body.slutt?.let { lagRiktigDato(it) },
+            )
 
         @PostMapping("foreldrepenger")
         fun hentForeldrepenger(
-            @RequestBody fnr: String,
-        ): Map<String, Any?> = ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
+            @RequestBody body: RequestBodyContent,
+        ): Map<String, Any?> =
+            ForeldrepengerUttrekk(getForeldrepengerService()).hent(
+                body.fnr,
+                body.start?.let { lagRiktigDato(it) },
+                body.slutt?.let { lagRiktigDato(it) },
+            )
 
         @PostMapping("pleiepenger")
         fun hentPleiepenger(
-            @RequestBody fnr: String,
-        ): Map<String, Any?> = PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
+            @RequestBody body: RequestBodyContent,
+        ): Map<String, Any?> =
+            PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(
+                body.fnr,
+                body.start?.let { lagRiktigDato(it) },
+                body.slutt?.let { lagRiktigDato(it) },
+            )
 
         private fun getForeldrepengerService(): ForeldrepengerServiceBi {
             return ForeldrepengerServiceBi { request ->

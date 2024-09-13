@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversiktproxy.rest.ytelse
 
+import no.nav.modiapersonoversiktproxy.commondomain.Periode
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.Arbeidsforhold
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.UtbetalingPaVent
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.sykepenger.Gradering
@@ -9,12 +10,26 @@ import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.SykepengerS
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.sykepenger.mapping.to.SykepengerRequest
 import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
+import org.joda.time.Years
 
 class SykepengerUttrekk constructor(private val sykepengerService: SykepengerServiceBi) {
-    fun hent(fodselsnummer: String): Map<String, Any?> {
+    fun hent(
+        fnr: String,
+        start: LocalDate?,
+        slutt: LocalDate?,
+    ): Map<String, Any?> {
+        val from = start ?: LocalDate.now().minusYears(2)
+        val to = slutt ?: LocalDate.now()
+        val diff = Years.yearsBetween(from, to)
+        val period =
+            if (diff.years > 2) {
+                Periode(to.minusYears(2), to)
+            } else {
+                Periode(from, to)
+            }
         val sykepenger =
             sykepengerService.hentSykmeldingsperioder(
-                SykepengerRequest(LocalDate.now().minusYears(2).plusDays(1), fodselsnummer, LocalDate.now()),
+                SykepengerRequest(fnr, period.from, period.to),
             )
 
         return mapOf(

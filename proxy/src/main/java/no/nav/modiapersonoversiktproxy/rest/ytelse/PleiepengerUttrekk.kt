@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversiktproxy.rest.ytelse
 
+import no.nav.modiapersonoversiktproxy.commondomain.Periode
 import no.nav.modiapersonoversiktproxy.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.pleiepenger.Arbeidsforhold
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.pleiepenger.Pleiepengeperiode
@@ -8,13 +9,34 @@ import no.nav.modiapersonoversiktproxy.consumer.infotrygd.domain.pleiepenger.Ved
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.PleiepengerService
 import no.nav.modiapersonoversiktproxy.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeRequest
 import no.nav.modiapersonoversiktproxy.rest.DATOFORMAT
+import org.joda.time.LocalDate
+import org.joda.time.Years
 
 class PleiepengerUttrekk constructor(
     private val pleiepengerService: PleiepengerService,
     private val organisasjonService: OrganisasjonService,
 ) {
-    fun hent(fodselsnummer: String): Map<String, Any?> {
-        val pleiepenger = pleiepengerService.hentPleiepengerListe(PleiepengerListeRequest(fodselsnummer))
+    fun hent(
+        fnr: String,
+        start: LocalDate?,
+        slutt: LocalDate?,
+    ): Map<String, Any?> {
+        val from = start ?: LocalDate.now().minusYears(2)
+        val to = slutt ?: LocalDate.now()
+        val diff = Years.yearsBetween(from, to)
+        val period =
+            if (diff.years > 2) {
+                Periode(to.minusYears(2), to)
+            } else {
+                Periode(from, to)
+            }
+        val pleiepenger =
+            pleiepengerService.hentPleiepengerListe(
+                PleiepengerListeRequest(
+                    fnr,
+                    period,
+                ),
+            )
 
         return mapOf(
             "pleiepenger" to
@@ -57,7 +79,13 @@ class PleiepengerUttrekk constructor(
     private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
         return arbeidsforhold.map {
             mapOf(
-                "arbeidsgiverNavn" to it.arbeidsgiverOrgnr?.let { orgnr -> hentArbeidsgiverNavn(organisasjonService, orgnr) },
+                "arbeidsgiverNavn" to
+                    it.arbeidsgiverOrgnr?.let { orgnr ->
+                        hentArbeidsgiverNavn(
+                            organisasjonService,
+                            orgnr,
+                        )
+                    },
                 "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
                 "inntektsperiode" to it.inntektsperiode,
                 "inntektForPerioden" to it.inntektForPerioden,

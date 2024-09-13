@@ -12,7 +12,7 @@ public class SykepengerRequest implements Serializable {
     public SykepengerRequest() {
     }
 
-    public SykepengerRequest(LocalDate from, String ident, LocalDate to) {
+    public SykepengerRequest(String ident, LocalDate from, LocalDate to) {
         this.from = from;
         this.ident = ident;
         this.to = to;
