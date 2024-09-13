@@ -212,7 +212,7 @@ class PersondataServiceImpl(
 
     private fun PersondataResult<List<FullmaktDetails>>.findKontaktinformasjonTredjepartspersoner(): List<String> {
         return this.fold(
-            onSuccess = { it.mapNotNull { it.fullmaktsgiver } },
+            onSuccess = { it.mapNotNull { it.fullmektig } },
             onFailure = { system, cause ->
                 log.error("Kunne ikke hente kontaktinfo for tredjeparter fra $system", cause)
                 emptyList()
