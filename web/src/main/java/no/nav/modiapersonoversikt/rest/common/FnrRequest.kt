@@ -6,6 +6,6 @@ data class FnrRequest(
 
 data class FnrDatoRangeRequest(
     val fnr: String,
-    val fom: String,
-    val tom: String,
+    val fom: String? = null,
+    val tom: String? = null,
 )

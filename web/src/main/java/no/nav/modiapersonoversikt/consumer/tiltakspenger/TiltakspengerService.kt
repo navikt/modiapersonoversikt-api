@@ -14,8 +14,8 @@ import org.springframework.cache.annotation.Cacheable
 interface TiltakspengerService {
     fun hentVedtakDetaljer(
         fodselsnummer: Fnr,
-        fom: String,
-        tom: String,
+        fom: String?,
+        tom: String?,
     ): List<Vedtak>
 }
 
@@ -27,8 +27,8 @@ open class TiltakspengerServiceImpl(
     @Cacheable
     override fun hentVedtakDetaljer(
         fodselsnummer: Fnr,
-        fom: String,
-        tom: String,
+        fom: String?,
+        tom: String?,
     ): List<Vedtak> = tiltakspengerApi.vedtakDetaljerPost(vedtakReqDTO = VedtakReqDTO(ident = fodselsnummer.get(), fom, tom)).orEmpty()
 
     override fun ping() =
