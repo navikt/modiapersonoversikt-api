@@ -30,7 +30,9 @@ open class ArbeidsrettetOppfolgingConfig {
         unleashService: UnleashService,
     ): ArbeidsrettetOppfolging.Service {
         val httpClient =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
                     LoggingInterceptor(unleashService, "Oppfolging") {
@@ -38,13 +40,11 @@ open class ArbeidsrettetOppfolgingConfig {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(
+                ).addInterceptor(
                     AuthorizationInterceptor {
                         AuthContextUtils.requireBoundedClientOboToken(onBehalfOfTokenClient.bindTo(downstreamApi))
                     },
-                )
-                .build()
+                ).build()
 
         return ArbeidsrettetOppfolgingServiceImpl(
             apiUrl = url,
@@ -54,10 +54,9 @@ open class ArbeidsrettetOppfolgingConfig {
     }
 
     @Bean
-    open fun oppfolgingsApiPing(service: ArbeidsrettetOppfolging.Service): Pingable {
-        return ConsumerPingable(
+    open fun oppfolgingsApiPing(service: ArbeidsrettetOppfolging.Service): Pingable =
+        ConsumerPingable(
             "OppfolgingsInfoApi",
             service::ping,
         )
-    }
 }

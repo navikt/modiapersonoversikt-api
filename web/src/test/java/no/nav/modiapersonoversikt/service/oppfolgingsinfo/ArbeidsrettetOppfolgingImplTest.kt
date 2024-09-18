@@ -1,7 +1,10 @@
 package no.nav.modiapersonoversikt.service.oppfolgingsinfo
 
-import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
+import com.marcinziolo.kotlin.wiremock.post
+import com.marcinziolo.kotlin.wiremock.returns
+import com.marcinziolo.kotlin.wiremock.returnsJson
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import io.mockk.Called
@@ -106,7 +109,7 @@ class ArbeidsrettetOppfolgingImplTest {
 
     private fun gittOppfolgingStatus() {
         @Language("json")
-        val body =
+        val returnbody =
             """
             {
                 "oppfolgingsenhet": {
@@ -118,9 +121,11 @@ class ArbeidsrettetOppfolgingImplTest {
             }
             """.trimIndent()
 
-        wiremock.get(urlMatching("/person/$FNR/oppfolgingsstatus")) {
+        wiremock.post {
+            urlMatching("/v2/person/hent-oppfolgingsstatus")
+        }.returnsJson {
             status(200)
-            json(body)
+            body = returnbody
         }
     }
 
