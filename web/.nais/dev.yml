@@ -63,7 +63,6 @@ spec:
         - host: kodeverk-api.intern.dev.nav.no
         - host: saf-q1.dev-fss-pub.nais.io
         - host: sokos-utbetaldata.dev-fss-pub.nais.io
-        - host: veilarboppfolging.dev-fss-pub.nais.io
         - host: digdir-krr-proxy.intern.dev.nav.no
         - host: sokos-kontoregister-person.intern.dev.nav.no
         - host: sf-henvendelse-api-proxy.dev-fss-pub.nais.io
@@ -84,6 +83,8 @@ spec:
           application: tiltakspenger-datadeling
         - namespace: org
           application: norg2
+        - namespace: poao
+          application: veilarboppfolging
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -117,9 +118,9 @@ spec:
     - name: UTBETALING_SCOPE
       value: "dev-fss:okonomi:sokos-utbetaldata"
     - name: VEILARBOPPFOLGINGAPI_URL
-      value: "https://veilarboppfolging.dev-fss-pub.nais.io/veilarboppfolging/api"
+      value: "http://veilarboppfolging.poao/veilarboppfolging/api"
     - name: VEILARBOPPFOLGINGAPI_SCOPE
-      value: "dev-fss:pto:veilarboppfolging"
+      value: "dev-gcp:poao:veilarboppfolging"
     - name: KRR_REST_URL
       value: "https://digdir-krr-proxy.intern.dev.nav.no/"
     - name: KRR_SCOPE
