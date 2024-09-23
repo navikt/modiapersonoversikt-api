@@ -4,9 +4,13 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import kotlin.reflect.KClass
@@ -63,16 +67,23 @@ open class ArbeidsrettetOppfolgingServiceImpl(
 
     private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder {
         return httpClient.fetchJson(
-            url = "$url/person/${fodselsnummer.get()}/oppfolgingsstatus",
+            url = "$url/v2/person/hent-oppfolgingsstatus",
+            requestBody = FnrRequest(fnr = fodselsnummer.get()).toRequestBody(),
             type = ArbeidsrettetOppfolging.EnhetOgVeileder::class,
         )
     }
 
     private fun <T : Any> OkHttpClient.fetchJson(
         url: String,
+        requestBody: RequestBody? = null,
         type: KClass<T>,
     ): T {
-        val request = Request.Builder().url(url).build()
+        val request =
+            Request.Builder().url(url).apply {
+                requestBody?.let {
+                    this.post(it)
+                }
+            }.build()
         val response = this.newCall(request).execute()
         val statusCode = response.code
         val body = response.body?.string()
@@ -84,3 +95,5 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         }
     }
 }
+
+fun FnrRequest.toRequestBody(): RequestBody = objectMapper.writeValueAsString(this).toRequestBody("application/json".toMediaType())
