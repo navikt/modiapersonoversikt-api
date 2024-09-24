@@ -15,7 +15,7 @@ open class InterceptorConfig {
         tjenestekallLogger: TjenestekallLogger,
     ): TjenestekallLoggingInterceptorFactory =
         { name, interceptor ->
-            LoggingInterceptor(unleashService, name, tjenestekallLogger, interceptor)
+            LoggingInterceptor(unleashService, tjenestekallLogger, name, interceptor)
         }
 }
 

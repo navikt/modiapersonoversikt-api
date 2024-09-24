@@ -39,7 +39,7 @@ class SkatteetatenInnkrevingHttpClientTest {
     private val maskinportenClient = mockk<MaskinportenClient>()
     private val unleashService = mockk<UnleashService>()
     private val loggingInterceptor =
-        LoggingInterceptor(unleashService, "SkatteetatenInnkrevingHttpClient", TjenestekallLogg) { _ -> "" }
+        LoggingInterceptor(unleashService, TjenestekallLogg, "SkatteetatenInnkrevingHttpClient") { _ -> "" }
     private val tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory =
         { _, _ -> loggingInterceptor }
 

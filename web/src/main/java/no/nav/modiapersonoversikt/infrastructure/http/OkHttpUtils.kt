@@ -43,10 +43,10 @@ object OkHttpUtils {
 }
 
 class LoggingInterceptor(
-    val unleashService: UnleashService,
-    val name: String,
+    private val unleashService: UnleashService,
     private val tjenestekallLogger: TjenestekallLogger,
-    val callIdExtractor: (Request) -> String,
+    private val name: String,
+    private val callIdExtractor: (Request) -> String,
 ) : Interceptor {
     private val log = LoggerFactory.getLogger(LoggingInterceptor::class.java)
 
