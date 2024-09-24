@@ -14,7 +14,7 @@ class UnleashTjenestekallLogger(
         fields: Map<String, Any?>,
         tags: Map<String, Any?>,
         throwable: Throwable?,
-    ) = logIfEnabled { info(header, fields, tags, throwable) }
+    ) = logIfEnabled { delegate.info(header, fields, tags, throwable) }
 
     override fun warn(
         header: String,
