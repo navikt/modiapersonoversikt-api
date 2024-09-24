@@ -31,9 +31,10 @@ spec:
     enabled: true
   resources:
     requests:
-      cpu: 50m
+      cpu: 10m
       memory: 1024Mi
     limits:
+      cpu: 1000m
       memory: 2048Mi
   ingresses:
     - https://modiapersonoversikt-api.intern.dev.nav.no
