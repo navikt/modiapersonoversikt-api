@@ -9,6 +9,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.consumer.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Criterion
 import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Paging
@@ -16,14 +17,12 @@ import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceConfig
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
@@ -51,7 +50,7 @@ class InternalController
         private val machineToMachineTokenClient: MachineToMachineTokenClient,
         private val onBehalfOfTokenClient: OnBehalfOfTokenClient,
         private val tilgangskontroll: Tilgangskontroll,
-        private val unleashService: UnleashService,
+        private val tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
         private val tjenestekallLogger: TjenestekallLogger,
     ) {
         private val pdlApiUrl: URL = EnvironmentUtils.getRequiredProperty("PDL_API_URL").let(::URL)
@@ -134,7 +133,7 @@ class InternalController
                         config {
                         }
                         addInterceptor(
-                            LoggingInterceptor(unleashService, "PDL", tjenestekallLogger) { request ->
+                            tjenestekallLoggingInterceptorFactory("PDL") { request ->
                                 requireNotNull(request.header("X-Correlation-ID")) {
                                     "Kall uten \"X-Correlation-ID\" er ikke lov"
                                 }

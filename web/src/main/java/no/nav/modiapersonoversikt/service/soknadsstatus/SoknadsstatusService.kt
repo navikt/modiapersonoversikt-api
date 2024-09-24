@@ -2,13 +2,12 @@ package no.nav.modiapersonoversikt.service.soknadsstatus
 
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.apis.SoknadsstatusControllerApi
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Behandling
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.FnrRequest
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Hendelse
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
-import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 
@@ -30,13 +29,11 @@ interface SoknadsstatusService {
 @CacheConfig(cacheNames = ["soknadsstatusCache"], keyGenerator = "userkeygenerator")
 open class SoknadsstatusServiceImpl(
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
-    private val unleashService: UnleashService,
-    private val tjenestekallLogger: TjenestekallLogger,
+    private val tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     private val soknadsstatusApi: SoknadsstatusControllerApi =
         SoknadsstatusApiFactory.createSoknadsstatusApi(
             oboTokenClient,
-            unleashService,
-            tjenestekallLogger,
+            tjenestekallLoggingInterceptorFactory,
         ),
 ) : SoknadsstatusService {
     @Cacheable

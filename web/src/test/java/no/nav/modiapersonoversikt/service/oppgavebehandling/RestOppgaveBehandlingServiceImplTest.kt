@@ -4,6 +4,7 @@ import io.mockk.*
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
@@ -17,7 +18,6 @@ import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.personoversikt.common.kabac.Decision
-import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.*
@@ -38,6 +38,7 @@ class RestOppgaveBehandlingServiceImplTest {
     private val oboTokenClient: BoundedOnBehalfOfTokenClient = mockk()
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient = mockk()
     private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
+    private val tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory = mockk()
 
     private val oppgaveBehandlingService =
         RestOppgaveBehandlingServiceImpl(
@@ -46,8 +47,7 @@ class RestOppgaveBehandlingServiceImplTest {
             tilgangskontroll,
             oboTokenClient,
             machineToMachineTokenClient,
-            unleashService,
-            TjenestekallLogg,
+            tjenestekallLoggingInterceptorFactory,
             apiClient,
             systemApiClient,
             fixedClock,

@@ -3,9 +3,8 @@ package no.nav.modiapersonoversikt.consumer.krr
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import no.nav.personoversikt.common.logging.TjenestekallLogger
@@ -20,7 +19,7 @@ open class KrrConfig {
     @Primary
     open fun krrService(
         machineToMachineTokenClient: MachineToMachineTokenClient,
-        unleashService: UnleashService,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
         tjenestekallLogger: TjenestekallLogger,
     ): Krr.Service {
         val scope = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("KRR_SCOPE"))
@@ -29,7 +28,7 @@ open class KrrConfig {
                 .baseClient()
                 .newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "digdir-krr-proxy", tjenestekallLogger) { request ->
+                    tjenestekallLoggingInterceptorFactory("digdir-krr-proxy") { request ->
                         requireNotNull(request.header("Nav-Call-Id"))
                     },
                 ).addInterceptor(

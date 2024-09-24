@@ -3,14 +3,12 @@ package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
-import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,8 +21,7 @@ open class BrukernotifikasjonConfig {
     @Bean
     open fun brukernotifikasjonService(
         oboTokenProvider: OnBehalfOfTokenClient,
-        unleashService: UnleashService,
-        tjenestekallLogger: TjenestekallLogger,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     ): Brukernotifikasjon.Service {
         val authInterceptor =
             HeadersInterceptor {
@@ -39,7 +36,7 @@ open class BrukernotifikasjonConfig {
                 .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "Brukernotifikasjon", tjenestekallLogger) { request ->
+                    tjenestekallLoggingInterceptorFactory("Brukernotifikasjon") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

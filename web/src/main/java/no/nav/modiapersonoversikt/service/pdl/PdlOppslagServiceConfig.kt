@@ -5,9 +5,8 @@ import io.ktor.client.engine.okhttp.OkHttp
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.bindTo
 import no.nav.personoversikt.common.logging.TjenestekallLogger
@@ -25,7 +24,7 @@ open class PdlOppslagServiceConfig {
     open fun pdlOppslagService(
         machineToMachineTokenClient: MachineToMachineTokenClient,
         oboTokenClient: OnBehalfOfTokenClient,
-        unleashService: UnleashService,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
         tjenestekallLogger: TjenestekallLogger,
     ): PdlOppslagService {
         val gqlHttpClient =
@@ -34,7 +33,7 @@ open class PdlOppslagServiceConfig {
                     config {
                     }
                     addInterceptor(
-                        LoggingInterceptor(unleashService, "PDL", tjenestekallLogger) { request ->
+                        tjenestekallLoggingInterceptorFactory("PDL") { request ->
                             requireNotNull(request.header("X-Correlation-ID")) {
                                 "Kall uten \"X-Correlation-ID\" er ikke lov"
                             }

@@ -12,6 +12,8 @@ import io.mockk.mockk
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
@@ -36,8 +38,13 @@ class SkatteetatenInnkrevingHttpClientTest {
 
     private val maskinportenClient = mockk<MaskinportenClient>()
     private val unleashService = mockk<UnleashService>()
+    private val loggingInterceptor =
+        LoggingInterceptor(unleashService, "SkatteetatenInnkrevingHttpClient", TjenestekallLogg) { _ -> "" }
+    private val tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory =
+        { _, _ -> loggingInterceptor }
 
-    private val httpClient = skatteetatenInnkrevingConfig.httpClient(maskinportenClient, unleashService, TjenestekallLogg)
+    private val httpClient =
+        skatteetatenInnkrevingConfig.httpClient(maskinportenClient, tjenestekallLoggingInterceptorFactory)
     private val apiClient = skatteetatenInnkrevingConfig.apiClient(wm.baseUrl(), httpClient)
     private val kravdetaljerApi = skatteetatenInnkrevingConfig.kravdetaljerApi(apiClient)
 

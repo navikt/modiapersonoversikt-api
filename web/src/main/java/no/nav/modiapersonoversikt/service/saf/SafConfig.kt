@@ -5,12 +5,11 @@ import io.ktor.client.engine.okhttp.OkHttp
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.bindTo
@@ -27,8 +26,8 @@ open class SafConfig {
 
     @Bean
     open fun safService(
-        unleashService: UnleashService,
         oboTokenClient: OnBehalfOfTokenClient,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
         tjenestekallLogger: TjenestekallLogger,
     ): SafService {
         val client: OkHttpClient =
@@ -40,7 +39,7 @@ open class SafConfig {
                         this.httpHeaders(oboTokenClient.bindTo(downstreamapi))
                     },
                 ).addInterceptor(
-                    LoggingInterceptor(unleashService, "Saf", tjenestekallLogger) { request ->
+                    tjenestekallLoggingInterceptorFactory("Saf") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
@@ -53,7 +52,7 @@ open class SafConfig {
                     config {
                     }
                     addInterceptor(
-                        LoggingInterceptor(unleashService, "saf-gql", tjenestekallLogger) { request ->
+                        tjenestekallLoggingInterceptorFactory("saf-gql") { request ->
                             requireNotNull(request.header("X-Correlation-ID")) {
                                 "Kall uten \"X-Correlation-ID\" er ikke lov"
                             }

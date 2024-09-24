@@ -5,6 +5,7 @@ import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgaveJsonDTO
@@ -22,13 +23,11 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGi
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.logging.Logging
-import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
@@ -42,16 +41,15 @@ class RestOppgaveBehandlingServiceImpl(
     private val tilgangskontroll: Tilgangskontroll,
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
-    private val unleashService: UnleashService,
-    private val tjenestekallLogger: TjenestekallLogger,
+    private val tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     private val apiClient: OppgaveApi =
         OppgaveApiFactory.createClient({
             AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
-        }, unleashService, tjenestekallLogger),
+        }, tjenestekallLoggingInterceptorFactory),
     private val systemApiClient: OppgaveApi =
         OppgaveApiFactory.createClient({
             machineToMachineTokenClient.createMachineToMachineToken()
-        }, unleashService, tjenestekallLogger),
+        }, tjenestekallLoggingInterceptorFactory),
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : OppgaveBehandlingService {
     private val tjenestekallLogg = Logging.secureLog

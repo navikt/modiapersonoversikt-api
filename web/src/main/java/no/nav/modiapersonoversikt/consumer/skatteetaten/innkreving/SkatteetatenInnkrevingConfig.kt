@@ -1,14 +1,13 @@
 package no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving
 
 import no.nav.common.rest.client.RestClient
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ApiClient
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravClient
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
-import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -20,15 +19,14 @@ open class SkatteetatenInnkrevingConfig {
     @Bean("skatteetatenOppdragsinnkrevingClient")
     open fun httpClient(
         maskinportenClient: MaskinportenClient,
-        unleashService: UnleashService,
-        tjenestekallLogger: TjenestekallLogger,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     ): OkHttpClient =
         RestClient
             .baseClient()
             .newBuilder()
             .addInterceptor(XCorrelationIdInterceptor())
             .addInterceptor(
-                LoggingInterceptor(unleashService, "SkatteetatenInnkreving", tjenestekallLogger) { request ->
+                tjenestekallLoggingInterceptorFactory("SkatteetatenInnkreving") { request ->
                     requireNotNull(request.header("X-Correlation-ID")) {
                         "Kall uten \"X-Correlation-ID\" er ikke lov"
                     }
