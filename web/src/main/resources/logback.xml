@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="no/nav/common/log/logback-default.xml"/>
+    <include resource="no/nav/common/log/logback-stdout-json.xml"/>
+    <include resource="no/nav/common/log/logback-naudit.xml"/>
+    <include resource="no/nav/common/log/logback-securelogs.xml"/>
+    <include resource="no/nav/common/log/logback-cxf.xml"/>
 </configuration>

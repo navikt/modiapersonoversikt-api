@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.bindTo
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,15 +20,17 @@ open class AzureADServiceConfig {
     open fun azureADService(
         oboflowTokenProvider: OnBehalfOfTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): AzureADService {
         val httpClient =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "AzureAd") {
+                    LoggingInterceptor(unleashService, "AzureAd", tjenestekallLogger) {
                         getCallId()
                     },
-                )
-                .build()
+                ).build()
 
         return AzureADServiceImpl(
             tokenClient = oboflowTokenProvider.bindTo(EnvironmentUtils.getRequiredProperty("MS_GRAPH_SCOPE")),

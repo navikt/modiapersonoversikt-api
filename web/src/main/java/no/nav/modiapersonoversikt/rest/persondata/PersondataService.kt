@@ -20,6 +20,7 @@ import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -42,8 +43,9 @@ class PersondataServiceImpl(
     private val oppfolgingService: ArbeidsrettetOppfolging.Service,
     private val policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
     kodeverk: EnhetligKodeverk.Service,
+    tjenestekallLogger: TjenestekallLogger,
 ) : PersondataService {
-    private val persondataFletter = PersondataFletter(kodeverk)
+    private val persondataFletter = PersondataFletter(kodeverk, tjenestekallLogger)
     private val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
 
     private val log: Logger = LoggerFactory.getLogger(PersondataService::class.java)
@@ -97,8 +99,7 @@ class PersondataServiceImpl(
                             tilganger,
                             kontaktinformasjonTredjepartspersonMap[it.ident],
                         )
-                    }
-                    .associateBy { it.fnr }
+                    }.associateBy { it.fnr }
             }
 
         val dkifData =
@@ -146,13 +147,12 @@ class PersondataServiceImpl(
 
     private val gtSomBurdeHaByDel = listOf("0301", "4601", "5001", "1103")
 
-    private fun erGyldigGT(gt: String?): Boolean {
-        return when {
+    private fun erGyldigGT(gt: String?): Boolean =
+        when {
             gt == null -> false
             gtSomBurdeHaByDel.contains(gt) -> false
             else -> true
         }
-    }
 
     fun hentNavEnhetFraNorg(
         adressebeskyttelse: List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>,
@@ -166,8 +166,7 @@ class PersondataServiceImpl(
                     } else {
                         PersondataResult.NotRelevant()
                     }
-                }
-                .fold(
+                }.fold(
                     onSuccess = { it ?: "" },
                     onNotRelevant = { null },
                     onFailure = { _, _ -> "" },
@@ -186,21 +185,22 @@ class PersondataServiceImpl(
                 break
             }
         }
-        return PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) {
-            norgApi
-                .finnNavKontor(gt, diskresjonskode)
-                ?.enhetId
-        }
-            .map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
+        return PersondataResult
+            .runCatching(InformasjonElement.NORG_NAVKONTOR) {
+                norgApi
+                    .finnNavKontor(gt, diskresjonskode)
+                    ?.enhetId
+            }.map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
                 it?.let { enhetId -> norgApi.hentKontaktinfo(EnhetId(enhetId)) }
             }
     }
 
-    private fun Person.findTredjepartsPersoner(andrePersoner: List<String>?): List<String> {
-        return setOf(
-            *this.vergemaalEllerFremtidsfullmakt.mapNotNull {
-                it.vergeEllerFullmektig.motpartsPersonident
-            }.toTypedArray(),
+    private fun Person.findTredjepartsPersoner(andrePersoner: List<String>?): List<String> =
+        setOf(
+            *this.vergemaalEllerFremtidsfullmakt
+                .mapNotNull {
+                    it.vergeEllerFullmektig.motpartsPersonident
+                }.toTypedArray(),
             *this.foreldreansvar.mapNotNull { it.ansvarlig }.toTypedArray(),
             *this.foreldreansvar.mapNotNull { it.ansvarssubjekt }.toTypedArray(),
             *this.sivilstand.mapNotNull { it.relatertVedSivilstand }.toTypedArray(),
@@ -208,18 +208,18 @@ class PersondataServiceImpl(
             *this.kontaktinformasjonForDoedsbo.mapNotNull { it.personSomKontakt?.identifikasjonsnummer }.toTypedArray(),
             *(andrePersoner ?: emptyList()).toTypedArray(),
         ).toList()
-    }
 
-    private fun PersondataResult<List<FullmaktDetails>>.findKontaktinformasjonTredjepartspersoner(): List<String> {
-        return this.fold(
-            onSuccess = { it.mapNotNull { it.fullmektig } },
-            onFailure = { system, cause ->
-                log.error("Kunne ikke hente kontaktinfo for tredjeparter fra $system", cause)
-                emptyList()
-            },
-            onNotRelevant = { emptyList() },
-        ).toSet().toList()
-    }
+    private fun PersondataResult<List<FullmaktDetails>>.findKontaktinformasjonTredjepartspersoner(): List<String> =
+        this
+            .fold(
+                onSuccess = { it.mapNotNull { it.fullmektig } },
+                onFailure = { system, cause ->
+                    log.error("Kunne ikke hente kontaktinfo for tredjeparter fra $system", cause)
+                    emptyList()
+                },
+                onNotRelevant = { emptyList() },
+            ).toSet()
+            .toList()
 
     private fun hentTilganger(): PersondataService.Tilganger {
         val ctx = policyEnforcementPoint.createEvaluationContext()

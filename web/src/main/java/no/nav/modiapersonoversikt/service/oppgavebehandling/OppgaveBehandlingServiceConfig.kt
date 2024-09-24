@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.bindTo
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -20,14 +21,15 @@ open class OppgaveBehandlingServiceConfig {
         oboTokenClient: OnBehalfOfTokenClient,
         machineToMachineTokenClient: MachineToMachineTokenClient,
         unleashService: UnleashService,
-    ): OppgaveBehandlingService {
-        return RestOppgaveBehandlingServiceImpl(
+        tjenestekallLogger: TjenestekallLogger,
+    ): OppgaveBehandlingService =
+        RestOppgaveBehandlingServiceImpl(
             pdlOppslagService = pdlOppslagService,
             ansattService = ansattService,
             tilgangskontroll = tilgangskontroll,
             oboTokenClient = oboTokenClient.bindTo(OppgaveApiFactory.downstreamApi),
             unleashService = unleashService,
             machineToMachineTokenClient = machineToMachineTokenClient.bindTo(OppgaveApiFactory.downstreamApi),
+            tjenestekallLogger = tjenestekallLogger,
         )
-    }
 }

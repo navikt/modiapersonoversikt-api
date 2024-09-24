@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -23,23 +24,26 @@ open class PdlPipConfig {
     lateinit var tokenProvider: MachineToMachineTokenClient
 
     @Bean
-    open fun pdlPip(unleashService: UnleashService): PdlPipApi {
+    open fun pdlPip(
+        unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
+    ): PdlPipApi {
         val httpClient: OkHttpClient =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "PdlPipApi") { request ->
+                    LoggingInterceptor(unleashService, "PdlPipApi", tjenestekallLogger) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(
+                ).addInterceptor(
                     AuthorizationInterceptor {
                         tokenProvider.createMachineToMachineToken(scope)
                     },
-                )
-                .build()
-        return PdlPipApiImpl(url, httpClient)
+                ).build()
+        return PdlPipApiImpl(url, httpClient, tjenestekallLogger)
     }
 }

@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.fel
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.sfhenvendelse.SfHenvendelseKodeverk
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -15,13 +16,28 @@ open class EnhetligKodeverkConfig {
     open fun enhetligKodeverk(
         machineToMachineTokenClient: MachineToMachineTokenClient,
         unleashService: UnleashService,
-    ): EnhetligKodeverk.Service {
-        return EnhetligKodeverkServiceImpl(
+        tjenestekallLogger: TjenestekallLogger,
+    ): EnhetligKodeverk.Service =
+        EnhetligKodeverkServiceImpl(
             KodeverkProviders(
-                fellesKodeverk = FellesKodeverk.Provider(machineToMachineTokenClient, unleashService),
-                sfHenvendelseKodeverk = SfHenvendelseKodeverk.Provider(machineToMachineTokenClient, unleashService),
-                oppgaveKodeverk = OppgaveKodeverk.Provider(machineToMachineTokenClient, unleashService),
+                fellesKodeverk =
+                    FellesKodeverk.Provider(
+                        machineToMachineTokenClient,
+                        unleashService,
+                        tjenestekallLogger,
+                    ),
+                sfHenvendelseKodeverk =
+                    SfHenvendelseKodeverk.Provider(
+                        machineToMachineTokenClient,
+                        unleashService,
+                        tjenestekallLogger,
+                    ),
+                oppgaveKodeverk =
+                    OppgaveKodeverk.Provider(
+                        machineToMachineTokenClient,
+                        unleashService,
+                        tjenestekallLogger,
+                    ),
             ),
         )
-    }
 }

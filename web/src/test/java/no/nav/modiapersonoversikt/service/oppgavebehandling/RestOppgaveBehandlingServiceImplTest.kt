@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.personoversikt.common.kabac.Decision
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.*
@@ -46,6 +47,7 @@ class RestOppgaveBehandlingServiceImplTest {
             oboTokenClient,
             machineToMachineTokenClient,
             unleashService,
+            TjenestekallLogg,
             apiClient,
             systemApiClient,
             fixedClock,
@@ -767,19 +769,16 @@ class RestOppgaveBehandlingServiceImplTest {
     private fun <T> withIdent(
         ident: String,
         fn: () -> T,
-    ): T {
-        return AuthContextTestUtils.withIdent(ident, fn)
-    }
+    ): T = AuthContextTestUtils.withIdent(ident, fn)
 
     private fun OppgaveJsonDTO.nybeskrivelse(
         ident: NavIdent,
         navn: String,
         enhet: String,
         tekst: String,
-    ): String {
-        return Utils.leggTilBeskrivelse(
+    ): String =
+        Utils.leggTilBeskrivelse(
             this.beskrivelse,
             Utils.beskrivelseInnslag(ident, navn, enhet, tekst, fixedClock),
         )
-    }
 }

@@ -12,6 +12,7 @@ import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory.asTokenProvider
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.bindTo
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import kotlin.time.Duration.Companion.seconds
@@ -27,6 +28,7 @@ open class SfHenvendelseConfig {
         oboTokenClient: OnBehalfOfTokenClient,
         machineToMachineTokenClient: MachineToMachineTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): SfHenvendelseService {
         val oboTokenClient = oboTokenClient.bindTo(SfHenvendelseApiFactory.downstreamApi())
         val httpClient =
@@ -34,7 +36,7 @@ open class SfHenvendelseConfig {
                 .baseClient()
                 .newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "SF-Henvendelse") { request ->
+                    LoggingInterceptor(unleashService, "SF-Henvendelse", tjenestekallLogger) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
@@ -53,10 +55,9 @@ open class SfHenvendelseConfig {
     }
 
     @Bean
-    open fun sfHenvendelseApiPing(service: SfHenvendelseService): ConsumerPingable {
-        return ConsumerPingable(
+    open fun sfHenvendelseApiPing(service: SfHenvendelseService): ConsumerPingable =
+        ConsumerPingable(
             "Salesforce - Henvendelse",
             service::ping,
         )
-    }
 }

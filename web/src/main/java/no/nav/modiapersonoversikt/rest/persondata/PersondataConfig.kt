@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -25,8 +26,9 @@ open class PersondataConfig {
         policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
         kodeverk: EnhetligKodeverk.Service,
         pdlFullmakt: PdlFullmaktApi,
-    ): PersondataService {
-        return PersondataServiceImpl(
+        tjenestekallLogger: TjenestekallLogger,
+    ): PersondataService =
+        PersondataServiceImpl(
             pdl,
             pdlFullmakt,
             krrService,
@@ -36,6 +38,6 @@ open class PersondataConfig {
             oppfolgingConfig,
             policyEnforcementPoint,
             kodeverk,
+            tjenestekallLogger,
         )
-    }
 }

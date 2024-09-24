@@ -5,6 +5,7 @@ import io.mockk.mockk
 import jakarta.xml.soap.SOAPFault
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.brukernotifikasjon.Brukernotifikasjon
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.Clock
@@ -17,7 +18,7 @@ class VarslerServiceImplTest {
     private val brukernotifikasjonService = mockk<Brukernotifikasjon.Service>()
     private val soapfault = mockk<SOAPFault>()
     private val varselService: VarslerService =
-        VarslerServiceImpl(brukernotifikasjonService)
+        VarslerServiceImpl(brukernotifikasjonService, TjenestekallLogg)
 
     @Test
     internal fun `skal rapportere om feil i system`() {

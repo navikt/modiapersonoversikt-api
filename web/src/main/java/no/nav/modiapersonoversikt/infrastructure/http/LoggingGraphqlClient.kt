@@ -4,13 +4,12 @@ import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import com.expediagroup.graphql.client.types.GraphQLClientError
 import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.ktor.client.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.header
 import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
-import no.nav.personoversikt.common.logging.TjenestekallLogg
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.slf4j.LoggerFactory
 import java.net.URL
 
@@ -18,7 +17,6 @@ typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
 
 class GraphQLException(
     override val message: String,
-    val errors: List<GraphQLClientError>,
 ) : RuntimeException(message)
 
 fun <T> GraphQLClientResponse<T>.assertNoErrors(): GraphQLClientResponse<T> {
@@ -27,18 +25,15 @@ fun <T> GraphQLClientResponse<T>.assertNoErrors(): GraphQLClientResponse<T> {
     } else {
         val errors = this.errors!!
         val message = if (errors.size == 1) errors[0].message else "Flere ukjente feil"
-        throw GraphQLException(message, errors)
+        throw GraphQLException(message)
     }
 }
-
-private val mapper =
-    jacksonObjectMapper()
-        .registerModule(JavaTimeModule())
 
 class LoggingGraphqlClient(
     private val name: String,
     url: URL,
     httpClient: HttpClient,
+    private val tjenestekallLogger: TjenestekallLogger,
 ) : GraphQLKtorClient(url, httpClient) {
     private val log = LoggerFactory.getLogger(LoggingGraphqlClient::class.java)
 
@@ -54,7 +49,7 @@ class LoggingGraphqlClient(
                 header(RestConstants.NAV_CALL_ID_HEADER, callId)
                 header("X-Correlation-ID", callId)
             }
-            TjenestekallLogg.info(
+            tjenestekallLogger.info(
                 "$name-request: $callId ($requestId)",
                 mapOf(
                     "operationName" to request.operationName,
@@ -74,15 +69,15 @@ class LoggingGraphqlClient(
                 )
 
             if (response.errors.isNullOrEmpty()) {
-                TjenestekallLogg.info("$name-response: $callId ($requestId)", tjenestekallFelt)
+                tjenestekallLogger.info("$name-response: $callId ($requestId)", tjenestekallFelt)
             } else {
-                TjenestekallLogg.error("$name-response: $callId ($requestId)", tjenestekallFelt)
+                tjenestekallLogger.error("$name-response: $callId ($requestId)", tjenestekallFelt)
             }
 
             response
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot $name (ID: $callId)", exception)
-            TjenestekallLogg.error(
+            tjenestekallLogger.error(
                 header = "$name-response: $callId ($requestId)",
                 fields = mapOf("exception" to exception.message),
                 throwable = exception,
@@ -92,7 +87,7 @@ class LoggingGraphqlClient(
         }
     }
 
-    private inline fun Long.measure(): Long = System.currentTimeMillis() - this
+    private fun Long.measure(): Long = System.currentTimeMillis() - this
 }
 
 data class GenericGraphQlResponse<T>(

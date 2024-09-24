@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.bindTo
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -28,6 +29,7 @@ open class ArbeidsrettetOppfolgingConfig {
         ansattService: AnsattService,
         onBehalfOfTokenClient: OnBehalfOfTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): ArbeidsrettetOppfolging.Service {
         val httpClient =
             RestClient
@@ -35,7 +37,7 @@ open class ArbeidsrettetOppfolgingConfig {
                 .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "Oppfolging") {
+                    LoggingInterceptor(unleashService, "Oppfolging", tjenestekallLogger) {
                         requireNotNull(it.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.bindTo
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -28,41 +29,43 @@ open class SoknadsstatusConfig {
     open fun soknadsstatusService(
         tokenClient: OnBehalfOfTokenClient,
         unleashService: UnleashService,
-    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi), unleashService)
+        tjenestekallLogger: TjenestekallLogger,
+    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi), unleashService, tjenestekallLogger)
 }
 
 object SoknadsstatusApiFactory {
-    fun createClient(
+    private fun createClient(
         tokenProvider: () -> String,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): OkHttpClient =
-        RestClient.baseClient().newBuilder()
+        RestClient
+            .baseClient()
+            .newBuilder()
             .addInterceptor(
                 HeadersInterceptor {
                     mapOf(
                         "nav-call-id" to getCallId(),
                     )
                 },
-            )
-            .addInterceptor(
-                LoggingInterceptor(unleashService, "ModiaSoknadsstatusV1") { request ->
+            ).addInterceptor(
+                LoggingInterceptor(unleashService, "ModiaSoknadsstatusV1", tjenestekallLogger) { request ->
                     requireNotNull(request.header("nav-call-id")) {
                         "Kall uten \"nav-call-id\" er ikke lov"
                     }
                 },
-            )
-            .addInterceptor(
+            ).addInterceptor(
                 AuthorizationInterceptor {
                     tokenProvider()
                 },
-            )
-            .readTimeout(15.seconds.toJavaDuration())
+            ).readTimeout(15.seconds.toJavaDuration())
             .build()
 
     fun createSoknadsstatusApi(
         oboClient: BoundedOnBehalfOfTokenClient,
         unleashService: UnleashService,
-    ) = SoknadsstatusControllerApi(url, createClient(oboClient.asTokenProvider(), unleashService))
+        tjenestekallLogger: TjenestekallLogger,
+    ) = SoknadsstatusControllerApi(url, createClient(oboClient.asTokenProvider(), unleashService, tjenestekallLogger))
 
     private fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String =
         {

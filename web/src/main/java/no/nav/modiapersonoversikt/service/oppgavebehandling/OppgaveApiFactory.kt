@@ -7,25 +7,28 @@ import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 
 object OppgaveApiFactory {
-    val url = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
+    val url: String = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
     val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("OPPGAVE_SCOPE"))
 
     fun createClient(
         tokenProvider: () -> String,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): OppgaveApi {
         val client =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "Oppgave") { request ->
+                    LoggingInterceptor(unleashService, "Oppgave", tjenestekallLogger) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(AuthorizationInterceptor(tokenProvider))
+                ).addInterceptor(AuthorizationInterceptor(tokenProvider))
                 .build()
         return OppgaveApi(url, client)
     }

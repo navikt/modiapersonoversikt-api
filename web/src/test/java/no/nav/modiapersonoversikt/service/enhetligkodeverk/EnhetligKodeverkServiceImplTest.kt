@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.Kod
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.MutableClock
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.*
@@ -141,7 +142,8 @@ internal class EnhetligKodeverkServiceImplTest {
         val oppgaveApi: KodeverkApi = mockk()
         val unleashService: UnleashService = mockk()
         val machineToMachineTokenClient: MachineToMachineTokenClient = mockk()
-        val provider = OppgaveKodeverk.Provider(machineToMachineTokenClient, unleashService, oppgaveApi)
+        val provider =
+            OppgaveKodeverk.Provider(machineToMachineTokenClient, unleashService, TjenestekallLogg, oppgaveApi)
         every { provider.oppgaveKodeverk.hentInterntKodeverk(any()) } returns
             listOf(
                 KodeverkkombinasjonDTO(

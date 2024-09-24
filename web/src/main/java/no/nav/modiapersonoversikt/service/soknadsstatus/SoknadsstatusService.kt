@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.model
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.models.Hendelse
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 
@@ -30,21 +31,19 @@ interface SoknadsstatusService {
 open class SoknadsstatusServiceImpl(
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val unleashService: UnleashService,
+    private val tjenestekallLogger: TjenestekallLogger,
     private val soknadsstatusApi: SoknadsstatusControllerApi =
         SoknadsstatusApiFactory.createSoknadsstatusApi(
             oboTokenClient,
             unleashService,
+            tjenestekallLogger,
         ),
 ) : SoknadsstatusService {
     @Cacheable
-    override fun hentHendelser(ident: String): List<Hendelse> {
-        return soknadsstatusApi.hentAlleHendelser(FnrRequest(ident)).orEmpty()
-    }
+    override fun hentHendelser(ident: String): List<Hendelse> = soknadsstatusApi.hentAlleHendelser(FnrRequest(ident)).orEmpty()
 
     @Cacheable
-    override fun hentBehandlinger(ident: String): List<Behandling> {
-        return soknadsstatusApi.hentAlleBehandlinger(FnrRequest(ident)).orEmpty()
-    }
+    override fun hentBehandlinger(ident: String): List<Behandling> = soknadsstatusApi.hentAlleBehandlinger(FnrRequest(ident)).orEmpty()
 
     @Cacheable
     override fun hentBehandlingerMedHendelser(ident: String): List<Behandling> {

@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,6 +24,7 @@ open class BrukernotifikasjonConfig {
     open fun brukernotifikasjonService(
         oboTokenProvider: OnBehalfOfTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): Brukernotifikasjon.Service {
         val authInterceptor =
             HeadersInterceptor {
@@ -32,16 +34,17 @@ open class BrukernotifikasjonConfig {
             }
 
         val httpClient: OkHttpClient =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "Brukernotifikasjon") { request ->
+                    LoggingInterceptor(unleashService, "Brukernotifikasjon", tjenestekallLogger) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(authInterceptor)
+                ).addInterceptor(authInterceptor)
                 .build()
         return BrukernotifikasjonService(
             BrukernotifikasjonClient(

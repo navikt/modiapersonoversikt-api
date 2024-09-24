@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.rest.internal
 
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
-import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.request.header
 import kotlinx.coroutines.runBlocking
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
@@ -27,13 +27,20 @@ import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import no.nav.personoversikt.common.typeanalyzer.CaptureStats
 import no.nav.personoversikt.common.typeanalyzer.Formatter
 import no.nav.personoversikt.common.typeanalyzer.KotlinFormat
 import no.nav.personoversikt.common.typeanalyzer.TypescriptFormat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import java.net.URL
 
 @RestController
@@ -45,6 +52,7 @@ class InternalController
         private val onBehalfOfTokenClient: OnBehalfOfTokenClient,
         private val tilgangskontroll: Tilgangskontroll,
         private val unleashService: UnleashService,
+        private val tjenestekallLogger: TjenestekallLogger,
     ) {
         private val pdlApiUrl: URL = EnvironmentUtils.getRequiredProperty("PDL_API_URL").let(::URL)
 
@@ -95,7 +103,7 @@ class InternalController
 
         @GetMapping("/typeanalyzer")
         fun getTypeanalyzerStats(): Map<String, CaptureStats> =
-            Typeanalyzers.values().associate {
+            Typeanalyzers.entries.associate {
                 it.name to it.analyzer.stats
             }
 
@@ -110,8 +118,12 @@ class InternalController
         }
 
         private val systemTokenAuthHeader: HeadersBuilder = {
-            val systemuserToken: String = machineToMachineTokenClient.createMachineToMachineToken(PdlOppslagServiceConfig.downstreamApi)
-            header(RestConstants.AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + systemuserToken)
+            val systemuserToken: String =
+                machineToMachineTokenClient.createMachineToMachineToken(PdlOppslagServiceConfig.downstreamApi)
+            header(
+                RestConstants.AUTHORIZATION,
+                RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + systemuserToken,
+            )
             header(RestConstants.TEMA_HEADER, RestConstants.ALLE_TEMA_HEADERVERDI)
         }
 
@@ -122,7 +134,7 @@ class InternalController
                         config {
                         }
                         addInterceptor(
-                            LoggingInterceptor(unleashService, "PDL") { request ->
+                            LoggingInterceptor(unleashService, "PDL", tjenestekallLogger) { request ->
                                 requireNotNull(request.header("X-Correlation-ID")) {
                                     "Kall uten \"X-Correlation-ID\" er ikke lov"
                                 }
@@ -131,6 +143,6 @@ class InternalController
                     }
                 }
 
-            return LoggingGraphqlClient("PDL", pdlApiUrl, gqlHttpClient)
+            return LoggingGraphqlClient("PDL", pdlApiUrl, gqlHttpClient, tjenestekallLogger)
         }
     }

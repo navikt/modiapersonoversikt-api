@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
@@ -18,7 +19,13 @@ object SfHenvendelseKodeverk {
     class Provider(
         private val machineToMachineTokenClient: MachineToMachineTokenClient,
         private val unleashService: UnleashService,
-        private val sfHenvendelseKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient, unleashService),
+        private val tjenestekallLogger: TjenestekallLogger,
+        private val sfHenvendelseKodeverk: KodeverkApi =
+            createKodeverkApi(
+                machineToMachineTokenClient,
+                unleashService,
+                tjenestekallLogger,
+            ),
     ) : EnhetligKodeverk.KodeverkProvider<String, String> {
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, String> {
             val respons =
@@ -33,32 +40,32 @@ object SfHenvendelseKodeverk {
         }
     }
 
-    internal fun parseTilKodeverk(respons: List<TemagruppeDTO>): Map<String, String> {
-        return respons.associate { (navn, kode) ->
+    internal fun parseTilKodeverk(respons: List<TemagruppeDTO>): Map<String, String> =
+        respons.associate { (navn, kode) ->
             kode to navn
         }
-    }
 
     internal fun createKodeverkApi(
         machineToMachineTokenClient: MachineToMachineTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): KodeverkApi {
         val downstreamApi = SfHenvendelseApiFactory.downstreamApi()
         val client =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "SF-Henvendelse-Kodeverk") { request ->
+                    LoggingInterceptor(unleashService, "SF-Henvendelse-Kodeverk", tjenestekallLogger) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(
+                ).addInterceptor(
                     AuthorizationInterceptor {
                         machineToMachineTokenClient.createMachineToMachineToken(downstreamApi)
                     },
-                )
-                .build()
+                ).build()
 
         return KodeverkApi(SfHenvendelseApiFactory.url(), client)
     }

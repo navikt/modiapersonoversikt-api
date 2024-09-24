@@ -14,6 +14,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
@@ -21,7 +22,13 @@ object FellesKodeverk {
     class Provider(
         private val machineToMachineTokenClient: MachineToMachineTokenClient,
         private val unleashService: UnleashService,
-        private val fellesKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient, unleashService),
+        private val tjenestekallLogger: TjenestekallLogger,
+        private val fellesKodeverk: KodeverkApi =
+            createKodeverkApi(
+                machineToMachineTokenClient,
+                unleashService,
+                tjenestekallLogger,
+            ),
     ) : EnhetligKodeverk.KodeverkProvider<String, String> {
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, String> {
             val respons =
@@ -39,35 +46,38 @@ object FellesKodeverk {
         }
     }
 
-    internal fun parseTilKodeverk(respons: GetKodeverkKoderBetydningerResponseDTO): Map<String, String> {
-        return respons.betydninger.mapValues { entry ->
-            entry.value.first().beskrivelser["nb"]?.term ?: entry.key
+    internal fun parseTilKodeverk(respons: GetKodeverkKoderBetydningerResponseDTO): Map<String, String> =
+        respons.betydninger.mapValues { entry ->
+            entry.value
+                .first()
+                .beskrivelser["nb"]
+                ?.term ?: entry.key
         }
-    }
 
     internal fun createKodeverkApi(
         machineToMachineTokenClient: MachineToMachineTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): KodeverkApi {
         val url = EnvironmentUtils.getRequiredProperty("FELLES_KODEVERK_URL")
         val downstreamApi = DownstreamApi.parse(EnvironmentUtils.getRequiredProperty("FELLES_KODEVERK_SCOPE"))
 
         val client =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "Felleskodeverk") { request ->
+                    LoggingInterceptor(unleashService, "Felleskodeverk", tjenestekallLogger) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(
+                ).addInterceptor(
                     AuthorizationInterceptor {
                         machineToMachineTokenClient.createMachineToMachineToken(downstreamApi)
                     },
-                )
-                .build()
+                ).build()
 
         return KodeverkApi(url, client)
     }

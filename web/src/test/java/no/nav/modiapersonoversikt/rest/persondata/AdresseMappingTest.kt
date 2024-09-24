@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Vegadres
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.Person
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,7 +19,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersonda
 
 internal class AdresseMappingTest {
     val kodeverk: EnhetligKodeverk.Service = mockk()
-    val mapper = PersondataFletter(kodeverk)
+    val mapper = PersondataFletter(kodeverk, TjenestekallLogg)
 
     @BeforeEach
     fun setup() {
@@ -36,20 +37,21 @@ internal class AdresseMappingTest {
         val hovedperson =
             testPerson.copy(
                 bostedsadresse =
-                    adresse.copy(
-                        vegadresse =
-                            Vegadresse(
-                                matrikkelId = 1234L,
-                                husnummer = "12",
-                                husbokstav = "A",
-                                bruksenhetsnummer = "H0101",
-                                adressenavn = "fin veg",
-                                kommunenummer = "1234",
-                                postnummer = "6789",
-                                bydelsnummer = null,
-                                tilleggsnavn = null,
-                            ),
-                    ).asList(),
+                    adresse
+                        .copy(
+                            vegadresse =
+                                Vegadresse(
+                                    matrikkelId = 1234L,
+                                    husnummer = "12",
+                                    husbokstav = "A",
+                                    bruksenhetsnummer = "H0101",
+                                    adressenavn = "fin veg",
+                                    kommunenummer = "1234",
+                                    postnummer = "6789",
+                                    bydelsnummer = null,
+                                    tilleggsnavn = null,
+                                ),
+                        ).asList(),
             )
         val tredjepartsPerson =
             gittTredjepartsperson().copy(
@@ -97,7 +99,10 @@ internal class AdresseMappingTest {
                 clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
             )
 
-        val harSammeAdresse = persondata.person.forelderBarnRelasjon.find { it.ident == barnFnr }?.harSammeAdresse
+        val harSammeAdresse =
+            persondata.person.forelderBarnRelasjon
+                .find { it.ident == barnFnr }
+                ?.harSammeAdresse
         Assertions.assertTrue(harSammeAdresse ?: false)
     }
 
@@ -106,16 +111,17 @@ internal class AdresseMappingTest {
         val person =
             testPerson.copy(
                 kontaktadresse =
-                    kontaktadresseData.copy(
-                        coAdressenavn = null,
-                        vegadresse = null,
-                        postboksadresse =
-                            Postboksadresse(
-                                postbokseier = "C/O Fornavn Etternavn",
-                                postboks = "123",
-                                postnummer = "9750",
-                            ),
-                    ).asList(),
+                    kontaktadresseData
+                        .copy(
+                            coAdressenavn = null,
+                            vegadresse = null,
+                            postboksadresse =
+                                Postboksadresse(
+                                    postbokseier = "C/O Fornavn Etternavn",
+                                    postboks = "123",
+                                    postnummer = "9750",
+                                ),
+                        ).asList(),
             )
 
         val persondata =
@@ -139,20 +145,21 @@ internal class AdresseMappingTest {
         val hovedperson =
             testPerson.copy(
                 bostedsadresse =
-                    adresse.copy(
-                        vegadresse =
-                            Vegadresse(
-                                matrikkelId = 1234L,
-                                husnummer = "   12",
-                                husbokstav = "A    ",
-                                bruksenhetsnummer = "  H0101",
-                                adressenavn = "fin veg",
-                                kommunenummer = "1234",
-                                postnummer = "6789",
-                                bydelsnummer = null,
-                                tilleggsnavn = null,
-                            ),
-                    ).asList(),
+                    adresse
+                        .copy(
+                            vegadresse =
+                                Vegadresse(
+                                    matrikkelId = 1234L,
+                                    husnummer = "   12",
+                                    husbokstav = "A    ",
+                                    bruksenhetsnummer = "  H0101",
+                                    adressenavn = "fin veg",
+                                    kommunenummer = "1234",
+                                    postnummer = "6789",
+                                    bydelsnummer = null,
+                                    tilleggsnavn = null,
+                                ),
+                        ).asList(),
             )
         val tredjepartsPerson =
             gittTredjepartsperson().copy(
@@ -200,7 +207,10 @@ internal class AdresseMappingTest {
                 clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
             )
 
-        val harSammeAdresse = persondata.person.forelderBarnRelasjon.find { it.ident == barnFnr }?.harSammeAdresse
+        val harSammeAdresse =
+            persondata.person.forelderBarnRelasjon
+                .find { it.ident == barnFnr }
+                ?.harSammeAdresse
         Assertions.assertTrue(harSammeAdresse ?: false)
     }
 

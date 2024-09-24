@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravClient
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -20,13 +21,14 @@ open class SkatteetatenInnkrevingConfig {
     open fun httpClient(
         maskinportenClient: MaskinportenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): OkHttpClient =
         RestClient
             .baseClient()
             .newBuilder()
             .addInterceptor(XCorrelationIdInterceptor())
             .addInterceptor(
-                LoggingInterceptor(unleashService, "SkatteetatenInnkreving") { request ->
+                LoggingInterceptor(unleashService, "SkatteetatenInnkreving", tjenestekallLogger) { request ->
                     requireNotNull(request.header("X-Correlation-ID")) {
                         "Kall uten \"X-Correlation-ID\" er ikke lov"
                     }

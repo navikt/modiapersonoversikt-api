@@ -15,6 +15,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveApiFactory
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
@@ -22,7 +23,13 @@ object OppgaveKodeverk {
     class Provider(
         private val machineToMachineTokenClient: MachineToMachineTokenClient,
         private val unleashService: UnleashService,
-        val oppgaveKodeverk: KodeverkApi = createKodeverkApi(machineToMachineTokenClient, unleashService),
+        private val tjenestekallLogger: TjenestekallLogger,
+        val oppgaveKodeverk: KodeverkApi =
+            createKodeverkApi(
+                machineToMachineTokenClient,
+                unleashService,
+                tjenestekallLogger,
+            ),
     ) : EnhetligKodeverk.KodeverkProvider<String, Tema> {
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, Tema> {
             val respons =
@@ -68,73 +75,78 @@ object OppgaveKodeverk {
     fun createKodeverkApi(
         machineToMachineTokenClient: MachineToMachineTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): KodeverkApi {
         val client =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "OppgaveKodeverk") { request ->
+                    LoggingInterceptor(unleashService, "OppgaveKodeverk", tjenestekallLogger) { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(
+                ).addInterceptor(
                     AuthorizationInterceptor {
                         machineToMachineTokenClient.createMachineToMachineToken(OppgaveApiFactory.downstreamApi)
                     },
-                )
-                .build()
+                ).build()
 
         return KodeverkApi(OppgaveApiFactory.url, client)
     }
 
-    internal fun parseTilKodeverk(respons: List<KodeverkkombinasjonDTO>): Map<String, Tema> {
-        return respons.filter { !OppgaveOverstyring.underkjenteTemaer.contains(it.tema.tema) }.map {
-            Tema(
-                kode = it.tema.tema,
-                tekst = it.tema.term,
-                oppgavetyper = hentOppgavetyper(it.oppgavetyper, it.tema.tema),
-                prioriteter = hentPrioriteter(it),
-                underkategorier = hentUnderkategorier(it.gjelderverdier),
-            )
-        }.sortedBy { it.tekst }.associateBy { it.kode }
-    }
+    internal fun parseTilKodeverk(respons: List<KodeverkkombinasjonDTO>): Map<String, Tema> =
+        respons
+            .filter { !OppgaveOverstyring.underkjenteTemaer.contains(it.tema.tema) }
+            .map {
+                Tema(
+                    kode = it.tema.tema,
+                    tekst = it.tema.term,
+                    oppgavetyper = hentOppgavetyper(it.oppgavetyper, it.tema.tema),
+                    prioriteter = hentPrioriteter(it),
+                    underkategorier = hentUnderkategorier(it.gjelderverdier),
+                )
+            }.sortedBy { it.tekst }
+            .associateBy { it.kode }
 
-    private fun hentPrioriteter(oppgaveKodeverk: KodeverkkombinasjonDTO): List<Prioritet> {
-        return OppgaveOverstyring.overstyrtKodeverk.tema[oppgaveKodeverk.tema.tema]?.prioriteter
+    private fun hentPrioriteter(oppgaveKodeverk: KodeverkkombinasjonDTO): List<Prioritet> =
+        OppgaveOverstyring.overstyrtKodeverk.tema[oppgaveKodeverk.tema.tema]?.prioriteter
             ?: OppgaveOverstyring.overstyrtKodeverk.prioriteter
-    }
 
-    private fun hentUnderkategorier(gjelderverdier: List<GjelderDTO>?): List<Underkategori> {
-        return gjelderverdier?.map { gjelder ->
-            Underkategori(
-                kode = listOf(gjelder.behandlingstema, gjelder.behandlingstype).joinToString(":") { it ?: "" },
-                tekst = listOfNotNull(gjelder.behandlingstemaTerm, gjelder.behandlingstypeTerm).joinToString(" - "),
-                erGyldig = true,
-            )
-        }?.sortedBy { it.tekst }
+    private fun hentUnderkategorier(gjelderverdier: List<GjelderDTO>?): List<Underkategori> =
+        gjelderverdier
+            ?.map { gjelder ->
+                Underkategori(
+                    kode = listOf(gjelder.behandlingstema, gjelder.behandlingstype).joinToString(":") { it ?: "" },
+                    tekst = listOfNotNull(gjelder.behandlingstemaTerm, gjelder.behandlingstypeTerm).joinToString(" - "),
+                    erGyldig = true,
+                )
+            }?.sortedBy { it.tekst }
             ?: emptyList()
-    }
 
     private fun hentOppgavetyper(
         oppgavetyper: List<OppgavetypeDTO>,
         tema: String,
-    ): List<Oppgavetype> {
-        return oppgavetyper.filter { OppgaveOverstyring.godkjenteOppgavetyper.contains(it.oppgavetype) }.map {
-            Oppgavetype(
-                kode = it.oppgavetype,
-                tekst = it.term,
-                dagerFrist = hentFrist(tema, it.oppgavetype),
-            )
-        }.sortedBy { it.tekst }
-    }
+    ): List<Oppgavetype> =
+        oppgavetyper
+            .filter { OppgaveOverstyring.godkjenteOppgavetyper.contains(it.oppgavetype) }
+            .map {
+                Oppgavetype(
+                    kode = it.oppgavetype,
+                    tekst = it.term,
+                    dagerFrist = hentFrist(tema, it.oppgavetype),
+                )
+            }.sortedBy { it.tekst }
 
     private fun hentFrist(
         tema: String,
         oppgavetype: String,
-    ): Int {
-        return OppgaveOverstyring.overstyrtKodeverk.tema[tema]?.oppgavetyper?.get(oppgavetype)?.frist
+    ): Int =
+        OppgaveOverstyring.overstyrtKodeverk.tema[tema]
+            ?.oppgavetyper
+            ?.get(oppgavetype)
+            ?.frist
             ?: OppgaveOverstyring.overstyrtKodeverk.frist
-    }
 }

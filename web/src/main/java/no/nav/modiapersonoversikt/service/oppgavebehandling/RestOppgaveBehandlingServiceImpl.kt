@@ -28,6 +28,7 @@ import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.logging.Logging
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
@@ -42,14 +43,15 @@ class RestOppgaveBehandlingServiceImpl(
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
     private val unleashService: UnleashService,
+    private val tjenestekallLogger: TjenestekallLogger,
     private val apiClient: OppgaveApi =
         OppgaveApiFactory.createClient({
             AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
-        }, unleashService),
+        }, unleashService, tjenestekallLogger),
     private val systemApiClient: OppgaveApi =
         OppgaveApiFactory.createClient({
             machineToMachineTokenClient.createMachineToMachineToken()
-        }, unleashService),
+        }, unleashService, tjenestekallLogger),
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : OppgaveBehandlingService {
     private val tjenestekallLogg = Logging.secureLog
@@ -88,7 +90,8 @@ class RestOppgaveBehandlingServiceImpl(
                         fristFerdigstillelse = request.oppgaveFrist,
                         prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
                         metadata =
-                            request.behandlingskjedeId.coerceBlankToNull()
+                            request.behandlingskjedeId
+                                .coerceBlankToNull()
                                 ?.let { mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to it) },
                     ),
             ) ?: throw ResponseStatusException(
@@ -171,10 +174,11 @@ class RestOppgaveBehandlingServiceImpl(
         apiClient.endreOppgave(
             correlationId(),
             oppgaveId.toLong(),
-            oppgave.copy(
-                tilordnetRessurs = ident,
-                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet),
-            ).toPutOppgaveRequestJsonDTO(),
+            oppgave
+                .copy(
+                    tilordnetRessurs = ident,
+                    endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet),
+                ).toPutOppgaveRequestJsonDTO(),
         )
     }
 
@@ -250,21 +254,22 @@ class RestOppgaveBehandlingServiceImpl(
         apiClient.endreOppgave(
             correlationId(),
             oppgaveId.toLong(),
-            oppgave.copy(
-                status = OppgaveJsonDTO.Status.FERDIGSTILT,
-                beskrivelse =
-                    leggTilBeskrivelse(
-                        oppgave.beskrivelse,
-                        beskrivelseInnslag(
-                            ident = ident,
-                            navn = ansattService.hentVeileder(ident).navn,
-                            enhet = saksbehandlersValgteEnhet,
-                            innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
-                            clock = clock,
+            oppgave
+                .copy(
+                    status = OppgaveJsonDTO.Status.FERDIGSTILT,
+                    beskrivelse =
+                        leggTilBeskrivelse(
+                            oppgave.beskrivelse,
+                            beskrivelseInnslag(
+                                ident = ident,
+                                navn = ansattService.hentVeileder(ident).navn,
+                                enhet = saksbehandlersValgteEnhet,
+                                innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
+                                clock = clock,
+                            ),
                         ),
-                    ),
-                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe?.orElse(null), saksbehandlersValgteEnhet),
-            ).toPutOppgaveRequestJsonDTO(),
+                    endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe?.orElse(null), saksbehandlersValgteEnhet),
+                ).toPutOppgaveRequestJsonDTO(),
         )
     }
 
@@ -363,15 +368,13 @@ class RestOppgaveBehandlingServiceImpl(
             .fold(
                 transformSuccess = this::mapTilOppgave,
                 transformFailure = { it },
-            )
-            .getWithFailureHandling { failures ->
+            ).getWithFailureHandling { failures ->
                 val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
                 tjenestekallLogg.warn(
                     "[OPPGAVE] hentOppgaverPaginertOgTilgangskontroll la tilbake oppgaver pga manglende tilgang: $oppgaveIds",
                 )
                 systemLeggTilbakeOppgaver(failures)
-            }
-            .toMutableList()
+            }.toMutableList()
     }
 
     private fun mapTilOppgave(oppgave: OppgaveJsonDTO): Oppgave {
@@ -410,8 +413,7 @@ class RestOppgaveBehandlingServiceImpl(
                             .type
                     }
                 Pair(aktoerId, decision)
-            }
-            .toMap()
+            }.toMap()
     }
 
     private fun systemLeggTilbakeOppgaver(oppgaver: List<OppgaveJsonDTO>) {
@@ -423,8 +425,7 @@ class RestOppgaveBehandlingServiceImpl(
                     .copy(
                         tilordnetRessurs = null,
                         endretAvEnhetsnr = defaultEnhetGittTemagruppe(null, "4100"),
-                    )
-                    .toPutOppgaveRequestJsonDTO(),
+                    ).toPutOppgaveRequestJsonDTO(),
             )
         }
     }

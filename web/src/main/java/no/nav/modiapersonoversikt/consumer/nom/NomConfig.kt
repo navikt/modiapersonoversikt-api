@@ -14,6 +14,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,17 +28,18 @@ open class NomConfig {
     open fun nom(
         tokenProvider: MachineToMachineTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): NomClient {
         val httpClient: OkHttpClient =
-            RestClient.baseClient()
+            RestClient
+                .baseClient()
                 .newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "Nom") {
+                    LoggingInterceptor(unleashService, "Nom", tjenestekallLogger) {
                         // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til Nom
                         getCallId()
                     },
-                )
-                .build()
+                ).build()
         if (EnvironmentUtils.isDevelopment().orElse(false)) {
             return DevNomClient()
         }
@@ -49,13 +51,9 @@ open class NomConfig {
 private class DevNomClient : NomClient {
     override fun checkHealth(): HealthCheckResult = HealthCheckResult.healthy()
 
-    override fun finnNavn(navIdent: NavIdent): VeilederNavn {
-        return lagVeilederNavn(navIdent)
-    }
+    override fun finnNavn(navIdent: NavIdent): VeilederNavn = lagVeilederNavn(navIdent)
 
-    override fun finnNavn(identer: MutableList<NavIdent>): List<VeilederNavn> {
-        return identer.map(::lagVeilederNavn)
-    }
+    override fun finnNavn(identer: MutableList<NavIdent>): List<VeilederNavn> = identer.map(::lagVeilederNavn)
 
     private fun lagVeilederNavn(navIdent: NavIdent): VeilederNavn {
         val ident = navIdent.get()

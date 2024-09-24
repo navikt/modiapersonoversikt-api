@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.bindTo
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -21,6 +22,7 @@ open class TiltakspengerConfig {
     open fun tiltakspengerApi(
         onBehalfOfTokenClient: OnBehalfOfTokenClient,
         unleashService: UnleashService,
+        tjenestekallLogger: TjenestekallLogger,
     ): TiltakspengerService {
         val oboTokenProvider = onBehalfOfTokenClient.bindTo(scope)
 
@@ -28,27 +30,26 @@ open class TiltakspengerConfig {
             TiltakspengerApi(
                 basePath = basePath,
                 httpClient =
-                    RestClient.baseClient().newBuilder()
+                    RestClient
+                        .baseClient()
+                        .newBuilder()
                         .addInterceptor(
                             HeadersInterceptor {
                                 mapOf(
                                     "nav-call-id" to getCallId(),
                                 )
                             },
-                        )
-                        .addInterceptor(
-                            LoggingInterceptor(unleashService, "TiltaksPenger") { request ->
+                        ).addInterceptor(
+                            LoggingInterceptor(unleashService, "TiltaksPenger", tjenestekallLogger) { request ->
                                 requireNotNull(request.header("nav-call-id")) {
                                     "Kall uten \"nav-call-id\" er ikke lov"
                                 }
                             },
-                        )
-                        .addInterceptor(
+                        ).addInterceptor(
                             AuthorizationInterceptor {
                                 AuthContextUtils.requireBoundedClientOboToken(oboTokenProvider)
                             },
-                        )
-                        .build(),
+                        ).build(),
             )
 
         return TiltakspengerServiceImpl(client)
