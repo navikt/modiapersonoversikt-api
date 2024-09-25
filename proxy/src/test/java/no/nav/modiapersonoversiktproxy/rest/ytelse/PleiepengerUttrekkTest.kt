@@ -63,8 +63,7 @@ internal class PleiepengerUttrekkTest {
                     .withBarnet(
                         WSPerson()
                             .withIdent(BARNETS_FNR),
-                    )
-                    .withOmsorgsperson(
+                    ).withOmsorgsperson(
                         WSPerson()
                             .withIdent(FNR),
                     ),

@@ -7,7 +7,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.WebMvcTestUtils.getJson
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,13 +42,15 @@ internal class FeatureToggleControllerTest {
 
     @Test
     internal fun `skal evaluere enkelt toggle`() {
-        mockMvc.getJson("/rest/featuretoggle/min.id")
+        mockMvc
+            .getJson("/rest/featuretoggle/min.id")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 assertThat(it.response.contentAsString).isEqualTo("true")
             }
 
-        mockMvc.getJson("/rest/featuretoggle/annen.id")
+        mockMvc
+            .getJson("/rest/featuretoggle/annen.id")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 assertThat(it.response.contentAsString).isEqualTo("false")
@@ -58,7 +59,8 @@ internal class FeatureToggleControllerTest {
 
     @Test
     internal fun `skal hente alle toggles spesifisert som queryparams`() {
-        mockMvc.getJson("/rest/featuretoggle/?id=min.id&id=annen.id&id=tredje.id")
+        mockMvc
+            .getJson("/rest/featuretoggle/?id=min.id&id=annen.id&id=tredje.id")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 assertThat(it.response.contentAsString).isEqualTo("""{"min.id":true,"annen.id":false,"tredje.id":true}""")
@@ -67,7 +69,8 @@ internal class FeatureToggleControllerTest {
 
     @Test
     internal fun `skal returnere tomt map om ingen featuretoggles er spesifisert`() {
-        mockMvc.getJson("/rest/featuretoggle")
+        mockMvc
+            .getJson("/rest/featuretoggle")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 assertThat(it.response.contentAsString).isEqualTo("{}")

@@ -78,8 +78,12 @@ class SakerServiceImplTest {
     fun `oppretter ikke generell oppfolgingssak`() {
         every { safService.hentSaker(any()) } returns createOppfolgingSaksliste()
         val saker =
-            sakerService.hentSaker(FNR).saker.stream()
-                .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+            sakerService
+                .hentSaker(FNR)
+                .saker
+                .stream()
+                .filter(harTemaKode(TEMAKODE_OPPFOLGING))
+                .toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].sakstype, not(`is`(SAKSTYPE_GENERELL)))
     }
@@ -88,7 +92,12 @@ class SakerServiceImplTest {
     @DisplayName("oppretter ikke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak")
     fun `oppretter ikke generell oppfolgingssak dersom denne finnes allerede`() {
         val saker =
-            sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+            sakerService
+                .hentSaker(FNR)
+                .saker
+                .stream()
+                .filter(harTemaKode(TEMAKODE_OPPFOLGING))
+                .toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].sakstype, `is`(SAKSTYPE_GENERELL))
     }
@@ -104,15 +113,21 @@ class SakerServiceImplTest {
             JournalforingSak().apply {
                 saksId = sakId
                 fagsystemSaksId = saksId
-                fagsystemKode = JournalforingSak.FAGSYSTEMKODE_ARENA
-                sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
+                fagsystemKode = FAGSYSTEMKODE_ARENA
+                sakstype = SAKSTYPE_MED_FAGSAK
                 temaKode = TEMAKODE_OPPFOLGING
                 opprettetDato = DateTime(xmlDato.toGregorianCalendar().time)
                 finnesIGsak = false
             }
         }
 
-        val saker = sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+        val saker =
+            sakerService
+                .hentSaker(FNR)
+                .saker
+                .stream()
+                .filter(harTemaKode(TEMAKODE_OPPFOLGING))
+                .toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].saksIdVisning, `is`(sakId))
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
@@ -235,8 +250,8 @@ class SakerServiceImplTest {
 
         private fun earlierDateTimeWithOffSet(offset: Long) = LocalDateTime.now().minusDays(offset)
 
-        fun createSaksliste(): GraphQLClientResponse<HentBrukersSaker.Result> {
-            return GenericGraphQlResponse(
+        fun createSaksliste(): GraphQLClientResponse<HentBrukersSaker.Result> =
+            GenericGraphQlResponse(
                 data =
                     HentBrukersSaker.Result(
                         saker =
@@ -289,10 +304,9 @@ class SakerServiceImplTest {
                             ),
                     ),
             )
-        }
 
-        fun createOppfolgingSaksliste(): GraphQLClientResponse<HentBrukersSaker.Result> {
-            return GenericGraphQlResponse(
+        fun createOppfolgingSaksliste(): GraphQLClientResponse<HentBrukersSaker.Result> =
+            GenericGraphQlResponse(
                 data =
                     HentBrukersSaker.Result(
                         saker =
@@ -318,6 +332,5 @@ class SakerServiceImplTest {
                             ),
                     ),
             )
-        }
     }
 }

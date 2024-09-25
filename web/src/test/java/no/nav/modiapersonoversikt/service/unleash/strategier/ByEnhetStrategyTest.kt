@@ -54,15 +54,11 @@ internal class ByEnhetStrategyTest {
         private fun strategyEnabled(
             unleashConfig: String?,
             ansattesEnheter: String?,
-        ): Arguments {
-            return Arguments.of(unleashConfig, ansattesEnheter, true)
-        }
+        ): Arguments = Arguments.of(unleashConfig, ansattesEnheter, true)
 
         private fun strategyDisabled(
             unleashConfig: String?,
             ansattesEnheter: String?,
-        ): Arguments {
-            return Arguments.of(unleashConfig, ansattesEnheter, false)
-        }
+        ): Arguments = Arguments.of(unleashConfig, ansattesEnheter, false)
     }
 }

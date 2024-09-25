@@ -12,8 +12,8 @@ class MutableClock(
 ) : Clock() {
     override fun getZone(): ZoneId = zone
 
-    override fun withZone(zone: ZoneId?): Clock {
-        return if (zone == this.zone) {
+    override fun withZone(zone: ZoneId?): Clock =
+        if (zone == this.zone) {
             this
         } else {
             this.zone =
@@ -22,7 +22,6 @@ class MutableClock(
                 }
             this
         }
-    }
 
     override fun instant(): Instant = instant
 

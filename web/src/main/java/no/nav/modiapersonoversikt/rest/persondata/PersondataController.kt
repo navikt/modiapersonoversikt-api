@@ -23,25 +23,20 @@ class PersondataController(
     @GetMapping
     fun hentPersondata(
         @PathVariable("fnr") fnr: String,
-    ): Persondata.Data {
-        return tilgangskontroll
+    ): Persondata.Data =
+        tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnr)) {
                 persondataService.hentPerson(fnr)
             }
-    }
 
     @GetMapping("/identer")
     fun hentIdenter(
         @PathVariable("fnr") fodselsnummer: String,
-    ): Identliste? {
-        return pdlOppslagService.hentIdenter(fodselsnummer)
-    }
+    ): Identliste? = pdlOppslagService.hentIdenter(fodselsnummer)
 
     @GetMapping("/aktorid")
     fun hentAktorId(
         @PathVariable("fnr") fodselsnummer: String,
-    ): String? {
-        return pdlOppslagService.hentAktorId(fodselsnummer)
-    }
+    ): String? = pdlOppslagService.hentAktorId(fodselsnummer)
 }

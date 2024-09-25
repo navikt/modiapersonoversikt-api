@@ -31,13 +31,16 @@ open class MaskinportenHttpClient(
         val clientAssertionJwt = createClientAssertionJwt(clientJwk, clientId, issuer, scopes)
 
         val requestBody =
-            FormBody.Builder().apply {
-                add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
-                add("assertion", clientAssertionJwt)
-            }.build()
+            FormBody
+                .Builder()
+                .apply {
+                    add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
+                    add("assertion", clientAssertionJwt)
+                }.build()
 
         val request =
-            Request.Builder()
+            Request
+                .Builder()
                 .url(maskinportenUrl)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .post(requestBody)

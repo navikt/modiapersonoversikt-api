@@ -99,13 +99,12 @@ object SafDokumentMapper {
             null
         }
 
-    private fun Journalpost.getRelevantDatoForType(type: Datotype): LocalDateTime? {
-        return this.relevanteDatoer
+    private fun Journalpost.getRelevantDatoForType(type: Datotype): LocalDateTime? =
+        this.relevanteDatoer
             .orEmpty()
             .filterNotNull()
             .find { it.datotype == type }
             ?.dato
-    }
 
     private fun getVedlegg(journalpost: Journalpost): List<Dokument> =
         getElektroniskeVedlegg(journalpost).plus(getLogiskeVedlegg(journalpost))
@@ -121,7 +120,8 @@ object SafDokumentMapper {
         journalpost.dokumenter?.get(0) ?: throw RuntimeException("Fant sak uten hoveddokument!")
 
     private fun getLogiskeVedlegg(journalpost: Journalpost): List<Dokument> =
-        getHoveddokumentet(journalpost).logiskeVedlegg
+        getHoveddokumentet(journalpost)
+            .logiskeVedlegg
             .filterNotNull()
             .map { logiskVedlegg -> fraSafLogiskVedlegg(logiskVedlegg) }
 
@@ -176,12 +176,11 @@ object SafDokumentMapper {
                 ?: it.find { variant -> variant?.variantformat == Variantformat.ARKIV }
         }
 
-    private fun fraSafLogiskVedlegg(logiskVedlegg: LogiskVedlegg): Dokument {
-        return Dokument().apply {
+    private fun fraSafLogiskVedlegg(logiskVedlegg: LogiskVedlegg): Dokument =
+        Dokument().apply {
             tittel = logiskVedlegg.tittel
             dokumentreferanse = null
             isKanVises = true
             isLogiskDokument = true
         }
-    }
 }

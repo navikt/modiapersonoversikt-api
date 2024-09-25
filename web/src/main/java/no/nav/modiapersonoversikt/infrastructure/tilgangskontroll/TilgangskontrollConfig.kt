@@ -32,8 +32,8 @@ open class TilgangskontrollConfig {
         ansattService: AnsattService,
         henvendelseService: SfHenvendelseService,
         azureADService: AzureADService,
-    ): Kabac.PolicyDecisionPoint {
-        return PolicyDecisionPointImpl().apply {
+    ): Kabac.PolicyDecisionPoint =
+        PolicyDecisionPointImpl().apply {
             install(AuthContextPip)
             install(NavIdentPip)
             install(BrukersFnrPip(pdlPip))
@@ -50,21 +50,18 @@ open class TilgangskontrollConfig {
             install(HenvendelseEierPip(henvendelseService))
             install(InternalTilgangPip())
         }
-    }
 
     @Bean
-    open fun enforcementPoint(decisionPoint: Kabac.PolicyDecisionPoint): Kabac.PolicyEnforcementPoint {
-        return PolicyEnforcementPointImpl(
+    open fun enforcementPoint(decisionPoint: Kabac.PolicyDecisionPoint): Kabac.PolicyEnforcementPoint =
+        PolicyEnforcementPointImpl(
             bias = Decision.Type.DENY,
             policyDecisionPoint = decisionPoint,
         )
-    }
 
     @Bean
-    open fun tilgangskontroll(enforcementPoint: Kabac.PolicyEnforcementPoint): Tilgangskontroll {
-        return TilgangskontrollKabac(enforcementPoint) {
+    open fun tilgangskontroll(enforcementPoint: Kabac.PolicyEnforcementPoint): Tilgangskontroll =
+        TilgangskontrollKabac(enforcementPoint) {
             log.error(it)
             ResponseStatusException(HttpStatus.FORBIDDEN, it)
         }
-    }
 }

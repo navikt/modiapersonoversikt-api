@@ -66,13 +66,13 @@ open class AzureADServiceImpl(
         val response: Response =
             httpClient
                 .newCall(
-                    Request.Builder()
+                    Request
+                        .Builder()
                         .url(url)
                         .addHeader("Authorization", "Bearer $token")
                         .addHeader("ConsistencyLevel", "eventual")
                         .build(),
-                )
-                .execute()
+                ).execute()
 
         val body =
             response.body

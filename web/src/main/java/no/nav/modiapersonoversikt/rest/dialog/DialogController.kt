@@ -23,13 +23,12 @@ class DialogController
         fun hentMeldinger(
             @PathVariable("fnr") fnr: String,
             @RequestParam(value = "enhet") enhet: String,
-        ): List<TraadDTO> {
-            return tilgangskontroll
+        ): List<TraadDTO> =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnr)))
                 .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                     dialogapi.hentMeldinger(fnr, enhet)
                 }
-        }
 
         @PostMapping("/sendmelding")
         fun sendMeldinger(

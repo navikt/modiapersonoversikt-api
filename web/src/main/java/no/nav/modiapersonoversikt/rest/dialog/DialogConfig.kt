@@ -29,25 +29,21 @@ open class DialogConfig {
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @Bean
-    open fun dialogApi(): DialogApi {
-        return SfLegacyDialogController(
+    open fun dialogApi(): DialogApi =
+        SfLegacyDialogController(
             sfHenvendelseService,
             oppgaveBehandlingService,
             ansattService,
             kodeverk,
         )
-    }
 
     @Bean
-    open fun dialogMerkApi(): DialogMerkApi {
-        return SfLegacyDialogMerkController(
+    open fun dialogMerkApi(): DialogMerkApi =
+        SfLegacyDialogMerkController(
             sfHenvendelseService,
             oppgaveBehandlingService,
         )
-    }
 
     @Bean
-    open fun dialogDelsvarApi(): DialogDelsvarApi {
-        return SfLegacyDelsvarController()
-    }
+    open fun dialogDelsvarApi(): DialogDelsvarApi = SfLegacyDelsvarController()
 }

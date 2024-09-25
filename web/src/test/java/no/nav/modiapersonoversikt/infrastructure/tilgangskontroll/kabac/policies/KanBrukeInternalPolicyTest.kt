@@ -49,11 +49,12 @@ internal class KanBrukeInternalPolicyTest {
         )
 
         TestUtils.withEnv("INTERNAL_TILGANG", "Z000001,Z000003") {
-            policy.assertDeny(
-                AuthContextPip,
-                NavIdentPip,
-                InternalTilgangPip(),
-            ).withMessage("Veileder har ikke tilgang til internal")
+            policy
+                .assertDeny(
+                    AuthContextPip,
+                    NavIdentPip,
+                    InternalTilgangPip(),
+                ).withMessage("Veileder har ikke tilgang til internal")
         }
     }
 }

@@ -8,7 +8,8 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 class InternalTilgangPip : Kabac.PolicyInformationPoint<List<NavIdent>> {
     private val identer: List<NavIdent> =
-        EnvironmentUtils.getRequiredProperty("INTERNAL_TILGANG", "")
+        EnvironmentUtils
+            .getRequiredProperty("INTERNAL_TILGANG", "")
             .split(",")
             .map(String::trim)
             .map(String::uppercase)
@@ -20,7 +21,5 @@ class InternalTilgangPip : Kabac.PolicyInformationPoint<List<NavIdent>> {
         override val key = Key<List<NavIdent>>(InternalTilgangPip)
     }
 
-    override fun provide(ctx: EvaluationContext): List<NavIdent> {
-        return identer
-    }
+    override fun provide(ctx: EvaluationContext): List<NavIdent> = identer
 }

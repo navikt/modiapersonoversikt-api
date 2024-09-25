@@ -45,8 +45,7 @@ internal class OppfolgingsSaker : SakerKilde {
     }
 
     companion object {
-        private fun inneholderOppfolgingssak(saker: List<JournalforingSak>): Boolean {
-            return saker.any { sak -> JournalforingSak.TEMAKODE_OPPFOLGING == sak.temaKode }
-        }
+        private fun inneholderOppfolgingssak(saker: List<JournalforingSak>): Boolean =
+            saker.any { sak -> JournalforingSak.TEMAKODE_OPPFOLGING == sak.temaKode }
     }
 }

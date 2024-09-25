@@ -41,8 +41,8 @@ class TilgangController
             @PathVariable("fnr") fnr: String,
             @RequestParam("enhet", required = false) enhet: String?,
             request: HttpServletRequest,
-        ): TilgangDTO {
-            return tilgangskontroll
+        ): TilgangDTO =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnr)))
                 .getDecision()
                 .makeResponse()
@@ -51,33 +51,32 @@ class TilgangController
                 .also {
                     enhetTrace.log(enhet ?: "IKKE SATT")
                 }
-        }
 
         @GetMapping
-        fun harTilgang(): TilgangDTO {
-            return tilgangskontroll
+        fun harTilgang(): TilgangDTO =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .getDecision()
                 .makeResponse()
-        }
 
         @GetMapping("/auth")
-        fun authIntropection(): AuthIntropectionDTO {
-            return AuthContextUtils.getClaims()
+        fun authIntropection(): AuthIntropectionDTO =
+            AuthContextUtils
+                .getClaims()
                 .map(JWTClaimsSet::getExpirationDate)
                 .orElse(AuthIntropectionDTO.INVALID)
-        }
 
-        private fun TilgangDTO.sjekkAktivFolkeregistrIden(fnr: String): TilgangDTO {
-            return if (this.harTilgang) {
+        private fun TilgangDTO.sjekkAktivFolkeregistrIden(fnr: String): TilgangDTO =
+            if (this.harTilgang) {
                 val aktivIdent =
-                    pdlOppslagService.hentFolkeregisterIdenter(fnr)
-                        ?.identer?.find { !it.historisk }
+                    pdlOppslagService
+                        .hentFolkeregisterIdenter(fnr)
+                        ?.identer
+                        ?.find { !it.historisk }
                 this.copy(aktivIdent = aktivIdent?.ident)
             } else {
                 this
             }
-        }
     }
 
 data class TilgangDTO(
@@ -86,7 +85,9 @@ data class TilgangDTO(
     val aktivIdent: String?,
 )
 
-class AuthIntropectionDTO(val expirationDate: Long) {
+class AuthIntropectionDTO(
+    val expirationDate: Long,
+) {
     companion object {
         val INVALID = AuthIntropectionDTO(-1)
     }
@@ -103,17 +104,15 @@ internal fun <T> TilgangDTO.logAudit(
     return this
 }
 
-internal fun JWTClaimsSet.getExpirationDate(): AuthIntropectionDTO {
-    return when (val exp: Date? = this.expirationTime) {
+internal fun JWTClaimsSet.getExpirationDate(): AuthIntropectionDTO =
+    when (val exp: Date? = this.expirationTime) {
         null -> AuthIntropectionDTO.INVALID
         else -> AuthIntropectionDTO(exp.time)
     }
-}
 
-internal fun Decision.makeResponse(): TilgangDTO {
-    return when (val biased = this.withBias(Decision.Type.DENY)) {
+internal fun Decision.makeResponse(): TilgangDTO =
+    when (val biased = this.withBias(Decision.Type.DENY)) {
         is Decision.Permit -> TilgangDTO(true, null, null)
         is Decision.Deny -> TilgangDTO(false, biased.cause, null)
         is Decision.NotApplicable -> TilgangDTO(false, Decision.NO_APPLICABLE_POLICY_FOUND, null)
     }
-}

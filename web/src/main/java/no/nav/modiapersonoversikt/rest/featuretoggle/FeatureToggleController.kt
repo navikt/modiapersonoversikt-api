@@ -34,17 +34,15 @@ class FeatureToggleController
         @GetMapping
         fun hentToggles(
             @RequestParam(value = "id", required = false) ids: Set<String>?,
-        ): Map<String, Boolean> {
-            return tilgangskontroll
+        ): Map<String, Boolean> =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.skipAuditLog()) {
                     (ids ?: emptySet()).associateWith {
                         unleashService.isEnabled(sjekkPrefix(it))
                     }
                 }
-        }
 
-        private fun sjekkPrefix(propertyKey: String): String {
-            return if (propertyKey.contains(".")) propertyKey else APPLICATION_PREFIX + propertyKey
-        }
+        private fun sjekkPrefix(propertyKey: String): String =
+            if (propertyKey.contains(".")) propertyKey else APPLICATION_PREFIX + propertyKey
     }

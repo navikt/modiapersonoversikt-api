@@ -26,7 +26,9 @@ private val ansattServiceMock = mockk<AnsattService>()
 
 @WebMvcTest(EnhetController::class)
 @ExtendWith(SnapshotExtension::class)
-internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
+internal class EnhetControllerSnapshotTest(
+    val snapshot: SnapshotExtension,
+) {
     @TestConfiguration
     open class TestConfig {
         @Bean
@@ -56,7 +58,8 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
                 ),
             )
 
-        mockMvc.getJson("/rest/enheter/1234/ansatte")
+        mockMvc
+            .getJson("/rest/enheter/1234/ansatte")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
@@ -74,7 +77,8 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
                     oppgavebehandler = false,
                 ),
             )
-        mockMvc.getJson("/rest/enheter/oppgavebehandlere/alle")
+        mockMvc
+            .getJson("/rest/enheter/oppgavebehandlere/alle")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)

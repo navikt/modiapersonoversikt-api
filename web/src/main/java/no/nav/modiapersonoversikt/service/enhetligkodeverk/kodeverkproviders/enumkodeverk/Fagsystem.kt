@@ -1,6 +1,8 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.enumkodeverk
 
-enum class Fagsystem(private val systemnavn: String) : EnumKodeverk.WithValue<String> {
+enum class Fagsystem(
+    private val systemnavn: String,
+) : EnumKodeverk.WithValue<String> {
     AO01("Arena"),
     AO11("Grisen"),
     FS22("Gosys"),

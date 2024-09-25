@@ -20,7 +20,8 @@ fun createClientAssertionJwt(
     val signer = RSASSASigner(rsaKey.toPrivateKey())
 
     val header: JWSHeader =
-        JWSHeader.Builder(JWSAlgorithm.RS256)
+        JWSHeader
+            .Builder(JWSAlgorithm.RS256)
             .keyID(rsaKey.keyID)
             .type(JOSEObjectType.JWT)
             .build()
@@ -29,17 +30,19 @@ fun createClientAssertionJwt(
     val expiration: Date = Date.from(Instant.now().plusSeconds(60))
 
     val claims: JWTClaimsSet =
-        JWTClaimsSet.Builder().apply {
-            if (scopes.isNotEmpty()) {
-                claim("scope", scopes)
-            }
+        JWTClaimsSet
+            .Builder()
+            .apply {
+                if (scopes.isNotEmpty()) {
+                    claim("scope", scopes)
+                }
 
-            issuer(clientId)
-            audience(issuer)
-            issueTime(now)
-            expirationTime(expiration)
-            jwtID(UUID.randomUUID().toString())
-        }.build()
+                issuer(clientId)
+                audience(issuer)
+                issueTime(now)
+                expirationTime(expiration)
+                jwtID(UUID.randomUUID().toString())
+            }.build()
 
     return SignedJWT(header, claims)
         .apply { sign(signer) }

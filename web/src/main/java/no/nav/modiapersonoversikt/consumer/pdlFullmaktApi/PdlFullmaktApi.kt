@@ -27,14 +27,12 @@ open class PdlFullmaktApiImpl(
     private val pdlFullmaktApi = FullmaktInternalControllerApi(url, client)
 
     @Cacheable
-    override fun hentFullmakterForFullmektig(fnr: Fnr): List<FullmaktDetails>? {
-        return pdlFullmaktApi.getFullmaktForFullmektig(fullmaktRequest(fnr.get()))
-    }
+    override fun hentFullmakterForFullmektig(fnr: Fnr): List<FullmaktDetails>? =
+        pdlFullmaktApi.getFullmaktForFullmektig(fullmaktRequest(fnr.get()))
 
     @Cacheable
-    override fun hentFullmakterForFullmaktsgiver(fnr: Fnr): List<FullmaktDetails>? {
-        return pdlFullmaktApi.getFullmaktForFullmaktsgiver(fullmaktRequest(fnr.get()))
-    }
+    override fun hentFullmakterForFullmaktsgiver(fnr: Fnr): List<FullmaktDetails>? =
+        pdlFullmaktApi.getFullmaktForFullmaktsgiver(fullmaktRequest(fnr.get()))
 
     private fun fullmaktRequest(ident: String) = FullmakIdentRequest(ident = "\"$ident\"".encodeBase64())
 

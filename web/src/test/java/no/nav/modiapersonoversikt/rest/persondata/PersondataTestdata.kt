@@ -3,8 +3,43 @@ package no.nav.modiapersonoversikt.rest.persondata
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
-import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.*
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.ForelderBarnRelasjonRolle
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KontaktinformasjonForDoedsboSkifteform
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Adressebeskyttelse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Bostedsadresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.DeltBosted
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Endring
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Foedested
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Foedselsdato
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Folkeregistermetadata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Folkeregisterpersonstatus
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.ForelderBarnRelasjon
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Foreldreansvar
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.IdentifiserendeInformasjon
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Kjoenn
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Kontaktadresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.KontaktinformasjonForDoedsbo
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.KontaktinformasjonForDoedsboAdresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.KontaktinformasjonForDoedsboPersonSomKontakt
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata2
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Navn
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Oppholdsadresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Personnavn
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.RelatertBiPerson
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Sikkerhetstiltak
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Sivilstand
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Statsborgerskap
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Telefonnummer
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.TilrettelagtKommunikasjon
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Tolk
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Vegadresse
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.VergeEllerFullmektig
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.VergemaalEllerFremtidsfullmakt
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDetails
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraadeMedHandling
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
@@ -70,14 +105,13 @@ internal fun gittNavn(navn: String): Persondata.Navn {
 internal fun gittIdentifiserendeInformasjon(
     navn: String,
     kjoenn: String,
-): IdentifiserendeInformasjon {
-    return IdentifiserendeInformasjon(
+): IdentifiserendeInformasjon =
+    IdentifiserendeInformasjon(
         navn = gittPersonnavn(navn),
         kjoenn = kjoenn,
         foedselsdato = LocalDate.parse("2000-01-01"),
         statsborgerskap = listOf(),
     )
-}
 
 internal fun gittPersonnavn(navn: String): Personnavn {
     val persondataNavn = gittNavn(navn)
@@ -464,13 +498,6 @@ internal val bostedadresseData =
 internal fun gittDato(dato: String) = LocalDate.parse(dato)
 
 internal fun gittDateTime(dato: String) = LocalDateTime.parse(dato)
-
-internal fun ukjentBosted(bosted: String) =
-    listOf(
-        adresse.copy(
-            ukjentBosted = UkjentBosted(bosted),
-        ),
-    )
 
 internal val testPerson =
     Person(

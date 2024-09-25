@@ -44,8 +44,8 @@ private class Instance(
     override fun <S> get(
         audit: Audit.AuditDescriptor<in S>,
         block: () -> S,
-    ): S {
-        return when (val decision = getDecision()) {
+    ): S =
+        when (val decision = getDecision()) {
             is Decision.Permit ->
                 runCatching(block)
                     .onSuccess(audit::log)
@@ -59,7 +59,6 @@ private class Instance(
                 throw noAccessHandler(decision.message ?: "No applicable policy found")
             }
         }
-    }
 
     override fun getDecision(): Decision {
         val attributes =
@@ -85,7 +84,5 @@ class TilgangskontrollKabac(
     private val enforcementPoint: Kabac.PolicyEnforcementPoint,
     private val noAccessHandler: NoAccessHandler,
 ) : Tilgangskontroll {
-    override fun check(policy: PolicyWithAttributes): TilgangskontrollInstance {
-        return Instance(enforcementPoint, noAccessHandler).check(policy)
-    }
+    override fun check(policy: PolicyWithAttributes): TilgangskontrollInstance = Instance(enforcementPoint, noAccessHandler).check(policy)
 }

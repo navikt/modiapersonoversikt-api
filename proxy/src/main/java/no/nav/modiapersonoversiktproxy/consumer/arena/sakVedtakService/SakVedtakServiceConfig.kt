@@ -82,8 +82,8 @@ open class SakVedtakServiceConfig {
         return Pingable { selftest }
     }
 
-    private fun createSakVedtakPortType(): SakVedtakPortType {
-        return Utils.withProperty(
+    private fun createSakVedtakPortType(): SakVedtakPortType =
+        Utils.withProperty(
             "disable.ssl.cn.check",
             "true",
         ) {
@@ -95,7 +95,6 @@ open class SakVedtakServiceConfig {
                 .withOutInterceptor(WSS4JOutInterceptor(getSecurityProps()))
                 .build()
         }
-    }
 
     private fun getSecurityProps(): Map<String, Any> {
         val user: String =

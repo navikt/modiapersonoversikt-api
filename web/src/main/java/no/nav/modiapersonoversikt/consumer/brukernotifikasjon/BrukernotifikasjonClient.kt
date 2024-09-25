@@ -6,7 +6,10 @@ import no.nav.modiapersonoversikt.infrastructure.http.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class BrukernotifikasjonClient(val baseUrl: String, val httpClient: OkHttpClient) : Brukernotifikasjon.Client {
+class BrukernotifikasjonClient(
+    val baseUrl: String,
+    val httpClient: OkHttpClient,
+) : Brukernotifikasjon.Client {
     override fun hentBrukernotifikasjoner(
         type: Brukernotifikasjon.Type,
         fnr: Fnr,
@@ -20,8 +23,7 @@ class BrukernotifikasjonClient(val baseUrl: String, val httpClient: OkHttpClient
                         .url("$baseUrl/${type.name.lowercase()}/all")
                         .header("fodselsnummer", fnr.get())
                         .build(),
-                )
-                .execute()
+                ).execute()
 
         val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
 
@@ -38,8 +40,7 @@ class BrukernotifikasjonClient(val baseUrl: String, val httpClient: OkHttpClient
                         .url("$baseUrl/varsel/alle")
                         .header("fodselsnummer", fnr.get())
                         .build(),
-                )
-                .execute()
+                ).execute()
 
         val bodyContent = checkNotNull(response.body?.string()) { "No Content" }
 

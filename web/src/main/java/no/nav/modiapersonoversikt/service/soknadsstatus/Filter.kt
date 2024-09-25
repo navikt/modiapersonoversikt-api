@@ -21,9 +21,10 @@ object Filter {
             ::sisteHendelseErIkkeEldreEnn1Ar,
         )
 
-    fun filtrerOgSorterBehandligner(behandlinger: List<Behandling>): List<Behandling> {
-        return filtrerBehandlinger(behandlinger = behandlinger).sortedByDescending { it.sistOppdatert }
-    }
+    fun filtrerOgSorterBehandligner(behandlinger: List<Behandling>): List<Behandling> =
+        filtrerBehandlinger(behandlinger = behandlinger).sortedByDescending {
+            it.sistOppdatert
+        }
 
     private fun filtrerBehandlinger(behandlinger: List<Behandling>): List<Behandling> {
         val result = mutableListOf<Behandling>()
@@ -38,19 +39,18 @@ object Filter {
         return result
     }
 
-    private fun erLovligBehandling(behandling: Behandling): Boolean {
-        return harLovligStatusPaBehandling(behandling) && harLovligBehandlingstypeEllerAvsluttetKvittering(behandling) &&
+    private fun erLovligBehandling(behandling: Behandling): Boolean =
+        harLovligStatusPaBehandling(behandling) &&
+            harLovligBehandlingstypeEllerAvsluttetKvittering(behandling) &&
             harLovligPrefix(
                 behandling,
             )
-    }
 
-    internal fun harLovligStatusPaBehandling(behandling: Behandling): Boolean {
-        return when (val status = behandling.status) {
+    internal fun harLovligStatusPaBehandling(behandling: Behandling): Boolean =
+        when (val status = behandling.status) {
             Behandling.Status.UNDER_BEHANDLING -> !erKvitteringstype(behandling.behandlingsType)
             else -> status == Behandling.Status.FERDIG_BEHANDLET // TODO: Denne filtrerer nå bort alle som er avbrutt
         }
-    }
 
     internal fun harLovligBehandlingstypeEllerAvsluttetKvittering(behandling: Behandling): Boolean {
         val behandlingsType = behandling.behandlingsType
@@ -84,9 +84,8 @@ object Filter {
         return type == SEND_SOKNAD_KVITTERINGSTYPE || DOKUMENTINNSENDING_KVITTERINGSTYPE == type
     }
 
-    private fun erAvsluttet(behandling: Behandling): Boolean {
-        return behandling.status == Behandling.Status.FERDIG_BEHANDLET || behandling.status == Behandling.Status.AVBRUTT
-    }
+    private fun erAvsluttet(behandling: Behandling): Boolean =
+        behandling.status == Behandling.Status.FERDIG_BEHANDLET || behandling.status == Behandling.Status.AVBRUTT
 
     internal fun lovligMenUtgaattStatusEllerUnderBehandling(
         type: String,
@@ -100,34 +99,23 @@ object Filter {
 
     // om nødvendig element mangler, skal ikkje behandlingstypen vises, logikken fiterer sakstemaet vekk
     // alle beahndlinger er ugyldig/utgått (se kode for filterbehandler for uttak av det visbare behandlingssettet).
-    private fun under1MndSidenFerdistillelse(behandling: Behandling): Boolean {
-        return behandling.sluttTidspunkt?.isAfter(LocalDateTime.now().minusMonths(1)) ?: false
-    }
+    private fun under1MndSidenFerdistillelse(behandling: Behandling): Boolean =
+        behandling.sluttTidspunkt?.isAfter(LocalDateTime.now().minusMonths(1)) ?: false
 
     // filterer ut ulovlige sakstema basert på blacklist
-    private fun harLovligSakstema(behandling: Behandling): Boolean {
-        return behandling.sakstema !in ulovligeSakstema
-    }
+    private fun harLovligSakstema(behandling: Behandling): Boolean = behandling.sakstema !in ulovligeSakstema
 
     // sak uten behandlinger skal ikke vises (sak med dokumenter skal)
-    private fun harHendelser(behandling: Behandling): Boolean {
-        return behandling.hendelser?.isNotEmpty() ?: false
-    }
+    private fun harHendelser(behandling: Behandling): Boolean = behandling.hendelser?.isNotEmpty() ?: false
 
     // Er ikke alle behandlingstyper (XXyyyy) som skal taes med
-    private fun harLovligBehandlingstype(behandling: Behandling): Boolean {
-        return behandling.behandlingsType in lovligeBehandlingstyper
-    }
+    private fun harLovligBehandlingstype(behandling: Behandling): Boolean = behandling.behandlingsType in lovligeBehandlingstyper
 
     // alle statuser utenom avbrutt er tillatt
-    private fun harLovligBehandlingsstatus(behandling: Behandling): Boolean {
-        return behandling.status != Behandling.Status.AVBRUTT
-    }
+    private fun harLovligBehandlingsstatus(behandling: Behandling): Boolean = behandling.status != Behandling.Status.AVBRUTT
 
     // Prefix uviss grunn til at 17 er forbudt
-    private fun harLovligPrefix(behandling: Behandling): Boolean {
-        return !behandling.behandlingId.startsWith(ULOVLIG_PREFIX)
-    }
+    private fun harLovligPrefix(behandling: Behandling): Boolean = !behandling.behandlingId.startsWith(ULOVLIG_PREFIX)
 
     // filterning av behandlingskjeder mappet til behandling som er ferdig/avsluttet og er over 1 år sidan den blie avslutta
     private fun sisteHendelseErIkkeEldreEnn1Ar(behandling: Behandling): Boolean {

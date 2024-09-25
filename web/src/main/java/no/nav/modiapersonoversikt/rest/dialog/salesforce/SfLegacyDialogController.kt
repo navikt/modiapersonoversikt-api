@@ -42,13 +42,12 @@ class SfLegacyDialogController(
     override fun sendMelding(
         fnr: String,
         meldingRequest: SendMelding,
-    ): TraadDTO {
-        return if (meldingRequest.traadId != null) {
+    ): TraadDTO =
+        if (meldingRequest.traadId != null) {
             fortsettPaEksisterendeDialog(fnr, meldingRequest)
         } else {
             opprettNyDialog(fnr, meldingRequest)
         }
-    }
 
     override fun sendInfomelding(
         fnr: String,
@@ -101,23 +100,23 @@ class SfLegacyDialogController(
         fnr: String,
         enhet: String?,
         ignorerConflict: Boolean,
-    ): String? {
-        return if (traad.erSporsmalFraBruker()) {
+    ): String? =
+        if (traad.erSporsmalFraBruker()) {
             try {
-                oppgaveBehandlingService.finnOgTilordneSTOOppgave(
-                    fnr,
-                    traad.kjedeId,
-                    traad.gjeldendeTemagruppe?.let { Temagruppe.valueOf(it) },
-                    enhet,
-                    ignorerConflict,
-                )?.oppgaveId
+                oppgaveBehandlingService
+                    .finnOgTilordneSTOOppgave(
+                        fnr,
+                        traad.kjedeId,
+                        traad.gjeldendeTemagruppe?.let { Temagruppe.valueOf(it) },
+                        enhet,
+                        ignorerConflict,
+                    )?.oppgaveId
             } catch (e: OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler) {
                 throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
             }
         } else {
             null
         }
-    }
 
     private fun HenvendelseDTO.erSporsmalFraBruker(): Boolean {
         val nyesteMelding = this.meldinger?.maxByOrNull { it.sendtDato }
@@ -128,9 +127,7 @@ class SfLegacyDialogController(
         val temakodeMap: Map<String, String>,
         val identMap: Map<String, Veileder>,
     ) {
-        fun getVeileder(ident: String?): Veileder? {
-            return identMap[ident ?: ""]
-        }
+        fun getVeileder(ident: String?): Veileder? = identMap[ident ?: ""]
     }
 
     private fun lagMappingContext(henvendelser: List<HenvendelseDTO>): DialogMappingContext {
@@ -149,8 +146,7 @@ class SfLegacyDialogController(
                     (journalportIdenter ?: emptyList())
                         .plus(markeringIdenter ?: emptyList())
                         .plus(meldingFraIdenter ?: emptyList())
-                }
-                .distinct()
+                }.distinct()
                 .map(::NavIdent)
 
         val identMap = ansattService.hentVeiledere(identer).mapKeys { (key, _) -> key.get() }
@@ -217,9 +213,7 @@ class SfLegacyDialogController(
         )
     }
 
-    private fun List<MarkeringDTO>?.getForType(type: MarkeringDTO.Markeringstype): MarkeringDTO? {
-        return this?.find { it.markeringstype == type }
-    }
+    private fun List<MarkeringDTO>?.getForType(type: MarkeringDTO.Markeringstype): MarkeringDTO? = this?.find { it.markeringstype == type }
 
     private fun DialogMappingContext.getIdent(
         ident: String?,

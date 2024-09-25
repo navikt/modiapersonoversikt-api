@@ -34,7 +34,7 @@ import kotlin.time.Duration.Companion.seconds
 interface NorgApi : Pingable {
     companion object {
         @JvmStatic
-        val IKKE_NEDLAGT: List<EnhetStatus> = EnhetStatus.values().asList().minus(EnhetStatus.NEDLAGT)
+        val IKKE_NEDLAGT: List<EnhetStatus> = EnhetStatus.entries.minus(EnhetStatus.NEDLAGT)
     }
 
     fun hentGeografiskTilknyttning(enhet: EnhetId): List<EnhetGeografiskTilknyttning>
@@ -107,12 +107,12 @@ class NorgApiImpl(
         )
     }
 
-    override fun hentGeografiskTilknyttning(enhet: EnhetId): List<EnhetGeografiskTilknyttning> {
-        return gtCache.get(enhet.get()) {
+    override fun hentGeografiskTilknyttning(enhet: EnhetId): List<EnhetGeografiskTilknyttning> =
+        gtCache.get(enhet.get()) {
             enhetApi
-                .getNavKontorerByEnhetsnummerUsingGET(it)?.map(::toInternalDomain)
+                .getNavKontorerByEnhetsnummerUsingGET(it)
+                ?.map(::toInternalDomain)
         } ?: emptyList()
-    }
 
     override fun hentEnheter(
         enhetId: EnhetId?,
@@ -140,10 +140,11 @@ class NorgApiImpl(
         val key = "finnNavKontor[$geografiskTilknytning,$diskresjonskode]"
         return navkontorCache.get(key) {
             if (geografiskTilknytning.isNumeric()) {
-                enhetApi.getEnhetByGeografiskOmraadeUsingGET(
-                    geografiskOmraade = geografiskTilknytning,
-                    disk = diskresjonskode?.name,
-                )?.let(::toInternalDomain)
+                enhetApi
+                    .getEnhetByGeografiskOmraadeUsingGET(
+                        geografiskOmraade = geografiskTilknytning,
+                        disk = diskresjonskode?.name,
+                    )?.let(::toInternalDomain)
             } else {
                 /**
                  * Ikke numerisk GT tilsier at det er landkode pga utenlandsk GT og da har vi ingen enhet
@@ -153,19 +154,17 @@ class NorgApiImpl(
         }
     }
 
-    override fun hentRegionalEnheter(enhet: List<EnhetId>): List<EnhetId> {
-        return enhet.mapNotNull(::hentRegionalEnhet)
-    }
+    override fun hentRegionalEnheter(enhet: List<EnhetId>): List<EnhetId> = enhet.mapNotNull(::hentRegionalEnhet)
 
-    override fun hentRegionalEnhet(enhet: EnhetId): EnhetId? {
-        return regionalkontorCache.get(enhet) { enhetId ->
-            organiseringApi.getAllOrganiseringerForEnhetUsingGET(enhetId.get())
+    override fun hentRegionalEnhet(enhet: EnhetId): EnhetId? =
+        regionalkontorCache.get(enhet) { enhetId ->
+            organiseringApi
+                .getAllOrganiseringerForEnhetUsingGET(enhetId.get())
                 ?.firstOrNull { it.orgType == "FYLKE" }
                 ?.organiserer
                 ?.nr
                 ?.let(::EnhetId)
         }
-    }
 
     override fun hentBehandlendeEnheter(
         behandling: Behandling?,
@@ -174,8 +173,8 @@ class NorgApiImpl(
         fagomrade: String?,
         erEgenAnsatt: Boolean?,
         diskresjonskode: NorgDomain.DiskresjonsKode?,
-    ): List<Enhet> {
-        return arbeidsfordelingApi
+    ): List<Enhet> =
+        arbeidsfordelingApi
             .runCatching {
                 getBehandlendeEnheterUsingPOST(
                     RsArbeidsFordelingCriteriaSkjermetDTO(
@@ -190,19 +189,16 @@ class NorgApiImpl(
                         temagruppe = null,
                     ),
                 )
-            }
-            .getOrElse {
+            }.getOrElse {
                 log.error("Kunne ikke hente enheter fra arbeidsfordeling.", it)
                 emptyList()
-            }
-            ?.map(::toInternalDomain).orEmpty()
-    }
+            }?.map(::toInternalDomain)
+            .orEmpty()
 
-    override fun hentKontaktinfo(enhet: EnhetId): EnhetKontaktinformasjon {
-        return requireNotNull(cache[enhet]) {
+    override fun hentKontaktinfo(enhet: EnhetId): EnhetKontaktinformasjon =
+        requireNotNull(cache[enhet]) {
             "Fant ikke $enhet i cache"
         }
-    }
 
     override fun ping() =
         SelfTestCheck(
@@ -233,16 +229,15 @@ class NorgApiImpl(
                     enhetKontaktInfoApi
                         .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
                             consumerId = AppConstants.APP_NAME,
-                        )
-                        ?.mapNotNull {
+                        )?.mapNotNull {
                             try {
                                 toInternalDomain(it)
                             } catch (e: Exception) {
                                 log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
                                 null
                             }
-                        }
-                        ?.associateBy { EnhetId(it.enhet.enhetId) }.orEmpty()
+                        }?.associateBy { EnhetId(it.enhet.enhetId) }
+                        .orEmpty()
                 lastUpdateOfCache = LocalDateTime.now(clock)
             }
         }
@@ -274,7 +269,9 @@ class NorgApiImpl(
         internal fun toInternalDomain(enhet: RsEnhetInkludertKontaktinformasjonDTO) =
             EnhetKontaktinformasjon(
                 enhet = toInternalDomain(requireNotNull(enhet.enhet)),
-                publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList(),
+                publikumsmottak =
+                    enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) }
+                        ?: emptyList(),
                 overordnetEnhet = enhet.overordnetEnhet?.let(::EnhetId),
             )
 

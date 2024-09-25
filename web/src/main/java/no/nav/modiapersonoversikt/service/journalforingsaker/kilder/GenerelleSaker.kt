@@ -18,11 +18,9 @@ internal class GenerelleSaker : SakerKilde {
 
         val manglendeGenerelleSaker =
             JournalforingSak.GODKJENTE_TEMA_FOR_GENERELL_SAK
-                .filter {
-                        temakode: String ->
+                .filter { temakode: String ->
                     harIngenSakerMedTemakode(temakode, generelleSaker) && JournalforingSak.TEMAKODE_OPPFOLGING != temakode
-                }
-                .map { temakode: String -> lagGenerellSakMedTema(temakode) }
+                }.map { temakode: String -> lagGenerellSakMedTema(temakode) }
 
         saker.addAll(manglendeGenerelleSaker)
     }
@@ -31,18 +29,15 @@ internal class GenerelleSaker : SakerKilde {
         private fun harIngenSakerMedTemakode(
             temakode: String,
             generelleSaker: List<JournalforingSak>,
-        ): Boolean {
-            return generelleSaker.none { it.temaKode == temakode }
-        }
+        ): Boolean = generelleSaker.none { it.temaKode == temakode }
 
-        private fun lagGenerellSakMedTema(temakode: String): JournalforingSak {
-            return JournalforingSak().apply {
+        private fun lagGenerellSakMedTema(temakode: String): JournalforingSak =
+            JournalforingSak().apply {
                 temaKode = temakode
                 finnesIGsak = false
                 fagsystemKode = JournalforingSak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
                 sakstype = JournalforingSak.SAKSTYPE_GENERELL
                 opprettetDato = DateTime.now()
             }
-        }
     }
 }

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/rest/baseurls")
 class BaseUrlsController
     @Autowired
-    constructor(private val tilgangskontroll: Tilgangskontroll) {
+    constructor(
+        private val tilgangskontroll: Tilgangskontroll,
+    ) {
         private val baseurls =
             BaseUrls(
                 norg2Frontend = EnvironmentUtils.getRequiredProperty("SERVER_NORG2_FRONTEND_URL"),
@@ -22,13 +24,12 @@ class BaseUrlsController
             )
 
         @GetMapping("/v2")
-        fun hentV2(): BaseUrls {
-            return tilgangskontroll
+        fun hentV2(): BaseUrls =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(skipAuditLog()) {
                     baseurls
                 }
-        }
 
         data class BaseUrls(
             val norg2Frontend: String,

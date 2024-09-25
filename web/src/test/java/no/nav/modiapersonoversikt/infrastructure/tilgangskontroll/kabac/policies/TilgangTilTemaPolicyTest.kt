@@ -37,12 +37,12 @@ internal class TilgangTilTemaPolicyTest {
     @Test
     internal fun `deny om veileder mangler tema tilgang`() {
         every { axsys.hentTilganger(ident) } returns listOf(axsysEnhet)
-        policy.assertDeny(
-            NavIdentPip.key.withValue(ident),
-            VeiledersTemaPip(AnsattServiceImpl(axsys, nom, azureADService)),
-            CommonAttributes.ENHET.withValue(EnhetId("0100")),
-            CommonAttributes.TEMA.withValue("SYM"),
-        )
-            .withMessage("Veileder har ikke tilgang til SYM")
+        policy
+            .assertDeny(
+                NavIdentPip.key.withValue(ident),
+                VeiledersTemaPip(AnsattServiceImpl(axsys, nom, azureADService)),
+                CommonAttributes.ENHET.withValue(EnhetId("0100")),
+                CommonAttributes.TEMA.withValue("SYM"),
+            ).withMessage("Veileder har ikke tilgang til SYM")
     }
 }

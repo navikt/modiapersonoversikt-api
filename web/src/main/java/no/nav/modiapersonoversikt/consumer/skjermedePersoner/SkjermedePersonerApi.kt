@@ -22,13 +22,12 @@ class SkjermedePersonerApiImpl(
 ) : SkjermedePersonerApi {
     private val skjermingPipApi = SkjermingPipApi(url, client)
 
-    override fun erSkjermetPerson(fnr: Fnr): Boolean {
-        return requireNotNull(
+    override fun erSkjermetPerson(fnr: Fnr): Boolean =
+        requireNotNull(
             cache.get(fnr) {
                 skjermingPipApi.isSkjermetPostUsingPOST(SkjermetDataRequestDTO(fnr.get()))
             },
         )
-    }
 
     override fun ping() =
         SelfTestCheck(

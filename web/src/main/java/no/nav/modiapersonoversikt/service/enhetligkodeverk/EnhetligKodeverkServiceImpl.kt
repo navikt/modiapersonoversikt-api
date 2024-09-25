@@ -17,7 +17,10 @@ class EnhetligKodeverkServiceImpl(
     scheduler: Timer = Timer(),
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : EnhetligKodeverk.Service {
-    private data class KodeverkCacheEntry(val timestamp: LocalDateTime, val kodeverk: EnhetligKodeverk.Kodeverk<*, *>)
+    private data class KodeverkCacheEntry(
+        val timestamp: LocalDateTime,
+        val kodeverk: EnhetligKodeverk.Kodeverk<*, *>,
+    )
 
     private val emptyKodeverk = EnhetligKodeverk.Kodeverk<Nothing, Nothing>("EMPTY", emptyMap())
     private val cache: MutableMap<EnhetligKodeverk.Kilde<*, *>, KodeverkCacheEntry> = mutableMapOf()
@@ -46,7 +49,9 @@ class EnhetligKodeverkServiceImpl(
 
     private fun hentScheduleDatoInstant(): Instant {
         val kjoringIdag =
-            LocalDate.now(clock).atTime(1, 0)
+            LocalDate
+                .now(clock)
+                .atTime(1, 0)
                 .atZone(ZoneId.systemDefault())
                 .toInstant()
 
@@ -58,9 +63,8 @@ class EnhetligKodeverkServiceImpl(
         }
     }
 
-    override fun <KEY, VALUE> hentKodeverk(kilde: EnhetligKodeverk.Kilde<KEY, VALUE>): EnhetligKodeverk.Kodeverk<KEY, VALUE> {
-        return (cache[kilde]?.kodeverk ?: emptyKodeverk) as EnhetligKodeverk.Kodeverk<KEY, VALUE>
-    }
+    override fun <KEY, VALUE> hentKodeverk(kilde: EnhetligKodeverk.Kilde<KEY, VALUE>): EnhetligKodeverk.Kodeverk<KEY, VALUE> =
+        (cache[kilde]?.kodeverk ?: emptyKodeverk) as EnhetligKodeverk.Kodeverk<KEY, VALUE>
 
     override fun ping() =
         SelfTestCheck(

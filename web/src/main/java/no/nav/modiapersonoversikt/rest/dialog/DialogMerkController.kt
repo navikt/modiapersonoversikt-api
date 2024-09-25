@@ -57,13 +57,12 @@ class DialogMerkController
         @GetMapping("/sladdearsaker/{kjedeid}")
         fun hentSladdeArsaker(
             @PathVariable("kjedeid") kjedeId: String,
-        ): List<String> {
-            return tilgangskontroll
+        ): List<String> =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Henvendelse.Merk.SladdeArsaker, AuditIdentifier.TRAAD_ID to kjedeId)) {
                     dialogMerkApi.hentSladdeArsaker(kjedeId)
                 }
-        }
 
         @PostMapping("/lukk-traad")
         fun lukkTraad(

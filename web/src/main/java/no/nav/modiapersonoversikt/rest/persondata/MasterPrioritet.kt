@@ -8,7 +8,5 @@ object MasterPrioritet {
             "Freg" to 2,
         )
 
-    operator fun get(value: String): Int {
-        return masterPriorityMap[value] ?: UNKOWN_PRIORITY
-    }
+    operator fun get(value: String): Int = masterPriorityMap[value] ?: UNKOWN_PRIORITY
 }

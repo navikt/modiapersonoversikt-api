@@ -6,7 +6,9 @@ import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
 import no.nav.personoversikt.common.kabac.utils.Key
 
-class BrukersGeografiskeTilknyttningPip(private val pdl: PdlOppslagService) : Kabac.PolicyInformationPoint<String?> {
+class BrukersGeografiskeTilknyttningPip(
+    private val pdl: PdlOppslagService,
+) : Kabac.PolicyInformationPoint<String?> {
     override val key = Companion.key
 
     companion object : Kabac.AttributeKey<String?> {

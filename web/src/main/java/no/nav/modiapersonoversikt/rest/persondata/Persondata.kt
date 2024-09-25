@@ -317,7 +317,9 @@ object Persondata {
         UKJENT,
     }
 
-    enum class PersonStatus(val tpsKode: String) {
+    enum class PersonStatus(
+        val tpsKode: String,
+    ) {
         BOSATT("BOSA"),
         DOD("DØD"),
         OPPHORT("UTPE"),
@@ -330,7 +332,9 @@ object Persondata {
         UKJENT("UKJENT"),
     }
 
-    enum class SivilstandType(val tpsKode: String) {
+    enum class SivilstandType(
+        val tpsKode: String,
+    ) {
         UOPPGITT("NULL"),
         UGIFT("UGIF"),
         GIFT("GIFT"),

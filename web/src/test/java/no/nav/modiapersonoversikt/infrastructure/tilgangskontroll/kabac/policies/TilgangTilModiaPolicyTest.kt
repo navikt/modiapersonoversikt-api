@@ -50,30 +50,33 @@ internal class TilgangTilModiaPolicyTest {
     @Test
     internal fun `deny om rolle manger`() {
         every { ansattService.hentVeilederRoller(ident) } returns RolleListe("annen-rolle")
-        policy.assertDeny(
-            NavIdentPip.key.withValue(ident),
-            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
-            VeiledersRollerPip(ansattService),
-        ).withMessage("Veileder har ikke tilgang til modia")
+        policy
+            .assertDeny(
+                NavIdentPip.key.withValue(ident),
+                VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
+                VeiledersRollerPip(ansattService),
+            ).withMessage("Veileder har ikke tilgang til modia")
     }
 
     @Test
     internal fun `deny om ingen roller`() {
         every { ansattService.hentVeilederRoller(ident) } returns RolleListe()
-        policy.assertDeny(
-            NavIdentPip.key.withValue(ident),
-            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
-            VeiledersRollerPip(ansattService),
-        ).withMessage("Veileder har ikke tilgang til modia")
+        policy
+            .assertDeny(
+                NavIdentPip.key.withValue(ident),
+                VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
+                VeiledersRollerPip(ansattService),
+            ).withMessage("Veileder har ikke tilgang til modia")
     }
 
     @Test
     internal fun `deny om ingen enheter`() {
         every { ansattService.hentVeilederRoller(ident) } returns RolleListe("0000-ga-syfo-sensitiv")
-        policy.assertDeny(
-            NavIdentPip.key.withValue(ident),
-            VeiledersEnheterPip.key.withValue(emptyList()),
-            VeiledersRollerPip(ansattService),
-        ).withMessage("Veileder har ikke tilgang til noen enheter")
+        policy
+            .assertDeny(
+                NavIdentPip.key.withValue(ident),
+                VeiledersEnheterPip.key.withValue(emptyList()),
+                VeiledersRollerPip(ansattService),
+            ).withMessage("Veileder har ikke tilgang til noen enheter")
     }
 }

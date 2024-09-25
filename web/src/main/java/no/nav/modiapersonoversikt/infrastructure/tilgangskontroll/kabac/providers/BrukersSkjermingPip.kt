@@ -6,7 +6,9 @@ import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
 import no.nav.personoversikt.common.kabac.utils.Key
 
-class BrukersSkjermingPip(private val skjermedePersonerApi: SkjermedePersonerApi) : Kabac.PolicyInformationPoint<Boolean> {
+class BrukersSkjermingPip(
+    private val skjermedePersonerApi: SkjermedePersonerApi,
+) : Kabac.PolicyInformationPoint<Boolean> {
     override val key = Companion.key
 
     companion object : Kabac.AttributeKey<Boolean> {

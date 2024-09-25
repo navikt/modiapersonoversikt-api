@@ -30,8 +30,8 @@ class EnhetController
         @GetMapping("/{enhetId}/ansatte")
         fun hentAnsattePaaEnhet(
             @PathVariable("enhetId") enhetId: String,
-        ): List<Ansatt> {
-            return tilgangskontroll
+        ): List<Ansatt> =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
                     ansattService.ansatteForEnhet(
@@ -41,11 +41,10 @@ class EnhetController
                         ),
                     )
                 }
-        }
 
         @GetMapping("/oppgavebehandlere/alle")
-        fun hentAlleEnheterForOppgave(): List<NorgDomain.Enhet> {
-            return tilgangskontroll
+        fun hentAlleEnheterForOppgave(): List<NorgDomain.Enhet> =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enhet.OppgaveBehandlere)) {
                     norgApi.hentEnheter(
@@ -54,7 +53,6 @@ class EnhetController
                         enhetStatuser = listOf(NorgDomain.EnhetStatus.AKTIV),
                     )
                 }
-        }
 
         @GetMapping("/oppgavebehandlere/v2/foreslatte")
         fun hentBehandlendeEnhet(
@@ -62,8 +60,8 @@ class EnhetController
             @RequestParam("temakode") temakode: String,
             @RequestParam("typekode") typekode: String,
             @RequestParam("underkategori") underkategorikode: String?,
-        ): List<NorgDomain.Enhet> {
-            return tilgangskontroll
+        ): List<NorgDomain.Enhet> =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnr)))
                 .get(Audit.describe(READ, Enhet.Foreslatte)) {
                     arbeidsfordeling.hentBehandlendeEnheter(
@@ -73,5 +71,4 @@ class EnhetController
                         underkategori = underkategorikode,
                     )
                 }
-        }
     }

@@ -34,8 +34,8 @@ class DialogOppgaveController
         @PostMapping("/v2/opprett")
         fun opprettOppgave(
             @RequestBody request: OpprettOppgaveRequestDTO,
-        ): OpprettOppgaveResponseDTO {
-            return tilgangskontroll
+        ): OpprettOppgaveResponseDTO =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
                 .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.behandlingskjedeId))
                 .get(
@@ -48,34 +48,33 @@ class DialogOppgaveController
                 ) {
                     oppgavebehandling.opprettOppgave(request.fromDTO()).toDTO()
                 }
-        }
 
         @PostMapping("/v2/opprettskjermetoppgave")
         fun opprettSkjermetOppgave(
             @RequestBody request: OpprettSkjermetOppgaveDTO,
-        ): OpprettOppgaveResponseDTO {
-            return tilgangskontroll
+        ): OpprettOppgaveResponseDTO =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                     oppgavebehandling.opprettSkjermetOppgave(request.fromDTO()).toDTO()
                 }
-        }
 
         @GetMapping("/v2/tema")
-        fun hentAlleTema(): List<OppgaveKodeverk.Tema> {
-            return tilgangskontroll
+        fun hentAlleTema(): List<OppgaveKodeverk.Tema> =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.skipAuditLog()) {
                     kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentAlleVerdier().toList()
                 }
-        }
 
         private fun kalkulerFrist(
             temaKode: String,
             oppgaveTypeKode: String,
         ): LocalDate {
             val dagerFrist =
-                kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentVerdiEllerNull(temaKode)
+                kodeverkService
+                    .hentKodeverk(KodeverkConfig.OPPGAVE)
+                    .hentVerdiEllerNull(temaKode)
                     ?.oppgavetyper
                     ?.find { it.kode == oppgaveTypeKode }
                     ?.dagerFrist

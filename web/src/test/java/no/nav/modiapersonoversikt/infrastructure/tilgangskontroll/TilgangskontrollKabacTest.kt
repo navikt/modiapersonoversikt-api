@@ -15,17 +15,13 @@ import org.junit.jupiter.api.Test
 internal class TilgangskontrollKabacTest {
     private val rollelistePip =
         object : Kabac.PolicyInformationPoint<RolleListe> {
-            override fun provide(ctx: Kabac.EvaluationContext): RolleListe {
-                return RolleListe("0000-ga-bd06_modiagenerelltilgang")
-            }
+            override fun provide(ctx: Kabac.EvaluationContext): RolleListe = RolleListe("0000-ga-bd06_modiagenerelltilgang")
 
             override val key: Key<RolleListe> = VeiledersRollerPip.key
         }
     private val enheterPip =
         object : Kabac.PolicyInformationPoint<List<EnhetId>> {
-            override fun provide(ctx: Kabac.EvaluationContext): List<EnhetId> {
-                return listOf(EnhetId("1234"))
-            }
+            override fun provide(ctx: Kabac.EvaluationContext): List<EnhetId> = listOf(EnhetId("1234"))
 
             override val key: Key<List<EnhetId>> = VeiledersEnheterPip.key
         }
@@ -52,8 +48,8 @@ internal class TilgangskontrollKabacTest {
     private suspend fun <T> inParallell(
         times: Int,
         task: () -> T,
-    ): List<T> {
-        return coroutineScope {
+    ): List<T> =
+        coroutineScope {
             buildList {
                 repeat(times) {
                     add(
@@ -64,5 +60,4 @@ internal class TilgangskontrollKabacTest {
                 }
             }.awaitAll()
         }
-    }
 }

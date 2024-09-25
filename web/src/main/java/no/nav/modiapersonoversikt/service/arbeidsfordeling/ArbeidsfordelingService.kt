@@ -20,7 +20,10 @@ interface ArbeidsfordelingService {
         underkategori: String?,
     ): List<NorgDomain.Enhet>
 
-    class ArbeidsfordelingException(message: String?, cause: Throwable?) : RuntimeException(message, cause)
+    class ArbeidsfordelingException(
+        message: String?,
+        cause: Throwable?,
+    ) : RuntimeException(message, cause)
 }
 
 class ArbeidsfordelingServiceImpl(
@@ -35,15 +38,16 @@ class ArbeidsfordelingServiceImpl(
         oppgavetype: String?,
         brukerIdent: Fnr?,
         underkategori: String?,
-    ): List<NorgDomain.Enhet> {
-        return runCatching {
+    ): List<NorgDomain.Enhet> =
+        runCatching {
             val behandling: Behandling? = underkategori?.parseV2BehandlingString()
             val geografiskTilknyttning =
                 brukerIdent?.get()?.let(pdlPip::hentGeografiskTilknytning)?.run {
                     gtBydel ?: gtKommune ?: gtLand
                 }
             val diskresjonskode =
-                brukerIdent?.get()
+                brukerIdent
+                    ?.get()
                     ?.let(pdlPip::hentAdresseBeskyttelse)
                     ?.let { if (it.isEmpty()) null else it.first().toNorgDiskresjonsKode() }
 
@@ -62,21 +66,18 @@ class ArbeidsfordelingServiceImpl(
                 erEgenAnsatt = erEgenAnsatt,
                 diskresjonskode = diskresjonskode,
             )
+        }.getOrElse {
+            log.error("Kunne ikke hente behandlende enheter", it)
+            throw ArbeidsfordelingService.ArbeidsfordelingException(
+                "Kunne ikke hente behandlende enheter",
+                it,
+            )
         }
-            .getOrElse {
-                log.error("Kunne ikke hente behandlende enheter", it)
-                throw ArbeidsfordelingService.ArbeidsfordelingException(
-                    "Kunne ikke hente behandlende enheter",
-                    it,
-                )
-            }
-    }
 }
 
-private fun PipAdressebeskyttelse.toNorgDiskresjonsKode(): NorgDomain.DiskresjonsKode {
-    return when (this.gradering) {
+private fun PipAdressebeskyttelse.toNorgDiskresjonsKode(): NorgDomain.DiskresjonsKode =
+    when (this.gradering) {
         STRENGT_FORTROLIG.toString(), STRENGT_FORTROLIG_UTLAND.toString() -> NorgDomain.DiskresjonsKode.SPSF
         FORTROLIG.toString() -> NorgDomain.DiskresjonsKode.SPFO
         else -> NorgDomain.DiskresjonsKode.ANY
     }
-}

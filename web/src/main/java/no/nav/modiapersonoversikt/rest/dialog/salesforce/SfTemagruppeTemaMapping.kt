@@ -32,7 +32,5 @@ object SfTemagruppeTemaMapping {
                 }
             }
 
-    fun hentTemagruppeForTema(temaKode: String): String {
-        return sfMapping[temaKode] ?: TemagruppeTemaMapping.TEMA_UTEN_TEMAGRUPPE.name
-    }
+    fun hentTemagruppeForTema(temaKode: String): String = sfMapping[temaKode] ?: TemagruppeTemaMapping.TEMA_UTEN_TEMAGRUPPE.name
 }

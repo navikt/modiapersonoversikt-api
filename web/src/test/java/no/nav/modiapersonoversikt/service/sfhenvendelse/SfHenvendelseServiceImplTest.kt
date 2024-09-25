@@ -282,10 +282,9 @@ internal class SfHenvendelseServiceImplTest {
         )
     }
 
-    private fun HenvendelseDTO.somKassert(): HenvendelseDTO {
-        return this.copy(
+    private fun HenvendelseDTO.somKassert(): HenvendelseDTO =
+        this.copy(
             kasseringsDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
             meldinger = this.meldinger?.map { it.copy(fritekst = "") },
         )
-    }
 }

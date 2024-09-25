@@ -88,14 +88,13 @@ class SakstemaServiceImpl
             wrapper: ResultatWrapper<List<DokumentMetadata>>,
             temakoder: Set<String>,
             soknadsstatuser: Map<String, Soknadsstatus>,
-        ): ResultatWrapper<List<SoknadsstatusSakstema>> {
-            return opprettSakstemaForEnTemagruppeSoknadsstatus(
+        ): ResultatWrapper<List<SoknadsstatusSakstema>> =
+            opprettSakstemaForEnTemagruppeSoknadsstatus(
                 temakoder = temakoder,
                 alleSaker = saker,
                 alleDokumentMetadata = wrapper.resultat,
                 soknadsstatuser,
             )
-        }
 
         override fun opprettSakstemaForEnTemagruppeSoknadsstatus(
             temakoder: Set<String>,
@@ -126,21 +125,20 @@ class SakstemaServiceImpl
             alleDokumentMetadata: List<DokumentMetadata>,
             temakode: String,
             tilhorendeSaker: List<Sak>,
-        ): List<DokumentMetadata> {
-            return alleDokumentMetadata
+        ): List<DokumentMetadata> =
+            alleDokumentMetadata
                 .stream()
                 .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temakode)))
                 .collect(Collectors.toList())
-        }
 
         override fun sakerITemagruppe(
             alleSaker: List<Sak>,
             temakode: String,
-        ): List<Sak> {
-            return alleSaker.stream()
+        ): List<Sak> =
+            alleSaker
+                .stream()
                 .filter { sak: Sak -> temakode == sak.temakode }
                 .collect(Collectors.toList())
-        }
 
         override fun getTemanavnForTemakode(temakode: String): ResultatWrapper<String> {
             val temanavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentVerdiEllerNull(temakode)
@@ -167,15 +165,16 @@ class SakstemaServiceImpl
                 return (sakerTema + dokumentTema + soknadsstatusTema).toSet()
             }
 
-            private fun tilhorendeFraJoark(tilhorendeSaker: List<Sak>): Predicate<DokumentMetadata> {
-                return Predicate { dm: DokumentMetadata ->
-                    tilhorendeSaker.stream().map { obj: Sak -> obj.saksId }
-                        .toList().contains(dm.tilhorendeSakid)
+            private fun tilhorendeFraJoark(tilhorendeSaker: List<Sak>): Predicate<DokumentMetadata> =
+                Predicate { dm: DokumentMetadata ->
+                    tilhorendeSaker
+                        .stream()
+                        .map { obj: Sak -> obj.saksId }
+                        .toList()
+                        .contains(dm.tilhorendeSakid)
                 }
-            }
 
-            private fun tilhorendeFraHenvendelse(temakode: String): Predicate<DokumentMetadata> {
-                return Predicate { dm: DokumentMetadata -> dm.baksystem.contains(Baksystem.HENVENDELSE) && dm.temakode == temakode }
-            }
+            private fun tilhorendeFraHenvendelse(temakode: String): Predicate<DokumentMetadata> =
+                Predicate { dm: DokumentMetadata -> dm.baksystem.contains(Baksystem.HENVENDELSE) && dm.temakode == temakode }
         }
     }

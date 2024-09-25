@@ -7,8 +7,10 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
-class AuthContextExtension(var authcontext: AuthContext? = null) :
-    BeforeTestExecutionCallback, AfterTestExecutionCallback {
+class AuthContextExtension(
+    var authcontext: AuthContext? = null,
+) : BeforeTestExecutionCallback,
+    AfterTestExecutionCallback {
     private var original: AuthContext? = null
     private val threadlocal: AuthContextHolder = AuthContextHolderThreadLocal.instance()
 

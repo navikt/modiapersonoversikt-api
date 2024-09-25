@@ -17,8 +17,8 @@ object Utils {
     fun defaultEnhetGittTemagruppe(
         temagruppe: Temagruppe?,
         valgtEnhet: String?,
-    ): String {
-        return if (temagruppe == null) {
+    ): String =
+        if (temagruppe == null) {
             DEFAULT_ENHET
         } else if (temagruppe == FMLI && valgtEnhet == STORD_ENHET) {
             STORD_ENHET
@@ -27,7 +27,6 @@ object Utils {
         } else {
             valgtEnhet ?: throw IllegalStateException("Kunne ikke utlede endretAvEnhet gitt $temagruppe og ingen enhet")
         }
-    }
 
     fun beskrivelseInnslag(
         ident: NavIdent,
@@ -35,8 +34,8 @@ object Utils {
         enhet: String?,
         innhold: String?,
         clock: Clock,
-    ): String {
-        return String.format(
+    ): String =
+        String.format(
             "--- %s %s (%s, %s) ---\n%s",
             DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(LocalDateTime.now(clock)),
             navn,
@@ -44,18 +43,16 @@ object Utils {
             enhet,
             innhold,
         )
-    }
 
     fun leggTilBeskrivelse(
         gammelBeskrivelse: String?,
         leggTil: String,
-    ): String {
-        return if (gammelBeskrivelse.isNullOrBlank()) {
+    ): String =
+        if (gammelBeskrivelse.isNullOrBlank()) {
             leggTil
         } else {
             "$leggTil\n\n$gammelBeskrivelse"
         }
-    }
 
     /**
      * Maks 50 om man bruker userToken mot oppgave.

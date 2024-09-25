@@ -12,17 +12,20 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class MetricsConfig() {
+open class MetricsConfig {
     companion object {
         private val collectorRegistry = PrometheusRegistry()
 
         @JvmStatic
         fun setup() {
             RestClient.setBaseClient(
-                RestClient.baseClientBuilder().eventListener(
-                    buildEventListener().uriMapper(::buildUriMap)
-                        .build(),
-                ).build(),
+                RestClient
+                    .baseClientBuilder()
+                    .eventListener(
+                        buildEventListener()
+                            .uriMapper(::buildUriMap)
+                            .build(),
+                    ).build(),
             )
         }
 
@@ -31,9 +34,7 @@ open class MetricsConfig() {
             return OkHttpMetricsEventListener.builder(registry, "okhttp.requests")
         }
 
-        private fun buildUriMap(req: Request): String {
-            return UrlMaskingUtils.maskSensitiveInfo(req.url.encodedPath)
-        }
+        private fun buildUriMap(req: Request): String = UrlMaskingUtils.maskSensitiveInfo(req.url.encodedPath)
     }
 
     @Bean

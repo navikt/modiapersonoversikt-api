@@ -9,7 +9,9 @@ import java.time.LocalDate
 import java.time.Period
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
-class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
+class TredjepartspersonMapper(
+    private val kodeverk: EnhetligKodeverk.Service,
+) {
     fun lagTredjepartsperson(
         ident: String,
         person: Person?,
@@ -54,32 +56,30 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
 
     fun tilKontaktinformasjonTredjepartsperson(
         krrInfo: Krr.DigitalKontaktinformasjon,
-    ): Persondata.DigitalKontaktinformasjonTredjepartsperson {
-        return Persondata.DigitalKontaktinformasjonTredjepartsperson(
+    ): Persondata.DigitalKontaktinformasjonTredjepartsperson =
+        Persondata.DigitalKontaktinformasjonTredjepartsperson(
             mobiltelefonnummer = krrInfo.mobiltelefonnummer?.value,
             reservasjon = krrInfo.reservasjon,
         )
-    }
 
-    private fun hentKjonn(person: Person?): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> {
-        return person?.kjoenn?.map {
+    private fun hentKjonn(person: Person?): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> =
+        person?.kjoenn?.map {
             when (it.kjoenn) {
                 KjoennType.MANN -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.M)
                 KjoennType.KVINNE -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.K)
                 else -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.U)
             }
         } ?: emptyList()
-    }
 
-    private fun hentAlder(fodselsdato: List<LocalDate>): Int? {
-        return fodselsdato.firstOrNull()
+    private fun hentAlder(fodselsdato: List<LocalDate>): Int? =
+        fodselsdato
+            .firstOrNull()
             ?.let {
                 Period.between(it, LocalDate.now()).years
             }
-    }
 
-    private fun hentBostedAdresse(adresse: Bostedsadresse): Persondata.Adresse? {
-        return when {
+    private fun hentBostedAdresse(adresse: Bostedsadresse): Persondata.Adresse? =
+        when {
             adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
             adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(adresse.matrikkeladresse!!)
             adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(adresse.utenlandskAdresse!!)
@@ -90,10 +90,9 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
                 )
             else -> null
         }
-    }
 
-    private fun lagAdresseFraVegadresse(adresse: Vegadresse): Persondata.Adresse {
-        return Persondata.Adresse(
+    private fun lagAdresseFraVegadresse(adresse: Vegadresse): Persondata.Adresse =
+        Persondata.Adresse(
             linje1 =
                 listOf(
                     adresse.adressenavn,
@@ -108,10 +107,9 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
                 ),
             sistEndret = null,
         )
-    }
 
-    private fun lagAdresseFraMatrikkeladresse(adresse: Matrikkeladresse): Persondata.Adresse {
-        return Persondata.Adresse(
+    private fun lagAdresseFraMatrikkeladresse(adresse: Matrikkeladresse): Persondata.Adresse =
+        Persondata.Adresse(
             linje1 =
                 listOf(
                     adresse.bruksenhetsnummer,
@@ -124,10 +122,9 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
                 ),
             sistEndret = null,
         )
-    }
 
-    private fun lagAdresseFraUtenlandskAdresse(adresse: UtenlandskAdresse): Persondata.Adresse {
-        return Persondata.Adresse(
+    private fun lagAdresseFraUtenlandskAdresse(adresse: UtenlandskAdresse): Persondata.Adresse =
+        Persondata.Adresse(
             linje1 =
                 listOf(
                     adresse.postboksNummerNavn,
@@ -146,12 +143,11 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
                 ),
             sistEndret = null,
         )
-    }
 
     private fun hentAdressebeskyttelse(
         adressebeskyttelseListe: List<Adressebeskyttelse>,
-    ): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
-        return adressebeskyttelseListe.map {
+    ): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> =
+        adressebeskyttelseListe.map {
             val kodebeskrivelse =
                 when (it.gradering) {
                     AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND, AdressebeskyttelseGradering.STRENGT_FORTROLIG ->
@@ -173,7 +169,6 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
                 }
             Persondata.KodeBeskrivelse(kode = adressebeskyttelse, beskrivelse = kodebeskrivelse.beskrivelse)
         }
-    }
 
     private fun Person?.harTilgang(tilganger: PersondataService.Tilganger): Boolean {
         val person = this ?: return false
@@ -199,7 +194,5 @@ class TredjepartspersonMapper(private val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun List<Navn>.prioriterKildesystem(): List<Navn> {
-        return this.sortedBy { MasterPrioritet[it.metadata.master] }
-    }
+    private fun List<Navn>.prioriterKildesystem(): List<Navn> = this.sortedBy { MasterPrioritet[it.metadata.master] }
 }

@@ -41,8 +41,9 @@ class SakerController
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
             @RequestParam(value = "enhet") enhet: String,
-        ): SakerApi.ResultatSoknadsstatus {
-            return tilgangskontroll.check(Policies.tilgangTilBruker(Fnr(fnr)))
+        ): SakerApi.ResultatSoknadsstatus =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnr)))
                 .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
                     val sakerWrapper = sakerService.hentSafSaker(fnr).asWrapper()
                     val sakstemaWrapper = sakstemaService.hentSakstemaSoknadsstatus(sakerWrapper.resultat, fnr)
@@ -55,7 +56,6 @@ class SakerController
 
                     mappingContext.mapTilResultat(sakstemaWrapper.resultat)
                 }
-        }
 
         @GetMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"], produces = ["application/pdf"])
         fun hentDokument(
@@ -63,8 +63,8 @@ class SakerController
             @PathVariable("fnr") fnr: String,
             @PathVariable("journalpostId") journalpostId: String,
             @PathVariable("dokumentreferanse") dokumentreferanse: String,
-        ): ResponseEntity<Any?> {
-            return tilgangskontroll
+        ): ResponseEntity<Any?> =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnr)))
                 .get(
                     Audit.describe(
@@ -96,13 +96,12 @@ class SakerController
                         }
                     }
                 }
-        }
 
         private fun harTilgangTilDokument(
             fnr: String,
             dokument: DokumentMetadata,
-        ): TjenesteResultatWrapper {
-            return if (!dokument.isErJournalfort) {
+        ): TjenesteResultatWrapper =
+            if (!dokument.isErJournalfort) {
                 TjenesteResultatWrapper(
                     Feilmelding.IKKE_JOURNALFORT,
                     mapOf(
@@ -116,13 +115,13 @@ class SakerController
             } else {
                 TjenesteResultatWrapper(true)
             }
-        }
 
         private fun finnVariantformat(
             journalpostMetadata: DokumentMetadata,
             dokumentreferanse: String,
         ): Variantformat =
-            journalpostMetadata.vedlegg.plus(journalpostMetadata.hoveddokument)
+            journalpostMetadata.vedlegg
+                .plus(journalpostMetadata.hoveddokument)
                 .find { dok -> dok.dokumentreferanse == dokumentreferanse }
                 ?.variantformat
                 ?: ARKIV
@@ -130,19 +129,19 @@ class SakerController
         private fun hentDokumentMetadata(
             journalpostId: String,
             fnr: String,
-        ): DokumentMetadata {
-            return safService.hentJournalposter(fnr).resultat
+        ): DokumentMetadata =
+            safService
+                .hentJournalposter(fnr)
+                .resultat
                 .firstOrNull { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
                 ?: throw RuntimeException("Fant ikke metadata om journalpostId $journalpostId. Dette bør ikke skje.")
-        }
 
         private fun finnesDokumentReferansenIMetadata(
             dokumentMetadata: DokumentMetadata,
             dokumentreferanse: String,
-        ): Boolean {
-            return dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
+        ): Boolean =
+            dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
                 dokumentMetadata.vedlegg.any { dokument -> dokument.dokumentreferanse == dokumentreferanse }
-        }
 
         private fun SakerService.Resultat.asWrapper(): ResultatWrapper<List<Sak>> {
             val saker =
@@ -160,8 +159,7 @@ class SakerController
                         runCatching {
                             Baksystem.valueOf(it)
                         }.getOrNull()
-                    }
-                    .toSet()
+                    }.toSet()
 
             return ResultatWrapper(
                 saker,

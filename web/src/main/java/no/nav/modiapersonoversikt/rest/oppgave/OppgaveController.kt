@@ -25,7 +25,8 @@ class OppgaveController
             tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    oppgaveBehandlingService
+                        .finnTildelteOppgaverIGsak()
                         .map { mapOppgave(it) }
                 }
 
@@ -36,7 +37,8 @@ class OppgaveController
             tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak(fnr)
+                    oppgaveBehandlingService
+                        .finnTildelteOppgaverIGsak(fnr)
                         .map { mapOppgave(it) }
                 }
 

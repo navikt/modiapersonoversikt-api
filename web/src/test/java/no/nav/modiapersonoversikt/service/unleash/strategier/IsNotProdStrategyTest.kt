@@ -34,12 +34,8 @@ internal class IsNotProdStrategyTest {
                 strategyDisabled(simulatedEnv = "p"),
             )
 
-        private fun strategyEnabled(simulatedEnv: String?): Arguments {
-            return Arguments.of(simulatedEnv, true)
-        }
+        private fun strategyEnabled(simulatedEnv: String?): Arguments = Arguments.of(simulatedEnv, true)
 
-        private fun strategyDisabled(simulatedEnv: String?): Arguments {
-            return Arguments.of(simulatedEnv, false)
-        }
+        private fun strategyDisabled(simulatedEnv: String?): Arguments = Arguments.of(simulatedEnv, false)
     }
 }

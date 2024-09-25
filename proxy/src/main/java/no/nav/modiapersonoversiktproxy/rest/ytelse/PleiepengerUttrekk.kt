@@ -50,8 +50,8 @@ class PleiepengerUttrekk constructor(
         )
     }
 
-    private fun hentPleiepenger(pleiepengerettigheter: List<Pleiepengerrettighet>): List<Map<String, Any?>> {
-        return pleiepengerettigheter.map {
+    private fun hentPleiepenger(pleiepengerettigheter: List<Pleiepengerrettighet>): List<Map<String, Any?>> =
+        pleiepengerettigheter.map {
             mapOf(
                 "barnet" to it.barnet,
                 "omsorgsperson" to it.omsorgsperson,
@@ -63,10 +63,9 @@ class PleiepengerUttrekk constructor(
                 "perioder" to it.perioder?.let { perioder -> hentPleiepengePerioder(perioder) },
             )
         }
-    }
 
-    private fun hentPleiepengePerioder(perioder: List<Pleiepengeperiode>): List<Map<String, Any?>> {
-        return perioder.map {
+    private fun hentPleiepengePerioder(perioder: List<Pleiepengeperiode>): List<Map<String, Any?>> =
+        perioder.map {
             mapOf(
                 "fom" to it.fraOgMed?.format(DATOFORMAT),
                 "antallPleiepengedager" to it.antallPleiepengedager,
@@ -74,10 +73,9 @@ class PleiepengerUttrekk constructor(
                 "vedtak" to it.vedtakListe?.let { liste -> hentVedtak(liste) },
             )
         }
-    }
 
-    private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
-        return arbeidsforhold.map {
+    private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> =
+        arbeidsforhold.map {
             mapOf(
                 "arbeidsgiverNavn" to
                     it.arbeidsgiverOrgnr?.let { orgnr ->
@@ -95,10 +93,9 @@ class PleiepengerUttrekk constructor(
                 "arbeidskategori" to it.arbeidskategori,
             )
         }
-    }
 
-    private fun hentVedtak(vedtak: List<Vedtak>): List<Map<String, Any?>> {
-        return vedtak.map {
+    private fun hentVedtak(vedtak: List<Vedtak>): List<Map<String, Any?>> =
+        vedtak.map {
             mapOf(
                 "periode" to it.periode?.let { periode -> lagPleiepengePeriode(periode) },
                 "kompensasjonsgrad" to it.kompensasjonsgrad,
@@ -109,5 +106,4 @@ class PleiepengerUttrekk constructor(
                 "pleiepengegrad" to it.pleiepengegrad,
             )
         }
-    }
 }

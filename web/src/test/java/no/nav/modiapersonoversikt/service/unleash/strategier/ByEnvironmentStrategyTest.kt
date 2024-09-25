@@ -42,15 +42,11 @@ internal class ByEnvironmentStrategyTest {
         private fun strategyEnabled(
             unleashConfig: String?,
             simulatedEnv: String?,
-        ): Arguments {
-            return Arguments.of(unleashConfig, simulatedEnv, true)
-        }
+        ): Arguments = Arguments.of(unleashConfig, simulatedEnv, true)
 
         private fun strategyDisabled(
             unleashConfig: String?,
             simulatedEnv: String?,
-        ): Arguments {
-            return Arguments.of(unleashConfig, simulatedEnv, false)
-        }
+        ): Arguments = Arguments.of(unleashConfig, simulatedEnv, false)
     }
 }

@@ -19,12 +19,14 @@ interface OrganisasjonV1Client {
     fun hentNokkelInfo(orgnummer: String): OrganisasjonResponse?
 }
 
-class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredProperty("EREG_ENDPOINTURL")) :
-    OrganisasjonV1Client {
+class OrganisasjonV1ClientImpl(
+    baseUrl: String = EnvironmentUtils.getRequiredProperty("EREG_ENDPOINTURL"),
+) : OrganisasjonV1Client {
     private val url = baseUrl + "api/v1/organisasjon/"
     private val log = LoggerFactory.getLogger(OrganisasjonV1ClientImpl::class.java)
     private val client =
-        RestClient.baseClient()
+        RestClient
+            .baseClient()
             .newBuilder()
             .addInterceptor(
                 LoggingInterceptor("Ereg-services") { request ->
@@ -32,8 +34,7 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
                         "Kall uten \"${RestConstants.NAV_CALL_ID_HEADER}\" er ikke lov"
                     }
                 },
-            )
-            .build()
+            ).build()
     private val objectMapper =
         jacksonObjectMapper()
             .apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
@@ -51,14 +52,14 @@ class OrganisasjonV1ClientImpl(baseUrl: String = EnvironmentUtils.getRequiredPro
             val response: Response =
                 client
                     .newCall(
-                        Request.Builder()
+                        Request
+                            .Builder()
                             .url("$url$orgnummer/noekkelinfo")
                             .header(RestConstants.NAV_CALL_ID_HEADER, getCallId())
                             .header(RestConstants.NAV_CONSUMER_ID_HEADER, AppConstants.SYSTEMUSER_USERNAME)
                             .header("accept", "application/json")
                             .build(),
-                    )
-                    .execute()
+                    ).execute()
             val body = response.body?.string()
             val tjenestekallInfo =
                 mapOf(

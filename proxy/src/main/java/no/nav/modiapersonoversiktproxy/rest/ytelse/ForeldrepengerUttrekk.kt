@@ -12,7 +12,9 @@ import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 import org.joda.time.Years
 
-class ForeldrepengerUttrekk constructor(private val forelderpengerService: ForeldrepengerServiceBi) {
+class ForeldrepengerUttrekk constructor(
+    private val forelderpengerService: ForeldrepengerServiceBi,
+) {
     fun hent(
         fnr: String,
         start: LocalDate?,
@@ -46,8 +48,8 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
         )
     }
 
-    private fun hentFraInfotrygd(foreldrepenger: Foreldrepengerettighet): Map<String, Any?> {
-        return foreldrepenger.let {
+    private fun hentFraInfotrygd(foreldrepenger: Foreldrepengerettighet): Map<String, Any?> =
+        foreldrepenger.let {
             mapOf(
                 "forelder" to it.forelder?.ident,
                 "andreForeldersFnr" to it.andreForeldersFnr,
@@ -74,10 +76,9 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                 },
             )
         }
-    }
 
-    private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
-        return arbeidsforhold.map {
+    private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> =
+        arbeidsforhold.map {
             mapOf(
                 "arbeidsgiverNavn" to it.arbeidsgiverNavn,
                 "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
@@ -88,10 +89,9 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                 "refusjonstype" to it.refusjonstype?.termnavn,
             )
         }
-    }
 
-    private fun hentForeldrepengeperioder(foreldrepengeperioder: List<Foreldrepengeperiode>): List<Map<String, Any?>> {
-        return foreldrepengeperioder.map {
+    private fun hentForeldrepengeperioder(foreldrepengeperioder: List<Foreldrepengeperiode>): List<Map<String, Any?>> =
+        foreldrepengeperioder.map {
             mapOf(
                 "fødselsnummer" to it.fodselsnummer,
                 "harAleneomsorgFar" to it.isHarAleneomsorgFar,
@@ -126,5 +126,4 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                     },
             )
         }
-    }
 }

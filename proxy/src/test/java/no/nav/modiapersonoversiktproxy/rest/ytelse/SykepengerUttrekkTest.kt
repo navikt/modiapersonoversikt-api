@@ -73,8 +73,7 @@ internal class SykepengerUttrekkTest {
                 .withStansaarsak(
                     FimsykStansaarsak()
                         .withTermnavn(STANS),
-                )
-                .withSykmeldtFom(createXMLGregorianCalendar())
+                ).withSykmeldtFom(createXMLGregorianCalendar())
                 .withArbeidskategori(FimsykArbeidskategori())
         periode.sykmeldt = FimsykBruker().withIdent(FNR)
 

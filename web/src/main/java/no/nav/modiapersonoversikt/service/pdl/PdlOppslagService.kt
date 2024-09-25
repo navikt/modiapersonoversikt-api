@@ -33,13 +33,18 @@ interface PdlOppslagService {
         BEFORE,
     }
 
-    enum class PdlSokeOmfang(val verdi: Boolean?) {
+    enum class PdlSokeOmfang(
+        val verdi: Boolean?,
+    ) {
         HISTORISK_OG_GJELDENDE(null),
         HISTORISK(true),
         GJELDENDE(false),
     }
 
-    enum class PdlFelt(val feltnavn: String, val rule: SokKriterieRule) {
+    enum class PdlFelt(
+        val feltnavn: String,
+        val rule: SokKriterieRule,
+    ) {
         NAVN("fritekst.navn", FUZZY_MATCH),
         TELEFON_NUMMER("person.telefonnummer.nummer", EQUALS),
         ADRESSE("fritekst.adresser", CONTAINS),

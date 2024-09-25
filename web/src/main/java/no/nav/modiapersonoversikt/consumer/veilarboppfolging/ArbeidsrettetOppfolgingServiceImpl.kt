@@ -45,33 +45,33 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     }
 
     @Cacheable
-    override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
-        return httpClient.fetchJson(
+    override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status =
+        httpClient.fetchJson(
             url = "$url/underoppfolging?fnr=${fodselsnummer.get()}",
             type = ArbeidsrettetOppfolging.Status::class,
         )
-    }
 
     override fun ping() {
         val request =
-            Request.Builder()
+            Request
+                .Builder()
                 .url("$url/ping")
                 .build()
 
-        RestClient.baseClient()
+        RestClient
+            .baseClient()
             .newCall(request)
             .execute()
             .body
             ?.string()
     }
 
-    private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder {
-        return httpClient.fetchJson(
+    private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder =
+        httpClient.fetchJson(
             url = "$url/v2/person/hent-oppfolgingsstatus",
             requestBody = FnrRequest(fnr = fodselsnummer.get()).toRequestBody(),
             type = ArbeidsrettetOppfolging.EnhetOgVeileder::class,
         )
-    }
 
     private fun <T : Any> OkHttpClient.fetchJson(
         url: String,
@@ -79,11 +79,14 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         type: KClass<T>,
     ): T {
         val request =
-            Request.Builder().url(url).apply {
-                requestBody?.let {
-                    this.post(it)
-                }
-            }.build()
+            Request
+                .Builder()
+                .url(url)
+                .apply {
+                    requestBody?.let {
+                        this.post(it)
+                    }
+                }.build()
         val response = this.newCall(request).execute()
         val statusCode = response.code
         val body = response.body?.string()

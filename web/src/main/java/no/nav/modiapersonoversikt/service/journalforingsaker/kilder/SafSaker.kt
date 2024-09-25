@@ -8,7 +8,9 @@ import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-class SafSaker(private val service: SafService) : SakerKilde {
+class SafSaker(
+    private val service: SafService,
+) : SakerKilde {
     override val kildeNavn: String = "SAF"
 
     override fun leggTilSaker(
@@ -16,7 +18,8 @@ class SafSaker(private val service: SafService) : SakerKilde {
         saker: MutableList<JournalforingSak>,
     ) {
         val resultat =
-            service.hentSaker(fnr)
+            service
+                .hentSaker(fnr)
                 .data
                 ?.saker
                 ?.filterNotNull()

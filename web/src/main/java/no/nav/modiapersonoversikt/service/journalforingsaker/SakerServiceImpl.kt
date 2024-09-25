@@ -41,14 +41,16 @@ class SakerServiceImpl : SakerService {
 
     override fun hentSafSaker(fnr: String): SakerService.Resultat {
         Contracts.requireNotNullOrBlank(fnr) { "Fnr-parameter må være tilstede." }
-        return SakerService.Resultat()
+        return SakerService
+            .Resultat()
             .leggTilDataFraKilde(fnr, safSaker)
     }
 
     override fun hentSaker(fnr: String): SakerService.Resultat {
         Contracts.requireNotNullOrBlank(fnr) { "Fnr-parameter må være tilstede." }
 
-        return SakerService.Resultat()
+        return SakerService
+            .Resultat()
             .leggTilDataFraKilde(fnr, safSaker)
             .leggTilDataFraKilde(fnr, arenaSaker)
             .leggTilDataFraKilde(fnr, generelleSaker)
@@ -68,12 +70,11 @@ class SakerServiceImpl : SakerService {
             return this
         }
 
-        private fun SakerService.Resultat.fjernDuplikater(): SakerService.Resultat {
-            return this.copy(
+        private fun SakerService.Resultat.fjernDuplikater(): SakerService.Resultat =
+            this.copy(
                 saker = this.saker.distinctBy { Pair(it.temaKode, it.fagsystemSaksId) }.toMutableList(),
                 feiledeSystemer = this.feiledeSystemer.distinct().toMutableList(),
             )
-        }
 
         private fun SakerService.Resultat.leggTilDataFraKilde(
             fnr: String,

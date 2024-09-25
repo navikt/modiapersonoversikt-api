@@ -9,16 +9,12 @@ class InProdCondition : Condition {
     override fun matches(
         context: ConditionContext,
         metadata: AnnotatedTypeMetadata,
-    ): Boolean {
-        return PROD_CLUSTERS.contains(requireClusterName())
-    }
+    ): Boolean = PROD_CLUSTERS.contains(requireClusterName())
 }
 
 class InDevCondition : Condition {
     override fun matches(
         context: ConditionContext,
         metadata: AnnotatedTypeMetadata,
-    ): Boolean {
-        return DEV_CLUSTERS.contains(requireClusterName())
-    }
+    ): Boolean = DEV_CLUSTERS.contains(requireClusterName())
 }

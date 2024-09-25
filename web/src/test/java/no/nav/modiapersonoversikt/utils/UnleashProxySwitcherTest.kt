@@ -34,7 +34,8 @@ internal class UnleashProxySwitcherTest {
     private fun createUnleashService(): UnleashServiceImpl {
         val unleashContextProvider = UnleashContextProviderImpl()
         val unleashConfig =
-            UnleashConfig.builder()
+            UnleashConfig
+                .builder()
                 .appName("modiapersonoversikt-api")
                 .instanceId(System.getProperty("APP_ENVIRONMENT_NAME", "local"))
                 .unleashAPI("http://dummy.io")
@@ -45,10 +46,9 @@ internal class UnleashProxySwitcherTest {
         return UnleashServiceImpl(null, unleash, null)
     }
 
-    private fun createInstances(): Pair<Dummy, Dummy> {
-        return Pair(
+    private fun createInstances(): Pair<Dummy, Dummy> =
+        Pair(
             Dummy { "" },
             Dummy { "" },
         )
-    }
 }

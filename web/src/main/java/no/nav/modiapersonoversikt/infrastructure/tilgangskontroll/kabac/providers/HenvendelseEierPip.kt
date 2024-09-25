@@ -8,7 +8,9 @@ import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
 import no.nav.personoversikt.common.kabac.utils.Key
 
-class HenvendelseEierPip(private val henvendelseService: SfHenvendelseService) : Kabac.PolicyInformationPoint<Fnr> {
+class HenvendelseEierPip(
+    private val henvendelseService: SfHenvendelseService,
+) : Kabac.PolicyInformationPoint<Fnr> {
     override val key = Companion.key
 
     companion object : Kabac.AttributeKey<Fnr> {

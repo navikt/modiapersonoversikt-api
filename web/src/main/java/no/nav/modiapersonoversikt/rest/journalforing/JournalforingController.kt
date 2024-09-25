@@ -28,13 +28,12 @@ class JournalforingController
         @GetMapping("/saker/")
         fun hentSaker(
             @PathVariable("fnr") fnr: String,
-        ): SakerService.Resultat {
-            return tilgangskontroll
+        ): SakerService.Resultat =
+            tilgangskontroll
                 .check(tilgangTilBruker(Fnr.of(fnr)))
                 .get(describe(Audit.Action.READ, AuditResources.Person.GsakSaker, FNR to fnr)) {
                     sakerService.hentSaker(fnr)
                 }
-        }
 
         @PostMapping("/{traadId}")
         fun knyttTilSak(

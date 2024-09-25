@@ -7,5 +7,8 @@ interface VarslerService {
 
     interface UnifiedVarsel
 
-    data class Result(val feil: List<String>, val varsler: List<UnifiedVarsel>)
+    data class Result(
+        val feil: List<String>,
+        val varsler: List<UnifiedVarsel>,
+    )
 }

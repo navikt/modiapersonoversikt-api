@@ -22,11 +22,10 @@ class VarslerController(
     @GetMapping("/v2/varsler/{fnr}")
     fun hentAlleVarsler(
         @PathVariable("fnr") fnr: String,
-    ): VarslerService.Result {
-        return tilgangskontroll
+    ): VarslerService.Result =
+        tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnr)))
             .get(Audit.describe(Action.READ, Person.Varsler, AuditIdentifier.FNR to fnr)) {
                 varslerService.hentAlleVarsler(Fnr(fnr))
             }
-    }
 }

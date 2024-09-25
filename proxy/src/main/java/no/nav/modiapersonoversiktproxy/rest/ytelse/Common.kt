@@ -41,14 +41,13 @@ fun hentKommendeUtbetalinger(kommendeUtbetalinger: List<KommendeUtbetaling>) =
         )
     }
 
-private fun hentKreditorTrekk(kreditortrekk: List<Kreditortrekk>): List<Map<String, Any?>> {
-    return kreditortrekk.map {
+private fun hentKreditorTrekk(kreditortrekk: List<Kreditortrekk>): List<Map<String, Any?>> =
+    kreditortrekk.map {
         mapOf(
             "kreditorsNavn" to it.kreditorsNavn,
             "beløp" to it.belop,
         )
     }
-}
 
 fun hentArbeidsgiverNavn(
     organisasjonService: OrganisasjonService,

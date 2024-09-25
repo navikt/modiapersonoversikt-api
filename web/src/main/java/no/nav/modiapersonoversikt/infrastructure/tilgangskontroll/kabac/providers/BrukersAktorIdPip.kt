@@ -6,7 +6,9 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttribut
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
 
-class BrukersAktorIdPip(private val pdlPip: PdlPipApi) : Kabac.PolicyInformationPoint<AktorId> {
+class BrukersAktorIdPip(
+    private val pdlPip: PdlPipApi,
+) : Kabac.PolicyInformationPoint<AktorId> {
     override val key = Companion.key
 
     companion object : Kabac.AttributeKey<AktorId> {

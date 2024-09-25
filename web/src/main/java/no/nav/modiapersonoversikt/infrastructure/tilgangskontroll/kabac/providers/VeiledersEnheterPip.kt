@@ -6,7 +6,9 @@ import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
 import no.nav.personoversikt.common.kabac.utils.Key
 
-class VeiledersEnheterPip(private val ansattService: AnsattService) : Kabac.PolicyInformationPoint<List<EnhetId>> {
+class VeiledersEnheterPip(
+    private val ansattService: AnsattService,
+) : Kabac.PolicyInformationPoint<List<EnhetId>> {
     override val key = Companion.key
 
     companion object : Kabac.AttributeKey<List<EnhetId>> {

@@ -12,7 +12,9 @@ import no.nav.modiapersonoversiktproxy.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 import org.joda.time.Years
 
-class SykepengerUttrekk constructor(private val sykepengerService: SykepengerServiceBi) {
+class SykepengerUttrekk constructor(
+    private val sykepengerService: SykepengerServiceBi,
+) {
     fun hent(
         fnr: String,
         start: LocalDate?,
@@ -37,8 +39,8 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
         )
     }
 
-    private fun hentSykemeldingsperioder(sykmeldingsperioder: List<Sykmeldingsperiode>): List<Map<String, Any?>> {
-        return sykmeldingsperioder.map {
+    private fun hentSykemeldingsperioder(sykmeldingsperioder: List<Sykmeldingsperiode>): List<Map<String, Any?>> =
+        sykmeldingsperioder.map {
             mapOf(
                 "fødselsnummer" to it.fodselsnummer,
                 "sykmeldtFom" to it.sykmeldtFom?.toString(JODA_DATOFORMAT),
@@ -69,10 +71,9 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                 "arbeidskategori" to it.arbeidskategori.termnavn,
             )
         }
-    }
 
-    private fun hentArbeidsgiverForhold(arbeidsgiverforholdListe: List<Arbeidsforhold>): List<Map<String, Any?>> {
-        return arbeidsgiverforholdListe.map {
+    private fun hentArbeidsgiverForhold(arbeidsgiverforholdListe: List<Arbeidsforhold>): List<Map<String, Any?>> =
+        arbeidsgiverforholdListe.map {
             mapOf(
                 "arbeidsgiverNavn" to it.arbeidsgiverNavn,
                 "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
@@ -83,10 +84,9 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                 "sykepengerFom" to it.sykepengerFom?.toString(JODA_DATOFORMAT),
             )
         }
-    }
 
-    private fun hentSykmeldinger(sykmeldinger: List<Sykmelding>): List<Map<String, Any?>> {
-        return sykmeldinger.map {
+    private fun hentSykmeldinger(sykmeldinger: List<Sykmelding>): List<Map<String, Any?>> =
+        sykmeldinger.map {
             mapOf(
                 "sykmelder" to it.sykmelder,
                 "behandlet" to it.behandlet?.toString(JODA_DATOFORMAT),
@@ -103,19 +103,17 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                 "gradAvSykmeldingListe" to it.gradAvSykmeldingListe?.let { sykemeldinger -> hentGraderinger(sykemeldinger) },
             )
         }
-    }
 
-    private fun hentGraderinger(graderinger: List<Gradering>): List<Map<String, Any?>> {
-        return graderinger.map {
+    private fun hentGraderinger(graderinger: List<Gradering>): List<Map<String, Any?>> =
+        graderinger.map {
             mapOf(
                 "gradert" to it.gradert?.let { periode -> lagPeriode(periode) },
                 "sykmeldingsgrad" to it.sykmeldingsgrad,
             )
         }
-    }
 
-    private fun hentUtbetalingerPaVent(utbetalingerPaVent: List<UtbetalingPaVent>): List<Map<String, Any?>> {
-        return utbetalingerPaVent.map {
+    private fun hentUtbetalingerPaVent(utbetalingerPaVent: List<UtbetalingPaVent>): List<Map<String, Any?>> =
+        utbetalingerPaVent.map {
             mapOf(
                 "vedtak" to it.vedtak?.let { vedtak -> lagPeriode(vedtak) },
                 "utbetalingsgrad" to it.utbetalingsgrad,
@@ -128,5 +126,4 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                 "sykmeldt" to it.sykmeldt?.let { sykmeldt -> lagPeriode(sykmeldt) },
             )
         }
-    }
 }

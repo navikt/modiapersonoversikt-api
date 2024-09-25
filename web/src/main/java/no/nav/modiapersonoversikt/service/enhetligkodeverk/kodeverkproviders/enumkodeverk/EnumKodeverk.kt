@@ -9,7 +9,9 @@ object EnumKodeverk {
         fun getValue(): T
     }
 
-    class Kilde<ENUM, VALUE>(enum: KClass<ENUM>) : EnhetligKodeverk.Kilde<String, VALUE>
+    class Kilde<ENUM, VALUE>(
+        enum: KClass<ENUM>,
+    ) : EnhetligKodeverk.Kilde<String, VALUE>
         where ENUM : Enum<ENUM>, ENUM : WithValue<VALUE> {
         override val navn: String = enum.toString()
         private val kodeverk =

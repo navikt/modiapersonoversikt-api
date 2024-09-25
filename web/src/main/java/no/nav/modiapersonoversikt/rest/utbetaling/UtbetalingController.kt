@@ -40,8 +40,8 @@ class UtbetalingController
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam("sluttDato")
             slutt: LocalDate,
-        ): UtbetalingerResponseDTO {
-            return tilgangskontroll
+        ): UtbetalingerResponseDTO =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, AuditIdentifier.FNR to fnr)) {
                     val utbetalinger = service.hentUtbetalinger(Fnr(fnr), start, slutt)
@@ -54,5 +54,4 @@ class UtbetalingController
                             ),
                     )
                 }
-        }
     }

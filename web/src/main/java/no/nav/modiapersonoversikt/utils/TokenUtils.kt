@@ -25,16 +25,12 @@ class DownstreamApi(
 
 private fun DownstreamApi.tokenscope(): String = "api://$cluster.$namespace.$application/.default"
 
-fun MachineToMachineTokenClient.createMachineToMachineToken(api: DownstreamApi): String {
-    return this.createMachineToMachineToken(api.tokenscope())
-}
+fun MachineToMachineTokenClient.createMachineToMachineToken(api: DownstreamApi): String = this.createMachineToMachineToken(api.tokenscope())
 
 fun OnBehalfOfTokenClient.exchangeOnBehalfOfToken(
     api: DownstreamApi,
     accesstoken: String,
-): String {
-    return this.exchangeOnBehalfOfToken(api.tokenscope(), accesstoken)
-}
+): String = this.exchangeOnBehalfOfToken(api.tokenscope(), accesstoken)
 
 interface BoundedMachineToMachineTokenClient {
     fun createMachineToMachineToken(): String

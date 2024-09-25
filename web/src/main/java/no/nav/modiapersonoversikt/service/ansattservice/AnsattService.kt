@@ -42,25 +42,22 @@ class AnsattServiceImpl
     ) : AnsattService {
         private val log = LoggerFactory.getLogger(AnsattServiceImpl::class.java)
 
-        override fun hentEnhetsliste(): List<AnsattEnhet> {
-            return AuthContextUtils
+        override fun hentEnhetsliste(): List<AnsattEnhet> =
+            AuthContextUtils
                 .getIdent()
                 .map { hentEnhetsliste(NavIdent(it)) }
                 .orElse(emptyList())
-        }
 
-        override fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet> {
-            return (axsys.hentTilganger(ident) ?: emptyList())
+        override fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet> =
+            (axsys.hentTilganger(ident) ?: emptyList())
                 .map { AnsattEnhet(it.enhetId.get(), it.navn) }
-        }
 
-        override fun hentVeileder(ident: NavIdent): Veileder {
-            return hentVeiledere(listOf(ident))
+        override fun hentVeileder(ident: NavIdent): Veileder =
+            hentVeiledere(listOf(ident))
                 .getOrDefault(ident, Veileder("", "", ident.get()))
-        }
 
-        override fun hentVeiledere(identer: List<NavIdent>): Map<NavIdent, Veileder> {
-            return nomClient
+        override fun hentVeiledere(identer: List<NavIdent>): Map<NavIdent, Veileder> =
+            nomClient
                 .runCatching { finnNavn(identer) }
                 .getOrDefault(emptyList())
                 .associateBy { it.navIdent }
@@ -71,34 +68,28 @@ class AnsattServiceImpl
                         etternavn = value.etternavn,
                     )
                 }
-        }
 
-        override fun hentVeilederRoller(ident: NavIdent): RolleListe {
-            return RolleListe(azureADService.hentRollerForVeileder(ident))
-        }
+        override fun hentVeilederRoller(ident: NavIdent): RolleListe = RolleListe(azureADService.hentRollerForVeileder(ident))
 
         override fun hentAnsattFagomrader(
             ident: String,
             enhet: String,
-        ): Set<String> {
-            return axsys
+        ): Set<String> =
+            axsys
                 .runCatching {
                     hentTilganger(NavIdent(ident))
                         .find {
                             it.enhetId.get() == enhet
-                        }
-                        ?.temaer
+                        }?.temaer
                         ?.toSet()
                         ?: emptySet()
-                }
-                .getOrElse {
+                }.getOrElse {
                     log.error("Klarte ikke å hente ansatt fagområder for $ident $enhet", it)
                     emptySet()
                 }
-        }
 
-        override fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt> {
-            return try {
+        override fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt> =
+            try {
                 val hentAnsatte = axsys.hentAnsatte(EnhetId(enhet.enhetId))
                 val ansatteNavn = nomClient.finnNavn(hentAnsatte)
                 ansatteNavn.map {
@@ -112,5 +103,4 @@ class AnsattServiceImpl
                 log.error("Får ikke hentet ansatte for enhet", e)
                 emptyList()
             }
-        }
     }

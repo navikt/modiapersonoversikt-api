@@ -167,8 +167,7 @@ class PersonsokControllerTest {
                 requestV3
                     .copy(
                         adresse = "Gatenavn 1 A 0100",
-                    )
-                    .tilPdlKriterier(clock)
+                    ).tilPdlKriterier(clock)
 
             assertThat(kriterier).contains(PdlKriterie(PdlFelt.ADRESSE, "Gatenavn 1 A 0100", searchHistorical = PdlSokeOmfang.GJELDENDE))
         }
@@ -179,8 +178,7 @@ class PersonsokControllerTest {
                 requestV3
                     .copy(
                         navn = "Fornavn Etternavn",
-                    )
-                    .tilPdlKriterier(clock)
+                    ).tilPdlKriterier(clock)
 
             assertThat(
                 kriterier,

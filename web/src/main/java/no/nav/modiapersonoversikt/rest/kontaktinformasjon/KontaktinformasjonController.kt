@@ -25,8 +25,8 @@ class KontaktinformasjonController
         @GetMapping
         fun hentKontaktinformasjon(
             @PathVariable("fnr") fnr: String,
-        ): KontaktinformasjonApi.Kontaktinformasjon {
-            return tilgangskontroll
+        ): KontaktinformasjonApi.Kontaktinformasjon =
+            tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnr)))
                 .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
                     val response = krrService.hentDigitalKontaktinformasjon(fnr)
@@ -37,7 +37,6 @@ class KontaktinformasjonController
                         reservasjon = response.reservasjon,
                     )
                 }
-        }
 
         private fun getEpost(response: Krr.DigitalKontaktinformasjon): KontaktinformasjonApi.Verdi? {
             if (response.epostadresse?.value.isNullOrEmpty()) {

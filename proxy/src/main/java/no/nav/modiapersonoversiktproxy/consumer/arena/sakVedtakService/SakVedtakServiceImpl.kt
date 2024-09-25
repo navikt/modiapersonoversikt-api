@@ -11,7 +11,9 @@ import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
 import javax.naming.ServiceUnavailableException
 
-class SakVedtakServiceImpl(private val arenaSakVedtakService: SakVedtakPortType) : SakVedtakService {
+class SakVedtakServiceImpl(
+    private val arenaSakVedtakService: SakVedtakPortType,
+) : SakVedtakService {
     private val log = LoggerFactory.getLogger(SakVedtakServiceImpl::class.java)
 
     override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? {

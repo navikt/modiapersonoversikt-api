@@ -7,7 +7,6 @@ import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
-import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
 import no.nav.personoversikt.common.kabac.Decision
 import java.util.*
 

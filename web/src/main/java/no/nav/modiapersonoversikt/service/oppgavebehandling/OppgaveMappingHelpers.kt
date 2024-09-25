@@ -3,13 +3,9 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 
 object OppgaveMappingHelpers {
-    fun requiredOppgaveId(value: Long?): Long {
-        return requireNotNull(value)
-    }
+    fun requiredOppgaveId(value: Long?): Long = requireNotNull(value)
 
-    fun <T : Any> required(value: T?): T {
-        return requireNotNull(value)
-    }
+    fun <T : Any> required(value: T?): T = requireNotNull(value)
 
     fun convertEnumToPutReq(value: OppgaveJsonDTO.Status): PutOppgaveRequestJsonDTO.Status = convertEnum(value)
 

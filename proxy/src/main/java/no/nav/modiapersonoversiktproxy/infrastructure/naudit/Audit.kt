@@ -18,7 +18,9 @@ val cefLogger =
     )
 
 class Audit {
-    open class AuditResource(val resource: String)
+    open class AuditResource(
+        val resource: String,
+    )
 
     enum class Action {
         CREATE,
@@ -58,55 +60,13 @@ class Audit {
         }
     }
 
-    internal class NoopDescriptor<T> : AuditDescriptor<T> {
-        override fun log(resource: T) {}
-
-        override fun denied(reason: String) {}
-
-        override fun failed(exception: Throwable) {}
-    }
-
-    internal class NothingDescriptor(
-        private val action: Action,
-        private val resourceType: AuditResource,
-        private val identifiers: Array<Pair<AuditIdentifier, String?>>,
-    ) : AuditDescriptor<Any> {
-        override fun log(resource: Any) {
-            logInternal(action, resourceType, identifiers)
-        }
-
-        override fun denied(reason: String) {
-            logInternal(action, resourceType, identifiers.plus(DENY_REASON to reason))
-        }
-
-        override fun failed(exception: Throwable) {
-            logInternal(action, resourceType, identifiers.plus(FAIL_REASON to exception.getFailureReason()))
-        }
-    }
-
     companion object {
-        val skipAuditLog: AuditDescriptor<Any> = NoopDescriptor()
-
-        @JvmStatic
-        fun <T> skipAuditLog(): AuditDescriptor<T> = NoopDescriptor()
-
-        @JvmStatic
-        fun describe(
-            action: Action,
-            resourceType: AuditResource,
-            vararg identifiers: Pair<AuditIdentifier, String?>,
-        ): AuditDescriptor<Any> {
-            return NothingDescriptor(action, resourceType, identifiers as Array<Pair<AuditIdentifier, String?>>)
-        }
-
         @JvmStatic
         fun <T> describe(
             action: Action,
             resourceType: AuditResource,
             extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>,
-        ): AuditDescriptor<T> {
-            return WithDataDescriptor(action, resourceType, extractIdentifiers)
-        }
+        ): AuditDescriptor<T> = WithDataDescriptor(action, resourceType, extractIdentifiers)
 
         private val auditMarker = Markers.appendEntries(mapOf(Logging.LOGTYPE_KEY to "audit"))
 
@@ -126,8 +86,7 @@ class Audit {
                     *identifiers
                         .map { "${it.first}='${it.second ?: "-"}'" }
                         .toTypedArray(),
-                )
-                    .joinToString(" ")
+                ).joinToString(" ")
 
             Logging.secureLog.info(auditMarker, logline)
             cefLogger.log(CEFEvent(action, resourceType, subject.orElse("-"), identifiers))

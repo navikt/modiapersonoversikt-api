@@ -13,7 +13,8 @@ object ArbeidsdagerUtils {
         val zone = ZoneId.systemDefault()
         val date = Date.from(startDato.atStartOfDay(zone).toInstant())
         val future = NorwegianDateUtil.addWorkingDaysToDate(date, ukedager)
-        return future.toInstant()
+        return future
+            .toInstant()
             .atZone(zone)
             .toLocalDate()
     }

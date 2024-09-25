@@ -8,18 +8,14 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class OrganisasjonConsumerConfig {
     @Bean
-    open fun organisasjonV1Client(): OrganisasjonV1Client {
-        return OrganisasjonV1ClientImpl()
-    }
+    open fun organisasjonV1Client(): OrganisasjonV1Client = OrganisasjonV1ClientImpl()
 
     @Bean
-    open fun organisasjonService(client: OrganisasjonV1Client): OrganisasjonService {
-        return OrganisasjonServiceImpl(client)
-    }
+    open fun organisasjonService(client: OrganisasjonV1Client): OrganisasjonService = OrganisasjonServiceImpl(client)
 
     @Bean
-    open fun eregOrganisasjonCheck(): SelfTestCheck {
-        return SelfTestCheck(
+    open fun eregOrganisasjonCheck(): SelfTestCheck =
+        SelfTestCheck(
             String.format("EREG Organisasjon  %s", ORG_NUMMER_NAV),
             false,
         ) {
@@ -34,7 +30,6 @@ open class OrganisasjonConsumerConfig {
                 HealthCheckResult.unhealthy(e)
             }
         }
-    }
 
     companion object {
         private const val ORG_NUMMER_NAV = "990983666"

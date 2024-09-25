@@ -69,15 +69,27 @@ class BrukernotifikasjonTest {
         val mappedEvent = Brukernotifikasjon.Mapper.byggVarslingsTidspunkt(event)
 
         assertTrue(mappedEvent.varslingsTidspunkt!!.sendt)
-        assertEquals(event.eksternVarsling!!.historikk[1].tidspunkt, mappedEvent.varslingsTidspunkt!!.tidspunkt)
+        assertEquals(event.eksternVarsling!!.historikk[1].tidspunkt, mappedEvent.varslingsTidspunkt.tidspunkt)
         assertEquals(
-            event.eksternVarsling!!.historikk[2].tidspunkt,
-            mappedEvent.varslingsTidspunkt!!.renotifikasjonTidspunkt,
+            event.eksternVarsling.historikk[2].tidspunkt,
+            mappedEvent.varslingsTidspunkt.renotifikasjonTidspunkt,
         )
         assertEquals(listOf("SMS", "EPOST"), mappedEvent.eksternVarslingKanaler)
-        assertTrue(mappedEvent.varslingsTidspunkt!!.harFeilteVarslinger)
-        assertTrue(mappedEvent.varslingsTidspunkt!!.harFeilteRevarslinger)
-        assertEquals("Feil telefonummer", mappedEvent.varslingsTidspunkt!!.feilteVarsliner.first().feilmelding)
-        assertEquals("Feil epost", mappedEvent.varslingsTidspunkt!!.feilteRevarslinger.first().feilmelding)
+        assertTrue(mappedEvent.varslingsTidspunkt.harFeilteVarslinger)
+        assertTrue(mappedEvent.varslingsTidspunkt.harFeilteRevarslinger)
+        assertEquals(
+            "Feil telefonummer",
+            mappedEvent.varslingsTidspunkt
+                .feilteVarsliner
+                .first()
+                .feilmelding,
+        )
+        assertEquals(
+            "Feil epost",
+            mappedEvent.varslingsTidspunkt
+                .feilteRevarslinger
+                .first()
+                .feilmelding,
+        )
     }
 }

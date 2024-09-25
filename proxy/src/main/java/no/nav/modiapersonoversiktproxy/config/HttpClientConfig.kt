@@ -10,7 +10,5 @@ import org.springframework.context.annotation.Primary
 open class HttpClientConfig {
     @Bean
     @Primary
-    open fun okHttpClient(): OkHttpClient {
-        return RestClient.baseClient()
-    }
+    open fun okHttpClient(): OkHttpClient = RestClient.baseClient()
 }

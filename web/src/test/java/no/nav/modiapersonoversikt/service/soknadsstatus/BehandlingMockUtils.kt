@@ -23,12 +23,11 @@ object BehandlingMockUtils {
         )
     }
 
-    fun createHendelse(behandlingId: String = UUID.randomUUID().toString()): Hendelse {
-        return Hendelse(
+    fun createHendelse(behandlingId: String = UUID.randomUUID().toString()): Hendelse =
+        Hendelse(
             hendelseId = "wjkew12",
             behandlingId = behandlingId,
             hendelseType = Hendelse.HendelseType.OPPRETTET,
             status = Hendelse.Status.UNDER_BEHANDLING,
         )
-    }
 }

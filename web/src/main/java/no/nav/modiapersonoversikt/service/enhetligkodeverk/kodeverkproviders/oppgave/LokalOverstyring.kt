@@ -6,15 +6,22 @@ private typealias Prioriteter = List<OppgaveKodeverk.Prioritet>
 private typealias Frist = Int
 
 object LokalOverstyring {
-    data class Kodeverk(val frist: Frist, val prioriteter: Prioriteter, val tema: Map<String, Tema>)
+    data class Kodeverk(
+        val frist: Frist,
+        val prioriteter: Prioriteter,
+        val tema: Map<String, Tema>,
+    )
 
-    data class Tema(val prioriteter: Prioriteter?, val oppgavetyper: Map<String, Oppgavetype>)
+    data class Tema(
+        val prioriteter: Prioriteter?,
+        val oppgavetyper: Map<String, Oppgavetype>,
+    )
 
-    data class Oppgavetype(val frist: Frist)
+    data class Oppgavetype(
+        val frist: Frist,
+    )
 
-    fun lagKodeverk(block: KodeverkBuilder.() -> Unit): Kodeverk {
-        return KodeverkBuilder().apply(block).build()
-    }
+    fun lagKodeverk(block: KodeverkBuilder.() -> Unit): Kodeverk = KodeverkBuilder().apply(block).build()
 
     class KodeverkBuilder {
         var frist by Delegates.notNull<Int>()
@@ -36,7 +43,9 @@ object LokalOverstyring {
             )
     }
 
-    class TemaBuilder(val navn: String) {
+    class TemaBuilder(
+        val navn: String,
+    ) {
         var prioriteter: Prioriteter? = null
         private var oppgavetyperMap: MutableMap<String, Oppgavetype> = mutableMapOf()
 

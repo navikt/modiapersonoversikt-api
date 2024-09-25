@@ -15,11 +15,10 @@ open class ArbeidsfordelingConfig {
         pdlOppslagService: PdlOppslagService,
         pdlPipApi: PdlPipApi,
         skjermedePersonerApi: SkjermedePersonerApi,
-    ): ArbeidsfordelingService {
-        return ArbeidsfordelingServiceImpl(
+    ): ArbeidsfordelingService =
+        ArbeidsfordelingServiceImpl(
             norgApi,
             pdlPipApi,
             skjermedePersonerApi,
         )
-    }
 }

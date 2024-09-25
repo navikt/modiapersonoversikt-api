@@ -47,8 +47,8 @@ class PersonsokController
         @PostMapping("/v3")
         fun sokPdlV3(
             @RequestBody personsokRequestV3: PersonsokRequestV3,
-        ): List<PersonSokResponsDTO> {
-            return tilgangskontroll
+        ): List<PersonSokResponsDTO> =
+            tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(auditDescriptor) {
                     handterFeil {
@@ -64,7 +64,6 @@ class PersonsokController
                             .mapNotNull(::lagPersonResponse)
                     }
                 }
-        }
 
         private fun <T> handterFeil(block: () -> T): T =
             try {
@@ -140,8 +139,7 @@ private fun lagBostedsadresse(adr: List<Bostedsadresse>?): String? {
                 adresse.utenlandskAdresse!!.postkode,
                 adresse.utenlandskAdresse!!.bySted,
                 adresse.utenlandskAdresse!!.landkode,
-            )
-                .joinToString(" ")
+            ).joinToString(" ")
         }
         adresse.vegadresse != null -> {
             return listOfNotNull(
@@ -172,8 +170,7 @@ fun lagPostadresse(adr: List<Kontaktadresse>?): String? {
                 adresse.postadresseIFrittFormat!!.adresselinje2,
                 adresse.postadresseIFrittFormat!!.adresselinje3,
                 adresse.postadresseIFrittFormat!!.postnummer,
-            )
-                .joinToString(" ")
+            ).joinToString(" ")
         }
         adresse.utenlandskAdresseIFrittFormat != null -> {
             return listOfNotNull(
@@ -183,8 +180,7 @@ fun lagPostadresse(adr: List<Kontaktadresse>?): String? {
                 adresse.utenlandskAdresseIFrittFormat!!.postkode,
                 adresse.utenlandskAdresseIFrittFormat!!.byEllerStedsnavn,
                 adresse.utenlandskAdresseIFrittFormat!!.landkode,
-            )
-                .joinToString(" ")
+            ).joinToString(" ")
         }
         adresse.postboksadresse != null -> {
             return listOfNotNull(
@@ -202,8 +198,7 @@ fun lagPostadresse(adr: List<Kontaktadresse>?): String? {
                 adresse.utenlandskAdresse!!.postkode,
                 adresse.utenlandskAdresse!!.bySted,
                 adresse.utenlandskAdresse!!.landkode,
-            )
-                .joinToString(" ")
+            ).joinToString(" ")
         }
         adresse.vegadresse != null -> {
             return listOfNotNull(
@@ -222,8 +217,8 @@ fun lagPostadresse(adr: List<Kontaktadresse>?): String? {
     }
 }
 
-fun hentNavn(person: Person?): PersonnavnDTO? {
-    return person
+fun hentNavn(person: Person?): PersonnavnDTO? =
+    person
         ?.navn
         ?.first()
         ?.let {
@@ -234,7 +229,6 @@ fun hentNavn(person: Person?): PersonnavnDTO? {
                 sammensatt = listOfNotNull(it.fornavn, it.mellomnavn, it.etternavn).joinToString(" "),
             )
         }
-}
 
 data class PersonSokResponsDTO(
     val ident: NorskIdentDTO,
@@ -255,9 +249,15 @@ data class PersonnavnDTO(
     val sammensatt: String,
 )
 
-data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: String)
+data class UtenlandskIdDTO(
+    val identifikasjonsnummer: String,
+    val utstederland: String,
+)
 
-data class NorskIdentDTO(val ident: String, val type: KodeverdiDTO?)
+data class NorskIdentDTO(
+    val ident: String,
+    val type: KodeverdiDTO?,
+)
 
 data class BrukerinfoDTO(
     val gjeldendePostadresseType: KodeverdiDTO?,
@@ -265,7 +265,10 @@ data class BrukerinfoDTO(
     val ansvarligEnhet: String?,
 )
 
-data class KodeverdiDTO(val kodeRef: String?, val beskrivelse: String?)
+data class KodeverdiDTO(
+    val kodeRef: String?,
+    val beskrivelse: String?,
+)
 
 data class PersonsokRequestV3(
     val enhet: String?,
@@ -304,13 +307,14 @@ fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone())
 private fun finnSenesteDatoGittAlder(
     alderTil: Int,
     clock: Clock,
-): String {
-    return LocalDate.now(clock).minusYears(alderTil.toLong() + 1).plusDays(1).toString()
-}
+): String =
+    LocalDate
+        .now(clock)
+        .minusYears(alderTil.toLong() + 1)
+        .plusDays(1)
+        .toString()
 
 private fun finnTidligsteDatoGittAlder(
     alderFra: Int,
     clock: Clock,
-): String {
-    return LocalDate.now(clock).minusYears(alderFra.toLong()).toString()
-}
+): String = LocalDate.now(clock).minusYears(alderFra.toLong()).toString()

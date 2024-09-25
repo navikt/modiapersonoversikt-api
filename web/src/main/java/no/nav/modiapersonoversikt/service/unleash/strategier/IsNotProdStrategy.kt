@@ -6,7 +6,5 @@ import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.getAp
 class IsNotProdStrategy : Strategy {
     override fun getName(): String = "isNotProd"
 
-    override fun isEnabled(parameters: Map<String, String>?): Boolean {
-        return getApplicationEnvironment() != "p"
-    }
+    override fun isEnabled(parameters: Map<String, String>?): Boolean = getApplicationEnvironment() != "p"
 }

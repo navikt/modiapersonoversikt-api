@@ -80,9 +80,7 @@ open class ArenaInfotrygdApiImpl(
     }
 
     @Cacheable(value = ["oppfolgingssakFraArenaCache"])
-    override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? {
-        return sendRequest("sakvedtak", fnr)
-    }
+    override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? = sendRequest("sakvedtak", fnr)
 
     @Cacheable(value = ["sykePengerCache"])
     override fun hentSykepenger(
@@ -130,8 +128,7 @@ open class ArenaInfotrygdApiImpl(
                         .url("$baseUrl/rest/$url")
                         .post(requestBody)
                         .build(),
-                )
-                .execute()
+                ).execute()
 
         if (response.body?.contentLength() == 0L) return null
 

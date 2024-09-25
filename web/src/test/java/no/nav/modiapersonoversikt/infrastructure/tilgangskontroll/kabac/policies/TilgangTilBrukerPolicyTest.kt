@@ -264,8 +264,8 @@ internal class TilgangTilBrukerPolicyTest {
         }
     }
 
-    private fun fellesPipTjenester(): Array<Kabac.PolicyInformationPoint<*>> {
-        return arrayOf(
+    private fun fellesPipTjenester(): Array<Kabac.PolicyInformationPoint<*>> =
+        arrayOf(
             NavIdentPip.key.withValue(ident),
             BrukersAktorIdPip(pdlPip),
             BrukersFnrPip(pdlPip),
@@ -278,5 +278,4 @@ internal class TilgangTilBrukerPolicyTest {
             VeiledersEnheterPip(ansattService),
             VeiledersRegionEnheterPip(norg),
         )
-    }
 }

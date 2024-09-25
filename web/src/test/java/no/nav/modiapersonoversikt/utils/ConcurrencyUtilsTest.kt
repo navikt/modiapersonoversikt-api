@@ -19,9 +19,10 @@ internal class ConcurrencyUtilsTest {
         MDC.put("TestKey", "TestValue")
 
         val result =
-            ConcurrencyUtils.makeThreadSwappable {
-                getCallId() to MDC.get("TestKey")
-            }.invoke()
+            ConcurrencyUtils
+                .makeThreadSwappable {
+                    getCallId() to MDC.get("TestKey")
+                }.invoke()
 
         assertThat(result).isEqualTo("CallId" to "TestValue")
     }
@@ -32,9 +33,10 @@ internal class ConcurrencyUtilsTest {
             AuthContextTestUtils.withIdent(
                 "Z999999",
                 UnsafeSupplier {
-                    ConcurrencyUtils.makeThreadSwappable {
-                        AuthContextUtils.requireIdent()
-                    }.invoke()
+                    ConcurrencyUtils
+                        .makeThreadSwappable {
+                            AuthContextUtils.requireIdent()
+                        }.invoke()
                 },
             )
         assertThat(result).isEqualTo("Z999999")
@@ -45,9 +47,10 @@ internal class ConcurrencyUtilsTest {
         val attributes = ServletWebRequest(mockk())
         RequestContextHolder.setRequestAttributes(attributes)
         val result =
-            ConcurrencyUtils.makeThreadSwappable {
-                RequestContextHolder.getRequestAttributes()
-            }.invoke()
+            ConcurrencyUtils
+                .makeThreadSwappable {
+                    RequestContextHolder.getRequestAttributes()
+                }.invoke()
         RequestContextHolder.setRequestAttributes(null)
 
         assertThat(result).isEqualTo(attributes)

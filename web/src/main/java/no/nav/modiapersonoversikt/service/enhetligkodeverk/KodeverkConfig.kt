@@ -35,24 +35,23 @@ object KodeverkConfig : ObjectEnum<EnhetligKodeverk.Kilde<*, *>>() {
     val FAGSYSTEM = add(EnumKodeverk.Kilde(Fagsystem::class))
 }
 
-class FellesKodeverkKilde(override val navn: String) : EnhetligKodeverk.Kilde<String, String> {
-    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> {
-        return providers.fellesKodeverk.hentKodeverk(navn)
-    }
+class FellesKodeverkKilde(
+    override val navn: String,
+) : EnhetligKodeverk.Kilde<String, String> {
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> =
+        providers.fellesKodeverk.hentKodeverk(navn)
 }
 
 class SfHenvendelseKodeverkKilde : EnhetligKodeverk.Kilde<String, String> {
     override val navn = "SF_TEMAGRUPPER"
 
-    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> {
-        return providers.sfHenvendelseKodeverk.hentKodeverk(navn)
-    }
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> =
+        providers.sfHenvendelseKodeverk.hentKodeverk(navn)
 }
 
 class OppgaveKodeverkKilde : EnhetligKodeverk.Kilde<String, OppgaveKodeverk.Tema> {
     override val navn = "OPPGAVE"
 
-    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, OppgaveKodeverk.Tema> {
-        return providers.oppgaveKodeverk.hentKodeverk(navn)
-    }
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, OppgaveKodeverk.Tema> =
+        providers.oppgaveKodeverk.hentKodeverk(navn)
 }

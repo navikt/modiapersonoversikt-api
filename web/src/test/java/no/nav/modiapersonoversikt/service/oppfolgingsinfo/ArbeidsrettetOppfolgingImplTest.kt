@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.service.oppfolgingsinfo
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.marcinziolo.kotlin.wiremock.post
-import com.marcinziolo.kotlin.wiremock.returns
 import com.marcinziolo.kotlin.wiremock.returnsJson
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
@@ -121,12 +120,13 @@ class ArbeidsrettetOppfolgingImplTest {
             }
             """.trimIndent()
 
-        wiremock.post {
-            urlMatching("/v2/person/hent-oppfolgingsstatus")
-        }.returnsJson {
-            status(200)
-            body = returnbody
-        }
+        wiremock
+            .post {
+                urlMatching("/v2/person/hent-oppfolgingsstatus")
+            }.returnsJson {
+                status(200)
+                body = returnbody
+            }
     }
 
     private fun gittUnderOppfolging(underOppfolging: Boolean) {

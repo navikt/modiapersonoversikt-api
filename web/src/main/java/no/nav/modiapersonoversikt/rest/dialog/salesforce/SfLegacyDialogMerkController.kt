@@ -24,9 +24,7 @@ class SfLegacyDialogMerkController(
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun hentSladdeArsaker(kjedeId: String): List<String> {
-        return sfHenvendelseService.hentSladdeArsaker(kjedeId)
-    }
+    override fun hentSladdeArsaker(kjedeId: String): List<String> = sfHenvendelseService.hentSladdeArsaker(kjedeId)
 
     override fun lukkTraad(request: LukkTraadRequest): ResponseEntity<Void> {
         sfHenvendelseService.lukkTraad(request.traadId)

@@ -6,7 +6,9 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttribut
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
 
-class BrukersFnrPip(private val pdlPip: PdlPipApi) : Kabac.PolicyInformationPoint<Fnr> {
+class BrukersFnrPip(
+    private val pdlPip: PdlPipApi,
+) : Kabac.PolicyInformationPoint<Fnr> {
     override val key = Companion.key
 
     companion object : Kabac.AttributeKey<Fnr> {

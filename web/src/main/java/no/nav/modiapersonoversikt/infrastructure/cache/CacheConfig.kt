@@ -8,15 +8,14 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.EnableAspectJAutoProxy
 import java.time.Duration
-import java.util.*
 
 @Configuration
 @EnableCaching
 @EnableAspectJAutoProxy
 open class CacheConfig {
     @Bean
-    open fun cacheManager(): CacheManager {
-        return CaffeineCacheManager().apply {
+    open fun cacheManager(): CacheManager =
+        CaffeineCacheManager().apply {
             cache("endpointCache", 3, 10000)
             cache("pleiePengerCache", 300)
             cache("oppfolgingsinfoCache", 300)
@@ -28,7 +27,6 @@ open class CacheConfig {
             cache("azureAdCache", 3600, 20000)
             cache("varslingCache", 180, 10000)
         }
-    }
 
     @Bean("userkeygenerator")
     open fun userKeyGenerator() = AutentisertBrukerKeyGenerator()
@@ -48,7 +46,8 @@ open class CacheConfig {
         fun createCache(
             time: Long,
             maximumSize: Long = 1000,
-        ) = Caffeine.newBuilder()
+        ) = Caffeine
+            .newBuilder()
             .recordStats()
             .expireAfterAccess(Duration.ofSeconds(time))
             .expireAfterWrite(Duration.ofSeconds(time))

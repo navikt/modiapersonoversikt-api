@@ -39,7 +39,9 @@ data class CEFEvent(
     val time: Long = Instant.now().toEpochMilli(),
 )
 
-enum class CEFAttributeName(val attribute: String) {
+enum class CEFAttributeName(
+    val attribute: String,
+) {
     TIME("end"),
     ACTION("act"),
     SUBJECT("suid"),
@@ -67,9 +69,15 @@ enum class CEFAttributeName(val attribute: String) {
 }
 
 sealed class CEFAttributesType {
-    data class EnumDescriptor(val attribute: CEFAttributeName, val value: String) : CEFAttributesType()
+    data class EnumDescriptor(
+        val attribute: CEFAttributeName,
+        val value: String,
+    ) : CEFAttributesType()
 
-    data class StringDescriptor(val attribute: String, val value: String) : CEFAttributesType()
+    data class StringDescriptor(
+        val attribute: String,
+        val value: String,
+    ) : CEFAttributesType()
 }
 
 class CEFAttributes {
@@ -110,7 +118,9 @@ class CEFAttributes {
     }
 }
 
-class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
+class ArchSightCEFLogger(
+    private val config: CEFLoggerConfig,
+) {
     private val descriptor: String =
         String.format(
             "CEF:%s|%s|%s|%s|%s|%s",
@@ -134,7 +144,8 @@ class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
         event.identifiers.forEach { attributes.addStringValue(it.first, it.second ?: "-") }
 
         val extension =
-            attributes.createCEFAttributes()
+            attributes
+                .createCEFAttributes()
                 .joinToString(" ") {
                     "${it.first.attribute}=${escapeAttribute(it.second)}"
                 }

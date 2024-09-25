@@ -34,11 +34,12 @@ internal class HenvendelseTilhorerBrukerPolicyTest {
     @Test
     internal fun `deny om henvendelse ikke eies av bruker`() {
         every { henvendelseService.hentHenvendelse(kjedeId) } returns dummyHenvendelse.copy(fnr = fnr)
-        policy.assertDeny(
-            HenvendelseEierPip(henvendelseService),
-            CommonAttributes.HENVENDELSE_KJEDE_ID.withValue(kjedeId),
-            CommonAttributes.FNR.withValue(Fnr("annet-fnr")),
-        ).withMessage("Bruker eier ikke henvendelsen")
+        policy
+            .assertDeny(
+                HenvendelseEierPip(henvendelseService),
+                CommonAttributes.HENVENDELSE_KJEDE_ID.withValue(kjedeId),
+                CommonAttributes.FNR.withValue(Fnr("annet-fnr")),
+            ).withMessage("Bruker eier ikke henvendelsen")
     }
 
     private val dummyHenvendelse =

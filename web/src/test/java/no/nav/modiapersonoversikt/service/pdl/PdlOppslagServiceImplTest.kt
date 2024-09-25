@@ -89,8 +89,8 @@ internal class PdlOppslagServiceImplTest {
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }
 
-    private fun createMockGraphQLClient(handler: MockRequestHandleScope.(request: HttpRequestData) -> HttpResponseData): GraphQLKtorClient {
-        return GraphQLKtorClient(
+    private fun createMockGraphQLClient(handler: MockRequestHandleScope.(request: HttpRequestData) -> HttpResponseData): GraphQLKtorClient =
+        GraphQLKtorClient(
             url = URL("http://dummy.no"),
             httpClient =
                 HttpClient(engineFactory = MockEngine) {
@@ -100,5 +100,4 @@ internal class PdlOppslagServiceImplTest {
                 },
             serializer = GraphQLClientKotlinxSerializer(),
         )
-    }
 }

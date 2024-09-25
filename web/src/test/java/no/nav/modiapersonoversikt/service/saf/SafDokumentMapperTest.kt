@@ -569,13 +569,12 @@ private fun lagJournalpost(): Journalpost {
     )
 }
 
-private fun lagSak(): Sak {
-    return Sak(
+private fun lagSak(): Sak =
+    Sak(
         arkivsaksnummer = arkivsaknummer,
         fagsakId = fagsakId,
         fagsaksystem = fagsakSystem,
     )
-}
 
 private fun lagAvsenderMottaker() = AvsenderMottaker(true, avsenderMottakerNavn)
 
@@ -583,14 +582,13 @@ private fun lagVedlegg(): DokumentInfo = lagDokumentInfo(vedleggTittel)
 
 private fun lagHoveddokument(): DokumentInfo = lagDokumentInfo(hovedDokumentTittel)
 
-private fun lagDokumentInfo(tittel: String): DokumentInfo {
-    return DokumentInfo(
+private fun lagDokumentInfo(tittel: String): DokumentInfo =
+    DokumentInfo(
         tittel = tittel,
         dokumentInfoId = dokumentinfoid,
         dokumentvarianter = listOf(lagDokumentVariant()),
         logiskeVedlegg = listOf(LogiskVedlegg(logiskVedleggtittel)),
         dokumentstatus = dokumentStatus,
     )
-}
 
 private fun lagDokumentVariant(): Dokumentvariant = Dokumentvariant(true, variantformat, null)

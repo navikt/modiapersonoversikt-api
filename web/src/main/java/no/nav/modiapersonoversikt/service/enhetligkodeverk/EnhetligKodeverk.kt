@@ -9,7 +9,10 @@ object EnhetligKodeverk {
         fun <KEY, VALUE> hentKodeverk(kilde: Kilde<KEY, VALUE>): Kodeverk<KEY, VALUE>
     }
 
-    class Kodeverk<KEY, VALUE>(val navn: String, private val kodeverk: Map<KEY, VALUE>) {
+    class Kodeverk<KEY, VALUE>(
+        val navn: String,
+        private val kodeverk: Map<KEY, VALUE>,
+    ) {
         private val log = LoggerFactory.getLogger(Kodeverk::class.java)
 
         fun hentVerdi(

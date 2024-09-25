@@ -8,7 +8,9 @@ import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
 import no.nav.personoversikt.common.kabac.utils.Key
 
-class BrukersDiskresjonskodePip(private val pdlPip: PdlPipApi) : Kabac.PolicyInformationPoint<BrukersDiskresjonskodePip.Kode?> {
+class BrukersDiskresjonskodePip(
+    private val pdlPip: PdlPipApi,
+) : Kabac.PolicyInformationPoint<BrukersDiskresjonskodePip.Kode?> {
     enum class Kode { KODE6, KODE7 }
 
     override val key = Companion.key
@@ -22,8 +24,8 @@ class BrukersDiskresjonskodePip(private val pdlPip: PdlPipApi) : Kabac.PolicyInf
         return pdlPip.hentAdresseBeskyttelse(fnr.get())?.finnStrengesteKode()
     }
 
-    private fun List<PipAdressebeskyttelse>.finnStrengesteKode(): Kode? {
-        return this
+    private fun List<PipAdressebeskyttelse>.finnStrengesteKode(): Kode? =
+        this
             .mapNotNull {
                 when (it.gradering) {
                     AdressebeskyttelseGradering.STRENGT_FORTROLIG.toString(),
@@ -33,5 +35,4 @@ class BrukersDiskresjonskodePip(private val pdlPip: PdlPipApi) : Kabac.PolicyInf
                     else -> null
                 }
             }.minOrNull()
-    }
 }

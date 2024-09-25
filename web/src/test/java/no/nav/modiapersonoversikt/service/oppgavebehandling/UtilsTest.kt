@@ -3,7 +3,10 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-data class Response(val total: Long, val data: List<String>)
+data class Response(
+    val total: Long,
+    val data: List<String>,
+)
 
 internal class UtilsTest {
     @Test

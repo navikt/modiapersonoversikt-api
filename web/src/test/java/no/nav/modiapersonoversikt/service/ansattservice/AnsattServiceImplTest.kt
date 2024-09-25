@@ -96,22 +96,20 @@ internal class AnsattServiceImplTest {
         fornavn: String,
         etternavn: String,
         id: String,
-    ): VeilederNavn {
-        return VeilederNavn()
+    ): VeilederNavn =
+        VeilederNavn()
             .setFornavn(fornavn)
             .setEtternavn(etternavn)
             .setNavIdent(NavIdent(id))
             .setVisningsNavn("$fornavn $etternavn")
-    }
 
     private fun lagNavEnhet(
         enhetsId: String,
         enhetsNavn: String,
         temaer: List<String>? = null,
-    ): AxsysEnhet {
-        return AxsysEnhet()
+    ): AxsysEnhet =
+        AxsysEnhet()
             .setEnhetId(EnhetId(enhetsId))
             .setNavn(enhetsNavn)
             .setTemaer(temaer)
-    }
 }

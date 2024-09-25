@@ -29,7 +29,9 @@ open class PdlOppslagServiceImpl(
     override fun hentPersondata(fnr: String): HentPersondata.Result? =
         runBlocking {
             pdlClient
-                .execute(HentPersondata(HentPersondata.Variables(fnr)), userTokenAuthorizationHeaders).assertNoErrors().data
+                .execute(HentPersondata(HentPersondata.Variables(fnr)), userTokenAuthorizationHeaders)
+                .assertNoErrors()
+                .data
         }
 
     @Cacheable(unless = "#result == null")
@@ -38,10 +40,11 @@ open class PdlOppslagServiceImpl(
             if (fnrs.isEmpty()) {
                 emptyList()
             } else {
-                pdlClient.execute(
-                    HentTredjepartspersondata(HentTredjepartspersondata.Variables(fnrs)),
-                    systemTokenAuthorizationHeaders,
-                ).assertNoErrors()
+                pdlClient
+                    .execute(
+                        HentTredjepartspersondata(HentTredjepartspersondata.Variables(fnrs)),
+                        systemTokenAuthorizationHeaders,
+                    ).assertNoErrors()
                     .data
                     ?.hentPersonBolk
                     ?: emptyList()
@@ -52,7 +55,8 @@ open class PdlOppslagServiceImpl(
     override fun hentIdenter(fnr: String): Identliste? =
         runBlocking {
             pdlClient
-                .execute(HentIdenter(HentIdenter.Variables(fnr)), userTokenAuthorizationHeaders).assertNoErrors()
+                .execute(HentIdenter(HentIdenter.Variables(fnr)), userTokenAuthorizationHeaders)
+                .assertNoErrors()
                 .data
                 ?.hentIdenter
         }
@@ -109,8 +113,7 @@ open class PdlOppslagServiceImpl(
                             SokPerson.Variables(paging, criteria),
                         ),
                         userTokenAuthorizationHeaders,
-                    )
-                    .assertNoErrors()
+                    ).assertNoErrors()
                     .data
                     ?.sokPerson
                     ?.hits
@@ -124,7 +127,8 @@ open class PdlOppslagServiceImpl(
     ): String? =
         runBlocking {
             pdlClient
-                .execute(HentAktorid(HentAktorid.Variables(ident, listOf(gruppe))), userTokenAuthorizationHeaders).assertNoErrors()
+                .execute(HentAktorid(HentAktorid.Variables(ident, listOf(gruppe))), userTokenAuthorizationHeaders)
+                .assertNoErrors()
                 .data
                 ?.hentIdenter
                 ?.identer

@@ -11,9 +11,8 @@ object UrlMaskingUtils {
             "$1{kjedeId}" to "(^|/)(?=[^/]*?[0-9])(?=[^/]*?[a-z])[a-z0-9]{18}(?=$|/)".toRegex(), // SalesforceId
         )
 
-    fun maskSensitiveInfo(stringToMask: String): String {
-        return replacements.fold(stringToMask) { current, (replacement, regex) ->
+    fun maskSensitiveInfo(stringToMask: String): String =
+        replacements.fold(stringToMask) { current, (replacement, regex) ->
             current.replace(regex, replacement)
         }
-    }
 }

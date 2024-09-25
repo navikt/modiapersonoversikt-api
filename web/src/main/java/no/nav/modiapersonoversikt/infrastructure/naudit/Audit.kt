@@ -18,7 +18,9 @@ val cefLogger =
     )
 
 class Audit {
-    open class AuditResource(val resource: String)
+    open class AuditResource(
+        val resource: String,
+    )
 
     enum class Action {
         CREATE,
@@ -95,18 +97,14 @@ class Audit {
             action: Action,
             resourceType: AuditResource,
             vararg identifiers: Pair<AuditIdentifier, String?>,
-        ): AuditDescriptor<Any> {
-            return NothingDescriptor(action, resourceType, identifiers as Array<Pair<AuditIdentifier, String?>>)
-        }
+        ): AuditDescriptor<Any> = NothingDescriptor(action, resourceType, identifiers as Array<Pair<AuditIdentifier, String?>>)
 
         @JvmStatic
         fun <T> describe(
             action: Action,
             resourceType: AuditResource,
             extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>,
-        ): AuditDescriptor<T> {
-            return WithDataDescriptor(action, resourceType, extractIdentifiers)
-        }
+        ): AuditDescriptor<T> = WithDataDescriptor(action, resourceType, extractIdentifiers)
 
         private val auditMarker = Markers.appendEntries(mapOf(Logging.LOGTYPE_KEY to "audit"))
 
@@ -126,8 +124,7 @@ class Audit {
                     *identifiers
                         .map { "${it.first}='${it.second ?: "-"}'" }
                         .toTypedArray(),
-                )
-                    .joinToString(" ")
+                ).joinToString(" ")
 
             Logging.secureLog.info(auditMarker, logline)
             cefLogger.log(CEFEvent(action, resourceType, subject.orElse("-"), identifiers))

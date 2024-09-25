@@ -67,11 +67,10 @@ class YtelseController
                 body.slutt?.let { lagRiktigDato(it) },
             )
 
-        private fun getForeldrepengerService(): ForeldrepengerServiceBi {
-            return ForeldrepengerServiceBi { request ->
+        private fun getForeldrepengerService(): ForeldrepengerServiceBi =
+            ForeldrepengerServiceBi { request ->
                 foreldrepengerServiceDefault.hentForeldrepengerListe(request)
             }
-        }
 
         private fun lagYtelseRequest(
             fnr: String,

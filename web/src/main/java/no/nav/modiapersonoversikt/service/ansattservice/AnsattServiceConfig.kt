@@ -13,7 +13,5 @@ open class AnsattServiceConfig {
         axsysClient: AxsysClient,
         nomClient: NomClient,
         azureADService: AzureADService,
-    ): AnsattService {
-        return AnsattServiceImpl(axsysClient, nomClient, azureADService)
-    }
+    ): AnsattService = AnsattServiceImpl(axsysClient, nomClient, azureADService)
 }

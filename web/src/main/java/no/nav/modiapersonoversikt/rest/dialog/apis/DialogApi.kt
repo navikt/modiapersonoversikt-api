@@ -88,7 +88,10 @@ data class MeldingDTO(
     val markertSomFeilsendtAv: Veileder?,
 )
 
-class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?)
+class FortsettDialogDTO(
+    val behandlingsId: String,
+    val oppgaveId: String?,
+)
 
 abstract class OpprettHenvendelse {
     abstract val enhet: String?
@@ -151,16 +154,3 @@ abstract class Infomelding {
     abstract val fritekst: String
     abstract val sak: JournalforingSak
 }
-
-data class InfomeldingRequest(
-    override val enhet: String,
-    override val fritekst: String,
-    override val sak: JournalforingSak,
-) : Infomelding()
-
-data class InfomeldingRequestV2(
-    val fnr: String,
-    override val enhet: String,
-    override val fritekst: String,
-    override val sak: JournalforingSak,
-) : Infomelding()

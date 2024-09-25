@@ -15,8 +15,8 @@ object FilterUtils {
 
     @JvmStatic
     @JvmName("fjernGamleDokumentSoknadsstatus")
-    fun fjernGamleDokumenter(saker: List<SoknadsstatusSakstema>): List<SoknadsstatusSakstema> {
-        return saker.map { sak ->
+    fun fjernGamleDokumenter(saker: List<SoknadsstatusSakstema>): List<SoknadsstatusSakstema> =
+        saker.map { sak ->
             val filtrerteDokument =
                 sak.dokumentMetadata.filter { dokument ->
                     val erFraSaf = dokument.baksystem.size == 1 && dokument.baksystem.contains(Baksystem.SAF)
@@ -25,5 +25,4 @@ object FilterUtils {
                 }
             sak.copy(dokumentMetadata = filtrerteDokument)
         }
-    }
 }
