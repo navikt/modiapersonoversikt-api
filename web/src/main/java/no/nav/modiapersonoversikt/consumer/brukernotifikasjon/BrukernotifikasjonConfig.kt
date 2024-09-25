@@ -3,11 +3,10 @@ package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
 import okhttp3.OkHttpClient
@@ -22,7 +21,7 @@ open class BrukernotifikasjonConfig {
     @Bean
     open fun brukernotifikasjonService(
         oboTokenProvider: OnBehalfOfTokenClient,
-        unleashService: UnleashService,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     ): Brukernotifikasjon.Service {
         val authInterceptor =
             HeadersInterceptor {
@@ -32,16 +31,17 @@ open class BrukernotifikasjonConfig {
             }
 
         val httpClient: OkHttpClient =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "Brukernotifikasjon") { request ->
+                    tjenestekallLoggingInterceptorFactory("Brukernotifikasjon") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
                     },
-                )
-                .addInterceptor(authInterceptor)
+                ).addInterceptor(authInterceptor)
                 .build()
         return BrukernotifikasjonService(
             BrukernotifikasjonClient(

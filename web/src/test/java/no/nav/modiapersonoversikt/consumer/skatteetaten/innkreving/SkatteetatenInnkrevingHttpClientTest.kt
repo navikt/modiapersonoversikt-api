@@ -12,6 +12,8 @@ import io.mockk.mockk
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
@@ -19,6 +21,7 @@ import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskra
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,8 +38,13 @@ class SkatteetatenInnkrevingHttpClientTest {
 
     private val maskinportenClient = mockk<MaskinportenClient>()
     private val unleashService = mockk<UnleashService>()
+    private val loggingInterceptor =
+        LoggingInterceptor(unleashService, TjenestekallLogg, "SkatteetatenInnkrevingHttpClient") { _ -> "" }
+    private val tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory =
+        { _, _ -> loggingInterceptor }
 
-    private val httpClient = skatteetatenInnkrevingConfig.httpClient(maskinportenClient, unleashService)
+    private val httpClient =
+        skatteetatenInnkrevingConfig.httpClient(maskinportenClient, tjenestekallLoggingInterceptorFactory)
     private val apiClient = skatteetatenInnkrevingConfig.apiClient(wm.baseUrl(), httpClient)
     private val kravdetaljerApi = skatteetatenInnkrevingConfig.kravdetaljerApi(apiClient)
 

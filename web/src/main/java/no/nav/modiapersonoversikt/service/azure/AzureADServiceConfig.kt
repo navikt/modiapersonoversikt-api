@@ -1,12 +1,11 @@
 package no.nav.modiapersonoversikt.service.azure
 
-import io.ktor.http.*
+import io.ktor.http.Url
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.bindTo
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
@@ -18,16 +17,17 @@ open class AzureADServiceConfig {
     @Bean
     open fun azureADService(
         oboflowTokenProvider: OnBehalfOfTokenClient,
-        unleashService: UnleashService,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     ): AzureADService {
         val httpClient =
-            RestClient.baseClient().newBuilder()
+            RestClient
+                .baseClient()
+                .newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "AzureAd") {
+                    tjenestekallLoggingInterceptorFactory("AzureAd") {
                         getCallId()
                     },
-                )
-                .build()
+                ).build()
 
         return AzureADServiceImpl(
             tokenClient = oboflowTokenProvider.bindTo(EnvironmentUtils.getRequiredProperty("MS_GRAPH_SCOPE")),

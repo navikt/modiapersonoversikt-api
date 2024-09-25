@@ -5,6 +5,7 @@ import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.parseV2BehandlingString
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgaveJsonDTO
@@ -22,7 +23,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGi
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
@@ -41,15 +41,15 @@ class RestOppgaveBehandlingServiceImpl(
     private val tilgangskontroll: Tilgangskontroll,
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
     private val machineToMachineTokenClient: BoundedMachineToMachineTokenClient,
-    private val unleashService: UnleashService,
+    private val tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     private val apiClient: OppgaveApi =
         OppgaveApiFactory.createClient({
             AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
-        }, unleashService),
+        }, tjenestekallLoggingInterceptorFactory),
     private val systemApiClient: OppgaveApi =
         OppgaveApiFactory.createClient({
             machineToMachineTokenClient.createMachineToMachineToken()
-        }, unleashService),
+        }, tjenestekallLoggingInterceptorFactory),
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : OppgaveBehandlingService {
     private val tjenestekallLogg = Logging.secureLog
@@ -88,7 +88,8 @@ class RestOppgaveBehandlingServiceImpl(
                         fristFerdigstillelse = request.oppgaveFrist,
                         prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
                         metadata =
-                            request.behandlingskjedeId.coerceBlankToNull()
+                            request.behandlingskjedeId
+                                .coerceBlankToNull()
                                 ?.let { mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to it) },
                     ),
             ) ?: throw ResponseStatusException(
@@ -171,10 +172,11 @@ class RestOppgaveBehandlingServiceImpl(
         apiClient.endreOppgave(
             correlationId(),
             oppgaveId.toLong(),
-            oppgave.copy(
-                tilordnetRessurs = ident,
-                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet),
-            ).toPutOppgaveRequestJsonDTO(),
+            oppgave
+                .copy(
+                    tilordnetRessurs = ident,
+                    endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet),
+                ).toPutOppgaveRequestJsonDTO(),
         )
     }
 
@@ -250,21 +252,22 @@ class RestOppgaveBehandlingServiceImpl(
         apiClient.endreOppgave(
             correlationId(),
             oppgaveId.toLong(),
-            oppgave.copy(
-                status = OppgaveJsonDTO.Status.FERDIGSTILT,
-                beskrivelse =
-                    leggTilBeskrivelse(
-                        oppgave.beskrivelse,
-                        beskrivelseInnslag(
-                            ident = ident,
-                            navn = ansattService.hentVeileder(ident).navn,
-                            enhet = saksbehandlersValgteEnhet,
-                            innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
-                            clock = clock,
+            oppgave
+                .copy(
+                    status = OppgaveJsonDTO.Status.FERDIGSTILT,
+                    beskrivelse =
+                        leggTilBeskrivelse(
+                            oppgave.beskrivelse,
+                            beskrivelseInnslag(
+                                ident = ident,
+                                navn = ansattService.hentVeileder(ident).navn,
+                                enhet = saksbehandlersValgteEnhet,
+                                innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
+                                clock = clock,
+                            ),
                         ),
-                    ),
-                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe?.orElse(null), saksbehandlersValgteEnhet),
-            ).toPutOppgaveRequestJsonDTO(),
+                    endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe?.orElse(null), saksbehandlersValgteEnhet),
+                ).toPutOppgaveRequestJsonDTO(),
         )
     }
 
@@ -363,15 +366,13 @@ class RestOppgaveBehandlingServiceImpl(
             .fold(
                 transformSuccess = this::mapTilOppgave,
                 transformFailure = { it },
-            )
-            .getWithFailureHandling { failures ->
+            ).getWithFailureHandling { failures ->
                 val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
                 tjenestekallLogg.warn(
                     "[OPPGAVE] hentOppgaverPaginertOgTilgangskontroll la tilbake oppgaver pga manglende tilgang: $oppgaveIds",
                 )
                 systemLeggTilbakeOppgaver(failures)
-            }
-            .toMutableList()
+            }.toMutableList()
     }
 
     private fun mapTilOppgave(oppgave: OppgaveJsonDTO): Oppgave {
@@ -410,8 +411,7 @@ class RestOppgaveBehandlingServiceImpl(
                             .type
                     }
                 Pair(aktoerId, decision)
-            }
-            .toMap()
+            }.toMap()
     }
 
     private fun systemLeggTilbakeOppgaver(oppgaver: List<OppgaveJsonDTO>) {
@@ -423,8 +423,7 @@ class RestOppgaveBehandlingServiceImpl(
                     .copy(
                         tilordnetRessurs = null,
                         endretAvEnhetsnr = defaultEnhetGittTemagruppe(null, "4100"),
-                    )
-                    .toPutOppgaveRequestJsonDTO(),
+                    ).toPutOppgaveRequestJsonDTO(),
             )
         }
     }

@@ -9,9 +9,8 @@ import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
@@ -26,18 +25,18 @@ open class NomConfig {
     @Bean
     open fun nom(
         tokenProvider: MachineToMachineTokenClient,
-        unleashService: UnleashService,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     ): NomClient {
         val httpClient: OkHttpClient =
-            RestClient.baseClient()
+            RestClient
+                .baseClient()
                 .newBuilder()
                 .addInterceptor(
-                    LoggingInterceptor(unleashService, "Nom") {
+                    tjenestekallLoggingInterceptorFactory("Nom") {
                         // Optimalt sett burde denne hentes fra requesten, men det sendes ikke noe tilsvarende callId til Nom
                         getCallId()
                     },
-                )
-                .build()
+                ).build()
         if (EnvironmentUtils.isDevelopment().orElse(false)) {
             return DevNomClient()
         }
@@ -49,13 +48,9 @@ open class NomConfig {
 private class DevNomClient : NomClient {
     override fun checkHealth(): HealthCheckResult = HealthCheckResult.healthy()
 
-    override fun finnNavn(navIdent: NavIdent): VeilederNavn {
-        return lagVeilederNavn(navIdent)
-    }
+    override fun finnNavn(navIdent: NavIdent): VeilederNavn = lagVeilederNavn(navIdent)
 
-    override fun finnNavn(identer: MutableList<NavIdent>): List<VeilederNavn> {
-        return identer.map(::lagVeilederNavn)
-    }
+    override fun finnNavn(identer: MutableList<NavIdent>): List<VeilederNavn> = identer.map(::lagVeilederNavn)
 
     private fun lagVeilederNavn(navIdent: NavIdent): VeilederNavn {
         val ident = navIdent.get()

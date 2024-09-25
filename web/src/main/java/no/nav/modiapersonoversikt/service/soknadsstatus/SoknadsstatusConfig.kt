@@ -3,13 +3,12 @@ package no.nav.modiapersonoversikt.service.soknadsstatus
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.consumer.modiaSoknadsstatusApi.generated.apis.SoknadsstatusControllerApi
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.bindTo
@@ -27,42 +26,44 @@ open class SoknadsstatusConfig {
     @Bean
     open fun soknadsstatusService(
         tokenClient: OnBehalfOfTokenClient,
-        unleashService: UnleashService,
-    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi), unleashService)
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
+    ) = SoknadsstatusServiceImpl(tokenClient.bindTo(downstreamApi), tjenestekallLoggingInterceptorFactory)
 }
 
 object SoknadsstatusApiFactory {
-    fun createClient(
+    private fun createClient(
         tokenProvider: () -> String,
-        unleashService: UnleashService,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     ): OkHttpClient =
-        RestClient.baseClient().newBuilder()
+        RestClient
+            .baseClient()
+            .newBuilder()
             .addInterceptor(
                 HeadersInterceptor {
                     mapOf(
                         "nav-call-id" to getCallId(),
                     )
                 },
-            )
-            .addInterceptor(
-                LoggingInterceptor(unleashService, "ModiaSoknadsstatusV1") { request ->
+            ).addInterceptor(
+                tjenestekallLoggingInterceptorFactory("ModiaSoknadsstatusV1") { request ->
                     requireNotNull(request.header("nav-call-id")) {
                         "Kall uten \"nav-call-id\" er ikke lov"
                     }
                 },
-            )
-            .addInterceptor(
+            ).addInterceptor(
                 AuthorizationInterceptor {
                     tokenProvider()
                 },
-            )
-            .readTimeout(15.seconds.toJavaDuration())
+            ).readTimeout(15.seconds.toJavaDuration())
             .build()
 
     fun createSoknadsstatusApi(
         oboClient: BoundedOnBehalfOfTokenClient,
-        unleashService: UnleashService,
-    ) = SoknadsstatusControllerApi(url, createClient(oboClient.asTokenProvider(), unleashService))
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
+    ) = SoknadsstatusControllerApi(
+        url,
+        createClient(oboClient.asTokenProvider(), tjenestekallLoggingInterceptorFactory),
+    )
 
     private fun BoundedOnBehalfOfTokenClient.asTokenProvider(): () -> String =
         {

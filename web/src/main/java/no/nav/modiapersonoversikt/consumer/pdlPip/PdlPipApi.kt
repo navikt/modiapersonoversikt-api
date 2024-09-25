@@ -13,7 +13,7 @@ import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipGeograf
 import no.nav.modiapersonoversikt.consumer.pdlPipApi.generated.models.PipPersondataResponse
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
-import no.nav.personoversikt.common.logging.TjenestekallLogg
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -32,36 +32,39 @@ interface PdlPipApi : Pingable {
 open class PdlPipApiImpl(
     private val url: String,
     private val client: OkHttpClient,
+    private val tjenestekallLogger: TjenestekallLogger,
     private val cache: Cache<String, PipPersondataResponse?> = CacheUtils.createCache(),
 ) : PdlPipApi {
     private val pdlPipApi = PIPTjenesteForPDLDataKunForSystemerApi(url, client)
 
     @Cacheable
-    override fun hentFnr(aktorId: AktorId): String? {
-        return hentIdenter(aktorId.get())?.identer?.identer?.find { it.gruppe == IdentGruppe.FOLKEREGISTERIDENT.toString() }?.ident
-    }
+    override fun hentFnr(aktorId: AktorId): String? =
+        hentIdenter(aktorId.get())
+            ?.identer
+            ?.identer
+            ?.find { it.gruppe == IdentGruppe.FOLKEREGISTERIDENT.toString() }
+            ?.ident
 
     @Cacheable
-    override fun hentAktorId(fnr: Fnr): String? {
-        return hentIdenter(fnr.get())?.identer?.identer?.find { it.gruppe == IdentGruppe.AKTORID.toString() }?.ident
-    }
+    override fun hentAktorId(fnr: Fnr): String? =
+        hentIdenter(fnr.get())
+            ?.identer
+            ?.identer
+            ?.find { it.gruppe == IdentGruppe.AKTORID.toString() }
+            ?.ident
 
     @Cacheable
-    override fun hentAdresseBeskyttelse(ident: String): List<PipAdressebeskyttelse>? {
-        return hentIdenter(ident)?.person?.adressebeskyttelse
-    }
+    override fun hentAdresseBeskyttelse(ident: String): List<PipAdressebeskyttelse>? = hentIdenter(ident)?.person?.adressebeskyttelse
 
     @Cacheable
-    override fun hentGeografiskTilknytning(ident: String): PipGeografiskTilknytning? {
-        return hentIdenter(ident)?.geografiskTilknytning
-    }
+    override fun hentGeografiskTilknytning(ident: String): PipGeografiskTilknytning? = hentIdenter(ident)?.geografiskTilknytning
 
-    private fun hentIdenter(ident: String): PipPersondataResponse? {
-        return cache.get(ident) {
+    private fun hentIdenter(ident: String): PipPersondataResponse? =
+        cache.get(ident) {
             runCatching {
                 pdlPipApi.lookupIdent(ident)
             }.getOrElse {
-                TjenestekallLogg.error(
+                tjenestekallLogger.error(
                     header = "Greide ikke å hente data fra pdl-pip-api",
                     fields = mapOf("ident" to ident),
                     throwable = it,
@@ -69,7 +72,6 @@ open class PdlPipApiImpl(
                 null
             }
         }
-    }
 
     override fun ping() =
         SelfTestCheck(

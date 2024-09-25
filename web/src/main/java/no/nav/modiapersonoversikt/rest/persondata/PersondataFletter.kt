@@ -17,7 +17,7 @@ import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonEl
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.personoversikt.common.logging.Logging
-import no.nav.personoversikt.common.logging.TjenestekallLogg
+import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Clock
@@ -28,7 +28,10 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kod
 
 val log: Logger = LoggerFactory.getLogger(PersondataFletter::class.java)
 
-class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
+class PersondataFletter(
+    val kodeverk: EnhetligKodeverk.Service,
+    private val tjenestekallLogger: TjenestekallLogger,
+) {
     data class Data(
         val personIdent: String,
         val persondata: Person,
@@ -54,16 +57,16 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 kontaktinformasjonTredjepartsperson,
             )
 
-        fun feilendeSystemer(): List<String> {
-            return ekstraDatapunker.mapNotNull {
-                if (it is PersondataResult.Failure<*>) {
-                    Logging.secureLog.error("Persondata feilet system: ${it.system}", it.exception)
-                    it.system.name
-                } else {
-                    null
-                }
-            }.filter { harTilgangTilSkjermetPerson || it != InformasjonElement.EGEN_ANSATT.name }
-        }
+        fun feilendeSystemer(): List<String> =
+            ekstraDatapunker
+                .mapNotNull {
+                    if (it is PersondataResult.Failure<*>) {
+                        Logging.secureLog.error("Persondata feilet system: ${it.system}", it.exception)
+                        it.system.name
+                    } else {
+                        null
+                    }
+                }.filter { harTilgangTilSkjermetPerson || it != InformasjonElement.EGEN_ANSATT.name }
     }
 
     fun flettSammenData(
@@ -82,7 +85,13 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     fodselsdato = hentFodselsdato(data),
                     fodested = hentFodested(data),
                     geografiskTilknytning = hentGeografiskTilknytning(data),
-                    alder = hentAlder(data.persondata.foedselsdato.firstOrNull()?.foedselsdato, clock),
+                    alder =
+                        hentAlder(
+                            data.persondata.foedselsdato
+                                .firstOrNull()
+                                ?.foedselsdato,
+                            clock,
+                        ),
                     dodsdato = hentDodsdato(data),
                     bostedAdresse = hentBostedAdresse(data),
                     kontaktAdresse = hentKontaktAdresse(data),
@@ -126,50 +135,40 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentGeografiskTilknytning(data: Data): String? {
-        return data.geografiskeTilknytning.getOrNull()
-    }
+    private fun hentGeografiskTilknytning(data: Data): String? = data.geografiskeTilknytning.getOrNull()
 
-    private fun hentNavn(data: Data): List<Persondata.Navn> {
-        return data.persondata.navn
+    private fun hentNavn(data: Data): List<Persondata.Navn> =
+        data.persondata.navn
             .prioriterKildesystem()
             .map(::hentNavn)
-    }
 
-    private fun hentNavn(navn: Navn): Persondata.Navn {
-        return Persondata.Navn(
+    private fun hentNavn(navn: Navn): Persondata.Navn =
+        Persondata.Navn(
             fornavn = navn.fornavn,
             mellomnavn = navn.mellomnavn,
             etternavn = navn.etternavn,
         )
-    }
 
-    private fun hentNavn(navn: Personnavn): Persondata.Navn {
-        return Persondata.Navn(
+    private fun hentNavn(navn: Personnavn): Persondata.Navn =
+        Persondata.Navn(
             fornavn = navn.fornavn,
             mellomnavn = navn.mellomnavn,
             etternavn = navn.etternavn,
         )
-    }
 
-    private fun hentKjonn(data: List<Kjoenn>): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> {
-        return data.map { hentKjonnFraType(it.kjoenn) }
-    }
+    private fun hentKjonn(data: List<Kjoenn>): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> = data.map { hentKjonnFraType(it.kjoenn) }
 
-    private fun hentKjonnFraType(kjonntype: KjoennType?): Persondata.KodeBeskrivelse<Persondata.Kjonn> {
-        return when (kjonntype) {
+    private fun hentKjonnFraType(kjonntype: KjoennType?): Persondata.KodeBeskrivelse<Persondata.Kjonn> =
+        when (kjonntype) {
             KjoennType.MANN -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.M)
             KjoennType.KVINNE -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.K)
             else -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.U)
         }
-    }
 
-    private fun hentFodselsdato(data: Data): List<LocalDate> {
-        return data.persondata.foedselsdato.mapNotNull { it.foedselsdato }
-    }
+    private fun hentFodselsdato(data: Data): List<LocalDate> = data.persondata.foedselsdato.mapNotNull { it.foedselsdato }
 
-    private fun hentFodested(data: Data): List<Persondata.Fodested> {
-        return data.persondata.foedested.map {
+    private fun hentFodested(data: Data): List<Persondata.Fodested> =
+        data.persondata.foedested.map {
             Persondata.Fodested(
                 land =
                     it.foedeland?.let { land ->
@@ -179,11 +178,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 it.foedested,
             )
         }
-    }
 
-    private fun hentDodsdato(data: Data): List<LocalDate> {
-        return data.persondata.doedsfall.mapNotNull { it.doedsdato }
-    }
+    private fun hentDodsdato(data: Data): List<LocalDate> = data.persondata.doedsfall.mapNotNull { it.doedsdato }
 
     private fun hentGyldighetsperiode(
         gyldigFraOgMed: LocalDate?,
@@ -205,8 +201,111 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return Persondata.GyldighetsPeriode(gyldigFraOgMed?.toLocalDate(), gyldigTilOgMed?.toLocalDate())
     }
 
-    private fun hentBostedAdresse(data: Data): List<Persondata.Adresse> {
-        return data.persondata.bostedsadresse.mapNotNull { adresse ->
+    private fun hentBostedAdresse(data: Data): List<Persondata.Adresse> =
+        data.persondata.bostedsadresse
+            .mapNotNull { adresse ->
+                val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
+                when {
+                    adresse.vegadresse != null ->
+                        lagAdresseFraVegadresse(
+                            adresse = adresse.vegadresse!!,
+                            sisteEndring = sisteEndring,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    adresse.matrikkeladresse != null ->
+                        lagAdresseFraMatrikkeladresse(
+                            adresse = adresse.matrikkeladresse!!,
+                            sisteEndring = sisteEndring,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    adresse.utenlandskAdresse != null ->
+                        lagAdresseFraUtenlandskAdresse(
+                            adresse = adresse.utenlandskAdresse!!,
+                            sisteEndring = sisteEndring,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    adresse.ukjentBosted != null ->
+                        Persondata.Adresse(
+                            linje1 = adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
+                            sistEndret = null,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    else -> {
+                        tjenestekallLogger.warn(
+                            "PersondataFletter",
+                            mapOf(
+                                "personIdent" to data.personIdent,
+                                "feil" to "Ukjent bostedsadresse struktur",
+                                "addresse" to adresse,
+                            ),
+                        )
+                        null
+                    }
+                }?.copy(angittFlyttedato = adresse.angittFlyttedato)
+            }.sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
+
+    private fun hentKontaktAdresse(data: Data): List<Persondata.Adresse> =
+        data.persondata.kontaktadresse
+            .mapNotNull { adresse ->
+                val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
+                when {
+                    adresse.vegadresse != null ->
+                        lagAdresseFraVegadresse(
+                            adresse = adresse.vegadresse!!,
+                            sisteEndring = sisteEndring,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    adresse.postboksadresse != null ->
+                        lagAdresseFraPostboksadresse(
+                            adresse = adresse.postboksadresse!!,
+                            sistEndring = sisteEndring,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    adresse.postadresseIFrittFormat != null ->
+                        lagAdresseFraPostadresseIFrittFormat(
+                            adresse = adresse.postadresseIFrittFormat!!,
+                            sistEndret = sisteEndring,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    adresse.utenlandskAdresse != null ->
+                        lagAdresseFraUtenlandskAdresse(
+                            adresse = adresse.utenlandskAdresse!!,
+                            sisteEndring = sisteEndring,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    adresse.utenlandskAdresseIFrittFormat != null ->
+                        lagAdresseFraUtenlandskAdresseIFrittFormat(
+                            adresse = adresse.utenlandskAdresseIFrittFormat!!,
+                            sisteEndring = sisteEndring,
+                            gyldighetsPeriode = gyldighetsPeriode,
+                        )
+
+                    else -> {
+                        tjenestekallLogger.warn(
+                            "PersondataFletter",
+                            mapOf(
+                                "personIdent" to data.personIdent,
+                                "feil" to "Ukjent kontaktadresse struktur",
+                                "addresse" to adresse,
+                            ),
+                        )
+                        null
+                    }
+                }?.copy(coAdresse = adresse.coAdressenavn)
+            }.sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
+
+    private fun hentOppholdsAdresse(data: Data): List<Persondata.Adresse> =
+        data.persondata.oppholdsadresse.mapNotNull { adresse ->
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
             when {
@@ -231,70 +330,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         gyldighetsPeriode = gyldighetsPeriode,
                     )
 
-                adresse.ukjentBosted != null ->
-                    Persondata.Adresse(
-                        linje1 = adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
-                        sistEndret = null,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
                 else -> {
-                    TjenestekallLogg.warn(
-                        "PersondataFletter",
-                        mapOf(
-                            "personIdent" to data.personIdent,
-                            "feil" to "Ukjent bostedsadresse struktur",
-                            "addresse" to adresse,
-                        ),
-                    )
-                    null
-                }
-            }?.copy(angittFlyttedato = adresse.angittFlyttedato)
-        }.sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
-    }
-
-    private fun hentKontaktAdresse(data: Data): List<Persondata.Adresse> {
-        return data.persondata.kontaktadresse.mapNotNull { adresse ->
-            val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
-            val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
-            when {
-                adresse.vegadresse != null ->
-                    lagAdresseFraVegadresse(
-                        adresse = adresse.vegadresse!!,
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
-                adresse.postboksadresse != null ->
-                    lagAdresseFraPostboksadresse(
-                        adresse = adresse.postboksadresse!!,
-                        sistEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
-                adresse.postadresseIFrittFormat != null ->
-                    lagAdresseFraPostadresseIFrittFormat(
-                        adresse = adresse.postadresseIFrittFormat!!,
-                        sistEndret = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
-                adresse.utenlandskAdresse != null ->
-                    lagAdresseFraUtenlandskAdresse(
-                        adresse = adresse.utenlandskAdresse!!,
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
-                adresse.utenlandskAdresseIFrittFormat != null ->
-                    lagAdresseFraUtenlandskAdresseIFrittFormat(
-                        adresse = adresse.utenlandskAdresseIFrittFormat!!,
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
-                else -> {
-                    TjenestekallLogg.warn(
+                    tjenestekallLogger.warn(
                         "PersondataFletter",
                         mapOf(
                             "personIdent" to data.personIdent,
@@ -306,49 +343,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 }
             }?.copy(coAdresse = adresse.coAdressenavn)
         }
-            .sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
-    }
-
-    private fun hentOppholdsAdresse(data: Data): List<Persondata.Adresse> {
-        return data.persondata.oppholdsadresse.mapNotNull { adresse ->
-            val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
-            val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
-            when {
-                adresse.vegadresse != null ->
-                    lagAdresseFraVegadresse(
-                        adresse = adresse.vegadresse!!,
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
-                adresse.matrikkeladresse != null ->
-                    lagAdresseFraMatrikkeladresse(
-                        adresse = adresse.matrikkeladresse!!,
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
-                adresse.utenlandskAdresse != null ->
-                    lagAdresseFraUtenlandskAdresse(
-                        adresse = adresse.utenlandskAdresse!!,
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode,
-                    )
-
-                else -> {
-                    TjenestekallLogg.warn(
-                        "PersondataFletter",
-                        mapOf(
-                            "personIdent" to data.personIdent,
-                            "feil" to "Ukjent kontaktadresse struktur",
-                            "addresse" to adresse,
-                        ),
-                    )
-                    null
-                }
-            }?.copy(coAdresse = adresse.coAdressenavn)
-        }
-    }
 
     private fun lagAdresseFraPostadresseIFrittFormat(
         adresse: PostadresseIFrittFormat,
@@ -383,8 +377,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         gyldighetsPeriode = gyldighetsPeriode,
     )
 
-    private fun hentSisteEndringFraMetadata(metadata: Metadata): Persondata.SistEndret? {
-        return metadata.endringer.maxByOrNull { it.registrert }
+    private fun hentSisteEndringFraMetadata(metadata: Metadata): Persondata.SistEndret? =
+        metadata.endringer
+            .maxByOrNull { it.registrert }
             ?.let {
                 Persondata.SistEndret(
                     ident = it.registrertAv,
@@ -393,10 +388,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     kilde = mapOmKildeFraEndringerMetadata(it.kilde),
                 )
             }
-    }
 
-    private fun mapOmSystemKildeFraEndringerMetadata(system: String): String {
-        return when (system) {
+    private fun mapOmSystemKildeFraEndringerMetadata(system: String): String =
+        when (system) {
             "FREG" -> "folkeregisteret"
             "BD03" -> "bruker"
             "srvpersonopplysnin" -> "bruker"
@@ -415,10 +409,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 system
             }
         }
-    }
 
-    private fun mapOmKildeFraEndringerMetadata(kilde: String): String {
-        return when (kilde) {
+    private fun mapOmKildeFraEndringerMetadata(kilde: String): String =
+        when (kilde) {
             "FREG" -> "folkeregisteret"
             "innbygger" -> "bruker"
             "KILDE_DSF" -> "det sentrale folkeregisteret"
@@ -457,7 +450,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 kilde
             }
         }
-    }
 
     private fun lagAdresseFraMatrikkeladresse(
         adresse: Matrikkeladresse,
@@ -558,20 +550,18 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         gyldighetsPeriode = gyldighetsPeriode,
     )
 
-    private fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.Enhet? {
-        return navEnhet
+    private fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.Enhet? =
+        navEnhet
             .map {
                 if (it == null) {
                     null
                 } else {
                     Persondata.Enhet(it.enhet.enhetId, it.enhet.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
                 }
-            }
-            .getOrNull()
-    }
+            }.getOrNull()
 
-    private fun hentPublikumsmottak(publikumsmottak: List<NorgDomain.Publikumsmottak>): List<Persondata.Publikumsmottak> {
-        return publikumsmottak.map {
+    private fun hentPublikumsmottak(publikumsmottak: List<NorgDomain.Publikumsmottak>): List<Persondata.Publikumsmottak> =
+        publikumsmottak.map {
             Persondata.Publikumsmottak(
                 besoksadresse = lagAdresseFraBesoksadresse(requireNotNull(it.besoksadresse)),
                 apningstider =
@@ -585,20 +575,18 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         },
             )
         }
-    }
 
-    private fun lagApningstidString(apningstid: NorgDomain.Apningstid): String {
-        return if (apningstid.stengt) {
+    private fun lagApningstidString(apningstid: NorgDomain.Apningstid): String =
+        if (apningstid.stengt) {
             "Stengt"
         } else {
             val fra = apningstid.apentFra ?: "Ukjent"
             val til = apningstid.apentTil ?: "Ukjent"
             "$fra - $til"
         }
-    }
 
-    private fun hentStatsborgerskap(data: Data): List<Persondata.Statsborgerskap> {
-        return data.persondata.statsborgerskap.map {
+    private fun hentStatsborgerskap(data: Data): List<Persondata.Statsborgerskap> =
+        data.persondata.statsborgerskap.map {
             val land =
                 when (it.land) {
                     "XUK" -> Persondata.KodeBeskrivelse("XUK", "Ukjent")
@@ -609,12 +597,11 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
             )
         }
-    }
 
     fun hentAdressebeskyttelse(
         adressebeskyttelse: List<Adressebeskyttelse>,
-    ): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
-        return adressebeskyttelse.map {
+    ): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> =
+        adressebeskyttelse.map {
             val kodebeskrivelse =
                 when (it.gradering) {
                     STRENGT_FORTROLIG_UTLAND, STRENGT_FORTROLIG ->
@@ -637,20 +624,18 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 }
             Persondata.KodeBeskrivelse(kode = gradering, beskrivelse = kodebeskrivelse.beskrivelse)
         }
-    }
 
-    private fun hentSikkerhetstiltak(data: Data): List<Persondata.Sikkerhetstiltak> {
-        return data.persondata.sikkerhetstiltak.map {
+    private fun hentSikkerhetstiltak(data: Data): List<Persondata.Sikkerhetstiltak> =
+        data.persondata.sikkerhetstiltak.map {
             Persondata.Sikkerhetstiltak(
                 type = it.tiltakstype,
                 beskrivelse = it.beskrivelse,
                 gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
             )
         }
-    }
 
-    private fun hentErEgenAnsatt(data: Data): Persondata.EgenAnsatt {
-        return data.erEgenAnsatt
+    private fun hentErEgenAnsatt(data: Data): Persondata.EgenAnsatt =
+        data.erEgenAnsatt
             .map {
                 if (it) {
                     Persondata.EgenAnsatt.JA
@@ -658,10 +643,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     Persondata.EgenAnsatt.NEI
                 }
             }.getOrElse(Persondata.EgenAnsatt.UKJENT)
-    }
 
-    private fun hentPersonstatus(data: Data): List<Persondata.KodeBeskrivelse<Persondata.PersonStatus>> {
-        return data.persondata.folkeregisterpersonstatus.map {
+    private fun hentPersonstatus(data: Data): List<Persondata.KodeBeskrivelse<Persondata.PersonStatus>> =
+        data.persondata.folkeregisterpersonstatus.map {
             val tpsKode =
                 when (it.status) {
                     "bosatt" -> Persondata.PersonStatus.BOSATT
@@ -678,10 +662,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val beskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.PERSONSTATUSER, tpsKode.tpsKode)
             Persondata.KodeBeskrivelse(tpsKode, beskrivelse.beskrivelse)
         }
-    }
 
-    private fun hentSivilstand(data: Data): List<Persondata.Sivilstand> {
-        return data.persondata.sivilstand.map { sivilstand ->
+    private fun hentSivilstand(data: Data): List<Persondata.Sivilstand> =
+        data.persondata.sivilstand.map { sivilstand ->
             val tpsKode =
                 when (sivilstand.type) {
                     Sivilstandstype.UOPPGITT -> Persondata.SivilstandType.UOPPGITT
@@ -705,7 +688,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 sivilstandRelasjon = hentSivilstandRelasjon(data, sivilstand.relatertVedSivilstand),
             )
         }
-    }
 
     private fun hentSivilstandRelasjon(
         data: Data,
@@ -727,8 +709,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentForeldreansvar(data: Data): List<Persondata.Foreldreansvar> {
-        return data.persondata.foreldreansvar.map { forelderansvar ->
+    private fun hentForeldreansvar(data: Data): List<Persondata.Foreldreansvar> =
+        data.persondata.foreldreansvar.map { forelderansvar ->
             val ansvarligUtenIdentifikatorNavn = forelderansvar.ansvarligUtenIdentifikator?.navn?.let(::hentNavn)
             val ansvarlig =
                 data.tredjepartsPerson
@@ -747,13 +729,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 ansvarsubject = ansvarligsubject,
             )
         }
-    }
 
     private fun hentAnsvarlig(
         ansvarlig: Persondata.NavnOgIdent?,
         ansvarligUtenIdentifikatorNavn: Persondata.Navn?,
-    ): Persondata.NavnOgIdent? {
-        return if (ansvarlig == null && ansvarligUtenIdentifikatorNavn == null) {
+    ): Persondata.NavnOgIdent? =
+        if (ansvarlig == null && ansvarligUtenIdentifikatorNavn == null) {
             null
         } else {
             ansvarlig ?: Persondata.NavnOgIdent(
@@ -761,10 +742,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 ident = null,
             )
         }
-    }
 
-    private fun hentDeltBosted(data: Data): List<Persondata.DeltBosted> {
-        return data.persondata.deltBosted.map {
+    private fun hentDeltBosted(data: Data): List<Persondata.DeltBosted> =
+        data.persondata.deltBosted.map {
             Persondata.DeltBosted(
                 gyldighetsPeriode = hentGyldighetsperiode(it.startdatoForKontrakt, it.sluttdatoForKontrakt),
                 adresse =
@@ -782,10 +762,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     }?.copy(coAdresse = it.coAdressenavn),
             )
         }
-    }
 
-    private fun hentDodsbo(data: Data): List<Persondata.Dodsbo> {
-        return data.persondata.kontaktinformasjonForDoedsbo.map { dodsbo ->
+    private fun hentDodsbo(data: Data): List<Persondata.Dodsbo> =
+        data.persondata.kontaktinformasjonForDoedsbo.map { dodsbo ->
             Persondata.Dodsbo(
                 adressat = hentAdressat(dodsbo, data.tredjepartsPerson),
                 adresse = hentAdresse(dodsbo.adresse),
@@ -799,18 +778,16 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 sistEndret = hentSisteEndringFraMetadata(dodsbo.metadata),
             )
         }
-    }
 
     private fun hentAdressat(
         dodsbo: KontaktinformasjonForDoedsbo,
         tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
-    ): Persondata.Adressat {
-        return Persondata.Adressat(
+    ): Persondata.Adressat =
+        Persondata.Adressat(
             advokatSomAdressat = hentAdvokatSomAdressat(dodsbo),
             personSomAdressat = hentPersonSomAdressat(dodsbo, tredjepartsPerson),
             organisasjonSomAdressat = hentOrganisasjonSomAdressat(dodsbo),
         )
-    }
 
     private fun hentAdvokatSomAdressat(dodsbo: KontaktinformasjonForDoedsbo): Persondata.AdvokatSomAdressat? {
         val adressat = dodsbo.advokatSomKontakt ?: return null
@@ -853,8 +830,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentFullmakt(data: Data): PersondataResult<List<Persondata.Fullmakt>> {
-        return data.fullmektige.map { fullmakter ->
+    private fun hentFullmakt(data: Data): PersondataResult<List<Persondata.Fullmakt>> =
+        data.fullmektige.map { fullmakter ->
             fullmakter.map {
                 val tredjepartsPerson =
                     data.tredjepartsPerson.map { personer -> personer[it.fullmektig as String] }.getOrNull()
@@ -870,10 +847,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 )
             }
         }
-    }
 
-    private fun hentOmrade(omraader: List<OmraadeMedHandling>): List<Persondata.OmraadeMedHandling<String>> {
-        return omraader.map { omrade ->
+    private fun hentOmrade(omraader: List<OmraadeMedHandling>): List<Persondata.OmraadeMedHandling<String>> =
+        omraader.map { omrade ->
             val omraadeBeskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade.tema as String)
             Persondata.OmraadeMedHandling(
                 omraade = omraadeBeskrivelse,
@@ -887,15 +863,18 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     } ?: emptyList(),
             )
         }
-    }
 
-    private fun hentVergemal(data: Data): List<Persondata.Verge> {
-        return data.persondata.vergemaalEllerFremtidsfullmakt.map { vergemal ->
+    private fun hentVergemal(data: Data): List<Persondata.Verge> =
+        data.persondata.vergemaalEllerFremtidsfullmakt.map { vergemal ->
             val motpart =
-                data.tredjepartsPerson.map { personer ->
-                    personer[vergemal.vergeEllerFullmektig.motpartsPersonident]?.navn
-                }.getOrNull()
-            val navn = vergemal.vergeEllerFullmektig.identifiserendeInformasjon?.navn?.let(::hentNavn)
+                data.tredjepartsPerson
+                    .map { personer ->
+                        personer[vergemal.vergeEllerFullmektig.motpartsPersonident]?.navn
+                    }.getOrNull()
+            val navn =
+                vergemal.vergeEllerFullmektig.identifiserendeInformasjon
+                    ?.navn
+                    ?.let(::hentNavn)
 
             Persondata.Verge(
                 ident = vergemal.vergeEllerFullmektig.motpartsPersonident,
@@ -911,7 +890,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     ),
             )
         }
-    }
 
     private fun hentTjenesteOppgaver(tjenesteOmraader: List<Tjenesteomraade>?): List<String>? {
         if (tjenesteOmraader == null) return null
@@ -928,8 +906,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun hentVergemalEmbete(embete: String?): String {
-        return when (embete) {
+    private fun hentVergemalEmbete(embete: String?): String =
+        when (embete) {
             "fylkesmannenIOsloOgViken" -> "Fylkesmannen i Oslo og Viken"
             "fylkesmannenIVestfoldOgTelemark" -> "Fylkesmannen i Vestfold og Telemark"
             "fylkesmannenITromsOgFinnmark" -> "Fylkesmannen i Troms og Finnmark"
@@ -956,10 +934,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 "Ukjent embete: $embete"
             }
         }
-    }
 
-    private fun hentVergemalOmfang(omfang: String?): String {
-        return when (omfang) {
+    private fun hentVergemalOmfang(omfang: String?): String =
+        when (omfang) {
             "utlendingssakerPersonligeOgOekonomiskeInteresser" ->
                 "Ivareta personens interesser innenfor det personlige og økonomiske området herunder utlendingssaken (kun for EMA)"
 
@@ -968,10 +945,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             "personligeInteresser" -> "Ivareta personens interesser innenfor det personlige området"
             else -> "Ikke oppgitt"
         }
-    }
 
-    private fun hentVergemalType(type: String?): String {
-        return when (type) {
+    private fun hentVergemalType(type: String?): String =
+        when (type) {
             "ensligMindreaarigAsylsoeker" -> "Enslig mindreårig asylsøker"
             "ensligMindreaarigFlyktning" -> "Enslig mindreårig flyktning inklusive midlertidige saker for denne gruppen"
             "voksen" -> "Voksen"
@@ -982,7 +958,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             "stadfestetFremtidsfullmakt" -> "Fremtidsfullmakt"
             else -> "Ingen vergesakstype oppgitt"
         }
-    }
 
     private fun hentTilrettelagtKommunikasjon(data: Data): Persondata.TilrettelagtKommunikasjon {
         val talesprak: MutableList<Persondata.KodeBeskrivelse<String>> = mutableListOf()
@@ -1003,8 +978,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentTelefonnummer(data: Data): List<Persondata.Telefon> {
-        return data.persondata.telefonnummer.map {
+    private fun hentTelefonnummer(data: Data): List<Persondata.Telefon> =
+        data.persondata.telefonnummer.map {
             val sisteEndring = hentSisteEndringFraMetadata(it.metadata)
             Persondata.Telefon(
                 retningsnummer = kodeverk.hentKodeBeskrivelse(Kodeverk.RETNINGSNUMRE, it.landskode),
@@ -1012,7 +987,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 sistEndret = sisteEndring,
             )
         }
-    }
 
     private fun hantKontaktinformasjon(data: Data): Persondata.KontaktInformasjon {
         val krrData = data.krrData.getOrNull()
@@ -1039,8 +1013,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentBankkonto(data: Data): PersondataResult<Persondata.Bankkonto?> {
-        return data.bankkonto.map { dto ->
+    private fun hentBankkonto(data: Data): PersondataResult<Persondata.Bankkonto?> =
+        data.bankkonto.map { dto ->
             dto?.let {
                 Persondata.Bankkonto(
                     kontonummer = it.kontonummer,
@@ -1078,54 +1052,53 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 )
             }
         }
-    }
 
     private fun hentForelderBarnRelasjon(
         data: Data,
         clock: Clock,
-    ): List<Persondata.ForelderBarnRelasjon> {
-        return data.persondata.forelderBarnRelasjon.map { relasjon ->
-            val rolle =
-                when (relasjon.relatertPersonsRolle) {
-                    ForelderBarnRelasjonRolle.MOR -> Persondata.ForelderBarnRelasjonRolle.MOR
-                    ForelderBarnRelasjonRolle.FAR -> Persondata.ForelderBarnRelasjonRolle.FAR
-                    ForelderBarnRelasjonRolle.MEDMOR -> Persondata.ForelderBarnRelasjonRolle.MEDMOR
-                    ForelderBarnRelasjonRolle.BARN -> Persondata.ForelderBarnRelasjonRolle.BARN
-                    else -> Persondata.ForelderBarnRelasjonRolle.UKJENT
+    ): List<Persondata.ForelderBarnRelasjon> =
+        data.persondata.forelderBarnRelasjon
+            .map { relasjon ->
+                val rolle =
+                    when (relasjon.relatertPersonsRolle) {
+                        ForelderBarnRelasjonRolle.MOR -> Persondata.ForelderBarnRelasjonRolle.MOR
+                        ForelderBarnRelasjonRolle.FAR -> Persondata.ForelderBarnRelasjonRolle.FAR
+                        ForelderBarnRelasjonRolle.MEDMOR -> Persondata.ForelderBarnRelasjonRolle.MEDMOR
+                        ForelderBarnRelasjonRolle.BARN -> Persondata.ForelderBarnRelasjonRolle.BARN
+                        else -> Persondata.ForelderBarnRelasjonRolle.UKJENT
+                    }
+                if (relasjon.relatertPersonUtenFolkeregisteridentifikator != null) {
+                    val tredjepartsPerson = requireNotNull(relasjon.relatertPersonUtenFolkeregisteridentifikator)
+                    Persondata.ForelderBarnRelasjon(
+                        ident = null,
+                        rolle = rolle,
+                        navn = tredjepartsPerson.navn?.let { listOf(hentNavn(it)) } ?: emptyList(),
+                        fodselsdato = tredjepartsPerson.foedselsdato?.let { listOf(it) } ?: emptyList(),
+                        alder = hentAlder(tredjepartsPerson.foedselsdato, clock),
+                        kjonn = listOf(hentKjonnFraType(tredjepartsPerson.kjoenn)),
+                        adressebeskyttelse = emptyList(),
+                        harSammeAdresse = false,
+                        dodsdato = emptyList(),
+                    )
+                } else {
+                    val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
+                    Persondata.ForelderBarnRelasjon(
+                        ident = tredjepartsPerson?.fnr,
+                        rolle = rolle,
+                        navn = tredjepartsPerson?.navn ?: emptyList(),
+                        fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
+                        alder = tredjepartsPerson?.alder,
+                        kjonn = tredjepartsPerson?.kjonn ?: emptyList(),
+                        adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
+                        harSammeAdresse =
+                            harSammeAdresse(
+                                personAdresse = hentBostedAdresse(data).firstOrNull(),
+                                tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull(),
+                            ),
+                        dodsdato = tredjepartsPerson?.dodsdato ?: emptyList(),
+                    )
                 }
-            if (relasjon.relatertPersonUtenFolkeregisteridentifikator != null) {
-                val tredjepartsPerson = requireNotNull(relasjon.relatertPersonUtenFolkeregisteridentifikator)
-                Persondata.ForelderBarnRelasjon(
-                    ident = null,
-                    rolle = rolle,
-                    navn = tredjepartsPerson.navn?.let { listOf(hentNavn(it)) } ?: emptyList(),
-                    fodselsdato = tredjepartsPerson.foedselsdato?.let { listOf(it) } ?: emptyList(),
-                    alder = hentAlder(tredjepartsPerson.foedselsdato, clock),
-                    kjonn = listOf(hentKjonnFraType(tredjepartsPerson.kjoenn)),
-                    adressebeskyttelse = emptyList(),
-                    harSammeAdresse = false,
-                    dodsdato = emptyList(),
-                )
-            } else {
-                val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
-                Persondata.ForelderBarnRelasjon(
-                    ident = tredjepartsPerson?.fnr,
-                    rolle = rolle,
-                    navn = tredjepartsPerson?.navn ?: emptyList(),
-                    fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
-                    alder = tredjepartsPerson?.alder,
-                    kjonn = tredjepartsPerson?.kjonn ?: emptyList(),
-                    adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
-                    harSammeAdresse =
-                        harSammeAdresse(
-                            personAdresse = hentBostedAdresse(data).firstOrNull(),
-                            tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull(),
-                        ),
-                    dodsdato = tredjepartsPerson?.dodsdato ?: emptyList(),
-                )
-            }
-        }.sortedBy { it.alder }
-    }
+            }.sortedBy { it.alder }
 
     private fun harSammeAdresse(
         personAdresse: Persondata.Adresse?,
@@ -1142,18 +1115,13 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentAlder(
         foedselsdato: LocalDate?,
         clock: Clock,
-    ): Int? {
-        return foedselsdato
+    ): Int? =
+        foedselsdato
             ?.let {
                 Period.between(it, LocalDate.now(clock)).years
             }
-    }
 
-    private fun String?.isNotNullOrBlank() = !this.isNullOrBlank()
-
-    private fun List<Navn>.prioriterKildesystem(): List<Navn> {
-        return this.sortedBy { MasterPrioritet[it.metadata.master] }
-    }
+    private fun List<Navn>.prioriterKildesystem(): List<Navn> = this.sortedBy { MasterPrioritet[it.metadata.master] }
 }
 
 fun <T> EnhetligKodeverk.Service.hentKodeBeskrivelse(

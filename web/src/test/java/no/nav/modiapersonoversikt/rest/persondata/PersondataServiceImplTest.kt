@@ -5,8 +5,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertTrue
 
 internal class PersondataServiceImplTest {
     private val ugyldigGT = "0301"
@@ -24,6 +25,7 @@ internal class PersondataServiceImplTest {
             policyEnforcementPoint = mockk(),
             kodeverk = mockk(),
             pdlFullmakt = mockk(),
+            tjenestekallLogger = TjenestekallLogg,
         )
 
     @Test

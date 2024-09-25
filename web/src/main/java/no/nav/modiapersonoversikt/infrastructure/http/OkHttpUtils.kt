@@ -12,9 +12,10 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
-import no.nav.personoversikt.common.logging.TjenestekallLogg
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
+import no.nav.personoversikt.common.logging.TjenestekallLogger
+import okhttp3.Interceptor
+import okhttp3.Request
+import okhttp3.Response
 import okio.Buffer
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -39,22 +40,18 @@ object OkHttpUtils {
                         .withCreatorVisibility(Visibility.NONE),
                 )
             }
-
-    object MediaTypes {
-        val JSON: MediaType = requireNotNull("application/json; charset=utf-8".toMediaType())
-    }
 }
 
 class LoggingInterceptor(
-    val unleashService: UnleashService,
-    val name: String,
-    val callIdExtractor: (Request) -> String,
+    private val unleashService: UnleashService,
+    private val tjenestekallLogger: TjenestekallLogger,
+    private val name: String,
+    private val callIdExtractor: (Request) -> String,
 ) : Interceptor {
     private val log = LoggerFactory.getLogger(LoggingInterceptor::class.java)
 
-    private fun Request.peekContent(): String? {
-        val logRequestBodyEnabled = unleashService.isEnabled(Feature.LOG_REQUEST_BODY)
-        if (!logRequestBodyEnabled) return "IGNORED"
+    private fun Request.peekContent(): String {
+        if (!unleashService.isEnabled(Feature.LOG_REQUEST_BODY)) return "IGNORED"
         val copy = this.newBuilder().build()
         val buffer = Buffer()
         copy.body?.writeTo(buffer)
@@ -62,9 +59,8 @@ class LoggingInterceptor(
         return buffer.readUtf8()
     }
 
-    private fun Response.peekContent(): String? {
-        val logResponseBodyEnabled = unleashService.isEnabled(Feature.LOG_RESPONSE_BODY)
-        if (!logResponseBodyEnabled) return "IGNORED"
+    private fun Response.peekContent(): String {
+        if (!unleashService.isEnabled(Feature.LOG_RESPONSE_BODY)) return "IGNORED"
         return when {
             this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
             this.code == 204 -> "StatusCode: 204, didn't try to peek at body"
@@ -78,7 +74,7 @@ class LoggingInterceptor(
         val requestId = IdUtils.generateId()
         val requestBody = request.peekContent()
 
-        TjenestekallLogg.info(
+        tjenestekallLogger.info(
             "$name-request: $callId ($requestId)",
             mapOf(
                 "url" to request.url.toString(),
@@ -92,7 +88,7 @@ class LoggingInterceptor(
             runCatching { chain.proceed(request) }
                 .onFailure { exception ->
                     log.error("$name-response-error (ID: $callId / $requestId)", exception)
-                    TjenestekallLogg.error(
+                    tjenestekallLogger.error(
                         header = "$name-response-error: $callId ($requestId))",
                         fields =
                             mapOf(
@@ -105,13 +101,12 @@ class LoggingInterceptor(
                             ),
                         throwable = exception,
                     )
-                }
-                .getOrThrow()
+                }.getOrThrow()
 
         val responseBody = response.peekContent()
 
         if (response.code in 200..299) {
-            TjenestekallLogg.info(
+            tjenestekallLogger.info(
                 header = "$name-response: $callId ($requestId)",
                 fields =
                     mapOf(
@@ -125,7 +120,7 @@ class LoggingInterceptor(
                     ),
             )
         } else {
-            TjenestekallLogg.error(
+            tjenestekallLogger.error(
                 header = "$name-response-error: $callId ($requestId)",
                 fields =
                     mapOf(
@@ -143,12 +138,15 @@ class LoggingInterceptor(
     }
 }
 
-private inline fun Long.measure(): Long = System.currentTimeMillis() - this
+private fun Long.measure(): Long = System.currentTimeMillis() - this
 
-open class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : Interceptor {
+open class HeadersInterceptor(
+    val headersProvider: () -> Map<String, String>,
+) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder =
-            chain.request()
+            chain
+                .request()
                 .newBuilder()
         headersProvider()
             .forEach { (name, value) -> builder.addHeader(name, value) }
@@ -157,12 +155,15 @@ open class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : 
     }
 }
 
-class XCorrelationIdInterceptor : HeadersInterceptor({
-    mapOf("X-Correlation-ID" to getCallId())
-})
+class XCorrelationIdInterceptor :
+    HeadersInterceptor({
+        mapOf("X-Correlation-ID" to getCallId())
+    })
 
-class AuthorizationInterceptor(val tokenProvider: () -> String) : HeadersInterceptor({
-    mapOf("Authorization" to "Bearer ${tokenProvider()}")
-})
+class AuthorizationInterceptor(
+    tokenProvider: () -> String,
+) : HeadersInterceptor({
+        mapOf("Authorization" to "Bearer ${tokenProvider()}")
+    })
 
 fun getCallId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()

@@ -1,10 +1,11 @@
 package no.nav.modiapersonoversikt.service.krr
 
-import KrrServiceImpl
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
+import no.nav.modiapersonoversikt.consumer.krr.KrrServiceImpl
 import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
@@ -45,7 +46,7 @@ internal class KrrServiceImplTest {
             status(200)
             json(jsonResponse)
         }
-        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient)
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000398")
         assertThat(response.personident).isEqualTo("10108000398")
         assertThat(response.epostadresse?.value).isEqualTo("noreply@nav.no")
@@ -55,7 +56,7 @@ internal class KrrServiceImplTest {
     @Test
     fun `trigg feil ved henting av kontaktinformasjon fra KrrRestApi`() {
         wiremock.get { status(404) }
-        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient)
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
 
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
@@ -67,7 +68,7 @@ internal class KrrServiceImplTest {
     @Test
     fun `trigg server-feil ved henting av kontaktinformasjon fra KrrRestApi`() {
         wiremock.get { status(500) }
-        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient)
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
         assertThat(response.reservasjon).isEqualTo("")
