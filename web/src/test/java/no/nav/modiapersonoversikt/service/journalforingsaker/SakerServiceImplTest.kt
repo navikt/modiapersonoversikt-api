@@ -113,8 +113,8 @@ class SakerServiceImplTest {
             JournalforingSak().apply {
                 saksId = sakId
                 fagsystemSaksId = saksId
-                fagsystemKode = FAGSYSTEMKODE_ARENA
-                sakstype = SAKSTYPE_MED_FAGSAK
+                fagsystemKode = JournalforingSak.FAGSYSTEMKODE_ARENA
+                sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
                 temaKode = TEMAKODE_OPPFOLGING
                 opprettetDato = DateTime(xmlDato.toGregorianCalendar().time)
                 finnesIGsak = false

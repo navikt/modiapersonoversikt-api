@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.oppfolgingsinfo
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.marcinziolo.kotlin.wiremock.post
+import com.marcinziolo.kotlin.wiremock.returns
 import com.marcinziolo.kotlin.wiremock.returnsJson
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT

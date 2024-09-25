@@ -2,7 +2,9 @@ package no.nav.modiapersonoversikt.service.saf
 
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
-import io.ktor.client.request.header
+import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
+import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
@@ -123,7 +125,6 @@ class SafServiceImpl(
                 TjenesteResultatWrapper(
                     response.body?.bytes(),
                 )
-
             else -> handterDokumentFeilKoder(response.code)
         }
     }
@@ -150,7 +151,6 @@ class SafServiceImpl(
                     Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi
                     """.trim(),
                 )
-
             401 -> log.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
             404 -> log.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
         }

@@ -34,7 +34,7 @@ import kotlin.time.Duration.Companion.seconds
 interface NorgApi : Pingable {
     companion object {
         @JvmStatic
-        val IKKE_NEDLAGT: List<EnhetStatus> = EnhetStatus.entries.minus(EnhetStatus.NEDLAGT)
+        val IKKE_NEDLAGT: List<EnhetStatus> = EnhetStatus.values().asList().minus(EnhetStatus.NEDLAGT)
     }
 
     fun hentGeografiskTilknyttning(enhet: EnhetId): List<EnhetGeografiskTilknyttning>
@@ -269,9 +269,7 @@ class NorgApiImpl(
         internal fun toInternalDomain(enhet: RsEnhetInkludertKontaktinformasjonDTO) =
             EnhetKontaktinformasjon(
                 enhet = toInternalDomain(requireNotNull(enhet.enhet)),
-                publikumsmottak =
-                    enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) }
-                        ?: emptyList(),
+                publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList(),
                 overordnetEnhet = enhet.overordnetEnhet?.let(::EnhetId),
             )
 

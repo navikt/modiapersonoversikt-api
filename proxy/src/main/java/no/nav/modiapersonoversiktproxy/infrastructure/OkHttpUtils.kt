@@ -12,6 +12,7 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
 import okio.Buffer
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -36,6 +37,10 @@ object OkHttpUtils {
                         .withCreatorVisibility(Visibility.NONE),
                 )
             }
+
+    object MediaTypes {
+        val JSON: MediaType = requireNotNull("application/json; charset=utf-8".toMediaType())
+    }
 }
 
 class LoggingInterceptor(
@@ -55,7 +60,7 @@ class LoggingInterceptor(
 
     private val log = LoggerFactory.getLogger(LoggingInterceptor::class.java)
 
-    private fun Request.peekContent(config: Config): String {
+    private fun Request.peekContent(config: Config): String? {
         if (config.ignoreRequestBody) return "IGNORED"
         val copy = this.newBuilder().build()
         val buffer = Buffer()
@@ -64,7 +69,7 @@ class LoggingInterceptor(
         return buffer.readUtf8()
     }
 
-    private fun Response.peekContent(config: Config): String {
+    private fun Response.peekContent(config: Config): String? {
         if (config.ignoreResponseBody) return "IGNORED"
         return when {
             this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
@@ -143,6 +148,39 @@ class LoggingInterceptor(
     }
 }
 
-private fun Long.measure(): Long = System.currentTimeMillis() - this
+private inline fun Long.measure(): Long = System.currentTimeMillis() - this
+
+open class HeadersInterceptor(
+    val headersProvider: () -> Map<String, String>,
+) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val builder =
+            chain
+                .request()
+                .newBuilder()
+        headersProvider()
+            .forEach { (name, value) -> builder.addHeader(name, value) }
+
+        return chain.proceed(builder.build())
+    }
+}
+
+class XCorrelationIdInterceptor :
+    HeadersInterceptor({
+        mapOf("X-Correlation-ID" to getCallId())
+    })
+
+class AuthorizationInterceptor(
+    val tokenProvider: () -> String,
+) : HeadersInterceptor({
+        mapOf("Authorization" to "Bearer ${tokenProvider()}")
+    })
+
+class BasicAuthorizationInterceptor(
+    private val username: String,
+    private val password: String,
+) : HeadersInterceptor({
+        mapOf("Authorization" to Credentials.basic(username, password))
+    })
 
 fun getCallId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()

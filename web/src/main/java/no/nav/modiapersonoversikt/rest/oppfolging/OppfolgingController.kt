@@ -16,6 +16,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import no.nav.modiapersonoversikt.rest.Typeanalyzers
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -28,6 +29,8 @@ class OppfolgingController
         private val service: ArbeidsrettetOppfolging.Service,
         private val tilgangskontroll: Tilgangskontroll,
     ) {
+        private val logger = LoggerFactory.getLogger(OppfolgingController::class.java)
+
         @GetMapping
         fun hent(
             @PathVariable("fnr") fodselsnummer: String,
