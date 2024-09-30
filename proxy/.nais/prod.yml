@@ -31,10 +31,9 @@ spec:
     enabled: true
   resources:
     requests:
-      cpu: 1000m
-      memory: 4096Mi
+      cpu: 30m
+      memory: 2500Mi
     limits:
-      cpu: 2000m
       memory: 8192Mi
   ingresses:
     - https://modiapersonoversikt-api-proxy.intern.nav.no
@@ -42,7 +41,7 @@ spec:
   replicas:
     min: 2
     max: 4
-    cpuThresholdPercentage: 60
+    cpuThresholdPercentage: 100
   vault:
     enabled: true
     paths:

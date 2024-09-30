@@ -31,18 +31,17 @@ spec:
     enabled: true
   resources:
     requests:
-      cpu: 1000m
-      memory: 4096Mi
+      cpu: 1m
+      memory: 450Mi
     limits:
-      cpu: 2000m
-      memory: 8192Mi
+      memory: 2000Mi
   ingresses:
     - https://modiapersonoversikt-api-proxy-q1.intern.dev.nav.no
     - https://modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io
   replicas:
     min: 2
     max: 4
-    cpuThresholdPercentage: 60
+    cpuThresholdPercentage: 500
   vault:
     enabled: true
     paths:
