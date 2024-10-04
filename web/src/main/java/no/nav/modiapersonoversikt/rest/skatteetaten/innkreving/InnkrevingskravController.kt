@@ -1,6 +1,11 @@
 package no.nav.modiapersonoversikt.rest.skatteetaten.innkreving
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
+import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
+import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.rest.skatteetaten.innkreving.json.InnkrevingskravJsonResponse
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravId
@@ -17,32 +22,47 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/rest/innkrevingskrav")
 class InnkrevingskravController(
     private val innkrevingskravService: InnkrevingskravService,
+    private val tilgangskontroll: Tilgangskontroll,
 ) {
     @GetMapping("/{innkrevingskravId}")
     fun hentInnkrevingskrav(
         @PathVariable innkrevingskravId: String,
-    ): ResponseEntity<InnkrevingskravJsonResponse> {
-        val innkrevingskrav = innkrevingskravService.hentInnkrevingskrav(InnkrevingskravId(innkrevingskravId))
-
-        return if (innkrevingskrav == null) {
-            ResponseEntity.notFound().build()
-        } else {
-            ResponseEntity.ok(InnkrevingskravJsonResponse.fromDomain(innkrevingskrav))
-        }
-    }
+    ): ResponseEntity<InnkrevingskravJsonResponse> =
+        tilgangskontroll
+            .check(Policies.tilgangTilInnkrevingskrav())
+            .get(
+                Audit.describe(
+                    Audit.Action.READ,
+                    AuditResources.Innkrevingskrav,
+                    AuditIdentifier.INNKREVINGSKRAV_ID to innkrevingskravId,
+                ),
+            ) {
+                val innkrevingskrav = innkrevingskravService.hentInnkrevingskrav(InnkrevingskravId(innkrevingskravId))
+                if (innkrevingskrav == null) {
+                    ResponseEntity.notFound().build()
+                } else {
+                    ResponseEntity.ok(InnkrevingskravJsonResponse.fromDomain(innkrevingskrav))
+                }
+            }
 
     @PostMapping
     fun hentAlleInnkrevingskrav(
         @RequestBody fnrRequest: FnrRequest,
-    ): ResponseEntity<List<InnkrevingskravJsonResponse>> {
-        val fnr = Fnr(fnrRequest.fnr)
-
-        if (!Fnr.isValid(fnr.get())) {
-            return ResponseEntity.badRequest().build()
-        }
-
-        val innkrevingskrav = innkrevingskravService.hentAlleInnkrevingskrav(fnr)
-
-        return ResponseEntity.ok(innkrevingskrav.map(InnkrevingskravJsonResponse::fromDomain))
-    }
+    ): ResponseEntity<List<InnkrevingskravJsonResponse>> =
+        tilgangskontroll
+            .check(Policies.tilgangTilInnkrevingskrav())
+            .get(
+                Audit.describe(
+                    Audit.Action.READ,
+                    AuditResources.Innkrevingskrav,
+                    AuditIdentifier.FNR to fnrRequest.fnr,
+                ),
+            ) {
+                val fnr = Fnr(fnrRequest.fnr)
+                if (!Fnr.isValid(fnr.get())) {
+                    return@get ResponseEntity.badRequest().build()
+                }
+                val innkrevingskrav = innkrevingskravService.hentAlleInnkrevingskrav(fnr)
+                ResponseEntity.ok(innkrevingskrav.map(InnkrevingskravJsonResponse::fromDomain))
+            }
 }
