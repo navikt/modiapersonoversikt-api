@@ -8,7 +8,7 @@ import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.utils.Key
 
 object TilgangTilInnkrevingskravPolicy : Kabac.Policy {
-    private val innkrevingskravRoller = RolleListe("personoversikt-innkrevingskrav")
+    private val innkrevingskravRoller = RolleListe("0000-ga-modia-innkrevingskrav")
 
     override val key: Key<Kabac.Policy> = Key(TilgangTilInnkrevingskravPolicy)
 
