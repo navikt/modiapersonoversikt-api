@@ -11,7 +11,6 @@ paths:
   /isalive:
     get:
       tags:
-        - HealthCheck
         - Tiltakspenger
       description: ""
       responses:
@@ -27,7 +26,6 @@ paths:
   /isready:
     get:
       tags:
-        - HealthCheck
         - Tiltakspenger
       description: ""
       responses:
@@ -43,7 +41,6 @@ paths:
   /vedtak/detaljer:
     post:
       tags:
-        - Vedtak
         - Tiltakspenger
       description: ""
       requestBody:
@@ -70,7 +67,6 @@ paths:
   /vedtak/perioder:
     post:
       tags:
-        - Vedtak
         - Tiltakspenger
       description: ""
       requestBody:
