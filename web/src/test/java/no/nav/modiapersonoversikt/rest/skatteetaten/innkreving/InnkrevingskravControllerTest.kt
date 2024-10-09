@@ -3,6 +3,8 @@ package no.nav.modiapersonoversikt.rest.skatteetaten.innkreving
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
@@ -25,6 +27,9 @@ class InnkrevingskravControllerTest {
 
     @Autowired
     lateinit var innkrevingskravService: InnkrevingskravService
+
+    @Autowired
+    lateinit var tilgangskontroll: Tilgangskontroll
 
     private val innkrevingskrav =
         Innkrevingskrav(
@@ -132,5 +137,8 @@ class InnkrevingskravControllerTest {
     open class TestConfig {
         @Bean
         open fun kravService(): InnkrevingskravService = mockk()
+
+        @Bean
+        open fun tilgangskontroll(): Tilgangskontroll = TilgangskontrollMock
     }
 }

@@ -39,7 +39,7 @@ class SkatteetatenHttpInnkrevingskravClient(
                     klientid = clientId,
                     accept = "application/json",
                     kravidentifikator = innkrevingskravId.value,
-                    kravidentifikatortype = InnkrevingskravType.SKATTEETATENS_KRAVIDENTIFIKATOR.name,
+                    kravidentifikatortype = KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR.name,
                 )?.toDomain()
         }.getOrElse {
             when (it) {
