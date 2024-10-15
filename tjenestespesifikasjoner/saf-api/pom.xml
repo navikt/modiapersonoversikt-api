@@ -13,7 +13,7 @@
     <artifactId>saf-api</artifactId>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.source>21</maven.compiler.source>
     </properties>
 
     <dependencies>

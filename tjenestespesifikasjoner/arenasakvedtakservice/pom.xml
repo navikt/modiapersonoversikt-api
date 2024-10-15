@@ -17,7 +17,7 @@
     </description>
     <properties>
         <wsdl.directory>src/main/wsdl</wsdl.directory>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <build>
         <plugins>
