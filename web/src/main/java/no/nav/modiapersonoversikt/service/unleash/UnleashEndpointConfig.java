@@ -13,7 +13,6 @@ import no.nav.modiapersonoversikt.service.unleash.strategier.IsNotProdStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,20 +23,16 @@ public class UnleashEndpointConfig {
     String apiToken = EnvironmentUtils.getRequiredProperty("UNLEASH_SERVER_API_TOKEN");
 
     @Bean
-    @Autowired
     public UnleashService unleashService(HttpFeatureFetcher featureFetcher, Unleash defaultUnleash) {
-        UnleashServiceImpl unleashService = new UnleashServiceImpl(featureFetcher, defaultUnleash, api);
-        return unleashService;
+        return new UnleashServiceImpl(featureFetcher, defaultUnleash, api);
     }
 
     @Bean
-    @Autowired
     public HttpFeatureFetcher unleashHttpToggleFetcher(UnleashConfig unleashConfig) {
         return new HttpFeatureFetcher(unleashConfig);
     }
 
     @Bean
-    @Autowired
     public Unleash defaultUnleash(UnleashConfig unleashConfig) {
         return new DefaultUnleash(unleashConfig, addStrategies());
     }
@@ -52,7 +47,6 @@ public class UnleashEndpointConfig {
     }
 
     @Bean
-    @Autowired
     public UnleashConfig unleashConfig(UnleashContextProvider unleashContextProvider) {
         return UnleashConfig.builder()
                 .appName("modiapersonoversikt-api")

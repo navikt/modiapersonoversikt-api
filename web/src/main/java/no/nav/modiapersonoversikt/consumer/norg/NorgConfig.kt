@@ -7,9 +7,11 @@ import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import java.util.concurrent.TimeUnit
 
 @Configuration
+@Profile("!local")
 open class NorgConfig {
     private val url: String = EnvironmentUtils.getRequiredProperty("NORG2_BASEURL")
 

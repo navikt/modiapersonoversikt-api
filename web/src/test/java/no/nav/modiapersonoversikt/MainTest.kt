@@ -1,44 +1,57 @@
-package no.nav.modiapersonoversikt;
+package no.nav.modiapersonoversikt
 
-import no.nav.common.nais.NaisYamlUtils;
-import no.nav.common.rest.client.RestClient;
-import no.nav.common.test.SystemProperties;
-import no.nav.common.test.ssl.SSLTestUtils;
-import no.nav.common.test.ssl.TrustAllSSLSocketFactory;
-import no.nav.modiapersonoversikt.Main;
-import org.springframework.boot.SpringApplication;
+import no.nav.common.nais.NaisYamlUtils
+import no.nav.common.rest.client.RestClient
+import no.nav.common.test.SystemProperties
+import no.nav.common.test.ssl.SSLTestUtils
+import no.nav.common.test.ssl.TrustAllSSLSocketFactory
+import org.springframework.boot.builder.SpringApplicationBuilder
+import java.security.cert.X509Certificate
+import javax.net.ssl.X509TrustManager
 
-import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
-
-public class MainTest {
-    static {
-        setupRestClient();
-        System.setProperty("NAIS_APP_NAME", "modiapersonoversikt-api");
-        SystemProperties.setFrom(".vault.properties");
-        NaisYamlUtils.loadFromYaml(".nais/dev.yml");
-        SSLTestUtils.disableCertificateChecks();
+object MainTest {
+    init {
+        setupRestClient()
+        System.setProperty("NAIS_APP_NAME", "modiapersonoversikt-api")
+        System.setProperty("NAIS_CLUSTER_NAME", "dev-gcp")
+        System.setProperty("UNLEASH_SERVER_API_URL", "https://unleash-api.dev-gcp.nais.io/api")
+        System.setProperty("UNLEASH_SERVER_API_TOKEN", "test")
+        SystemProperties.setFrom(".vault.properties")
+        NaisYamlUtils.loadFromYaml(".nais/dev.yml")
+        SSLTestUtils.disableCertificateChecks()
     }
 
-    public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(Main.class);
-        application.setAdditionalProfiles("local");
-        application.run(args);
+    @JvmStatic
+    fun main(args: Array<String>) {
+        SpringApplicationBuilder(Main::class.java)
+            .initializers(localBeans)
+            .lazyInitialization(true)
+            .profiles("local")
+            .run(*args)
     }
 
-    private static void setupRestClient() {
-        RestClient.setBaseClient(RestClient.baseClientBuilder()
-                .sslSocketFactory(new TrustAllSSLSocketFactory(), new X509TrustManager() {
-                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
-                    }
+    private fun setupRestClient() {
+        RestClient.setBaseClient(
+            RestClient
+                .baseClientBuilder()
+                .sslSocketFactory(
+                    TrustAllSSLSocketFactory(),
+                    object : X509TrustManager {
+                        override fun checkClientTrusted(
+                            x509Certificates: Array<X509Certificate>,
+                            s: String,
+                        ) {
+                        }
 
-                    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
-                    }
+                        override fun checkServerTrusted(
+                            x509Certificates: Array<X509Certificate>,
+                            s: String,
+                        ) {
+                        }
 
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return new X509Certificate[0];
-                    }
-                })
-                .build());
+                        override fun getAcceptedIssuers(): Array<X509Certificate> = emptyArray()
+                    },
+                ).build(),
+        )
     }
 }

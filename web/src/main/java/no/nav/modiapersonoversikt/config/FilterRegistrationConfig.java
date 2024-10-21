@@ -11,12 +11,14 @@ import no.nav.personoversikt.common.science.scientist.ScientistFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
 import static no.nav.common.utils.EnvironmentUtils.isDevelopment;
 
 @Configuration
+@Profile("!local")
 public class FilterRegistrationConfig {
     private static final String azureAdClientId = EnvironmentUtils.getRequiredProperty("AZURE_APP_CLIENT_ID");
     private static final String azureAdDiscoveryUrl = EnvironmentUtils.getRequiredProperty("AZURE_APP_WELL_KNOWN_URL");
