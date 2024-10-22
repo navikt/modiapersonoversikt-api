@@ -17,7 +17,7 @@ Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.
 ### Caching
 
 Cacheoppsett er hovedsakelig beskrevet ved bruk av annotasjon og benytter seg av Springs cache abstraction og en
-underliggende caffeina-cache-implementasjon.
+underliggende caffeine-cache-implementasjon.
 
 Tjenestekall mot NORG caches i to forskjellige cacher. Se hver enkelt tjeneste for eksakt hvilke kall som bruker hvilken
 cache.
