@@ -13,10 +13,12 @@ import no.nav.personoversikt.common.logging.TjenestekallLogger
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import java.net.URL
 
 @Configuration
 @EnableCaching
+@Profile("!local")
 open class PdlOppslagServiceConfig {
     private val pdlApiUrl: URL = EnvironmentUtils.getRequiredProperty("PDL_API_URL").let(::URL)
 

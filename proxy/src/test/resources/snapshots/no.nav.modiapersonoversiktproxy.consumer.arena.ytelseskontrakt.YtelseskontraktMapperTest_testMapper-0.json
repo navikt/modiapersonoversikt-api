@@ -1,7 +1,7 @@
 {
-  "personidentifikator" : "123451234",
   "periode" : {
     "fom" : [ "javax.xml.datatype.XMLGregorianCalendar", "2020-10-13T00:00:00.000+00:00" ],
     "tom" : [ "javax.xml.datatype.XMLGregorianCalendar", "2020-10-13T00:00:00.000+00:00" ]
-  }
+  },
+  "personidentifikator" : "123451234"
 }

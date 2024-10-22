@@ -15,9 +15,11 @@ import no.nav.modiapersonoversikt.utils.bindTo
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 
 @Configuration
 @EnableCaching
+@Profile("!local")
 open class ArbeidsrettetOppfolgingConfig {
     private val url: String = getRequiredProperty("VEILARBOPPFOLGINGAPI_URL")
     private val downstreamApi = DownstreamApi.parse(getRequiredProperty("VEILARBOPPFOLGINGAPI_SCOPE"))
