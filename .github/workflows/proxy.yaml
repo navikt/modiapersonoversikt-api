@@ -61,16 +61,13 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    strategy:
-      matrix:
-        namespace: [q0, q1]
     steps:
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v2
         env:
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
-          RESOURCE: proxy/.nais/nais-${{ matrix.namespace }}.yml
+          RESOURCE: proxy/.nais/nais-q1.yml
           VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
 
   deploy-prod:
