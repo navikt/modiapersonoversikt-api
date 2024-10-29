@@ -88,3 +88,5 @@ spec:
       value: "https://arena-q1.adeo.no/arena_ws/services/ArenaSakVedtakService"
     - name: CXF_SECURE_LOG
       value: "enabled"
+    - name: JDK_JAVA_OPTIONS
+      value: "$(JAVA_PROXY_OPTIONS)"
