@@ -61,31 +61,37 @@ spec:
     outbound:
       external:
         - host: graph.microsoft.com
-        - host: kodeverk-api.intern.nav.no
         - host: saf.prod-fss-pub.nais.io
         - host: sokos-utbetaldata.prod-fss-pub.nais.io
-        - host: digdir-krr-proxy.intern.nav.no
-        - host: sokos-kontoregister-person.intern.nav.no
         - host: sf-henvendelse-api-proxy.prod-fss-pub.nais.io
         - host: pdl-api.prod-fss-pub.nais.io
         - host: pdl-pip-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
         - host: axsys.prod-fss-pub.nais.io
-        - host: nom-api.intern.nav.no
-        - host: skjermede-personer-pip.intern.nav.no
-        - host: person.nav.no
-        - host: modia-soknadsstatus-api.intern.nav.no
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: pdl-fullmakt.dev-fss-pub.nais.io
         - host: api-test.sits.no # Skatteetaten
       rules:
+        - application: modia-soknadsstatus-api
         - namespace: tpts
           application: tiltakspenger-datadeling
         - namespace: org
           application: norg2
         - namespace: poao
           application: veilarboppfolging
+        - namespace: team-rocket
+          application: kodeverk-api
+        - namespace: team-rocket
+          application: digdir-krr-proxy
+        - namespace: min-side
+          application: tms-event-api
+        - namespace: nom
+          application: skjermede-personer-pip
+        - namespace: nom
+          application: nom-api
+        - namespace: okonomi
+          application: sokos-kontoregister-person
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -102,7 +108,7 @@ spec:
     - name: MS_GRAPH_SCOPE
       value: "https://graph.microsoft.com/.default"
     - name: FELLES_KODEVERK_URL
-      value: "https://kodeverk-api.intern.nav.no"
+      value: "http://kodeverk-api.team-rocket"
     - name: FELLES_KODEVERK_SCOPE
       value: "prod-gcp:team-rocket:kodeverk-api"
     - name: SAF_GRAPHQL_URL
@@ -124,11 +130,11 @@ spec:
     - name: VEILARBOPPFOLGINGAPI_SCOPE
       value: "prod-gcp:poao:veilarboppfolging"
     - name: KRR_REST_URL
-      value: "https://digdir-krr-proxy.intern.nav.no/"
+      value: "http://digdir-krr-proxy.team-rocket/"
     - name: KRR_SCOPE
       value: "prod-gcp:team-rocket:digdir-krr-proxy"
     - name: KONTOREGISTER_REST_URL
-      value: "https://sokos-kontoregister-person.intern.nav.no/api/system"
+      value: "http://sokos-kontoregister-person.okonomi/api/system"
     - name: KONTOREGISTER_SCOPE
       value: "prod-gcp:okonomi:sokos-kontoregister-person"
     - name: SF_HENVENDELSE_URL
@@ -170,15 +176,15 @@ spec:
     - name: NOM_SCOPE
       value: "prod-gcp:nom:nom-api"
     - name: SKJERMEDE_PERSONER_PIP_URL
-      value: "https://skjermede-personer-pip.intern.nav.no"
+      value: "http://skjermede-personer-pip.nom"
     - name: SKJERMEDE_PERSONER_SCOPE
       value: "prod-gcp:nom:skjermede-personer-pip"
     - name: TMS_EVENT_API_URL
-      value: "https://person.nav.no/tms-event-api"
+      value: "http://tms-event-api.min-side/tms-event-api"
     - name: TMS_EVENT_API_SCOPE
       value: "prod-gcp:min-side:tms-event-api"
     - name: MODIA_SOKNADSSTATUS_API_URL
-      value: "https://modia-soknadsstatus-api.intern.nav.no"
+      value: "http://modia-soknadsstatus-api"
     - name: MODIA_SOKNADSSTATUS_SCOPE
       value: "prod-gcp:personoversikt:modia-soknadsstatus-api"
     - name: MODIAPERSONOVERSIKT_API_PROXY_URL
