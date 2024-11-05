@@ -204,6 +204,7 @@
         "gyldigFraOgMed" : "2018-01-03",
         "gyldigTilOgMed" : "2018-10-03"
       },
+      "kilde" : null,
       "motpartsPersonNavn" : {
         "etternavn" : "MedFullmakt",
         "fornavn" : "Person",

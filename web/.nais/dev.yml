@@ -68,7 +68,6 @@ spec:
         - host: axsys.dev-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
-        - host: pdl-fullmakt.dev-fss-pub.nais.io
         - host: api-test.sits.no # Skatteetaten
       rules:
         - application: modia-soknadsstatus-api
@@ -90,6 +89,8 @@ spec:
           application: nom-api
         - namespace: okonomi
           application: sokos-kontoregister-person
+        - application: repr-api
+          namespace: repr
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -147,9 +148,9 @@ spec:
     - name: PDL_PIP_SCOPE
       value: "dev-fss:pdl:pdl-pip-api"
     - name: PDL_FULLMAKT_URL
-      value: "https://pdl-fullmakt.dev-fss-pub.nais.io"
+      value: "http://repr-api.repr"
     - name: PDL_FULLMAKT_SCOPE
-      value: "dev-fss:pdl:pdl-fullmakt"
+      value: "dev-gcp:repr:repr-api"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL

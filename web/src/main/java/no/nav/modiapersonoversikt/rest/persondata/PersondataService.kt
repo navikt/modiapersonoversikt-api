@@ -8,7 +8,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.PdlFullmaktApi
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDetails
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
@@ -209,7 +209,7 @@ class PersondataServiceImpl(
             *(andrePersoner ?: emptyList()).toTypedArray(),
         ).toList()
 
-    private fun PersondataResult<List<FullmaktDetails>>.findKontaktinformasjonTredjepartspersoner(): List<String> =
+    private fun PersondataResult<List<FullmaktDto>>.findKontaktinformasjonTredjepartspersoner(): List<String> =
         this
             .fold(
                 onSuccess = { it.mapNotNull { it.fullmektig } },
