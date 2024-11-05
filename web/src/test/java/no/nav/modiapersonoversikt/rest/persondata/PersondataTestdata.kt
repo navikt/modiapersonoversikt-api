@@ -5,8 +5,8 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDetails
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraadeMedHandling
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraaderMedHandlingDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -324,10 +324,10 @@ internal val tilrettelagtKommunikasjonData =
     )
 
 internal val fullmaktPerson =
-    FullmaktDetails(
+    FullmaktDto(
         fullmaktId = 1232133123,
         fullmektig = "55555666000",
-        omraade = listOf(OmraadeMedHandling(tema = "SAP", handling = listOf(OmraadeMedHandling.Handling.LES))),
+        omraade = listOf(OmraaderMedHandlingDto(tema = "SAP", handling = listOf(OmraaderMedHandlingDto.Handling.LES))),
         gyldigFraOgMed = gittDato("2018-01-03"),
         gyldigTilOgMed = gittDato("2018-10-03"),
     )

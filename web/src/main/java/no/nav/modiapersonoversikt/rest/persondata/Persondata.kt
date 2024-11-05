@@ -232,6 +232,7 @@ object Persondata {
         val omrade: List<OmraadeMedHandling<String>>,
         val gyldighetsPeriode: GyldighetsPeriode?,
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
+        val kilde: String?,
     )
 
     data class DigitalKontaktinformasjonTredjepartsperson(

@@ -1,69 +1,98 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Fullmakt",
-    "description": "Dokumentasjon for pdl-fullmakt API.",
-    "contact": {
-      "name": "Team Representasjon",
-      "url": "https://repr-docs.dev.intern.nav.no/"
-    },
-    "version": "1.0"
+    "title": "repr-api",
+    "version": "v3"
   },
   "servers": [
     {
-      "url": "https://pdl-fullmakt.dev.intern.nav.no",
+      "url": "https://repr-api.intern.dev.nav.no",
       "description": "Generated server url"
     }
   ],
   "security": [
     {
-      "Authorization": []
+      "Authorization": [
+        "api_key"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Fullmakt internbruker (AzureAD)",
+      "description": "Det trengs et AzureAD-token for å kalle disse endepunktene. Token kan genereres her for on-behalf-token https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:repr:repr-api og her for maskin-token https://azure-token-generator.intern.dev.nav.no/api/m2m?aud=dev-gcp:repr:repr-api."
     },
     {
-      "Azure-OBO-Token": []
+      "name": "Fullmakt eksternbruker (Tokenx)",
+      "description": "Det trengs et Tokenx-token for å kalle disse endepunktene. Token kan genereres her https://tokenx-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:repr:repr-api ."
     }
   ],
   "paths": {
-    "/api/internbruker/fullmektig": {
+    "/api/internbruker/fullmakt/fullmektig": {
       "post": {
         "tags": [
-          "fullmakt-internal-controller"
+          "Fullmakt internbruker (AzureAD)"
         ],
-        "summary": "internbruker: Get all fullmakt for fullmektig",
-        "operationId": "getFullmaktForFullmektig",
+        "summary": "Fetch all active fullmakter for fullmektig",
+        "operationId": "hentAktiveFullmakterForFullmektig",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FullmakIdentRequest"
+                "$ref": "#/components/schemas/RequestDto"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Fullmakt not found",
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmektig",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
           },
           "200": {
-            "description": "Fullmakt fetched",
+            "description": "Active fullmakter returned",
             "content": {
               "*/*": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
+                    "$ref": "#/components/schemas/FullmaktDto"
                   }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested person could not be found in PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Not Found",
+                  "status": 404,
+                  "detail": "Ingen treff på dette søket fordi hentIdenter er null eller tømt.",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmektig",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
@@ -71,64 +100,37 @@
           "403": {
             "description": "User lacks access",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Not permitted by ABAC: AbacErrorDetails(cause=cause-0001-manglerrolle, policy=adressebeskyttelse_fortrolig_adresse)",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmektig",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
           },
-          "204": {
-            "description": "Success but no content for Fullmakt",
+          "400": {
+            "description": "The request was malformed or contained invalid data.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service unavailable",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "The security token is missing, has expired, or is invalid for other reasons",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Angitt ident er ikke norsk ident",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmektig",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
@@ -136,242 +138,18 @@
         }
       }
     },
-    "/api/internbruker/fullmektig-historikk": {
+    "/api/internbruker/fullmakt/fullmektig-historikk": {
       "post": {
         "tags": [
-          "fullmakt-internal-controller"
+          "Fullmakt internbruker (AzureAD)"
         ],
-        "summary": "internbruker: Get all fullmakt for fullmektig with history",
-        "operationId": "getFullmaktWithHistoryForFullmektig",
+        "summary": "Fetch historic fullmakter for fullmektig",
+        "operationId": "hentHistoriskeFullmakterForFullmektig",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FullmakIdentRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Fullmakt fetched with history",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "User lacks access",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "Success but no content for Fullmakt",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Fullmakt  with history not found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service unavailable",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "The security token is missing, has expired, or is invalid for other reasons",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/internbruker/fullmaktsgiver": {
-      "post": {
-        "tags": [
-          "fullmakt-internal-controller"
-        ],
-        "summary": "internbruker: Get all fullmakt for fullmaktsgiver",
-        "operationId": "getFullmaktForFullmaktsgiver",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FullmakIdentRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "404": {
-            "description": "Fullmakt not found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "User lacks access",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "Success but no content for Fullmakt",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service unavailable",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Fullmakt for fullmaktsgiver fetched",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "The security token is missing, has expired, or is invalid for other reasons",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/internbruker/fullmaktsgiver-historikk": {
-      "post": {
-        "tags": [
-          "fullmakt-internal-controller"
-        ],
-        "summary": "internbruker: Get all fullmakt for fullmaktsgiver with history",
-        "operationId": "getFullmaktWithHistoryForFullmaktsgiver",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FullmakIdentRequest"
+                "$ref": "#/components/schemas/RequestDto"
               }
             }
           },
@@ -381,77 +159,37 @@
           "403": {
             "description": "User lacks access",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Not permitted by ABAC: AbacErrorDetails(cause=cause-0001-manglerrolle, policy=adressebeskyttelse_fortrolig_adresse)",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmektig-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
           },
-          "204": {
-            "description": "Success but no content for Fullmakt",
+          "400": {
+            "description": "The request was malformed or contained invalid data.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Fullmakt with history not found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service unavailable",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Fullmakt with history fetched",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Angitt ident er ikke norsk ident",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmektig-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
@@ -459,94 +197,560 @@
           "401": {
             "description": "The security token is missing, has expired, or is invalid for other reasons",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktEndringsloggDetailsByFullmaktId"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/internal/unleash": {
-      "get": {
-        "tags": [
-          "unleash-actuators"
-        ],
-        "operationId": "unleash",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/internal/unleash-fullmakt": {
-      "get": {
-        "tags": [
-          "unleash-actuators"
-        ],
-        "operationId": "unleashFullmakt",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/internal/shutdown": {
-      "get": {
-        "tags": [
-          "nais-actuators"
-        ],
-        "operationId": "shutdown",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/fullmektig": {
-      "get": {
-        "tags": [
-          "fullmakt-controller"
-        ],
-        "summary": "Get all fullmakt for fullmektig",
-        "operationId": "getFullmaktForFullmektig_1",
-        "responses": {
-          "404": {
-            "description": "Fullmakt not found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmektig-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
           },
           "200": {
-            "description": "Fullmakt fetched",
+            "description": "Historic fullmakter returned",
             "content": {
               "*/*": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
+                    "$ref": "#/components/schemas/FullmaktMedEndringslogg"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested person could not be found in PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Not Found",
+                  "status": 404,
+                  "detail": "Ingen treff på dette søket fordi hentIdenter er null eller tømt.",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmektig-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/internbruker/fullmakt/fullmaktsgiver": {
+      "post": {
+        "tags": [
+          "Fullmakt internbruker (AzureAD)"
+        ],
+        "summary": "Fetch all active fullmakter for fullmaktsgiver",
+        "operationId": "hentAktiveFullmakterForFullmaktsgiver",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "403": {
+            "description": "User lacks access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Not permitted by ABAC: AbacErrorDetails(cause=cause-0001-manglerrolle, policy=adressebeskyttelse_fortrolig_adresse)",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmaktsgiver",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested person could not be found in PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Not Found",
+                  "status": 404,
+                  "detail": "Ingen treff på dette søket fordi hentIdenter er null eller tømt.",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmaktsgiver",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Active fullmakter returned",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was malformed or contained invalid data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Angitt ident er ikke norsk ident",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmaktsgiver",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmaktsgiver",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/internbruker/fullmakt/fullmaktsgiver-historikk": {
+      "post": {
+        "tags": [
+          "Fullmakt internbruker (AzureAD)"
+        ],
+        "summary": "Fetch historic fullmakter for fullmaktsgiver",
+        "operationId": "hentHistoriskeFullmakterForFullmaktsgiver",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "403": {
+            "description": "User lacks access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Not permitted by ABAC: AbacErrorDetails(cause=cause-0001-manglerrolle, policy=adressebeskyttelse_fortrolig_adresse)",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmaktsgiver-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was malformed or contained invalid data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Angitt ident er ikke norsk ident",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmaktsgiver-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmaktsgiver-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Historic fullmakter returned",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktMedEndringslogg"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested person could not be found in PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Not Found",
+                  "status": 404,
+                  "detail": "Ingen treff på dette søket fordi hentIdenter er null eller tømt.",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/fullmaktsgiver-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eksternbruker/fullmakt/fullmektig-historikk/fullmaktIds": {
+      "post": {
+        "tags": [
+          "Fullmakt eksternbruker (Tokenx)"
+        ],
+        "summary": "Fetch historic fullmakter for fullmektig on given IDs",
+        "operationId": "hentHistoriskeFullmakterForFullmektigMedFullmaktsIds",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FullmaktIds"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmektig-historikk/fullmaktIds",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Historic fullmakter returned",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktMedEndringslogg"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eksternbruker/fullmakt/fullmaktsgiver-historikk/fullmaktIds": {
+      "post": {
+        "tags": [
+          "Fullmakt eksternbruker (Tokenx)"
+        ],
+        "summary": "Fetch historic fullmakter for fullmaktsgiver on given IDs",
+        "operationId": "hentHistoriskeFullmakterForFullmaktsgiverMedFullmaktsIds",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FullmaktIds"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmaktsgiver-historikk/fullmaktIds",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Historic fullmakter returned",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktMedEndringslogg"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/internbruker/fullmakt/omraade": {
+      "get": {
+        "tags": [
+          "Fullmakt internbruker (AzureAD)"
+        ],
+        "summary": "Fetch all possible områder for fullmakt",
+        "operationId": "hentAlleOmraader",
+        "responses": {
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/omraade",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Forbidden",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/internbruker/fullmakt/omraade",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Områder returned",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eksternbruker/fullmakt/omraade": {
+      "get": {
+        "tags": [
+          "Fullmakt eksternbruker (Tokenx)"
+        ],
+        "summary": "Fetch all possible områder for fullmakt",
+        "operationId": "hentAlleOmraader_1",
+        "responses": {
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/omraade",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User lacks access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Not permitted by ABAC: AbacErrorDetails(cause=cause-0001-manglerrolle, policy=adressebeskyttelse_fortrolig_adresse)",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/omraade",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Områder returned",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eksternbruker/fullmakt/fullmektig": {
+      "get": {
+        "tags": [
+          "Fullmakt eksternbruker (Tokenx)"
+        ],
+        "summary": "Fetch all fullmakter for fullmektig",
+        "operationId": "hentAktiveFullmakterForFullmektig_1",
+        "responses": {
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmektig",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Active fullmakter returned",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eksternbruker/fullmakt/fullmektig/tema": {
+      "get": {
+        "tags": [
+          "Fullmakt eksternbruker (Tokenx)"
+        ],
+        "summary": "Fetch all fullmakter with område union for fullmektig",
+        "operationId": "hentOmraaderForSammeFullmaktsgiver",
+        "responses": {
+          "200": {
+            "description": "Fullmakter with område union returned",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OmraaderForSammeFullmaktsgiver"
                   }
                 }
               }
@@ -555,50 +759,60 @@
           "403": {
             "description": "User lacks access",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Not permitted by ABAC: AbacErrorDetails(cause=cause-0001-manglerrolle, policy=adressebeskyttelse_fortrolig_adresse)",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmektig/tema",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
           },
-          "204": {
-            "description": "Success but no content for Fullmakt",
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmektig/tema",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eksternbruker/fullmakt/fullmektig/temaMedHandling": {
+      "get": {
+        "tags": [
+          "Fullmakt eksternbruker (Tokenx)"
+        ],
+        "summary": "Fetch all fullmakt with område union with handling for fullmektig ",
+        "operationId": "hentOmraaderMedHandlingForSammeFullmaktsgiver",
+        "responses": {
+          "200": {
+            "description": "Fullmakter with område union with handling returned",
             "content": {
               "*/*": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service unavailable",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
+                    "$ref": "#/components/schemas/OmraaderMedHandlingForSammeFullmaktsgiver"
                   }
                 }
               }
@@ -607,49 +821,18 @@
           "401": {
             "description": "The security token is missing, has expired, or is invalid for other reasons",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/fullmektig/tema": {
-      "get": {
-        "tags": [
-          "fullmakt-controller"
-        ],
-        "summary": "Get all fullmakt with område union for fullmektig ",
-        "operationId": "getFullmaktForFullmektigTema",
-        "responses": {
-          "204": {
-            "description": "Success but no content for Fullmakt with område union",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmektigTemaResponse"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Fullmakt not found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmektigTemaResponse"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmektig/temaMedHandling",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
@@ -657,63 +840,60 @@
           "403": {
             "description": "User lacks access",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmektigTemaResponse"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Not permitted by ABAC: AbacErrorDetails(cause=cause-0001-manglerrolle, policy=adressebeskyttelse_fortrolig_adresse)",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmektig/temaMedHandling",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal server error",
+          }
+        }
+      }
+    },
+    "/api/eksternbruker/fullmakt/fullmektig-historikk": {
+      "get": {
+        "tags": [
+          "Fullmakt eksternbruker (Tokenx)"
+        ],
+        "summary": "Fetch historic fullmakter for fullmektig",
+        "operationId": "hentHistoriskeFullmakterForFullmektig_1",
+        "responses": {
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmektigTemaResponse"
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service unavailable",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmektigTemaResponse"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmektig-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
           },
           "200": {
-            "description": "Fullmakt fetched with område union",
+            "description": "Historic fullmakter returned",
             "content": {
               "*/*": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FullmektigTemaResponse"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "The security token is missing, has expired, or is invalid for other reasons",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmektigTemaResponse"
+                    "$ref": "#/components/schemas/FullmaktMedEndringslogg"
                   }
                 }
               }
@@ -722,21 +902,41 @@
         }
       }
     },
-    "/api/fullmektig/temaMedHandling": {
+    "/api/eksternbruker/fullmakt/fullmaktsgiver": {
       "get": {
         "tags": [
-          "fullmakt-controller"
+          "Fullmakt eksternbruker (Tokenx)"
         ],
-        "operationId": "getFullmaktForFullmektigTemaMedHandling",
+        "summary": "Fetch all active fullmakter for fullmaktsgiver",
+        "operationId": "hentAktiveFullmakterForFullmaktsgiver_1",
         "responses": {
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmaktsgiver",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
+                }
+              }
+            }
+          },
           "200": {
-            "description": "OK",
+            "description": "Active fullmakter returned",
             "content": {
               "*/*": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FullmektigTemaMedHandlingResponse"
+                    "$ref": "#/components/schemas/FullmaktDto"
                   }
                 }
               }
@@ -745,100 +945,41 @@
         }
       }
     },
-    "/api/fullmaktsgiver": {
+    "/api/eksternbruker/fullmakt/fullmaktsgiver-historikk": {
       "get": {
         "tags": [
-          "fullmakt-controller"
+          "Fullmakt eksternbruker (Tokenx)"
         ],
-        "summary": "Get all fullmakt for fullmaktsgiver",
-        "operationId": "getFullmaktForFullmaktsgiver_1",
+        "summary": "Fetch historic fullmakter for fullmaktsgiver",
+        "operationId": "hentHistoriskeFullmakterForFullmaktsgiver_1",
         "responses": {
-          "404": {
-            "description": "Fullmakt not found",
+          "401": {
+            "description": "The security token is missing, has expired, or is invalid for other reasons",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/eksternbruker/fullmakt/fullmaktsgiver-historikk",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2024-11-05T09:35:59.055+00:00"
                 }
               }
             }
           },
           "200": {
-            "description": "Fullmakt fetched",
+            "description": "Historic fullmakter returned",
             "content": {
               "*/*": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "User lacks access",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "Success but no content for Fullmakt",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service unavailable",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "The security token is missing, has expired, or is invalid for other reasons",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FullmaktDetails"
+                    "$ref": "#/components/schemas/FullmaktMedEndringslogg"
                   }
                 }
               }
@@ -850,7 +991,10 @@
   },
   "components": {
     "schemas": {
-      "FullmakIdentRequest": {
+      "RequestDto": {
+        "required": [
+          "ident"
+        ],
         "type": "object",
         "properties": {
           "ident": {
@@ -858,7 +1002,36 @@
           }
         }
       },
-      "FullmaktDetails": {
+      "ProblemDetail": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string",
+            "format": "uri"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "FullmaktDto": {
         "type": "object",
         "properties": {
           "fullmaktId": {
@@ -891,7 +1064,7 @@
           "omraade": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/OmraadeMedHandling"
+              "$ref": "#/components/schemas/OmraaderMedHandlingDto"
             }
           },
           "gyldigFraOgMed": {
@@ -928,7 +1101,7 @@
           }
         }
       },
-      "OmraadeMedHandling": {
+      "OmraaderMedHandlingDto": {
         "type": "object",
         "properties": {
           "tema": {
@@ -947,7 +1120,7 @@
           }
         }
       },
-      "FullmaktEndringsloggDetails": {
+      "EndringsloggDto": {
         "type": "object",
         "properties": {
           "fullmaktEndringsloggId": {
@@ -1018,7 +1191,7 @@
           }
         }
       },
-      "FullmaktEndringsloggDetailsByFullmaktId": {
+      "FullmaktMedEndringslogg": {
         "type": "object",
         "properties": {
           "fullmaktId": {
@@ -1027,17 +1200,27 @@
           "fullmaktEndringsloggDetails": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FullmaktEndringsloggDetails"
+              "$ref": "#/components/schemas/EndringsloggDto"
             }
           }
         }
       },
-      "FullmektigTemaResponse": {
+      "FullmaktIds": {
         "required": [
-          "fullmaktsgiver",
-          "fullmaktsgiverNavn",
-          "tema"
+          "fullmaktIds"
         ],
+        "type": "object",
+        "properties": {
+          "fullmaktIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "OmraaderForSammeFullmaktsgiver": {
         "type": "object",
         "properties": {
           "fullmaktsgiver": {
@@ -1054,12 +1237,7 @@
           }
         }
       },
-      "FullmektigTemaMedHandlingResponse": {
-        "required": [
-          "fullmaktsgiver",
-          "fullmaktsgiverNavn",
-          "omraade"
-        ],
+      "OmraaderMedHandlingForSammeFullmaktsgiver": {
         "type": "object",
         "properties": {
           "fullmaktsgiver": {
@@ -1068,25 +1246,11 @@
           "omraade": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/OmraadeMedHandlingResponse"
+              "$ref": "#/components/schemas/OmraaderMedHandlingDto"
             }
           },
           "fullmaktsgiverNavn": {
             "type": "string"
-          }
-        }
-      },
-      "OmraadeMedHandlingResponse": {
-        "type": "object",
-        "properties": {
-          "tema": {
-            "type": "string"
-          },
-          "handling": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           }
         }
       }
@@ -1094,15 +1258,11 @@
     "securitySchemes": {
       "Authorization": {
         "type": "http",
-        "description": "Legg inn TOKENX token kun, uten \"Bearer \"",
+        "description": "Legg inn token  kun, uten \"Bearer\"",
         "name": "Authorization",
-        "scheme": "bearer"
-      },
-      "Azure-OBO-Token": {
-        "type": "http",
-        "description": "Legg inn Azure OBO token kun, uten \"Bearer \"",
-        "name": "Azure-OBO-Token",
-        "scheme": "bearer"
+        "in": "header",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

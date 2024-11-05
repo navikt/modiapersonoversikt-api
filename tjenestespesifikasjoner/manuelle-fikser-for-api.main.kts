@@ -83,9 +83,13 @@ object ChangeUtils {
         val source: String,
     )
 
-    class JsonSource(source: String) : Source(jsonParser, source)
+    class JsonSource(
+        source: String,
+    ) : Source(jsonParser, source)
 
-    class YamlSource(source: String) : Source(yamlParser, source)
+    class YamlSource(
+        source: String,
+    ) : Source(yamlParser, source)
 
     fun getFileName(file: String) = file.substring(file.lastIndexOf("/") + 1)
 
@@ -107,8 +111,7 @@ object ChangeUtils {
             block(json)
             val mutatedJson = to.mapper.writeValueAsString(json)
             writeFile(to.source, mutatedJson)
-        }
-            .onSuccess { println("Mutated ${from.source} -> ${to.source}") }
+        }.onSuccess { println("Mutated ${from.source} -> ${to.source}") }
             .onFailure { println("Mutation of ${from.source} failed: $it") }
     }
 
@@ -230,8 +233,8 @@ object ChangeUtils {
         }
     }
 
-    fun objectOf(vararg fields: Field): Json {
-        return mutableMapOf(
+    fun objectOf(vararg fields: Field): Json =
+        mutableMapOf(
             "type" to "object",
             "properties" to
                 fields
@@ -244,9 +247,13 @@ object ChangeUtils {
                     },
             "required" to fields.filter { it.required }.map { it.name },
         )
-    }
 
-    data class Field(val name: String, val type: String, val isReference: Boolean = false, val required: Boolean = false) {
+    data class Field(
+        val name: String,
+        val type: String,
+        val isReference: Boolean = false,
+        val required: Boolean = false,
+    ) {
         fun toSpec(): Json {
             val typeKey = if (isReference) "\$ref" else "type"
             return mutableMapOf(

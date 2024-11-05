@@ -9,8 +9,8 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Kontaktinformasjo
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDetails
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraadeMedHandling
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraaderMedHandlingDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
 import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
@@ -35,7 +35,7 @@ class PersondataFletter(
     data class Data(
         val personIdent: String,
         val persondata: Person,
-        val fullmektige: PersondataResult<List<FullmaktDetails>>,
+        val fullmektige: PersondataResult<List<FullmaktDto>>,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
@@ -844,11 +844,12 @@ class PersondataFletter(
                     omrade = hentOmrade(it.omraade ?: emptyList()),
                     gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
                     digitalKontaktinformasjonTredjepartsperson = tredjepartsPerson?.digitalKontaktinformasjon,
+                    kilde = it.kilde,
                 )
             }
         }
 
-    private fun hentOmrade(omraader: List<OmraadeMedHandling>): List<Persondata.OmraadeMedHandling<String>> =
+    private fun hentOmrade(omraader: List<OmraaderMedHandlingDto>): List<Persondata.OmraadeMedHandling<String>> =
         omraader.map { omrade ->
             val omraadeBeskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade.tema as String)
             Persondata.OmraadeMedHandling(
@@ -856,9 +857,9 @@ class PersondataFletter(
                 handling =
                     omrade.handling?.map {
                         when (it) {
-                            OmraadeMedHandling.Handling.LES -> Persondata.Handling.LES
-                            OmraadeMedHandling.Handling.KOMMUNISER -> Persondata.Handling.KOMMUNISER
-                            OmraadeMedHandling.Handling.SKRIV -> Persondata.Handling.SKRIV
+                            OmraaderMedHandlingDto.Handling.LES -> Persondata.Handling.LES
+                            OmraaderMedHandlingDto.Handling.KOMMUNISER -> Persondata.Handling.KOMMUNISER
+                            OmraaderMedHandlingDto.Handling.SKRIV -> Persondata.Handling.SKRIV
                         }
                     } ?: emptyList(),
             )
