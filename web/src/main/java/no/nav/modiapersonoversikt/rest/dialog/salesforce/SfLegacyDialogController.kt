@@ -196,6 +196,8 @@ class SfLegacyDialogController(
                     markertSomFeilsendtAv = markertSomFeilsendtAv,
                 )
             }
+        val sistEndretAv = getIdent(henvendelse.sistEndretAv, MeldingFraDTO.IdentType.NAVIDENT)
+
         return TraadDTO(
             traadId = henvendelse.kjedeId,
             fnr = henvendelse.fnr,
@@ -203,7 +205,7 @@ class SfLegacyDialogController(
             kontorsperre = henvendelse.kontorsperre,
             feilsendt = henvendelse.feilsendt,
             avsluttetDato = henvendelse.avsluttetDato,
-            sistEndretAv = henvendelse.sistEndretAv,
+            sistEndretAv = sistEndretAv,
             sladding = henvendelse.sladding,
             lukketAv = henvendelse.lukketAv?.let { getIdent(it.ident, it.identType) },
             temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe),
