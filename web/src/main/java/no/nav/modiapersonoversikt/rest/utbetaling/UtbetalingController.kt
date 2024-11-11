@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
+@Deprecated("Use v2 instead")
 @RestController
 @RequestMapping("/rest/utbetaling/{fnr}")
 class UtbetalingController

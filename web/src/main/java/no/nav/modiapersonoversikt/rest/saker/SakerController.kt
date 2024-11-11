@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
+@Deprecated("Use v2 instead")
 @RestController
 @RequestMapping("/rest/saker/{fnr}")
 class SakerController

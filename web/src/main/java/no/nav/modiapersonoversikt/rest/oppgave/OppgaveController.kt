@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingSer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
+@Deprecated("Use v2 instead")
 @RestController
 @RequestMapping("/rest/oppgaver")
 class OppgaveController

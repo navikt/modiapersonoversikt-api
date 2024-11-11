@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Deprecated("Use v2 instead")
 @RestController
 @RequestMapping("/rest/v2/person/{fnr}")
 class PersondataController(

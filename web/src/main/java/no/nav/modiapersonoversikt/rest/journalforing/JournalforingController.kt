@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
+@Deprecated("Use journalforing controller v2 instead")
 @RestController
 @RequestMapping("/rest/journalforing/{fnr}")
 class JournalforingController
