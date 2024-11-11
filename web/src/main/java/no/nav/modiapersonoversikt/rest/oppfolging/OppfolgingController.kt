@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
+@Deprecated("Use v2 instead")
 @RestController
 @RequestMapping("/rest/oppfolging/{fnr}")
 class OppfolgingController

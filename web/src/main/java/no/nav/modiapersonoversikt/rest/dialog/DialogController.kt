@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
+@Deprecated("Use dialog-controller-v2")
 @RestController
 @RequestMapping("/rest/dialog/{fnr}")
 class DialogController

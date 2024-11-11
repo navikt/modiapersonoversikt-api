@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+@Deprecated("Use v2 instead")
 @RestController
 @RequestMapping("/rest/tilgang")
 class TilgangController
