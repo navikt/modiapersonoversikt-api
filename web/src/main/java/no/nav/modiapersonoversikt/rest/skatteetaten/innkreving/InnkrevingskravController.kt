@@ -7,9 +7,9 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
-import no.nav.modiapersonoversikt.rest.skatteetaten.innkreving.json.InnkrevingskravJsonResponse
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravId
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravService
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -27,7 +27,7 @@ class InnkrevingskravController(
     @GetMapping("/{innkrevingskravId}")
     fun hentInnkrevingskrav(
         @PathVariable innkrevingskravId: String,
-    ): ResponseEntity<InnkrevingskravJsonResponse> =
+    ): ResponseEntity<Krav?> =
         tilgangskontroll
             .check(Policies.tilgangTilInnkrevingskrav())
             .get(
@@ -41,14 +41,14 @@ class InnkrevingskravController(
                 if (innkrevingskrav == null) {
                     ResponseEntity.notFound().build()
                 } else {
-                    ResponseEntity.ok(InnkrevingskravJsonResponse.fromDomain(innkrevingskrav))
+                    ResponseEntity.ok(innkrevingskrav)
                 }
             }
 
     @PostMapping
     fun hentAlleInnkrevingskrav(
         @RequestBody fnrRequest: FnrRequest,
-    ): ResponseEntity<List<InnkrevingskravJsonResponse>> =
+    ): ResponseEntity<List<Krav>> =
         tilgangskontroll
             .check(Policies.tilgangTilInnkrevingskrav())
             .get(
@@ -63,6 +63,6 @@ class InnkrevingskravController(
                     return@get ResponseEntity.badRequest().build()
                 }
                 val innkrevingskrav = innkrevingskravService.hentAlleInnkrevingskrav(fnr)
-                ResponseEntity.ok(innkrevingskrav.map(InnkrevingskravJsonResponse::fromDomain))
+                ResponseEntity.ok(innkrevingskrav)
             }
 }

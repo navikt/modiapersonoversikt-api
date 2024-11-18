@@ -13,12 +13,12 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
+import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.Kravlinje
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.maskinporten.MaskinportenClient
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravId
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.personoversikt.common.logging.TjenestekallLogg
@@ -84,7 +84,7 @@ class SkatteetatenInnkrevingHttpClientTest {
             Innkrevingskrav(
                 Grunnlag(iDag),
                 listOf(
-                    Krav(
+                    Kravlinje(
                         "kravType",
                         200.0,
                         100.0,

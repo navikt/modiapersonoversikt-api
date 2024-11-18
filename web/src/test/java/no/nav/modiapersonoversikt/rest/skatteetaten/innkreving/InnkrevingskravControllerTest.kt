@@ -6,10 +6,8 @@ import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Grunnlag
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Innkrevingskrav
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravService
-import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.*
+import org.joda.time.LocalDateTime
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -32,15 +30,36 @@ class InnkrevingskravControllerTest {
     lateinit var tilgangskontroll: Tilgangskontroll
 
     private val innkrevingskrav =
-        Innkrevingskrav(
-            Grunnlag(null),
-            listOf(
-                Krav(
-                    "kravType",
-                    200.0,
-                    100.0,
+        Krav(
+            kravType = "kravType",
+            kravId = "1234",
+            kid = "12232424232323",
+            debitor =
+                Debitor(
+                    debitorId = "12345",
+                    name = "Debitor 1",
+                    identType = IdentType.FNR,
+                    ident = "10108000398",
                 ),
-            ),
+            kreditor =
+                Kreditor(
+                    kreditorId = "12345",
+                    name = "Debitor 1",
+                    identType = IdentType.ORG_NR,
+                    ident = "101080003",
+                ),
+            kravLinjer =
+                listOf(
+                    KravLinje(
+                        kode = "KRL1",
+                        beskrivelse = "Beskrivelse 3",
+                        opprinneligBelop = 1000.0,
+                        betaltBelop = 500.0,
+                        gjenstaendeBelop = 500.0,
+                        opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
+                    ),
+                ),
+            opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
         )
 
     @Test
@@ -58,16 +77,32 @@ class InnkrevingskravControllerTest {
                     json(
                         """
                         {
-                            "kravgrunnlag": {
-                                "datoNaarKravVarBesluttetHosOppdragsgiver": null
-                            },
-                            "krav": [
-                                {
-                                    "kravType": "kravType",
-                                    "opprinneligBeløp": 200.0,
-                                    "gjenståendeBeløp": 100.0
-                                }
-                            ]
+                            "kravType": "kravType",
+                            "kravId": "1234",
+                            "kid": "12232424232323",
+                            "debitor": {
+                            "debitorId": "12345",
+                            "name": "Debitor 1",
+                            "identType": "FNR",
+                            "ident": "10108000398"
+                        },
+                            "kreditor": {
+                            "kreditorId": "12345",
+                            "name": "Debitor 1",
+                            "identType": "ORG_NR",
+                            "ident": "101080003"
+                        },
+                            "kravLinjer": [
+                            {
+                                "kode": "KRL1",
+                                "beskrivelse": "Beskrivelse 3",
+                                "opprinneligBelop": 1000.0,
+                                "betaltBelop": 500.0,
+                                "gjenstaendeBelop": 500.0,
+                                "opprettetDato": "2024-05-14T12:00:00.000"
+                            }
+                            ],
+                            "opprettetDato": "2024-05-14T12:00:00.000"
                         }
                         """.trimIndent(),
                     )
@@ -104,16 +139,32 @@ class InnkrevingskravControllerTest {
                         """
                         [
                             {
-                                "kravgrunnlag": {
-                                    "datoNaarKravVarBesluttetHosOppdragsgiver": null
-                                },
-                                "krav": [
-                                    {
-                                        "kravType": "kravType",
-                                        "opprinneligBeløp": 200.0,
-                                        "gjenståendeBeløp": 100.0
-                                    }
-                                ]
+                                "kravType": "kravType",
+                                "kravId": "1234",
+                                "kid": "12232424232323",
+                                "debitor": {
+                                        "debitorId": "12345",
+                                        "name": "Debitor 1",
+                                        "identType": "FNR",
+                                        "ident": "10108000398"
+                                    },
+                                "kreditor": {
+                                        "kreditorId": "12345",
+                                        "name": "Debitor 1",
+                                        "identType": "ORG_NR",
+                                        "ident": "101080003"
+                                    },
+                                "kravLinjer": [
+                                        {
+                                            "kode": "KRL1",
+                                            "beskrivelse": "Beskrivelse 3",
+                                            "opprinneligBelop": 1000.0,
+                                            "betaltBelop": 500.0,
+                                            "gjenstaendeBelop": 500.0,
+                                            "opprettetDato": "2024-05-14T12:00:00.000"
+                                        }
+                                    ],
+                                "opprettetDato": "2024-05-14T12:00:00.000"
                             }
                         ]
                         """.trimIndent(),
