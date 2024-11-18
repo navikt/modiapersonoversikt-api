@@ -11,8 +11,8 @@ class InnkrevingskravService(
     private val innkrevingskravClient: InnkrevingskravClient,
     private val unleash: UnleashService,
 ) {
-    fun hentInnkrevingskrav(innkrevingskravId: InnkrevingskravId): Krav? {
-        return if (unleash.isEnabled(Feature.SKATTEETATEN_INNKREVING_API_MOCK.propertyKey)) {
+    fun hentInnkrevingskrav(innkrevingskravId: InnkrevingskravId): Krav? =
+        if (unleash.isEnabled(Feature.SKATTEETATEN_INNKREVING_API_MOCK.propertyKey)) {
             Krav(
                 kravType = "kravType",
                 kravId = round(Math.random() * 10000).toString(),
@@ -66,10 +66,9 @@ class InnkrevingskravService(
                     innkrevingskravId,
                 )?.toDomain()
         }
-    }
 
-    fun hentAlleInnkrevingskrav(fnr: Fnr): List<Krav> {
-        return if (unleash.isEnabled(Feature.SKATTEETATEN_INNKREVING_API_MOCK.propertyKey)) {
+    fun hentAlleInnkrevingskrav(fnr: Fnr): List<Krav> =
+        if (unleash.isEnabled(Feature.SKATTEETATEN_INNKREVING_API_MOCK.propertyKey)) {
             (1..(1..10).random()).map {
                 Krav(
                     kravType = "kravType",
@@ -121,9 +120,9 @@ class InnkrevingskravService(
             }
         } else {
             innkrevingskravClient
-                .hentAlleInnkrevingskrav(fnr).map { it.toDomain() }
+                .hentAlleInnkrevingskrav(fnr)
+                .map { it.toDomain() }
         }
-    }
 }
 
 private fun Kravlinje.toDomain(): KravLinje =
