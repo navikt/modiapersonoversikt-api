@@ -5,23 +5,23 @@ import org.joda.time.LocalDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Krav(
-    val kravId: String? = null,
-    val kid: String? = null,
-    val kravType: String? = null,
-    val debitor: Debitor? = null,
-    val kreditor: Kreditor? = null,
-    val kravLinjer: List<KravLinje> = listOf(),
-    val opprettetDato: LocalDateTime? = null,
+    val kravId: String,
+    val kid: String,
+    val kravType: String,
+    val debitor: Debitor,
+    val kreditor: Kreditor,
+    val posteringer: List<KravPostering> = listOf(),
+    val opprettetDato: LocalDateTime,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class KravLinje(
-    val kode: String? = null,
-    val beskrivelse: String? = null,
+data class KravPostering(
+    val kode: String,
+    val beskrivelse: String,
     val opprinneligBelop: Double,
-    val betaltBelop: Double? = null,
-    val gjenstaendeBelop: Double? = null,
-    val opprettetDato: LocalDateTime? = null,
+    val betaltBelop: Double,
+    val gjenstaendeBelop: Double,
+    val opprettetDato: LocalDateTime,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

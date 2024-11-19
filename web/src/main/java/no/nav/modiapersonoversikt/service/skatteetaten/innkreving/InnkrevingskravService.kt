@@ -31,9 +31,9 @@ class InnkrevingskravService(
                         identType = IdentType.ORG_NR,
                         ident = "101080003",
                     ),
-                kravLinjer =
+                posteringer =
                     listOf(
-                        KravLinje(
+                        KravPostering(
                             kode = "KRL1",
                             beskrivelse = "Beskrivelse 3",
                             opprinneligBelop = 1000.0,
@@ -41,7 +41,7 @@ class InnkrevingskravService(
                             gjenstaendeBelop = 500.0,
                             opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
                         ),
-                        KravLinje(
+                        KravPostering(
                             kode = "KRL2",
                             beskrivelse = "Beskrivelse 3",
                             opprinneligBelop = 500.0,
@@ -49,7 +49,7 @@ class InnkrevingskravService(
                             gjenstaendeBelop = 200.0,
                             opprettetDato = LocalDateTime.parse("2024-06-14T12:00:00"),
                         ),
-                        KravLinje(
+                        KravPostering(
                             kode = "KRL3",
                             beskrivelse = "Beskrivelse 3",
                             opprinneligBelop = 200.0,
@@ -88,9 +88,9 @@ class InnkrevingskravService(
                             identType = IdentType.ORG_NR,
                             ident = "101080003",
                         ),
-                    kravLinjer =
+                    posteringer =
                         listOf(
-                            KravLinje(
+                            KravPostering(
                                 kode = "KRL1",
                                 beskrivelse = "Beskrivelse 3",
                                 opprinneligBelop = 1000.0,
@@ -98,7 +98,7 @@ class InnkrevingskravService(
                                 gjenstaendeBelop = 500.0,
                                 opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
                             ),
-                            KravLinje(
+                            KravPostering(
                                 kode = "KRL2",
                                 beskrivelse = "Beskrivelse 3",
                                 opprinneligBelop = 500.0,
@@ -106,7 +106,7 @@ class InnkrevingskravService(
                                 gjenstaendeBelop = 200.0,
                                 opprettetDato = LocalDateTime.parse("2024-06-14T12:00:00"),
                             ),
-                            KravLinje(
+                            KravPostering(
                                 kode = "KRL3",
                                 beskrivelse = "Beskrivelse 3",
                                 opprinneligBelop = 200.0,
@@ -125,10 +125,23 @@ class InnkrevingskravService(
         }
 }
 
-private fun Kravlinje.toDomain(): KravLinje =
-    KravLinje(
+private fun Kravlinje.toDomain(): KravPostering =
+    KravPostering(
+        kode = "",
+        beskrivelse = "",
         opprinneligBelop = opprinneligBeloep,
-        gjenstaendeBelop = gjenstaaendeBeloep,
+        betaltBelop = 0.0,
+        gjenstaendeBelop = gjenstaaendeBeloep ?: 0.0,
+        opprettetDato = LocalDateTime.now(),
     )
 
-private fun Innkrevingskrav.toDomain(): Krav = Krav(kravLinjer = krav.map(Kravlinje::toDomain))
+private fun Innkrevingskrav.toDomain(): Krav =
+    Krav(
+        posteringer = krav.map(Kravlinje::toDomain),
+        kravId = "",
+        kid = "",
+        kravType = "",
+        debitor = Debitor("", "", IdentType.FNR, ""),
+        kreditor = Kreditor("", "", IdentType.ORG_NR, ""),
+        opprettetDato = LocalDateTime.now(),
+    )

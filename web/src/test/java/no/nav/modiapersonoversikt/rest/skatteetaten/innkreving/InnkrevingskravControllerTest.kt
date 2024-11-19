@@ -48,9 +48,9 @@ class InnkrevingskravControllerTest {
                     identType = IdentType.ORG_NR,
                     ident = "101080003",
                 ),
-            kravLinjer =
+            posteringer =
                 listOf(
-                    KravLinje(
+                    KravPostering(
                         kode = "KRL1",
                         beskrivelse = "Beskrivelse 3",
                         opprinneligBelop = 1000.0,
@@ -92,7 +92,7 @@ class InnkrevingskravControllerTest {
                             "identType": "ORG_NR",
                             "ident": "101080003"
                         },
-                            "kravLinjer": [
+                            "posteringer": [
                             {
                                 "kode": "KRL1",
                                 "beskrivelse": "Beskrivelse 3",
@@ -154,7 +154,7 @@ class InnkrevingskravControllerTest {
                                         "identType": "ORG_NR",
                                         "ident": "101080003"
                                     },
-                                "kravLinjer": [
+                                "posteringer": [
                                         {
                                             "kode": "KRL1",
                                             "beskrivelse": "Beskrivelse 3",

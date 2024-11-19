@@ -34,7 +34,7 @@ class InnkrevingskravServiceTest {
 
         val result = innkrevingskravService.hentInnkrevingskrav(InnkrevingskravId("kravId"))
 
-        assertThat(result?.kravLinjer?.size).isEqualTo(1)
+        assertThat(result?.posteringer?.size).isEqualTo(1)
     }
 
     @Test
@@ -56,6 +56,6 @@ class InnkrevingskravServiceTest {
         val result = innkrevingskravService.hentAlleInnkrevingskrav(Fnr("12345678910"))
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first().kravLinjer?.size).isEqualTo(1)
+        assertThat(result.first().posteringer?.size).isEqualTo(1)
     }
 }
