@@ -90,7 +90,7 @@ open class ArenaInfotrygdApiImpl(
     override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? = sendRequest("sakvedtak", fnr)
 
     @Cacheable(value = ["organisasjonInfoCache"])
-    override fun hentOrganisasjonInfo(orgnummer: String): Organisasjon?  = sendRequest("organisasjonInfo", orgnummer)
+    override fun hentOrganisasjonInfo(orgnummer: String): Organisasjon? = sendRequest("organisasjonInfo", orgnummer)
 
     @Cacheable(value = ["sykePengerCache"])
     override fun hentSykepenger(

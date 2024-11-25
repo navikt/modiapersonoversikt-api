@@ -32,7 +32,6 @@ class InnkrevingskravService(
                 .map { it.toDomain(arenaInfotrygdApi) }
         }
 
-
     fun hentAllekravForOrgnr(orgnr: String): List<Krav> =
         if (unleash.isEnabled(Feature.SKATTEETATEN_INNKREVING_API_MOCK.propertyKey)) {
             mockKravList()
@@ -64,55 +63,7 @@ private fun Innkrevingskrav.toDomain(arenaInfotrygdApi: ArenaInfotrygdApi): Krav
         opprettetDato = LocalDateTime.now(),
     )
 
-private fun mockSingleKrav() = Krav(
-    kravType = "kravType",
-    kravId = round(Math.random() * 10000).toString(),
-    kid = round(Math.random() * 10000000).toString(),
-    debitor =
-        Debitor(
-            debitorId = round(Math.random() * 100).toString(),
-            name = "Debitor 1",
-            identType = IdentType.FNR,
-            ident = "10108000398",
-        ),
-    kreditor =
-        Kreditor(
-            kreditorId = round(Math.random() * 100).toString(),
-            name = "Debitor 1",
-            identType = IdentType.ORG_NR,
-            ident = "101080003",
-        ),
-    posteringer =
-        listOf(
-            KravPostering(
-                kode = "KRL1",
-                beskrivelse = "Beskrivelse 3",
-                opprinneligBelop = 1000.0,
-                betaltBelop = 500.0,
-                gjenstaendeBelop = 500.0,
-                opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
-            ),
-            KravPostering(
-                kode = "KRL2",
-                beskrivelse = "Beskrivelse 3",
-                opprinneligBelop = 500.0,
-                betaltBelop = 300.0,
-                gjenstaendeBelop = 200.0,
-                opprettetDato = LocalDateTime.parse("2024-06-14T12:00:00"),
-            ),
-            KravPostering(
-                kode = "KRL3",
-                beskrivelse = "Beskrivelse 3",
-                opprinneligBelop = 200.0,
-                betaltBelop = 100.0,
-                gjenstaendeBelop = 100.0,
-                opprettetDato = LocalDateTime.parse("2024-07-14T12:00:00"),
-            ),
-        ),
-    opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
-)
-
-private fun mockKravList() = (1..(1..10).random()).map {
+private fun mockSingleKrav() =
     Krav(
         kravType = "kravType",
         kravId = round(Math.random() * 10000).toString(),
@@ -160,4 +111,54 @@ private fun mockKravList() = (1..(1..10).random()).map {
             ),
         opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
     )
-}
+
+private fun mockKravList() =
+    (1..(1..10).random()).map {
+        Krav(
+            kravType = "kravType",
+            kravId = round(Math.random() * 10000).toString(),
+            kid = round(Math.random() * 10000000).toString(),
+            debitor =
+                Debitor(
+                    debitorId = round(Math.random() * 100).toString(),
+                    name = "Debitor 1",
+                    identType = IdentType.FNR,
+                    ident = "10108000398",
+                ),
+            kreditor =
+                Kreditor(
+                    kreditorId = round(Math.random() * 100).toString(),
+                    name = "Debitor 1",
+                    identType = IdentType.ORG_NR,
+                    ident = "101080003",
+                ),
+            posteringer =
+                listOf(
+                    KravPostering(
+                        kode = "KRL1",
+                        beskrivelse = "Beskrivelse 3",
+                        opprinneligBelop = 1000.0,
+                        betaltBelop = 500.0,
+                        gjenstaendeBelop = 500.0,
+                        opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
+                    ),
+                    KravPostering(
+                        kode = "KRL2",
+                        beskrivelse = "Beskrivelse 3",
+                        opprinneligBelop = 500.0,
+                        betaltBelop = 300.0,
+                        gjenstaendeBelop = 200.0,
+                        opprettetDato = LocalDateTime.parse("2024-06-14T12:00:00"),
+                    ),
+                    KravPostering(
+                        kode = "KRL3",
+                        beskrivelse = "Beskrivelse 3",
+                        opprinneligBelop = 200.0,
+                        betaltBelop = 100.0,
+                        gjenstaendeBelop = 100.0,
+                        opprettetDato = LocalDateTime.parse("2024-07-14T12:00:00"),
+                    ),
+                ),
+            opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
+        )
+    }

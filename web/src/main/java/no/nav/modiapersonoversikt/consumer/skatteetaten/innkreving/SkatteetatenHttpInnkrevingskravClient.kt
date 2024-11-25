@@ -48,6 +48,7 @@ class SkatteetatenHttpInnkrevingskravClient(
 
     // Lager en liste med opptil 10 mockede kravdetaljer
     override fun hentAlleKravForFnr(fnr: Fnr): List<Innkrevingskrav> = listOf()
+
     // Lager en liste med opptil 10 mockede kravdetaljer
     override fun hentAlleKravForOrgnr(orgnr: String): List<Innkrevingskrav> = listOf()
 

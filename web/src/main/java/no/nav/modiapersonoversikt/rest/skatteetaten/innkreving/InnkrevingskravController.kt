@@ -56,7 +56,13 @@ class InnkrevingskravController(
                 Audit.describe(
                     Audit.Action.READ,
                     AuditResources.Innkrevingskrav,
-                    if (kravRequest.identType == IdentType.FNR) AuditIdentifier.FNR to kravRequest.ident else AuditIdentifier.ORGANISASJON_ID to kravRequest.ident,
+                    if (kravRequest.identType ==
+                        IdentType.FNR
+                    ) {
+                        AuditIdentifier.FNR to kravRequest.ident
+                    } else {
+                        AuditIdentifier.ORGANISASJON_ID to kravRequest.ident
+                    },
                 ),
             ) {
                 if (kravRequest.identType == IdentType.FNR) {

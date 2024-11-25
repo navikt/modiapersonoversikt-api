@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/rest")
 class OrganisasjonController
-@Autowired
-constructor(
-    private val organisasjonService: OrganisasjonService,
-) {
-    @PostMapping("/organisasjonInfo")
-    fun hentOrganisasjonInfo(
-        @RequestBody orgnummer: String,
-    ): Organisasjon? = organisasjonService.hentNoekkelinfo(orgnummer)
-}
+    @Autowired
+    constructor(
+        private val organisasjonService: OrganisasjonService,
+    ) {
+        @PostMapping("/organisasjonInfo")
+        fun hentOrganisasjonInfo(
+            @RequestBody orgnummer: String,
+        ): Organisasjon? = organisasjonService.hentNoekkelinfo(orgnummer)
+    }

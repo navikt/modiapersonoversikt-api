@@ -8,7 +8,7 @@ data class FnrRequest(
 
 data class KravRequest(
     val ident: String,
-    val identType: IdentType
+    val identType: IdentType,
 )
 
 data class FnrDatoRangeRequest(
