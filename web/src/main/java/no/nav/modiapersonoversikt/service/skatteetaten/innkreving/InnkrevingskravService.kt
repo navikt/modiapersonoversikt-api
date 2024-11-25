@@ -20,7 +20,7 @@ class InnkrevingskravService(
             innkrevingskravClient
                 .hentKrav(
                     innkrevingskravId,
-                )?.toDomain(arenaInfotrygdApi)
+                )?.let { mapToKrav(it) }
         }
 
     fun hentAllekravForFnr(fnr: Fnr): List<Krav> =
@@ -29,7 +29,7 @@ class InnkrevingskravService(
         } else {
             innkrevingskravClient
                 .hentAlleKravForFnr(fnr)
-                .map { it.toDomain(arenaInfotrygdApi) }
+                .map { mapToKrav(it) }
         }
 
     fun hentAllekravForOrgnr(orgnr: String): List<Krav> =
@@ -38,30 +38,30 @@ class InnkrevingskravService(
         } else {
             innkrevingskravClient
                 .hentAlleKravForOrgnr(orgnr)
-                .map { it.toDomain(arenaInfotrygdApi) }
+                .map { mapToKrav(it) }
         }
+
+    private fun mapToKrav(innkrevingskrav: Innkrevingskrav): Krav =
+        Krav(
+            posteringer = innkrevingskrav.krav.map { mapToKravPostering(it) },
+            kravId = "",
+            kid = "",
+            kravType = "",
+            debitor = Debitor("", "", IdentType.FNR, ""),
+            kreditor = Kreditor("", "", IdentType.ORG_NR, ""),
+            opprettetDato = LocalDateTime.now(),
+        )
+
+    private fun mapToKravPostering(kravlinje: Kravlinje): KravPostering =
+        KravPostering(
+            kode = "",
+            beskrivelse = "",
+            opprinneligBelop = kravlinje.opprinneligBeloep,
+            betaltBelop = 0.0,
+            gjenstaendeBelop = kravlinje.gjenstaaendeBeloep ?: 0.0,
+            opprettetDato = LocalDateTime.now(),
+        )
 }
-
-private fun Kravlinje.toDomain(): KravPostering =
-    KravPostering(
-        kode = "",
-        beskrivelse = "",
-        opprinneligBelop = opprinneligBeloep,
-        betaltBelop = 0.0,
-        gjenstaendeBelop = gjenstaaendeBeloep ?: 0.0,
-        opprettetDato = LocalDateTime.now(),
-    )
-
-private fun Innkrevingskrav.toDomain(arenaInfotrygdApi: ArenaInfotrygdApi): Krav =
-    Krav(
-        posteringer = krav.map(Kravlinje::toDomain),
-        kravId = "",
-        kid = "",
-        kravType = "",
-        debitor = Debitor("", "", IdentType.FNR, ""),
-        kreditor = Kreditor("", "", IdentType.ORG_NR, ""),
-        opprettetDato = LocalDateTime.now(),
-    )
 
 private fun mockSingleKrav() =
     Krav(
