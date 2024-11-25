@@ -6,7 +6,8 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.rest.common.FnrRequest
+import no.nav.modiapersonoversikt.rest.common.KravRequest
+import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.IdentType
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravId
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.InnkrevingskravService
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.Krav
@@ -47,7 +48,7 @@ class InnkrevingskravController(
 
     @PostMapping
     fun hentAlleInnkrevingskrav(
-        @RequestBody fnrRequest: FnrRequest,
+        @RequestBody kravRequest: KravRequest,
     ): ResponseEntity<List<Krav>> =
         tilgangskontroll
             .check(Policies.tilgangTilInnkrevingskrav())
@@ -55,14 +56,17 @@ class InnkrevingskravController(
                 Audit.describe(
                     Audit.Action.READ,
                     AuditResources.Innkrevingskrav,
-                    AuditIdentifier.FNR to fnrRequest.fnr,
+                    if (kravRequest.identType == IdentType.FNR) AuditIdentifier.FNR to kravRequest.ident else AuditIdentifier.ORGANISASJON_ID to kravRequest.ident,
                 ),
             ) {
-                val fnr = Fnr(fnrRequest.fnr)
-                if (!Fnr.isValid(fnr.get())) {
-                    return@get ResponseEntity.badRequest().build()
+                if (kravRequest.identType == IdentType.FNR) {
+                    val fnr = Fnr(kravRequest.ident)
+                    if (!Fnr.isValid(fnr.get())) {
+                        return@get ResponseEntity.badRequest().build()
+                    }
+                    ResponseEntity.ok(innkrevingskravService.hentAllekravForFnr(fnr))
+                } else {
+                    ResponseEntity.ok(innkrevingskravService.hentAllekravForOrgnr(kravRequest.ident))
                 }
-                val innkrevingskrav = innkrevingskravService.hentAlleInnkrevingskrav(fnr)
-                ResponseEntity.ok(innkrevingskrav)
             }
 }

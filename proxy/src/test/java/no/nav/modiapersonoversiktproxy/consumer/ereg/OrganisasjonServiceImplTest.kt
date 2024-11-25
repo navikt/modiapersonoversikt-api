@@ -11,10 +11,9 @@ import no.nav.modiapersonoversiktproxy.utils.WireMockUtils.json
 import no.nav.modiapersonoversiktproxy.utils.WireMockUtils.status
 import no.nav.modiapersonoversiktproxy.utils.WireMockUtils.verify
 import no.nav.personoversikt.common.test.testenvironment.TestEnvironmentRule
-import org.hamcrest.MatcherAssert
-import org.hamcrest.core.Is
 import org.junit.Rule
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class OrganisasjonServiceImplTest {
     @Rule
@@ -37,26 +36,25 @@ class OrganisasjonServiceImplTest {
     fun `returnerer 200 statusCode med data`() {
         withMockServer(statusCode = 200, body = gyldigRespons) { service ->
             val nokkelInfo = service.hentNoekkelinfo(orgNr)
-            MatcherAssert.assertThat(nokkelInfo.isPresent, Is.`is`(true))
-            MatcherAssert.assertThat(nokkelInfo.get().navn, Is.`is`("NAV IT"))
+            assertEquals(nokkelInfo?.navn, "NAV IT")
         }
     }
 
     @Test
     fun `returnerer ukjent json uten alvorlig feil`() {
         withMockServer(statusCode = 200, body = "{\"json\": true}") { service ->
-            MatcherAssert.assertThat(service.hentNoekkelinfo(orgNr).isEmpty, Is.`is`(true))
+            assertEquals(service.hentNoekkelinfo(orgNr), null)
         }
     }
 
     @Test
     fun `returnerer status coder utenfor 200-299 rangen`() {
         withMockServer(statusCode = 404, body = gyldigRespons) { service ->
-            MatcherAssert.assertThat(service.hentNoekkelinfo(orgNr).isEmpty, Is.`is`(true))
+            assertEquals(service.hentNoekkelinfo(orgNr), null)
         }
 
         withMockServer(statusCode = 500) { service ->
-            MatcherAssert.assertThat(service.hentNoekkelinfo(orgNr).isEmpty, Is.`is`(true))
+            assertEquals(service.hentNoekkelinfo(orgNr), null)
         }
     }
 

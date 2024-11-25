@@ -26,7 +26,7 @@ class SkatteetatenHttpInnkrevingskravClient(
     Pingable {
     private val log = LoggerFactory.getLogger(SkatteetatenHttpInnkrevingskravClient::class.java)
 
-    override fun hentInnkrevingskrav(innkrevingskravId: InnkrevingskravId): Innkrevingskrav? =
+    override fun hentKrav(innkrevingskravId: InnkrevingskravId): Innkrevingskrav? =
         runCatching {
             kravdetaljerApi
                 .getKravdetaljer(
@@ -47,7 +47,9 @@ class SkatteetatenHttpInnkrevingskravClient(
         }
 
     // Lager en liste med opptil 10 mockede kravdetaljer
-    override fun hentAlleInnkrevingskrav(fnr: Fnr): List<Innkrevingskrav> = listOf()
+    override fun hentAlleKravForFnr(fnr: Fnr): List<Innkrevingskrav> = listOf()
+    // Lager en liste med opptil 10 mockede kravdetaljer
+    override fun hentAlleKravForOrgnr(orgnr: String): List<Innkrevingskrav> = listOf()
 
     override fun ping(): SelfTestCheck =
         SelfTestCheck("SkatteetatenInnkrevingHttpClient", false) {
@@ -57,7 +59,7 @@ class SkatteetatenHttpInnkrevingskravClient(
 
             // Midlertidig ping som kun fungerer i test.
             val kravdetaljer =
-                hentInnkrevingskrav(
+                hentKrav(
                     InnkrevingskravId("87b5a5c6-17ea-413a-ad80-b6c3406188fa"),
                 )
 

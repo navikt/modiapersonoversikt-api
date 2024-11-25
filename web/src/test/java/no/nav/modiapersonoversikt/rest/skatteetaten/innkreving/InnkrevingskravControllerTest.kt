@@ -5,7 +5,7 @@ import io.mockk.mockk
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.rest.common.FnrRequest
+import no.nav.modiapersonoversikt.rest.common.KravRequest
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.*
 import org.joda.time.LocalDateTime
 import org.junit.jupiter.api.Test
@@ -124,12 +124,12 @@ class InnkrevingskravControllerTest {
 
     @Test
     fun `get alle krav for en person returnerer liste med alle krav`() {
-        every { innkrevingskravService.hentAlleInnkrevingskrav(any()) } returns listOf(innkrevingskrav)
+        every { innkrevingskravService.hentAllekravForFnr(any()) } returns listOf(innkrevingskrav)
 
         mockMvc
             .post("/rest/innkrevingskrav") {
                 contentType = MediaType.APPLICATION_JSON
-                content = objectMapper.writeValueAsString(FnrRequest("12345678910"))
+                content = objectMapper.writeValueAsString(KravRequest("12345678910", IdentType.FNR))
             }.andExpect {
                 status { isOk() }
                 content { contentType("application/json") }
@@ -178,7 +178,7 @@ class InnkrevingskravControllerTest {
         mockMvc
             .post("/rest/innkrevingskrav") {
                 contentType = MediaType.APPLICATION_JSON
-                content = objectMapper.writeValueAsString(FnrRequest("1"))
+                content = objectMapper.writeValueAsString(KravRequest("1", IdentType.FNR))
             }.andExpect {
                 status { isBadRequest() }
             }

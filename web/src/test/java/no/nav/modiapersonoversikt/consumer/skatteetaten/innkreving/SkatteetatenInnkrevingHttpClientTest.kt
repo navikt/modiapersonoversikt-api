@@ -105,7 +105,7 @@ class SkatteetatenInnkrevingHttpClientTest {
         }
 
         val result =
-            skatteetatenInnkrevingClient.hentInnkrevingskrav(
+            skatteetatenInnkrevingClient.hentKrav(
                 InnkrevingskravId("kravidentifikator"),
             )
 
@@ -123,7 +123,7 @@ class SkatteetatenInnkrevingHttpClientTest {
         }
 
         val result =
-            skatteetatenInnkrevingClient.hentInnkrevingskrav(
+            skatteetatenInnkrevingClient.hentKrav(
                 InnkrevingskravId("kravidentifikator"),
             )
 
