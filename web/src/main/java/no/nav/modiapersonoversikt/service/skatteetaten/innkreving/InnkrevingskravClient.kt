@@ -3,7 +3,9 @@ package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 import no.nav.common.types.identer.Fnr
 
 interface InnkrevingskravClient {
-    fun hentInnkrevingskrav(innkrevingskravId: InnkrevingskravId): Innkrevingskrav?
+    fun hentKrav(innkrevingskravId: InnkrevingskravId): Innkrevingskrav?
 
-    fun hentAlleInnkrevingskrav(fnr: Fnr): List<Innkrevingskrav>
+    fun hentAlleKravForFnr(fnr: Fnr): List<Innkrevingskrav>
+
+    fun hentAlleKravForOrgnr(orgnr: String): List<Innkrevingskrav>
 }

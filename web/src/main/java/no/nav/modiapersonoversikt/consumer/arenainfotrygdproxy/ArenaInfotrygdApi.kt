@@ -46,7 +46,14 @@ interface ArenaInfotrygdApi {
     ): Map<String, Any?>
 
     fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak?
+
+    fun hentOrganisasjonInfo(orgnummer: String): Organisasjon?
 }
+
+@Serializable
+data class Organisasjon(
+    val navn: String,
+)
 
 @Serializable
 data class RequestBodyContent(
@@ -81,6 +88,9 @@ open class ArenaInfotrygdApiImpl(
 
     @Cacheable(value = ["oppfolgingssakFraArenaCache"])
     override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak? = sendRequest("sakvedtak", fnr)
+
+    @Cacheable(value = ["organisasjonInfoCache"])
+    override fun hentOrganisasjonInfo(orgnummer: String): Organisasjon? = sendRequest("organisasjonInfo", orgnummer)
 
     @Cacheable(value = ["sykePengerCache"])
     override fun hentSykepenger(

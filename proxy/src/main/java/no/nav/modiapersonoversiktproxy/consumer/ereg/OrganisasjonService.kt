@@ -1,22 +1,18 @@
 package no.nav.modiapersonoversiktproxy.consumer.ereg
 
-import java.util.*
-
 data class Organisasjon(
     val navn: String,
 )
 
 interface OrganisasjonService {
-    fun hentNoekkelinfo(orgnummer: String): Optional<Organisasjon>
+    fun hentNoekkelinfo(orgnummer: String): Organisasjon?
 }
 
 class OrganisasjonServiceImpl(
     private val organisasjonV1Client: OrganisasjonV1Client,
 ) : OrganisasjonService {
-    override fun hentNoekkelinfo(orgnummer: String): Optional<Organisasjon> =
-        Optional
-            .ofNullable(organisasjonV1Client.hentNokkelInfo(orgnummer))
-            .map { nokkelInfo -> Organisasjon(formaterNavn(nokkelInfo.navn)) }
+    override fun hentNoekkelinfo(orgnummer: String): Organisasjon? =
+        organisasjonV1Client.hentNokkelInfo(orgnummer)?.let { Organisasjon(formaterNavn(it.navn)) }
 
     private fun formaterNavn(orgNavn: OrgNavn): String =
         listOfNotNull(
