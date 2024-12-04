@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.Kravlinje
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -10,7 +9,6 @@ import kotlin.math.round
 
 class InnkrevingskravService(
     private val innkrevingskravClient: InnkrevingskravClient,
-    private val arenaInfotrygdApi: ArenaInfotrygdApi,
     private val unleash: UnleashService,
 ) {
     fun hentInnkrevingskrav(innkrevingskravId: InnkrevingskravId): Krav? =

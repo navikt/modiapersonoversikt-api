@@ -195,7 +195,7 @@ spec:
     - name: UNLEASH_ENVIRONMENT
       value: "development"
     - name: SKATTEETATEN_INNKREVINGSOPPDRAG_API_BASE_URL
-      value: "https://api-test.sits.no"
+      value: "https://api.skatteetaten.no"
     - name: TILTAKSPENGER_URL
       value: "http://tiltakspenger-datadeling.tpts"
     - name: TILTAKSPENGER_SCOPE

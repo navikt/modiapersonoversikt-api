@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.Kravlinje
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -13,8 +12,7 @@ import org.junit.jupiter.api.Test
 class InnkrevingskravServiceTest {
     private val innkrevingskravClient = mockk<InnkrevingskravClient>()
     private val unleashService = mockk<UnleashService>()
-    private val arenaInfotrygdApi = mockk<ArenaInfotrygdApi>()
-    private val innkrevingskravService = InnkrevingskravService(innkrevingskravClient, arenaInfotrygdApi, unleashService)
+    private val innkrevingskravService = InnkrevingskravService(innkrevingskravClient, unleashService)
 
     private val innkrevingskrav =
         Innkrevingskrav(
@@ -58,6 +56,6 @@ class InnkrevingskravServiceTest {
         val result = innkrevingskravService.hentAllekravForFnr(Fnr("12345678910"))
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first().posteringer?.size).isEqualTo(1)
+        assertThat(result.first().posteringer.size).isEqualTo(1)
     }
 }
