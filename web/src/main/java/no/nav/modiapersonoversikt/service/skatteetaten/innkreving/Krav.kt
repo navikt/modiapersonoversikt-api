@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import org.joda.time.LocalDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Krav(
@@ -11,7 +10,7 @@ data class Krav(
     val debitor: Debitor,
     val kreditor: Kreditor,
     val posteringer: List<KravPostering> = listOf(),
-    val opprettetDato: LocalDateTime,
+    val opprettetDato: String? = null,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,7 +20,7 @@ data class KravPostering(
     val opprinneligBelop: Double,
     val betaltBelop: Double,
     val gjenstaendeBelop: Double,
-    val opprettetDato: LocalDateTime,
+    val opprettetDato: String? = null,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

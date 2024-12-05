@@ -7,7 +7,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.rest.common.KravRequest
 import no.nav.modiapersonoversikt.service.skatteetaten.innkreving.*
-import org.joda.time.LocalDateTime
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -56,10 +55,10 @@ class InnkrevingskravControllerTest {
                         opprinneligBelop = 1000.0,
                         betaltBelop = 500.0,
                         gjenstaendeBelop = 500.0,
-                        opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
+                        opprettetDato = "2024-05-14",
                     ),
                 ),
-            opprettetDato = LocalDateTime.parse("2024-05-14T12:00:00"),
+            opprettetDato = "2024-05-14",
         )
 
     @Test
@@ -99,10 +98,10 @@ class InnkrevingskravControllerTest {
                                 "opprinneligBelop": 1000.0,
                                 "betaltBelop": 500.0,
                                 "gjenstaendeBelop": 500.0,
-                                "opprettetDato": "2024-05-14T12:00:00.000"
+                                "opprettetDato": "2024-05-14"
                             }
                             ],
-                            "opprettetDato": "2024-05-14T12:00:00.000"
+                            "opprettetDato": "2024-05-14"
                         }
                         """.trimIndent(),
                     )
@@ -161,10 +160,10 @@ class InnkrevingskravControllerTest {
                                             "opprinneligBelop": 1000.0,
                                             "betaltBelop": 500.0,
                                             "gjenstaendeBelop": 500.0,
-                                            "opprettetDato": "2024-05-14T12:00:00.000"
+                                            "opprettetDato": "2024-05-14"
                                         }
                                     ],
-                                "opprettetDato": "2024-05-14T12:00:00.000"
+                                "opprettetDato": "2024-05-14"
                             }
                         ]
                         """.trimIndent(),
