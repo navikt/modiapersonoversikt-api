@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import kotlinx.datetime.LocalDate
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Krav(
@@ -10,7 +11,7 @@ data class Krav(
     val debitor: Debitor,
     val kreditor: Kreditor,
     val posteringer: List<KravPostering> = listOf(),
-    val opprettetDato: String? = null,
+    val opprettetDato: LocalDate? = null,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,7 +21,7 @@ data class KravPostering(
     val opprinneligBelop: Double,
     val betaltBelop: Double,
     val gjenstaendeBelop: Double,
-    val opprettetDato: String? = null,
+    val opprettetDato: LocalDate? = null,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
+import kotlinx.datetime.LocalDate
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.models.Kravlinje
 import no.nav.modiapersonoversikt.service.unleash.Feature
@@ -46,7 +47,7 @@ class InnkrevingskravService(
             kravType = "",
             debitor = Debitor("", "", IdentType.FNR, ""),
             kreditor = Kreditor("", "", IdentType.ORG_NR, ""),
-            opprettetDato = innkrevingskrav.grunnlag.datoNaarKravVarBesluttetHosOppdragsgiver?.toString(),
+            opprettetDato = innkrevingskrav.grunnlag.datoNaarKravVarBesluttetHosOppdragsgiver,
         )
 
     private fun mapToKravPostering(kravlinje: Kravlinje): KravPostering =
@@ -86,7 +87,7 @@ private fun mockSingleKrav() =
                     opprinneligBelop = 1000.0,
                     betaltBelop = 500.0,
                     gjenstaendeBelop = 500.0,
-                    opprettetDato = "2024-05-14",
+                    opprettetDato = LocalDate.parse("2024-05-14"),
                 ),
                 KravPostering(
                     kode = "KRL2",
@@ -94,7 +95,7 @@ private fun mockSingleKrav() =
                     opprinneligBelop = 500.0,
                     betaltBelop = 300.0,
                     gjenstaendeBelop = 200.0,
-                    opprettetDato = "2024-06-14",
+                    opprettetDato = LocalDate.parse("2024-06-14"),
                 ),
                 KravPostering(
                     kode = "KRL3",
@@ -102,10 +103,10 @@ private fun mockSingleKrav() =
                     opprinneligBelop = 200.0,
                     betaltBelop = 100.0,
                     gjenstaendeBelop = 100.0,
-                    opprettetDato = "2024-07-14",
+                    opprettetDato = LocalDate.parse("2024-07-14"),
                 ),
             ),
-        opprettetDato = "2024-05-14",
+        opprettetDato = LocalDate.parse("2024-05-14"),
     )
 
 private fun mockKravList() =
@@ -136,7 +137,7 @@ private fun mockKravList() =
                         opprinneligBelop = 1000.0,
                         betaltBelop = 500.0,
                         gjenstaendeBelop = 500.0,
-                        opprettetDato = "2024-05-14",
+                        opprettetDato = LocalDate.parse("2024-05-14"),
                     ),
                     KravPostering(
                         kode = "KRL2",
@@ -144,7 +145,7 @@ private fun mockKravList() =
                         opprinneligBelop = 500.0,
                         betaltBelop = 300.0,
                         gjenstaendeBelop = 200.0,
-                        opprettetDato = "2024-06-14",
+                        opprettetDato = LocalDate.parse("2024-06-14"),
                     ),
                     KravPostering(
                         kode = "KRL3",
@@ -152,9 +153,9 @@ private fun mockKravList() =
                         opprinneligBelop = 200.0,
                         betaltBelop = 100.0,
                         gjenstaendeBelop = 100.0,
-                        opprettetDato = "2024-07-14",
+                        opprettetDato = LocalDate.parse("2024-07-14"),
                     ),
                 ),
-            opprettetDato = "2024-05-14",
+            opprettetDato = LocalDate.parse("2024-05-14"),
         )
     }
