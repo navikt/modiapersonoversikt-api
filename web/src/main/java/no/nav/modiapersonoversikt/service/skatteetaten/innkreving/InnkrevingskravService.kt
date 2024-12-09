@@ -18,7 +18,7 @@ class InnkrevingskravService(
             innkrevingskravClient
                 .hentKrav(
                     innkrevingskravId,
-                )?.let { mapToKrav(it) }
+                )?.let { mapToKrav(it, innkrevingskravId.value) }
         }
 
     fun hentAllekravForFnr(fnr: Fnr): List<Krav> =
@@ -39,10 +39,13 @@ class InnkrevingskravService(
                 .map { mapToKrav(it) }
         }
 
-    private fun mapToKrav(innkrevingskrav: Innkrevingskrav): Krav =
+    private fun mapToKrav(
+        innkrevingskrav: Innkrevingskrav,
+        kravId: String = "",
+    ): Krav =
         Krav(
             posteringer = innkrevingskrav.krav.map { mapToKravPostering(it) },
-            kravId = "",
+            kravId = kravId,
             kid = "",
             kravType = "",
             debitor = Debitor("", "", IdentType.FNR, ""),
