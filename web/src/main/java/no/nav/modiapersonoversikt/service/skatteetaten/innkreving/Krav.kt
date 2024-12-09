@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.Serializable
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Serializable
 data class Krav(
     val kravId: String,
     val kid: String,
@@ -14,7 +14,7 @@ data class Krav(
     val opprettetDato: LocalDate? = null,
 )
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Serializable
 data class KravPostering(
     val kode: String,
     val beskrivelse: String,
@@ -24,7 +24,7 @@ data class KravPostering(
     val opprettetDato: LocalDate? = null,
 )
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Serializable
 data class Debitor(
     val debitorId: String,
     val name: String,
@@ -32,7 +32,7 @@ data class Debitor(
     val ident: String,
 )
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Serializable
 data class Kreditor(
     val kreditorId: String,
     val name: String,
@@ -40,6 +40,7 @@ data class Kreditor(
     val ident: String,
 )
 
+@Serializable
 enum class IdentType {
     FNR,
     ORG_NR,
