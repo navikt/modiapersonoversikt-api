@@ -4,6 +4,7 @@ import kotlinx.datetime.toKotlinLocalDate
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
+import no.nav.common.utils.EnvironmentUtils.isDevelopment
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.apis.KravdetaljerApi
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ClientException
 import no.nav.modiapersonoversikt.consumer.skatteetaten.innkreving.api.generated.infrastructure.ServerException
@@ -28,12 +29,19 @@ class SkatteetatenHttpInnkrevingskravClient(
 
     override fun hentKrav(innkrevingskravId: InnkrevingskravId): Innkrevingskrav? =
         runCatching {
+            val kravidentifikatorType =
+                if (isDevelopment().orElse(false)) {
+                    KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR
+                } else {
+                    KravidentifikatorType.OPPDRAGSGIVERS_KRAVIDENTIFIKATOR
+                }
+
             kravdetaljerApi
                 .getKravdetaljer(
                     klientid = clientId,
                     accept = "application/json",
                     kravidentifikator = innkrevingskravId.value,
-                    kravidentifikatortype = KravidentifikatorType.SKATTEETATENS_KRAVIDENTIFIKATOR.name,
+                    kravidentifikatortype = kravidentifikatorType.name,
                 )?.toDomain()
         }.getOrElse {
             when (it) {
