@@ -569,7 +569,8 @@
               "OMSORGSPENGER",
               "HJELPEMIDLER",
               "TILLEGGSSTONADER",
-              "NEESSI"
+              "NEESSI",
+              "KOMPYS"
             ],
             "description": "Fagsystemet som saken behandles i, required hvis saksId er definert",
             "example": "AO01"
@@ -637,7 +638,8 @@
               "OMSORGSPENGER",
               "HJELPEMIDLER",
               "TILLEGGSSTONADER",
-              "NEESSI"
+              "NEESSI",
+              "KOMPYS"
             ],
             "description": "Fagsystemet som saken behandles i.",
             "example": "AO01"
