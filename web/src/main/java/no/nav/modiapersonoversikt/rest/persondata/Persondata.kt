@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 object Persondata {
     data class Data(
-        val feilendeSystemer: List<String>,
+        val feilendeSystemer: List<PersondataResult.InformasjonElement>,
         val person: Person,
     )
 
