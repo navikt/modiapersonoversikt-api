@@ -57,16 +57,16 @@ class PersondataFletter(
                 kontaktinformasjonTredjepartsperson,
             )
 
-        fun feilendeSystemer(): List<String> =
+        fun feilendeSystemer(): List<InformasjonElement> =
             ekstraDatapunker
                 .mapNotNull {
                     if (it is PersondataResult.Failure<*>) {
                         Logging.secureLog.error("Persondata feilet system: ${it.system}", it.exception)
-                        it.system.name
+                        it.system
                     } else {
                         null
                     }
-                }.filter { harTilgangTilSkjermetPerson || it != InformasjonElement.EGEN_ANSATT.name }
+                }.filter { harTilgangTilSkjermetPerson || it != InformasjonElement.EGEN_ANSATT }
     }
 
     fun flettSammenData(
@@ -111,7 +111,7 @@ class PersondataFletter(
                             onSuccess = { it },
                             onNotRelevant = { emptyList() },
                             onFailure = { system, cause ->
-                                feilendeSystemer.add(system.name)
+                                feilendeSystemer.add(system)
                                 Logging.secureLog.error("Persondata feilet system: $system", cause)
                                 emptyList()
                             },
@@ -125,7 +125,7 @@ class PersondataFletter(
                             onSuccess = { it },
                             onNotRelevant = { null },
                             onFailure = { system, cause ->
-                                feilendeSystemer.add(system.name)
+                                feilendeSystemer.add(system)
                                 Logging.secureLog.error("Persondata feilet system: $system", cause)
                                 null
                             },
