@@ -19,9 +19,9 @@ class BrukernotifikasjonClient(
                 .newCall(
                     Request
                         .Builder()
-                        .get()
                         .url("$baseUrl/${type.name.lowercase()}/all")
                         .header("fodselsnummer", fnr.get())
+                        .get()
                         .build(),
                 ).execute()
 
@@ -36,9 +36,9 @@ class BrukernotifikasjonClient(
                 .newCall(
                     Request
                         .Builder()
-                        .get()
                         .url("$baseUrl/varsel/alle")
                         .header("fodselsnummer", fnr.get())
+                        .get()
                         .build(),
                 ).execute()
 
