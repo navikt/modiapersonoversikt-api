@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.skatteetaten.innkreving
 
+import io.swagger.v3.oas.annotations.media.Schema
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -11,6 +12,7 @@ data class Krav(
     val debitor: Debitor,
     val kreditor: Kreditor,
     val posteringer: List<KravPostering> = listOf(),
+    @Schema(type = "string", format = "date", example = "2025-01-01")
     val opprettetDato: LocalDate? = null,
 )
 
@@ -21,6 +23,7 @@ data class KravPostering(
     val opprinneligBelop: Double,
     val betaltBelop: Double,
     val gjenstaendeBelop: Double,
+    @Schema(type = "string", format = "date", example = "2025-01-01")
     val opprettetDato: LocalDate? = null,
 )
 
