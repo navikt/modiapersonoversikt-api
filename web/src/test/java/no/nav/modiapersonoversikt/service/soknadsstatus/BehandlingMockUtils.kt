@@ -27,7 +27,7 @@ object BehandlingMockUtils {
         Hendelse(
             hendelseId = "wjkew12",
             behandlingId = behandlingId,
-            hendelseType = Hendelse.HendelseType.OPPRETTET,
+            hendelseType = Hendelse.HendelseType.BEHANDLING_OPPRETTET,
             status = Hendelse.Status.UNDER_BEHANDLING,
         )
 }
