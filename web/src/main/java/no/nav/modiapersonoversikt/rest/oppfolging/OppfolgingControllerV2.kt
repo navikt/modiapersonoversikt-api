@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.SYFOPunkt
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Vedtak
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Ytelse
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.VeilarbvedtaksstotteService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -25,6 +26,7 @@ class OppfolgingControllerV2
     @Autowired
     constructor(
         private val arenaInfotrygdApi: ArenaInfotrygdApi,
+        private val veilarbvedtaksstotteService: VeilarbvedtaksstotteService,
         private val service: ArbeidsrettetOppfolging.Service,
         private val tilgangskontroll: Tilgangskontroll,
     ) {
@@ -73,13 +75,14 @@ class OppfolgingControllerV2
                             start,
                             slutt,
                         )
+                    val siste14aVedtak = veilarbvedtaksstotteService.hentSiste14aVedtak(Fnr(fnrRequest.fnr))
                     val oppfolgingstatus = runCatching { hent(fnrRequest) }
 
                     mapOf(
                         "oppfolging" to oppfolgingstatus.getOrNull(),
                         "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
                         "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
-                        "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
+                        "innsatsgruppe" to siste14aVedtak?.innsatsgruppe,
                         "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
                         "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
                         "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),

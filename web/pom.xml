@@ -202,7 +202,11 @@
             <version>0.6.1</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>veilarbvedtaksstotte-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>oppgave-api</artifactId>
