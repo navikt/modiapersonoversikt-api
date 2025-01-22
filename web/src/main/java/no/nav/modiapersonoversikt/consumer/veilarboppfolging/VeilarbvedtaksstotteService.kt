@@ -17,8 +17,8 @@ interface VeilarbvedtaksstotteService : Pingable {
 }
 
 data class Siste14aVedtak(
-    val innsatsgruppe: String,
-    val hovedmal: String?,
+    val innsatsgruppe: Siste14aVedtakDTO.Innsatsgruppe,
+    val hovedmal: Siste14aVedtakDTO.Hovedmal?,
     val fattetDato: LocalDateTime,
     val fraArena: Boolean?,
 )
@@ -45,8 +45,8 @@ class VeilarbvedtaksstotteServiceImpl(
 
     private fun mapToSiste14aVedtak(dto: Siste14aVedtakDTO) =
         Siste14aVedtak(
-            innsatsgruppe = dto.innsatsgruppe.value,
-            hovedmal = dto.hovedmal?.value,
+            innsatsgruppe = dto.innsatsgruppe,
+            hovedmal = dto.hovedmal,
             fattetDato = dto.fattetDato.toLocalDateTime(),
             fraArena = dto.fraArena,
         )

@@ -82,7 +82,7 @@ class OppfolgingControllerV2
                         "oppfolging" to oppfolgingstatus.getOrNull(),
                         "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
                         "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
-                        "innsatsgruppe" to siste14aVedtak?.innsatsgruppe,
+                        "14aVedtak" to siste14aVedtak,
                         "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
                         "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
                         "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
