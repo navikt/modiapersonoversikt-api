@@ -37,7 +37,7 @@ open class VeilarbvedtaksstotteConfig {
                 .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    tjenestekallLoggingInterceptorFactory("Oppfolging") {
+                    tjenestekallLoggingInterceptorFactory("Veilarbvedtaksstotte") {
                         requireNotNull(it.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
