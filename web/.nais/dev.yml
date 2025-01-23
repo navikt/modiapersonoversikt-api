@@ -118,7 +118,7 @@ spec:
     - name: SERVER_DREK_URL
       value: "https://pdl-web.dev.intern.nav.no/rekvirerdnummer"
     - name: SERVER_NORG2_FRONTEND_URL
-      value: "https://norg2-frontend.intern.dev.nav.no"
+      value: "https://norg2-frontend.ekstern.dev.nav.no"
     - name: REST_UTBETALING_ENDPOINTURL
       value: "https://sokos-utbetaldata.dev-fss-pub.nais.io/utbetaldata/api"
     - name: UTBETALING_SCOPE
