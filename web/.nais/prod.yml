@@ -130,6 +130,10 @@ spec:
       value: "http://veilarboppfolging.poao/veilarboppfolging/api"
     - name: VEILARBOPPFOLGINGAPI_SCOPE
       value: "prod-gcp:poao:veilarboppfolging"
+    - name: VEILARBVEDTAKSTOTTEAPI_URL
+      value: "http://veilarbvedtaksstotte.obo/"
+    - name: VEILARBVEDTAKSTOTTEAPI_SCOPE
+      value: "prod-gcp:obo:veilarbvedtaksstotte"
     - name: KRR_REST_URL
       value: "http://digdir-krr-proxy.team-rocket/"
     - name: KRR_SCOPE

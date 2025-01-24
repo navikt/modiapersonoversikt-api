@@ -46,6 +46,7 @@
         <module>skatteetaten-innkreving-api</module>
         <module>tiltakspenger</module>
         <module>pdl-fullmakt-api</module>
+        <module>veilarbvedtaksstotte-api</module>
     </modules>
 
     <dependencyManagement>
