@@ -128,7 +128,7 @@ spec:
     - name: VEILARBOPPFOLGINGAPI_SCOPE
       value: "dev-gcp:poao:veilarboppfolging"
     - name: VEILARBVEDTAKSTOTTEAPI_URL
-      value: "http://veilarbvedtaksstotte.obo/"
+      value: "http://veilarbvedtaksstotte.obo/veilarbvedtaksstotte"
     - name: VEILARBVEDTAKSTOTTEAPI_SCOPE
       value: "dev-gcp:obo:veilarbvedtaksstotte"
     - name: KRR_REST_URL
