@@ -93,6 +93,8 @@ spec:
           application: sokos-kontoregister-person
         - application: repr-api
           namespace: repr
+        - application: veilarbvedtaksstotte
+          namespace: obo
     inbound:
       rules:
         - application: modiapersonoversikt
