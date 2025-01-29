@@ -31,10 +31,6 @@ class VeilarbvedtaksstotteServiceImpl(
     private val innsatsgruppeCache: Cache<String, InnsatsgruppeDetaljert> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
     private val hovedmalCache: Cache<String, HovedmalDetaljert> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
 ) : VeilarbvedtaksstotteService {
-    init {
-        prepopulerCache()
-    }
-
     override fun hentSiste14aVedtak(fnr: Fnr): Siste14aVedtak? =
         cache.get(fnr) {
             siste14AVedtakV2Api.hentSiste14aVedtak(Siste14aVedtakRequest(fnr.get()))?.let { mapToSiste14aVedtak(it) }
