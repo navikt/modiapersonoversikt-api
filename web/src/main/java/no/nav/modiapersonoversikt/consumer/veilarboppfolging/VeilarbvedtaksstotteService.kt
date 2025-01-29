@@ -5,11 +5,12 @@ import no.nav.common.health.HealthCheckUtils
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.UrlUtils
+import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.KodeverkFor14AVedtakApi
 import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.Siste14AVedtakV2Api
-import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.models.Siste14aVedtakDTO
-import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.models.Siste14aVedtakRequest
+import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
+import java.time.Duration
 import java.time.LocalDateTime
 
 interface VeilarbvedtaksstotteService : Pingable {
@@ -17,16 +18,23 @@ interface VeilarbvedtaksstotteService : Pingable {
 }
 
 data class Siste14aVedtak(
-    val innsatsgruppe: Siste14aVedtakDTO.Innsatsgruppe,
-    val hovedmal: Siste14aVedtakDTO.Hovedmal?,
+    val innsatsgruppe: InnsatsgruppeDetaljert,
+    val hovedmal: HovedmalDetaljert?,
     val fattetDato: LocalDateTime,
     val fraArena: Boolean?,
 )
 
 class VeilarbvedtaksstotteServiceImpl(
     private val siste14AVedtakV2Api: Siste14AVedtakV2Api,
+    private val kodeverkFor14AVedtakApi: KodeverkFor14AVedtakApi,
     private val cache: Cache<Fnr, Siste14aVedtak> = CacheUtils.createCache(),
+    private val innsatsgruppeCache: Cache<String, InnsatsgruppeDetaljert> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
+    private val hovedmalCache: Cache<String, HovedmalDetaljert> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
 ) : VeilarbvedtaksstotteService {
+    init {
+        prepopulerCache()
+    }
+
     override fun hentSiste14aVedtak(fnr: Fnr): Siste14aVedtak? =
         cache.get(fnr) {
             siste14AVedtakV2Api.hentSiste14aVedtak(Siste14aVedtakRequest(fnr.get()))?.let { mapToSiste14aVedtak(it) }
@@ -45,9 +53,28 @@ class VeilarbvedtaksstotteServiceImpl(
 
     private fun mapToSiste14aVedtak(dto: Siste14aVedtakDTO) =
         Siste14aVedtak(
-            innsatsgruppe = dto.innsatsgruppe,
-            hovedmal = dto.hovedmal,
+            innsatsgruppe = innsatsgruppeCache.get(dto.innsatsgruppe.value) { getInnsatsgruppe(dto.innsatsgruppe.value) },
+            hovedmal = dto.hovedmal?.let { hovedmalCache.get(it.value) { getHovedmal(dto.innsatsgruppe.value) } },
             fattetDato = dto.fattetDato.toLocalDateTime(),
             fraArena = dto.fraArena,
         )
+
+    private fun getInnsatsgruppe(innsatsgrupper: String): InnsatsgruppeDetaljert? {
+        prepopulerCache()
+        return innsatsgruppeCache.getIfPresent(innsatsgrupper)
+    }
+
+    private fun getHovedmal(hovedmal: String): HovedmalDetaljert? {
+        prepopulerCache()
+        return hovedmalCache.getIfPresent(hovedmal)
+    }
+
+    private fun prepopulerCache() {
+        innsatsgruppeCache.invalidateAll()
+        hovedmalCache.invalidateAll()
+        kodeverkFor14AVedtakApi.henteKodeverk()?.let { kodeverk ->
+            kodeverk.innsatsgrupper?.let { innsatsgruppe -> innsatsgruppeCache.putAll(innsatsgruppe.associateBy { it.kode }) }
+            kodeverk.hovedmal?.let { hovedmal -> hovedmalCache.putAll(hovedmal.associateBy { it.kode }) }
+        }
+    }
 }
