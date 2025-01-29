@@ -4,6 +4,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
+import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.KodeverkFor14AVedtakApi
 import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.Siste14AVedtakV2Api
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
@@ -49,8 +50,9 @@ open class VeilarbvedtaksstotteConfig {
                 ).build()
 
         val siste14AVedtakApi = Siste14AVedtakV2Api(url, httpClient)
+        val kodeverkFor14AVedtakApi = KodeverkFor14AVedtakApi(url, httpClient)
 
-        return VeilarbvedtaksstotteServiceImpl(siste14AVedtakApi)
+        return VeilarbvedtaksstotteServiceImpl(siste14AVedtakApi, kodeverkFor14AVedtakApi)
     }
 
     @Bean

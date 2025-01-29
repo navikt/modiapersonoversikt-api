@@ -1542,6 +1542,72 @@
           }
         }
       }
+    },
+    "/api/kodeverk/innsatsgruppeoghovedmal": {
+      "get": {
+        "tags": [
+          "Kodeverk for § 14 a-vedtak"
+        ],
+        "operationId": "henteKodeverk",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/KodeverkDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kodeverk/innsatsgruppe": {
+      "get": {
+        "tags": [
+          "Kodeverk for § 14 a-vedtak innsatsgruppe"
+        ],
+        "operationId": "henteInnsatsgruppeKodeverk",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InnsatsgruppeDetaljert"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kodeverk/hovedmal": {
+      "get": {
+        "tags": [
+          "Kodeverk for § 14 a-vedtak hovedmal"
+        ],
+        "operationId": "henteHovedmalKodeverk",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HovedmalDetaljert"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3036,6 +3102,45 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "InnsatsgruppeDetaljert": {
+        "type": "object",
+        "properties": {
+          "kode": {
+            "type": "string"
+          },
+          "beskrivelse": {
+            "type": "string"
+          }
+        }
+      },
+      "HovedmalDetaljert": {
+        "type": "object",
+        "properties": {
+          "kode": {
+            "type": "string"
+          },
+          "beskrivelse": {
+            "type": "string"
+          }
+        }
+      },
+      "KodeverkDTO": {
+        "type": "object",
+        "properties": {
+          "innsatsgrupper": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InnsatsgruppeDetaljert"
+            }
+          },
+          "hovedmal": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HovedmalDetaljert"
+            }
           }
         }
       }
