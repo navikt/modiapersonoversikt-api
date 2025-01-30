@@ -19,7 +19,7 @@ import java.time.OffsetDateTime
 class VeilarbvedtaksstotteServiceTest {
     private val siste14AVedtakV2Api: Siste14AVedtakV2Api = mockk()
     private val kodeverkFor14AVedtakApi: KodeverkFor14AVedtakApi = mockk()
-    private val FNR = "12345678910"
+    private val fnr = Fnr("12345678910")
 
     @BeforeEach
     fun setupStandardMocker() {
@@ -46,7 +46,7 @@ class VeilarbvedtaksstotteServiceTest {
     fun `hent Siste 14a Vedtak`() {
         val veilarbvedtaksstotteService =
             VeilarbvedtaksstotteServiceImpl(siste14AVedtakV2Api, kodeverkFor14AVedtakApi)
-        val siste14aVedtak = veilarbvedtaksstotteService.hentSiste14aVedtak(Fnr(FNR))
+        val siste14aVedtak = veilarbvedtaksstotteService.hentSiste14aVedtak(fnr)
 
         verifySequence {
             kodeverkFor14AVedtakApi.getKodeverk()
