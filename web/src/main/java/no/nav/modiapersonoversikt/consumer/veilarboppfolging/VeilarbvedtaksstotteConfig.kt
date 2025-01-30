@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 
 import no.nav.common.rest.client.RestClient
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
@@ -11,9 +12,9 @@ import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.ping.ConsumerPingable
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
-import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.bindTo
+import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,11 +28,10 @@ open class VeilarbvedtaksstotteConfig {
     private val downstreamApi = DownstreamApi.parse(getRequiredProperty("VEILARBVEDTAKSTOTTEAPI_SCOPE"))
 
     @Bean
-    open fun veilarbvedtaksstotteService(
-        ansattService: AnsattService,
+    open fun siste14AVedtakApi(
         onBehalfOfTokenClient: OnBehalfOfTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
-    ): VeilarbvedtaksstotteService {
+    ): Siste14AVedtakV2Api {
         val httpClient =
             RestClient
                 .baseClient()
@@ -49,11 +49,39 @@ open class VeilarbvedtaksstotteConfig {
                     },
                 ).build()
 
-        val siste14AVedtakApi = Siste14AVedtakV2Api(url, httpClient)
-        val kodeverkFor14AVedtakApi = KodeverkFor14AVedtakApi(url, httpClient)
-
-        return VeilarbvedtaksstotteServiceImpl(siste14AVedtakApi, kodeverkFor14AVedtakApi)
+        return Siste14AVedtakV2Api(url, httpClient)
     }
+
+    @Bean
+    open fun kodeverkFor14AVedtakApi(
+        machineToMachineTokenClient: MachineToMachineTokenClient,
+        tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
+    ): KodeverkFor14AVedtakApi {
+        val httpClient =
+            RestClient
+                .baseClient()
+                .newBuilder()
+                .addInterceptor(XCorrelationIdInterceptor())
+                .addInterceptor(
+                    tjenestekallLoggingInterceptorFactory("Veilarbvedtaksstotte") {
+                        requireNotNull(it.header("X-Correlation-ID")) {
+                            "Kall uten \"X-Correlation-ID\" er ikke lov"
+                        }
+                    },
+                ).addInterceptor(
+                    AuthorizationInterceptor {
+                        machineToMachineTokenClient.createMachineToMachineToken(downstreamApi)
+                    },
+                ).build()
+
+        return KodeverkFor14AVedtakApi(url, httpClient)
+    }
+
+    @Bean
+    open fun veilarbvedtaksstotteService(
+        siste14AVedtakApi: Siste14AVedtakV2Api,
+        kodeverkFor14AVedtakApi: KodeverkFor14AVedtakApi,
+    ): VeilarbvedtaksstotteService = VeilarbvedtaksstotteServiceImpl(siste14AVedtakApi, kodeverkFor14AVedtakApi)
 
     @Bean
     open fun veilarbvedtaksstotteApiPing(veilarbvedtaksstotteService: VeilarbvedtaksstotteService): Pingable =
