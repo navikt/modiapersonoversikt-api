@@ -31,6 +31,10 @@ class VeilarbvedtaksstotteServiceImpl(
     private val innsatsgruppeCache: Cache<String, InnsatsgruppeDetaljert> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
     private val hovedmalCache: Cache<String, HovedmalDetaljert> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
 ) : VeilarbvedtaksstotteService {
+    init {
+        prepopulerCache()
+    }
+
     override fun hentSiste14aVedtak(fnr: Fnr): Siste14aVedtak? =
         cache.get(fnr) {
             siste14AVedtakV2Api.hentSiste14aVedtak(Siste14aVedtakRequest(fnr.get()))?.let { mapToSiste14aVedtak(it) }
@@ -50,19 +54,19 @@ class VeilarbvedtaksstotteServiceImpl(
     private fun mapToSiste14aVedtak(dto: Siste14aVedtakDTO) =
         Siste14aVedtak(
             innsatsgruppe = innsatsgruppeCache.get(dto.innsatsgruppe.value) { getInnsatsgruppe(dto.innsatsgruppe.value) },
-            hovedmal = dto.hovedmal?.let { hovedmalCache.get(it.value) { getHovedmal(dto.innsatsgruppe.value) } },
+            hovedmal = dto.hovedmal?.let { hovedmal -> hovedmalCache.get(hovedmal.value) { getHovedmal(hovedmal.value) } },
             fattetDato = dto.fattetDato.toLocalDateTime(),
             fraArena = dto.fraArena,
         )
 
-    private fun getInnsatsgruppe(innsatsgrupper: String): InnsatsgruppeDetaljert? {
-        prepopulerCache()
-        return innsatsgruppeCache.getIfPresent(innsatsgrupper)
+    private fun getInnsatsgruppe(key: String): InnsatsgruppeDetaljert? {
+        kodeverkFor14AVedtakApi.getInnsatsgrupper()?.map { innsatsgruppeCache.put(it.kode, it) }
+        return innsatsgruppeCache.getIfPresent(key)
     }
 
-    private fun getHovedmal(hovedmal: String): HovedmalDetaljert? {
-        prepopulerCache()
-        return hovedmalCache.getIfPresent(hovedmal)
+    private fun getHovedmal(key: String): HovedmalDetaljert? {
+        kodeverkFor14AVedtakApi.getHovedmal()?.map { hovedmalCache.put(it.kode, it) }
+        return hovedmalCache.getIfPresent(key)
     }
 
     private fun prepopulerCache() {
