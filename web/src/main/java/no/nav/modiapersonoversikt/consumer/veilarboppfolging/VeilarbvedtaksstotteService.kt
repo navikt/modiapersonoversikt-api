@@ -66,7 +66,7 @@ class VeilarbvedtaksstotteServiceImpl(
     }
 
     private fun prepopulerCache() {
-        kodeverkFor14AVedtakApi.henteKodeverk()?.let { kodeverk ->
+        kodeverkFor14AVedtakApi.getKodeverk()?.let { kodeverk ->
             kodeverk.innsatsgrupper?.let { innsatsgruppe -> innsatsgruppeCache.putAll(innsatsgruppe.associateBy { it.kode }) }
             kodeverk.hovedmal?.let { hovedmal -> hovedmalCache.putAll(hovedmal.associateBy { it.kode }) }
         }
