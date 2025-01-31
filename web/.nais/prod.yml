@@ -65,7 +65,6 @@ spec:
         - host: axsys.prod-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
-        - host: api.skatteetaten.no
       rules:
         - application: modia-soknadsstatus-api
         - namespace: tpts
