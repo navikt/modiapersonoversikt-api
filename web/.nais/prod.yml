@@ -43,11 +43,6 @@ spec:
     min: 2
     max: 4
     cpuThresholdPercentage: 60
-  maskinporten:
-    enabled: true
-    scopes:
-      consumes:
-        - name: "skatteetaten:innkrevingsoppdrag"
   leaderElection: true
   azure:
     application:
@@ -200,8 +195,6 @@ spec:
       value: "prod-fss:personoversikt:modiapersonoversikt-api-proxy"
     - name: UNLEASH_ENVIRONMENT
       value: "development"
-    - name: SKATTEETATEN_INNKREVINGSOPPDRAG_API_BASE_URL
-      value: "https://api.skatteetaten.no"
     - name: TILTAKSPENGER_URL
       value: "http://tiltakspenger-datadeling.tpts"
     - name: TILTAKSPENGER_SCOPE

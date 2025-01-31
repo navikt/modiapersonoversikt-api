@@ -7,7 +7,6 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.HenvendelseTilhorerBrukerPolicy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.KanBrukeInternalPolicy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerPolicy
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilInnkrevingskravPolicy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilModiaPolicy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilTemaPolicy
 import no.nav.personoversikt.common.kabac.AttributeValue
@@ -40,9 +39,6 @@ object Policies {
         eksternBrukerId.toAttributeValue(),
         CommonAttributes.HENVENDELSE_KJEDE_ID.withValue(kjedeId),
     )
-
-    @JvmStatic
-    fun tilgangTilInnkrevingskrav() = TilgangTilInnkrevingskravPolicy.withAttributes()
 
     val kanBrukeInternal = KanBrukeInternalPolicy.withAttributes()
 
