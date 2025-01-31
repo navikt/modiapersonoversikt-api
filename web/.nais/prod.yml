@@ -136,6 +136,10 @@ spec:
       value: "http://veilarbvedtaksstotte.obo/veilarbvedtaksstotte"
     - name: VEILARBVEDTAKSTOTTEAPI_SCOPE
       value: "prod-gcp:obo:veilarbvedtaksstotte"
+    - name: PENSJON_API_PROXY_URL
+      value: "http://pen-nks-service.pensjon-saksbehandling/"
+    - name: PENSJON_API_PROXY_SCOPE
+      value: "prod-gcp:pensjon-saksbehandling:pen-nks-service"
     - name: KRR_REST_URL
       value: "http://digdir-krr-proxy.team-rocket/"
     - name: KRR_SCOPE
