@@ -74,7 +74,7 @@ class YtelseControllerV2
         ): List<PensjonSak> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Tiltakspenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pensjon, AuditIdentifier.FNR to fnrRequest.fnr)) {
                     pensjonService.hentSaker(fnrRequest.fnr)
                 }
     }

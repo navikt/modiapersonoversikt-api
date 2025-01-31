@@ -31,7 +31,7 @@ open class PensjonServiceConfig {
                 .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    tjenestekallLoggingInterceptorFactory("ArenaInfotrygdApi") { request ->
+                    tjenestekallLoggingInterceptorFactory("Pensjon") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }

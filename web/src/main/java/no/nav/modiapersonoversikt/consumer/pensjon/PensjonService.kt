@@ -10,7 +10,7 @@ import java.time.LocalDate
 interface PensjonService {
     fun hentSaker(fnr: String): List<PensjonSak>
 
-    fun hentVedtaker(
+    fun hentVedtak(
         fnr: String,
         sakId: String,
     ): List<PensjonVedtak>
@@ -37,29 +37,32 @@ data class PensjonVedtak(
 data class Code(
     val code: String,
     val decode: String,
-    val prioritet: Int? = null,
 )
 
 open class PensjonServiceImpl(
     private val baseUrl: String,
     private val httpClient: OkHttpClient,
 ) : PensjonService {
-    @Cacheable(value = ["pensjonSaker"])
-    override fun hentSaker(fnr: String): List<PensjonSak> = sendRequest("sak") ?: listOf()
+    @Cacheable("pensjonSaker")
+    override fun hentSaker(fnr: String): List<PensjonSak> = sendRequest("sak", fnr) ?: listOf()
 
-    @Cacheable(value = ["pensjonVedtaker"])
-    override fun hentVedtaker(
+    @Cacheable("pensjonVedtak")
+    override fun hentVedtak(
         fnr: String,
         sakId: String,
-    ): List<PensjonVedtak> = sendRequest("/sak/$sakId/vedtak") ?: listOf()
+    ): List<PensjonVedtak> = sendRequest("/sak/$sakId/vedtak", fnr) ?: listOf()
 
-    private inline fun <reified T> sendRequest(url: String): T? {
+    private inline fun <reified T> sendRequest(
+        url: String,
+        fnr: String,
+    ): T? {
         val response =
             httpClient
                 .newCall(
                     Request
                         .Builder()
                         .url("$baseUrl/rest/api/$url")
+                        .addHeader("fnr", fnr)
                         .get()
                         .build(),
                 ).execute()
