@@ -17,5 +17,4 @@ enum class AuditIdentifier {
     SAK_ID,
     SAK_TEMA,
     SOKEFELTER,
-    INNKREVINGSKRAV_ID,
 }
