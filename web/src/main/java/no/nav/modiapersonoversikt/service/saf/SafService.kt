@@ -124,6 +124,7 @@ class SafServiceImpl(
             200 ->
                 TjenesteResultatWrapper(
                     response.body?.bytes(),
+                    response.header("content-type"),
                 )
             else -> handterDokumentFeilKoder(response.code)
         }

@@ -9,12 +9,18 @@ import static java.util.Optional.ofNullable;
 
 public class TjenesteResultatWrapper {
     public Optional<Object> result;
+    public Optional<String> contentType;
     public Feilmelding feilmelding;
     public Integer statuskode;
     public Map<Object, Object> ekstraFeilInfo;
 
-    public TjenesteResultatWrapper(Object pdfSomBytes) {
-        this.result = ofNullable(pdfSomBytes);
+    public TjenesteResultatWrapper(Object filSomBytes, String contentType) {
+        this.result = ofNullable(filSomBytes);
+        this.contentType = ofNullable(contentType);
+    }
+
+    public TjenesteResultatWrapper(Object filSomBytes) {
+        this.result = ofNullable(filSomBytes);
     }
 
     public TjenesteResultatWrapper(Feilmelding feilmelding) {
