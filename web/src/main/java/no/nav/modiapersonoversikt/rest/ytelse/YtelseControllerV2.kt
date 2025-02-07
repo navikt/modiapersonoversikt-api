@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.rest.ytelse
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
+import no.nav.modiapersonoversikt.consumer.pensjon.Etteroppgjorshistorikk
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
@@ -89,7 +90,7 @@ class YtelseControllerV2
         fun hentPensjonSak(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
             @PathVariable("sakId") sakId: String,
-        ): List<PensjonSak> =
+        ): List<Etteroppgjorshistorikk> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
@@ -99,6 +100,6 @@ class YtelseControllerV2
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    pensjonService.hentSaker(fnrRequest.fnr)
+                    pensjonService.hentEtteroppgjorshistorikk(fnrRequest.fnr, sakId)
                 }
     }
