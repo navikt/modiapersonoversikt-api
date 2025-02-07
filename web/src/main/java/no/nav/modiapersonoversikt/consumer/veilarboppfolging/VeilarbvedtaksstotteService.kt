@@ -1,10 +1,9 @@
 package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 
 import com.github.benmanes.caffeine.cache.Cache
-import no.nav.common.health.HealthCheckUtils
+import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
-import no.nav.common.utils.UrlUtils
 import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.KodeverkFor14AVedtakApi
 import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.Siste14AVedtakV2Api
 import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.models.*
@@ -45,10 +44,7 @@ class VeilarbvedtaksstotteServiceImpl(
             "VeilarbvedtaksstotteApi via ${siste14AVedtakV2Api.client.baseUrl}",
             false,
         ) {
-            HealthCheckUtils.pingUrl(
-                UrlUtils.joinPaths(siste14AVedtakV2Api.client.baseUrl, "/internal/health/liveness"),
-                siste14AVedtakV2Api.client.client,
-            )
+            HealthCheckResult.healthy()
         }
 
     private fun mapToSiste14aVedtak(dto: Siste14aVedtakDTO) =

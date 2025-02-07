@@ -10,6 +10,11 @@ import java.time.LocalDate
 interface PensjonService {
     fun hentSaker(fnr: String): List<PensjonSak>
 
+    fun hentEtteroppgjorshistorikk(
+        fnr: String,
+        sakId: String,
+    ): List<PensjonEtteroppgjorshistorikk>
+
     fun hentVedtak(
         fnr: String,
         sakId: String,
@@ -34,6 +39,24 @@ data class PensjonVedtak(
     val lopendeTom: LocalDate?,
 )
 
+data class PensjonEtteroppgjorshistorikk(
+    val fom: LocalDate,
+    val tom: LocalDate,
+    val resultat: Code?,
+    val belop: Int?,
+    val vedtaksdato: LocalDate?,
+    val ar: String,
+    val ytelser: List<PensjonEtteroppgjorYtelse>,
+)
+
+data class PensjonEtteroppgjorYtelse(
+    val type: Code?,
+    val inntekt: Int?,
+    val fradrag: Int?,
+    val inntektBruktIEtteroppgjor: Int?,
+    val avviksbelop: Int?,
+)
+
 data class Code(
     val code: String,
     val decode: String,
@@ -45,6 +68,12 @@ open class PensjonServiceImpl(
 ) : PensjonService {
     @Cacheable("pensjonSaker")
     override fun hentSaker(fnr: String): List<PensjonSak> = sendRequest("sak", fnr) ?: listOf()
+
+    @Cacheable("pensjonEtteroppgjorshistorikk")
+    override fun hentEtteroppgjorshistorikk(
+        fnr: String,
+        sakId: String,
+    ): List<PensjonEtteroppgjorshistorikk> = sendRequest("/sak/$sakId/etteroppgjorshistorikk", fnr) ?: listOf()
 
     @Cacheable("pensjonVedtak")
     override fun hentVedtak(
