@@ -13,7 +13,7 @@ interface PensjonService {
     fun hentEtteroppgjorshistorikk(
         fnr: String,
         sakId: String,
-    ): List<Etteroppgjorshistorikk>
+    ): List<PensjonEtteroppgjorshistorikk>
 
     fun hentVedtak(
         fnr: String,
@@ -39,17 +39,17 @@ data class PensjonVedtak(
     val lopendeTom: LocalDate?,
 )
 
-data class Etteroppgjorshistorikk(
+data class PensjonEtteroppgjorshistorikk(
     val fom: LocalDate,
     val tom: LocalDate,
     val resultat: Code?,
     val belop: Int?,
     val vedtaksdato: LocalDate?,
     val ar: String,
-    val ytelser: List<EtteroppgjorYtelse>,
+    val ytelser: List<PensjonEtteroppgjorYtelse>,
 )
 
-data class EtteroppgjorYtelse(
+data class PensjonEtteroppgjorYtelse(
     val type: Code?,
     val inntekt: Int?,
     val fradrag: Int?,
@@ -73,7 +73,7 @@ open class PensjonServiceImpl(
     override fun hentEtteroppgjorshistorikk(
         fnr: String,
         sakId: String,
-    ): List<Etteroppgjorshistorikk> = sendRequest("/sak/$sakId/etteroppgjorshistorikk", fnr) ?: listOf()
+    ): List<PensjonEtteroppgjorshistorikk> = sendRequest("/sak/$sakId/etteroppgjorshistorikk", fnr) ?: listOf()
 
     @Cacheable("pensjonVedtak")
     override fun hentVedtak(
