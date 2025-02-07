@@ -22,10 +22,13 @@ import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.SakstemaService
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import kotlin.jvm.optionals.getOrDefault
 
 @RestController
 @RequestMapping("/rest/v2/saker")
@@ -58,7 +61,7 @@ class SakerControllerV2
                     mappingContext.mapTilResultat(sakstemaWrapper.resultat)
                 }
 
-        @PostMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"], produces = ["application/pdf"])
+        @PostMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"])
         fun hentDokument(
             request: HttpServletRequest,
             @RequestBody fnrRequest: FnrRequest,
@@ -92,8 +95,16 @@ class SakerControllerV2
 
                         safService.hentDokument(journalpostId, dokumentreferanse, variantformat).let { wrapper ->
                             wrapper.result
-                                .map { ResponseEntity(it, HttpStatus.OK) }
-                                .orElseGet { ResponseEntity(HttpStatus.valueOf(wrapper.statuskode)) }
+                                .map {
+                                    val headers = HttpHeaders()
+                                    headers.set(
+                                        HttpHeaders.CONTENT_TYPE,
+                                        wrapper.contentType.getOrDefault(
+                                            MediaType.APPLICATION_PDF.toString(),
+                                        ),
+                                    )
+                                    ResponseEntity(it, headers, HttpStatus.OK)
+                                }.orElseGet { ResponseEntity(HttpStatus.valueOf(wrapper.statuskode)) }
                         }
                     }
                 }
