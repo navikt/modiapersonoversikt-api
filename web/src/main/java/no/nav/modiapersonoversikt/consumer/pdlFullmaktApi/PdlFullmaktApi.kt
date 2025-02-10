@@ -40,6 +40,6 @@ open class PdlFullmaktApiImpl(
             "pdl-fullmakt-api via $url",
             false,
         ) {
-            HealthCheckUtils.pingUrl(UrlUtils.joinPaths(url, "/internal/health/liveness"), client)
+            HealthCheckUtils.pingUrl(UrlUtils.joinPaths(url, "/actuator/health/liveness"), client)
         }
 }

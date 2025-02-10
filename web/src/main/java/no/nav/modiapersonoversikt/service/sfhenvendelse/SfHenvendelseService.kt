@@ -369,7 +369,6 @@ class SfHenvendelseServiceImpl(
 
     override fun ping() {
         val callId = getCallId()
-
         adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(callId)
     }
 
