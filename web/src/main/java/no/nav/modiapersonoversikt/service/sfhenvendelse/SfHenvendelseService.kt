@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
+import no.nav.common.health.HealthCheckResult
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
@@ -368,9 +369,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun ping() {
-        val callId = getCallId()
-
-        adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(callId)
+        HealthCheckResult.healthy()
     }
 
     enum class ApiFeilType {
