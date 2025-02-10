@@ -1,8 +1,9 @@
 package no.nav.modiapersonoversikt.consumer.pdlFullmaktApi
 
-import no.nav.common.health.HealthCheckResult
+import no.nav.common.health.HealthCheckUtils
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
+import no.nav.common.utils.UrlUtils
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.apis.FullmaktInternbrukerAzureADApi
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.RequestDto
@@ -39,6 +40,6 @@ open class PdlFullmaktApiImpl(
             "pdl-fullmakt-api via $url",
             false,
         ) {
-            HealthCheckResult.healthy()
+            HealthCheckUtils.pingUrl(UrlUtils.joinPaths(url, "/actuator/health/liveness"), client)
         }
 }
