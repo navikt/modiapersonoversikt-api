@@ -147,7 +147,6 @@ class SfHenvendelseServiceImpl(
             ?.map(kassertInnhold(OffsetDateTime.now()))
             ?.map(journalfortTemaTilgang(tematilganger))
             ?.map(::sorterMeldinger)
-            ?.map(::unikeJournalposter)
             ?.toList()
             .orEmpty()
     }
@@ -410,11 +409,6 @@ class SfHenvendelseServiceImpl(
             if (journalposter.any { it.journalforerNavIdent == null }) {
                 feil.add(ApiFeil(ApiFeilType.JOURNALFORENDE_IDENT, henvendelse.kjedeId))
             }
-            val unikeJournalposter = journalposter.distinctBy { Pair(it.journalfortTema, it.journalpostId) }
-            if (unikeJournalposter.size != journalposter.size) {
-                feil.add(ApiFeil(ApiFeilType.DUPLIKAT_JOURNALPOST, henvendelse.kjedeId))
-            }
-
             val markeringer = henvendelse.markeringer ?: emptyList()
             if (markeringer.any { it.markertDato == null }) {
                 feil.add(ApiFeil(ApiFeilType.MARKERT_DATO, henvendelse.kjedeId))
@@ -522,11 +516,6 @@ class SfHenvendelseServiceImpl(
     private fun sorterMeldinger(henvendelse: HenvendelseDTO): HenvendelseDTO =
         henvendelse.copy(
             meldinger = henvendelse.meldinger?.sortedBy { it.sendtDato },
-        )
-
-    private fun unikeJournalposter(henvendelse: HenvendelseDTO): HenvendelseDTO =
-        henvendelse.copy(
-            journalposter = henvendelse.journalposter?.distinctBy { Pair(it.journalfortTema, it.fagsakId) },
         )
 
     private fun createPatchRequest(
