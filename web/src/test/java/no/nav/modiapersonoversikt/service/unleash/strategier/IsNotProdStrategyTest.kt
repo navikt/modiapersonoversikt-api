@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.service.unleash.strategier
 
+import io.getunleash.UnleashContext
+import io.mockk.mockk
 import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.ENVIRONMENT_PROPERTY
 import no.nav.personoversikt.common.test.testenvironment.TestEnvironment
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource
 
 internal class IsNotProdStrategyTest {
     val isNotProdStrategy = IsNotProdStrategy()
+    val unleashContext = mockk<UnleashContext>()
 
     @ParameterizedTest
     @MethodSource("testcases")
@@ -17,7 +20,7 @@ internal class IsNotProdStrategyTest {
         expected: Boolean,
     ) {
         TestEnvironment.withEnvironment(mapOf(ENVIRONMENT_PROPERTY to simulatedEnv)) {
-            assertThat(isNotProdStrategy.isEnabled(null)).isEqualTo(expected)
+            assertThat(isNotProdStrategy.isEnabled(emptyMap(), unleashContext)).isEqualTo(expected)
         }
     }
 

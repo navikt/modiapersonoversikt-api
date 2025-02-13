@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.service.unleash.strategier
 
+import io.getunleash.UnleashContext
+import io.mockk.mockk
 import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.ENVIRONMENT_PROPERTY
 import no.nav.personoversikt.common.test.testenvironment.TestEnvironment.Companion.withEnvironment
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource
 
 internal class ByEnvironmentStrategyTest {
     val byEnvironmentStrategy = ByEnvironmentStrategy()
+    val unleashContext = mockk<UnleashContext>()
 
     @ParameterizedTest
     @MethodSource("testcases")
@@ -18,9 +21,9 @@ internal class ByEnvironmentStrategyTest {
         expected: Boolean,
     ) {
         withEnvironment(mapOf(ENVIRONMENT_PROPERTY to simulatedEnv)) {
-            val parameters = mapOf(ByEnvironmentStrategy.ENABLED_ENVIRONMENT_PROPERTY to unleashConfig)
+            val parameters = mapOf(ByEnvironmentStrategy.ENABLED_ENVIRONMENT_PROPERTY to (unleashConfig.orEmpty()))
 
-            assertThat(byEnvironmentStrategy.isEnabled(parameters)).isEqualTo(expected)
+            assertThat(byEnvironmentStrategy.isEnabled(parameters, unleashContext)).isEqualTo(expected)
         }
     }
 

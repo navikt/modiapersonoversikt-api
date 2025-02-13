@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.utils
 
 import io.getunleash.DefaultUnleash
+import io.getunleash.repository.HttpFeatureFetcher
 import io.getunleash.util.UnleashConfig
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashContextProviderImpl
@@ -42,8 +43,9 @@ internal class UnleashProxySwitcherTest {
                 .unleashContextProvider(unleashContextProvider)
                 .build()
 
+        val featureFetcher = HttpFeatureFetcher(unleashConfig)
         val unleash = DefaultUnleash(unleashConfig)
-        return UnleashServiceImpl(null, unleash, null)
+        return UnleashServiceImpl(featureFetcher, unleash, null)
     }
 
     private fun createInstances(): Pair<Dummy, Dummy> =

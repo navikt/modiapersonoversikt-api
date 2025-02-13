@@ -1,15 +1,17 @@
 package no.nav.modiapersonoversikt.service.unleash;
 
 import io.getunleash.Unleash;
-import io.getunleash.repository.ClientFeaturesResponse;
+import io.getunleash.event.ClientFeaturesResponse;
 import io.getunleash.repository.HttpFeatureFetcher;
 import no.nav.common.health.selftest.SelfTestCheck;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static io.getunleash.repository.FeatureToggleResponse.Status.NOT_CHANGED;
-import static io.getunleash.repository.FeatureToggleResponse.Status.UNAVAILABLE;
+import java.util.Optional;
+
+import static io.getunleash.event.ClientFeaturesResponse.Status.NOT_CHANGED;
+import static io.getunleash.event.ClientFeaturesResponse.Status.UNAVAILABLE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -55,7 +57,7 @@ class UnleashServiceImplTest {
 
     @Test
     void pingHappyCase() {
-        when(toggleFetcher.fetchFeatures()).thenReturn(new ClientFeaturesResponse(NOT_CHANGED, 200));
+        when(toggleFetcher.fetchFeatures()).thenReturn(ClientFeaturesResponse.notChanged());
 
         unleashService.ping().getCheck().checkHealth();
         SelfTestCheck pingResult = unleashService.ping();
@@ -66,7 +68,7 @@ class UnleashServiceImplTest {
 
     @Test
     void pingUnavailable() {
-        when(toggleFetcher.fetchFeatures()).thenReturn(new ClientFeaturesResponse(UNAVAILABLE, 200));
+        when(toggleFetcher.fetchFeatures()).thenReturn(ClientFeaturesResponse.unavailable(200, Optional.empty()));
 
         unleashService.ping().getCheck().checkHealth();
         SelfTestCheck pingResult = unleashService.ping();

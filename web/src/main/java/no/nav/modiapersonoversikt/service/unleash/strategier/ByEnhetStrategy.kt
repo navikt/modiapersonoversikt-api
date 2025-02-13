@@ -8,11 +8,6 @@ import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.split
 class ByEnhetStrategy : Strategy {
     override fun getName(): String = "byEnhet"
 
-    override fun isEnabled(parameters: Map<String, String>): Boolean {
-        // Missing context, cannot verify "enhet"
-        return false
-    }
-
     override fun isEnabled(
         parameters: Map<String, String?>?,
         unleashContext: UnleashContext,

@@ -16,7 +16,8 @@ internal class ByEnhetStrategyTest {
 
     @Test
     internal fun `calls without context should return false`() {
-        assertThat(byEnhetStrategy.isEnabled(emptyMap())).isFalse
+        every { unleashContext.properties } returns emptyMap()
+        assertThat(byEnhetStrategy.isEnabled(emptyMap(), unleashContext)).isFalse
     }
 
     @ParameterizedTest

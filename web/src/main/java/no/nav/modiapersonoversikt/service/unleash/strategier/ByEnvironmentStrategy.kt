@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.unleash.strategier
 
+import io.getunleash.UnleashContext
 import io.getunleash.strategy.Strategy
 import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.getApplicationEnvironment
 import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.splitIntoSet
@@ -7,8 +8,11 @@ import no.nav.modiapersonoversikt.service.unleash.strategier.StrategyUtils.split
 class ByEnvironmentStrategy : Strategy {
     override fun getName(): String = "byEnvironment"
 
-    override fun isEnabled(parameters: Map<String, String?>?): Boolean {
-        val strategiMiljo = parameters?.get(ENABLED_ENVIRONMENT_PROPERTY).splitIntoSet()
+    override fun isEnabled(
+        parameters: Map<String, String>,
+        context: UnleashContext,
+    ): Boolean {
+        val strategiMiljo = parameters[ENABLED_ENVIRONMENT_PROPERTY].splitIntoSet()
         return strategiMiljo.contains(getApplicationEnvironment())
     }
 
