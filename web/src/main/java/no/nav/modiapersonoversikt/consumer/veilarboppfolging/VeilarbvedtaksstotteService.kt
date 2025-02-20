@@ -17,6 +17,10 @@ interface VeilarbvedtaksstotteService : Pingable {
     fun hentSiste14aVedtak(fodselsnummer: Fnr): Siste14aVedtak?
 }
 
+data class Siste14aVedtakResponse(
+    val siste14aVedtak: Siste14aVedtak?,
+)
+
 data class Siste14aVedtak(
     val innsatsgruppe: InnsatsgruppeDetaljert,
     val hovedmal: HovedmalDetaljert?,

@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.SYFOPunkt
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Vedtak
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Ytelse
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.Siste14aVedtakResponse
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.VeilarbvedtaksstotteService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -17,8 +18,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -31,7 +30,6 @@ class OppfolgingControllerV2
         private val veilarbvedtaksstotteService: VeilarbvedtaksstotteService,
         private val service: ArbeidsrettetOppfolging.Service,
         private val tilgangskontroll: Tilgangskontroll,
-        private val unleashService: UnleashService,
     ) {
         @PostMapping
         fun hent(
@@ -78,14 +76,6 @@ class OppfolgingControllerV2
                             start,
                             slutt,
                         )
-                    val enabled: Boolean = unleashService.isEnabled(Feature.VIS_14A_VEDTAK)
-
-                    val siste14aVedtak =
-                        if (enabled) {
-                            veilarbvedtaksstotteService.hentSiste14aVedtak(Fnr(fnrRequest.fnr))
-                        } else {
-                            null
-                        }
 
                     val oppfolgingstatus = runCatching { hent(fnrRequest) }
 
@@ -93,7 +83,6 @@ class OppfolgingControllerV2
                         "oppfolging" to oppfolgingstatus.getOrNull(),
                         "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
                         "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
-                        "siste14aVedtak" to siste14aVedtak,
                         "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
                         "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
                         "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
@@ -101,6 +90,23 @@ class OppfolgingControllerV2
                         "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
                         "ytelser" to hentYtelser(ytelserResponse.ytelser),
                     ).also(Typeanalyzers.OPPFOLGING_YTELSER.analyzer::capture)
+                }
+
+        @PostMapping("/siste14AVedtak")
+        fun hentSiste14AVedtak(
+            @RequestBody fnrRequest: FnrRequest,
+        ): Siste14aVedtakResponse =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.oppfolging14aVedtak,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    val siste14aVedtak = veilarbvedtaksstotteService.hentSiste14aVedtak(Fnr(fnrRequest.fnr))
+                    Siste14aVedtakResponse(siste14aVedtak)
                 }
 
         private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
