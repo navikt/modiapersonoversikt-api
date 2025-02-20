@@ -101,7 +101,7 @@ class OppfolgingControllerV2
                 .get(
                     Audit.describe(
                         Audit.Action.READ,
-                        AuditResources.Person.siste14aVedtak,
+                        AuditResources.Person.oppfolging14aVedtak,
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
