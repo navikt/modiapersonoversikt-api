@@ -1,11 +1,10 @@
 package no.nav.modiapersonoversikt.consumer.tiltakspenger
 
 import no.nav.common.rest.client.RestClient
-import no.nav.common.token_client.client.OnBehalfOfTokenClient
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.apis.TiltakspengerApi
-import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
@@ -21,10 +20,10 @@ open class TiltakspengerConfig {
 
     @Bean
     open fun tiltakspengerApi(
-        onBehalfOfTokenClient: OnBehalfOfTokenClient,
+        machineTokenClient: MachineToMachineTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     ): TiltakspengerService {
-        val oboTokenProvider = onBehalfOfTokenClient.bindTo(scope)
+        val tokenProvider = machineTokenClient.bindTo(scope)
 
         val client =
             TiltakspengerApi(
@@ -47,7 +46,7 @@ open class TiltakspengerConfig {
                             },
                         ).addInterceptor(
                             AuthorizationInterceptor {
-                                AuthContextUtils.requireBoundedClientOboToken(oboTokenProvider)
+                                tokenProvider.createMachineToMachineToken()
                             },
                         ).build(),
             )
