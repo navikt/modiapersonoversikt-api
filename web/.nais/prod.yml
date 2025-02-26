@@ -58,7 +58,6 @@ spec:
         - host: graph.microsoft.com
         - host: saf.prod-fss-pub.nais.io
         - host: sokos-utbetaldata.prod-fss-pub.nais.io
-        - host: sf-henvendelse-api-proxy.prod-fss-pub.nais.io
         - host: pdl-api.prod-fss-pub.nais.io
         - host: pdl-pip-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
@@ -143,9 +142,9 @@ spec:
     - name: KONTOREGISTER_SCOPE
       value: "prod-gcp:okonomi:sokos-kontoregister-person"
     - name: SF_HENVENDELSE_URL
-      value: "https://sf-henvendelse-api-proxy.prod-fss-pub.nais.io/api"
+      value: "http://sf-henvendelse-api-proxy.teamnks/api"
     - name: SF_HENVENDELSE_SCOPE
-      value: "prod-fss:teamnks:sf-henvendelse-api-proxy"
+      value: "prod-gcp:teamnks:sf-henvendelse-api-proxy"
     - name: PDL_API_URL
       value: "https://pdl-api.prod-fss-pub.nais.io/graphql"
     - name: PDL_SCOPE
