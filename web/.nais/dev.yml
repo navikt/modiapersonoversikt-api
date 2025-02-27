@@ -64,6 +64,8 @@ spec:
         - host: personoversikt-unleash-api.nav.cloud.nais.io
       rules:
         - application: modia-soknadsstatus-api
+        - application: sf-henvendelse-api-proxy
+          namespace: teamnks
         - namespace: tpts
           application: tiltakspenger-datadeling
         - namespace: org
