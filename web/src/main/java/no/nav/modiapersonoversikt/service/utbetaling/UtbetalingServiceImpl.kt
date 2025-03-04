@@ -68,9 +68,9 @@ open class UtbetalingServiceImpl(
     ) = { utbetaling: UtbetalingDTO ->
         val dato =
             listOfNotNull(
-                utbetaling.utbetalingsdato,
-                utbetaling.forfallsdato,
                 utbetaling.posteringsdato,
+                utbetaling.forfallsdato,
+                utbetaling.utbetalingsdato,
             ).firstOrNull()
 
         if (dato == null) {
