@@ -18,6 +18,15 @@ object WireMockUtils {
         )
     }
 
+    fun Stubbing.post(
+        urlPattern: UrlPattern = WireMock.anyUrl(),
+        mock: ResponseDefinitionBuilder.() -> Unit,
+    ) {
+        this.stubFor(
+            WireMock.post(urlPattern).willReturn(aResponse().apply(mock)),
+        )
+    }
+
     fun Stubbing.verify(
         method: RequestMethod,
         urlPattern: UrlPattern,

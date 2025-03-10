@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.service.krr
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import no.nav.modiapersonoversikt.consumer.krr.KrrServiceImpl
-import no.nav.modiapersonoversikt.utils.WireMockUtils.get
 import no.nav.modiapersonoversikt.utils.WireMockUtils.json
+import no.nav.modiapersonoversikt.utils.WireMockUtils.post
 import no.nav.modiapersonoversikt.utils.WireMockUtils.status
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.OkHttpClient
@@ -25,24 +25,37 @@ internal class KrrServiceImplTest {
     private val jsonResponse =
         """
         {
-          "personident": "10108000398",
-          "aktiv": true,
-          "kanVarsles": false,
-          "reservert": false,
-          "spraak": "nb",
-          "spraakOppdatert": "2000-01-01T09:00:00Z",
-          "epostadresse": "noreply@nav.no",
-          "epostadresseOppdatert": "2000-01-01T09:00:00Z",
-          "epostadresseVerifisert": "2000-01-01T09:00:00Z",
-          "mobiltelefonnummer": "11111111",
-          "mobiltelefonnummerOppdatert": "2000-01-01T09:00:00Z",
-          "mobiltelefonnummerVerifisert": "2000-01-01T09:00:00Z"
+          "personer":  {
+              "10108000398": {
+                  "personident": "10108000398",
+                  "aktiv": true,
+                  "kanVarsles": false,
+                  "reservert": false,
+                  "spraak": "nb",
+                  "spraakOppdatert": "2000-01-01T09:00:00Z",
+                  "epostadresse": "noreply@nav.no",
+                  "epostadresseOppdatert": "2000-01-01T09:00:00Z",
+                  "epostadresseVerifisert": "2000-01-01T09:00:00Z",
+                  "mobiltelefonnummer": "11111111",
+                  "mobiltelefonnummerOppdatert": "2000-01-01T09:00:00Z",
+                  "mobiltelefonnummerVerifisert": "2000-01-01T09:00:00Z"
+                }
+            }
+        }
+        """.trimIndent()
+
+    @Language("json")
+    private val jsonFeilResponse =
+        """
+        {
+            "feil": "fortrolig_adresse"
+            
         }
         """.trimIndent()
 
     @Test
     fun `hent kontaktinformasjon fra KrrRestApi`() {
-        wiremock.get {
+        wiremock.post {
             status(200)
             json(jsonResponse)
         }
@@ -55,7 +68,22 @@ internal class KrrServiceImplTest {
 
     @Test
     fun `trigg feil ved henting av kontaktinformasjon fra KrrRestApi`() {
-        wiremock.get { status(404) }
+        wiremock.post { status(404) }
+        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
+
+        val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
+        assertThat(response.personident).isNull()
+        assertThat(response.reservasjon).isEqualTo("")
+        assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
+        assertThat(response.epostadresse?.value).isEqualTo("")
+    }
+
+    @Test
+    fun `trigg feil ved henting av kontaktinformasjon fra KrrRestApi med feil i response`() {
+        wiremock.post {
+            status(200)
+            json(jsonFeilResponse)
+        }
         val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
 
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
@@ -67,7 +95,7 @@ internal class KrrServiceImplTest {
 
     @Test
     fun `trigg server-feil ved henting av kontaktinformasjon fra KrrRestApi`() {
-        wiremock.get { status(500) }
+        wiremock.post { status(500) }
         val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
