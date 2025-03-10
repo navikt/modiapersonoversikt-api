@@ -5,9 +5,10 @@ import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.consumer.krr.generated.apis.PersonControllerApi
+import no.nav.modiapersonoversikt.consumer.krr.generated.apis.PersonerControllerApi
 import no.nav.modiapersonoversikt.consumer.krr.generated.apis.PingControllerApi
 import no.nav.modiapersonoversikt.consumer.krr.generated.models.DigitalKontaktinformasjonDTO
+import no.nav.modiapersonoversikt.consumer.krr.generated.models.PostPersonerRequestDTO
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.personoversikt.common.logging.TjenestekallLogger
@@ -21,7 +22,7 @@ class KrrServiceImpl(
     private val tjenestekallLogger: TjenestekallLogger,
     private val cache: Cache<Fnr, Krr.DigitalKontaktinformasjon> = CacheUtils.createCache(),
 ) : Krr.Service {
-    private val client = PersonControllerApi(basePath = baseUrl, httpClient = httpClient)
+    private val client = PersonerControllerApi(basePath = baseUrl, httpClient = httpClient)
     private val pingApi = PingControllerApi(baseUrl, httpClient)
 
     override fun hentDigitalKontaktinformasjon(fnr: String): Krr.DigitalKontaktinformasjon =
@@ -29,21 +30,21 @@ class KrrServiceImpl(
             cache.get(Fnr(fnr)) {
                 client
                     .runCatching {
-                        getPerson(
-                            navPersonident = fnr,
+                        postPersoner(
+                            postPersonerRequestDTO = PostPersonerRequestDTO(personidenter = setOf(fnr)),
                             navCallId = getCallId(),
                             inkluderSikkerDigitalPost = true,
                         )
                     }.map { data ->
-                        if (data != null) {
-                            mapToDigitalKontaktInformasjon(data)
+                        val dto = data?.personer?.get(fnr)
+                        if (dto != null) {
+                            mapToDigitalKontaktInformasjon(dto)
                         } else {
                             tjenestekallLogger.warn(
-                                header = "Feil ved henting av digital kontaktinformasjon fra krr",
+                                header = "Feil ved henting av digital kontaktinformasjon fra krr: Tom respons for bruker",
                                 fields =
                                     mapOf(
                                         "fnr" to fnr,
-                                        "exception" to it,
                                     ),
                             )
                             Krr.INGEN_KONTAKTINFO
