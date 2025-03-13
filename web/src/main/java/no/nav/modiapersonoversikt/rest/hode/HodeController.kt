@@ -19,12 +19,12 @@ data class Me(
     val etternavn: String,
 )
 
-data class Enheter(
+data class VeilederEnheter(
     val ident: String,
-    val enhetliste: List<Enhet>,
+    val enhetliste: List<VeiledersEnhet>,
 )
 
-data class Enhet(
+data class VeiledersEnhet(
     val enhetId: String,
     val navn: String,
 )
@@ -48,7 +48,7 @@ class HodeController
                 }
 
         @GetMapping("/enheter")
-        fun hentEnheter(): Enheter =
+        fun hentEnheter(): VeilederEnheter =
             tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(describe(Audit.Action.READ, AuditResources.Saksbehandler.Companion.Enheter)) {
@@ -56,7 +56,7 @@ class HodeController
                     val enheter =
                         ansattService
                             .hentEnhetsliste(navIdent)
-                            .map { enhet -> Enhet(enhet.enhetId, enhet.enhetNavn) }
-                    Enheter(navIdent.get(), enheter)
+                            .map { enhet -> VeiledersEnhet(enhet.enhetId, enhet.enhetNavn) }
+                    VeilederEnheter(navIdent.get(), enheter)
                 }
     }
