@@ -8,7 +8,7 @@ import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.SYFOPunkt
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Vedtak
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.Ytelse
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
-import no.nav.modiapersonoversikt.consumer.veilarboppfolging.Siste14aVedtakResponse
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.Gjeldende14aVedtakResponse
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.VeilarbvedtaksstotteService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -92,10 +92,10 @@ class OppfolgingControllerV2
                     ).also(Typeanalyzers.OPPFOLGING_YTELSER.analyzer::capture)
                 }
 
-        @PostMapping("/siste14AVedtak")
-        fun hentSiste14AVedtak(
+        @PostMapping("/hent-gjeldende-14a-vedtak")
+        fun hentGjeldende14aVedtak(
             @RequestBody fnrRequest: FnrRequest,
-        ): Siste14aVedtakResponse =
+        ): Gjeldende14aVedtakResponse =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
@@ -105,8 +105,8 @@ class OppfolgingControllerV2
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    val siste14aVedtak = veilarbvedtaksstotteService.hentSiste14aVedtak(Fnr(fnrRequest.fnr))
-                    Siste14aVedtakResponse(siste14aVedtak)
+                    val gjeldende14aVedtak = veilarbvedtaksstotteService.hentGjeldende14aVedtak(Fnr(fnrRequest.fnr))
+                    Gjeldende14aVedtakResponse(gjeldende14aVedtak)
                 }
 
         private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {

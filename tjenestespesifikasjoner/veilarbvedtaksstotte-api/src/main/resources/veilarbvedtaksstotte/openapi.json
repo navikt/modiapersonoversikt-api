@@ -18,6 +18,10 @@
     {
       "name": "Siste § 14 a-vedtak V2",
       "description": "Funksjonalitet knyttet til siste § 14 a-vedtak."
+    },
+    {
+      "name": "Gjeldende § 14 a-vedtak",
+      "description": "Funksjonalitet knyttet til gjeldende § 14 a-vedtak."
     }
   ],
   "paths": {
@@ -68,6 +72,42 @@
     "/api/utkast/{vedtakId}/fattVedtak": {},
     "/api/meldinger": {},
     "/api/logger/event": {},
+    "/api/hent-gjeldende-14a-vedtak": {},
+    "/api/ekstern/hent-gjeldende-14a-vedtak": {
+      "post": {
+        "tags": [
+          "Gjeldende § 14 a-vedtak"
+        ],
+        "summary": "Henter personens gjeldende § 14 a-vedtak",
+        "description": "Henter det gjeldende § 14 a-vedtaket for den spesifiserte brukeren. Har ikke tilgangssjekk på fagsystemroller, så dette må gjøres av konsumentene.",
+        "operationId": "hentGjeldende14aVedtakEksternt",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Gjeldende14aVedtakRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Gjeldende14aVedtakDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/api/beslutteroversikt/sok": {},
     "/api/beslutter/start": {},
     "/api/beslutter/godkjenn": {},
@@ -76,22 +116,21 @@
     "/api/admin/utrulling/{enhetId}": {},
     "/api/admin/republiser/vedtak-14a-fattet-dvh": {},
     "/api/admin/republiser/siste-14a-vedtak": {},
-    "/open/api/kodeverk/innsatsgruppeoghovedmal": {
+    "/open/api/v2/kodeverk/innsatsgruppeoghovedmal": {
       "get": {
         "tags": [
           "Kodeverk for § 14 a-vedtak"
         ],
         "summary": "Hent kodeverk for innsatsgruppe og hovedmål",
-        "description": "Henter kodeverket for både innsatsgruppe og hovedmål.\n\nEn innsatsgruppe representerer konklusjonen i et § 14 a-vedtak. Med konklusjon menes hvilken/hvor mye arbeidsrettet oppfølging en bruker har rett på.\nEt hovedmål representerer brukers mål med den arbeidsrettede oppfølgingen og er en del av begrunnelsen i et § 14 a-vedtak.\n",
-        "operationId": "getKodeverk",
+        "description": "\n    Henter kodeverket for både innsatsgruppe og hovedmål.\n\n    En innsatsgruppe representerer konklusjonen i et § 14 a-vedtak. Med konklusjon menes hvilken/hvor mye arbeidsrettet oppfølging en bruker har rett på.\n    Et hovedmål representerer brukers mål med den arbeidsrettede oppfølgingen og er en del av begrunnelsen i et § 14 a-vedtak.",
+        "operationId": "getInnsatsgruppeOgHovedmalKodeverk",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "$ref": "#/components/schemas/KodeverkDTO"
+                  "$ref": "#/components/schemas/KodeverkV2DTO"
                 }
               }
             }
@@ -99,7 +138,7 @@
         }
       }
     },
-    "/open/api/kodeverk/innsatsgruppe": {
+    "/open/api/v2/kodeverk/innsatsgruppe": {
       "get": {
         "tags": [
           "Kodeverk for § 14 a-vedtak"
@@ -115,7 +154,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/InnsatsgruppeDetaljert"
+                    "$ref": "#/components/schemas/InnsatsgruppeKodeverkV2DTO"
                   }
                 }
               }
@@ -124,7 +163,7 @@
         }
       }
     },
-    "/open/api/kodeverk/hovedmal": {
+    "/open/api/v2/kodeverk/hovedmal": {
       "get": {
         "tags": [
           "Kodeverk for § 14 a-vedtak"
@@ -140,7 +179,79 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/HovedmalDetaljert"
+                    "$ref": "#/components/schemas/HovedmalKodeverkV2DTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/open/api/kodeverk/innsatsgruppeoghovedmal": {
+      "get": {
+        "tags": [
+          "Kodeverk for § 14 a-vedtak"
+        ],
+        "summary": "Hent kodeverk for innsatsgruppe og hovedmål",
+        "description": "\n    Henter kodeverket for både innsatsgruppe og hovedmål.\n\n    En innsatsgruppe representerer konklusjonen i et § 14 a-vedtak. Med konklusjon menes hvilken/hvor mye arbeidsrettet oppfølging en bruker har rett på.\n    Et hovedmål representerer brukers mål med den arbeidsrettede oppfølgingen og er en del av begrunnelsen i et § 14 a-vedtak.",
+        "operationId": "getInnsatsgruppeOgHovedmalKodeverk_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KodeverkDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/open/api/kodeverk/innsatsgruppe": {
+      "get": {
+        "tags": [
+          "Kodeverk for § 14 a-vedtak"
+        ],
+        "summary": "Hent kodeverk for innsatsgruppe",
+        "description": "Henter kodeverket for innsatsgrupper. En innsatsgruppe representerer konklusjonen i et § 14 a-vedtak. Med konklusjon menes hvilken/hvor mye arbeidsrettet oppfølging en bruker har rett på.",
+        "operationId": "getInnsatsgrupper_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InnsatsgruppeKodeverkDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/open/api/kodeverk/hovedmal": {
+      "get": {
+        "tags": [
+          "Kodeverk for § 14 a-vedtak"
+        ],
+        "summary": "Hent kodeverk for hovedmål",
+        "description": "Henter kodeverket for hovedmål. Et hovedmål representerer brukers mål med den arbeidsrettede oppfølgingen og er en del av begrunnelsen i et § 14 a-vedtak.",
+        "operationId": "getHovedmal_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HovedmalKodeverkDTO"
                   }
                 }
               }
@@ -216,27 +327,183 @@
           "fnr"
         ]
       },
-      "InnsatsgruppeDetaljert": {
+      "Gjeldende14aVedtakDto": {
         "type": "object",
         "properties": {
-          "kode": {
-            "type": "string"
+          "innsatsgruppe": {
+            "type": "string",
+            "enum": [
+              "GODE_MULIGHETER",
+              "TRENGER_VEILEDNING",
+              "TRENGER_VEILEDNING_NEDSATT_ARBEIDSEVNE",
+              "JOBBE_DELVIS",
+              "LITEN_MULIGHET_TIL_A_JOBBE"
+            ]
           },
-          "beskrivelse": {
-            "type": "string"
+          "hovedmal": {
+            "type": "string",
+            "enum": [
+              "SKAFFE_ARBEID",
+              "BEHOLDE_ARBEID",
+              "OKE_DELTAKELSE"
+            ]
+          },
+          "fattetDato": {
+            "type": "string",
+            "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "fattetDato",
+          "innsatsgruppe"
+        ]
       },
-      "HovedmalDetaljert": {
+      "Gjeldende14aVedtakRequest": {
+        "type": "object",
+        "properties": {
+          "fnr": {
+            "type": "string",
+            "description": "Fødselsnummer til brukeren som man ønsker å hente det gjeldende § 14 a-vedtaket til"
+          }
+        },
+        "required": [
+          "fnr"
+        ]
+      },
+      "HovedmalKodeverkV2DTO": {
         "type": "object",
         "properties": {
           "kode": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "SKAFFE_ARBEID",
+              "BEHOLDE_ARBEID"
+            ]
           },
           "beskrivelse": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "beskrivelse",
+          "kode"
+        ]
+      },
+      "InnsatsgruppeKodeverkV2DTO": {
+        "type": "object",
+        "properties": {
+          "kode": {
+            "type": "string",
+            "enum": [
+              "GODE_MULIGHETER",
+              "TRENGER_VEILEDNING",
+              "TRENGER_VEILEDNING_NEDSATT_ARBEIDSEVNE",
+              "JOBBE_DELVIS",
+              "LITEN_MULIGHET_TIL_A_JOBBE"
+            ]
+          },
+          "gammelKode": {
+            "type": "string",
+            "enum": [
+              "STANDARD_INNSATS",
+              "SITUASJONSBESTEMT_INNSATS",
+              "SPESIELT_TILPASSET_INNSATS",
+              "GRADERT_VARIG_TILPASSET_INNSATS",
+              "VARIG_TILPASSET_INNSATS"
+            ]
+          },
+          "arenaKode": {
+            "type": "string",
+            "enum": [
+              "BATT",
+              "BFORM",
+              "IKVAL",
+              "VARIG"
+            ]
+          },
+          "beskrivelse": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "arenaKode",
+          "beskrivelse",
+          "gammelKode",
+          "kode"
+        ]
+      },
+      "KodeverkV2DTO": {
+        "type": "object",
+        "properties": {
+          "innsatsgrupper": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InnsatsgruppeKodeverkV2DTO"
+            }
+          },
+          "hovedmal": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HovedmalKodeverkV2DTO"
+            }
+          }
+        },
+        "required": [
+          "hovedmal",
+          "innsatsgrupper"
+        ]
+      },
+      "HovedmalKodeverkDTO": {
+        "type": "object",
+        "properties": {
+          "kode": {
+            "type": "string",
+            "enum": [
+              "SKAFFE_ARBEID",
+              "BEHOLDE_ARBEID",
+              "OKE_DELTAKELSE"
+            ]
+          },
+          "beskrivelse": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "beskrivelse",
+          "kode"
+        ]
+      },
+      "InnsatsgruppeKodeverkDTO": {
+        "type": "object",
+        "properties": {
+          "kode": {
+            "type": "string",
+            "enum": [
+              "STANDARD_INNSATS",
+              "SITUASJONSBESTEMT_INNSATS",
+              "SPESIELT_TILPASSET_INNSATS",
+              "GRADERT_VARIG_TILPASSET_INNSATS",
+              "VARIG_TILPASSET_INNSATS"
+            ]
+          },
+          "beskrivelse": {
+            "type": "string"
+          },
+          "arenakode": {
+            "type": "string",
+            "enum": [
+              "BATT",
+              "BFORM",
+              "IKVAL",
+              "VARIG"
+            ]
+          }
+        },
+        "required": [
+          "arenakode",
+          "beskrivelse",
+          "kode"
+        ]
       },
       "KodeverkDTO": {
         "type": "object",
@@ -244,16 +511,20 @@
           "innsatsgrupper": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InnsatsgruppeDetaljert"
+              "$ref": "#/components/schemas/InnsatsgruppeKodeverkDTO"
             }
           },
           "hovedmal": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/HovedmalDetaljert"
+              "$ref": "#/components/schemas/HovedmalKodeverkDTO"
             }
           }
-        }
+        },
+        "required": [
+          "hovedmal",
+          "innsatsgrupper"
+        ]
       }
     }
   }

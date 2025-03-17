@@ -5,8 +5,8 @@ import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
+import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.Gjeldende14AVedtakApi
 import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.KodeverkFor14AVedtakApi
-import no.nav.modiapersonoversikt.domain.veilarbvedtaksstotte.api.generated.apis.Siste14AVedtakV2Api
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
@@ -28,10 +28,10 @@ open class VeilarbvedtaksstotteConfig {
     private val downstreamApi = DownstreamApi.parse(getRequiredProperty("VEILARBVEDTAKSTOTTEAPI_SCOPE"))
 
     @Bean
-    open fun siste14AVedtakApi(
+    open fun gjeldende14AVedtakApi(
         onBehalfOfTokenClient: OnBehalfOfTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
-    ): Siste14AVedtakV2Api {
+    ): Gjeldende14AVedtakApi {
         val httpClient =
             RestClient
                 .baseClient()
@@ -49,7 +49,7 @@ open class VeilarbvedtaksstotteConfig {
                     },
                 ).build()
 
-        return Siste14AVedtakV2Api(url, httpClient)
+        return Gjeldende14AVedtakApi(url, httpClient)
     }
 
     @Bean
@@ -79,9 +79,9 @@ open class VeilarbvedtaksstotteConfig {
 
     @Bean
     open fun veilarbvedtaksstotteService(
-        siste14AVedtakApi: Siste14AVedtakV2Api,
+        gjeldende14AVedtakApi: Gjeldende14AVedtakApi,
         kodeverkFor14AVedtakApi: KodeverkFor14AVedtakApi,
-    ): VeilarbvedtaksstotteService = VeilarbvedtaksstotteServiceImpl(siste14AVedtakApi, kodeverkFor14AVedtakApi)
+    ): VeilarbvedtaksstotteService = VeilarbvedtaksstotteServiceImpl(gjeldende14AVedtakApi, kodeverkFor14AVedtakApi)
 
     @Bean
     open fun veilarbvedtaksstotteApiPing(veilarbvedtaksstotteService: VeilarbvedtaksstotteService): Pingable =
