@@ -54,7 +54,7 @@ spec:
     outbound:
       external:
         - host: graph.microsoft.com
-        - host: saf-q1.dev-fss-pub.nais.io
+        - host: saf.dev-fss-pub.nais.io
         - host: sokos-utbetaldata.dev-fss-pub.nais.io
         - host: pdl-api.dev-fss-pub.nais.io
         - host: pdl-pip-api.dev-fss-pub.nais.io
@@ -97,7 +97,7 @@ spec:
     - secret: modiapersonoversikt-api-unleash-api-token
   env:
     - name: APP_ENVIRONMENT_NAME
-      value: "q1"
+      value: "q2"
     - name: MS_GRAPH_URL
       value: "https://graph.microsoft.com/"
     - name: MS_GRAPH_SCOPE
@@ -109,9 +109,9 @@ spec:
     - name: SAF_GRAPHQL_URL
       value: "https://saf.dev-fss-pub.nais.io/graphql"
     - name: SAF_HENTDOKUMENT_URL
-      value: "https://saf.dev-fss-pub.nais.io/rest/hentdokument"
+      value: "https://saf-q2.dev-fss-pub.nais.io/rest/hentdokument"
     - name: SAF_SCOPE
-      value: "dev-fss:teamdokumenthandtering:saf-q1"
+      value: "dev-fss:teamdokumenthandtering:saf"
     - name: SERVER_DREK_URL
       value: "https://pdl-web.dev.intern.nav.no/rekvirerdnummer"
     - name: SERVER_NORG2_FRONTEND_URL
