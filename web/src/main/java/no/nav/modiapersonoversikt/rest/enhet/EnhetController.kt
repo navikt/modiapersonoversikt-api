@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingServi
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
+@Deprecated("Bruk v2")
 @RestController
 @RequestMapping("/rest/enheter")
 class EnhetController
