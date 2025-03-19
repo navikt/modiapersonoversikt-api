@@ -8,6 +8,46 @@ servers:
 security:
   - Authorization: []
 paths:
+  /behandling:
+    post:
+      description: ""
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorJson"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /behandlinger/perioder:
+    post:
+      tags:
+        - Tiltakspenger
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VedtakReqDTO"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MappingError"
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BehandlingPerioderResponse"
   /isalive:
     get:
       tags:
@@ -38,6 +78,31 @@ paths:
               examples:
                 Example#1:
                   value: "READY"
+        "503":
+          description: "Service Unavailable"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "NOT READY"
+  /vedtak:
+    post:
+      description: ""
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorJson"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
   /vedtak/detaljer:
     post:
       tags:
@@ -52,18 +117,12 @@ paths:
       responses:
         "400":
           description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/MappingError"
         "200":
           description: "OK"
           content:
-            '*/*':
+            application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Vedtak"
+                $ref: "#/components/schemas/VedtakDetaljer"
   /vedtak/perioder:
     post:
       tags:
@@ -85,20 +144,21 @@ paths:
         "200":
           description: "OK"
           content:
-            '*/*':
+            application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Periode"
+                $ref: "#/components/schemas/VedtakPerioderResponse"
 components:
   schemas:
-    ExceptionResponse:
+    ErrorJson:
       type: "object"
       properties:
-        message:
+        melding:
+          type: "string"
+        kode:
           type: "string"
       required:
-        - "message"
+        - "melding"
+        - "kode"
     VedtakReqDTO:
       type: "object"
       properties:
@@ -108,6 +168,134 @@ components:
           type: "string"
         tom:
           type: "string"
+    VedtakDetaljer:
+      type: "array"
+      items:
+        type: "object"
+        properties:
+          fom:
+            type: "string"
+            format: "date"
+            description: "The start date in YYYY-MM-DD format"
+          tom:
+            type: "string"
+            format: "date"
+            description: "The end date in YYYY-MM-DD format"
+          antallDager:
+            type: "number"
+            description: "The number of days"
+          dagsatsTiltakspenger:
+            type: "integer"
+            description: "The daily rate for tiltakspenger"
+          dagsatsBarnetillegg:
+            type: "integer"
+            description: "The daily rate for barnetillegg"
+          antallBarn:
+            type: "integer"
+            description: "The number of children"
+          relaterteTiltak:
+            type: "string"
+            description: "Related measures"
+          rettighet:
+            type: "string"
+            enum:
+              - TILTAKSPENGER
+              - BARNETILLEGG
+              - TILTAKSPENGER_OG_BARNETILLEGG
+              - INGENTING
+            description: "The right associated with the vedtak"
+          vedtakId:
+            type: "string"
+            description: "The ID of the vedtak"
+          sakId:
+            type: "string"
+            description: "The ID of the case"
+          saksnummer:
+            type: "string"
+            description: "The case number"
+          kilde:
+            type: "string"
+            description: "The source of the vedtak"
+        required: [ "fom", "tom", "antallDager", "dagsatsTiltakspenger", "dagsatsBarnetillegg", "antallBarn", "relaterteTiltak", "rettighet", "vedtakId", "sakId", "saksnummer", "kilde" ]
+    VedtakPerioderResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          vedtakId:
+            type: string
+            description: 'Id for vedtaket, enten fra arena eller tpsak'
+          rettighet:
+            type: string
+            enum:
+              - TILTAKSPENGER
+              - TILTAKSPENGER_OG_BARNETILLEGG
+            description: Rettigheten fra vedtaket
+          periode:
+            $ref: '#/components/schemas/Periode'
+          kilde:
+            type: string
+            enum:
+              - TPSAK
+              - ARENA
+            description: Kilden for vedtaket
+          barnetillegg:
+            type: object
+            properties:
+              perioder:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Barnetilleggperiode'
+        required:
+          - vedtakId
+          - rettighet
+          - periode
+          - kilde
+    Periode:
+      type: object
+      required:
+        - fraOgMed
+        - tilOgMed
+      properties:
+        fraOgMed:
+          type: string
+          format: date
+          description: Startdato på format YYYY-MM-DD
+        tilOgMed:
+          type: string
+          format: date
+          description: Sluttdato på format YYYY-MM-DD
+    Barnetilleggperiode:
+      type: object
+      required:
+        - antallBarn
+        - periode
+      properties:
+        antallBarn:
+          type: integer
+          description: Antall barn
+        periode:
+          $ref: '#/components/schemas/Periode'
+    BehandlingPerioderResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          behandlingId:
+            type: string
+            description: 'The ID of the behandling. Ulid, prefixed with ''beh_'''
+          fom:
+            type: string
+            format: date
+            description: The start date in YYYY-MM-DD format
+          tom:
+            type: string
+            format: date
+            description: The end date in YYYY-MM-DD format
+        required:
+          - behandlingId
+          - fom
+          - tom
     MappingError:
       type: "object"
       properties:
@@ -115,56 +303,3 @@ components:
           type: "string"
       required:
         - "feilmelding"
-    Vedtak:
-      type: "object"
-      properties:
-        fom:
-          type: "string"
-          format: "date"
-        tom:
-          type: "string"
-          format: "date"
-        antallDager:
-          type: "number"
-          format: "double"
-        dagsatsTiltakspenger:
-          type: "integer"
-          format: "int32"
-        dagsatsBarnetillegg:
-          type: "integer"
-          format: "int32"
-        antallBarn:
-          type: "integer"
-          format: "int32"
-        relaterteTiltak:
-          type: "string"
-        rettighet:
-          type: "string"
-          enum:
-            - "TILTAKSPENGER"
-            - "BARNETILLEGG"
-            - "TILTAKSPENGER_OG_BARNETILLEGG"
-            - "INGENTING"
-        vedtakId:
-          type: "string"
-        sakId:
-          type: "string"
-      required:
-        - "fom"
-        - "tom"
-        - "relaterteTiltak"
-        - "rettighet"
-        - "vedtakId"
-        - "sakId"
-    Periode:
-      type: "object"
-      properties:
-        fom:
-          type: "string"
-          format: "date"
-        tom:
-          type: "string"
-          format: "date"
-      required:
-        - "fom"
-        - "tom"
