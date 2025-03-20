@@ -550,13 +550,13 @@ class PersondataFletter(
         gyldighetsPeriode = gyldighetsPeriode,
     )
 
-    private fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.Enhet? =
+    private fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.PersonDataEnhet? =
         navEnhet
             .map {
                 if (it == null) {
                     null
                 } else {
-                    Persondata.Enhet(it.enhet.enhetId, it.enhet.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
+                    Persondata.PersonDataEnhet(it.enhet.enhetId, it.enhet.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
                 }
             }.getOrNull()
 

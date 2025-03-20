@@ -22,7 +22,7 @@ object Persondata {
         val bostedAdresse: List<Adresse>,
         val kontaktAdresse: List<Adresse>,
         val oppholdsAdresse: List<Adresse>,
-        val navEnhet: Enhet?,
+        val navEnhet: PersonDataEnhet?,
         val statsborgerskap: List<Statsborgerskap>,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val sikkerhetstiltak: List<Sikkerhetstiltak>,
@@ -162,7 +162,7 @@ object Persondata {
         val apningstider: List<Apningstid>,
     )
 
-    data class Enhet(
+    data class PersonDataEnhet(
         val id: String,
         val navn: String,
         val publikumsmottak: List<Publikumsmottak>,

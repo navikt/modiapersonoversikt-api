@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt
 
 import no.nav.common.nais.NaisYamlUtils
 import no.nav.common.rest.client.RestClient
-import no.nav.common.test.SystemProperties
 import no.nav.common.test.ssl.SSLTestUtils
 import no.nav.common.test.ssl.TrustAllSSLSocketFactory
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -16,8 +15,7 @@ object MainTest {
         System.setProperty("NAIS_CLUSTER_NAME", "dev-gcp")
         System.setProperty("UNLEASH_SERVER_API_URL", "https://unleash-api.dev-gcp.nais.io/api")
         System.setProperty("UNLEASH_SERVER_API_TOKEN", "test")
-        SystemProperties.setFrom(".vault.properties")
-        NaisYamlUtils.loadFromYaml(".nais/dev.yml")
+        NaisYamlUtils.loadFromYaml("web/.nais/dev.yml")
         SSLTestUtils.disableCertificateChecks()
     }
 
