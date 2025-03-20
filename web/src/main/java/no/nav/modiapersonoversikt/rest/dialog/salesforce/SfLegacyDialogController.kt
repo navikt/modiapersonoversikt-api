@@ -85,7 +85,7 @@ class SfLegacyDialogController(
          */
         val traad = sfHenvendelseService.hentHenvendelse(opprettHenvendelseRequest.traadId)
         val oppgaveId: String? =
-            finnOgTilordneOppgaveIdTilTrad(traad, fnr, opprettHenvendelseRequest.enhet, ignorerConflict ?: false)
+            finnOgTilordneOppgaveIdTilTrad(traad, fnr, opprettHenvendelseRequest.enhet, ignorerConflict == true)
 
         return FortsettDialogDTO(opprettHenvendelseRequest.traadId, oppgaveId)
     }
@@ -192,7 +192,7 @@ class SfLegacyDialogController(
                     ferdigstiltDato = melding.sendtDato,
                     kontorsperretEnhet = kontorsperretEnhet,
                     kontorsperretAv = kontorsperretAv,
-                    sendtTilSladding = (henvendelse.sladding ?: false),
+                    sendtTilSladding = (henvendelse.sladding == true),
                     markertSomFeilsendtAv = markertSomFeilsendtAv,
                 )
             }

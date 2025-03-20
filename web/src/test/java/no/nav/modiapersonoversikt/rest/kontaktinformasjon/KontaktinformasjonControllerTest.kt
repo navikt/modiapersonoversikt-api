@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +20,7 @@ private val SIST_OPPDATERT = LocalDate.of(2012, 12, 27)
 
 class KontaktinformasjonControllerTest {
     private val krrService: Krr.Service = mockk()
-    private val controller = KontaktinformasjonController(krrService, TilgangskontrollMock.get())
+    private val controller = KontaktinformasjonControllerV2(krrService, TilgangskontrollMock.get())
 
     @BeforeEach
     fun before() {
@@ -46,7 +47,7 @@ class KontaktinformasjonControllerTest {
 
     @Test
     fun `Henter informasjon fra Digital Kontaktinformasjon registeret`() {
-        val response = controller.hentKontaktinformasjon(FNR)
+        val response = controller.hentKontaktinformasjon(FnrRequest(FNR))
         val epost = response.epost
         val mobiltelefon = response.mobiltelefon
 
@@ -69,7 +70,7 @@ class KontaktinformasjonControllerTest {
     fun `Når bruker ikke har epost eller mobil`() {
         every { krrService.hentDigitalKontaktinformasjon(FNR) } returns Krr.DigitalKontaktinformasjon()
 
-        val response = controller.hentKontaktinformasjon(FNR)
+        val response = controller.hentKontaktinformasjon(FnrRequest(FNR))
         val epost = response.epost
         val mobiltelefon = response.mobiltelefon
 
