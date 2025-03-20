@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.personoversikt.common.kabac.Decision
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.Date
 
 @RestController
 @RequestMapping("/rest/v2/tilgang")
@@ -77,4 +79,42 @@ class TilgangControllerV2
             } else {
                 this
             }
+    }
+
+data class TilgangDTO(
+    val harTilgang: Boolean,
+    val ikkeTilgangArsak: Decision.DenyCause?,
+    val aktivIdent: String?,
+)
+
+class AuthIntropectionDTO(
+    val expirationDate: Long,
+) {
+    companion object {
+        val INVALID = AuthIntropectionDTO(-1)
+    }
+}
+
+internal fun <T> TilgangDTO.logAudit(
+    audit: Audit.AuditDescriptor<T>,
+    data: T,
+): TilgangDTO {
+    when (this.harTilgang) {
+        true -> audit.log(data)
+        else -> audit.denied("Ikke tilgang til $data, årsak: ${this.ikkeTilgangArsak}")
+    }
+    return this
+}
+
+internal fun JWTClaimsSet.getExpirationDate(): AuthIntropectionDTO =
+    when (val exp: Date? = this.expirationTime) {
+        null -> AuthIntropectionDTO.INVALID
+        else -> AuthIntropectionDTO(exp.time)
+    }
+
+internal fun Decision.makeResponse(): TilgangDTO =
+    when (val biased = this.withBias(Decision.Type.DENY)) {
+        is Decision.Permit -> TilgangDTO(true, null, null)
+        is Decision.Deny -> TilgangDTO(false, biased.cause, null)
+        is Decision.NotApplicable -> TilgangDTO(false, Decision.NO_APPLICABLE_POLICY_FOUND, null)
     }

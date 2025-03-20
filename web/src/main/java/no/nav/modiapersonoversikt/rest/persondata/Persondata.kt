@@ -112,7 +112,7 @@ object Persondata {
         val gyldigTilOgMed: LocalDate?,
     )
 
-    data class Adresse constructor(
+    data class Adresse(
         val coAdresse: String? = null,
         val linje1: String,
         val linje2: String? = null,

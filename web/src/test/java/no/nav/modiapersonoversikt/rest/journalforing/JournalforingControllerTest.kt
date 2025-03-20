@@ -34,12 +34,13 @@ internal class JournalforingControllerTest {
                 temaKode = "DAG"
                 fagsystemKode = "IT01"
                 fagsystemSaksId = "987654"
+                fnr = "10108000398"
             }
 
         val sakerService: SakerService = mockk()
         val sfHenvendelseService: SfHenvendelseService = mockk()
         val controller =
-            JournalforingController(
+            JournalforingControllerV2(
                 sakerService,
                 sfHenvendelseService,
                 TilgangskontrollMock.get(),
@@ -68,13 +69,13 @@ internal class JournalforingControllerTest {
         AuthContextTestUtils.withIdent(
             ident,
             UnsafeSupplier {
-                controller.knyttTilSak("10108000398", "traad-id", sak, "1234")
+                controller.knyttTilSak("traad-id", sak, "1234")
             },
         )
     }
 
     @Test
-    fun `forespørsler som fieler kaster 500 Internal Server Error`() {
+    fun `foresporsler som fieler kaster 500 Internal Server Error`() {
         every {
             sfHenvendelseService.journalforHenvendelse(
                 any(),
@@ -90,17 +91,17 @@ internal class JournalforingControllerTest {
                 AuthContextTestUtils.withIdent(
                     ident,
                     UnsafeSupplier {
-                        controller.knyttTilSak("10108000398", "traad-id", sak, "1234")
+                        controller.knyttTilSak("traad-id", sak, "1234")
                     },
                 )
             }
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.statusCode)
-        assertEquals(JournalforingController.UKJENT_FEIL, exception.reason)
+        assertEquals(JournalforingControllerV2.UKJENT_FEIL, exception.reason)
     }
 
     @Test
-    fun `forespørsler uten enhet kaster 500 Internal Server Error med message satt i body`() {
+    fun `foresporsler uten enhet kaster 500 Internal Server Error med message satt i body`() {
         every { sfHenvendelseService.journalforHenvendelse(any(), any(), any(), any(), any()) } just runs
 
         val exception =
@@ -108,13 +109,13 @@ internal class JournalforingControllerTest {
                 AuthContextTestUtils.withIdent(
                     ident,
                     UnsafeSupplier {
-                        controller.knyttTilSak("10108000398", "traad-id", sak, null)
+                        controller.knyttTilSak("traad-id", sak, null)
                     },
                 )
             }
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.statusCode)
-        assertEquals(JournalforingController.FEILMELDING_UTEN_ENHET, exception.reason)
+        assertEquals(JournalforingControllerV2.FEILMELDING_UTEN_ENHET, exception.reason)
     }
 
     @Test

@@ -54,6 +54,13 @@ class OppgaveControllerV2
                 }
     }
 
+data class OppgaveDTO(
+    val oppgaveId: String,
+    val traadId: String?,
+    val fødselsnummer: String?,
+    val erSTOOppgave: Boolean,
+)
+
 private fun mapOppgave(oppgave: Oppgave) =
     OppgaveDTO(
         oppgave.oppgaveId,

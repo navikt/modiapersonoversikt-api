@@ -42,7 +42,7 @@ object SakerApiMapper {
         fun mapTilResultat(sakstemaer: List<SoknadsstatusSakstema>) =
             SakerApi.ResultatSoknadsstatus(
                 sakstemaer.map { sakstema ->
-                    val harTilgang = tematilgang[sakstema.temakode] ?: false
+                    val harTilgang = tematilgang[sakstema.temakode] == true
                     val tilhorendeSaker = sakstema.tilhorendeSaker.map(::mapTilTilhorendeSak)
                     SakerApi.SoknadsstatusSakstema(
                         temakode = sakstema.temakode,
@@ -78,7 +78,7 @@ object SakerApiMapper {
                 erJournalfort = behandlingskjede.isErJournalfort,
                 feil =
                     SakerApi.Feil(
-                        inneholderFeil = behandlingskjede.feilWrapper?.inneholderFeil ?: false,
+                        inneholderFeil = behandlingskjede.feilWrapper?.inneholderFeil == true,
                         feilmelding = behandlingskjede.feilWrapper?.feilmelding,
                     ),
             )
