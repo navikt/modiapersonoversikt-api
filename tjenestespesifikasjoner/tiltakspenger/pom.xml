@@ -47,7 +47,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/tiltakspenger/openapi.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/navikt/tiltakspenger-datadeling/refs/heads/main/src/main/resources/openapi/documentation.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp4</library>
                             <packageName>no.nav.modiapersonoversikt.consumer.tiltakspenger.generated</packageName>

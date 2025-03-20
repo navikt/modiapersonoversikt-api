@@ -4,7 +4,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
-import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.apis.TiltakspengerApi
+import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.apis.DefaultApi
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
@@ -26,7 +26,7 @@ open class TiltakspengerConfig {
         val tokenProvider = machineTokenClient.bindTo(scope)
 
         val client =
-            TiltakspengerApi(
+            DefaultApi(
                 basePath = basePath,
                 httpClient =
                     RestClient
