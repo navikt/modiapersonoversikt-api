@@ -16,7 +16,6 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
-import no.nav.modiapersonoversikt.rest.Typeanalyzers
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -34,7 +33,7 @@ class OppfolgingControllerV2
         @PostMapping
         fun hent(
             @RequestBody fnrRequest: FnrRequest,
-        ): Map<String, Any?> =
+        ): OppfolgingDTO =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
@@ -46,11 +45,7 @@ class OppfolgingControllerV2
                 ) {
                     val oppfolging = service.hentOppfolgingsinfo(Fnr(fnrRequest.fnr))
 
-                    mapOf(
-                        "erUnderOppfolging" to oppfolging.erUnderOppfolging,
-                        "veileder" to hentVeileder(oppfolging.veileder),
-                        "enhet" to hentEnhet(oppfolging.oppfolgingsenhet),
-                    ).also(Typeanalyzers.OPPFOLGING_STATUS.analyzer::capture)
+                    OppfolgingDTO(oppfolging.erUnderOppfolging, oppfolging.veileder, oppfolging.oppfolgingsenhet)
                 }
 
         @PostMapping("/ytelserogkontrakter")
@@ -58,7 +53,7 @@ class OppfolgingControllerV2
             @RequestBody fnrRequest: FnrRequest,
             @RequestParam("startDato") start: String?,
             @RequestParam("sluttDato") slutt: String?,
-        ): Map<String, Any?> =
+        ): UtvidetOppfolgingDTO =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
@@ -79,17 +74,17 @@ class OppfolgingControllerV2
 
                     val oppfolgingstatus = runCatching { hent(fnrRequest) }
 
-                    mapOf(
-                        "oppfolging" to oppfolgingstatus.getOrNull(),
-                        "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
-                        "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
-                        "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
-                        "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
-                        "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
-                        "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
-                        "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
-                        "ytelser" to hentYtelser(ytelserResponse.ytelser),
-                    ).also(Typeanalyzers.OPPFOLGING_YTELSER.analyzer::capture)
+                    UtvidetOppfolgingDTO(
+                        oppfolging = oppfolgingstatus.getOrNull(),
+                        meldeplikt = kontraktResponse.bruker?.meldeplikt,
+                        formidlingsgruppe = kontraktResponse.bruker?.formidlingsgruppe,
+                        innsatsgruppe = kontraktResponse.bruker?.innsatsgruppe,
+                        sykmeldtFra = kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
+                        rettighetsgruppe = ytelserResponse.rettighetsgruppe,
+                        vedtaksdato = kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
+                        sykefraværsoppfølging = hentSyfoPunkt(kontraktResponse.syfoPunkter),
+                        ytelser = hentYtelser(ytelserResponse.ytelser),
+                    )
                 }
 
         @PostMapping("/hent-gjeldende-14a-vedtak")
@@ -109,78 +104,125 @@ class OppfolgingControllerV2
                     Gjeldende14aVedtakResponse(gjeldende14aVedtak)
                 }
 
-        private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
+        private fun hentYtelser(ytelser: List<Ytelse>?): List<YtelseDTO> {
             if (ytelser == null) return emptyList()
 
             return ytelser.map {
-                mapOf(
-                    "datoKravMottatt" to it.datoKravMottat?.toString(JODA_DATOFORMAT),
-                    "fom" to it.fom?.toString(JODA_DATOFORMAT),
-                    "tom" to it.tom?.toString(JODA_DATOFORMAT),
-                    "status" to it.status,
-                    "type" to it.type,
-                    "vedtak" to hentVedtak(it.vedtak),
-                    "dagerIgjenMedBortfall" to it.dagerIgjenMedBortfall,
-                    "ukerIgjenMedBortfall" to it.ukerIgjenMedBortfall,
-                    *hentDagPengerFelter(it),
-                )
+                when (it) {
+                    is Dagpengeytelse ->
+                        DagpengeytelseDTO(
+                            datoKravMottat = it.datoKravMottat?.toString(JODA_DATOFORMAT),
+                            fom = it.fom?.toString(JODA_DATOFORMAT),
+                            tom = it.tom?.toString(JODA_DATOFORMAT),
+                            status = it.status,
+                            type = it.type,
+                            vedtak = hentVedtak(it.vedtak),
+                            dagerIgjenMedBortfall = it.dagerIgjenMedBortfall,
+                            ukerIgjenMedBortfall = it.ukerIgjenMedBortfall,
+                            dagerIgjenPermittering = it.antallDagerIgjenPermittering,
+                            ukerIgjenPermittering = it.antallUkerIgjenPermittering,
+                            dagerIgjen = it.antallDagerIgjen,
+                            ukerIgjen = it.antallUkerIgjen,
+                        )
+
+                    else ->
+                        YtelseDTO(
+                            datoKravMottat = it.datoKravMottat?.toString(JODA_DATOFORMAT),
+                            fom = it.fom?.toString(JODA_DATOFORMAT),
+                            tom = it.tom?.toString(JODA_DATOFORMAT),
+                            status = it.status,
+                            type = it.type,
+                            vedtak = hentVedtak(it.vedtak),
+                            dagerIgjenMedBortfall = it.dagerIgjenMedBortfall,
+                            ukerIgjenMedBortfall = it.ukerIgjenMedBortfall,
+                        )
+                }
             }
         }
 
-        private fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> =
-            when (ytelse) {
-                is Dagpengeytelse ->
-                    arrayOf(
-                        "dagerIgjenPermittering" to ytelse.antallDagerIgjenPermittering,
-                        "ukerIgjenPermittering" to ytelse.antallUkerIgjenPermittering,
-                        "dagerIgjen" to ytelse.antallDagerIgjen,
-                        "ukerIgjen" to ytelse.antallUkerIgjen,
-                    )
-
-                else -> emptyArray()
-            }
-
-        private fun hentVedtak(vedtak: List<Vedtak>?): List<Map<String, Any?>> {
+        private fun hentVedtak(vedtak: List<Vedtak>?): List<VedtakDTO> {
             if (vedtak == null) return emptyList()
 
             return vedtak.map {
-                mapOf(
-                    "aktivFra" to it.activeFrom?.toString(JODA_DATOFORMAT),
-                    "aktivTil" to it.activeTo?.toString(JODA_DATOFORMAT),
-                    "aktivitetsfase" to it.aktivitetsfase,
-                    "vedtakstatus" to it.vedtakstatus,
-                    "vedtakstype" to it.vedtakstype,
+                VedtakDTO(
+                    aktivFra = it.activeFrom?.toString(JODA_DATOFORMAT),
+                    aktivTil = it.activeTo?.toString(JODA_DATOFORMAT),
+                    aktivitetsfase = it.aktivitetsfase,
+                    vedtakstatus = it.vedtakstatus,
+                    vedtakstype = it.vedtakstype,
                 )
             }
         }
 
-        private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>> {
+        private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<SyfoPunktDTO> {
             if (syfoPunkter == null) return emptyList()
 
             return syfoPunkter.map {
-                mapOf(
-                    "dato" to it.dato?.toString(JODA_DATOFORMAT),
-                    "fastOppfølgingspunkt" to it.isFastOppfolgingspunkt,
-                    "status" to it.status,
-                    "syfoHendelse" to it.syfoHendelse,
+                SyfoPunktDTO(
+                    dato = it.dato?.toString(JODA_DATOFORMAT),
+                    fastOppfølgingspunkt = it.isFastOppfolgingspunkt,
+                    status = it.status,
+                    syfoHendelse = it.syfoHendelse,
                 )
             }
         }
-
-        private fun hentVeileder(veileder: Veileder?): Map<String, Any?>? =
-            veileder?.let {
-                mapOf(
-                    "ident" to it.ident,
-                    "navn" to it.navn,
-                )
-            }
-
-        private fun hentEnhet(enhet: ArbeidsrettetOppfolging.Enhet?): Map<String, Any?>? =
-            enhet?.let {
-                mapOf(
-                    "id" to it.enhetId,
-                    "navn" to it.navn,
-                    "status" to null, // TODO Ubrukt i frontend, men lar feltet være frem til det er fjernet fra domenemodellen der
-                )
-            }
     }
+
+data class OppfolgingDTO(
+    val erUnderOppfolging: Boolean,
+    val veileder: Veileder?,
+    val enhet: ArbeidsrettetOppfolging.Enhet?,
+)
+
+data class SyfoPunktDTO(
+    val fastOppfølgingspunkt: Boolean,
+    val dato: String?,
+    val status: String,
+    val syfoHendelse: String,
+)
+
+open class YtelseDTO(
+    open val type: String,
+    open val status: String,
+    open val datoKravMottat: String?,
+    open val vedtak: List<VedtakDTO> = listOf(),
+    open val fom: String?,
+    open val tom: String?,
+    open val dagerIgjenMedBortfall: Int,
+    open val ukerIgjenMedBortfall: Int,
+)
+
+data class DagpengeytelseDTO(
+    override val type: String,
+    override val status: String,
+    override val datoKravMottat: String?,
+    override val vedtak: List<VedtakDTO> = listOf(),
+    override val fom: String?,
+    override val tom: String?,
+    override val dagerIgjenMedBortfall: Int,
+    override val ukerIgjenMedBortfall: Int,
+    val dagerIgjenPermittering: Int,
+    val ukerIgjenPermittering: Int,
+    val dagerIgjen: Int,
+    val ukerIgjen: Int,
+) : YtelseDTO(type, status, datoKravMottat, vedtak, fom, tom, dagerIgjenMedBortfall, ukerIgjenMedBortfall)
+
+data class VedtakDTO(
+    val aktivFra: String?,
+    val aktivTil: String?,
+    val aktivitetsfase: String,
+    val vedtakstatus: String,
+    val vedtakstype: String,
+)
+
+data class UtvidetOppfolgingDTO(
+    val oppfolging: OppfolgingDTO?,
+    val meldeplikt: Boolean?,
+    val formidlingsgruppe: String?,
+    val innsatsgruppe: String?,
+    val sykmeldtFra: String?,
+    val rettighetsgruppe: String,
+    val vedtaksdato: String?,
+    val sykefraværsoppfølging: List<SyfoPunktDTO> = listOf(),
+    val ytelser: List<YtelseDTO> = listOf(),
+)
