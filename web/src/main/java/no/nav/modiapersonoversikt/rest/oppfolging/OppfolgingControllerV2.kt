@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
@@ -126,7 +128,7 @@ class OppfolgingControllerV2
                         )
 
                     else ->
-                        YtelseDTO(
+                        GenericYtelseDTO(
                             datoKravMottat = it.datoKravMottat?.toString(JODA_DATOFORMAT),
                             fom = it.fom?.toString(JODA_DATOFORMAT),
                             tom = it.tom?.toString(JODA_DATOFORMAT),
@@ -181,7 +183,18 @@ data class SyfoPunktDTO(
     val syfoHendelse: String,
 )
 
-open class YtelseDTO(
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type",
+)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = GenericYtelseDTO::class, name = "GenericYtelseDTO"),
+    JsonSubTypes.Type(value = DagpengeytelseDTO::class, name = "YtelseDTO"),
+)
+sealed class YtelseDTO
+
+open class GenericYtelseDTO(
     open val type: String,
     open val status: String,
     open val datoKravMottat: String?,
@@ -190,7 +203,7 @@ open class YtelseDTO(
     open val tom: String?,
     open val dagerIgjenMedBortfall: Int,
     open val ukerIgjenMedBortfall: Int,
-)
+) : YtelseDTO()
 
 data class DagpengeytelseDTO(
     override val type: String,
@@ -205,7 +218,7 @@ data class DagpengeytelseDTO(
     val ukerIgjenPermittering: Int,
     val dagerIgjen: Int,
     val ukerIgjen: Int,
-) : YtelseDTO(type, status, datoKravMottat, vedtak, fom, tom, dagerIgjenMedBortfall, ukerIgjenMedBortfall)
+) : GenericYtelseDTO(type, status, datoKravMottat, vedtak, fom, tom, dagerIgjenMedBortfall, ukerIgjenMedBortfall)
 
 data class VedtakDTO(
     val aktivFra: String?,
