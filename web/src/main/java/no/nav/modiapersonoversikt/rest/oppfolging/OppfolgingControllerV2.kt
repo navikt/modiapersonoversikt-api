@@ -128,7 +128,7 @@ class OppfolgingControllerV2
                         )
 
                     else ->
-                        GenericYtelseDTO(
+                        OppfolgingsYtelseDTO(
                             datoKravMottat = it.datoKravMottat?.toString(JODA_DATOFORMAT),
                             fom = it.fom?.toString(JODA_DATOFORMAT),
                             tom = it.tom?.toString(JODA_DATOFORMAT),
@@ -189,20 +189,20 @@ data class SyfoPunktDTO(
     property = "type",
 )
 @JsonSubTypes(
-    JsonSubTypes.Type(value = GenericYtelseDTO::class, name = "GenericYtelseDTO"),
+    JsonSubTypes.Type(value = OppfolgingsYtelseDTO::class, name = "OppfolgingsYtelseDTO"),
     JsonSubTypes.Type(value = DagpengeytelseDTO::class, name = "YtelseDTO"),
 )
 sealed class YtelseDTO
 
-open class GenericYtelseDTO(
+open class OppfolgingsYtelseDTO(
     open val type: String,
     open val status: String,
     open val datoKravMottat: String?,
     open val vedtak: List<VedtakDTO> = listOf(),
     open val fom: String?,
     open val tom: String?,
-    open val dagerIgjenMedBortfall: Int,
-    open val ukerIgjenMedBortfall: Int,
+    open val dagerIgjenMedBortfall: Int?,
+    open val ukerIgjenMedBortfall: Int?,
 ) : YtelseDTO()
 
 data class DagpengeytelseDTO(
@@ -212,13 +212,13 @@ data class DagpengeytelseDTO(
     override val vedtak: List<VedtakDTO> = listOf(),
     override val fom: String?,
     override val tom: String?,
-    override val dagerIgjenMedBortfall: Int,
-    override val ukerIgjenMedBortfall: Int,
-    val dagerIgjenPermittering: Int,
-    val ukerIgjenPermittering: Int,
-    val dagerIgjen: Int,
-    val ukerIgjen: Int,
-) : GenericYtelseDTO(type, status, datoKravMottat, vedtak, fom, tom, dagerIgjenMedBortfall, ukerIgjenMedBortfall)
+    override val dagerIgjenMedBortfall: Int?,
+    override val ukerIgjenMedBortfall: Int?,
+    val dagerIgjenPermittering: Int?,
+    val ukerIgjenPermittering: Int?,
+    val dagerIgjen: Int?,
+    val ukerIgjen: Int?,
+) : OppfolgingsYtelseDTO(type, status, datoKravMottat, vedtak, fom, tom, dagerIgjenMedBortfall, ukerIgjenMedBortfall)
 
 data class VedtakDTO(
     val aktivFra: String?,
