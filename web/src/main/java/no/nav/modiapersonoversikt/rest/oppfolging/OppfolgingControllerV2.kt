@@ -84,7 +84,7 @@ class OppfolgingControllerV2
                         sykmeldtFra = kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
                         rettighetsgruppe = ytelserResponse.rettighetsgruppe,
                         vedtaksdato = kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
-                        sykefraværsoppfølging = hentSyfoPunkt(kontraktResponse.syfoPunkter),
+                        sykefravaersoppfolging = hentSyfoPunkt(kontraktResponse.syfoPunkter),
                         ytelser = hentYtelser(ytelserResponse.ytelser),
                     )
                 }
@@ -236,6 +236,6 @@ data class UtvidetOppfolgingDTO(
     val sykmeldtFra: String?,
     val rettighetsgruppe: String,
     val vedtaksdato: String?,
-    val sykefraværsoppfølging: List<SyfoPunktDTO> = listOf(),
+    val sykefravaersoppfolging: List<SyfoPunktDTO> = listOf(),
     val ytelser: List<YtelseDTO> = listOf(),
 )
