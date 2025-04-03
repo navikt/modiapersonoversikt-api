@@ -162,7 +162,7 @@ class OppfolgingControllerV2
             return syfoPunkter.map {
                 SyfoPunktDTO(
                     dato = it.dato?.toString(JODA_DATOFORMAT),
-                    fastOppfølgingspunkt = it.isFastOppfolgingspunkt,
+                    fastOppfolgingspunkt = it.isFastOppfolgingspunkt,
                     status = it.status,
                     syfoHendelse = it.syfoHendelse,
                 )
@@ -177,7 +177,7 @@ data class OppfolgingDTO(
 )
 
 data class SyfoPunktDTO(
-    val fastOppfølgingspunkt: Boolean,
+    val fastOppfolgingspunkt: Boolean,
     val dato: String?,
     val status: String,
     val syfoHendelse: String,
