@@ -171,16 +171,16 @@ class OppfolgingControllerV2
     }
 
 data class OppfolgingDTO(
-    val erUnderOppfolging: Boolean,
+    val erUnderOppfolging: Boolean?,
     val veileder: Veileder?,
     val enhet: ArbeidsrettetOppfolging.Enhet?,
 )
 
 data class SyfoPunktDTO(
-    val fastOppfolgingspunkt: Boolean,
+    val fastOppfolgingspunkt: Boolean?,
     val dato: String?,
-    val status: String,
-    val syfoHendelse: String,
+    val status: String?,
+    val syfoHendelse: String?,
 )
 
 @JsonTypeInfo(
@@ -195,10 +195,10 @@ data class SyfoPunktDTO(
 sealed class YtelseDTO
 
 open class OppfolgingsYtelseDTO(
-    open val type: String,
-    open val status: String,
+    open val type: String?,
+    open val status: String?,
     open val datoKravMottat: String?,
-    open val vedtak: List<VedtakDTO> = listOf(),
+    open val vedtak: List<VedtakDTO>? = listOf(),
     open val fom: String?,
     open val tom: String?,
     open val dagerIgjenMedBortfall: Int?,
@@ -206,10 +206,10 @@ open class OppfolgingsYtelseDTO(
 ) : YtelseDTO()
 
 data class DagpengeytelseDTO(
-    override val type: String,
-    override val status: String,
+    override val type: String?,
+    override val status: String?,
     override val datoKravMottat: String?,
-    override val vedtak: List<VedtakDTO> = listOf(),
+    override val vedtak: List<VedtakDTO>? = listOf(),
     override val fom: String?,
     override val tom: String?,
     override val dagerIgjenMedBortfall: Int?,
@@ -223,9 +223,9 @@ data class DagpengeytelseDTO(
 data class VedtakDTO(
     val aktivFra: String?,
     val aktivTil: String?,
-    val aktivitetsfase: String,
-    val vedtakstatus: String,
-    val vedtakstype: String,
+    val aktivitetsfase: String?,
+    val vedtakstatus: String?,
+    val vedtakstype: String?,
 )
 
 data class UtvidetOppfolgingDTO(
@@ -234,8 +234,8 @@ data class UtvidetOppfolgingDTO(
     val formidlingsgruppe: String?,
     val innsatsgruppe: String?,
     val sykmeldtFra: String?,
-    val rettighetsgruppe: String,
+    val rettighetsgruppe: String?,
     val vedtaksdato: String?,
-    val sykefravaersoppfolging: List<SyfoPunktDTO> = listOf(),
-    val ytelser: List<YtelseDTO> = listOf(),
+    val sykefravaersoppfolging: List<SyfoPunktDTO>? = listOf(),
+    val ytelser: List<YtelseDTO>? = listOf(),
 )
