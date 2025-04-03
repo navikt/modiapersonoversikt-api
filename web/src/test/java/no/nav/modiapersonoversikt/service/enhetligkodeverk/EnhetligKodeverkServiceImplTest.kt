@@ -104,7 +104,7 @@ internal class EnhetligKodeverkServiceImplTest {
             if (dateSlot.captured.toInstant().isBefore(Instant.now())) {
                 LocalDate.now().dayOfMonth
             } else {
-                LocalDate.now().plusDays(1).dayOfMonth
+                LocalDate.now().dayOfMonth
             }
         assertThat(dateSlot.captured).hasDayOfMonth(forventetDato)
 
