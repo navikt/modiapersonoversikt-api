@@ -1,0 +1,17 @@
+{
+  "dagerIgjenMedBortfall" : 60,
+  "datoKravMottat" : "2020-10-14",
+  "fom" : "2020-10-14",
+  "status" : "Aktiv",
+  "tom" : "2020-10-14",
+  "type" : "Arbeidsavklaringspenger",
+  "ukerIgjenMedBortfall" : 12,
+  "vedtak" : [ "java.util.ArrayList", [ {
+    "activeFrom" : "2020-10-14",
+    "activeTo" : "2020-10-14",
+    "aktivitetsfase" : "Under arbeid",
+    "vedtaksdato" : "2020-10-14",
+    "vedtakstatus" : "Innvilget",
+    "vedtakstype" : "Kontroll"
+  } ] ]
+}

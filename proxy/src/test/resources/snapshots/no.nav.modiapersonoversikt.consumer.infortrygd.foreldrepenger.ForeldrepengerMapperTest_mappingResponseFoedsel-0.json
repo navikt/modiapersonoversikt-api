@@ -1,0 +1,89 @@
+{
+  "foreldrepengerettighet" : {
+    "andreForeldersFnr" : "10108000398",
+    "antallBarn" : null,
+    "arbeidsforholdListe" : [ "java.util.ArrayList", [ {
+      "arbeidsgiverKontonr" : null,
+      "arbeidsgiverNavn" : null,
+      "inntektForPerioden" : null,
+      "inntektsperiode" : null,
+      "refusjonTom" : null,
+      "refusjonstype" : null,
+      "sykepengerFom" : null
+    } ] ],
+    "arbeidskategori" : {
+      "kode" : "Arbeidskategori",
+      "termnavn" : "Arbeidskategori"
+    },
+    "barnetsFoedselsdato" : "2013-02-13",
+    "dekningsgrad" : 8.0E-49,
+    "eldsteIdDato" : null,
+    "erArbeidsgiverperiode" : false,
+    "fedrekvoteTom" : "2013-02-13",
+    "forelder" : {
+      "ident" : "Bruker id"
+    },
+    "foreldreAvSammeKjoenn" : null,
+    "foreldrepengetype" : {
+      "kode" : "Foreldrepengetype",
+      "termnavn" : "Foedsel"
+    },
+    "graderingsdager" : 1254,
+    "moedrekvoteTom" : null,
+    "periode" : [ "java.util.ArrayList", [ {
+      "arbeidsprosentMor" : 4.9E-58,
+      "avslaatt" : "2013-02-13",
+      "avslagsaarsak" : null,
+      "disponibelGradering" : 0.0,
+      "erFedrekvote" : true,
+      "erModrekvote" : false,
+      "fodselsnummer" : null,
+      "foreldrepengerFom" : "2015-02-13",
+      "forskyvelsesaarsak1" : {
+        "kode" : "Forskyvelsesaarsak",
+        "termnavn" : "Generell aarsak"
+      },
+      "forskyvelsesaarsak2" : null,
+      "forskyvelsesperiode" : {
+        "from" : "2013-02-13",
+        "to" : "2014-02-13"
+      },
+      "forskyvelsesperiode2" : null,
+      "harAleneomsorgFar" : true,
+      "harAleneomsorgMor" : false,
+      "historiskeUtbetalinger" : [ "java.util.ArrayList", [ ] ],
+      "kommendeUtbetalinger" : [ "java.util.ArrayList", [ {
+        "arbeidsgiverKontonr" : null,
+        "arbeidsgiverNavn" : null,
+        "arbeidsgiverOrgnr" : "123456789",
+        "bruttobeloep" : 0.0,
+        "dagsats" : 0.0,
+        "saksbehandler" : "SAKB001",
+        "type" : null,
+        "utbetalingsdato" : null,
+        "utbetalingsgrad" : null,
+        "vedtak" : {
+          "from" : "2016-02-13",
+          "to" : "2016-07-13"
+        }
+      } ] ],
+      "midlertidigStansDato" : null,
+      "morSituasjon" : {
+        "kode" : "Mors situasjon",
+        "termnavn" : "Ok"
+      },
+      "rettTilFedrekvote" : {
+        "kode" : "fkvote",
+        "termnavn" : "fedrekvote ja"
+      },
+      "stansaarsak" : {
+        "kode" : "Stansaarsak",
+        "termnavn" : "Genrell aarsak"
+      }
+    } ] ],
+    "restDager" : 54,
+    "rettighetFom" : "2013-02-15",
+    "slutt" : null,
+    "termin" : "2013-02-15"
+  }
+}
