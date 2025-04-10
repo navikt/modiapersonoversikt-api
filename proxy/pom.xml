@@ -206,6 +206,12 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>felles</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
 
         <!-- tjenester -->
@@ -312,8 +318,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>no.nav.modiapersonoversikt.Main</mainClass>
-                    <classifier>exec</classifier>
+                    <mainClass>no.nav.modiapersonoversikt.ProxyMain</mainClass>
                 </configuration>
             </plugin>
         </plugins>

@@ -8,6 +8,10 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Forel
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.foreldrepenger.Foreldrepengerettighet
 import no.nav.modiapersonoversikt.consumer.infotrygd.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.modiapersonoversikt.consumer.infotrygd.foreldrepenger.mapping.to.ForeldrepengerListeRequest
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengePeriode
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.Foreldrepenger
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerArbeidsforhold
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 import org.joda.time.Years

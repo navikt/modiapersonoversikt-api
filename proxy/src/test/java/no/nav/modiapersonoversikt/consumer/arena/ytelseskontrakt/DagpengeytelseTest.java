@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Dagpengeytelse;
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Vedtak;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Dagpengeytelse;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Vedtak;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 

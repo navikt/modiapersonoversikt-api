@@ -17,6 +17,7 @@
 
     <modules>
         <module>tjenestespesifikasjoner</module>
+        <module>arena-infotrygd-models</module>
         <module>proxy</module>
         <module>web</module>
     </modules>

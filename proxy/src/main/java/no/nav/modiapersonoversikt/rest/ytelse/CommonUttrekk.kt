@@ -1,10 +1,12 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
 import no.nav.modiapersonoversikt.commondomain.Periode
-import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.HistoriskUtbetaling
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.KommendeUtbetaling
-import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kreditortrekk
+import no.nav.modiapersonoversikt.infotrgd.CommonHistoriskUtbetaling
+import no.nav.modiapersonoversikt.infotrgd.CommonKommendeUtbetaling
+import no.nav.modiapersonoversikt.infotrgd.CommonKreditortrekk
+import no.nav.modiapersonoversikt.infotrgd.CommonPeriode
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 
 fun hentHistoriskeUtbetalinger(historiskeUtbetalinger: List<HistoriskUtbetaling>) =
@@ -42,52 +44,12 @@ fun hentKommendeUtbetalinger(kommendeUtbetalinger: List<KommendeUtbetaling>) =
 
 fun toCommonPeriode(period: Periode) = CommonPeriode(period.from.toString(JODA_DATOFORMAT), period.to.toString(JODA_DATOFORMAT))
 
-private fun hentKreditorTrekk(kreditortrekk: List<Kreditortrekk>): List<CommonKreditortrekk> =
+private fun hentKreditorTrekk(
+    kreditortrekk: List<no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kreditortrekk>,
+): List<CommonKreditortrekk> =
     kreditortrekk.map {
         CommonKreditortrekk(
             kreditorsNavn = it.kreditorsNavn,
             belop = it.belop,
         )
     }
-
-fun hentArbeidsgiverNavn(
-    organisasjonService: OrganisasjonService,
-    orgnr: String,
-): String = organisasjonService.hentNoekkelinfo(orgnr)?.navn ?: ""
-
-data class CommonHistoriskUtbetaling(
-    val vedtak: CommonPeriode?,
-    val utbetalingsgrad: Double?,
-    val utbetalingsdato: String?,
-    val nettobelop: Double?,
-    val bruttobelop: Double?,
-    val skattetrekk: Double?,
-    val arbeidsgiverNavn: String?,
-    val arbeidsgiverOrgNr: String?,
-    val dagsats: Double?,
-    val type: String?,
-    val trekk: List<CommonKreditortrekk>?,
-)
-
-data class CommonKommendeUtbetaling(
-    val vedtak: CommonPeriode?,
-    val utbetalingsgrad: Double?,
-    val utbetalingsdato: String?,
-    val bruttobelop: Double?,
-    val arbeidsgiverNavn: String?,
-    val arbeidsgiverOrgNr: String?,
-    val arbeidsgiverKontonr: String?,
-    val dagsats: Double?,
-    val type: String?,
-    val saksbehandler: String?,
-)
-
-data class CommonKreditortrekk(
-    val kreditorsNavn: String?,
-    val belop: Double?,
-)
-
-data class CommonPeriode(
-    val fra: String?,
-    val til: String?,
-)

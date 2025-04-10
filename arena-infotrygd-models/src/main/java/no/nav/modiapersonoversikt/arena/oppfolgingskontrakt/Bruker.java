@@ -1,10 +1,9 @@
-package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain;
+package no.nav.modiapersonoversikt.arena.oppfolgingskontrakt;
 
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class Bruker implements Serializable {
     private Boolean meldeplikt;
@@ -54,13 +53,5 @@ public class Bruker implements Serializable {
 
     public void setRettighetsgruppe(String rettighetsgruppe) {
         this.rettighetsgruppe = rettighetsgruppe;
-    }
-
-    public boolean erTom() {
-        return meldeplikt == null
-                && isBlank(formidlingsgruppe)
-                && isBlank(innsatsgruppe)
-                && isBlank(rettighetsgruppe)
-                && sykmeldtFrom != null;
     }
 }

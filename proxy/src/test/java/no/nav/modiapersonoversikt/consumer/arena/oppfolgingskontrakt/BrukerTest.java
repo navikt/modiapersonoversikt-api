@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.Bruker;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.Bruker;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse;
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.mock.OppfolgingkontraktMockService;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.SYFOPunkt;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.SYFOPunkt;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

@@ -1,8 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.Bruker;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.Bruker;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse;
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.mock.OppfolgingkontraktMockFactory;
 import no.nav.personoversikt.common.test.snapshot.SnapshotRule;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;

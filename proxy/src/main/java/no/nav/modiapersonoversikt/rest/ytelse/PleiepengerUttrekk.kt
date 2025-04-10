@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Pleiepen
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.pleiepenger.Vedtak
 import no.nav.modiapersonoversikt.consumer.infotrygd.pleiepenger.PleiepengerService
 import no.nav.modiapersonoversikt.consumer.infotrygd.pleiepenger.mapping.to.PleiepengerListeRequest
+import no.nav.modiapersonoversikt.infotrgd.pleiepenger.*
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import org.joda.time.LocalDate
 import org.joda.time.Years
@@ -93,6 +94,11 @@ class PleiepengerUttrekk constructor(
                 arbeidskategori = it.arbeidskategori,
             )
         }
+
+    private fun hentArbeidsgiverNavn(
+        organisasjonService: OrganisasjonService,
+        orgnr: String,
+    ): String = organisasjonService.hentNoekkelinfo(orgnr)?.navn ?: ""
 
     private fun hentVedtak(vedtak: List<Vedtak>): List<PleiepengerVedtak> =
         vedtak.map {

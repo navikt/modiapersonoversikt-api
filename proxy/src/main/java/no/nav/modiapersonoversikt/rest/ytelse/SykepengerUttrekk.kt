@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.sykepenger.Sykmeldin
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.sykepenger.Sykmeldingsperiode
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.SykepengerServiceBi
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.mapping.to.SykepengerRequest
+import no.nav.modiapersonoversikt.infotrgd.sykepenger.*
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
 import org.joda.time.Years

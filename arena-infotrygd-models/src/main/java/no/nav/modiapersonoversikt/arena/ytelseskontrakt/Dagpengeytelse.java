@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain;
+package no.nav.modiapersonoversikt.arena.ytelseskontrakt;
 
 public class Dagpengeytelse extends Ytelse {
     private Integer antallDagerIgjen;

@@ -1,9 +1,8 @@
 package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.Bruker;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.SYFOPunkt;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.Bruker;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.SYFOPunkt;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;

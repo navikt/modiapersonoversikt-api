@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.mock;
 
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktMapper;
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService;
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse;
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktRequest;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimBruker;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimRettighetsgruppe;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;

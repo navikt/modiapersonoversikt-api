@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse;
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.mock.YtelseskontraktMockService;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain;
+package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
 import org.joda.time.LocalDate;
 

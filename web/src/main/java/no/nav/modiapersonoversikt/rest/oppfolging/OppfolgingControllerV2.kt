@@ -3,11 +3,11 @@ package no.nav.modiapersonoversikt.rest.oppfolging
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.SYFOPunkt
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Dagpengeytelse
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Vedtak
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Ytelse
 import no.nav.modiapersonoversikt.commondomain.Veileder
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.SYFOPunkt
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Dagpengeytelse
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Vedtak
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.Gjeldende14aVedtakResponse

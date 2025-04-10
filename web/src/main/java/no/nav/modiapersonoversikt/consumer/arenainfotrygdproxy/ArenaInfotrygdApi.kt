@@ -4,12 +4,12 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
+import no.nav.modiapersonoversikt.infotrgd.pleiepenger.PleiepengerResponse
+import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
-import no.nav.modiapersonoversikt.rest.ytelse.ForeldrepengerResponse
-import no.nav.modiapersonoversikt.rest.ytelse.PleiepengerResponse
-import no.nav.modiapersonoversikt.rest.ytelse.SykepengerResponse
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -76,7 +76,9 @@ open class ArenaInfotrygdApiImpl(
         slutt: String?,
     ): YtelseskontraktResponse {
         val requestContent = Json.encodeToString(RequestBodyContent(fnr, start, slutt))
-        return sendRequest("ytelseskontrakter", requestContent) ?: YtelseskontraktResponse(listOf())
+        return sendRequest("ytelseskontrakter", requestContent) ?: YtelseskontraktResponse(
+            listOf(),
+        )
     }
 
     @Cacheable(value = ["OppfolgingskontrakterCache"])
