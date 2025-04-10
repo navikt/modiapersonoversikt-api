@@ -280,7 +280,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>proxy</artifactId>
+            <artifactId>felles</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -402,7 +402,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>no.nav.modiapersonoversikt.Main</mainClass>
+                    <mainClass>no.nav.modiapersonoversikt.ProxyMain</mainClass>
                 </configuration>
             </plugin>
             <plugin>

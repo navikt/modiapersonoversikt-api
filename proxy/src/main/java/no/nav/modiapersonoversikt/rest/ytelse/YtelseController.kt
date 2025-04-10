@@ -1,12 +1,15 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktRequest
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.infotrygd.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.modiapersonoversikt.consumer.infotrygd.pleiepenger.PleiepengerService
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.SykepengerServiceBi
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
+import no.nav.modiapersonoversikt.infotrgd.pleiepenger.PleiepengerResponse
+import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import no.nav.modiapersonoversikt.rest.RequestBodyContent
 import org.joda.time.IllegalFieldValueException

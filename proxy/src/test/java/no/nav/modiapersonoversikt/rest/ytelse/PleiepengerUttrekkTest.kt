@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
 import no.nav.modiapersonoversikt.consumer.infotrygd.pleiepenger.PleiepengerServiceImpl
+import no.nav.modiapersonoversikt.infotrgd.pleiepenger.Pleiepenger
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPerson

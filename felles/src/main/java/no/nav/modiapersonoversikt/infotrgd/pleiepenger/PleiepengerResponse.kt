@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.ytelse
+package no.nav.modiapersonoversikt.infotrgd.pleiepenger
 
 import java.math.BigDecimal
 

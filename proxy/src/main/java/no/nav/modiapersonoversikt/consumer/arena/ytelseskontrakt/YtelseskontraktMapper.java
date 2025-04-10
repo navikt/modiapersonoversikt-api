@@ -1,6 +1,9 @@
 package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.*;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Dagpengeytelse;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Vedtak;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Ytelse;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.*;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;

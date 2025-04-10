@@ -17,6 +17,7 @@
 
     <modules>
         <module>tjenestespesifikasjoner</module>
+        <module>felles</module>
         <module>proxy</module>
         <module>web</module>
     </modules>

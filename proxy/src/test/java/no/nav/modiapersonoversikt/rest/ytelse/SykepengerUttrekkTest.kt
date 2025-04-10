@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.DefaultSykepengerService
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.mapping.SykepengerMapper
+import no.nav.modiapersonoversikt.infotrgd.sykepenger.Sykepenger
 import no.nav.tjeneste.virksomhet.sykepenger.v2.HentSykepengerListeSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykArbeidskategori
@@ -37,14 +38,14 @@ internal class SykepengerUttrekkTest {
     }
 
     @Test
-    fun`Kaster Auth exception`() {
+    fun `Kaster Auth exception`() {
         every { sykepengerV2.hentSykepengerListe(any()) } throws HentSykepengerListeSikkerhetsbegrensning()
 
         assertFailsWith<RuntimeException> { uttrekk.hent(FNR, from, to) }
     }
 
     @Test
-    fun`Test på om felter blir satt`() {
+    fun `Test på om felter blir satt`() {
         every { sykepengerV2.hentSykepengerListe(any()) } returns mockResponse()
 
         val sykmeldingsperiode = unwrapResponse()

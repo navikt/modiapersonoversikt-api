@@ -4,6 +4,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.http.RequestMethod
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonServiceImpl
+import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonV1ClientImpl
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.utils.AppConstants
 import no.nav.modiapersonoversikt.utils.WireMockUtils.get

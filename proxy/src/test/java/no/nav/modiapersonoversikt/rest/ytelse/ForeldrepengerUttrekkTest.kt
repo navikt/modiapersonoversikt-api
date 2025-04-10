@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.infotrygd.foreldrepenger.DefaultForeldrepengerService
 import no.nav.modiapersonoversikt.consumer.infotrygd.foreldrepenger.mapping.ForeldrepengerMapper
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.Foreldrepenger
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.ForeldrepengerV2
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.HentForeldrepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.informasjon.FimFoedsel

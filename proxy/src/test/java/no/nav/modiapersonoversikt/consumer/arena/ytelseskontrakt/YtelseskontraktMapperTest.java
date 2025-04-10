@@ -1,9 +1,8 @@
 package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt;
 
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Dagpengeytelse;
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.Ytelse;
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Dagpengeytelse;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Ytelse;
+import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse;
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.personoversikt.common.test.snapshot.SnapshotRule;

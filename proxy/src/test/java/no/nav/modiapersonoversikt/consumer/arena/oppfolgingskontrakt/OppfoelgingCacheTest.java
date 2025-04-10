@@ -1,9 +1,8 @@
 package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
 import no.nav.modiapersonoversikt.config.CacheTest;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse;
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.SYFOPunkt;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse;
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.SYFOPunkt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

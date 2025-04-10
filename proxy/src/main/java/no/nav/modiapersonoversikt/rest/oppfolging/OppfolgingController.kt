@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
+import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktRequest
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktRequest
-import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import no.nav.modiapersonoversikt.rest.RequestBodyContent
 import org.joda.time.IllegalFieldValueException

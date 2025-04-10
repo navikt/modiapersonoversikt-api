@@ -1,4 +1,8 @@
-package no.nav.modiapersonoversikt.rest.ytelse
+package no.nav.modiapersonoversikt.infotrgd.sykepenger
+
+import no.nav.modiapersonoversikt.infotrgd.CommonHistoriskUtbetaling
+import no.nav.modiapersonoversikt.infotrgd.CommonKommendeUtbetaling
+import no.nav.modiapersonoversikt.infotrgd.CommonPeriode
 
 data class SykepengerResponse(
     val sykepenger: List<Sykepenger>?,

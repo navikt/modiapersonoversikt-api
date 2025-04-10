@@ -17,7 +17,7 @@ import static no.nav.modiapersonoversikt.utils.AppConstants.SYSTEMUSER_PASSWORD_
 import static no.nav.modiapersonoversikt.utils.AppConstants.SYSTEMUSER_USERNAME_PROPERTY;
 
 @SpringBootApplication
-public class Main {
+public class ProxyMain {
     static {
         System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl");
     }
@@ -27,7 +27,7 @@ public class Main {
         SslUtils.setupTruststore();
         EnvironmentUtils.setProperty("NAIS_APP_NAME", "modiapersonoversiktproxy", PUBLIC);
         MetricsConfig.setup();
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(ProxyMain.class, args);
     }
 
     private static void loadVaultSecrets() {
