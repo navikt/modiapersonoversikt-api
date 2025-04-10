@@ -36,7 +36,7 @@ data class SykmeldingItem(
     val sykmeldt: CommonPeriode?,
     val sykmeldingsgrad: Double?,
     val gjelderYrkesskade: GjelderYrkesskade?,
-    val gradAvSykmeldingListe: List<GradAvSykmelding>? = listOf(),
+    val gradAvSykmeldingListe: List<GradAvSykmelding>?,
 )
 
 data class GjelderYrkesskade(
