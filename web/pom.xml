@@ -280,7 +280,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>felles</artifactId>
+            <artifactId>arena-infotrygd-models</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
