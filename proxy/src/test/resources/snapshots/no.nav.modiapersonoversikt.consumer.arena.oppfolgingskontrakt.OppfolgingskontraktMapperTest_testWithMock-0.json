@@ -1,0 +1,11 @@
+{
+  "bruker" : {
+    "formidlingsgruppe" : "50000",
+    "innsatsgruppe" : "Servicegruppe",
+    "meldeplikt" : true,
+    "rettighetsgruppe" : null,
+    "sykmeldtFrom" : null
+  },
+  "syfoPunkter" : null,
+  "vedtaksdato" : "2020-10-13"
+}

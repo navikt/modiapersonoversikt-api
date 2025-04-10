@@ -1,0 +1,63 @@
+{
+  "bruker" : null,
+  "sykmeldingsperioder" : [ "java.util.ArrayList", [ {
+    "arbeidsforholdListe" : [ "java.util.ArrayList", [ ] ],
+    "arbeidskategori" : null,
+    "bruker" : null,
+    "erArbeidsgiverperiode" : false,
+    "ferie1" : null,
+    "ferie2" : null,
+    "fodselsnummer" : null,
+    "forbrukteDager" : 100,
+    "gjeldendeForsikring" : null,
+    "historiskeUtbetalinger" : [ "java.util.ArrayList", [ ] ],
+    "kommendeUtbetalinger" : [ "java.util.ArrayList", [ {
+      "arbeidsgiverKontonr" : null,
+      "arbeidsgiverNavn" : null,
+      "arbeidsgiverOrgnr" : null,
+      "bruttobeloep" : 0.0,
+      "dagsats" : 0.0,
+      "saksbehandler" : null,
+      "type" : null,
+      "utbetalingsdato" : null,
+      "utbetalingsgrad" : null,
+      "vedtak" : null
+    } ] ],
+    "midlertidigStanset" : null,
+    "sanksjon" : null,
+    "slutt" : null,
+    "stansarsak" : null,
+    "sykmelding" : {
+      "behandlet" : null,
+      "gjelderYrkesskade" : null,
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ ] ],
+      "sykmelder" : "Dr. med. Nils Nilsen",
+      "sykmeldingsgrad" : null,
+      "sykmeldt" : null
+    },
+    "sykmeldinger" : [ "java.util.ArrayList", [ {
+      "behandlet" : null,
+      "gjelderYrkesskade" : null,
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ ] ],
+      "sykmelder" : "Dr. med. Nils Nilsen",
+      "sykmeldingsgrad" : null,
+      "sykmeldt" : null
+    } ] ],
+    "sykmeldtFom" : "2012-12-20",
+    "unntakAktivitet" : null,
+    "utbetalingerPaVent" : [ "java.util.ArrayList", [ {
+      "arbeidskategori" : null,
+      "ferie1" : null,
+      "ferie2" : null,
+      "oppgjoerstype" : {
+        "kode" : "oppgjorstype",
+        "termnavn" : "Kontant"
+      },
+      "sanksjon" : null,
+      "stansaarsak" : null,
+      "sykmeldt" : null,
+      "utbetalingsgrad" : null,
+      "vedtak" : null
+    } ] ]
+  } ] ]
+}

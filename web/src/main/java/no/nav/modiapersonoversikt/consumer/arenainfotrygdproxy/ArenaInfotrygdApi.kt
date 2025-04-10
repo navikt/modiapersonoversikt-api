@@ -4,9 +4,12 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.OppfolgingskontraktResponse
-import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.domain.YtelseskontraktResponse
+import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.domain.OppfolgingskontraktResponse
+import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.domain.YtelseskontraktResponse
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
+import no.nav.modiapersonoversikt.rest.ytelse.ForeldrepengerResponse
+import no.nav.modiapersonoversikt.rest.ytelse.PleiepengerResponse
+import no.nav.modiapersonoversikt.rest.ytelse.SykepengerResponse
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -31,19 +34,19 @@ interface ArenaInfotrygdApi {
         fnr: String,
         fom: String?,
         tom: String?,
-    ): Map<String, Any?>
+    ): SykepengerResponse
 
     fun hentForeldrepenger(
         fnr: String,
         fom: String?,
         tom: String?,
-    ): Map<String, Any?>
+    ): ForeldrepengerResponse
 
     fun hentPleiepenger(
         fnr: String,
         fom: String?,
         tom: String?,
-    ): Map<String, Any?>
+    ): PleiepengerResponse
 
     fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak?
 
@@ -83,7 +86,7 @@ open class ArenaInfotrygdApiImpl(
         slutt: String?,
     ): OppfolgingskontraktResponse {
         val requestContent = Json.encodeToString(RequestBodyContent(fnr, start, slutt))
-        return sendRequest("Oppfolgingskontrakter", requestContent) ?: OppfolgingskontraktResponse(listOf())
+        return sendRequest("Oppfolgingskontrakter", requestContent) ?: OppfolgingskontraktResponse()
     }
 
     @Cacheable(value = ["oppfolgingssakFraArenaCache"])
@@ -97,9 +100,9 @@ open class ArenaInfotrygdApiImpl(
         fnr: String,
         fom: String?,
         tom: String?,
-    ): Map<String, Any?> {
+    ): SykepengerResponse {
         val requestContent = Json.encodeToString(RequestBodyContent(fnr, fom, tom))
-        return sendRequest("sykepenger", requestContent) ?: mapOf()
+        return sendRequest("sykepenger", requestContent) ?: SykepengerResponse(sykepenger = null)
     }
 
     @Cacheable(value = ["foreldrePengerCache"])
@@ -107,9 +110,11 @@ open class ArenaInfotrygdApiImpl(
         fnr: String,
         fom: String?,
         tom: String?,
-    ): Map<String, Any?> {
+    ): ForeldrepengerResponse {
         val requestContent = Json.encodeToString(RequestBodyContent(fnr, fom, tom))
-        return sendRequest("foreldrepenger", requestContent) ?: mapOf()
+        return sendRequest("foreldrepenger", requestContent) ?: ForeldrepengerResponse(
+            foreldrepenger = null,
+        )
     }
 
     @Cacheable(value = ["pleiePengerCache"])
@@ -117,9 +122,9 @@ open class ArenaInfotrygdApiImpl(
         fnr: String,
         fom: String?,
         tom: String?,
-    ): Map<String, Any?> {
+    ): PleiepengerResponse {
         val requestContent = Json.encodeToString(RequestBodyContent(fnr, fom, tom))
-        return sendRequest("pleiepenger", requestContent) ?: mapOf()
+        return sendRequest("pleiepenger", requestContent) ?: PleiepengerResponse(pleiepenger = null)
     }
 
     private inline fun <reified T> sendRequest(

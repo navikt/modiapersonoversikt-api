@@ -9,7 +9,7 @@
         <version>dev</version>
     </parent>
 
-    <artifactId>modiabrukerdialog-web</artifactId>
+    <artifactId>web</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -276,6 +276,12 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>tiltakspenger</artifactId>
             <version>dev</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>proxy</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 

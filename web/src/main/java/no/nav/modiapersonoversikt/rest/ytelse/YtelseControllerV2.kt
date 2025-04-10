@@ -33,7 +33,7 @@ class YtelseControllerV2
         @PostMapping("sykepenger")
         fun hentSykepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): Map<String, Any?> =
+        ): SykepengerResponse =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
@@ -43,7 +43,7 @@ class YtelseControllerV2
         @PostMapping("foreldrepenger")
         fun hentForeldrepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): Map<String, Any?> =
+        ): ForeldrepengerResponse =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
@@ -53,7 +53,7 @@ class YtelseControllerV2
         @PostMapping("pleiepenger")
         fun hentPleiepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): Map<String, Any?> =
+        ): PleiepengerResponse =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {

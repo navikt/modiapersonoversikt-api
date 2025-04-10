@@ -1,0 +1,16 @@
+{
+  "bruker" : {
+    "formidlingsgruppe" : "1222",
+    "innsatsgruppe" : "servicegruppe",
+    "meldeplikt" : true,
+    "rettighetsgruppe" : null,
+    "sykmeldtFrom" : "2012-10-10"
+  },
+  "syfoPunkter" : [ "java.util.ArrayList", [ {
+    "dato" : "2011-02-05",
+    "fastOppfolgingspunkt" : true,
+    "status" : "syfoPunktStatus",
+    "syfoHendelse" : "syfoHendelse"
+  } ] ],
+  "vedtaksdato" : "2000-12-01"
+}

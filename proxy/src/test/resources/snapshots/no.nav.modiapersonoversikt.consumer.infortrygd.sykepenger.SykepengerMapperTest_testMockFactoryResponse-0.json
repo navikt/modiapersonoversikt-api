@@ -1,0 +1,675 @@
+{
+  "bruker" : null,
+  "sykmeldingsperioder" : [ "java.util.ArrayList", [ {
+    "arbeidsforholdListe" : [ "java.util.ArrayList", [ {
+      "arbeidsgiverKontonr" : "1234.12.7845",
+      "arbeidsgiverNavn" : "Google Inc.",
+      "inntektForPerioden" : 3652.2,
+      "inntektsperiode" : {
+        "kode" : "inntektsperiode",
+        "termnavn" : "inntektsperiode 1"
+      },
+      "refusjonTom" : "2013-08-01",
+      "refusjonstype" : {
+        "kode" : "Refusjonstype",
+        "termnavn" : "Generell refusjon"
+      },
+      "sykepengerFom" : "2013-06-04"
+    } ] ],
+    "arbeidskategori" : {
+      "kode" : "99",
+      "termnavn" : "Arbeidsledig"
+    },
+    "bruker" : {
+      "ident" : "12345612345"
+    },
+    "erArbeidsgiverperiode" : true,
+    "ferie1" : {
+      "from" : "2013-12-01",
+      "to" : "2013-12-21"
+    },
+    "ferie2" : {
+      "from" : "2016-10-01",
+      "to" : "2016-12-16"
+    },
+    "fodselsnummer" : null,
+    "forbrukteDager" : 30,
+    "gjeldendeForsikring" : {
+      "erGyldig" : true,
+      "forsikret" : {
+        "from" : "2010-08-01",
+        "to" : "2013-08-01"
+      },
+      "forsikringsordning" : "Helseforsikring",
+      "premiegrunnlag" : 100000.0
+    },
+    "historiskeUtbetalinger" : [ "java.util.ArrayList", [ ] ],
+    "kommendeUtbetalinger" : [ "java.util.ArrayList", [ {
+      "arbeidsgiverKontonr" : "1234.12.7845",
+      "arbeidsgiverNavn" : "Google Inc.",
+      "arbeidsgiverOrgnr" : "1234512345",
+      "bruttobeloep" : 220.55,
+      "dagsats" : 120.89,
+      "saksbehandler" : "SAKB001",
+      "type" : {
+        "kode" : "UT",
+        "termnavn" : "Utbetaling"
+      },
+      "utbetalingsdato" : "2013-07-22",
+      "utbetalingsgrad" : 50.0,
+      "vedtak" : {
+        "from" : "2013-02-06",
+        "to" : "2013-05-06"
+      }
+    }, {
+      "arbeidsgiverKontonr" : "11111.11.99999",
+      "arbeidsgiverNavn" : "Microsoft",
+      "arbeidsgiverOrgnr" : "9912135555",
+      "bruttobeloep" : 22000.55,
+      "dagsats" : 1000.0,
+      "saksbehandler" : "SAKB002",
+      "type" : {
+        "kode" : "RE",
+        "termnavn" : "Reduksjon"
+      },
+      "utbetalingsdato" : "2012-12-30",
+      "utbetalingsgrad" : 65.0,
+      "vedtak" : {
+        "from" : "2013-04-30",
+        "to" : "2013-05-20"
+      }
+    }, {
+      "arbeidsgiverKontonr" : "11111.11.99999",
+      "arbeidsgiverNavn" : "Microsoft",
+      "arbeidsgiverOrgnr" : "9912135555",
+      "bruttobeloep" : 22000.55,
+      "dagsats" : 1000.0,
+      "saksbehandler" : "SAKB002",
+      "type" : {
+        "kode" : "RE",
+        "termnavn" : "Reduksjon"
+      },
+      "utbetalingsdato" : "2012-12-30",
+      "utbetalingsgrad" : 65.0,
+      "vedtak" : {
+        "from" : "2013-04-30",
+        "to" : "2013-05-20"
+      }
+    } ] ],
+    "midlertidigStanset" : "2013-07-29",
+    "sanksjon" : {
+      "from" : "2002-06-11",
+      "to" : "2002-09-11"
+    },
+    "slutt" : "2014-02-01",
+    "stansarsak" : {
+      "kode" : "Stansaarsak",
+      "termnavn" : "Helse"
+    },
+    "sykmelding" : {
+      "behandlet" : "2013-02-08",
+      "gjelderYrkesskade" : {
+        "skadet" : "2013-08-08",
+        "vedtatt" : "2013-06-08",
+        "yrkesskadeart" : {
+          "kode" : "Skadeart",
+          "termnavn" : "Hodeskade"
+        }
+      },
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2013-03-08",
+          "to" : "2013-04-08"
+        },
+        "sykmeldingsgrad" : 70.0
+      }, {
+        "gradert" : {
+          "from" : "2013-08-09",
+          "to" : "2013-11-15"
+        },
+        "sykmeldingsgrad" : 90.0
+      }, {
+        "gradert" : {
+          "from" : "2013-07-20",
+          "to" : "2013-08-08"
+        },
+        "sykmeldingsgrad" : 80.0
+      } ] ],
+      "sykmelder" : "Dr. Bjarne Hansensen",
+      "sykmeldingsgrad" : 90.0,
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      }
+    },
+    "sykmeldinger" : [ "java.util.ArrayList", [ {
+      "behandlet" : "2013-02-08",
+      "gjelderYrkesskade" : {
+        "skadet" : "2013-08-08",
+        "vedtatt" : "2013-06-08",
+        "yrkesskadeart" : {
+          "kode" : "Skadeart",
+          "termnavn" : "Hodeskade"
+        }
+      },
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2013-03-08",
+          "to" : "2013-04-08"
+        },
+        "sykmeldingsgrad" : 70.0
+      }, {
+        "gradert" : {
+          "from" : "2013-08-09",
+          "to" : "2013-11-15"
+        },
+        "sykmeldingsgrad" : 90.0
+      }, {
+        "gradert" : {
+          "from" : "2013-07-20",
+          "to" : "2013-08-08"
+        },
+        "sykmeldingsgrad" : 80.0
+      } ] ],
+      "sykmelder" : "Dr. Bjarne Hansensen",
+      "sykmeldingsgrad" : 90.0,
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      }
+    }, {
+      "behandlet" : "2012-04-08",
+      "gjelderYrkesskade" : null,
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2012-06-08",
+          "to" : "2012-08-14"
+        },
+        "sykmeldingsgrad" : 50.0
+      } ] ],
+      "sykmelder" : "Dr. Herman Hermansen",
+      "sykmeldingsgrad" : 50.0,
+      "sykmeldt" : {
+        "from" : "2012-05-08",
+        "to" : "2013-05-18"
+      }
+    }, {
+      "behandlet" : "2011-06-09",
+      "gjelderYrkesskade" : null,
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ ] ],
+      "sykmelder" : "Dr. Kalle Hermansen",
+      "sykmeldingsgrad" : null,
+      "sykmeldt" : {
+        "from" : "2011-06-11",
+        "to" : "2012-06-18"
+      }
+    } ] ],
+    "sykmeldtFom" : "2013-12-12",
+    "unntakAktivitet" : {
+      "kode" : "UnntakAktivitet",
+      "termnavn" : "Unntak"
+    },
+    "utbetalingerPaVent" : [ "java.util.ArrayList", [ {
+      "arbeidskategori" : {
+        "kode" : "99",
+        "termnavn" : "Arbeidsledig"
+      },
+      "ferie1" : {
+        "from" : "2013-12-01",
+        "to" : "2013-12-21"
+      },
+      "ferie2" : {
+        "from" : "2016-10-01",
+        "to" : "2016-12-16"
+      },
+      "oppgjoerstype" : {
+        "kode" : "41",
+        "termnavn" : "OPGJ999"
+      },
+      "sanksjon" : {
+        "from" : "2002-06-11",
+        "to" : "2002-09-11"
+      },
+      "stansaarsak" : {
+        "kode" : "Stansaarsak",
+        "termnavn" : "Helse"
+      },
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      },
+      "utbetalingsgrad" : 22.0,
+      "vedtak" : {
+        "from" : "2016-05-01",
+        "to" : "2016-06-01"
+      }
+    } ] ]
+  }, {
+    "arbeidsforholdListe" : [ "java.util.ArrayList", [ {
+      "arbeidsgiverKontonr" : "9999.12.7845",
+      "arbeidsgiverNavn" : "Hydro",
+      "inntektForPerioden" : 3652.2,
+      "inntektsperiode" : {
+        "kode" : "inntektsperiode",
+        "termnavn" : "inntektsperiode 1"
+      },
+      "refusjonTom" : "2013-02-01",
+      "refusjonstype" : {
+        "kode" : "Refusjonstype2",
+        "termnavn" : "Generell refusjon2"
+      },
+      "sykepengerFom" : "2012-08-01"
+    }, {
+      "arbeidsgiverKontonr" : "1234.12.7845",
+      "arbeidsgiverNavn" : "Google Inc.",
+      "inntektForPerioden" : 3652.2,
+      "inntektsperiode" : {
+        "kode" : "inntektsperiode",
+        "termnavn" : "inntektsperiode 1"
+      },
+      "refusjonTom" : "2013-08-01",
+      "refusjonstype" : {
+        "kode" : null,
+        "termnavn" : null
+      },
+      "sykepengerFom" : "2013-06-04"
+    } ] ],
+    "arbeidskategori" : null,
+    "bruker" : {
+      "ident" : "12345612345"
+    },
+    "erArbeidsgiverperiode" : true,
+    "ferie1" : {
+      "from" : "2013-12-01",
+      "to" : "2013-12-21"
+    },
+    "ferie2" : null,
+    "fodselsnummer" : null,
+    "forbrukteDager" : 20,
+    "gjeldendeForsikring" : null,
+    "historiskeUtbetalinger" : [ "java.util.ArrayList", [ ] ],
+    "kommendeUtbetalinger" : [ "java.util.ArrayList", [ {
+      "arbeidsgiverKontonr" : "1234.12.7845",
+      "arbeidsgiverNavn" : "Google Inc.",
+      "arbeidsgiverOrgnr" : "1234512345",
+      "bruttobeloep" : 220.55,
+      "dagsats" : 120.89,
+      "saksbehandler" : "SAKB001",
+      "type" : {
+        "kode" : "UT",
+        "termnavn" : "Utbetaling"
+      },
+      "utbetalingsdato" : "2013-07-22",
+      "utbetalingsgrad" : 50.0,
+      "vedtak" : {
+        "from" : "2013-02-06",
+        "to" : "2013-05-06"
+      }
+    }, {
+      "arbeidsgiverKontonr" : "11111.11.99999",
+      "arbeidsgiverNavn" : "Microsoft",
+      "arbeidsgiverOrgnr" : "9912135555",
+      "bruttobeloep" : 22000.55,
+      "dagsats" : 1000.0,
+      "saksbehandler" : "SAKB002",
+      "type" : {
+        "kode" : "RE",
+        "termnavn" : "Reduksjon"
+      },
+      "utbetalingsdato" : "2012-12-30",
+      "utbetalingsgrad" : 65.0,
+      "vedtak" : {
+        "from" : "2013-04-30",
+        "to" : "2013-05-20"
+      }
+    }, {
+      "arbeidsgiverKontonr" : "11111.11.99999",
+      "arbeidsgiverNavn" : "Microsoft",
+      "arbeidsgiverOrgnr" : "9912135555",
+      "bruttobeloep" : 22000.55,
+      "dagsats" : 1000.0,
+      "saksbehandler" : "SAKB002",
+      "type" : {
+        "kode" : "RE",
+        "termnavn" : "Reduksjon"
+      },
+      "utbetalingsdato" : "2012-12-30",
+      "utbetalingsgrad" : 65.0,
+      "vedtak" : {
+        "from" : "2013-04-30",
+        "to" : "2013-05-20"
+      }
+    } ] ],
+    "midlertidigStanset" : null,
+    "sanksjon" : null,
+    "slutt" : "2014-02-01",
+    "stansarsak" : {
+      "kode" : "MA",
+      "termnavn" : "Manglende Aktivitet"
+    },
+    "sykmelding" : {
+      "behandlet" : "2013-02-08",
+      "gjelderYrkesskade" : {
+        "skadet" : "2013-08-08",
+        "vedtatt" : "2013-06-08",
+        "yrkesskadeart" : {
+          "kode" : "Skadeart",
+          "termnavn" : "Hodeskade"
+        }
+      },
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2013-03-08",
+          "to" : "2013-04-08"
+        },
+        "sykmeldingsgrad" : 70.0
+      }, {
+        "gradert" : {
+          "from" : "2013-08-09",
+          "to" : "2013-11-15"
+        },
+        "sykmeldingsgrad" : 90.0
+      }, {
+        "gradert" : {
+          "from" : "2013-07-20",
+          "to" : "2013-08-08"
+        },
+        "sykmeldingsgrad" : 80.0
+      } ] ],
+      "sykmelder" : "Dr. Bjarne Hansensen",
+      "sykmeldingsgrad" : 90.0,
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      }
+    },
+    "sykmeldinger" : [ "java.util.ArrayList", [ {
+      "behandlet" : "2013-02-08",
+      "gjelderYrkesskade" : {
+        "skadet" : "2013-08-08",
+        "vedtatt" : "2013-06-08",
+        "yrkesskadeart" : {
+          "kode" : "Skadeart",
+          "termnavn" : "Hodeskade"
+        }
+      },
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2013-03-08",
+          "to" : "2013-04-08"
+        },
+        "sykmeldingsgrad" : 70.0
+      }, {
+        "gradert" : {
+          "from" : "2013-08-09",
+          "to" : "2013-11-15"
+        },
+        "sykmeldingsgrad" : 90.0
+      }, {
+        "gradert" : {
+          "from" : "2013-07-20",
+          "to" : "2013-08-08"
+        },
+        "sykmeldingsgrad" : 80.0
+      } ] ],
+      "sykmelder" : "Dr. Bjarne Hansensen",
+      "sykmeldingsgrad" : 90.0,
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      }
+    }, {
+      "behandlet" : "2012-04-08",
+      "gjelderYrkesskade" : null,
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2012-06-08",
+          "to" : "2012-08-14"
+        },
+        "sykmeldingsgrad" : 50.0
+      } ] ],
+      "sykmelder" : "Dr. Herman Hermansen",
+      "sykmeldingsgrad" : 50.0,
+      "sykmeldt" : {
+        "from" : "2012-05-08",
+        "to" : "2013-05-18"
+      }
+    }, {
+      "behandlet" : "2011-06-09",
+      "gjelderYrkesskade" : null,
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ ] ],
+      "sykmelder" : "Dr. Kalle Hermansen",
+      "sykmeldingsgrad" : null,
+      "sykmeldt" : {
+        "from" : "2011-06-11",
+        "to" : "2012-06-18"
+      }
+    } ] ],
+    "sykmeldtFom" : "2002-01-02",
+    "unntakAktivitet" : {
+      "kode" : "UnntakAktivitet",
+      "termnavn" : "Unntak"
+    },
+    "utbetalingerPaVent" : [ "java.util.ArrayList", [ {
+      "arbeidskategori" : null,
+      "ferie1" : {
+        "from" : "2013-12-01",
+        "to" : "2013-12-21"
+      },
+      "ferie2" : null,
+      "oppgjoerstype" : {
+        "kode" : "41",
+        "termnavn" : "OPGJ999"
+      },
+      "sanksjon" : null,
+      "stansaarsak" : {
+        "kode" : "MA",
+        "termnavn" : "Manglende Aktivitet"
+      },
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      },
+      "utbetalingsgrad" : 22.0,
+      "vedtak" : {
+        "from" : "2016-05-01",
+        "to" : "2016-06-01"
+      }
+    } ] ]
+  }, {
+    "arbeidsforholdListe" : [ "java.util.ArrayList", [ ] ],
+    "arbeidskategori" : null,
+    "bruker" : {
+      "ident" : "12345612345"
+    },
+    "erArbeidsgiverperiode" : false,
+    "ferie1" : null,
+    "ferie2" : null,
+    "fodselsnummer" : null,
+    "forbrukteDager" : null,
+    "gjeldendeForsikring" : null,
+    "historiskeUtbetalinger" : [ "java.util.ArrayList", [ ] ],
+    "kommendeUtbetalinger" : [ "java.util.ArrayList", [ {
+      "arbeidsgiverKontonr" : "1234.12.7845",
+      "arbeidsgiverNavn" : "Google Inc.",
+      "arbeidsgiverOrgnr" : "1234512345",
+      "bruttobeloep" : 220.55,
+      "dagsats" : 120.89,
+      "saksbehandler" : "SAKB001",
+      "type" : {
+        "kode" : "UT",
+        "termnavn" : "Utbetaling"
+      },
+      "utbetalingsdato" : "2013-07-22",
+      "utbetalingsgrad" : 50.0,
+      "vedtak" : {
+        "from" : "2013-02-06",
+        "to" : "2013-05-06"
+      }
+    }, {
+      "arbeidsgiverKontonr" : "11111.11.99999",
+      "arbeidsgiverNavn" : "Microsoft",
+      "arbeidsgiverOrgnr" : "9912135555",
+      "bruttobeloep" : 22000.55,
+      "dagsats" : 1000.0,
+      "saksbehandler" : "SAKB002",
+      "type" : {
+        "kode" : "RE",
+        "termnavn" : "Reduksjon"
+      },
+      "utbetalingsdato" : "2012-12-30",
+      "utbetalingsgrad" : 65.0,
+      "vedtak" : {
+        "from" : "2013-04-30",
+        "to" : "2013-05-20"
+      }
+    }, {
+      "arbeidsgiverKontonr" : "11111.11.99999",
+      "arbeidsgiverNavn" : "Microsoft",
+      "arbeidsgiverOrgnr" : "9912135555",
+      "bruttobeloep" : 22000.55,
+      "dagsats" : 1000.0,
+      "saksbehandler" : "SAKB002",
+      "type" : {
+        "kode" : "RE",
+        "termnavn" : "Reduksjon"
+      },
+      "utbetalingsdato" : "2012-12-30",
+      "utbetalingsgrad" : 65.0,
+      "vedtak" : {
+        "from" : "2013-04-30",
+        "to" : "2013-05-20"
+      }
+    } ] ],
+    "midlertidigStanset" : null,
+    "sanksjon" : null,
+    "slutt" : null,
+    "stansarsak" : {
+      "kode" : "NA",
+      "termnavn" : "Noe Annet"
+    },
+    "sykmelding" : {
+      "behandlet" : "2013-02-08",
+      "gjelderYrkesskade" : {
+        "skadet" : "2013-08-08",
+        "vedtatt" : "2013-06-08",
+        "yrkesskadeart" : {
+          "kode" : "Skadeart",
+          "termnavn" : "Hodeskade"
+        }
+      },
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2013-03-08",
+          "to" : "2013-04-08"
+        },
+        "sykmeldingsgrad" : 70.0
+      }, {
+        "gradert" : {
+          "from" : "2013-08-09",
+          "to" : "2013-11-15"
+        },
+        "sykmeldingsgrad" : 90.0
+      }, {
+        "gradert" : {
+          "from" : "2013-07-20",
+          "to" : "2013-08-08"
+        },
+        "sykmeldingsgrad" : 80.0
+      } ] ],
+      "sykmelder" : "Dr. Bjarne Hansensen",
+      "sykmeldingsgrad" : 90.0,
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      }
+    },
+    "sykmeldinger" : [ "java.util.ArrayList", [ {
+      "behandlet" : "2013-02-08",
+      "gjelderYrkesskade" : {
+        "skadet" : "2013-08-08",
+        "vedtatt" : "2013-06-08",
+        "yrkesskadeart" : {
+          "kode" : "Skadeart",
+          "termnavn" : "Hodeskade"
+        }
+      },
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2013-03-08",
+          "to" : "2013-04-08"
+        },
+        "sykmeldingsgrad" : 70.0
+      }, {
+        "gradert" : {
+          "from" : "2013-08-09",
+          "to" : "2013-11-15"
+        },
+        "sykmeldingsgrad" : 90.0
+      }, {
+        "gradert" : {
+          "from" : "2013-07-20",
+          "to" : "2013-08-08"
+        },
+        "sykmeldingsgrad" : 80.0
+      } ] ],
+      "sykmelder" : "Dr. Bjarne Hansensen",
+      "sykmeldingsgrad" : 90.0,
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      }
+    }, {
+      "behandlet" : "2012-04-08",
+      "gjelderYrkesskade" : null,
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ {
+        "gradert" : {
+          "from" : "2012-06-08",
+          "to" : "2012-08-14"
+        },
+        "sykmeldingsgrad" : 50.0
+      } ] ],
+      "sykmelder" : "Dr. Herman Hermansen",
+      "sykmeldingsgrad" : 50.0,
+      "sykmeldt" : {
+        "from" : "2012-05-08",
+        "to" : "2013-05-18"
+      }
+    }, {
+      "behandlet" : "2011-06-09",
+      "gjelderYrkesskade" : null,
+      "gradAvSykmeldingListe" : [ "java.util.ArrayList", [ ] ],
+      "sykmelder" : "Dr. Kalle Hermansen",
+      "sykmeldingsgrad" : null,
+      "sykmeldt" : {
+        "from" : "2011-06-11",
+        "to" : "2012-06-18"
+      }
+    } ] ],
+    "sykmeldtFom" : "2010-05-25",
+    "unntakAktivitet" : null,
+    "utbetalingerPaVent" : [ "java.util.ArrayList", [ {
+      "arbeidskategori" : null,
+      "ferie1" : null,
+      "ferie2" : null,
+      "oppgjoerstype" : {
+        "kode" : "41",
+        "termnavn" : "OPGJ999"
+      },
+      "sanksjon" : null,
+      "stansaarsak" : {
+        "kode" : "NA",
+        "termnavn" : "Noe Annet"
+      },
+      "sykmeldt" : {
+        "from" : "2013-04-08",
+        "to" : "2013-11-08"
+      },
+      "utbetalingsgrad" : 22.0,
+      "vedtak" : {
+        "from" : "2016-05-01",
+        "to" : "2016-06-01"
+      }
+    } ] ]
+  } ] ]
+}
