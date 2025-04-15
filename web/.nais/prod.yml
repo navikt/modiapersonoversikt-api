@@ -31,9 +31,10 @@ spec:
       runtime: java
     logging:
       destinations:
-        - id: secure_logs
         - id: elastic
         - id: loki
+  secureLogs:
+    enabled: true
   resources:
     requests:
       cpu: 200m
