@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.utils.MutableClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.*
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 internal class EnhetligKodeverkServiceImplTest {
@@ -101,8 +102,8 @@ internal class EnhetligKodeverkServiceImplTest {
         assertThat(dateSlot.captured).hasHourOfDay(1)
 
         val forventetDato =
-            if (dateSlot.captured.toInstant().isBefore(Instant.now())) {
-                LocalDate.now().dayOfMonth
+            if (dateSlot.captured.toInstant().isAfter(Instant.now())) {
+                LocalDate.now().plus(1, ChronoUnit.DAYS).dayOfMonth
             } else {
                 LocalDate.now().plusDays(1).dayOfMonth
             }
