@@ -7,8 +7,11 @@ import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.VedtakDTO
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.Foreldrepenger
 import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
+import no.nav.modiapersonoversikt.infotrgd.pleiepenger.Pleiepenger
 import no.nav.modiapersonoversikt.infotrgd.pleiepenger.PleiepengerResponse
+import no.nav.modiapersonoversikt.infotrgd.sykepenger.Sykepenger
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -33,6 +36,37 @@ class YtelseControllerV2
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
     ) {
+        @PostMapping("alle-ytelser")
+        fun hentYtelser(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): YtelseResponse =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Ytelser,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    val sykepengerResponse =
+                        arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
+                    val pleiepengerResponse =
+                        arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
+                    val foreldrepengerResponse =
+                        arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
+                    val tiltakspenger =
+                        tiltakspengerService.hentVedtakPerioder(Fnr(fnrRequest.fnr), fnrRequest.fom, fnrRequest.tom)
+
+                    YtelseResponse(
+                        sykepenger = sykepengerResponse.sykepenger,
+                        foreldrepenger = foreldrepengerResponse.foreldrepenger,
+                        pleiepenger = pleiepengerResponse.pleiepenger,
+                        tiltakspenger = tiltakspenger,
+                        pensjon = pensjonService.hentSaker(fnrRequest.fnr),
+                    )
+                }
+
         @PostMapping("sykepenger")
         fun hentSykepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
@@ -106,3 +140,11 @@ class YtelseControllerV2
                     pensjonService.hentEtteroppgjorshistorikk(fnrRequest.fnr, sakId)
                 }
     }
+
+data class YtelseResponse(
+    val sykepenger: List<Sykepenger>?,
+    val foreldrepenger: List<Foreldrepenger>?,
+    val pleiepenger: List<Pleiepenger>?,
+    val tiltakspenger: List<VedtakDTO>?,
+    val pensjon: List<PensjonSak>?,
+)
