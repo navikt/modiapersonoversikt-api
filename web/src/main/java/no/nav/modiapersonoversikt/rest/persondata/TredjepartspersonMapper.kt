@@ -59,7 +59,7 @@ class TredjepartspersonMapper(
     ): Persondata.DigitalKontaktinformasjonTredjepartsperson =
         Persondata.DigitalKontaktinformasjonTredjepartsperson(
             mobiltelefonnummer = krrInfo.mobiltelefonnummer?.value,
-            reservasjon = krrInfo.reservasjon,
+            reservasjon = krrInfo.reservasjon?.value,
         )
 
     private fun hentKjonn(person: Person?): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> =

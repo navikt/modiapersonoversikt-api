@@ -10,7 +10,7 @@ object Krr {
 
     data class DigitalKontaktinformasjon(
         val personident: String? = null,
-        val reservasjon: String? = null,
+        val reservasjon: Reservasjon? = null,
         val epostadresse: Epostadresse? = null,
         val mobiltelefonnummer: MobilTelefon? = null,
     )
@@ -27,9 +27,14 @@ object Krr {
         val sistVerifisert: LocalDate? = null,
     )
 
+    data class Reservasjon(
+        val value: Boolean? = null,
+        val sistOppdatert: LocalDate? = null,
+    )
+
     val INGEN_KONTAKTINFO =
         DigitalKontaktinformasjon(
-            reservasjon = "",
+            reservasjon = null,
             epostadresse = Epostadresse(value = ""),
             mobiltelefonnummer = MobilTelefon(value = ""),
         )

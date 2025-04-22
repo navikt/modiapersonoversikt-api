@@ -116,7 +116,7 @@ internal fun gittHentPersondataNavn(navn: String): List<Navn> {
 internal val kontaktinformasjonTredjepartsperson =
     Persondata.DigitalKontaktinformasjonTredjepartsperson(
         mobiltelefonnummer = "90909090",
-        reservasjon = "false",
+        reservasjon = false,
     )
 
 internal val kontaktinformasjonTredjepartspersonMap =

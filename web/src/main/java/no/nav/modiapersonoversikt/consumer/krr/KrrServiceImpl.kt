@@ -89,7 +89,13 @@ class KrrServiceImpl(
     private fun mapToDigitalKontaktInformasjon(dto: DigitalKontaktinformasjonDTO) =
         Krr.DigitalKontaktinformasjon(
             personident = dto.personident,
-            reservasjon = dto.reservert?.toString(),
+            reservasjon =
+                dto.reservert?.let {
+                    Krr.Reservasjon(
+                        value = it,
+                        sistOppdatert = toLocalDate(dto.reservasjonOppdatert),
+                    )
+                },
             epostadresse =
                 dto.epostadresse?.let { epostadresse ->
                     Krr.Epostadresse(
