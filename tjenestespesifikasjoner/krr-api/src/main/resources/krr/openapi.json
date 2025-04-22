@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "API versjon 1",
     "description": "REST-grensesnittet som er tilgjengelig for konsumering fra andre applikasjoner og komponenter, for å hente personers digitale kontaktinformasjon.",
@@ -12,6 +12,29 @@
     }
   ],
   "paths": {
+    "/rest/v1/person/spraak": {
+      "put": {
+        "tags": [
+          "person-controller"
+        ],
+        "operationId": "putPersonSpraak",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutPersonSpraakRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/rest/v1/personer": {
       "post": {
         "tags": [
@@ -102,7 +125,7 @@
             "Azure_AD_System-to-System": []
           },
           {
-            "Azure_AD_On-Behalf-Of": []
+            "Azure AD (On-Behalf-Of)": []
           }
         ]
       }
@@ -152,6 +175,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "TokenX": []
@@ -193,38 +217,60 @@
   },
   "components": {
     "schemas": {
-      "PostPersonerRequest": {
+      "PutPersonSpraakRequest": {
+        "type": "object",
+        "properties": {
+          "personidentifikator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "spraak": {
+            "type": "string",
+            "enum": [
+              "nb",
+              "nn",
+              "se",
+              "en"
+            ]
+          }
+        },
         "required": [
-          "personidenter"
-        ],
+          "spraak"
+        ]
+      },
+      "PostPersonerRequest": {
         "type": "object",
         "properties": {
           "personidenter": {
-            "maxItems": 500,
-            "minItems": 1,
-            "uniqueItems": true,
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "maxItems": 500,
+            "minItems": 1,
+            "uniqueItems": true
           }
-        }
+        },
+        "required": [
+          "personidenter"
+        ]
       },
       "DigitalKontaktinformasjon": {
-        "required": [
-          "aktiv",
-          "personident"
-        ],
         "type": "object",
         "properties": {
           "personident": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "aktiv": {
             "type": "boolean"
           },
           "kanVarsles": {
             "type": "boolean"
+          },
+          "reservasjonOppdatert": {
+            "type": "string",
+            "format": "date-time"
           },
           "reservert": {
             "type": "boolean"
@@ -261,7 +307,11 @@
           "sikkerDigitalPostkasse": {
             "$ref": "#/components/schemas/SikkerDigitalPostkasse"
           }
-        }
+        },
+        "required": [
+          "aktiv",
+          "personident"
+        ]
       },
       "PostPersonerResponse": {
         "type": "object",
@@ -281,36 +331,32 @@
         }
       },
       "SikkerDigitalPostkasse": {
-        "required": [
-          "adresse",
-          "leverandoerAdresse",
-          "leverandoerSertifikat"
-        ],
         "type": "object",
         "properties": {
           "adresse": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "leverandoerAdresse": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "leverandoerSertifikat": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           }
         }
       },
       "GetPrintsertifikatResponse": {
-        "required": [
-          "postkasseleverandoerAdresse",
-          "x509Sertifikat"
-        ],
         "type": "object",
         "properties": {
           "postkasseleverandoerAdresse": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "x509Sertifikat": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           }
         }
       },
@@ -348,7 +394,7 @@
       },
       "TokenX": {
         "type": "http",
-        "description": "Make sure that your own application's client is pre-authorized to call this application, then use the the token URL `https://tokendings.dev-gcp.nais.io/token`, a user token from ID Porten (or some other  TokenX token) and `audience=dev-gcp:team-rocket:digdir-krr-proxy`.\n\nInsert the generated JWT token below. Note that Swagger UI will prepend the necessary `Bearer` prefix automatically.",
+        "description": "Make sure that your own application's client is pre-authorized to call this application, then use the the token URL `https://tokenx.dev-gcp.nav.cloud.nais.io/token`, a user token from ID Porten (or some other  TokenX token) and `audience=dev-gcp:team-rocket:digdir-krr-proxy`.\n\nInsert the generated JWT token below. Note that Swagger UI will prepend the necessary `Bearer` prefix automatically.",
         "name": "TokenX",
         "scheme": "Bearer",
         "bearerFormat": "JWT"

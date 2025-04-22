@@ -4,13 +4,13 @@ import java.time.LocalDate
 
 object KontaktinformasjonApi {
     data class Kontaktinformasjon(
-        val epost: Verdi?,
-        val mobiltelefon: Verdi?,
-        val reservasjon: String?,
+        val epost: Verdi<String>?,
+        val mobiltelefon: Verdi<String>?,
+        val reservasjon: Verdi<Boolean>?,
     )
 
-    data class Verdi(
-        val value: String,
+    data class Verdi<T>(
+        val value: T,
         val sistOppdatert: LocalDate?,
     )
 }

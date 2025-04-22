@@ -994,7 +994,14 @@ class PersondataFletter(
         val oppfolging = data.oppfolging.getOrNull()
         return Persondata.KontaktInformasjon(
             erManuell = oppfolging?.erManuell,
-            erReservert = krrData?.reservasjon?.toBooleanStrictOrNull(),
+            erReservert =
+                krrData?.reservasjon?.let {
+                    Persondata.KontaktInformasjon.Verdi(
+                        it.value,
+                        it.sistOppdatert,
+                        null,
+                    )
+                },
             epost =
                 krrData?.epostadresse?.let {
                     Persondata.KontaktInformasjon.Verdi(

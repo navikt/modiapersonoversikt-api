@@ -31,6 +31,7 @@ internal class KrrServiceImplTest {
                   "aktiv": true,
                   "kanVarsles": false,
                   "reservert": false,
+                  "reservasjonOppdatert": "2000-01-01T09:00:00Z",
                   "spraak": "nb",
                   "spraakOppdatert": "2000-01-01T09:00:00Z",
                   "epostadresse": "noreply@nav.no",
@@ -64,6 +65,8 @@ internal class KrrServiceImplTest {
         assertThat(response.personident).isEqualTo("10108000398")
         assertThat(response.epostadresse?.value).isEqualTo("noreply@nav.no")
         assertThat(response.mobiltelefonnummer?.value).isEqualTo("11111111")
+        assertThat(response.reservasjon?.value).isEqualTo(false)
+        assertThat(response.reservasjon?.sistOppdatert).isNotNull()
     }
 
     @Test
@@ -73,7 +76,7 @@ internal class KrrServiceImplTest {
 
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
-        assertThat(response.reservasjon).isEqualTo("")
+        assertThat(response.reservasjon).isEqualTo(null)
         assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
         assertThat(response.epostadresse?.value).isEqualTo("")
     }
@@ -88,7 +91,7 @@ internal class KrrServiceImplTest {
 
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
-        assertThat(response.reservasjon).isEqualTo("")
+        assertThat(response.reservasjon).isEqualTo(null)
         assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
         assertThat(response.epostadresse?.value).isEqualTo("")
     }
@@ -99,7 +102,7 @@ internal class KrrServiceImplTest {
         val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
-        assertThat(response.reservasjon).isEqualTo("")
+        assertThat(response.reservasjon).isEqualTo(null)
         assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
         assertThat(response.epostadresse?.value).isEqualTo("")
     }

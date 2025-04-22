@@ -236,7 +236,7 @@ object Persondata {
     )
 
     data class DigitalKontaktinformasjonTredjepartsperson(
-        val reservasjon: String? = null,
+        val reservasjon: Boolean? = null,
         val mobiltelefonnummer: String? = null,
     )
 
@@ -275,12 +275,12 @@ object Persondata {
 
     data class KontaktInformasjon(
         val erManuell: Boolean?,
-        val erReservert: Boolean?,
-        val epost: Verdi?,
-        val mobil: Verdi?,
+        val erReservert: Verdi<Boolean>?,
+        val epost: Verdi<String>?,
+        val mobil: Verdi<String>?,
     ) {
-        data class Verdi(
-            val value: String?,
+        data class Verdi<T>(
+            val value: T?,
             val sistOppdatert: LocalDate?,
             val sistVerifisert: LocalDate?,
         )

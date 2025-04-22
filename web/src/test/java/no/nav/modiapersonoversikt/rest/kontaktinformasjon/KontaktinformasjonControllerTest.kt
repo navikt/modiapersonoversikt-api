@@ -15,7 +15,7 @@ import java.time.LocalDate
 private const val FNR = "10108000398"
 private const val EPOST = "test@testesen.com"
 private const val MOBILTELEFON = "12345678"
-private const val RESERVASJON = "Reservert"
+private const val RESERVASJON = true
 private val SIST_OPPDATERT = LocalDate.of(2012, 12, 27)
 
 class KontaktinformasjonControllerTest {
@@ -31,7 +31,7 @@ class KontaktinformasjonControllerTest {
         every { krrService.hentDigitalKontaktinformasjon(FNR) } returns
             Krr.DigitalKontaktinformasjon(
                 personident = null,
-                reservasjon = RESERVASJON,
+                reservasjon = Krr.Reservasjon(RESERVASJON, sistOppdatert = SIST_OPPDATERT),
                 epostadresse =
                     Krr.Epostadresse(
                         value = EPOST,
@@ -50,6 +50,7 @@ class KontaktinformasjonControllerTest {
         val response = controller.hentKontaktinformasjon(FnrRequest(FNR))
         val epost = response.epost
         val mobiltelefon = response.mobiltelefon
+        val reservasjon = response.reservasjon
 
         assertAll(
             "Henter epost",
@@ -63,7 +64,11 @@ class KontaktinformasjonControllerTest {
             Executable { assertEquals(SIST_OPPDATERT, mobiltelefon?.sistOppdatert) },
         )
 
-        assertEquals(RESERVASJON, response.reservasjon)
+        assertAll(
+            "Henter reservasjon",
+            Executable { assertEquals(RESERVASJON, reservasjon?.value) },
+            Executable { assertEquals(SIST_OPPDATERT, reservasjon?.sistOppdatert) },
+        )
     }
 
     @Test
