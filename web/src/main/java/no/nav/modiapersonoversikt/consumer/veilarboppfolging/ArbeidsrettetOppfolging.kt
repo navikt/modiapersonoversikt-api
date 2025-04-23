@@ -21,15 +21,15 @@ object ArbeidsrettetOppfolging {
         val erUnderOppfolging: Boolean,
         val erManuell: Boolean,
         val veileder: Veileder?,
-        val oppfolgingsenhet: Enhet?,
+        val oppfolgingsenhet: OppfolgingsEnhet?,
     )
 
     data class EnhetOgVeileder(
-        val oppfolgingsenhet: Enhet?,
+        val oppfolgingsenhet: OppfolgingsEnhet?,
         val veilederId: String?,
     )
 
-    data class Enhet(
+    data class OppfolgingsEnhet(
         val enhetId: String,
         val navn: String,
     )
