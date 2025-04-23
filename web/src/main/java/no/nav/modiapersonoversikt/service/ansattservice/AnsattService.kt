@@ -50,7 +50,7 @@ class AnsattServiceImpl
 
         override fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet> =
             (axsys.hentTilganger(ident) ?: emptyList())
-                .map { AnsattEnhet(it.enhetId.get(), it.navn) }
+                .map { AnsattEnhet(it.enhetId.get(), it.navn ?: "UKJENT") }
 
         override fun hentVeileder(ident: NavIdent): Veileder =
             hentVeiledere(listOf(ident))
