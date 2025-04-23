@@ -36,7 +36,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
             oppfolgingstatus.erManuell,
             enhetOgVeileder?.veilederId?.let { ansattService.hentVeileder(NavIdent(it)) },
             enhetOgVeileder?.oppfolgingsenhet?.let {
-                ArbeidsrettetOppfolging.Enhet(
+                ArbeidsrettetOppfolging.OppfolgingsEnhet(
                     it.enhetId,
                     it.navn,
                 )

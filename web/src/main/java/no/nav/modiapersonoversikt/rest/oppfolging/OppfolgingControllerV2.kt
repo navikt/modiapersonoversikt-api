@@ -173,7 +173,7 @@ class OppfolgingControllerV2
 data class OppfolgingDTO(
     val erUnderOppfolging: Boolean?,
     val veileder: Veileder?,
-    val enhet: ArbeidsrettetOppfolging.Enhet?,
+    val enhet: ArbeidsrettetOppfolging.OppfolgingsEnhet?,
 )
 
 data class SyfoPunktDTO(
