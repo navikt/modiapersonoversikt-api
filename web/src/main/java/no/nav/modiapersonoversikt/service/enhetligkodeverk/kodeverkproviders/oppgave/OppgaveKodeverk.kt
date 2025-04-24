@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave
 
-import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
@@ -57,7 +56,6 @@ object OppgaveKodeverk {
     ) {
         val tekst by lazy { kode.tekst }
 
-        @Schema(enumAsRef = true)
         enum class PrioritetKode(
             val kode: String,
             val tekst: String,
