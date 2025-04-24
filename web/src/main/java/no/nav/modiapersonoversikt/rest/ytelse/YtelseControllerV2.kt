@@ -49,21 +49,36 @@ class YtelseControllerV2
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    val sykepengerResponse =
-                        arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
-                    val pleiepengerResponse =
-                        arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
-                    val foreldrepengerResponse =
-                        arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
+                    val sykepenger =
+                        arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom).sykepenger?.map {
+                            YtelseVedtak(YtelseType.Sykepenger, YtelseData.SykepengerYtelse(it))
+                        }
+                            ?: listOf()
+                    val pleiepenger =
+                        arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom).pleiepenger?.map {
+                            YtelseVedtak(YtelseType.Pleiepenger, YtelseData.PleiepengerYtelse(it))
+                        }
+                            ?: listOf()
+                    val foreldrepenger =
+                        arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom).foreldrepenger?.map {
+                            YtelseVedtak(
+                                YtelseType.Foreldrepenger,
+                                YtelseData.ForeldrepengerYtelse(it),
+                            )
+                        }
+                            ?: listOf()
                     val tiltakspenger =
-                        tiltakspengerService.hentVedtakPerioder(Fnr(fnrRequest.fnr), fnrRequest.fom, fnrRequest.tom)
+                        tiltakspengerService.hentVedtakPerioder(Fnr(fnrRequest.fnr), fnrRequest.fom, fnrRequest.tom).map {
+                            YtelseVedtak(YtelseType.Tiltakspenge, YtelseData.TiltakspengerYtelse(it))
+                        }
+                    val pensjon =
+                        pensjonService
+                            .hentSaker(
+                                fnrRequest.fnr,
+                            ).map { YtelseVedtak(YtelseType.Pensjon, YtelseData.PensjonYtelse(it)) }
 
                     YtelseResponse(
-                        sykepenger = sykepengerResponse.sykepenger,
-                        foreldrepenger = foreldrepengerResponse.foreldrepenger,
-                        pleiepenger = pleiepengerResponse.pleiepenger,
-                        tiltakspenger = tiltakspenger,
-                        pensjon = pensjonService.hentSaker(fnrRequest.fnr),
+                        ytelser = sykepenger + pleiepenger + foreldrepenger + tiltakspenger + pensjon,
                     )
                 }
 
@@ -141,10 +156,41 @@ class YtelseControllerV2
                 }
     }
 
+sealed class YtelseData {
+    data class SykepengerYtelse(
+        val data: Sykepenger,
+    ) : YtelseData()
+
+    data class ForeldrepengerYtelse(
+        val data: Foreldrepenger,
+    ) : YtelseData()
+
+    data class PleiepengerYtelse(
+        val data: Pleiepenger,
+    ) : YtelseData()
+
+    data class TiltakspengerYtelse(
+        val data: VedtakDTO,
+    ) : YtelseData()
+
+    data class PensjonYtelse(
+        val data: PensjonSak,
+    ) : YtelseData()
+}
+
+enum class YtelseType {
+    Sykepenger,
+    Foreldrepenger,
+    Pleiepenger,
+    Tiltakspenge,
+    Pensjon,
+}
+
+data class YtelseVedtak(
+    val ytelseType: YtelseType,
+    val ytelseData: YtelseData,
+)
+
 data class YtelseResponse(
-    val sykepenger: List<Sykepenger>?,
-    val foreldrepenger: List<Foreldrepenger>?,
-    val pleiepenger: List<Pleiepenger>?,
-    val tiltakspenger: List<VedtakDTO>?,
-    val pensjon: List<PensjonSak>?,
+    val ytelser: List<YtelseVedtak>?,
 )
