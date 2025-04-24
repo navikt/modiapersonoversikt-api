@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import java.time.LocalDate
 
 data class OpprettOppgaveResponse(
@@ -14,7 +15,7 @@ data class OpprettOppgaveRequest(
     val tema: String,
     val oppgavetype: String,
     val behandlingstype: String,
-    val prioritet: String,
+    val prioritet: OppgaveKodeverk.Prioritet.PrioritetKode,
     val underkategoriKode: String?,
     val opprettetavenhetsnummer: String,
     val oppgaveFrist: LocalDate,
@@ -33,7 +34,7 @@ data class OpprettSkjermetOppgaveRequest(
     val tema: String,
     val oppgavetype: String,
     val behandlingstype: String,
-    val prioritet: String,
+    val prioritet: OppgaveKodeverk.Prioritet.PrioritetKode,
     val underkategoriKode: String?,
     val opprettetavenhetsnummer: String,
     val oppgaveFrist: LocalDate,

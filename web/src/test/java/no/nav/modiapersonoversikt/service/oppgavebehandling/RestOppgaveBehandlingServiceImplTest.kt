@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
@@ -103,7 +104,7 @@ class RestOppgaveBehandlingServiceImplTest {
                             tema = "KNA",
                             oppgavetype = "SPM_OG_SVR",
                             behandlingstype = "",
-                            prioritet = "NORM",
+                            prioritet = OppgaveKodeverk.Prioritet.PrioritetKode.NORM,
                             underkategoriKode = "",
                             opprettetavenhetsnummer = "4100",
                             oppgaveFrist = now(fixedClock),
@@ -157,7 +158,7 @@ class RestOppgaveBehandlingServiceImplTest {
                             tema = "KNA",
                             oppgavetype = "SPM_OG_SVR",
                             behandlingstype = "",
-                            prioritet = OppgaveJsonDTO.Prioritet.NORM.value,
+                            prioritet = OppgaveKodeverk.Prioritet.PrioritetKode.NORM,
                             underkategoriKode = "",
                             opprettetavenhetsnummer = "4100",
                             oppgaveFrist = now(fixedClock),

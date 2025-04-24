@@ -15,6 +15,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
@@ -86,7 +87,7 @@ class RestOppgaveBehandlingServiceImpl(
                         behandlingstype = behandling?.behandlingstype,
                         aktivDato = LocalDate.now(clock),
                         fristFerdigstillelse = request.oppgaveFrist,
-                        prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
+                        prioritet = request.prioritet.toPostOppgavePrioritet(),
                         metadata =
                             request.behandlingskjedeId
                                 .coerceBlankToNull()
@@ -131,7 +132,7 @@ class RestOppgaveBehandlingServiceImpl(
                         behandlingstype = behandling?.behandlingstype,
                         aktivDato = LocalDate.now(clock),
                         fristFerdigstillelse = request.oppgaveFrist,
-                        prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
+                        prioritet = request.prioritet.toPostOppgavePrioritet(),
                     ),
             ) ?: throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -430,7 +431,12 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun correlationId() = getCallId()
 
-    private fun stripTemakode(prioritet: String) = prioritet.substringBefore("_")
+    fun OppgaveKodeverk.Prioritet.PrioritetKode.toPostOppgavePrioritet() =
+        when (this) {
+            OppgaveKodeverk.Prioritet.PrioritetKode.HOY -> PostOppgaveRequestJsonDTO.Prioritet.HOY
+            OppgaveKodeverk.Prioritet.PrioritetKode.NORM -> PostOppgaveRequestJsonDTO.Prioritet.NORM
+            OppgaveKodeverk.Prioritet.PrioritetKode.LAV -> PostOppgaveRequestJsonDTO.Prioritet.LAV
+        }
 
     private fun String?.coerceBlankToNull() = if (this.isNullOrBlank()) null else this
 }
