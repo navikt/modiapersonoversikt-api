@@ -21,13 +21,13 @@ data class SykpengerRequest(
 data class SykpengerVedtak(
     val vedtaksreferanse: String,
     val utbetalinger: List<Utbetalingsperiode>,
-    val vedtattTidspunkt: LocalDateTime
+    val vedtattTidspunkt: LocalDateTime,
 )
 
 data class Utbetalingsperiode(
     val fom: LocalDate,
     val tom: LocalDate,
-    val grad: Double
+    val grad: Double,
 )
 
 interface SpokelseClient {
@@ -77,7 +77,10 @@ open class SpokelseClientImpl(
         return objectMapper.readValue(body, Utbetalingsperioder::class.java)
     }
 
-    override fun hentSykpengerVedtak(fnr: String, fom: LocalDate): List<SykpengerVedtak> {
+    override fun hentSykpengerVedtak(
+        fnr: String,
+        fom: LocalDate,
+    ): List<SykpengerVedtak> {
         val response =
             httpClient
                 .newCall(
