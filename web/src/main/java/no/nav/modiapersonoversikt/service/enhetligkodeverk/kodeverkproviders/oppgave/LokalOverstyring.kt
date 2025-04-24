@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.op
 
 import kotlin.properties.Delegates
 
-private typealias Prioriteter = List<OppgaveKodeverk.Prioritet>
+private typealias Prioriteter = List<OppgaveKodeverk.Prioritet.PrioritetKode>
 private typealias Frist = Int
 
 object LokalOverstyring {

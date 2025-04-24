@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave
 
-import com.fasterxml.jackson.annotation.JsonFormat
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
@@ -52,14 +52,20 @@ object OppgaveKodeverk {
         val dagerFrist: Int,
     )
 
-    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-    enum class Prioritet(
-        val kode: String,
-        val tekst: String,
+    data class Prioritet(
+        val kode: PrioritetKode,
     ) {
-        HOY("HOY", "Høy"),
-        NORM("NORM", "Normal"),
-        LAV("LAV", "Lav"),
+        val tekst by lazy { kode.tekst }
+
+        @Schema(enumAsRef = true)
+        enum class PrioritetKode(
+            val kode: String,
+            val tekst: String,
+        ) {
+            HOY("HOY", "Høy"),
+            NORM("NORM", "Normal"),
+            LAV("LAV", "Lav"),
+        }
     }
 
     data class Underkategori(
@@ -107,8 +113,10 @@ object OppgaveKodeverk {
             .associateBy { it.kode }
 
     private fun hentPrioriteter(oppgaveKodeverk: KodeverkkombinasjonDTO): List<Prioritet> =
-        OppgaveOverstyring.overstyrtKodeverk.tema[oppgaveKodeverk.tema.tema]?.prioriteter
-            ?: OppgaveOverstyring.overstyrtKodeverk.prioriteter
+        OppgaveOverstyring.overstyrtKodeverk.tema[oppgaveKodeverk.tema.tema]
+            ?.prioriteter
+            ?.map { Prioritet(it) }
+            ?: OppgaveOverstyring.overstyrtKodeverk.prioriteter.map { Prioritet(it) }
 
     private fun hentUnderkategorier(gjelderverdier: List<GjelderDTO>?): List<Underkategori> =
         gjelderverdier

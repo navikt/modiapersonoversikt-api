@@ -126,7 +126,7 @@ class DialogOppgaveController
 data class OpprettOppgaveRequestDTO(
     val fnr: String,
     val opprettetavenhetsnummer: String,
-    val valgtEnhetId: Int,
+    val valgtEnhetId: String,
     val behandlingskjedeId: String,
     val dagerFrist: Int,
     val ansvarligEnhetId: String,
@@ -135,7 +135,7 @@ data class OpprettOppgaveRequestDTO(
     val temaKode: String,
     val underkategoriKode: String?,
     val oppgaveTypeKode: String,
-    val prioritetKode: String,
+    val prioritetKode: OppgaveKodeverk.Prioritet.PrioritetKode,
 )
 
 data class OpprettSkjermetOppgaveDTO(
@@ -145,7 +145,7 @@ data class OpprettSkjermetOppgaveDTO(
     val temaKode: String,
     val underkategoriKode: String?,
     val oppgaveTypeKode: String,
-    val prioritetKode: String,
+    val prioritetKode: OppgaveKodeverk.Prioritet.PrioritetKode,
 )
 
 data class OpprettOppgaveResponseDTO(

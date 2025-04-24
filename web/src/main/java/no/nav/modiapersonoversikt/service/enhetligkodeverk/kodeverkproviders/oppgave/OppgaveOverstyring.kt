@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave
 
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk.Prioritet.*
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk.Prioritet.PrioritetKode.*
 
 object OppgaveOverstyring {
     private const val VURD_HENV = "VURD_HENV"
