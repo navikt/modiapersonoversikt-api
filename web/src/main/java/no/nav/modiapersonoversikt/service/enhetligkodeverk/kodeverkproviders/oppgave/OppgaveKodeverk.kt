@@ -54,7 +54,7 @@ object OppgaveKodeverk {
     data class Prioritet(
         val kode: PrioritetKode,
     ) {
-        val tekst by lazy { kode.tekst }
+        val tekst = kode.tekst
 
         enum class PrioritetKode(
             val kode: String,
