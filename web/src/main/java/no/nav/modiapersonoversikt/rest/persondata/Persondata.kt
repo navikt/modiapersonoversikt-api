@@ -42,7 +42,7 @@ object Persondata {
     )
 
     data class Dodsdato(
-        val dodsdato: LocalDate? = null,
+        val dodsdato: LocalDate,
         val sistEndret: SistEndret?,
     )
 
