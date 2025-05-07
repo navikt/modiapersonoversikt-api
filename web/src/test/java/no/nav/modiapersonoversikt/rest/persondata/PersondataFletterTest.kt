@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Doedsfall
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
@@ -49,7 +50,20 @@ internal class PersondataFletterTest {
                     testData
                         .copy(
                             personIdent = fnr,
-                            persondata = testPerson.copy(doedsfall = listOf(Doedsfall(gittDato("2010-01-02")))),
+                            persondata =
+                                testPerson.copy(
+                                    doedsfall =
+                                        listOf(
+                                            Doedsfall(
+                                                gittDato("2010-01-02"),
+                                                metadata =
+                                                    Metadata(
+                                                        master = "Freg",
+                                                        endringer = emptyList(),
+                                                    ),
+                                            ),
+                                        ),
+                                ),
                             geografiskeTilknytning = PersondataResult.NotRelevant(),
                             navEnhet = PersondataResult.NotRelevant(),
                         ),

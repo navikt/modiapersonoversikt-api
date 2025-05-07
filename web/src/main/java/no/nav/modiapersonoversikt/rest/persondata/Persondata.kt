@@ -18,7 +18,7 @@ object Persondata {
         val fodested: List<Fodested>,
         val geografiskTilknytning: String?,
         val alder: Int?,
-        val dodsdato: List<LocalDate>,
+        val dodsdato: List<Dodsdato>,
         val bostedAdresse: List<Adresse>,
         val kontaktAdresse: List<Adresse>,
         val oppholdsAdresse: List<Adresse>,
@@ -39,6 +39,11 @@ object Persondata {
         val kontaktInformasjon: KontaktInformasjon,
         val bankkonto: Bankkonto?,
         val forelderBarnRelasjon: List<ForelderBarnRelasjon>,
+    )
+
+    data class Dodsdato(
+        val dodsdato: LocalDate,
+        val sistEndret: SistEndret?,
     )
 
     data class TredjepartsPerson(
