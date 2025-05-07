@@ -112,7 +112,10 @@
       },
       "skifteform" : "OFFENTLIG"
     } ] ],
-    "dodsdato" : [ "java.util.ArrayList", [ "2010-01-02" ] ],
+    "dodsdato" : [ "java.util.ArrayList", [ {
+      "dodsdato" : "2010-01-02",
+      "sistEndret" : null
+    } ] ],
     "erEgenAnsatt" : "NEI",
     "fnr" : "12345678910",
     "fodested" : [ "java.util.ArrayList", [ {

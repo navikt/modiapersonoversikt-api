@@ -179,7 +179,11 @@ class PersondataFletter(
             )
         }
 
-    private fun hentDodsdato(data: Data): List<LocalDate> = data.persondata.doedsfall.mapNotNull { it.doedsdato }
+    private fun hentDodsdato(data: Data): List<Persondata.Dodsdato> =
+        data.persondata.doedsfall.map {
+            val sisteEndring = hentSisteEndringFraMetadata(it.metadata)
+            Persondata.Dodsdato(it.doedsdato, sisteEndring)
+        }
 
     private fun hentGyldighetsperiode(
         gyldigFraOgMed: LocalDate?,
