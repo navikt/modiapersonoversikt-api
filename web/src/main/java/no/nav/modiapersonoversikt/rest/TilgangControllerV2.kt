@@ -12,6 +12,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.personoversikt.common.kabac.Decision
+import no.nav.personoversikt.common.science.scientist.Scientist
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -44,15 +45,33 @@ class TilgangControllerV2
             @RequestParam("enhet", required = false) enhet: String?,
             request: HttpServletRequest,
         ): TilgangDTO =
-            tilgangskontroll
-                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .getDecision()
-                .makeResponse()
-                .sjekkAktivFolkeregistrIden(fnrRequest.fnr)
-                .logAudit(audit, fnrRequest.fnr)
-                .also {
-                    enhetTrace.log(enhet ?: "IKKE SATT")
-                }
+            Scientist
+                .createExperiment<TilgangDTO>(
+                    Scientist.Config(
+                        name = "tilgangsmaskinen",
+                        rate = { true },
+                    ),
+                ).run({
+                    tilgangskontroll
+                        .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                        .getDecision()
+                        .makeResponse()
+                        .sjekkAktivFolkeregistrIden(fnrRequest.fnr)
+                        .logAudit(audit, fnrRequest.fnr)
+                        .also {
+                            enhetTrace.log(enhet ?: "IKKE SATT")
+                        }
+                }, {
+                    tilgangskontroll
+                        .check(Policies.tilgangTilBrukerV2(Fnr(fnrRequest.fnr)))
+                        .getDecision()
+                        .makeResponse()
+                        .sjekkAktivFolkeregistrIden(fnrRequest.fnr)
+                        .logAudit(audit, fnrRequest.fnr)
+                        .also {
+                            enhetTrace.log(enhet ?: "IKKE SATT")
+                        }
+                })
 
         @PostMapping("/v2")
         fun harTilgangV2(
