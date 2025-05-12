@@ -94,6 +94,8 @@ spec:
           namespace: repr
         - application: veilarbvedtaksstotte
           namespace: obo
+        - application: populasjonstilgangskontroll
+          namespace: tilgangsmaskin
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -207,3 +209,7 @@ spec:
       value: "http://tiltakspenger-datadeling.tpts"
     - name: TILTAKSPENGER_SCOPE
       value: "prod-gcp:tpts:tiltakspenger-datadeling"
+    - name: TILGANGSMASKIN_URL
+      value: "http://populasjonstilgangskontroll.tilgangsmaskin"
+    - name: TILGANGSMASKIN_SCOPE
+      value: "prod-gcp:tilgangsmaskin:populasjonstilgangskontroll"
