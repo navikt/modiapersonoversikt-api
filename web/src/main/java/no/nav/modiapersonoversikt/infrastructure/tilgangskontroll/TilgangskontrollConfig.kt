@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.pdlPip.PdlPipApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsmaskinen
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.*
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.azure.AzureADService
@@ -32,6 +33,7 @@ open class TilgangskontrollConfig {
         ansattService: AnsattService,
         henvendelseService: SfHenvendelseService,
         azureADService: AzureADService,
+        tilgangsmaskinen: Tilgangsmaskinen,
     ): Kabac.PolicyDecisionPoint =
         PolicyDecisionPointImpl().apply {
             install(AuthContextPip)
@@ -49,6 +51,7 @@ open class TilgangskontrollConfig {
             install(VeiledersTemaPip(ansattService))
             install(HenvendelseEierPip(henvendelseService))
             install(InternalTilgangPip())
+            install(TilgangsMaskinenPip(tilgangsmaskinen))
         }
 
     @Bean

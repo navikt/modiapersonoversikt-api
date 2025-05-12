@@ -54,6 +54,22 @@ class TilgangControllerV2
                     enhetTrace.log(enhet ?: "IKKE SATT")
                 }
 
+        @PostMapping("/v2")
+        fun harTilgangV2(
+            @RequestBody fnrRequest: FnrRequest,
+            @RequestParam("enhet", required = false) enhet: String?,
+            request: HttpServletRequest,
+        ): TilgangDTO =
+            tilgangskontroll
+                .check(Policies.tilgangTilBrukerV2(Fnr(fnrRequest.fnr)))
+                .getDecision()
+                .makeResponse()
+                .sjekkAktivFolkeregistrIden(fnrRequest.fnr)
+                .logAudit(audit, fnrRequest.fnr)
+                .also {
+                    enhetTrace.log(enhet ?: "IKKE SATT")
+                }
+
         @GetMapping
         fun harTilgang(): TilgangDTO =
             tilgangskontroll

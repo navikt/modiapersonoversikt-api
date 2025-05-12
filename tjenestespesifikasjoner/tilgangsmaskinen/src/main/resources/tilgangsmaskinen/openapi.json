@@ -1,0 +1,248 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "https://tilgangsmaskin.intern.nav.no",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "TilgangController",
+      "description": "Denne kontrolleren skal brukes i produksjon"
+    }
+  ],
+  "paths": {
+    "/api/v1/overstyr": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "operationId": "overstyr",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OverstyringData"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/komplett": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "operationId": "kompletteRegler",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/kjerne": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "operationId": "kjerneregler",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/bulk": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "operationId": "bulk",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IdOgType"
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OverstyringData": {
+        "type": "object",
+        "properties": {
+          "brukerId": {
+            "type": "string"
+          },
+          "begrunnelse": {
+            "type": "string"
+          },
+          "gyldigtil": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "begrunnelse",
+          "brukerId",
+          "gyldigtil"
+        ]
+      },
+      "ForbiddenResponse": {
+        "type": "object",
+        "required": [
+          "title",
+          "instance",
+          "navIdent",
+          "brukerIdent",
+          "begrunnelse",
+          "kanOverstyres"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "enum": [
+              "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+              "AVVIST_STRENGT_FORTROLIG_UTLAND",
+              "AVVIST_FORTROLIG_ADRESSE",
+              "AVVIST_SKJERMING",
+              "AVVIST_GEOGRAFISK",
+              "AVVIST_HABILITET",
+              "AVVIST_AVDØD",
+              "AVVIST_PERSON_UTLAND",
+              "AVVIST_PERSON_UKJENT"
+            ]
+          },
+          "instance": {
+            "type": "string",
+            "description": "format ident/fnr"
+          },
+          "brukerIdent": {
+            "type": "string"
+          },
+          "navIdent": {
+            "type": "string"
+          },
+          "begrunnelse": {
+            "type": "string"
+          },
+          "kanOverstyres": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IdOgType": {
+        "type": "object",
+        "properties": {
+          "brukerId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "KJERNE_REGELTYPE",
+              "KOMPLETT_REGELTYPE",
+              "OVERSTYRBAR_REGELTYPE"
+            ]
+          }
+        },
+        "required": [
+          "brukerId",
+          "type"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
