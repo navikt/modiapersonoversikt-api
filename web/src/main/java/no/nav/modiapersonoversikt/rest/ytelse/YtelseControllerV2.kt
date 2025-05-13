@@ -7,8 +7,11 @@ import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.VedtakDTO
+import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.Foreldrepenger
 import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
+import no.nav.modiapersonoversikt.infotrgd.pleiepenger.Pleiepenger
 import no.nav.modiapersonoversikt.infotrgd.pleiepenger.PleiepengerResponse
+import no.nav.modiapersonoversikt.infotrgd.sykepenger.Sykepenger
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -33,6 +36,52 @@ class YtelseControllerV2
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
     ) {
+        @PostMapping("alle-ytelser")
+        fun hentYtelser(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): YtelseResponse =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Ytelser,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    val sykepenger =
+                        arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom).sykepenger?.map {
+                            YtelseVedtak(YtelseType.Sykepenger, YtelseData.SykepengerYtelse(it))
+                        }
+                            ?: listOf()
+                    val pleiepenger =
+                        arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom).pleiepenger?.map {
+                            YtelseVedtak(YtelseType.Pleiepenger, YtelseData.PleiepengerYtelse(it))
+                        }
+                            ?: listOf()
+                    val foreldrepenger =
+                        arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom).foreldrepenger?.map {
+                            YtelseVedtak(
+                                YtelseType.Foreldrepenger,
+                                YtelseData.ForeldrepengerYtelse(it),
+                            )
+                        }
+                            ?: listOf()
+                    val tiltakspenger =
+                        tiltakspengerService.hentVedtakPerioder(Fnr(fnrRequest.fnr), fnrRequest.fom, fnrRequest.tom).map {
+                            YtelseVedtak(YtelseType.Tiltakspenge, YtelseData.TiltakspengerYtelse(it))
+                        }
+                    val pensjon =
+                        pensjonService
+                            .hentSaker(
+                                fnrRequest.fnr,
+                            ).map { YtelseVedtak(YtelseType.Pensjon, YtelseData.PensjonYtelse(it)) }
+
+                    YtelseResponse(
+                        ytelser = sykepenger + pleiepenger + foreldrepenger + tiltakspenger + pensjon,
+                    )
+                }
+
         @PostMapping("sykepenger")
         fun hentSykepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
@@ -106,3 +155,42 @@ class YtelseControllerV2
                     pensjonService.hentEtteroppgjorshistorikk(fnrRequest.fnr, sakId)
                 }
     }
+
+sealed class YtelseData {
+    data class SykepengerYtelse(
+        val data: Sykepenger,
+    ) : YtelseData()
+
+    data class ForeldrepengerYtelse(
+        val data: Foreldrepenger,
+    ) : YtelseData()
+
+    data class PleiepengerYtelse(
+        val data: Pleiepenger,
+    ) : YtelseData()
+
+    data class TiltakspengerYtelse(
+        val data: VedtakDTO,
+    ) : YtelseData()
+
+    data class PensjonYtelse(
+        val data: PensjonSak,
+    ) : YtelseData()
+}
+
+enum class YtelseType {
+    Sykepenger,
+    Foreldrepenger,
+    Pleiepenger,
+    Tiltakspenge,
+    Pensjon,
+}
+
+data class YtelseVedtak(
+    val ytelseType: YtelseType,
+    val ytelseData: YtelseData,
+)
+
+data class YtelseResponse(
+    val ytelser: List<YtelseVedtak>?,
+)
