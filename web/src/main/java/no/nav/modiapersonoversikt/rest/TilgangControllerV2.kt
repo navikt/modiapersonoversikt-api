@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.science.scientist.Scientist
 import org.springframework.beans.factory.annotation.Autowired
@@ -50,6 +51,7 @@ class TilgangControllerV2
                     Scientist.Config(
                         name = "tilgangsmaskinen",
                         rate = { true },
+                        threadSwappingFn = ConcurrencyUtils::makeThreadSwappable,
                     ),
                 ).run({
                     tilgangskontroll
