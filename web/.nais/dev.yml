@@ -206,7 +206,7 @@ spec:
       value: "http://tiltakspenger-datadeling.tpts"
     - name: TILTAKSPENGER_SCOPE
       value: "dev-gcp:tpts:tiltakspenger-datadeling"
-    - name: TILGANGSMASKIN_URL
+    - name: TILGANGSMASKINEN_URL
       value: "http://populasjonstilgangskontroll.tilgangsmaskin"
-    - name: TILGANGSMASKIN_SCOPE
+    - name: TILGANGSMASKINEN_SCOPE
       value: "dev-gcp:tilgangsmaskin:populasjonstilgangskontroll"
