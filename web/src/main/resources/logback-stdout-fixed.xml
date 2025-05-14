@@ -3,12 +3,6 @@
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 
     <appender name="stdout_json_masked" class="no.nav.common.log.MaskingAppender">
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="no.nav.modiapersonoversikt.infrastructure.CXFEvaluatorFilter">
-            </evaluator>
-            <onMatch>DENY</onMatch>
-            <onMismatch>NEUTRAL</onMismatch>
-        </filter>
         <appender-ref ref="consoleAppender"/>
     </appender>
     <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
