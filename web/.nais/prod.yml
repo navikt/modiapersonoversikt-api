@@ -178,7 +178,7 @@ spec:
     - name: INTERNAL_TILGANG
       value: "U143410"
     - name: CXF_SECURE_LOG
-      value: "enabled"
+      value: "disabled"
     - name: AXSYS_URL
       value: "https://axsys.prod-fss-pub.nais.io"
     - name: AXSYS_SCOPE
