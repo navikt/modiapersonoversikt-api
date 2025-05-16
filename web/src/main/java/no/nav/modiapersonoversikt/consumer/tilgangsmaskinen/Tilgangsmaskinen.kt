@@ -2,14 +2,14 @@ package no.nav.modiapersonoversikt.consumer.tilgangsmaskinen
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.benmanes.caffeine.cache.Cache
-import io.ktor.util.reflect.instanceOf
 import no.nav.common.health.HealthCheckUtils
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
 import no.nav.common.utils.UrlUtils
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.apis.TilgangControllerApi
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ApiResponse
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ClientError
-import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ClientException
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ResponseType
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.models.ForbiddenResponse
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
@@ -18,7 +18,6 @@ import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.http.HttpStatus
 
 interface Tilgangsmaskinen : Pingable {
     fun sjekkTilgang(fnr: Fnr): TilgangsMaskinResponse?
@@ -44,20 +43,16 @@ open class TilgangsmaskinenImpl(
     override fun sjekkTilgang(fnr: Fnr): TilgangsMaskinResponse? =
         cache.get(fnr.get()) {
             runCatching {
-                tilgangsMaskinenApi.kompletteRegler(fnr.get())
-                TilgangsMaskinResponse(harTilgang = true)
-            }.getOrElse { err ->
-                if (err.instanceOf(ClientException::class) && (err as ClientException).statusCode == HttpStatus.FORBIDDEN.value()) {
-                    val errorRes = err.response as ClientError<*>
-                    try {
-                        val errorObject = objectMapper.readValue(errorRes.body as String, ForbiddenResponse::class.java)
-                        TilgangsMaskinResponse(harTilgang = false, error = errorObject)
-                    } catch (e: Exception) {
-                        logger.warn("Parse exception when parsing error response from tilgangsmaskinen: ${e.message}")
+                val response = tilgangsMaskinenApi.kompletteReglerWithHttpInfo(fnr.get())
+                when (response.responseType) {
+                    ResponseType.Success -> TilgangsMaskinResponse(harTilgang = true)
+                    ResponseType.ClientError -> makeErrorResponse(response)
+                    else -> {
+                        logger.error("Received unexpected response type: ${response.responseType}")
+                        TilgangsMaskinResponse(harTilgang = false)
                     }
-                    TilgangsMaskinResponse(harTilgang = false)
                 }
-
+            }.getOrElse { err ->
                 tjenestekallLogger.error(
                     header = "Greide ikke å hente tilgang fra tilgangsmaskinen",
                     fields = mapOf("fnr" to fnr.get()),
@@ -66,6 +61,21 @@ open class TilgangsmaskinenImpl(
                 null
             }
         }
+
+    private fun makeErrorResponse(response: ApiResponse<*>): TilgangsMaskinResponse {
+        if (response.statusCode == 403) {
+            response as ClientError<*>
+            try {
+                val errorObject = objectMapper.readValue(response.body as String, ForbiddenResponse::class.java)
+                return TilgangsMaskinResponse(harTilgang = false, error = errorObject)
+            } catch (e: Exception) {
+                logger.warn("Parse exception when parsing error response from tilgangsmaskinen: ${e.message}")
+                return TilgangsMaskinResponse(harTilgang = false)
+            }
+        }
+        logger.warn("Received error response from tilgangsmaskinen: ${response.statusCode}")
+        return TilgangsMaskinResponse(harTilgang = false)
+    }
 
     override fun ping() =
         SelfTestCheck(
