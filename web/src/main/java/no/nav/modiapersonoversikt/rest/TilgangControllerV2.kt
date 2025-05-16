@@ -121,7 +121,8 @@ class TilgangControllerV2
 data class TilgangDTO(
     val harTilgang: Boolean,
     val ikkeTilgangArsak: Decision.DenyCause?,
-    val aktivIdent: String?,
+    val message: String? = null,
+    val aktivIdent: String? = null,
 )
 
 class AuthIntropectionDTO(
@@ -151,7 +152,7 @@ internal fun JWTClaimsSet.getExpirationDate(): AuthIntropectionDTO =
 
 internal fun Decision.makeResponse(): TilgangDTO =
     when (val biased = this.withBias(Decision.Type.DENY)) {
-        is Decision.Permit -> TilgangDTO(true, null, null)
-        is Decision.Deny -> TilgangDTO(false, biased.cause, null)
+        is Decision.Permit -> TilgangDTO(true, null)
+        is Decision.Deny -> TilgangDTO(false, biased.cause, message = biased.message)
         is Decision.NotApplicable -> TilgangDTO(false, Decision.NO_APPLICABLE_POLICY_FOUND, null)
     }
