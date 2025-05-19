@@ -65,7 +65,6 @@ data class TraadDTO(
     val avsluttetDato: OffsetDateTime?,
     val sistEndretAv: String?,
     val sladding: Boolean?,
-    val lukketAv: String?,
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogApi.Journalpost>,
 )

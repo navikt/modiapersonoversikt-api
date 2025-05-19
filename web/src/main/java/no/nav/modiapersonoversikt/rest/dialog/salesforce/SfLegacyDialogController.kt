@@ -207,7 +207,6 @@ class SfLegacyDialogController(
             avsluttetDato = henvendelse.avsluttetDato,
             sistEndretAv = sistEndretAv,
             sladding = henvendelse.sladding,
-            lukketAv = henvendelse.lukketAv?.let { getIdent(it.ident, it.identType) },
             temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe),
             traadType = TraadType.valueOf(henvendelse.henvendelseType.value),
             meldinger = meldinger,
