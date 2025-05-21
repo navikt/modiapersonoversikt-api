@@ -142,11 +142,11 @@ class OppfolgingControllerV2
             }
         }
 
-        private fun hentVedtak(vedtak: List<Vedtak>?): List<VedtakDTO> {
+        private fun hentVedtak(vedtak: List<Vedtak>?): List<OppfolgingYtelseVedtakDTO> {
             if (vedtak == null) return emptyList()
 
             return vedtak.map {
-                VedtakDTO(
+                OppfolgingYtelseVedtakDTO(
                     aktivFra = it.activeFrom?.toString(JODA_DATOFORMAT),
                     aktivTil = it.activeTo?.toString(JODA_DATOFORMAT),
                     aktivitetsfase = it.aktivitetsfase,
@@ -198,7 +198,7 @@ open class OppfolgingsYtelseDTO(
     open val type: String?,
     open val status: String?,
     open val datoKravMottat: String?,
-    open val vedtak: List<VedtakDTO>? = listOf(),
+    open val vedtak: List<OppfolgingYtelseVedtakDTO>? = listOf(),
     open val fom: String?,
     open val tom: String?,
     open val dagerIgjenMedBortfall: Int?,
@@ -209,7 +209,7 @@ data class DagpengeytelseDTO(
     override val type: String?,
     override val status: String?,
     override val datoKravMottat: String?,
-    override val vedtak: List<VedtakDTO>? = listOf(),
+    override val vedtak: List<OppfolgingYtelseVedtakDTO>? = listOf(),
     override val fom: String?,
     override val tom: String?,
     override val dagerIgjenMedBortfall: Int?,
@@ -220,7 +220,7 @@ data class DagpengeytelseDTO(
     val ukerIgjen: Int?,
 ) : OppfolgingsYtelseDTO(type, status, datoKravMottat, vedtak, fom, tom, dagerIgjenMedBortfall, ukerIgjenMedBortfall)
 
-data class VedtakDTO(
+data class OppfolgingYtelseVedtakDTO(
     val aktivFra: String?,
     val aktivTil: String?,
     val aktivitetsfase: String?,
