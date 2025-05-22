@@ -239,11 +239,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modia-soknadsstatus-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>utbetaling-api</artifactId>
             <version>${project.version}</version>
         </dependency>
