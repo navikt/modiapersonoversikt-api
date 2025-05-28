@@ -9,33 +9,37 @@ import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.FilterUtils.fjernGamleDokumenter
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
-import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
-import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
-import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.function.Predicate
 import java.util.stream.Collectors
 
+data class SakstemaData(
+    val temakode: String,
+    val temanavn: String,
+    val erGruppert: Boolean,
+    val dokumentMetadata: List<DokumentMetadata> = emptyList(),
+    val tilhorendeSaker: List<Sak> = emptyList(),
+    val feilkoder: List<Int> = emptyList(),
+)
+
 interface SakstemaService {
-    fun hentSakstemaSoknadsstatus(
+    fun hentSakstema(
         saker: List<Sak>,
         fnr: String,
-    ): ResultatWrapper<List<SoknadsstatusSakstema>>
+    ): ResultatWrapper<List<SakstemaData>>
 
-    fun opprettSakstemaresultatSoknadsstatus(
+    fun opprettSakstemaresultat(
         saker: List<Sak>,
         wrapper: ResultatWrapper<List<DokumentMetadata>>,
         temakoder: Set<String>,
-        soknadsstatuser: Map<String, Soknadsstatus>,
-    ): ResultatWrapper<List<SoknadsstatusSakstema>>
+    ): ResultatWrapper<List<SakstemaData>>
 
-    fun opprettSakstemaForEnTemagruppeSoknadsstatus(
+    fun opprettSakstemaForEnTemagruppe(
         temakoder: Set<String>,
         alleSaker: List<Sak>,
         alleDokumentMetadata: List<DokumentMetadata>,
-        soknadsstatuser: Map<String, Soknadsstatus>,
-    ): ResultatWrapper<List<SoknadsstatusSakstema>>
+    ): ResultatWrapper<List<SakstemaData>>
 
     fun tilhorendeDokumentMetadata(
         alleDokumentMetadata: List<DokumentMetadata>,
@@ -56,52 +60,39 @@ class SakstemaServiceImpl
     constructor(
         private val safService: SafService,
         private val kodeverk: EnhetligKodeverk.Service,
-        private val soknadsstatusService: SoknadsstatusService,
     ) : SakstemaService {
-        override fun hentSakstemaSoknadsstatus(
+        override fun hentSakstema(
             saker: List<Sak>,
             fnr: String,
-        ): ResultatWrapper<List<SoknadsstatusSakstema>> {
+        ): ResultatWrapper<List<SakstemaData>> {
             val wrapper = safService.hentJournalposter(fnr)
 
             return try {
-                var soknadsstatuser: Map<String, Soknadsstatus>
-                try {
-                    soknadsstatuser =
-                        soknadsstatusService.hentBehandlingerGruppertPaaTema(fnr)
-                } catch (e: Exception) {
-                    soknadsstatuser = emptyMap()
-                    LOG.error("Klarte ikke å hente ut soknadsstatus", e)
-                }
-
-                val temakoder = hentAlleTemaSoknadsstatus(saker, wrapper.resultat, soknadsstatuser)
-                opprettSakstemaresultatSoknadsstatus(saker, wrapper, temakoder, soknadsstatuser)
+                val temakoder = hentAlleTema(saker, wrapper.resultat)
+                opprettSakstemaresultat(saker, wrapper, temakoder)
             } catch (e: FeilendeBaksystemException) {
-                val temakoder = hentAlleTemaSoknadsstatus(saker, wrapper.resultat, emptyMap<String, Soknadsstatus>())
+                val temakoder = hentAlleTema(saker, wrapper.resultat)
                 wrapper.feilendeSystemer.add(e.baksystem)
-                opprettSakstemaresultatSoknadsstatus(saker, wrapper, temakoder, emptyMap<String, Soknadsstatus>())
+                opprettSakstemaresultat(saker, wrapper, temakoder)
             }
         }
 
-        override fun opprettSakstemaresultatSoknadsstatus(
+        override fun opprettSakstemaresultat(
             saker: List<Sak>,
             wrapper: ResultatWrapper<List<DokumentMetadata>>,
             temakoder: Set<String>,
-            soknadsstatuser: Map<String, Soknadsstatus>,
-        ): ResultatWrapper<List<SoknadsstatusSakstema>> =
-            opprettSakstemaForEnTemagruppeSoknadsstatus(
+        ): ResultatWrapper<List<SakstemaData>> =
+            opprettSakstemaForEnTemagruppe(
                 temakoder = temakoder,
                 alleSaker = saker,
                 alleDokumentMetadata = wrapper.resultat,
-                soknadsstatuser,
             )
 
-        override fun opprettSakstemaForEnTemagruppeSoknadsstatus(
+        override fun opprettSakstemaForEnTemagruppe(
             temakoder: Set<String>,
             alleSaker: List<Sak>,
             alleDokumentMetadata: List<DokumentMetadata>,
-            soknadsstatuser: Map<String, Soknadsstatus>,
-        ): ResultatWrapper<List<SoknadsstatusSakstema>> {
+        ): ResultatWrapper<List<SakstemaData>> {
             val feilendeBaksystem: MutableSet<Baksystem> = mutableSetOf()
             val sakstema =
                 temakoder.map { temakode: String ->
@@ -109,11 +100,10 @@ class SakstemaServiceImpl
                     val tilhorendeDokumentMetadata = tilhorendeDokumentMetadata(alleDokumentMetadata, temakode, tilhorendeSaker)
                     val temanavn = getTemanavnForTemakode(temakode)
                     feilendeBaksystem.addAll(temanavn.feilendeSystemer)
-                    SoknadsstatusSakstema(
+                    SakstemaData(
                         temakode = temakode,
                         temanavn = temanavn.resultat,
                         erGruppert = false,
-                        soknadsstatus = soknadsstatuser[temakode] ?: Soknadsstatus(),
                         dokumentMetadata = tilhorendeDokumentMetadata,
                         tilhorendeSaker = tilhorendeSaker,
                     )
@@ -153,16 +143,14 @@ class SakstemaServiceImpl
         companion object {
             private val LOG = LoggerFactory.getLogger(SakstemaServiceImpl::class.java)
 
-            fun hentAlleTemaSoknadsstatus(
+            fun hentAlleTema(
                 saker: List<Sak>,
                 dokumentMetadata: List<DokumentMetadata>,
-                soknadsstatuser: Map<String, Soknadsstatus>,
             ): Set<String> {
                 val sakerTema = saker.map { it.temakode }
                 val dokumentTema =
                     dokumentMetadata.filter { it.baksystem.contains(Baksystem.HENVENDELSE) }.map { it.temakode }
-                val soknadsstatusTema = soknadsstatuser.keys
-                return (sakerTema + dokumentTema + soknadsstatusTema).toSet()
+                return (sakerTema + dokumentTema).toSet()
             }
 
             private fun tilhorendeFraJoark(tilhorendeSaker: List<Sak>): Predicate<DokumentMetadata> =

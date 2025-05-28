@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.service.sakstema
 
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
-import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -14,8 +13,8 @@ object FilterUtils {
     }
 
     @JvmStatic
-    @JvmName("fjernGamleDokumentSoknadsstatus")
-    fun fjernGamleDokumenter(saker: List<SoknadsstatusSakstema>): List<SoknadsstatusSakstema> =
+    @JvmName("fjernGamleDokument")
+    fun fjernGamleDokumenter(saker: List<SakstemaData>): List<SakstemaData> =
         saker.map { sak ->
             val filtrerteDokument =
                 sak.dokumentMetadata.filter { dokument ->
