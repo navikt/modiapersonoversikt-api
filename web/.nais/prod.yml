@@ -68,6 +68,7 @@ spec:
         - host: axsys.prod-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
+        - host: pensjon-pen.prod-fss-pub.nais.io
       rules:
         - application: sf-henvendelse-api-proxy
           namespace: teamnks
@@ -137,9 +138,9 @@ spec:
     - name: VEILARBVEDTAKSTOTTEAPI_SCOPE
       value: "prod-gcp:obo:veilarbvedtaksstotte"
     - name: PENSJON_API_PROXY_URL
-      value: "http://pen-nks-service.pensjon-saksbehandling/"
+      value: "https://pensjon-pen.prod-fss-pub.nais.io"
     - name: PENSJON_API_PROXY_SCOPE
-      value: "prod-gcp:pensjon-saksbehandling:pen-nks-service"
+      value: "prod-fss:pensjon-pen:pensjondeployer"
     - name: KRR_REST_URL
       value: "http://digdir-krr-proxy.team-rocket/"
     - name: KRR_SCOPE

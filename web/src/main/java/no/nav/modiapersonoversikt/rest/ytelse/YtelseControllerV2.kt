@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.rest.ytelse
 
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
-import no.nav.modiapersonoversikt.consumer.pensjon.PensjonEtteroppgjorshistorikk
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
@@ -20,7 +19,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.common.FnrDatoRangeRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -136,23 +134,6 @@ class YtelseControllerV2
                     ),
                 ) {
                     pensjonService.hentSaker(fnrRequest.fnr)
-                }
-
-        @PostMapping("pensjon/{sakId}")
-        fun hentPensjonSakEtteroppgjorshistorikk(
-            @RequestBody fnrRequest: FnrDatoRangeRequest,
-            @PathVariable("sakId") sakId: String,
-        ): List<PensjonEtteroppgjorshistorikk> =
-            tilgangskontroll
-                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(
-                    Audit.describe(
-                        Audit.Action.READ,
-                        AuditResources.Person.Pensjon,
-                        AuditIdentifier.FNR to fnrRequest.fnr,
-                    ),
-                ) {
-                    pensjonService.hentEtteroppgjorshistorikk(fnrRequest.fnr, sakId)
                 }
     }
 
