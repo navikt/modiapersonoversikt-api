@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.pensjon
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
@@ -24,6 +25,7 @@ data class PensjonSak(
     val enhetsId: String,
 )
 
+@Serializable
 data class RequestBodyContent(
     val fnr: String,
 )
