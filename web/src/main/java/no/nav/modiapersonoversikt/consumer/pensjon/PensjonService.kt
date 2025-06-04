@@ -1,65 +1,31 @@
 package no.nav.modiapersonoversikt.consumer.pensjon
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.springframework.cache.annotation.Cacheable
 import java.time.LocalDate
 
 interface PensjonService {
     fun hentSaker(fnr: String): List<PensjonSak>
-
-    fun hentEtteroppgjorshistorikk(
-        fnr: String,
-        sakId: String,
-    ): List<PensjonEtteroppgjorshistorikk>
-
-    fun hentVedtak(
-        fnr: String,
-        sakId: String,
-    ): List<PensjonVedtak>
 }
 
 data class PensjonSak(
-    val id: Long,
-    val type: Code?,
-    val status: Code?,
-    val fom: LocalDate?,
-    val tom: LocalDate?,
-    val enhetId: String,
+    val sakid: Long,
+    val sakType: String,
+    val sakStatus: String,
+    val fomDato: LocalDate?,
+    val tomDato: LocalDate?,
+    val enhetsId: String,
 )
 
-data class PensjonVedtak(
-    val id: Long,
-    val type: Code?,
-    val status: Code?,
-    val vedtaksdato: LocalDate?,
-    val lopendeFom: LocalDate?,
-    val lopendeTom: LocalDate?,
-)
-
-data class PensjonEtteroppgjorshistorikk(
-    val fom: LocalDate,
-    val tom: LocalDate,
-    val resultat: Code?,
-    val belop: Int?,
-    val vedtaksdato: LocalDate?,
-    val ar: String,
-    val ytelser: List<PensjonEtteroppgjorYtelse>,
-)
-
-data class PensjonEtteroppgjorYtelse(
-    val type: Code?,
-    val inntekt: Int?,
-    val fradrag: Int?,
-    val inntektBruktIEtteroppgjor: Int?,
-    val avviksbelop: Int?,
-)
-
-data class Code(
-    val code: String,
-    val decode: String,
+data class RequestBodyContent(
+    val fnr: String,
 )
 
 open class PensjonServiceImpl(
@@ -67,32 +33,26 @@ open class PensjonServiceImpl(
     private val httpClient: OkHttpClient,
 ) : PensjonService {
     @Cacheable("pensjonSaker")
-    override fun hentSaker(fnr: String): List<PensjonSak> = sendRequest("sak", fnr) ?: listOf()
+    override fun hentSaker(fnr: String): List<PensjonSak> = sendRequest(fnr) ?: listOf()
 
-    @Cacheable("pensjonEtteroppgjorshistorikk")
-    override fun hentEtteroppgjorshistorikk(
-        fnr: String,
-        sakId: String,
-    ): List<PensjonEtteroppgjorshistorikk> = sendRequest("/sak/$sakId/etteroppgjorshistorikk", fnr) ?: listOf()
+    private inline fun <reified T> sendRequest(fnr: String): T? {
+        val requestContent =
+            Json.encodeToString(
+                RequestBodyContent(
+                    fnr,
+                ),
+            )
+        val requestBody =
+            requestContent
+                .toRequestBody("application/json".toMediaTypeOrNull())
 
-    @Cacheable("pensjonVedtak")
-    override fun hentVedtak(
-        fnr: String,
-        sakId: String,
-    ): List<PensjonVedtak> = sendRequest("/sak/$sakId/vedtak", fnr) ?: listOf()
-
-    private inline fun <reified T> sendRequest(
-        url: String,
-        fnr: String,
-    ): T? {
         val response =
             httpClient
                 .newCall(
                     Request
                         .Builder()
-                        .url("$baseUrl/rest/api/$url")
-                        .addHeader("fnr", fnr)
-                        .get()
+                        .url("$baseUrl/pen/api/sak/alderspensjon/sammendrag")
+                        .post(requestBody)
                         .build(),
                 ).execute()
 
