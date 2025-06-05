@@ -137,7 +137,7 @@ spec:
     - name: PENSJON_API_PROXY_URL
       value: "https://pensjon-pen-q2.dev-fss-pub.nais.io"
     - name: PENSJON_API_PROXY_SCOPE
-      value: "dev-fss:pensjon-pen-q2:pensjon-q2"
+      value: "dev-fss:pensjon-q2:pensjon-pen-q2"
     - name: KRR_REST_URL
       value: "http://digdir-krr-proxy.team-rocket/"
     - name: KRR_SCOPE
