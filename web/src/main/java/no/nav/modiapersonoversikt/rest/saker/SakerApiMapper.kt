@@ -5,18 +5,18 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
-import no.nav.modiapersonoversikt.service.sakstema.SakstemaData
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
+import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
 import no.nav.personoversikt.common.kabac.Decision
 import java.util.*
 
 object SakerApiMapper {
-    @JvmName("createMappingContextSakstema")
+    @JvmName("createMappingContextSoknadsstatus")
     fun createMappingContext(
         tilgangskontroll: Tilgangskontroll,
         enhet: EnhetId,
-        sakstemaer: List<SakstemaData>,
+        sakstemaer: List<SoknadsstatusSakstema>,
     ): MappingContext {
         val tematilgang =
             sakstemaer
@@ -39,15 +39,16 @@ object SakerApiMapper {
     class MappingContext(
         private val tematilgang: Map<String, Boolean>,
     ) {
-        fun mapTilResultat(sakstemaer: List<SakstemaData>) =
-            SakerApi.SakstemaResponse(
+        fun mapTilResultat(sakstemaer: List<SoknadsstatusSakstema>) =
+            SakerApi.ResultatSoknadsstatus(
                 sakstemaer.map { sakstema ->
                     val harTilgang = tematilgang[sakstema.temakode] == true
                     val tilhorendeSaker = sakstema.tilhorendeSaker.map(::mapTilTilhorendeSak)
-                    SakerApi.Sakstema(
+                    SakerApi.SoknadsstatusSakstema(
                         temakode = sakstema.temakode,
                         temanavn = sakstema.temanavn,
                         erGruppert = sakstema.erGruppert,
+                        soknadsstatus = sakstema.soknadsstatus,
                         dokumentMetadata = sakstema.dokumentMetadata.map(::mapTilDokumentMetadata),
                         tilhorendeSaker = tilhorendeSaker,
                         feilkoder = sakstema.feilkoder,

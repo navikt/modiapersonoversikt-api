@@ -70,6 +70,7 @@ spec:
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: pensjon-pen.prod-fss-pub.nais.io
       rules:
+        - application: modia-soknadsstatus-api
         - application: sf-henvendelse-api-proxy
           namespace: teamnks
         - namespace: tpts
@@ -195,6 +196,10 @@ spec:
       value: "http://tms-event-api.min-side/tms-event-api"
     - name: TMS_EVENT_API_SCOPE
       value: "prod-gcp:min-side:tms-event-api"
+    - name: MODIA_SOKNADSSTATUS_API_URL
+      value: "http://modia-soknadsstatus-api"
+    - name: MODIA_SOKNADSSTATUS_SCOPE
+      value: "prod-gcp:personoversikt:modia-soknadsstatus-api"
     - name: MODIAPERSONOVERSIKT_API_PROXY_URL
       value: "https://modiapersonoversikt-api-proxy.prod-fss-pub.nais.io"
     - name: MODIAPERSONOVERSIKT_API_PROXY_SCOPE
