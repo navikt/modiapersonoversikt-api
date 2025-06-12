@@ -24,6 +24,8 @@ import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -71,6 +73,27 @@ class SakerServiceImplTest {
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
         assertThat(saksliste[saksliste.size - 1].temaKode, `is`("BID"))
         assertThat(saksliste[saksliste.size - 1].fagsystemKode, `is`("BISYS"))
+    }
+
+    @Test
+    fun `transformerer response til saksliste nye temakoder`() {
+        every { safService.hentSaker(any()) } returns createSaksliste()
+
+        val saksliste: List<JournalforingSak> = sakerService.hentSaker(FNR).saker
+
+        val ungSaker = saksliste.filter { it.temaKode == Tema.UNG.toString() }
+        assertThat(ungSaker.size, `is`(2))
+
+        assertThat(ungSaker[0].saksId, `is`(SakId_6))
+        assertThat(ungSaker[1].saksId, `is`(SakId_7))
+
+        val paiSak = saksliste.find { it.temaKode == Tema.PAI.toString() }
+        assertThat(paiSak, notNullValue())
+        assertThat(paiSak?.saksId, nullValue())
+
+        assertThat(saksliste.find { it.temaKode == Tema.AKT.toString() }, notNullValue())
+        assertThat(saksliste.find { it.temaKode == Tema.POI.toString() }, notNullValue())
+
     }
 
     @Test
@@ -247,6 +270,8 @@ class SakerServiceImplTest {
         private val FagsystemSakId_3 = "33"
         private val SakId_4 = "4"
         private val SakId_5 = "5"
+        private val SakId_6 = "6"
+        private val SakId_7 = "7"
 
         private fun earlierDateTimeWithOffSet(offset: Long) = LocalDateTime.now().minusDays(offset)
 
@@ -300,6 +325,24 @@ class SakerServiceImplTest {
                                     fagsakId = null,
                                     sakstype = Sakstype.GENERELL_SAK,
                                     tema = Tema.BIL,
+                                ),
+                                Sak(
+                                    arkivsaksnummer = SakId_6,
+                                    arkivsaksystem = null,
+                                    datoOpprettet = earlierDateTimeWithOffSet(5),
+                                    fagsaksystem = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK,
+                                    fagsakId = "1",
+                                    sakstype = Sakstype.GENERELL_SAK,
+                                    tema = Tema.UNG,
+                                ),
+                                Sak(
+                                    arkivsaksnummer = SakId_7,
+                                    arkivsaksystem = null,
+                                    datoOpprettet = earlierDateTimeWithOffSet(5),
+                                    fagsaksystem = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK,
+                                    fagsakId = "2",
+                                    sakstype = Sakstype.GENERELL_SAK,
+                                    tema = Tema.UNG,
                                 ),
                             ),
                     ),
