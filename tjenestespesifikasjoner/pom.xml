@@ -17,7 +17,7 @@
         <cxf.version>4.1.2</cxf.version>
         <cxf-xjc-boolean.version>3.1.0</cxf-xjc-boolean.version>
         <org.jvnet.jaxb.version>4.0.9</org.jvnet.jaxb.version>
-        <jackson-annotations.version>2.19.0</jackson-annotations.version>
+        <jackson-annotations.version>2.19.1</jackson-annotations.version>
         <joda-time.version>2.14.0</joda-time.version>
         <jaxb2-maven-plugin.version>3.3.0</jaxb2-maven-plugin.version>
         <jaxb2-value-constructor.version>3.0</jaxb2-value-constructor.version>
