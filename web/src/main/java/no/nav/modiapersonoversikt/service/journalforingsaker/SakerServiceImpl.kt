@@ -2,6 +2,7 @@
 
 package no.nav.modiapersonoversikt.service.journalforingsaker
 
+import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
@@ -24,6 +25,10 @@ class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var arenaInfotrygdApi: ArenaInfotrygdApi
 
+    @Autowired
+    private lateinit var aapApi: AapApi
+
+    private lateinit var aapSaker: AapSaker
     private lateinit var safSaker: SafSaker
     private lateinit var arenaSaker: SakerKilde
     private lateinit var bidragSaker: BidragSaker
@@ -37,6 +42,7 @@ class SakerServiceImpl : SakerService {
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
         oppfolgingsSaker = OppfolgingsSaker()
+        aapSaker = AapSaker(aapApi)
     }
 
     override fun hentSafSaker(fnr: String): SakerService.Resultat {
@@ -56,6 +62,7 @@ class SakerServiceImpl : SakerService {
             .leggTilDataFraKilde(fnr, generelleSaker)
             .leggTilDataFraKilde(fnr, oppfolgingsSaker)
             .leggTilDataFraKilde(fnr, bidragSaker)
+            .leggTilDataFraKilde(fnr, aapSaker)
             .leggTilTemaNavn(kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA))
             .leggTilFagsystemNavn(kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM))
             .fjernIkkeGodkjenteSaker()

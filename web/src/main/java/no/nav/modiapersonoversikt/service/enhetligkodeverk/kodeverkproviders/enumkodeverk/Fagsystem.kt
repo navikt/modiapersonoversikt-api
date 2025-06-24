@@ -24,6 +24,7 @@ enum class Fagsystem(
     KONT("Kontantstøtte"),
     KOMPYS("Yrkesskade"),
     ARBEIDSOPPFOLGING("Arbeidsoppfølging"),
+    KELVIN("Kelvin"),
     ;
 
     override fun getValue(): String = this.systemnavn
