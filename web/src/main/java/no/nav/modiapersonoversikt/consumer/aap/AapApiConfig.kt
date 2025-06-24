@@ -10,12 +10,10 @@ import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
 import okhttp3.OkHttpClient
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@EnableCaching
 open class AapApiConfig {
     private val scope = DownstreamApi.parse(getRequiredProperty("AAP_URL"))
     private val url: String = getRequiredProperty("AAP_SCOPE")

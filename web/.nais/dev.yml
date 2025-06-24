@@ -184,7 +184,7 @@ spec:
     - name: AXSYS_SCOPE
       value: "dev-fss:org:axsys"
     - name: AAP_URL
-      value: "https://aap-api.ekstern.dev.nav.no"
+      value: "https://aap-api.intern.dev.nav.no"
     - name: AAP_SCOPE
       value: "dev-gcp:aap:api-intern"
     - name: NOM_URL
