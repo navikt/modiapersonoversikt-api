@@ -10,6 +10,7 @@ import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.saf.generated.HentBrukersSaker
 import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Sakstype
@@ -17,6 +18,7 @@ import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Tema
 import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukerssaker.Sak
 import no.nav.modiapersonoversikt.infrastructure.http.GenericGraphQlResponse
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.enumkodeverk.Fagsystem
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak.*
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerServiceImpl.Companion.leggTilFagsystemNavn
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerServiceImpl.Companion.leggTilTemaNavn
@@ -48,6 +50,9 @@ class SakerServiceImplTest {
 
     @MockK
     private lateinit var arenaInfotrygdApi: ArenaInfotrygdApi
+
+    @MockK
+    private lateinit var aapApi: AapApi
 
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
@@ -135,12 +140,26 @@ class SakerServiceImplTest {
             JournalforingSak().apply {
                 saksId = sakId
                 fagsystemSaksId = saksId
-                fagsystemKode = JournalforingSak.FAGSYSTEMKODE_ARENA
-                sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
+                fagsystemKode = FAGSYSTEMKODE_ARENA
+                sakstype = SAKSTYPE_MED_FAGSAK
                 temaKode = TEMAKODE_OPPFOLGING
                 opprettetDato = DateTime(xmlDato.toGregorianCalendar().time)
                 finnesIGsak = false
             }
+        }
+
+        every { aapApi.hentAapSaker(any()) } answers {
+            listOf(
+                JournalforingSak().apply {
+                    saksId = sakId
+                    fagsystemSaksId = saksId
+                    fagsystemKode = Fagsystem.KELVIN.getValue()
+                    sakstype = SAKSTYPE_GENERELL
+                    temaKode = "AAP"
+                    opprettetDato = DateTime(xmlDato.toGregorianCalendar().time)
+                    finnesIGsak = false
+                },
+            )
         }
 
         val saker =
