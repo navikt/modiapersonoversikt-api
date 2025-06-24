@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class AapApiConfig {
-    private val scope = DownstreamApi.parse(getRequiredProperty("AAP_URL"))
-    private val url: String = getRequiredProperty("AAP_SCOPE")
+    private val scope = DownstreamApi.parse(getRequiredProperty("AAP_SCOPE"))
+    private val url: String = getRequiredProperty("AAP_URL")
 
     @Bean
     open fun aapApi(
