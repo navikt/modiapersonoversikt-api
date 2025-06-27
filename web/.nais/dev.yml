@@ -95,8 +95,6 @@ spec:
           namespace: obo
         - application: populasjonstilgangskontroll
           namespace: tilgangsmaskin
-        - application: api-intern
-          namespace: aap
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -183,10 +181,6 @@ spec:
       value: "https://axsys.dev-fss-pub.nais.io"
     - name: AXSYS_SCOPE
       value: "dev-fss:org:axsys"
-    - name: AAP_URL
-      value: "http://api-intern.aap"
-    - name: AAP_SCOPE
-      value: "dev-gcp:aap:api-intern"
     - name: NOM_URL
       value: "http://nom-api.nom"
     - name: NOM_SCOPE
