@@ -223,7 +223,7 @@ class SfLegacyDialogController(
         MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID ->
             getVeileder(ident)
                 ?.let { "${it.navn} (${it.ident})" }
-                ?: "($ident)"
+                ?: ident.let { "($ident)" }
 
         MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
     }
