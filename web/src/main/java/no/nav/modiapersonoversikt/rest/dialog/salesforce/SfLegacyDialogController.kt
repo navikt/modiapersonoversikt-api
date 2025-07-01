@@ -183,7 +183,7 @@ class SfLegacyDialogController(
                     meldingsId = melding.meldingsId,
                     meldingstype = meldingstypeFraSfTyper(henvendelse, melding),
                     temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe), // TODO error in api-spec
-                    skrevetAvTekst = skrevetAv,
+                    skrevetAvTekst = skrevetAv ?: "",
                     fritekst = hentFritekstFraMelding(henvendelseErKassert, melding),
                     lestDato = melding.lestDato,
                     status = status,
@@ -223,7 +223,7 @@ class SfLegacyDialogController(
         MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID ->
             getVeileder(ident)
                 ?.let { "${it.navn} (${it.ident})" }
-                ?: ident.let { "($ident)" }
+                ?: ident?.let { "($ident)" }
 
         MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
     }
