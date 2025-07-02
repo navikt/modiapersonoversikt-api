@@ -210,7 +210,7 @@ class SfHenvendelseServiceImpl(
         val aktorId = bruker.aktorId()
 
         return henvendelseOpprettApi.henvendelseNySamtalereferatPost(
-            xCorrelationId = callId,
+            xCorrelationID = callId,
             samtalereferatRequestDTO =
                 SamtalereferatRequestDTO(
                     aktorId = aktorId,
@@ -337,7 +337,7 @@ class SfHenvendelseServiceImpl(
         val callId = getCallId()
 
         henvendelseBehandlingApi.henvendelseSladdingPost(
-            xCorrelationId = callId,
+            xCorrelationID = callId,
             sladdeRequestDTO =
                 SladdeRequestDTO(
                     kjedeId = kjedeId,
@@ -352,7 +352,7 @@ class SfHenvendelseServiceImpl(
 
         return henvendelseBehandlingApi
             .henvendelseSladdingAarsakerKjedeIdGet(
-                xCorrelationId = callId,
+                xCorrelationID = callId,
                 kjedeId = kjedeId,
             ).orEmpty()
     }
