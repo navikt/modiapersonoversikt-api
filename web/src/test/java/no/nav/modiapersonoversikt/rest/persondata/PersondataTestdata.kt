@@ -350,6 +350,16 @@ internal val vergemal =
             ),
     )
 
+internal val rettsligHandleevne =
+    RettsligHandleevne(
+        rettsligHandleevneomfang = "begrenset",
+        folkeregistermetadata =
+            Folkeregistermetadata(
+                gyldighetstidspunkt = gittDateTime("2018-02-02T00:00:00"),
+                opphoerstidspunkt = null,
+            ),
+    )
+
 internal val foreldreansvarData =
     Foreldreansvar(
         ansvar = "felles",
@@ -490,6 +500,7 @@ internal val testPerson =
         tilrettelagtKommunikasjon = listOf(tilrettelagtKommunikasjonData),
         telefonnummer = listOf(Telefonnummer("47", "90909090", 1, metadata)),
         vergemaalEllerFremtidsfullmakt = listOf(vergemal),
+        rettsligHandleevne = listOf(rettsligHandleevne),
         foreldreansvar = listOf(foreldreansvarData),
         forelderBarnRelasjon = forelderBarnRelasjonData,
         deltBosted = listOf(deltBostedData),
