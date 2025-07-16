@@ -118,6 +118,7 @@ class PersondataFletter(
                         ),
                     vergemal = hentVergemal(data),
                     tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
+                    rettsligHandleevne = hentRettsligHandleevne(data),
                     telefonnummer = hentTelefonnummer(data),
                     kontaktInformasjon = hantKontaktinformasjon(data),
                     bankkonto =
@@ -894,6 +895,18 @@ class PersondataFletter(
                     hentGyldighetsperiode(
                         vergemal.folkeregistermetadata?.gyldighetstidspunkt,
                         vergemal.folkeregistermetadata?.opphoerstidspunkt,
+                    ),
+            )
+        }
+
+    private fun hentRettsligHandleevne(data: Data): List<Persondata.RettsligHandleevne> =
+        data.persondata.rettsligHandleevne.map { handleevne ->
+            Persondata.RettsligHandleevne(
+                omfang = handleevne.rettsligHandleevneomfang,
+                gyldighetsPeriode =
+                    hentGyldighetsperiode(
+                        handleevne.folkeregistermetadata?.gyldighetstidspunkt,
+                        handleevne.folkeregistermetadata?.opphoerstidspunkt,
                     ),
             )
         }

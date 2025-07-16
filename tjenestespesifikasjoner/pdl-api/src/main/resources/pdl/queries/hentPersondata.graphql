@@ -205,6 +205,13 @@ query hentPersondata($ident: ID!){
                 opphoerstidspunkt
             }
         }
+        rettsligHandleevne {
+            rettsligHandleevneomfang
+            folkeregistermetadata {
+                gyldighetstidspunkt
+                opphoerstidspunkt
+            }
+        }
         foreldreansvar {
             ansvar
             ansvarlig

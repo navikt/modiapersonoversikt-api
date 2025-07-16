@@ -322,6 +322,13 @@
       "beskrivelse" : "Bosatt",
       "kode" : "BOSATT"
     } ] ],
+    "rettsligHandleevne" : [ "java.util.ArrayList", [ {
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2018-02-02",
+        "gyldigTilOgMed" : null
+      },
+      "omfang" : "begrenset"
+    } ] ],
     "sikkerhetstiltak" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Telefonisk utestengelse",
       "gyldighetsPeriode" : {

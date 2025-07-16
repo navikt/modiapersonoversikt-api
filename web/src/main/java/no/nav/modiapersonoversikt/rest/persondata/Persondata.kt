@@ -35,6 +35,7 @@ object Persondata {
         val fullmakt: List<Fullmakt>,
         val vergemal: List<Verge>,
         val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon,
+        val rettsligHandleevne: List<RettsligHandleevne>,
         val telefonnummer: List<Telefon>,
         val kontaktInformasjon: KontaktInformasjon,
         val bankkonto: Bankkonto?,
@@ -259,6 +260,11 @@ object Persondata {
         val omfang: String,
         val tjenesteOppgaver: List<String>?,
         val embete: String?,
+        val gyldighetsPeriode: GyldighetsPeriode?,
+    )
+
+    data class RettsligHandleevne(
+        val omfang: String?,
         val gyldighetsPeriode: GyldighetsPeriode?,
     )
 
