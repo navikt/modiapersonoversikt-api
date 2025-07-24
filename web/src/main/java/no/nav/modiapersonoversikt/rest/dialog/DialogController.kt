@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/v2/dialog")
-class DialogControllerV2
+@RequestMapping("/rest/dialog")
+class DialogController
     @Autowired
     constructor(
         private val tilgangskontroll: Tilgangskontroll,
