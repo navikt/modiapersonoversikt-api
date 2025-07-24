@@ -64,7 +64,15 @@ class LoggingInterceptor(
         return when {
             this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
             this.code == 204 -> "StatusCode: 204, didn't try to peek at body"
-            else -> this.peekBody(Long.MAX_VALUE).string()
+            else -> {
+                val responseBody = this.body
+                val contentLength = responseBody?.contentLength() ?: 0
+                if (contentLength > 10_000_000) {
+                    return "Payload too large to peek: Size $contentLength bytes"
+                } else {
+                    return this.peekBody(Long.MAX_VALUE).string()
+                }
+            }
         }
     }
 
@@ -74,11 +82,20 @@ class LoggingInterceptor(
         val requestId = IdUtils.generateId()
         val requestBody = request.peekContent()
 
+        val requestHeaders =
+            mapOf(
+                *request.headers
+                    .names()
+                    .map { name ->
+                        name to (request.headers[name] ?: "")
+                    }.toTypedArray(),
+            )
+
         tjenestekallLogger.info(
             "$name-request: $callId ($requestId)",
             mapOf(
                 "url" to request.url.toString(),
-                "headers" to request.headers.names().joinToString(", "),
+                "headers" to requestHeaders,
                 "body" to requestBody,
             ),
         )
