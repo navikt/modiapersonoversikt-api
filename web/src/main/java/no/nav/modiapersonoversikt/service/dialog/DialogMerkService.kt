@@ -1,8 +1,8 @@
 
-package no.nav.modiapersonoversikt.rest.dialog.apis
+package no.nav.modiapersonoversikt.service.dialog
 import org.springframework.http.ResponseEntity
 
-interface DialogMerkApi {
+interface DialogMerkService {
     fun merkSomFeilsendt(request: MerkSomFeilsendtRequest): ResponseEntity<Void>
 
     fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void>

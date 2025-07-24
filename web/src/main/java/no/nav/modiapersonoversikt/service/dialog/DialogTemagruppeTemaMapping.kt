@@ -1,9 +1,9 @@
-package no.nav.modiapersonoversikt.rest.dialog.salesforce
+package no.nav.modiapersonoversikt.service.dialog
 
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.TemagruppeTemaMapping
 
-object SfTemagruppeTemaMapping {
+object DialogTemagruppeTemaMapping {
     private val legacyMapping = HashMap(TemagruppeTemaMapping.TEMA_TEMAGRUPPE_MAPPING)
 
     private val enkeltTemaOverstyring =
