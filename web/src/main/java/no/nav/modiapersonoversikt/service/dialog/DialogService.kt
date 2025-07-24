@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.dialog.apis
+package no.nav.modiapersonoversikt.service.dialog
 
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
@@ -7,7 +7,7 @@ import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import java.time.OffsetDateTime
 
-interface DialogApi {
+interface DialogService {
     fun hentMeldinger(
         fnr: String,
         enhet: String,
@@ -66,7 +66,7 @@ data class TraadDTO(
     val sistEndretAv: String?,
     val sladding: Boolean?,
     val meldinger: List<MeldingDTO>,
-    val journalposter: List<DialogApi.Journalpost>,
+    val journalposter: List<DialogService.Journalpost>,
 )
 
 data class MeldingDTO(
@@ -97,11 +97,6 @@ abstract class OpprettHenvendelse {
     abstract val traadId: String
 }
 
-data class OpprettHenvendelseRequest(
-    override val enhet: String?,
-    override val traadId: String,
-) : OpprettHenvendelse()
-
 data class OpprettHenvendelseRequestV2(
     val fnr: String,
     override val enhet: String?,
@@ -120,19 +115,6 @@ abstract class SendMelding {
     abstract val behandlingsId: String?
     abstract val oppgaveId: String?
 }
-
-data class SendMeldingRequest(
-    override val traadId: String?,
-    override val traadType: TraadType,
-    override val enhet: String,
-    override val fritekst: String,
-    override val temagruppe: String?,
-    override val sak: JournalforingSak?,
-    override val erOppgaveTilknyttetAnsatt: Boolean?,
-    override val avsluttet: Boolean?,
-    override val behandlingsId: String?,
-    override val oppgaveId: String?,
-) : SendMelding()
 
 data class SendMeldingRequestV2(
     val fnr: String,
@@ -153,16 +135,3 @@ abstract class Infomelding {
     abstract val fritekst: String
     abstract val sak: JournalforingSak
 }
-
-data class InfomeldingRequest(
-    override val enhet: String,
-    override val fritekst: String,
-    override val sak: JournalforingSak,
-) : Infomelding()
-
-data class InfomeldingRequestV2(
-    val fnr: String,
-    override val enhet: String,
-    override val fritekst: String,
-    override val sak: JournalforingSak,
-) : Infomelding()

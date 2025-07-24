@@ -1,16 +1,15 @@
-package no.nav.modiapersonoversikt.rest.dialog.salesforce
+package no.nav.modiapersonoversikt.service.dialog
 
-import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.util.*
 
-class SfLegacyDialogMerkController(
+class DialogMerkServiceImpl(
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
-) : DialogMerkApi {
+) : DialogMerkService {
     override fun merkSomFeilsendt(request: MerkSomFeilsendtRequest): ResponseEntity<Void> {
         require(request.behandlingsidListe.size == 1) {
             "Man forventer en enkelt kjedeId"

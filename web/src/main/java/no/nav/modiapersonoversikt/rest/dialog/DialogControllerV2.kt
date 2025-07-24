@@ -8,7 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
-import no.nav.modiapersonoversikt.rest.dialog.apis.*
+import no.nav.modiapersonoversikt.service.dialog.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -18,7 +18,7 @@ class DialogControllerV2
     @Autowired
     constructor(
         private val tilgangskontroll: Tilgangskontroll,
-        private val dialogapi: DialogApi,
+        private val dialogService: DialogService,
     ) {
         @PostMapping("/meldinger")
         fun hentMeldinger(
@@ -28,7 +28,7 @@ class DialogControllerV2
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    dialogapi.hentMeldinger(fnrRequest.fnr, enhet)
+                    dialogService.hentMeldinger(fnrRequest.fnr, enhet)
                 }
 
         @PostMapping("/sendmelding")
@@ -46,7 +46,7 @@ class DialogControllerV2
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
-                    dialogapi.sendMelding(meldingRequest.fnr, meldingRequest)
+                    dialogService.sendMelding(meldingRequest.fnr, meldingRequest)
                 }
         }
 
@@ -64,7 +64,7 @@ class DialogControllerV2
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(opprettHenvendelseRequest.fnr)))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
-                    dialogapi.startFortsettDialog(opprettHenvendelseRequest.fnr, ignorerConflict, opprettHenvendelseRequest)
+                    dialogService.startFortsettDialog(opprettHenvendelseRequest.fnr, ignorerConflict, opprettHenvendelseRequest)
                 }
         }
 
@@ -83,7 +83,7 @@ class DialogControllerV2
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(meldingRequest.fnr)))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
-                    dialogapi.fortsettPaEksisterendeDialog(meldingRequest.fnr, meldingRequest)
+                    dialogService.fortsettPaEksisterendeDialog(meldingRequest.fnr, meldingRequest)
                 }
         }
     }

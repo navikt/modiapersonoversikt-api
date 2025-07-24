@@ -7,7 +7,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.Henvendelse
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.rest.dialog.apis.*
+import no.nav.modiapersonoversikt.service.dialog.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,7 +18,7 @@ class DialogMerkController
     @Autowired
     constructor(
         private val tilgangskontroll: Tilgangskontroll,
-        private val dialogMerkApi: DialogMerkApi,
+        private val dialogMerkService: DialogMerkService,
     ) {
         @PostMapping("/feilsendt")
         fun merkSomFeilsendt(
@@ -33,7 +33,7 @@ class DialogMerkController
                 .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
                 .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.behandlingsidListe.first()))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Feilsendt, *auditIdentifier)) {
-                    dialogMerkApi.merkSomFeilsendt(request)
+                    dialogMerkService.merkSomFeilsendt(request)
                 }
         }
 
@@ -51,7 +51,7 @@ class DialogMerkController
                 .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
                 .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.traadId))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Sladding, *auditIdentifier)) {
-                    dialogMerkApi.sendTilSladding(request)
+                    dialogMerkService.sendTilSladding(request)
                 }
         }
 
@@ -62,7 +62,7 @@ class DialogMerkController
             tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Henvendelse.Merk.SladdeArsaker, AuditIdentifier.TRAAD_ID to kjedeId)) {
-                    dialogMerkApi.hentSladdeArsaker(kjedeId)
+                    dialogMerkService.hentSladdeArsaker(kjedeId)
                 }
 
         @PostMapping("/lukk-traad")
@@ -80,7 +80,7 @@ class DialogMerkController
                 .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
                 .check(Policies.henvendelseTilhorerBruker(Fnr(request.fnr), request.traadId))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Lukk, *auditIdentifier)) {
-                    dialogMerkApi.lukkTraad(request)
+                    dialogMerkService.lukkTraad(request)
                 }
         }
 
@@ -97,7 +97,7 @@ class DialogMerkController
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, *auditIdentifier)) {
-                    dialogMerkApi.avsluttGosysOppgave(request)
+                    dialogMerkService.avsluttGosysOppgave(request)
                 }
         }
     }

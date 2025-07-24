@@ -1,12 +1,10 @@
-package no.nav.modiapersonoversikt.rest.dialog.salesforce
+package no.nav.modiapersonoversikt.service.dialog
 
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
-import no.nav.modiapersonoversikt.rest.dialog.apis.*
-import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
 import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
@@ -21,12 +19,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
 
-class SfLegacyDialogController(
+class DialogServiceImpl(
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ansattService: AnsattService,
     private val kodeverk: EnhetligKodeverk.Service,
-) : DialogApi {
+) : DialogService {
     override fun hentMeldinger(
         fnr: String,
         enhet: String,
@@ -53,7 +51,7 @@ class SfLegacyDialogController(
         fnr: String,
         infomeldingRequest: Infomelding,
     ): TraadDTO {
-        val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode)
+        val temagruppe = DialogTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode)
         val henvendelse =
             sfHenvendelseService.opprettNyDialogOgSendMelding(
                 bruker = EksternBruker.Fnr(fnr),
@@ -229,7 +227,7 @@ class SfLegacyDialogController(
     }
 
     private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) =
-        DialogApi.Journalpost(
+        DialogService.Journalpost(
             journalfortDato = journalpost.journalfortDato,
             journalfortTema = journalpost.journalfortTema,
             journalfortTemanavn = temakodeMap[journalpost.journalfortTema] ?: journalpost.journalfortTema,
@@ -237,12 +235,12 @@ class SfLegacyDialogController(
             journalfortAv =
                 identMap[journalpost.journalforerNavIdent ?: ""]
                     ?.let {
-                        DialogApi.Veileder(
+                        DialogService.Veileder(
                             ident = it.ident,
                             navn = "${it.fornavn} ${it.etternavn}",
                         )
                     }
-                    ?: DialogApi.Veileder.UKJENT,
+                    ?: DialogService.Veileder.UKJENT,
             journalforendeEnhet = journalpost.journalforendeEnhet,
             journalfortFagsaksystem = journalpost.fagsaksystem?.value,
         )
@@ -318,7 +316,7 @@ class SfLegacyDialogController(
             return parseFraHenvendelseTilTraad(henvendelse)
         } else {
             val sak = meldingRequest.sak!!
-            val temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sak.temaKode)
+            val temagruppe = DialogTemagruppeTemaMapping.hentTemagruppeForTema(sak.temaKode)
 
             val henvendelse =
                 sfHenvendelseService.opprettNyDialogOgSendMelding(

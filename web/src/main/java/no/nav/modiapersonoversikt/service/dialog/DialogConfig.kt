@@ -1,11 +1,5 @@
-package no.nav.modiapersonoversikt.rest.dialog
+package no.nav.modiapersonoversikt.service.dialog
 
-import no.nav.modiapersonoversikt.rest.dialog.apis.DialogApi
-import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi
-import no.nav.modiapersonoversikt.rest.dialog.apis.DialogMerkApi
-import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDelsvarController
-import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogController
-import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogMerkController
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
@@ -29,8 +23,8 @@ open class DialogConfig {
     private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @Bean
-    open fun dialogApi(): DialogApi =
-        SfLegacyDialogController(
+    open fun dialogService(): DialogService =
+        DialogServiceImpl(
             sfHenvendelseService,
             oppgaveBehandlingService,
             ansattService,
@@ -38,12 +32,9 @@ open class DialogConfig {
         )
 
     @Bean
-    open fun dialogMerkApi(): DialogMerkApi =
-        SfLegacyDialogMerkController(
+    open fun dialogMerkService(): DialogMerkService =
+        DialogMerkServiceImpl(
             sfHenvendelseService,
             oppgaveBehandlingService,
         )
-
-    @Bean
-    open fun dialogDelsvarApi(): DialogDelsvarApi = SfLegacyDelsvarController()
 }
