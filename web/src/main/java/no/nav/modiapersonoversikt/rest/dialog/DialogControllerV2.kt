@@ -38,6 +38,8 @@ class DialogControllerV2
             val auditIdentifier =
                 arrayOf(
                     AuditIdentifier.FNR to meldingRequest.fnr,
+                    AuditIdentifier.TRAAD_ID to meldingRequest.traadId,
+                    AuditIdentifier.TRAAD_TYPE to meldingRequest.traadType.name,
                     AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
                     AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId,
                 )
@@ -57,6 +59,7 @@ class DialogControllerV2
                 arrayOf(
                     AuditIdentifier.FNR to opprettHenvendelseRequest.fnr,
                     AuditIdentifier.TRAAD_ID to opprettHenvendelseRequest.traadId,
+                    AuditIdentifier.ENHET_ID to opprettHenvendelseRequest.enhet,
                 )
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(opprettHenvendelseRequest.fnr)))
@@ -72,6 +75,8 @@ class DialogControllerV2
             val auditIdentifier =
                 arrayOf(
                     AuditIdentifier.FNR to meldingRequest.fnr,
+                    AuditIdentifier.TRAAD_ID to meldingRequest.traadId,
+                    AuditIdentifier.TRAAD_TYPE to meldingRequest.traadType.name,
                     AuditIdentifier.BEHANDLING_ID to meldingRequest.behandlingsId,
                     AuditIdentifier.OPPGAVE_ID to meldingRequest.oppgaveId,
                 )

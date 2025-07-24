@@ -44,7 +44,8 @@ class DialogMerkController
             val auditIdentifier =
                 arrayOf(
                     AuditIdentifier.FNR to request.fnr,
-                    AuditIdentifier.BEHANDLING_ID to request.traadId,
+                    AuditIdentifier.TRAAD_ID to request.traadId,
+                    AuditIdentifier.MELDING_ID to request.meldingId?.joinToString(", "),
                 )
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
@@ -73,6 +74,7 @@ class DialogMerkController
                     AuditIdentifier.FNR to request.fnr,
                     AuditIdentifier.TRAAD_ID to request.traadId,
                     AuditIdentifier.OPPGAVE_ID to request.oppgaveId,
+                    AuditIdentifier.ENHET_ID to request.saksbehandlerValgtEnhet,
                 )
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
@@ -90,6 +92,7 @@ class DialogMerkController
                 arrayOf(
                     AuditIdentifier.FNR to request.fnr,
                     AuditIdentifier.OPPGAVE_ID to request.oppgaveid,
+                    AuditIdentifier.ENHET_ID to request.saksbehandlerValgtEnhet,
                 )
             return tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(request.fnr)))
