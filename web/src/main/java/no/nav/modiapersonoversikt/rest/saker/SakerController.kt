@@ -31,8 +31,8 @@ import org.springframework.web.server.ResponseStatusException
 import kotlin.jvm.optionals.getOrDefault
 
 @RestController
-@RequestMapping("/rest/v2/saker")
-class SakerControllerV2
+@RequestMapping("/rest/saker")
+class SakerController
     @Autowired
     constructor(
         private val sakstemaService: SakstemaService,
@@ -40,7 +40,7 @@ class SakerControllerV2
         private val safService: SafService,
         val tilgangskontroll: Tilgangskontroll,
     ) {
-        @PostMapping("/v2/sakstema")
+        @PostMapping("/sakstema")
         fun hentSakstemaSoknadsstatus(
             request: HttpServletRequest,
             @RequestBody fnrRequest: FnrRequest,
