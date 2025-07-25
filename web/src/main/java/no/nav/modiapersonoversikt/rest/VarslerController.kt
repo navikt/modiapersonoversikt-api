@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/rest")
-class VarslerControllerV2(
+@RequestMapping("/rest/varsler")
+class VarslerController(
     private val varslerService: VarslerService,
     private val tilgangskontroll: Tilgangskontroll,
 ) {
-    @PostMapping("/v3/varsler")
+    @PostMapping("")
     fun hentAlleVarsler(
         @RequestBody fnrRequest: FnrRequest,
     ): VarslerService.Result =
