@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/v2/oppgaver")
-class OppgaveControllerV2
+@RequestMapping("/rest/oppgaver")
+class OppgaveController
     @Autowired
     constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,

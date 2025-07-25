@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 internal class OppgaveControllerTest {
     private val oppgavebehandlingService: OppgaveBehandlingService = mockk()
     private val oppgaveController =
-        OppgaveControllerV2(
+        OppgaveController(
             oppgavebehandlingService,
             TilgangskontrollMock.get(),
         )
