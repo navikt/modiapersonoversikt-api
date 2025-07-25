@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.post
 import org.springframework.web.server.ResponseStatusException
 import kotlin.test.assertEquals
 
-@WebMvcTest(JournalforingControllerV2::class)
+@WebMvcTest(JournalforingController::class)
 internal class JournalforingControllerTest {
     companion object {
         val ident = "Z999643"
@@ -40,7 +40,7 @@ internal class JournalforingControllerTest {
         val sakerService: SakerService = mockk()
         val sfHenvendelseService: SfHenvendelseService = mockk()
         val controller =
-            JournalforingControllerV2(
+            JournalforingController(
                 sakerService,
                 sfHenvendelseService,
                 TilgangskontrollMock.get(),
@@ -97,7 +97,7 @@ internal class JournalforingControllerTest {
             }
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.statusCode)
-        assertEquals(JournalforingControllerV2.UKJENT_FEIL, exception.reason)
+        assertEquals(JournalforingController.UKJENT_FEIL, exception.reason)
     }
 
     @Test
@@ -115,7 +115,7 @@ internal class JournalforingControllerTest {
             }
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.statusCode)
-        assertEquals(JournalforingControllerV2.FEILMELDING_UTEN_ENHET, exception.reason)
+        assertEquals(JournalforingController.FEILMELDING_UTEN_ENHET, exception.reason)
     }
 
     @Test
@@ -127,7 +127,7 @@ internal class JournalforingControllerTest {
             )
 
         mvc
-            .post("/rest/v2/journalforing/saker/") {
+            .post("/rest/journalforing/saker/") {
                 content = "{\"fnr\": \"10108000398\"}"
                 contentType = MediaType.APPLICATION_JSON
             }.andExpect { jsonPath("$.saker[0].saksIdVisning", `is`(sak.fagsystemSaksId)) }

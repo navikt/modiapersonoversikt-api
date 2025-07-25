@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/rest/v2/ytelse")
-class YtelseControllerV2
+@RequestMapping("/rest/ytelse")
+class YtelseController
     @Autowired
     constructor(
         private val arenaInfotrygdApi: ArenaInfotrygdApi,

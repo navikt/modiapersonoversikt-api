@@ -31,7 +31,7 @@ class DialogOppgaveController
         private val tilgangskontroll: Tilgangskontroll,
         private val kodeverkService: EnhetligKodeverk.Service,
     ) {
-        @PostMapping("/v2/opprett")
+        @PostMapping("/opprett")
         fun opprettOppgave(
             @RequestBody request: OpprettOppgaveRequestDTO,
         ): OpprettOppgaveResponseDTO =
@@ -49,7 +49,7 @@ class DialogOppgaveController
                     oppgavebehandling.opprettOppgave(request.fromDTO()).toDTO()
                 }
 
-        @PostMapping("/v2/opprettskjermetoppgave")
+        @PostMapping("/opprettskjermetoppgave")
         fun opprettSkjermetOppgave(
             @RequestBody request: OpprettSkjermetOppgaveDTO,
         ): OpprettOppgaveResponseDTO =
@@ -59,7 +59,7 @@ class DialogOppgaveController
                     oppgavebehandling.opprettSkjermetOppgave(request.fromDTO()).toDTO()
                 }
 
-        @GetMapping("/v2/tema")
+        @GetMapping("/tema")
         fun hentAlleTema(): List<OppgaveKodeverk.Tema> =
             tilgangskontroll
                 .check(Policies.tilgangTilModia)

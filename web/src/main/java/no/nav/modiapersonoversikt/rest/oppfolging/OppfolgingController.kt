@@ -23,8 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/v2/oppfolging")
-class OppfolgingControllerV2
+@RequestMapping("/rest/oppfolging")
+class OppfolgingController
     @Autowired
     constructor(
         private val arenaInfotrygdApi: ArenaInfotrygdApi,

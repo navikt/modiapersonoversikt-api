@@ -23,8 +23,8 @@ class BaseUrlsController
                 personforvalter = EnvironmentUtils.getRequiredProperty("PERSONFORVALTER_URL"),
             )
 
-        @GetMapping("/v2")
-        fun hentV2(): BaseUrls =
+        @GetMapping
+        fun hent(): BaseUrls =
             tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(skipAuditLog()) {

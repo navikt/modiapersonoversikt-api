@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/v2/person/kontaktinformasjon")
-class KontaktinformasjonControllerV2
+@RequestMapping("/rest/person/kontaktinformasjon")
+class KontaktinformasjonController
     @Autowired
     constructor(
         private val krrService: Krr.Service,
@@ -41,8 +41,8 @@ class KontaktinformasjonControllerV2
                 return null
             }
             return KontaktinformasjonApi.Verdi(
-                value = requireNotNull(response.epostadresse.value),
-                sistOppdatert = response.epostadresse.sistOppdatert,
+                value = requireNotNull(response.epostadresse?.value),
+                sistOppdatert = response.epostadresse?.sistOppdatert,
             )
         }
 
@@ -51,8 +51,8 @@ class KontaktinformasjonControllerV2
                 return null
             }
             return KontaktinformasjonApi.Verdi(
-                value = requireNotNull(response.mobiltelefonnummer.value),
-                sistOppdatert = response.mobiltelefonnummer.sistOppdatert,
+                value = requireNotNull(response.mobiltelefonnummer?.value),
+                sistOppdatert = response.mobiltelefonnummer?.sistOppdatert,
             )
         }
 
