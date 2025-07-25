@@ -5,8 +5,12 @@ import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Postboksadresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Vegadresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.Person
-import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult.InformasjonElement
+import no.nav.modiapersonoversikt.service.persondata.PersondataService
+import no.nav.modiapersonoversikt.service.persondata.TredjepartspersonMapper
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

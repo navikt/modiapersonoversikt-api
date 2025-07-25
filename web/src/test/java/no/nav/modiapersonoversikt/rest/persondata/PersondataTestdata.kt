@@ -8,9 +8,12 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraaderMedHandlingDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
-import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
+import no.nav.modiapersonoversikt.service.persondata.Persondata
+import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult.InformasjonElement
 import java.time.LocalDate
 import java.time.LocalDateTime
 

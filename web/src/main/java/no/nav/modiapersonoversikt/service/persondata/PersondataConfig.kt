@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.persondata
+package no.nav.modiapersonoversikt.service.persondata
 
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi

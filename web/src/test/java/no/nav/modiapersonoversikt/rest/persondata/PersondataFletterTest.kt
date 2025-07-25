@@ -5,6 +5,8 @@ import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Doedsfall
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.BeforeEach
