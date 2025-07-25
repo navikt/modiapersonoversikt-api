@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/rest/v2/journalforing")
-class JournalforingControllerV2
+@RequestMapping("/rest/journalforing")
+class JournalforingController
     @Autowired
     constructor(
         private val sakerService: SakerService,
