@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.persondata
+package no.nav.modiapersonoversikt.service.persondata
 
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
@@ -14,7 +14,7 @@ import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfol
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode7Policy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedSkjermingPolicy
-import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
@@ -67,12 +67,10 @@ class PersondataServiceImpl(
                 )
             }
         val harTilgangTilSkjermetPerson =
-            PersondataResult
-                .runCatching(InformasjonElement.VEILEDER_ROLLER) { harTilgangTilSkjermetPerson() }
+            PersondataResult.runCatching(InformasjonElement.VEILEDER_ROLLER) { harTilgangTilSkjermetPerson() }
                 .getOrElse(false)
         val tilganger =
-            PersondataResult
-                .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
+            PersondataResult.runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
                 .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
 
         val fullmektige =
@@ -185,12 +183,11 @@ class PersondataServiceImpl(
                 break
             }
         }
-        return PersondataResult
-            .runCatching(InformasjonElement.NORG_NAVKONTOR) {
-                norgApi
-                    .finnNavKontor(gt, diskresjonskode)
-                    ?.enhetId
-            }.map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
+        return PersondataResult.runCatching(InformasjonElement.NORG_NAVKONTOR) {
+            norgApi
+                .finnNavKontor(gt, diskresjonskode)
+                ?.enhetId
+        }.map(InformasjonElement.NORG_KONTAKTINFORMASJON) {
                 it?.let { enhetId -> norgApi.hentKontaktinfo(EnhetId(enhetId)) }
             }
     }

@@ -5,6 +5,8 @@ import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.*
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.persondata.PersondataService
+import no.nav.modiapersonoversikt.service.persondata.TredjepartspersonMapper
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

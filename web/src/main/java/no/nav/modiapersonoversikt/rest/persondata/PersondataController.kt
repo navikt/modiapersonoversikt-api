@@ -9,11 +9,13 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.persondata.Persondata
+import no.nav.modiapersonoversikt.service.persondata.PersondataService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/v3/person")
-class PersondataControllerV2(
+@RequestMapping("/rest/person")
+class PersondataController(
     private val persondataService: PersondataService,
     private val tilgangskontroll: Tilgangskontroll,
     private val pdlOppslagService: PdlOppslagService,

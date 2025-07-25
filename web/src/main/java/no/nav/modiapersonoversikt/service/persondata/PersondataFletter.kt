@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.persondata
+package no.nav.modiapersonoversikt.service.persondata
 
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
@@ -12,8 +12,8 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraaderMedHandlingDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
-import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
-import no.nav.modiapersonoversikt.rest.persondata.PersondataResult.InformasjonElement
+import no.nav.modiapersonoversikt.service.persondata.Persondata.asNavnOgIdent
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult.InformasjonElement
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
 import no.nav.personoversikt.common.logging.Logging
@@ -563,7 +563,11 @@ class PersondataFletter(
                 if (it == null) {
                     null
                 } else {
-                    Persondata.PersonDataEnhet(it.enhet.enhetId, it.enhet.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
+                    Persondata.PersonDataEnhet(
+                        it.enhet.enhetId,
+                        it.enhet.enhetNavn,
+                        hentPublikumsmottak(it.publikumsmottak)
+                    )
                 }
             }.getOrNull()
 

@@ -5,6 +5,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult
+import no.nav.modiapersonoversikt.service.persondata.PersondataServiceImpl
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue

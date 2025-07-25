@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.persondata
+package no.nav.modiapersonoversikt.service.persondata
 
 object MasterPrioritet {
     private const val UNKOWN_PRIORITY = 9999
