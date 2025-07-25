@@ -20,7 +20,7 @@ class VarslerController(
     private val varslerService: VarslerService,
     private val tilgangskontroll: Tilgangskontroll,
 ) {
-    @PostMapping("")
+    @PostMapping
     fun hentAlleVarsler(
         @RequestBody fnrRequest: FnrRequest,
     ): VarslerService.Result =
