@@ -127,7 +127,7 @@ internal class JournalforingControllerTest {
             )
 
         mvc
-            .post("/rest/v2/journalforing/saker/") {
+            .post("/rest/journalforing/saker/") {
                 content = "{\"fnr\": \"10108000398\"}"
                 contentType = MediaType.APPLICATION_JSON
             }.andExpect { jsonPath("$.saker[0].saksIdVisning", `is`(sak.fagsystemSaksId)) }
