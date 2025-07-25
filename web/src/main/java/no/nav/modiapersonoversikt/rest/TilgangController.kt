@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.Date
 
 @RestController
-@RequestMapping("/rest/v2/tilgang")
+@RequestMapping("/rest/tilgang")
 class TilgangControllerV2
     @Autowired
     constructor(
