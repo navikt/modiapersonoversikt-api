@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/rest/v2/enheter")
+@RequestMapping("/rest/enheter")
 class EnhetControllerV2
     @Autowired
     constructor(
@@ -54,7 +54,7 @@ class EnhetControllerV2
                     )
                 }
 
-        @PostMapping("/oppgavebehandlere/v2/foreslatte")
+        @PostMapping("/oppgavebehandlere/foreslatte")
         fun hentBehandlendeEnhet(
             @RequestBody request: BehandlendeEnhetRequest,
         ): List<NorgDomain.Enhet> =
