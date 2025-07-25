@@ -24,7 +24,7 @@ private val norgapiMock = mockk<NorgApi>()
 private val arbeidsfordelingMock = mockk<ArbeidsfordelingService>()
 private val ansattServiceMock = mockk<AnsattService>()
 
-@WebMvcTest(EnhetControllerV2::class)
+@WebMvcTest(EnhetController::class)
 @ExtendWith(SnapshotExtension::class)
 internal class EnhetControllerSnapshotTest(
     val snapshot: SnapshotExtension,
@@ -59,7 +59,7 @@ internal class EnhetControllerSnapshotTest(
             )
 
         mockMvc
-            .getJson("/rest/v2/enheter/1234/ansatte")
+            .getJson("/rest/enheter/1234/ansatte")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
@@ -78,7 +78,7 @@ internal class EnhetControllerSnapshotTest(
                 ),
             )
         mockMvc
-            .getJson("/rest/v2/enheter/oppgavebehandlere/alle")
+            .getJson("/rest/enheter/oppgavebehandlere/alle")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
