@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/enheter")
-class EnhetControllerV2
+class EnhetController
     @Autowired
     constructor(
         private val norgApi: NorgApi,
