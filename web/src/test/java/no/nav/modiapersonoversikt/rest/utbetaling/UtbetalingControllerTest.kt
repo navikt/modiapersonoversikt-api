@@ -16,7 +16,7 @@ internal class UtbetalingControllerTest {
     private val datoSlutt = LocalDate.parse("2018-10-01")
 
     private val service: UtbetalingService = mockk()
-    private val controller = UtbetalingControllerV2(service, TilgangskontrollMock.get())
+    private val controller = UtbetalingController(service, TilgangskontrollMock.get())
 
     @Test
     fun `Kaster ApplicationException`() {
