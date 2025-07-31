@@ -33,7 +33,7 @@ class SakerServiceImpl : SakerService {
     @jakarta.annotation.PostConstruct
     fun setup() {
         safSaker = SafSaker(safService)
-        arenaSaker = ArenaSakerV2(arenaInfotrygdApi)
+        arenaSaker = ArenaSaker(arenaInfotrygdApi)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
         oppfolgingsSaker = OppfolgingsSaker()

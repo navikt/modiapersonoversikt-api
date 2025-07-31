@@ -9,9 +9,7 @@ import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.FilterUtils.fjernGamleDokumenter
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
-import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
-import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
-import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusService
+import no.nav.modiapersonoversikt.service.soknadsstatus.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.function.Predicate
@@ -49,6 +47,11 @@ interface SakstemaService {
     ): List<Sak>
 
     fun getTemanavnForTemakode(temakode: String): ResultatWrapper<String>
+
+    fun hentSaksData(
+        saker: List<Sak>,
+        fnr: String,
+    ): ResultatWrapper<SaksData>
 }
 
 class SakstemaServiceImpl
@@ -80,6 +83,47 @@ class SakstemaServiceImpl
                 val temakoder = hentAlleTemaSoknadsstatus(saker, wrapper.resultat, emptyMap<String, Soknadsstatus>())
                 wrapper.feilendeSystemer.add(e.baksystem)
                 opprettSakstemaresultatSoknadsstatus(saker, wrapper, temakoder, emptyMap<String, Soknadsstatus>())
+            }
+        }
+
+        override fun hentSaksData(
+            saker: List<Sak>,
+            fnr: String,
+        ): ResultatWrapper<SaksData> {
+            val wrapper = safService.hentJournalposter(fnr)
+            val feilendeSystem: MutableSet<Baksystem> = mutableSetOf()
+
+            return try {
+                var soknadsstatuser: Map<String, Soknadsstatus>
+                try {
+                    soknadsstatuser =
+                        soknadsstatusService.hentBehandlingerGruppertPaaTema(fnr)
+                } catch (e: Exception) {
+                    soknadsstatuser = emptyMap()
+                    LOG.error("Klarte ikke å hente ut soknadsstatus", e)
+                }
+
+                val temakoder = hentAlleTemaSoknadsstatus(saker, wrapper.resultat, soknadsstatuser)
+                val temaer =
+                    temakoder.map { temakode: String ->
+                        val temanavn = getTemanavnForTemakode(temakode)
+                        feilendeSystem.addAll(temanavn.feilendeSystemer)
+                        Sakstema(temakode = temakode, temanavn = temanavn.resultat)
+                    }
+
+                val saksData = SaksData(saker = saker, dokumenter = wrapper.resultat, temaer = temaer)
+                ResultatWrapper(saksData, feilendeSystem)
+            } catch (e: FeilendeBaksystemException) {
+                val temakoder = hentAlleTemaSoknadsstatus(saker, wrapper.resultat, emptyMap())
+                val temaer =
+                    temakoder.map { temakode: String ->
+                        val temanavn = getTemanavnForTemakode(temakode)
+                        feilendeSystem.addAll(temanavn.feilendeSystemer)
+                        Sakstema(temakode = temakode, temanavn = temanavn.resultat)
+                    }
+                feilendeSystem.add(e.baksystem)
+                val saksData = SaksData(saker = saker, dokumenter = wrapper.resultat, temaer = temaer)
+                ResultatWrapper(saksData, feilendeSystem)
             }
         }
 

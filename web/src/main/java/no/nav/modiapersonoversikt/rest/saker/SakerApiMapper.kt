@@ -1,11 +1,13 @@
 package no.nav.modiapersonoversikt.rest.saker
 
 import no.nav.common.types.identer.EnhetId
+import no.nav.modiapersonoversikt.commondomain.sak.ResultatWrapper
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
+import no.nav.modiapersonoversikt.service.soknadsstatus.SaksData
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
 import no.nav.personoversikt.common.kabac.Decision
@@ -55,6 +57,30 @@ object SakerApiMapper {
                         harTilgang = harTilgang,
                     )
                 },
+            )
+
+        fun mapTilResultatSaksDokumenter(resultatWrapper: ResultatWrapper<SaksData>) =
+            SakerApi.ResultatSaksDokumenter(
+                saker =
+                    resultatWrapper.resultat.saker.map { sak ->
+                        val harTilgang = tematilgang[sak.temakode] == true
+                        val tilhorendeDokumenter =
+                            resultatWrapper.resultat.dokumenter.filter { it.tilhorendeSakid == sak.saksId }
+                        val sakstema = resultatWrapper.resultat.temaer.find { it.temakode == sak.temakode }
+                        SakerApi.SaksDokumenter(
+                            saksid = sak.saksId,
+                            temakode = sak.temakode,
+                            temanavn = sakstema?.temanavn ?: "",
+                            tilhorendeDokumenter = tilhorendeDokumenter.map(::mapTilDokumentMetadata),
+                            harTilgang = harTilgang,
+                            fagsaksnummer = sak.fagsaksnummer,
+                            avsluttet = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
+                            fagsystem = sak.fagsystem,
+                            baksystem = sak.baksystem,
+                        )
+                    },
+                temaer = resultatWrapper.resultat.temaer,
+                feilendeSystemer = resultatWrapper.feilendeSystemer.toList(),
             )
 
         private fun mapTilDokumentMetadata(behandlingskjede: DokumentMetadata) =

@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.commondomain.sak.Entitet
 import no.nav.modiapersonoversikt.commondomain.sak.Feilmelding
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument.DokumentStatus
 import no.nav.modiapersonoversikt.service.saf.domain.Kommunikasjonsretning
+import no.nav.modiapersonoversikt.service.soknadsstatus.Sakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
 import java.time.LocalDateTime
 
@@ -67,5 +68,24 @@ object SakerApi {
         val avsluttet: LocalDateTime?,
         val fagsystem: String,
         val baksystem: Baksystem,
+    )
+
+    data class ResultatSaksDokumenter(
+        val saker: List<SaksDokumenter>,
+        val temaer: List<Sakstema>,
+        val feilendeSystemer: List<Baksystem> = listOf(),
+    )
+
+    data class SaksDokumenter(
+        val temakode: String,
+        val temanavn: String,
+        val saksid: String,
+        val fagsaksnummer: String?,
+        val tilhorendeDokumenter: List<Dokumentmetadata> = listOf(),
+        val avsluttet: LocalDateTime?,
+        val fagsystem: String,
+        val baksystem: Baksystem,
+        val harTilgang: Boolean,
+        var feilendeSystemer: List<Baksystem> = listOf(),
     )
 }
