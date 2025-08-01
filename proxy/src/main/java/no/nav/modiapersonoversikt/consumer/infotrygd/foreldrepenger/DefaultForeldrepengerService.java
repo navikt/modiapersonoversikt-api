@@ -33,20 +33,19 @@ public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
 
     @Override
     public ForeldrepengerListeResponse hentForeldrepengerListe(ForeldrepengerListeRequest request) {
-
-        FimHentForeldrepengerettighetRequest rawRequest = mapper.map(request);
-        FimHentForeldrepengerettighetResponse rawResponse = null;
         try {
+            FimHentForeldrepengerettighetRequest rawRequest = mapper.map(request);
+            FimHentForeldrepengerettighetResponse rawResponse = null;
             rawResponse = foreldrepengerService.hentForeldrepengerettighet(rawRequest);
             if (rawResponse != null && rawResponse.getForeldrepengerettighet() != null && rawResponse.getForeldrepengerettighet().getForelder() != null) {
                 auditLogger.log(rawResponse.getForeldrepengerettighet().getForelder());
             }
+            return mapper.map(rawResponse);
         } catch (HentForeldrepengerettighetSikkerhetsbegrensning ex) {
             logger.warn("HentForeldrepengerListeSikkerhetsbegrensning ved kall på hentForeldrepengerListe", ex);
             auditLogger.denied("Årsak: " + ex.getMessage());
             throw new RuntimeException(ex.getMessage(), ex);
         }
-        return mapper.map(rawResponse);
     }
 
     public void setMapper(ForeldrepengerMapper mapper) {

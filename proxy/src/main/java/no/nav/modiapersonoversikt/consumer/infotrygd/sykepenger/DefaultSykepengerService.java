@@ -34,19 +34,19 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
 
     @Override
     public SykepengerResponse hentSykmeldingsperioder(SykepengerRequest request) {
-        FimHentSykepengerListeRequest rawRequest = mapper.map(request);
-        FimHentSykepengerListeResponse rawResponse = null;
         try {
+            FimHentSykepengerListeRequest rawRequest = mapper.map(request);
+            FimHentSykepengerListeResponse rawResponse = null;
             rawResponse = sykepengerService.hentSykepengerListe(rawRequest);
             if (rawResponse != null && !CollectionUtils.isEmpty(rawResponse.getSykmeldingsperiodeListe())) {
                 auditLogger.log(rawResponse.getSykmeldingsperiodeListe().get(0).getSykmeldt());
             }
+            return mapper.map(rawResponse);
         } catch (HentSykepengerListeSikkerhetsbegrensning ex) {
             logger.warn("HentSykepengerListeSikkerhetsbegrensning ved kall på hentSykepengerListe", ex);
             auditLogger.denied("Årsak: " + ex.getMessage());
             throw new RuntimeException(ex.getMessage(), ex);
         }
-        return mapper.map(rawResponse);
     }
 
     public void setMapper(SykepengerMapper mapper) {
