@@ -42,7 +42,7 @@ fun hentKommendeUtbetalinger(kommendeUtbetalinger: List<KommendeUtbetaling>) =
         )
     }
 
-fun toCommonPeriode(period: Periode) = CommonPeriode(period.from.toString(JODA_DATOFORMAT), period.to.toString(JODA_DATOFORMAT))
+fun toCommonPeriode(period: Periode) = CommonPeriode(period.from?.toString(JODA_DATOFORMAT), period.to?.toString(JODA_DATOFORMAT))
 
 private fun hentKreditorTrekk(
     kreditortrekk: List<no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kreditortrekk>,
