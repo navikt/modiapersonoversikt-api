@@ -83,6 +83,7 @@ object SakerApi {
         val fagsaksnummer: String?,
         val tilhorendeDokumenter: List<Dokumentmetadata> = listOf(),
         val avsluttet: LocalDateTime?,
+        val opprettet: LocalDateTime?,
         val fagsystem: String,
         val baksystem: Baksystem,
         val harTilgang: Boolean,
