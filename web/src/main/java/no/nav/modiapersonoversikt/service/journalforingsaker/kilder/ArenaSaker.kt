@@ -4,7 +4,7 @@ import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerKilde
 
-internal class ArenaSakerV2(
+internal class ArenaSaker(
     private val arenaInfotrygdApi: ArenaInfotrygdApi,
 ) : SakerKilde {
     override val kildeNavn: String

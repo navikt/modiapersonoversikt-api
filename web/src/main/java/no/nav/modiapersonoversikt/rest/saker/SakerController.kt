@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.rest.saker
 
-import jakarta.servlet.http.HttpServletRequest
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
@@ -42,7 +41,6 @@ class SakerController
     ) {
         @PostMapping("/sakstema")
         fun hentSakstemaSoknadsstatus(
-            request: HttpServletRequest,
             @RequestBody fnrRequest: FnrRequest,
             @RequestParam(value = "enhet") enhet: String,
         ): SakerApi.ResultatSoknadsstatus =
@@ -61,9 +59,28 @@ class SakerController
                     mappingContext.mapTilResultat(sakstemaWrapper.resultat)
                 }
 
+        @PostMapping("/saker_og_dokumenter")
+        fun hentSaker(
+            @RequestBody fnrRequest: FnrRequest,
+            @RequestParam(value = "enhet") enhet: String,
+        ): SakerApi.ResultatSaksDokumenter =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                    val sakerWrapper = sakerService.hentSafSaker(fnrRequest.fnr).asWrapper()
+                    val sakstemaWrapper = sakstemaService.hentSaksData(sakerWrapper.resultat, fnrRequest.fnr)
+                    val mappingContext =
+                        SakerApiMapper.createMappingContext(
+                            tilgangskontroll = tilgangskontroll,
+                            enhet = EnhetId(enhet),
+                            sakstemaer = listOf(),
+                        )
+
+                    mappingContext.mapTilResultatSaksDokumenter(sakstemaWrapper)
+                }
+
         @PostMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"])
         fun hentDokument(
-            request: HttpServletRequest,
             @RequestBody fnrRequest: FnrRequest,
             @PathVariable("journalpostId") journalpostId: String,
             @PathVariable("dokumentreferanse") dokumentreferanse: String,
