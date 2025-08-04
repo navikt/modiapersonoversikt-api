@@ -14,9 +14,14 @@ public class Sak {
     private Optional<DateTime> avsluttet = empty();
     private String fagsystem;
     private Baksystem baksystem;
+    private Optional<DateTime> opprettetDato = empty();
 
     public Optional<DateTime> getAvsluttet() {
         return avsluttet;
+    }
+
+    public Optional<DateTime> getOpprettetDato() {
+        return opprettetDato;
     }
 
     public String getFagsystem() {
@@ -82,6 +87,11 @@ public class Sak {
 
     public Sak withBaksystem(final Baksystem baksystem) {
         this.baksystem = baksystem;
+        return this;
+    }
+
+    public Sak withOpprettetDato(final Optional<DateTime> opprettetDato) {
+        this.opprettetDato = opprettetDato;
         return this;
     }
 }

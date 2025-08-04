@@ -74,6 +74,7 @@ object SakerApiMapper {
                             tilhorendeDokumenter = tilhorendeDokumenter.map(::mapTilDokumentMetadata),
                             harTilgang = harTilgang,
                             fagsaksnummer = sak.fagsaksnummer,
+                            opprettet = sak.opprettetDato.map { it.toJavaDateTime() }.orElse(null),
                             avsluttet = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
                             fagsystem = sak.fagsystem,
                             baksystem = sak.baksystem,

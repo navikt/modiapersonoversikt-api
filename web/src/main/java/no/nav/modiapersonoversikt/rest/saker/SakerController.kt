@@ -27,6 +27,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import java.util.*
 import kotlin.jvm.optionals.getOrDefault
 
 @RestController
@@ -181,6 +182,7 @@ class SakerController
                         .withTemakode(it.temaKode)
                         .withBaksystem(Baksystem.SAF)
                         .withFagsystem(it.fagsystemKode)
+                        .withOpprettetDato(Optional.ofNullable(it.opprettetDato))
                 }
             val feilendeSystemer =
                 this.feiledeSystemer
