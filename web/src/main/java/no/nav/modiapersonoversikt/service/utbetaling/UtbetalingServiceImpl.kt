@@ -8,9 +8,6 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.AktoerD
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.PeriodeDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingDTO
 import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.UtbetalingsoppslagDTO
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
-import no.nav.modiapersonoversikt.service.utbetaling.UtbetalingUtils.leggTilEkstraDagerPaaStartdato
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import java.time.LocalDate
@@ -25,7 +22,6 @@ import no.nav.modiapersonoversikt.api.domain.utbetaling.generated.models.Ytelsek
 @CacheConfig(cacheNames = ["utbetalingCache"], keyGenerator = "userkeygenerator")
 open class UtbetalingServiceImpl(
     private val utbetaldataV2Api: UtbetaldataV2Api,
-    private val unleash: UnleashService,
 ) : UtbetalingService {
     @Cacheable
     override fun hentUtbetalinger(
@@ -33,13 +29,6 @@ open class UtbetalingServiceImpl(
         startDato: LocalDate,
         sluttDato: LocalDate,
     ): List<UtbetalingDomain.Utbetaling> {
-        val fomDato =
-            if (unleash.isEnabled(Feature.UTVIDET_UTBETALINGS_SPORRING.propertyKey)) {
-                startDato
-            } else {
-                leggTilEkstraDagerPaaStartdato(startDato)
-            }
-
         val utbetalinger =
             utbetaldataV2Api.hentUtbetalingsinformasjonIntern(
                 utbetalingsoppslagDTO =
@@ -48,7 +37,7 @@ open class UtbetalingServiceImpl(
                         rolle = UtbetalingsoppslagDTO.Rolle.RETTIGHETSHAVER,
                         periode =
                             PeriodeDTO(
-                                fom = fomDato,
+                                fom = startDato,
                                 tom = sluttDato,
                             ),
                         periodetype = UtbetalingsoppslagDTO.Periodetype.UTBETALINGSPERIODE,
