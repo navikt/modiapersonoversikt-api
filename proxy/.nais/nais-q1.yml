@@ -67,6 +67,10 @@ spec:
         - application: modiapersonoversikt-api
           namespace: personoversikt
           cluster: dev-gcp
+    outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
   env:
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"

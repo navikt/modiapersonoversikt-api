@@ -67,6 +67,10 @@ spec:
         - application: modiapersonoversikt-api
           namespace: personoversikt
           cluster: prod-gcp
+    outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
 
   env:
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
