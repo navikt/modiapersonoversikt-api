@@ -65,7 +65,7 @@
         <appender-ref ref="team-logs" />
     </root>
 
-    <logger name="team-logs-logger" level="INFO" additivity="false">
+    <logger name="TeamLog" level="INFO" additivity="false">
         <appender-ref ref="team-logs" />
     </logger>
 
