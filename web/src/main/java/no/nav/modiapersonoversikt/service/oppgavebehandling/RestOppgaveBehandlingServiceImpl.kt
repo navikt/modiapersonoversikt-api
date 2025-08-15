@@ -164,6 +164,7 @@ class RestOppgaveBehandlingServiceImpl(
             return
         } else if (tvungenTilordning) {
             tjenestekallLogg.warn(
+                Logging.TEAM_LOGS_MARKER,
                 "[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}",
             )
         } else if (oppgave.tilordnetRessurs != null) {
@@ -370,6 +371,7 @@ class RestOppgaveBehandlingServiceImpl(
             ).getWithFailureHandling { failures ->
                 val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
                 tjenestekallLogg.warn(
+                    Logging.TEAM_LOGS_MARKER,
                     "[OPPGAVE] hentOppgaverPaginertOgTilgangskontroll la tilbake oppgaver pga manglende tilgang: $oppgaveIds",
                 )
                 systemLeggTilbakeOppgaver(failures)
