@@ -106,7 +106,7 @@ class Audit {
             extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>,
         ): AuditDescriptor<T> = WithDataDescriptor(action, resourceType, extractIdentifiers)
 
-        private val auditMarker = Markers.appendEntries(mapOf(Logging.LOGTYPE_KEY to "audit"))
+        private val markers = Markers.appendEntries(mapOf(Logging.LOGTYPE_KEY to "audit", Logging.TEAM_LOGS_MARKER.name to true))
 
         private fun logInternal(
             action: Action,
@@ -126,7 +126,7 @@ class Audit {
                         .toTypedArray(),
                 ).joinToString(" ")
 
-            Logging.secureLog.info(auditMarker, logline)
+            Logging.secureLog.info(markers, logline)
             cefLogger.log(CEFEvent(action, resourceType, subject.orElse("-"), identifiers))
         }
     }
