@@ -53,7 +53,7 @@ class RestOppgaveBehandlingServiceImpl(
         }, tjenestekallLoggingInterceptorFactory),
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : OppgaveBehandlingService {
-    private val tjenestekallLogg = Logging.secureLog
+    private val tjenestekallLogg = Logging.teamLog
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
