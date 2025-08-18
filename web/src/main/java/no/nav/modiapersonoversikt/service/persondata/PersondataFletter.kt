@@ -61,7 +61,7 @@ class PersondataFletter(
             ekstraDatapunker
                 .mapNotNull {
                     if (it is PersondataResult.Failure<*>) {
-                        Logging.secureLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: ${it.system}", it.exception)
+                        Logging.teamLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: ${it.system}", it.exception)
                         it.system
                     } else {
                         null
@@ -112,7 +112,7 @@ class PersondataFletter(
                             onNotRelevant = { emptyList() },
                             onFailure = { system, cause ->
                                 feilendeSystemer.add(system)
-                                Logging.secureLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: $system", cause)
+                                Logging.teamLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: $system", cause)
                                 emptyList()
                             },
                         ),
@@ -127,7 +127,7 @@ class PersondataFletter(
                             onNotRelevant = { null },
                             onFailure = { system, cause ->
                                 feilendeSystemer.add(system)
-                                Logging.secureLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: $system", cause)
+                                Logging.teamLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: $system", cause)
                                 null
                             },
                         ),
