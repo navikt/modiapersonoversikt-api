@@ -54,8 +54,8 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="default-json" />
         <appender-ref ref="team-logs" />
+        <appender-ref ref="default-json" />
     </root>
 
     <logger name="TeamLog" level="INFO" additivity="false">
