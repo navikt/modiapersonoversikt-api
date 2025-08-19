@@ -70,5 +70,6 @@ internal class HenvendelseTilhorerBrukerPolicyTest {
                     ),
                 ),
             markeringer = null,
+            kontorsperre = false,
         )
 }

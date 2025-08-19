@@ -188,7 +188,6 @@ class DialogServiceImpl(
                     markertSomFeilsendtAv = markertSomFeilsendtAv,
                 )
             }
-        val sistEndretAv = getIdent(henvendelse.sistEndretAv, MeldingFraDTO.IdentType.NAVIDENT)
 
         return TraadDTO(
             traadId = henvendelse.kjedeId,
@@ -196,7 +195,6 @@ class DialogServiceImpl(
             opprettetDato = henvendelse.opprettetDato,
             feilsendt = henvendelse.feilsendt,
             avsluttetDato = henvendelse.avsluttetDato,
-            sistEndretAv = sistEndretAv,
             sladding = henvendelse.sladding,
             temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe),
             traadType = TraadType.valueOf(henvendelse.henvendelseType.value),

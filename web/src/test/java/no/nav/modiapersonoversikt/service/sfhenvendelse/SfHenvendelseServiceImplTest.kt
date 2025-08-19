@@ -200,6 +200,7 @@ internal class SfHenvendelseServiceImplTest {
                     ),
                 ),
             markeringer = null,
+            kontorsperre = false,
         )
 
     private fun HenvendelseDTO.medJournalpost(tema: String): HenvendelseDTO {
