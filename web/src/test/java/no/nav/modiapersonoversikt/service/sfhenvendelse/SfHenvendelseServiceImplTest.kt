@@ -58,27 +58,6 @@ internal class SfHenvendelseServiceImplTest {
         }
 
     @Test
-    internal fun `skal fjerne kontorsperrede henvendelser`() {
-        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
-        every { norgApi.hentGeografiskTilknyttning(any()) } returns
-            listOf(
-                EnhetGeografiskTilknyttning(
-                    enhetId = "5678",
-                    geografiskOmraade = "005678",
-                ),
-            )
-        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns
-            listOf(
-                dummyHenvendelse.medJournalpost("DAG"),
-                dummyHenvendelse.medKontorsperre(enhet = "1234"),
-            )
-
-        val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")
-        assertThat(henvendelser).hasSize(1)
-        assertThat(henvendelser[0].kontorsperre).isFalse
-    }
-
-    @Test
     internal fun `skal fjerne innhold om man ikke har tematilgang`() {
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns
@@ -200,7 +179,6 @@ internal class SfHenvendelseServiceImplTest {
             aktorId = "00012345678910",
             opprinneligGT = "010101",
             opprettetDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
-            kontorsperre = false,
             feilsendt = false,
             kjedeId = "ABBA12341010101",
             gjeldendeTemagruppe = "ARBD",
@@ -240,24 +218,6 @@ internal class SfHenvendelseServiceImplTest {
                 } else {
                     this.journalposter!!.plus(journalpost)
                 },
-        )
-    }
-
-    private fun HenvendelseDTO.medKontorsperre(
-        enhet: String? = null,
-        gt: String? = null,
-    ): HenvendelseDTO {
-        val markering =
-            MarkeringDTO(
-                markeringstype = MarkeringDTO.Markeringstype.KONTORSPERRE,
-                markertDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
-                markertAv = "Z123456",
-                kontorsperreEnhet = enhet,
-                kontorsperreGT = gt,
-            )
-        return this.copy(
-            kontorsperre = true,
-            markeringer = if (this.markeringer == null) listOf(markering) else this.markeringer!!.plus(markering),
         )
     }
 
