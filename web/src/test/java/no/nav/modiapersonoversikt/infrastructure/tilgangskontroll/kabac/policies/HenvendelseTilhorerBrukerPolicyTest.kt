@@ -49,7 +49,6 @@ internal class HenvendelseTilhorerBrukerPolicyTest {
             aktorId = "00012345678910",
             opprinneligGT = "010101",
             opprettetDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
-            kontorsperre = false,
             feilsendt = false,
             kjedeId = "ABBA12341010101",
             gjeldendeTemagruppe = "ARBD",

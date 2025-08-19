@@ -60,7 +60,6 @@ data class TraadDTO(
     val traadType: TraadType,
     val temagruppe: String,
     val opprettetDato: OffsetDateTime?,
-    val kontorsperre: Boolean,
     val feilsendt: Boolean,
     val avsluttetDato: OffsetDateTime?,
     val sistEndretAv: String?,
@@ -81,8 +80,6 @@ data class MeldingDTO(
     val opprettetDato: OffsetDateTime,
     val avsluttetDato: OffsetDateTime?,
     val ferdigstiltDato: OffsetDateTime,
-    val kontorsperretEnhet: String?,
-    val kontorsperretAv: Veileder?,
     val sendtTilSladding: Boolean,
     val markertSomFeilsendtAv: Veileder?,
 )
