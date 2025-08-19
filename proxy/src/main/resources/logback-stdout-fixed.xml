@@ -42,17 +42,6 @@
         </encoder>
     </appender>
 
-    <appender name="default-json" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>TEAM_LOGS</marker>
-            </evaluator>
-            <OnMatch>DENY</OnMatch>
-            <OnMismatch>ACCEPT</OnMismatch>
-        </filter>
-    </appender>
-
     <root level="INFO">
         <appender-ref ref="team-logs" />
         <appender-ref ref="default-json" />
