@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.rest.oppgave
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -59,12 +61,39 @@ data class OppgaveDTO(
     val traadId: String?,
     val fødselsnummer: String?,
     val erSTOOppgave: Boolean,
+    val tildeltEnhetsnr: String,
+    val tema: String,
+    val temagruppe: String? = null,
+    val oppgavetype: String,
+    val prioritet: String,
+    val status: String,
+    val aktivDato: LocalDate,
+    val id: Long? = null,
+    val endretAvEnhetsnr: String? = null,
+    val opprettetAvEnhetsnr: String? = null,
+    val saksreferanse: String? = null,
+    val beskrivelse: String? = null,
+    val fristFerdigstillelse: LocalDate? = null,
+    val opprettetTidspunkt: LocalDateTime? = null,
 )
 
 private fun mapOppgave(oppgave: Oppgave) =
     OppgaveDTO(
-        oppgave.oppgaveId,
-        oppgave.henvendelseId,
-        oppgave.fnr,
-        oppgave.erSTOOppgave,
+        oppgaveId = oppgave.oppgaveId,
+        traadId = oppgave.henvendelseId,
+        fødselsnummer = oppgave.fnr,
+        erSTOOppgave = oppgave.erSTOOppgave,
+        tildeltEnhetsnr = oppgave.tildeltEnhetsnr,
+        tema = oppgave.tema,
+        temagruppe = oppgave.oppgavetype,
+        oppgavetype = oppgave.oppgavetype,
+        prioritet = oppgave.prioritet,
+        status = oppgave.status,
+        aktivDato = oppgave.aktivDato,
+        fristFerdigstillelse = oppgave.fristFerdigstillelse,
+        endretAvEnhetsnr = oppgave.endretAvEnhetsnr,
+        opprettetAvEnhetsnr = oppgave.opprettetAvEnhetsnr,
+        saksreferanse = oppgave.saksreferanse,
+        beskrivelse = oppgave.beskrivelse,
+        opprettetTidspunkt = oppgave.opprettetTidspunkt,
     )
