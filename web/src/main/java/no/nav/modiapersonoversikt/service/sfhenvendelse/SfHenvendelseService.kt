@@ -143,7 +143,6 @@ class SfHenvendelseServiceImpl(
             .henvendelseinfoHenvendelselisteGet(aktorId, callId)
             ?.let { loggFeilSomErSpesialHandtert(bruker, it) }
             ?.asSequence()
-            ?.filter(kontorsperreTilgang(enhetOgGTListe))
             ?.map(kassertInnhold(OffsetDateTime.now()))
             ?.map(journalfortTemaTilgang(tematilganger))
             ?.map(::sorterMeldinger)
@@ -454,18 +453,6 @@ class SfHenvendelseServiceImpl(
 
         return kanJobbesMedIModia
     }
-
-    private fun kontorsperreTilgang(enhetOgGTListe: List<String>): (HenvendelseDTO) -> Boolean =
-        { henvendelseDTO ->
-            if (!henvendelseDTO.kontorsperre) {
-                true
-            } else {
-                val sperre =
-                    henvendelseDTO.markeringer?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
-                val enhetEllerGT: String? = sperre?.kontorsperreGT ?: sperre?.kontorsperreEnhet
-                enhetEllerGT == null || enhetOgGTListe.any { it == enhetEllerGT }
-            }
-        }
 
     private fun kassertInnhold(now: OffsetDateTime): (HenvendelseDTO) -> HenvendelseDTO =
         { henvendelseDTO ->

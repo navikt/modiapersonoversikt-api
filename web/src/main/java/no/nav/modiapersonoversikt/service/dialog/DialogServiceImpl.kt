@@ -158,10 +158,6 @@ class DialogServiceImpl(
                 ?.map { tilJournalpostDTO(it) }
                 ?: emptyList()
 
-        val kontorsperre: MarkeringDTO? = henvendelse.markeringer.getForType(MarkeringDTO.Markeringstype.KONTORSPERRE)
-        val kontorsperretEnhet: String? = kontorsperre?.kontorsperreGT ?: kontorsperre?.kontorsperreEnhet
-        val kontorsperretAv = getVeileder(kontorsperre?.markertAv)
-
         val markertSomFeilsendt = henvendelse.markeringer.getForType(MarkeringDTO.Markeringstype.FEILSENDT)
         val markertSomFeilsendtAv = getVeileder(markertSomFeilsendt?.markertAv)
 
@@ -188,22 +184,17 @@ class DialogServiceImpl(
                     opprettetDato = melding.sendtDato,
                     avsluttetDato = henvendelse.avsluttetDato,
                     ferdigstiltDato = melding.sendtDato,
-                    kontorsperretEnhet = kontorsperretEnhet,
-                    kontorsperretAv = kontorsperretAv,
                     sendtTilSladding = (henvendelse.sladding == true),
                     markertSomFeilsendtAv = markertSomFeilsendtAv,
                 )
             }
-        val sistEndretAv = getIdent(henvendelse.sistEndretAv, MeldingFraDTO.IdentType.NAVIDENT)
 
         return TraadDTO(
             traadId = henvendelse.kjedeId,
             fnr = henvendelse.fnr,
             opprettetDato = henvendelse.opprettetDato,
-            kontorsperre = henvendelse.kontorsperre,
             feilsendt = henvendelse.feilsendt,
             avsluttetDato = henvendelse.avsluttetDato,
-            sistEndretAv = sistEndretAv,
             sladding = henvendelse.sladding,
             temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe),
             traadType = TraadType.valueOf(henvendelse.henvendelseType.value),
