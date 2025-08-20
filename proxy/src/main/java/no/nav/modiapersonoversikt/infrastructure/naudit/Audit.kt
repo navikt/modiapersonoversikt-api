@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.DENY_REASON
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.FAIL_REASON
 import no.nav.personoversikt.common.logging.Logging
-import org.slf4j.Marker
 
 val cefLogger =
     ArchSightCEFLogger(
@@ -107,7 +106,7 @@ class Audit {
             extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>,
         ): AuditDescriptor<T> = WithDataDescriptor(action, resourceType, extractIdentifiers)
 
-        val markers: Marker = Markers.aggregate(Logging.TEAM_LOGS_MARKER, Markers.appendEntries(mapOf(Logging.LOGTYPE_KEY to "audit")))
+        private val auditMarker = Markers.appendEntries(mapOf(Logging.LOGTYPE_KEY to "audit"))
 
         private fun logInternal(
             action: Action,
@@ -127,7 +126,7 @@ class Audit {
                         .toTypedArray(),
                 ).joinToString(" ")
 
-            Logging.teamLog.info(markers, logline)
+            Logging.secureLog.info(auditMarker, logline)
             cefLogger.log(CEFEvent(action, resourceType, subject.orElse("-"), identifiers))
         }
     }
