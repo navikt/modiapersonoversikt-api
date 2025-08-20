@@ -68,7 +68,6 @@ data class OppgaveDTO(
     val prioritet: String,
     val status: String,
     val aktivDato: LocalDate,
-    val id: Long? = null,
     val endretAvEnhetsnr: String? = null,
     val opprettetAvEnhetsnr: String? = null,
     val saksreferanse: String? = null,
