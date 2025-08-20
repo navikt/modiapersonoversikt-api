@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalDateTime
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling
@@ -388,12 +390,26 @@ class RestOppgaveBehandlingServiceImpl(
             }
         val henvendelseId = oppgave.metadata?.get(MetadataKey.EKSTERN_HENVENDELSE_ID.name)
         val erSTO = oppgave.oppgavetype == SPORSMAL_OG_SVAR
+        val javaLocalDateTime = oppgave.opprettetTidspunkt?.toLocalDateTime()
 
         return Oppgave(
             oppgaveId.toString(),
             fnr,
             henvendelseId,
             erSTO,
+            tildeltEnhetsnr = oppgave.tildeltEnhetsnr,
+            tema = oppgave.tema,
+            temagruppe = oppgave.temagruppe,
+            oppgavetype = oppgave.oppgavetype,
+            prioritet = oppgave.prioritet.value,
+            status = oppgave.status.value,
+            aktivDato = oppgave.aktivDato.toKotlinLocalDate(),
+            fristFerdigstillelse = oppgave.fristFerdigstillelse?.toKotlinLocalDate(),
+            endretAvEnhetsnr = oppgave.endretAvEnhetsnr,
+            opprettetAvEnhetsnr = oppgave.opprettetAvEnhetsnr,
+            saksreferanse = oppgave.saksreferanse,
+            beskrivelse = oppgave.beskrivelse,
+            opprettetTidspunkt = javaLocalDateTime?.toKotlinLocalDateTime(),
         )
     }
 

@@ -2,12 +2,14 @@ package no.nav.modiapersonoversikt.rest.oppgave
 
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.datetime.toKotlinLocalDate
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 import kotlin.test.assertEquals
 
 internal class OppgaveControllerTest {
@@ -27,12 +29,34 @@ internal class OppgaveControllerTest {
                     "fnr",
                     "traadId",
                     true,
+                    tildeltEnhetsnr = "0001",
+                    tema = TEMA_AAP,
+                    temagruppe = TEMAGRUPPE_ARBEID,
+                    oppgavetype = "MLD",
+                    prioritet = "1",
+                    status = "OPPRETTET",
+                    aktivDato = LocalDate.now().toKotlinLocalDate(),
+                    endretAvEnhetsnr = VALGT_ENHET,
+                    opprettetAvEnhetsnr = VALGT_ENHET,
+                    saksreferanse = "",
+                    beskrivelse = "",
                 ),
                 Oppgave(
                     OPPGAVE_ID_2,
                     "fnr",
                     "traadId",
                     true,
+                    tildeltEnhetsnr = "0001",
+                    tema = TEMA_AAP,
+                    temagruppe = TEMAGRUPPE_ARBEID,
+                    oppgavetype = "MLD",
+                    prioritet = "1",
+                    status = "OPPRETTET",
+                    aktivDato = LocalDate.now().toKotlinLocalDate(),
+                    endretAvEnhetsnr = VALGT_ENHET,
+                    opprettetAvEnhetsnr = VALGT_ENHET,
+                    saksreferanse = "",
+                    beskrivelse = "",
                 ),
             )
 
@@ -55,6 +79,7 @@ internal class OppgaveControllerTest {
         const val OPPGAVE_ID_2 = "OPPGAVE_ID_2"
         const val SAKSBEHANDLERS_IDENT = "SAKSBEHANDLER"
         const val TEMAGRUPPE_ARBEID = "ARBD"
+        const val TEMA_AAP = "TEMA_AAP"
         const val VALGT_ENHET = "4300"
     }
 }
