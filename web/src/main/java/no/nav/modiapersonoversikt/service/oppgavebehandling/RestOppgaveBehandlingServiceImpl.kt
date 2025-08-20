@@ -396,6 +396,18 @@ class RestOppgaveBehandlingServiceImpl(
             fnr,
             henvendelseId,
             erSTO,
+            tildeltEnhetsnr = oppgave.tildeltEnhetsnr,
+            tema = oppgave.tema,
+            temagruppe = oppgave.temagruppe,
+            oppgavetype = oppgave.oppgavetype,
+            prioritet = oppgave.prioritet.value,
+            status = oppgave.status.value,
+            aktivDato = oppgave.aktivDato,
+            id = oppgave.id,
+            endretAvEnhetsnr = oppgave.endretAvEnhetsnr,
+            opprettetAvEnhetsnr = oppgave.opprettetAvEnhetsnr,
+            saksreferanse = oppgave.saksreferanse,
+            beskrivelse = oppgave.beskrivelse,
         )
     }
 
