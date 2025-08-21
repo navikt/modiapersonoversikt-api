@@ -177,7 +177,6 @@ internal class SfHenvendelseServiceImplTest {
             henvendelseType = HenvendelseDTO.HenvendelseType.MELDINGSKJEDE,
             fnr = "12345678910",
             aktorId = "00012345678910",
-            opprinneligGT = "010101",
             opprettetDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
             feilsendt = false,
             kjedeId = "ABBA12341010101",
@@ -200,7 +199,6 @@ internal class SfHenvendelseServiceImplTest {
                     ),
                 ),
             markeringer = null,
-            kontorsperre = false,
         )
 
     private fun HenvendelseDTO.medJournalpost(tema: String): HenvendelseDTO {
