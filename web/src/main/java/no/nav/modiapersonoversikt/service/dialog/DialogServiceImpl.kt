@@ -195,6 +195,8 @@ class DialogServiceImpl(
             opprettetDato = henvendelse.opprettetDato,
             feilsendt = henvendelse.feilsendt,
             avsluttetDato = henvendelse.avsluttetDato,
+            avsluttetAv = henvendelse.avsluttetAv,
+            sattTilSladdingAv = henvendelse.sattTilSladdingAv,
             sladding = henvendelse.sladding,
             temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe),
             traadType = TraadType.valueOf(henvendelse.henvendelseType.value),
