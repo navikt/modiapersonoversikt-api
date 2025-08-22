@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.rest.oppgave
 
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.datetime.toKotlinLocalDate
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave

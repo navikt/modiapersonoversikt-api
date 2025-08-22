@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import kotlinx.datetime.toKotlinLocalDate
-import kotlinx.datetime.toKotlinLocalDateTime
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling

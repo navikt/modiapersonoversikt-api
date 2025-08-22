@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.rest.oppgave
 
-import java.time.LocalDate
-import java.time.LocalDateTime
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -13,6 +11,8 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/rest/oppgaver")
