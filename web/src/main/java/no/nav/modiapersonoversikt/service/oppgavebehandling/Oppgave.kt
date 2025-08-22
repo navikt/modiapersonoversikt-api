@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Oppgave(
     val oppgaveId: String,

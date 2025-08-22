@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import kotlinx.datetime.toKotlinLocalDate
-import kotlinx.datetime.toKotlinLocalDateTime
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling
@@ -403,13 +401,13 @@ class RestOppgaveBehandlingServiceImpl(
             oppgavetype = oppgave.oppgavetype,
             prioritet = oppgave.prioritet.value,
             status = oppgave.status.value,
-            aktivDato = oppgave.aktivDato.toKotlinLocalDate(),
-            fristFerdigstillelse = oppgave.fristFerdigstillelse?.toKotlinLocalDate(),
+            aktivDato = oppgave.aktivDato,
+            fristFerdigstillelse = oppgave.fristFerdigstillelse,
             endretAvEnhetsnr = oppgave.endretAvEnhetsnr,
             opprettetAvEnhetsnr = oppgave.opprettetAvEnhetsnr,
             saksreferanse = oppgave.saksreferanse,
             beskrivelse = oppgave.beskrivelse,
-            opprettetTidspunkt = javaLocalDateTime?.toKotlinLocalDateTime(),
+            opprettetTidspunkt = javaLocalDateTime,
         )
     }
 

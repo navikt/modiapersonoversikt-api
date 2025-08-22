@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.rest.oppgave
 
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.datetime.toKotlinLocalDate
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
@@ -35,7 +34,7 @@ internal class OppgaveControllerTest {
                     oppgavetype = "MLD",
                     prioritet = "1",
                     status = "OPPRETTET",
-                    aktivDato = LocalDate.now().toKotlinLocalDate(),
+                    aktivDato = LocalDate.now(),
                     endretAvEnhetsnr = VALGT_ENHET,
                     opprettetAvEnhetsnr = VALGT_ENHET,
                     saksreferanse = "",
@@ -52,7 +51,7 @@ internal class OppgaveControllerTest {
                     oppgavetype = "MLD",
                     prioritet = "1",
                     status = "OPPRETTET",
-                    aktivDato = LocalDate.now().toKotlinLocalDate(),
+                    aktivDato = LocalDate.now(),
                     endretAvEnhetsnr = VALGT_ENHET,
                     opprettetAvEnhetsnr = VALGT_ENHET,
                     saksreferanse = "",
