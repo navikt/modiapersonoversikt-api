@@ -403,13 +403,13 @@ class RestOppgaveBehandlingServiceImpl(
             oppgavetype = oppgave.oppgavetype,
             prioritet = oppgave.prioritet.value,
             status = oppgave.status.value,
-            aktivDato = oppgave.aktivDato.toKotlinLocalDate(),
-            fristFerdigstillelse = oppgave.fristFerdigstillelse?.toKotlinLocalDate(),
+            aktivDato = oppgave.aktivDato,
+            fristFerdigstillelse = oppgave.fristFerdigstillelse,
             endretAvEnhetsnr = oppgave.endretAvEnhetsnr,
             opprettetAvEnhetsnr = oppgave.opprettetAvEnhetsnr,
             saksreferanse = oppgave.saksreferanse,
             beskrivelse = oppgave.beskrivelse,
-            opprettetTidspunkt = javaLocalDateTime?.toKotlinLocalDateTime(),
+            opprettetTidspunkt = javaLocalDateTime,
         )
     }
 

@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.oppgave
 
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalDateTime
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
