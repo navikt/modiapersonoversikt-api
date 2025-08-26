@@ -71,10 +71,10 @@ class SakerController
                     val sakerWrapper = sakerService.hentSafSaker(fnrRequest.fnr).asWrapper()
                     val sakstemaWrapper = sakstemaService.hentSaksData(sakerWrapper.resultat, fnrRequest.fnr)
                     val mappingContext =
-                        SakerApiMapper.createMappingContext(
+                        SakerApiMapper.createMappingContextSaksDokumenter(
                             tilgangskontroll = tilgangskontroll,
                             enhet = EnhetId(enhet),
-                            sakstemaer = listOf(),
+                            sakstemaer = sakstemaWrapper.resultat.temaer,
                         )
 
                     mappingContext.mapTilResultatSaksDokumenter(sakstemaWrapper)
