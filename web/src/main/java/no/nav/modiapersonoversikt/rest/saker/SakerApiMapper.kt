@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.soknadsstatus.SaksData
+import no.nav.modiapersonoversikt.service.soknadsstatus.Sakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
 import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
 import no.nav.personoversikt.common.kabac.Decision
@@ -19,6 +20,30 @@ object SakerApiMapper {
         tilgangskontroll: Tilgangskontroll,
         enhet: EnhetId,
         sakstemaer: List<SoknadsstatusSakstema>,
+    ): MappingContext {
+        val tematilgang =
+            sakstemaer
+                .map { it.temakode }
+                .distinct()
+                .associateWith { tema ->
+                    val decision =
+                        tilgangskontroll
+                            .check(Policies.tilgangTilTema(enhet, tema))
+                            .getDecision()
+
+                    decision.type == Decision.Type.PERMIT
+                }
+
+        return MappingContext(
+            tematilgang = tematilgang,
+        )
+    }
+
+    @JvmName("createMappingContext")
+    fun createMappingContextSaksDokumenter(
+        tilgangskontroll: Tilgangskontroll,
+        enhet: EnhetId,
+        sakstemaer: List<Sakstema>,
     ): MappingContext {
         val tematilgang =
             sakstemaer
