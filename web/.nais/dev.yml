@@ -95,6 +95,8 @@ spec:
           namespace: obo
         - application: populasjonstilgangskontroll
           namespace: tilgangsmaskin
+        - application: logging
+          namespace: nais-system
     inbound:
       rules:
         - application: modiapersonoversikt

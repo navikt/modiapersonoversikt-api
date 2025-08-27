@@ -15,23 +15,44 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
 
+    <appender name="team-logs" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>team-logs.nais-system:5170</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"google_cloud_project":"${GOOGLE_CLOUD_PROJECT}","nais_namespace_name":"${NAIS_NAMESPACE}","nais_pod_name":"${NAIS_POD_NAME}","nais_container_name":"${NAIS_APP_NAME}"}</customFields>
+            <includeContext>false</includeContext>
+        </encoder>
+    </appender>
+
     <!-- Prometheus metrikker for antall ganger logget per nivå -->
     <appender name="metrics" class="io.prometheus.client.logback.InstrumentedAppender"/>
-
-    <root level="INFO">
-        <appender-ref ref="stdout_json_masked"/>
-        <appender-ref ref="metrics"/>
-    </root>
 
     <!-- Logger cookies dersom den ikke parses riktig, noe vi ikke ønsker -->
     <logger name="org.apache.tomcat.util.http.parser.Cookie" level="OFF" />
 
-    <logger name="org.apache" level="INFO"/>
-    <logger name="org.apache.cxf" level="ERROR"/>
-    <logger name="no.nav.common.cxf" level="ERROR"/>
+    <logger name="org.apache" level="INFO">
+        <appender-ref ref="team-logs" />
+    </logger>
+    <logger name="org.apache.cxf" level="ERROR">
+        <appender-ref ref="team-logs" />
+    </logger>
+    <logger name="no.nav.common.cxf" level="ERROR">
+        <appender-ref ref="team-logs" />
+    </logger>
+
     <logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="ERROR"/>
     <logger name="org.apache.wss4j.common.crypto.CryptoBase" level="ERROR"/>
     <logger name="no.nav.common.rest.client.LogRequestInterceptor" level="INFO"/>
     <logger name="no.nav.common.rest.filter.LogRequestFilter" level="INFO"/>
+
+
+    <root level="INFO">
+        <appender-ref ref="stdout_json_masked"/>
+        <appender-ref ref="metrics"/>
+        <appender-ref ref="team-logs" />
+    </root>
+
+    <logger name="TeamLog" level="INFO" additivity="false">
+        <appender-ref ref="team-logs" />
+    </logger>
 
 </included>
