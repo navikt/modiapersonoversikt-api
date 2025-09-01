@@ -460,6 +460,13 @@ internal val oppholdsadresseData =
         metadata = metadata,
     )
 
+internal val innflyttingTilNorge =
+    InnflyttingTilNorge(
+        fraflyttingsland = "SWD",
+        folkeregistermetadata = null,
+        metadata = metadata,
+    )
+
 internal val bostedadresseData =
     Bostedsadresse(
         gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
@@ -525,6 +532,8 @@ internal val testPerson =
                 ),
             ),
         oppholdsadresse = listOf(oppholdsadresseData),
+        innflyttingTilNorge = listOf(innflyttingTilNorge),
+        utflyttingFraNorge = listOf(),
     )
 
 internal val testData =

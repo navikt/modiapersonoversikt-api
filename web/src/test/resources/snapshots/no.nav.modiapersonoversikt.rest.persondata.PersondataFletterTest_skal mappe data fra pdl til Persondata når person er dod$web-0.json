@@ -224,6 +224,16 @@
       } ] ]
     } ] ],
     "geografiskTilknytning" : null,
+    "innflyttingTilNorge" : [ "java.util.ArrayList", [ {
+      "fraflyttingsland" : "SWD",
+      "gyldighetsPeriode" : null,
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
+        "system" : "folkeregisteret",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    } ] ],
     "kjonn" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Mann",
       "kode" : "M"
@@ -375,6 +385,7 @@
         "kode" : "NO"
       } ] ]
     },
+    "utflyttingFraNorge" : [ "java.util.ArrayList", [ ] ],
     "vergemal" : [ "java.util.ArrayList", [ {
       "embete" : "Fylkesmannen i Oslo og Viken",
       "gyldighetsPeriode" : {
