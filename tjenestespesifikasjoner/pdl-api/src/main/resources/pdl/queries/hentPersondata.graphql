@@ -312,5 +312,26 @@ query hentPersondata($ident: ID!){
                 ...endringerOgMaster
             }
         }
+        innflyttingTilNorge {
+            fraflyttingsland
+            folkeregistermetadata {
+                gyldighetstidspunkt
+                opphoerstidspunkt
+            }
+            metadata {
+                ...endringerOgMaster
+            }
+        }
+        utflyttingFraNorge {
+            tilflyttingsland
+            utflyttingsdato
+            folkeregistermetadata {
+                gyldighetstidspunkt
+                opphoerstidspunkt
+            }
+            metadata {
+                ...endringerOgMaster
+            }
+        }
     }
 }

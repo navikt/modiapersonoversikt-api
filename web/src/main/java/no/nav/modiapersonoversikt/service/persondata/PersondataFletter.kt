@@ -112,7 +112,11 @@ class PersondataFletter(
                             onNotRelevant = { emptyList() },
                             onFailure = { system, cause ->
                                 feilendeSystemer.add(system)
-                                Logging.teamLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: $system", cause)
+                                Logging.teamLog.error(
+                                    Logging.TEAM_LOGS_MARKER,
+                                    "Persondata feilet system: $system",
+                                    cause,
+                                )
                                 emptyList()
                             },
                         ),
@@ -132,6 +136,8 @@ class PersondataFletter(
                             },
                         ),
                     forelderBarnRelasjon = hentForelderBarnRelasjon(data, clock),
+                    innflyttingTilNorge = hentInnflyttingTilNorge(data),
+                    utflyttingFraNorge = hentUtflyttingFraNorge(data),
                 ),
         )
     }
@@ -911,6 +917,33 @@ class PersondataFletter(
                     hentGyldighetsperiode(
                         handleevne.folkeregistermetadata?.gyldighetstidspunkt,
                         handleevne.folkeregistermetadata?.opphoerstidspunkt,
+                    ),
+            )
+        }
+
+    private fun hentInnflyttingTilNorge(data: Data): List<Persondata.InnflyttingTilNorge> =
+        data.persondata.innflyttingTilNorge.map { innflytting ->
+            Persondata.InnflyttingTilNorge(
+                fraflyttingsland = innflytting.fraflyttingsland,
+                sistEndret = hentSisteEndringFraMetadata(innflytting.metadata),
+                gyldighetsPeriode =
+                    hentGyldighetsperiode(
+                        innflytting.folkeregistermetadata?.gyldighetstidspunkt,
+                        innflytting.folkeregistermetadata?.opphoerstidspunkt,
+                    ),
+            )
+        }
+
+    private fun hentUtflyttingFraNorge(data: Data): List<Persondata.UtflyttingFraNorge> =
+        data.persondata.utflyttingFraNorge.map { utflytting ->
+            Persondata.UtflyttingFraNorge(
+                tilflyttingsland = utflytting.tilflyttingsland,
+                utflyttingsdato = utflytting.utflyttingsdato,
+                sistEndret = hentSisteEndringFraMetadata(utflytting.metadata),
+                gyldighetsPeriode =
+                    hentGyldighetsperiode(
+                        utflytting.folkeregistermetadata?.gyldighetstidspunkt,
+                        utflytting.folkeregistermetadata?.opphoerstidspunkt,
                     ),
             )
         }

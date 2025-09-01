@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.service.persondata
 
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.InnflyttingTilNorge
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.UtflyttingFraNorge
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -40,6 +42,8 @@ object Persondata {
         val kontaktInformasjon: KontaktInformasjon,
         val bankkonto: Bankkonto?,
         val forelderBarnRelasjon: List<ForelderBarnRelasjon>,
+        val innflyttingTilNorge: List<InnflyttingTilNorge>,
+        val utflyttingFraNorge: List<UtflyttingFraNorge>,
     )
 
     data class Dodsdato(
@@ -222,6 +226,19 @@ object Persondata {
     data class TilrettelagtKommunikasjon(
         val talesprak: List<KodeBeskrivelse<String>>,
         val tegnsprak: List<KodeBeskrivelse<String>>,
+    )
+
+    data class InnflyttingTilNorge(
+        val fraflyttingsland: String? = null,
+        val gyldighetsPeriode: GyldighetsPeriode? = null,
+        val sistEndret: SistEndret? = null,
+    )
+
+    data class UtflyttingFraNorge(
+        val tilflyttingsland: String? = null,
+        val utflyttingsdato: LocalDate? = null,
+        val gyldighetsPeriode: GyldighetsPeriode? = null,
+        val sistEndret: SistEndret? = null,
     )
 
     enum class Handling { LES, KOMMUNISER, SKRIV }
