@@ -27,8 +27,6 @@ spec:
   prometheus:
     enabled: true
     path: /internal/metrics
-  secureLogs:
-    enabled: true
   resources:
     requests:
       cpu: 30m
