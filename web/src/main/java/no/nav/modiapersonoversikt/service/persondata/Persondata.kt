@@ -1,7 +1,4 @@
 package no.nav.modiapersonoversikt.service.persondata
-
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.InnflyttingTilNorge
-import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.UtflyttingFraNorge
 import java.time.LocalDate
 import java.time.LocalDateTime
 

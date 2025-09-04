@@ -924,7 +924,10 @@ class PersondataFletter(
     private fun hentInnflyttingTilNorge(data: Data): List<Persondata.InnflyttingTilNorge> =
         data.persondata.innflyttingTilNorge.map { innflytting ->
             Persondata.InnflyttingTilNorge(
-                fraflyttingsland = innflytting.fraflyttingsland,
+                fraflyttingsland =
+                    innflytting.fraflyttingsland?.let { landkode ->
+                        kodeverk.hentKodeBeskrivelse(Kodeverk.LAND, landkode).beskrivelse
+                    },
                 sistEndret = hentSisteEndringFraMetadata(innflytting.metadata),
                 gyldighetsPeriode =
                     hentGyldighetsperiode(
@@ -937,7 +940,10 @@ class PersondataFletter(
     private fun hentUtflyttingFraNorge(data: Data): List<Persondata.UtflyttingFraNorge> =
         data.persondata.utflyttingFraNorge.map { utflytting ->
             Persondata.UtflyttingFraNorge(
-                tilflyttingsland = utflytting.tilflyttingsland,
+                tilflyttingsland =
+                    utflytting.tilflyttingsland?.let { landkode ->
+                        kodeverk.hentKodeBeskrivelse(Kodeverk.LAND, landkode).beskrivelse
+                    },
                 utflyttingsdato = utflytting.utflyttingsdato,
                 sistEndret = hentSisteEndringFraMetadata(utflytting.metadata),
                 gyldighetsPeriode =
