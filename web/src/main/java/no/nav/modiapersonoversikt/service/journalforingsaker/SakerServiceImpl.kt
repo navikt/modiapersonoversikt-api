@@ -58,10 +58,18 @@ class SakerServiceImpl : SakerService {
             .leggTilDataFraKilde(fnr, bidragSaker)
             .leggTilTemaNavn(kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA))
             .leggTilFagsystemNavn(kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM))
+            .fjernIkkeGodkjenteSaker()
             .fjernDuplikater()
     }
 
     companion object {
+        private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
+            this.saker.removeIf {
+                !godkjentFagSak(it) && !godkjentGenerellSak(it)
+            }
+            return this
+        }
+
         private fun SakerService.Resultat.fjernDuplikater(): SakerService.Resultat =
             this.copy(
                 saker = this.saker.distinctBy { Pair(it.temaKode, it.fagsystemSaksId) }.toMutableList(),
@@ -93,6 +101,22 @@ class SakerServiceImpl : SakerService {
                 it.fagsystemNavn = kodeverk.hentVerdi(it.fagsystemKode ?: "", it.fagsystemKode ?: "")
             }
             return this
+        }
+
+        private fun godkjentFagSak(sak: JournalforingSak): Boolean {
+            val godkjentType = !sak.isSakstypeForVisningGenerell
+            val godkjentSystem = JournalforingSak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode)
+            val godkjentTema = JournalforingSak.TEMAKODE_KLAGE_ANKE != sak.temaKode
+
+            return godkjentType && godkjentSystem && godkjentTema
+        }
+
+        private fun godkjentGenerellSak(sak: JournalforingSak): Boolean {
+            val godkjentType = sak.isSakstypeForVisningGenerell
+            val godkjentSystem = JournalforingSak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode)
+            val godkjentTema = JournalforingSak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
+
+            return godkjentType && godkjentSystem && godkjentTema
         }
     }
 }
