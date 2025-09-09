@@ -211,11 +211,21 @@ class SakstemaServiceImpl
 
             private fun tilhorendeFraJoark(tilhorendeSaker: List<Sak>): Predicate<DokumentMetadata> =
                 Predicate { dm: DokumentMetadata ->
-                    tilhorendeSaker
-                        .stream()
-                        .map { obj: Sak -> obj.fagsaksnummer }
-                        .toList()
-                        .contains(dm.tilhorendeFagsakId)
+                    val fagsakIds =
+                        tilhorendeSaker
+                            .stream()
+                            .map { obj: Sak -> obj.fagsaksnummer }
+                            .filter { it != null }
+                            .toList()
+
+                    val saksIds =
+                        tilhorendeSaker
+                            .stream()
+                            .map { obj: Sak -> obj.saksId }
+                            .filter { it != null }
+                            .toList()
+
+                    fagsakIds.contains(dm.tilhorendeFagsakId) || saksIds.contains(dm.tilhorendeSakid)
                 }
 
             private fun tilhorendeFraHenvendelse(temakode: String): Predicate<DokumentMetadata> =
