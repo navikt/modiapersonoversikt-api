@@ -213,9 +213,9 @@ class SakstemaServiceImpl
                 Predicate { dm: DokumentMetadata ->
                     tilhorendeSaker
                         .stream()
-                        .map { obj: Sak -> obj.saksId }
+                        .map { obj: Sak -> obj.fagsaksnummer }
                         .toList()
-                        .contains(dm.tilhorendeSakid)
+                        .contains(dm.tilhorendeFagsakId)
                 }
 
             private fun tilhorendeFraHenvendelse(temakode: String): Predicate<DokumentMetadata> =
