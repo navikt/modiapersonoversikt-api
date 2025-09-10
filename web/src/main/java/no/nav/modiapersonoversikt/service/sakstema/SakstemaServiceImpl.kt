@@ -172,7 +172,7 @@ class SakstemaServiceImpl
         ): List<DokumentMetadata> =
             alleDokumentMetadata
                 .stream()
-                .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temakode)))
+                .filter(tilhorendeFraJoark(tilhorendeSaker, temakode).or(tilhorendeFraHenvendelse(temakode)))
                 .collect(Collectors.toList())
 
         override fun sakerITemagruppe(
@@ -209,7 +209,10 @@ class SakstemaServiceImpl
                 return (sakerTema + dokumentTema + soknadsstatusTema).toSet()
             }
 
-            private fun tilhorendeFraJoark(tilhorendeSaker: List<Sak>): Predicate<DokumentMetadata> =
+            private fun tilhorendeFraJoark(
+                tilhorendeSaker: List<Sak>,
+                temakode: String,
+            ): Predicate<DokumentMetadata> =
                 Predicate { dm: DokumentMetadata ->
                     val fagsakIds =
                         tilhorendeSaker
@@ -225,7 +228,7 @@ class SakstemaServiceImpl
                             .filter { it != null }
                             .toList()
 
-                    fagsakIds.contains(dm.tilhorendeFagsakId) || saksIds.contains(dm.tilhorendeSakid)
+                    (fagsakIds.contains(dm.tilhorendeFagsakId) || saksIds.contains(dm.tilhorendeSakid)) && dm.temakode == temakode
                 }
 
             private fun tilhorendeFraHenvendelse(temakode: String): Predicate<DokumentMetadata> =
