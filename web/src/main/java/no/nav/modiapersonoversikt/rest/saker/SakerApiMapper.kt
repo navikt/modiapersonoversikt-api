@@ -90,7 +90,10 @@ object SakerApiMapper {
                     resultatWrapper.resultat.saker.map { sak ->
                         val harTilgang = tematilgang[sak.temakode] == true
                         val tilhorendeDokumenter =
-                            resultatWrapper.resultat.dokumenter.filter { it.tilhorendeSakid == sak.saksId }
+                            resultatWrapper.resultat.dokumenter.filter {
+                                (it.tilhorendeSakid == sak.saksId && it.tilhorendeSakid != null) ||
+                                    (it.tilhorendeFagsakId == sak.fagsaksnummer && it.tilhorendeFagsakId != null)
+                            }
                         val sakstema = resultatWrapper.resultat.temaer.find { it.temakode == sak.temakode }
                         SakerApi.SaksDokumenter(
                             saksid = sak.saksId,
