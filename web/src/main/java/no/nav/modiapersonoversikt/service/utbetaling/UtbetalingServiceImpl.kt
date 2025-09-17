@@ -29,6 +29,11 @@ open class UtbetalingServiceImpl(
         startDato: LocalDate,
         sluttDato: LocalDate,
     ): List<UtbetalingDomain.Utbetaling> {
+        // UtbetaltdataApi filtrerer på posteringsdato, men utbetalinger kan ha betalingsdato utenfor dette.
+        // Trekker derfor fra 1 mnd på startdato for å fange opp alle utbetalinger
+
+        val utvidetStartDato: LocalDate = startDato.minusDays(30)
+
         val utbetalinger =
             utbetaldataV2Api.hentUtbetalingsinformasjonIntern(
                 utbetalingsoppslagDTO =
@@ -37,7 +42,7 @@ open class UtbetalingServiceImpl(
                         rolle = UtbetalingsoppslagDTO.Rolle.RETTIGHETSHAVER,
                         periode =
                             PeriodeDTO(
-                                fom = startDato,
+                                fom = utvidetStartDato,
                                 tom = sluttDato,
                             ),
                         periodetype = UtbetalingsoppslagDTO.Periodetype.UTBETALINGSPERIODE,
@@ -55,18 +60,14 @@ open class UtbetalingServiceImpl(
         start: LocalDate,
         slutt: LocalDate,
     ) = { utbetaling: UtbetalingDTO ->
-        val dato =
+        val datoer =
             listOfNotNull(
                 utbetaling.posteringsdato,
                 utbetaling.forfallsdato,
                 utbetaling.utbetalingsdato,
-            ).firstOrNull()
+            )
 
-        if (dato == null) {
-            false
-        } else {
-            dato in start..slutt
-        }
+        datoer.any { it in start..slutt }
     }
 
     private fun mapTilDTO(utbetaling: RsUtbetaling): UtbetalingDomain.Utbetaling =
