@@ -55,13 +55,18 @@ open class UtbetalingServiceImpl(
         start: LocalDate,
         slutt: LocalDate,
     ) = { utbetaling: UtbetalingDTO ->
-        val datoer =
+        val dato =
             listOfNotNull(
                 utbetaling.posteringsdato,
                 utbetaling.forfallsdato,
                 utbetaling.utbetalingsdato,
-            )
-        datoer.any { it in start..slutt }
+            ).firstOrNull()
+
+        if (dato == null) {
+            false
+        } else {
+            dato in start..slutt
+        }
     }
 
     private fun mapTilDTO(utbetaling: RsUtbetaling): UtbetalingDomain.Utbetaling =
