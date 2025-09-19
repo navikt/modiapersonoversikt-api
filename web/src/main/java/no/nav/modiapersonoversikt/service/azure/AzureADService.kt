@@ -5,9 +5,10 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import no.nav.common.types.identer.AzureObjectId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
+import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -18,6 +19,13 @@ import org.springframework.cache.annotation.Cacheable
 
 interface AzureADService {
     fun hentRollerForVeileder(veilederIdent: NavIdent): List<String>
+
+    fun hentAnsatteForEnhet(
+        enhetId: String,
+        gruppeId: String,
+    ): List<Ansatt>
+
+    fun hentEnhetGruppe(enhetId: String): Gruppe?
 }
 
 @CacheConfig(cacheNames = ["azureAdCache"], keyGenerator = "userkeygenerator")
@@ -43,7 +51,7 @@ open class AzureADServiceImpl(
 
         return try {
             runBlocking {
-                val response = handleRequest(url, userToken, veilederIdent)
+                val response = handleRequest(url, userToken)
                 if (response.value.isEmpty()) {
                     log.warn("Bruker $veilederIdent har ingen AzureAD group")
                 }
@@ -52,15 +60,83 @@ open class AzureADServiceImpl(
                 }
             }
         } catch (e: Exception) {
-            log.error("Kall til azureAD feilet", veilederIdent, e)
+            log.error("Kall til azureAD feilet for veileder: $veilederIdent", e)
             return listOf()
+        }
+    }
+
+    @Cacheable(unless = "#result.size()==0")
+    override fun hentAnsatteForEnhet(
+        enhetId: String,
+        gruppeId: String,
+    ): List<Ansatt> {
+        val userToken = AuthContextUtils.requireToken()
+        val url =
+            URLBuilder(graphUrl)
+                .apply {
+                    path("v1.0/groups/$gruppeId/members")
+                    parameters.append("\$count", "true")
+                    parameters.append("\$accountEnabled", "true")
+                    parameters.append("\$select", "givenName,surname,onPremisesSamAccountName")
+                }.buildString()
+
+        return try {
+            runBlocking {
+                val response = handleRequest(url, userToken)
+                val brukereUtenIdent = response.value.filter { it.onPremisesSamAccountName == null }
+
+                if (brukereUtenIdent.isNotEmpty()) {
+                    log.warn("Det finnes: ${brukereUtenIdent.size} brukere uten ident i gruppe for enhet $enhetId. CallId=${getCallId()}")
+                }
+
+                response.value
+                    .mapNotNull { user ->
+                        user.onPremisesSamAccountName?.let { accountName ->
+                            Ansatt(
+                                user.givenName ?: "",
+                                user.surname ?: "",
+                                accountName,
+                            )
+                        }
+                    }
+            }
+        } catch (e: Exception) {
+            log.error("Azure AD: Feil ved henting av alle ansatte med gruppe id for enhet $enhetId", e)
+            return listOf()
+        }
+    }
+
+    @Cacheable(unless = "#result.size()==0")
+    override fun hentEnhetGruppe(enhetId: String): Gruppe? {
+        val userToken = AuthContextUtils.requireToken()
+        val url =
+            URLBuilder(graphUrl)
+                .apply {
+                    path("v1.0/groups")
+                    parameters.append("\$count", "true")
+                    parameters.append("\$filter", "displayName eq '${displayName(enhetId)}'")
+                    parameters.append("\$select", "displayName,id")
+                }.buildString()
+
+        return try {
+            runBlocking {
+                val response = handleRequest(url, userToken)
+                response.value.first().let {
+                    Gruppe(
+                        requireNotNull(it.displayName),
+                        requireNotNull(it.id),
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            log.error("Azure AD: Feil ved henting av gruppe for enhet $enhetId", e)
+            return null
         }
     }
 
     private fun handleRequest(
         url: String,
         userToken: String,
-        veilederIdent: NavIdent,
     ): AzureAdResponse {
         val token = tokenClient.exchangeOnBehalfOfToken(userToken)
         val response: Response =
@@ -76,11 +152,11 @@ open class AzureADServiceImpl(
 
         val body =
             response.body
-                ?: throw IllegalArgumentException("Mottok ingen grupper fra MS Graph for veileder:  $veilederIdent. Body var null")
+                ?: throw IllegalArgumentException("Mottok ingen response fra MS Graph. Body var null")
 
         if (!response.isSuccessful) {
             throw java.lang.IllegalArgumentException(
-                "Mottok ingen grupper fra MS Graph for veileder:  $veilederIdent. Body var ${
+                "Feil i kall til MS Graph. Body var ${
                     json.decodeFromString<AzureErrorResponse>(body.string())
                 }",
             )
@@ -91,11 +167,13 @@ open class AzureADServiceImpl(
             body.string(),
         )
     }
+
+    private fun displayName(enhetId: String): String = "0000-GA-ENHET_$enhetId"
 }
 
-data class AnsattRolle(
+data class Gruppe(
     val gruppeNavn: String,
-    val gruppeId: AzureObjectId,
+    val gruppeId: String,
 )
 
 @Serializable
@@ -137,6 +215,8 @@ data class AzureGroupResponse(
     val onPremisesLastSyncDateTime: String? = null,
     val onPremisesNetBiosName: String? = null,
     val onPremisesSamAccountName: String? = null,
+    val givenName: String? = null,
+    val surname: String? = null,
     val onPremisesSecurityIdentifier: String? = null,
     val onPremisesSyncEnabled: Boolean? = null,
     val preferredDataLocation: String? = null,

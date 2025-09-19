@@ -2,10 +2,8 @@ package no.nav.modiapersonoversikt.service.ansattservice
 
 import no.nav.common.client.axsys.AxsysClient
 import no.nav.common.client.nom.NomClient
-import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Veileder
-import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
 import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import kotlin.Exception
 
 interface AnsattService {
-    fun hentEnhetsliste(): List<AnsattEnhet>
-
     fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet>
 
     fun hentVeileder(ident: NavIdent): Veileder
@@ -42,12 +38,7 @@ class AnsattServiceImpl
     ) : AnsattService {
         private val log = LoggerFactory.getLogger(AnsattServiceImpl::class.java)
 
-        override fun hentEnhetsliste(): List<AnsattEnhet> =
-            AuthContextUtils
-                .getIdent()
-                .map { hentEnhetsliste(NavIdent(it)) }
-                .orElse(emptyList())
-
+        // TODO: Hent enheter fra MS graph
         override fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet> =
             (axsys.hentTilganger(ident) ?: emptyList())
                 .map { AnsattEnhet(it.enhetId.get(), it.navn ?: "UKJENT") }
@@ -88,19 +79,17 @@ class AnsattServiceImpl
                     emptySet()
                 }
 
-        override fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt> =
-            try {
-                val hentAnsatte = axsys.hentAnsatte(EnhetId(enhet.enhetId))
-                val ansatteNavn = nomClient.finnNavn(hentAnsatte)
-                ansatteNavn.map {
-                    Ansatt(
-                        it.fornavn,
-                        it.etternavn,
-                        it.navIdent.get(),
-                    )
+        override fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt> {
+            return try {
+                val gruppe = azureADService.hentEnhetGruppe(enhet.enhetId)
+                if (gruppe == null) {
+                    log.error("Finner ikke gruppe for enhet ${enhet.enhetId}")
+                    return emptyList()
                 }
+                azureADService.hentAnsatteForEnhet(enhet.enhetId, gruppe.gruppeId)
             } catch (e: Exception) {
-                log.error("Får ikke hentet ansatte for enhet", e)
+                log.error("Får ikke hentet ansatte for enhet ${enhet.enhetId}", e)
                 emptyList()
             }
+        }
     }
