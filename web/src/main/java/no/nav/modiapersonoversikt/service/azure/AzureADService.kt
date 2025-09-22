@@ -106,7 +106,7 @@ open class AzureADServiceImpl(
         }
     }
 
-    @Cacheable(unless = "#result.size()==0")
+    @Cacheable
     override fun hentEnhetGruppe(enhetId: String): Gruppe? {
         val userToken = AuthContextUtils.requireToken()
         val url =
