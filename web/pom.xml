@@ -295,7 +295,12 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>aap-api-intern</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>io.getunleash</groupId>
             <artifactId>unleash-client-java</artifactId>

@@ -107,6 +107,9 @@ class AuditResources {
             val Foreldrepenger = AuditResource("person.foreldrepenger")
 
             @JvmField
+            val ArbeidsavklaringsPenger = AuditResource("person.arbeidsavklaringspenger")
+
+            @JvmField
             val Pleiepenger = AuditResource("person.pleiepenger")
 
             @JvmField
