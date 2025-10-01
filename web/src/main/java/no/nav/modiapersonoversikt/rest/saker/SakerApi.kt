@@ -67,6 +67,7 @@ object SakerApi {
         val fagsaksnummer: String?,
         val avsluttet: LocalDateTime?,
         val fagsystem: String,
+        val fagsystemNavn: String,
         val baksystem: Baksystem,
     )
 
@@ -85,6 +86,7 @@ object SakerApi {
         val avsluttet: LocalDateTime?,
         val opprettet: LocalDateTime?,
         val fagsystem: String,
+        val fagsystemNavn: String,
         val baksystem: Baksystem,
         val harTilgang: Boolean,
         var feilendeSystemer: List<Baksystem> = listOf(),
