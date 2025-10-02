@@ -182,7 +182,7 @@ class SakerController
                         .withTemakode(it.temaKode)
                         .withBaksystem(Baksystem.SAF)
                         .withFagsystem(it.fagsystemKode)
-                        .withFagsystemNavn(it.fagsystemNavn)
+                        .withFagsystemNavn(Optional.ofNullable(it.fagsystemNavn))
                         .withOpprettetDato(Optional.ofNullable(it.opprettetDato))
                 }
             val feilendeSystemer =
