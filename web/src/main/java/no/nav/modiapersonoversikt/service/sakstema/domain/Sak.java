@@ -13,7 +13,7 @@ public class Sak {
     private String fagsaksnummer;
     private Optional<DateTime> avsluttet = empty();
     private String fagsystem;
-    private String fagsystemNavn;
+    private Optional<String> fagsystemNavn;
     private Baksystem baksystem;
     private Optional<DateTime> opprettetDato = empty();
 
@@ -29,7 +29,7 @@ public class Sak {
         return fagsystem;
     }
 
-    public String getFagsystemNavn() {
+    public Optional<String> getFagsystemNavn() {
         return fagsystemNavn;
     }
 
@@ -90,7 +90,7 @@ public class Sak {
         return this;
     }
 
-    public Sak withFagsystemNavn(final String fagsystemNavn) {
+    public Sak withFagsystemNavn(final Optional<String> fagsystemNavn) {
         this.fagsystemNavn = fagsystemNavn;
         return this;
     }
