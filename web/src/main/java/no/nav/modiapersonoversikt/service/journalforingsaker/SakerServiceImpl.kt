@@ -44,6 +44,7 @@ class SakerServiceImpl : SakerService {
         return SakerService
             .Resultat()
             .leggTilDataFraKilde(fnr, safSaker)
+            .leggTilFagsystemNavn(kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM))
     }
 
     override fun hentSaker(fnr: String): SakerService.Resultat {
