@@ -47,6 +47,7 @@
         <module>pdl-fullmakt-api</module>
         <module>veilarbvedtaksstotte-api</module>
         <module>tilgangsmaskinen</module>
+        <module>aap-api-intern</module>
     </modules>
 
     <dependencyManagement>

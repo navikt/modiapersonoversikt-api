@@ -95,6 +95,8 @@ spec:
           namespace: tilgangsmaskin
         - application: logging
           namespace: nais-system
+        - application: api-intern
+          namespace: aap
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -211,3 +213,8 @@ spec:
       value: "http://populasjonstilgangskontroll.tilgangsmaskin"
     - name: TILGANGSMASKINEN_SCOPE
       value: "dev-gcp:tilgangsmaskin:populasjonstilgangskontroll"
+    - name: AAP_URL
+      value: "http://api-intern.aap"
+    - name: AAP_SCOPE
+      value: "dev-gcp:aap:api-intern"
+

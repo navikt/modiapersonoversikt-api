@@ -1,6 +1,8 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.api.domain.aap.generated.models.NonavaapapiinternVedtakUtenUtbetalingDTO
+import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
@@ -33,6 +35,7 @@ class YtelseController
         private val tilgangskontroll: Tilgangskontroll,
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
+        private val aapApi: AapApi,
     ) {
         @PostMapping("alle-ytelser")
         fun hentYtelser(
@@ -75,8 +78,16 @@ class YtelseController
                                 fnrRequest.fnr,
                             ).map { YtelseVedtak(YtelseType.Pensjon, YtelseData.PensjonYtelse(it)) }
 
+                    val arbeidsavklaringspenger =
+                        aapApi
+                            .hentArbeidsavklaringspengerVedtak(
+                                fnrRequest.fnr,
+                                fnrRequest.tom,
+                                fnrRequest.fom,
+                            ).map { YtelseVedtak(YtelseType.Arbeidsavklaringspenger, YtelseData.ArbeidsavklaringsPengerYtelse(it)) }
+
                     YtelseResponse(
-                        ytelser = sykepenger + pleiepenger + foreldrepenger + tiltakspenger + pensjon,
+                        ytelser = sykepenger + pleiepenger + foreldrepenger + tiltakspenger + pensjon + arbeidsavklaringspenger,
                     )
                 }
 
@@ -135,6 +146,26 @@ class YtelseController
                 ) {
                     pensjonService.hentSaker(fnrRequest.fnr)
                 }
+
+        @PostMapping("arbeidsavklaringspenger")
+        fun hentArbeidsavklaringsPenger(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): List<NonavaapapiinternVedtakUtenUtbetalingDTO> =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.ArbeidsavklaringsPenger,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    aapApi.hentArbeidsavklaringspengerVedtak(
+                        fnrRequest.fnr,
+                        fnrRequest.tom,
+                        fnrRequest.fom,
+                    )
+                }
     }
 
 sealed class YtelseData {
@@ -157,6 +188,10 @@ sealed class YtelseData {
     data class PensjonYtelse(
         val data: PensjonSak,
     ) : YtelseData()
+
+    data class ArbeidsavklaringsPengerYtelse(
+        val data: NonavaapapiinternVedtakUtenUtbetalingDTO,
+    ) : YtelseData()
 }
 
 enum class YtelseType {
@@ -165,6 +200,7 @@ enum class YtelseType {
     Pleiepenger,
     Tiltakspenge,
     Pensjon,
+    Arbeidsavklaringspenger,
 }
 
 data class YtelseVedtak(

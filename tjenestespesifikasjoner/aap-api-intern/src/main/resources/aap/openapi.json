@@ -1,0 +1,2274 @@
+{
+  "components": {
+    "schemas": {
+      "api.InternVedtakRequestApiIntern": {
+        "nullable": false,
+        "properties": {
+          "fraOgMedDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": true,
+            "type": "string"
+          },
+          "personidentifikator": {
+            "nullable": false,
+            "type": "string"
+          },
+          "tilOgMedDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "personidentifikator"
+        ],
+        "type": "object"
+      },
+      "api.SakerRequest": {
+        "nullable": false,
+        "properties": {
+          "personidentifikatorer": {
+            "items": {
+              "nullable": false,
+              "type": "string"
+            },
+            "nullable": false,
+            "type": "array"
+          }
+        },
+        "required": [
+          "personidentifikatorer"
+        ],
+        "type": "object"
+      },
+      "api.kelvin.MeldekortPerioderDTO": {
+        "nullable": false,
+        "properties": {
+          "meldekortPerioder": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.komponenter.type.Periode"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "personIdent": {
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "meldekortPerioder",
+          "personIdent"
+        ],
+        "type": "object"
+      },
+      "api.kelvin.SakStatus": {
+        "nullable": false,
+        "properties": {
+          "kilde": {
+            "enum": [
+              "ARENA",
+              "KELVIN"
+            ],
+            "nullable": false,
+            "type": "string"
+          },
+          "periode": {
+            "$ref": "#/components/schemas/no.nav.aap.komponenter.type.Periode"
+          },
+          "sakId": {
+            "nullable": false,
+            "type": "string"
+          },
+          "statusKode": {
+            "enum": [
+              "AVSLU",
+              "FORDE",
+              "GODKJ",
+              "INNST",
+              "IVERK",
+              "KONT",
+              "MOTAT",
+              "OPPRE",
+              "REGIS",
+              "UKJENT",
+              "OPPRETTET",
+              "UTREDES",
+              "LØPENDE",
+              "AVSLUTTET"
+            ],
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "kilde",
+          "periode",
+          "sakId",
+          "statusKode"
+        ],
+        "type": "object"
+      },
+      "api.kelvin.SakStatusKelvin": {
+        "nullable": false,
+        "properties": {
+          "ident": {
+            "nullable": false,
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/api.kelvin.SakStatus"
+          }
+        },
+        "required": [
+          "ident",
+          "status"
+        ],
+        "type": "object"
+      },
+      "api.postgres.DatadelingDTO": {
+        "nullable": false,
+        "properties": {
+          "behandlingStatus": {
+            "enum": [
+              "OPPRETTET",
+              "UTREDES",
+              "IVERKSETTES",
+              "AVSLUTTET"
+            ],
+            "nullable": false,
+            "type": "string"
+          },
+          "behandlingsId": {
+            "nullable": false,
+            "type": "string"
+          },
+          "behandlingsReferanse": {
+            "nullable": false,
+            "type": "string"
+          },
+          "beregningsgrunnlag": {
+            "nullable": false,
+            "type": "number"
+          },
+          "rettighetsPeriodeFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "rettighetsPeriodeTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "rettighetsTypeTidsLinje": {
+            "items": {
+              "$ref": "#/components/schemas/api.postgres.RettighetsTypePeriode"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "sak": {
+            "$ref": "#/components/schemas/api.postgres.SakDTO"
+          },
+          "samId": {
+            "nullable": true,
+            "type": "string"
+          },
+          "tilkjent": {
+            "items": {
+              "$ref": "#/components/schemas/api.postgres.TilkjentDTO"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "underveisperiode": {
+            "items": {
+              "$ref": "#/components/schemas/api.postgres.UnderveisDTO"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "vedtakId": {
+            "format": "int64",
+            "nullable": false,
+            "type": "integer"
+          },
+          "vedtaksDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "behandlingStatus",
+          "behandlingsId",
+          "behandlingsReferanse",
+          "beregningsgrunnlag",
+          "rettighetsPeriodeFom",
+          "rettighetsPeriodeTom",
+          "rettighetsTypeTidsLinje",
+          "sak",
+          "tilkjent",
+          "underveisperiode",
+          "vedtakId",
+          "vedtaksDato"
+        ],
+        "type": "object"
+      },
+      "api.postgres.RettighetsTypePeriode": {
+        "nullable": false,
+        "properties": {
+          "fom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "tom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "verdi": {
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "fom",
+          "tom",
+          "verdi"
+        ],
+        "type": "object"
+      },
+      "api.postgres.SakDTO": {
+        "nullable": false,
+        "properties": {
+          "fnr": {
+            "items": {
+              "nullable": false,
+              "type": "string"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "opprettetTidspunkt": {
+            "example": "2025-04-01T12:30:00",
+            "format": "date-time",
+            "nullable": false,
+            "type": "string"
+          },
+          "saksnummer": {
+            "nullable": false,
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "OPPRETTET",
+              "UTREDES",
+              "LØPENDE",
+              "AVSLUTTET"
+            ],
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "fnr",
+          "opprettetTidspunkt",
+          "saksnummer",
+          "status"
+        ],
+        "type": "object"
+      },
+      "api.postgres.TilkjentDTO": {
+        "nullable": false,
+        "properties": {
+          "antallBarn": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "barnetillegg": {
+            "nullable": false,
+            "type": "number"
+          },
+          "barnetilleggsats": {
+            "nullable": false,
+            "type": "number"
+          },
+          "dagsats": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "gradering": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "grunnbeløp": {
+            "nullable": false,
+            "type": "number"
+          },
+          "grunnlagsfaktor": {
+            "nullable": false,
+            "type": "number"
+          },
+          "samordningUføregradering": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "tilkjentFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "tilkjentTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "antallBarn",
+          "barnetillegg",
+          "barnetilleggsats",
+          "dagsats",
+          "gradering",
+          "grunnbeløp",
+          "grunnlagsfaktor",
+          "tilkjentFom",
+          "tilkjentTom"
+        ],
+        "type": "object"
+      },
+      "api.postgres.UnderveisDTO": {
+        "nullable": false,
+        "properties": {
+          "avslagsårsak": {
+            "nullable": true,
+            "type": "string"
+          },
+          "meldeperiodeFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "meldeperiodeTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "rettighetsType": {
+            "nullable": true,
+            "type": "string"
+          },
+          "underveisFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "underveisTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "utfall": {
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "meldeperiodeFom",
+          "meldeperiodeTom",
+          "underveisFom",
+          "underveisTom",
+          "utfall"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.Maksimum": {
+        "nullable": false,
+        "properties": {
+          "vedtak": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.api.intern.Vedtak"
+            },
+            "nullable": false,
+            "type": "array"
+          }
+        },
+        "required": [
+          "vedtak"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.Medium": {
+        "nullable": false,
+        "properties": {
+          "vedtak": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.api.intern.VedtakUtenUtbetaling"
+            },
+            "nullable": false,
+            "type": "array"
+          }
+        },
+        "required": [
+          "vedtak"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.MeldekortDetalj": {
+        "nullable": false,
+        "properties": {
+          "arbeidPerDag": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.api.intern.TimerPaaDag"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "dagsats": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "meldePeriode": {
+            "$ref": "#/components/schemas/no.nav.aap.api.intern.Periode"
+          },
+          "mottattTidspunkt": {
+            "example": "2025-04-01T12:30:00",
+            "format": "date-time",
+            "nullable": false,
+            "type": "string"
+          },
+          "saksnummer": {
+            "nullable": false,
+            "type": "string"
+          },
+          "ukesats": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "vedtaksdato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "arbeidPerDag",
+          "meldePeriode",
+          "mottattTidspunkt",
+          "saksnummer"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.MeldekortDetaljerRequest": {
+        "nullable": false,
+        "properties": {
+          "fraOgMedDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": true,
+            "type": "string"
+          },
+          "personidentifikator": {
+            "nullable": false,
+            "type": "string"
+          },
+          "tilOgMedDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "personidentifikator"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.MeldekortDetaljerResponse": {
+        "nullable": false,
+        "properties": {
+          "meldekort": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.api.intern.MeldekortDetalj"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "personIdent": {
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "meldekort",
+          "personIdent"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.Periode": {
+        "nullable": false,
+        "properties": {
+          "fraOgMedDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": true,
+            "type": "string"
+          },
+          "tilOgMedDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.PeriodeInkludert11_17": {
+        "nullable": false,
+        "properties": {
+          "aktivitetsfaseKode": {
+            "nullable": false,
+            "type": "string"
+          },
+          "aktivitetsfaseNavn": {
+            "nullable": false,
+            "type": "string"
+          },
+          "periode": {
+            "$ref": "#/components/schemas/no.nav.aap.api.intern.Periode"
+          }
+        },
+        "required": [
+          "aktivitetsfaseKode",
+          "aktivitetsfaseNavn",
+          "periode"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.PerioderInkludert11_17Response": {
+        "nullable": false,
+        "properties": {
+          "perioder": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.api.intern.PeriodeInkludert11_17"
+            },
+            "nullable": false,
+            "type": "array"
+          }
+        },
+        "required": [
+          "perioder"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.PerioderResponse": {
+        "nullable": false,
+        "properties": {
+          "perioder": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.api.intern.Periode"
+            },
+            "nullable": false,
+            "type": "array"
+          }
+        },
+        "required": [
+          "perioder"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.PersonEksistererIAAPArena": {
+        "nullable": false,
+        "properties": {
+          "eksisterer": {
+            "nullable": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "eksisterer"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.Reduksjon": {
+        "nullable": false,
+        "properties": {
+          "annenReduksjon": {
+            "format": "float",
+            "nullable": false,
+            "type": "number"
+          },
+          "timerArbeidet": {
+            "format": "double",
+            "nullable": false,
+            "type": "number"
+          }
+        },
+        "required": [
+          "annenReduksjon",
+          "timerArbeidet"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.SakStatus": {
+        "nullable": false,
+        "properties": {
+          "kilde": {
+            "enum": [
+              "ARENA",
+              "KELVIN"
+            ],
+            "nullable": false,
+            "type": "string"
+          },
+          "periode": {
+            "$ref": "#/components/schemas/no.nav.aap.api.intern.Periode"
+          },
+          "sakId": {
+            "nullable": false,
+            "type": "string"
+          },
+          "statusKode": {
+            "enum": [
+              "AVSLU",
+              "FORDE",
+              "GODKJ",
+              "INNST",
+              "IVERK",
+              "KONT",
+              "MOTAT",
+              "OPPRE",
+              "REGIS",
+              "UKJENT",
+              "OPPRETTET",
+              "UTREDES",
+              "LØPENDE",
+              "AVSLUTTET"
+            ],
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "kilde",
+          "periode",
+          "sakId",
+          "statusKode"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.TimerPaaDag": {
+        "nullable": false,
+        "properties": {
+          "dag": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "timerArbeidet": {
+            "nullable": false,
+            "type": "number"
+          }
+        },
+        "required": [
+          "dag",
+          "timerArbeidet"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.UtbetalingMedMer": {
+        "nullable": false,
+        "properties": {
+          "barnetilegg": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "barnetillegg": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "belop": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "dagsats": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "periode": {
+            "$ref": "#/components/schemas/no.nav.aap.api.intern.Periode"
+          },
+          "reduksjon": {
+            "$ref": "#/components/schemas/no.nav.aap.api.intern.Reduksjon"
+          },
+          "utbetalingsgrad": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "barnetilegg",
+          "barnetillegg",
+          "belop",
+          "dagsats",
+          "periode"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.Vedtak": {
+        "nullable": false,
+        "properties": {
+          "barnMedStonad": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "barnetillegg": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "beregningsgrunnlag": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "dagsats": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "dagsatsEtterUføreReduksjon": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "kildesystem": {
+            "enum": [
+              "ARENA",
+              "KELVIN"
+            ],
+            "nullable": false,
+            "type": "string"
+          },
+          "opphorsAarsak": {
+            "nullable": true,
+            "type": "string"
+          },
+          "periode": {
+            "$ref": "#/components/schemas/no.nav.aap.api.intern.Periode"
+          },
+          "rettighetsType": {
+            "nullable": false,
+            "type": "string"
+          },
+          "saksnummer": {
+            "nullable": false,
+            "type": "string"
+          },
+          "samordningsId": {
+            "nullable": true,
+            "type": "string"
+          },
+          "status": {
+            "nullable": false,
+            "type": "string"
+          },
+          "utbetaling": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.api.intern.UtbetalingMedMer"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "vedtakId": {
+            "nullable": false,
+            "type": "string"
+          },
+          "vedtaksTypeKode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "vedtaksTypeNavn": {
+            "nullable": true,
+            "type": "string"
+          },
+          "vedtaksdato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "barnMedStonad",
+          "barnetillegg",
+          "beregningsgrunnlag",
+          "dagsats",
+          "kildesystem",
+          "periode",
+          "rettighetsType",
+          "saksnummer",
+          "status",
+          "utbetaling",
+          "vedtakId",
+          "vedtaksdato"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.api.intern.VedtakUtenUtbetaling": {
+        "nullable": false,
+        "properties": {
+          "barnMedStonad": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "barnetillegg": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "beregningsgrunnlag": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "dagsats": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "dagsatsEtterUføreReduksjon": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "kildesystem": {
+            "nullable": false,
+            "type": "string"
+          },
+          "opphorsAarsak": {
+            "nullable": true,
+            "type": "string"
+          },
+          "periode": {
+            "$ref": "#/components/schemas/no.nav.aap.api.intern.Periode"
+          },
+          "rettighetsType": {
+            "nullable": false,
+            "type": "string"
+          },
+          "saksnummer": {
+            "nullable": false,
+            "type": "string"
+          },
+          "samordningsId": {
+            "nullable": true,
+            "type": "string"
+          },
+          "status": {
+            "nullable": false,
+            "type": "string"
+          },
+          "vedtakId": {
+            "nullable": false,
+            "type": "string"
+          },
+          "vedtaksTypeKode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "vedtaksTypeNavn": {
+            "nullable": true,
+            "type": "string"
+          },
+          "vedtaksdato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "barnMedStonad",
+          "barnetillegg",
+          "beregningsgrunnlag",
+          "dagsats",
+          "kildesystem",
+          "periode",
+          "rettighetsType",
+          "saksnummer",
+          "status",
+          "vedtakId",
+          "vedtaksdato"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.arenaoppslag.kontrakt.intern.InternVedtakRequest": {
+        "nullable": false,
+        "properties": {
+          "fraOgMedDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "personidentifikator": {
+            "nullable": false,
+            "type": "string"
+          },
+          "tilOgMedDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "fraOgMedDato",
+          "personidentifikator",
+          "tilOgMedDato"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.behandlingsflyt.kontrakt.datadeling.ArbeidIPeriodeDTO": {
+        "nullable": false,
+        "properties": {
+          "periodeFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "periodeTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "timerArbeidet": {
+            "nullable": false,
+            "type": "number"
+          }
+        },
+        "required": [
+          "periodeFom",
+          "periodeTom",
+          "timerArbeidet"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.behandlingsflyt.kontrakt.datadeling.DatadelingDTO": {
+        "nullable": false,
+        "properties": {
+          "behandlingStatus": {
+            "enum": [
+              "OPPRETTET",
+              "UTREDES",
+              "IVERKSETTES",
+              "AVSLUTTET"
+            ],
+            "nullable": false,
+            "type": "string"
+          },
+          "behandlingsId": {
+            "nullable": false,
+            "type": "string"
+          },
+          "behandlingsReferanse": {
+            "nullable": false,
+            "type": "string"
+          },
+          "beregningsgrunnlag": {
+            "nullable": false,
+            "type": "number"
+          },
+          "rettighetsPeriodeFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "rettighetsPeriodeTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "rettighetsTypeTidsLinje": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.behandlingsflyt.kontrakt.datadeling.RettighetsTypePeriode"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "sak": {
+            "$ref": "#/components/schemas/no.nav.aap.behandlingsflyt.kontrakt.datadeling.SakDTO"
+          },
+          "samId": {
+            "nullable": true,
+            "type": "string"
+          },
+          "tilkjent": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.behandlingsflyt.kontrakt.datadeling.TilkjentDTO"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "underveisperiode": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.behandlingsflyt.kontrakt.datadeling.UnderveisDTO"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "vedtakId": {
+            "format": "int64",
+            "nullable": false,
+            "type": "integer"
+          },
+          "vedtaksDato": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "behandlingStatus",
+          "behandlingsId",
+          "behandlingsReferanse",
+          "beregningsgrunnlag",
+          "rettighetsPeriodeFom",
+          "rettighetsPeriodeTom",
+          "rettighetsTypeTidsLinje",
+          "sak",
+          "tilkjent",
+          "underveisperiode",
+          "vedtakId",
+          "vedtaksDato"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.behandlingsflyt.kontrakt.datadeling.DetaljertMeldekortDTO": {
+        "nullable": false,
+        "properties": {
+          "avslagsårsakKode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "behandlingId": {
+            "format": "int64",
+            "nullable": false,
+            "type": "integer"
+          },
+          "journalpostId": {
+            "nullable": false,
+            "type": "string"
+          },
+          "meldeperiodeFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "meldeperiodeTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "meldepliktStatusKode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "mottattTidspunkt": {
+            "example": "2025-04-01T12:30:00",
+            "format": "date-time",
+            "nullable": false,
+            "type": "string"
+          },
+          "personIdent": {
+            "nullable": false,
+            "type": "string"
+          },
+          "rettighetsTypeKode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "saksnummer": {
+            "$ref": "#/components/schemas/no.nav.aap.behandlingsflyt.kontrakt.sak.Saksnummer"
+          },
+          "timerArbeidPerPeriode": {
+            "items": {
+              "$ref": "#/components/schemas/no.nav.aap.behandlingsflyt.kontrakt.datadeling.ArbeidIPeriodeDTO"
+            },
+            "nullable": false,
+            "type": "array"
+          }
+        },
+        "required": [
+          "behandlingId",
+          "journalpostId",
+          "meldeperiodeFom",
+          "meldeperiodeTom",
+          "mottattTidspunkt",
+          "personIdent",
+          "saksnummer",
+          "timerArbeidPerPeriode"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.behandlingsflyt.kontrakt.datadeling.RettighetsTypePeriode": {
+        "nullable": false,
+        "properties": {
+          "fom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "tom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "verdi": {
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "fom",
+          "tom",
+          "verdi"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.behandlingsflyt.kontrakt.datadeling.SakDTO": {
+        "nullable": false,
+        "properties": {
+          "fnr": {
+            "items": {
+              "nullable": false,
+              "type": "string"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "opprettetTidspunkt": {
+            "example": "2025-04-01T12:30:00",
+            "format": "date-time",
+            "nullable": false,
+            "type": "string"
+          },
+          "saksnummer": {
+            "nullable": false,
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "OPPRETTET",
+              "UTREDES",
+              "LØPENDE",
+              "AVSLUTTET"
+            ],
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "fnr",
+          "opprettetTidspunkt",
+          "saksnummer",
+          "status"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.behandlingsflyt.kontrakt.datadeling.TilkjentDTO": {
+        "nullable": false,
+        "properties": {
+          "antallBarn": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "barnetillegg": {
+            "nullable": false,
+            "type": "number"
+          },
+          "barnetilleggsats": {
+            "nullable": false,
+            "type": "number"
+          },
+          "dagsats": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "gradering": {
+            "format": "int32",
+            "nullable": false,
+            "type": "integer"
+          },
+          "grunnbeløp": {
+            "nullable": false,
+            "type": "number"
+          },
+          "grunnlag": {
+            "nullable": false,
+            "type": "number"
+          },
+          "grunnlagsfaktor": {
+            "nullable": false,
+            "type": "number"
+          },
+          "samordningUføregradering": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "tilkjentFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "tilkjentTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "antallBarn",
+          "barnetillegg",
+          "barnetilleggsats",
+          "dagsats",
+          "gradering",
+          "grunnbeløp",
+          "grunnlag",
+          "grunnlagsfaktor",
+          "tilkjentFom",
+          "tilkjentTom"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.behandlingsflyt.kontrakt.datadeling.UnderveisDTO": {
+        "nullable": false,
+        "properties": {
+          "avslagsårsak": {
+            "nullable": true,
+            "type": "string"
+          },
+          "meldeperiodeFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "meldeperiodeTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "rettighetsType": {
+            "nullable": true,
+            "type": "string"
+          },
+          "underveisFom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "underveisTom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "utfall": {
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "meldeperiodeFom",
+          "meldeperiodeTom",
+          "underveisFom",
+          "underveisTom",
+          "utfall"
+        ],
+        "type": "object"
+      },
+      "no.nav.aap.behandlingsflyt.kontrakt.sak.Saksnummer": {
+        "nullable": false,
+        "type": "object"
+      },
+      "no.nav.aap.komponenter.type.Periode": {
+        "nullable": false,
+        "properties": {
+          "fom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          },
+          "tom": {
+            "example": "2025-04-01",
+            "format": "date",
+            "nullable": false,
+            "type": "string"
+          }
+        },
+        "required": [
+          "fom",
+          "tom"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "jwtAuth": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "name": "Team AAP",
+      "url": "https://github.com/navikt/aap-api-intern"
+    },
+    "description": "aap-intern-api tilbyr et internt API for henting av aap-data\nBruker Azure til autentisering",
+    "title": "aap-api-intern",
+    "version": "0.0.1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/perioder": {
+      "post": {
+        "description": "Henter perioder med vedtak for en person innen gitte datointervall.",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/no.nav.aap.arenaoppslag.kontrakt.intern.InternVedtakRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/no.nav.aap.api.intern.PerioderResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Perioder"
+        ]
+      }
+    },
+    "/perioder/aktivitetfase": {
+      "post": {
+        "description": "Henter perioder med vedtak fra Arena (aktivitetsfase) for en person innen gitte datointervall.",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/no.nav.aap.arenaoppslag.kontrakt.intern.InternVedtakRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/no.nav.aap.api.intern.PerioderInkludert11_17Response"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Perioder"
+        ]
+      }
+    },
+    "/perioder/meldekort": {
+      "post": {
+        "description": "Henter meldekort perioder for en person innen gitte datointerval",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/no.nav.aap.arenaoppslag.kontrakt.intern.InternVedtakRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/no.nav.aap.komponenter.type.Periode"
+                  },
+                  "nullable": false,
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Perioder"
+        ]
+      }
+    },
+    "/kelvin/meldekort-detaljer": {
+      "post": {
+        "description": "Henter detaljerte meldekort for en gitt person og evt. begrenset til en gitt periode",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/no.nav.aap.api.intern.MeldekortDetaljerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/no.nav.aap.api.intern.MeldekortDetaljerResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Meldekort"
+        ]
+      }
+    },
+    "/sakerByFnr": {
+      "post": {
+        "description": "Henter saker for en person",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api.SakerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/no.nav.aap.api.intern.SakStatus"
+                  },
+                  "nullable": false,
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Saker"
+        ]
+      }
+    },
+    "/arena/person/aap/eksisterer": {
+      "post": {
+        "description": "Sjekker om en person eksisterer i AAP-arena",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api.SakerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/no.nav.aap.api.intern.PersonEksistererIAAPArena"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Saker"
+        ]
+      }
+    },
+    "/kelvin/sakerByFnr": {
+      "post": {
+        "description": "Henter saker for en person",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api.SakerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/no.nav.aap.api.intern.SakStatus"
+                  },
+                  "nullable": false,
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Saker"
+        ]
+      }
+    },
+    "/maksimumUtenUtbetaling": {
+      "post": {
+        "description": "Henter maksimumsløsning uten utbetalinger for en person innen gitte datointervall.\ndagsatsEtterUføreReduksjon er kun tilgjengelig fra Kelvin.",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api.InternVedtakRequestApiIntern"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/no.nav.aap.api.intern.Medium"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Maksimum"
+        ]
+      }
+    },
+    "/maksimum": {
+      "post": {
+        "description": "Henter maksimumsløsning for en person innen gitte datointervall. Behandlinger før 18/8 inneholder ikke beregningsgrunnlag.\ndagsatsEtterUføreReduksjon er kun tilgjengelig fra Kelvin",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api.InternVedtakRequestApiIntern"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/no.nav.aap.api.intern.Maksimum"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Maksimum"
+        ]
+      }
+    },
+    "/kelvin/maksimumUtenUtbetaling": {
+      "post": {
+        "description": "Henter maksimumsløsning uten utbetalinger fra kelvin for en person innen gitte datointerval. Behandlinger før 18/8 inneholder ikke beregningsgrunnlag.",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/no.nav.aap.arenaoppslag.kontrakt.intern.InternVedtakRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/no.nav.aap.api.intern.Medium"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Maksimum"
+        ]
+      }
+    },
+    "/kelvin/behandling": {
+      "post": {
+        "deprecated": true,
+        "description": "Henter ut behandlingsdata for en person innen gitte datointerval uten behandling av datasett",
+        "parameters": [
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "callId",
+            "explode": true,
+            "in": "header",
+            "name": "nav-callid",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": false,
+            "deprecated": false,
+            "description": "correlation id",
+            "explode": true,
+            "in": "header",
+            "name": "x-correlation-id",
+            "required": false,
+            "schema": {
+              "nullable": false,
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/no.nav.aap.arenaoppslag.kontrakt.intern.InternVedtakRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/api.postgres.DatadelingDTO"
+                  },
+                  "nullable": false,
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "tags": [
+          "Maksimum"
+        ]
+      }
+    },
+    "/api/insert/meldeperioder": {
+      "post": {
+        "description": "Legg inn meldekortperioder for en person. Endepunktet kan kun brukes av behandlingsflyt",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api.kelvin.MeldekortPerioderDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "summary": "Legg inn meldekortperioder",
+        "tags": [
+          "Tilgangkontrollert"
+        ]
+      }
+    },
+    "/api/insert/sakStatus": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api.kelvin.SakStatusKelvin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "summary": "Legg inn sakstatus for en person. Endepunktet kan kun brukes av behandlingsflyt",
+        "tags": [
+          "Tilgangkontrollert"
+        ]
+      }
+    },
+    "/api/insert/vedtak": {
+      "post": {
+        "description": "Legg inn sak, behandling, og vedtaksdata for en person. Endepunktet kan kun brukes av behandlingsflyt",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/no.nav.aap.behandlingsflyt.kontrakt.datadeling.DatadelingDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "summary": "Legg inn sak, behandling, og vedtaksdata",
+        "tags": [
+          "Tilgangkontrollert"
+        ]
+      }
+    },
+    "/api/insert/meldekort-detaljer": {
+      "post": {
+        "description": "Legg inn meldekort-liste for en person. Endepunktet kan kun brukes av behandlingsflyt",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/no.nav.aap.behandlingsflyt.kontrakt.datadeling.DetaljertMeldekortDTO"
+                },
+                "nullable": false,
+                "type": "array"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": [
+              "BEHANDLINGSFLYT"
+            ]
+          }
+        ],
+        "summary": "Legg inn detaljerte meldekort",
+        "tags": [
+          "Tilgangkontrollert"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "description": "For å hente perioder med AAP",
+      "name": "Perioder"
+    },
+    {
+      "description": "For å hente AAP-meldekort",
+      "name": "Meldekort"
+    },
+    {
+      "description": "For å hente AAP-saker",
+      "name": "Saker"
+    },
+    {
+      "description": "For å hente maksimumsløsning",
+      "name": "Maksimum"
+    },
+    {
+      "description": "Dette endepunktet er tilgangkontrollert.",
+      "name": "Tilgangkontrollert"
+    }
+  ]
+}
