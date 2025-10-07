@@ -10,7 +10,7 @@ import org.springframework.cache.annotation.Cacheable
 import java.time.LocalDate
 
 interface AapApi {
-    fun hentArbeidsavklaringspengerVedtak(
+    fun hentArbeidsavklaringspengerSistePeriodePerVedtak(
         fnr: String,
         tilOgMedDato: String?,
         fraOgMedDato: String?,
@@ -43,10 +43,8 @@ open class AapApiImpl(
             .orEmpty()
     }
 
-    // Retunerer en liste av vedtak uten utbetaling
-    // Vedtak med samme vedtakId er slått sammen til ett vedtak
     @Cacheable
-    override fun hentArbeidsavklaringspengerVedtak(
+    override fun hentArbeidsavklaringspengerSistePeriodePerVedtak(
         fnr: String,
         tilOgMedDato: String?,
         fraOgMedDato: String?,

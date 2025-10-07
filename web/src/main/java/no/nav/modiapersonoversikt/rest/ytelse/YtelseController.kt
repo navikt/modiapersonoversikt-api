@@ -80,7 +80,7 @@ class YtelseController
 
                     val arbeidsavklaringspenger =
                         aapApi
-                            .hentArbeidsavklaringspengerVedtak(
+                            .hentArbeidsavklaringspengerSistePeriodePerVedtak(
                                 fnrRequest.fnr,
                                 fnrRequest.tom,
                                 fnrRequest.fom,
@@ -160,7 +160,7 @@ class YtelseController
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    aapApi.hentArbeidsavklaringspengerVedtak(
+                    aapApi.hentArbeidsavklaringspengerSistePeriodePerVedtak(
                         fnrRequest.fnr,
                         fnrRequest.tom,
                         fnrRequest.fom,
