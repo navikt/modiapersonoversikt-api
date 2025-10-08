@@ -14,3 +14,10 @@ target
 .DS_Store
 node_modules/
 web/src/test/resources/.vault.properties
+
+
+# misc
+.*.sw?
+*.vim
+TAGS
+tags
