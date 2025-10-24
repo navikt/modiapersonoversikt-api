@@ -24,8 +24,8 @@ open class AzureADServiceImpl(
     private val msGraphClient: MsGraphClient,
 ) : AzureADService {
     private val log = LoggerFactory.getLogger(AzureADServiceImpl::class.java)
-    private val TEMA_ROLLE_PREFIX = "0000-GA-TEMA_"
-    private val ENHET_ROLLE_PREFIX = "0000-GA-ENHET_"
+    private val temaRolePrefix = "0000-GA-TEMA_"
+    private val enhetRolePrefix = "0000-GA-ENHET_"
 
     override fun hentRollerForVeileder(ident: NavIdent): List<String> {
         val token = tokenClient.exchangeOnBehalfOfToken(AuthContextUtils.requireToken())
@@ -51,7 +51,7 @@ open class AzureADServiceImpl(
                 log.warn("Bruker $ident har ingen AzureAD group for enhet")
             }
             response.map {
-                requireNotNull(EnhetId(it.displayName.removePrefix(ENHET_ROLLE_PREFIX)))
+                requireNotNull(EnhetId(it.displayName.removePrefix(enhetRolePrefix)))
             }
         } catch (e: Exception) {
             log.error("Kall til azureAD feilet", ident, e)
@@ -67,7 +67,7 @@ open class AzureADServiceImpl(
                 log.warn("Bruker $ident har ingen AzureAD group fir tema")
             }
             response.map {
-                requireNotNull(it.displayName.removePrefix(TEMA_ROLLE_PREFIX))
+                requireNotNull(it.displayName.removePrefix(temaRolePrefix))
             }
         } catch (e: Exception) {
             log.error("Kall til azureAD feilet", ident, e)
