@@ -3,8 +3,6 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.common.client.axsys.AxsysClient
-import no.nav.common.client.axsys.AxsysEnhet
 import no.nav.common.client.nom.NomClient
 import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.EnhetId
@@ -33,9 +31,9 @@ internal class TilgangTilBrukerPolicyTest {
     private val pdlPip = mockk<PdlPipApi>()
     private val norg = mockk<NorgApi>()
     private val nom = mockk<NomClient>()
-    private val axsys = mockk<AxsysClient>()
+    private val norgApi = mockk<NorgApi>()
     private val skjermedePersoner = mockk<SkjermedePersonerApi>()
-    private val ansattService = AnsattServiceImpl(axsys, nom, azureADService)
+    private val ansattService = AnsattServiceImpl(norgApi, nom, azureADService)
 
     private val ident = NavIdent("Z999999")
     private val fnr = Fnr("10108000398")
@@ -238,7 +236,7 @@ internal class TilgangTilBrukerPolicyTest {
     }
 
     private fun gittAtVeilederHarTilgangTilEnhet(enhetId: EnhetId) {
-        every { axsys.hentTilganger(ident) } returns listOf(AxsysEnhet().setEnhetId(enhetId))
+        every { azureADService.hentEnheterForVeileder(ident) } returns listOf(enhetId)
     }
 
     private fun gittFnrAktorIdMapping(vararg fnraktoridMapping: Pair<Fnr, AktorId>) {

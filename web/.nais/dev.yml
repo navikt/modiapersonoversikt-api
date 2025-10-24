@@ -61,7 +61,6 @@ spec:
         - host: pdl-api.dev-fss-pub.nais.io
         - host: pdl-pip-api.dev-fss-pub.nais.io
         - host: oppgave.dev-fss-pub.nais.io
-        - host: axsys.dev-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: spokelse.dev-gcp-pub.nais.io
@@ -180,10 +179,6 @@ spec:
       value: "Z990351,Z994123,Z994404,Z994673"
     - name: CXF_SECURE_LOG
       value: "enabled"
-    - name: AXSYS_URL
-      value: "https://axsys.dev-fss-pub.nais.io"
-    - name: AXSYS_SCOPE
-      value: "dev-fss:org:axsys"
     - name: NOM_URL
       value: "http://nom-api.nom"
     - name: NOM_SCOPE

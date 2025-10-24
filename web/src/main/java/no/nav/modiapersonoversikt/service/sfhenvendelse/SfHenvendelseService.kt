@@ -131,10 +131,7 @@ class SfHenvendelseServiceImpl(
                 .mapNotNull { it.geografiskOmraade }
                 .plus(enhet)
         val tematilganger =
-            ansattService.hentAnsattFagomrader(
-                AuthContextUtils.requireIdent(),
-                enhet,
-            )
+            ansattService.hentAnsattFagomrader(AuthContextUtils.requireIdent())
 
         val aktorId = bruker.aktorId()
         val callId = getCallId()
