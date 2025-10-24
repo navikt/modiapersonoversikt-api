@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers
 
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.CommonAttributes
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
@@ -18,6 +17,5 @@ class VeiledersTemaPip(
     override fun provide(ctx: EvaluationContext): Set<String> =
         ansattService.hentAnsattFagomrader(
             ident = ctx.getValue(NavIdentPip).get(),
-            enhet = ctx.getValue(CommonAttributes.ENHET).get(),
         )
 }

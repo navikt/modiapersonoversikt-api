@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.service.ansattservice
 
-import no.nav.common.client.axsys.AxsysClient
 import no.nav.common.client.nom.NomClient
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Veileder
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
@@ -19,16 +19,15 @@ interface AnsattService {
 
     fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet>
 
+    fun hentEnhetIds(ident: NavIdent): List<EnhetId>
+
     fun hentVeileder(ident: NavIdent): Veileder
 
     fun hentVeiledere(identer: List<NavIdent>): Map<NavIdent, Veileder>
 
     fun hentVeilederRoller(ident: NavIdent): RolleListe
 
-    fun hentAnsattFagomrader(
-        ident: String,
-        enhet: String,
-    ): Set<String>
+    fun hentAnsattFagomrader(ident: String): Set<String>
 
     fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt>
 }
@@ -36,7 +35,7 @@ interface AnsattService {
 class AnsattServiceImpl
     @Autowired
     constructor(
-        private val axsys: AxsysClient,
+        private val norgApi: NorgApi,
         private val nomClient: NomClient,
         private val azureADService: AzureADService,
     ) : AnsattService {
@@ -48,9 +47,16 @@ class AnsattServiceImpl
                 .map { hentEnhetsliste(NavIdent(it)) }
                 .orElse(emptyList())
 
-        override fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet> =
-            (axsys.hentTilganger(ident) ?: emptyList())
-                .map { AnsattEnhet(it.enhetId.get(), it.navn ?: "UKJENT") }
+        override fun hentEnhetsliste(ident: NavIdent): List<AnsattEnhet> {
+            val enheter = azureADService.hentEnheterForVeileder(ident)
+            return enheter
+                .map {
+                    val enhet = norgApi.hentEnheter().get(it)
+                    AnsattEnhet(it.get(), enhet?.enhetNavn ?: "UKJENT")
+                }
+        }
+
+        override fun hentEnhetIds(ident: NavIdent): List<EnhetId> = azureADService.hentEnheterForVeileder(ident)
 
         override fun hentVeileder(ident: NavIdent): Veileder =
             hentVeiledere(listOf(ident))
@@ -69,36 +75,13 @@ class AnsattServiceImpl
                     )
                 }
 
-        override fun hentVeilederRoller(ident: NavIdent): RolleListe = RolleListe(azureADService.hentRollerForVeileder(ident))
+        override fun hentVeilederRoller(ident: NavIdent): RolleListe = RolleListe(azureADService.hentRollerForVeileder(ident).toSet())
 
-        override fun hentAnsattFagomrader(
-            ident: String,
-            enhet: String,
-        ): Set<String> =
-            axsys
-                .runCatching {
-                    hentTilganger(NavIdent(ident))
-                        .find {
-                            it.enhetId.get() == enhet
-                        }?.temaer
-                        ?.toSet()
-                        ?: emptySet()
-                }.getOrElse {
-                    log.error("Klarte ikke å hente ansatt fagområder for $ident $enhet", it)
-                    emptySet()
-                }
+        override fun hentAnsattFagomrader(ident: String): Set<String> = azureADService.hentTemaerForVeileder(NavIdent(ident)).toSet()
 
         override fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt> =
             try {
-                val hentAnsatte = axsys.hentAnsatte(EnhetId(enhet.enhetId))
-                val ansatteNavn = nomClient.finnNavn(hentAnsatte)
-                ansatteNavn.map {
-                    Ansatt(
-                        it.fornavn,
-                        it.etternavn,
-                        it.navIdent.get(),
-                    )
-                }
+                azureADService.hentAnsatteForEnhet(EnhetId(enhet.enhetId))
             } catch (e: Exception) {
                 log.error("Får ikke hentet ansatte for enhet", e)
                 emptyList()

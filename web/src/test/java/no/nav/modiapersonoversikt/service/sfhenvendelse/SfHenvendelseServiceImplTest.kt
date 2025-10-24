@@ -59,7 +59,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal fjerne innhold om man ikke har tematilgang`() {
-        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
+        every { ansattService.hentAnsattFagomrader(any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns
             listOf(
                 EnhetGeografiskTilknyttning(
@@ -83,7 +83,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal fjerne lage dummy innhold om henvendelse er kassert`() {
-        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
+        every { ansattService.hentAnsattFagomrader(any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns
             listOf(
                 EnhetGeografiskTilknyttning(
@@ -103,7 +103,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal fjerne henvendelse om den ikke har noen meldinger`() {
-        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
+        every { ansattService.hentAnsattFagomrader(any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns
             listOf(
                 EnhetGeografiskTilknyttning(
@@ -129,7 +129,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal sortere meldinger kronologisk`() {
-        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
+        every { ansattService.hentAnsattFagomrader(any()) } returns setOf("DAG", "OPP")
         every { norgApi.hentGeografiskTilknyttning(any()) } returns
             listOf(
                 EnhetGeografiskTilknyttning(
