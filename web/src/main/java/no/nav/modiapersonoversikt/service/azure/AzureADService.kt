@@ -64,7 +64,7 @@ open class AzureADServiceImpl(
         return try {
             val response = msGraphClient.hentAdGroupsForUser(token, ident.get(), AdGroupFilter.TEMA)
             if (response.isEmpty()) {
-                log.warn("Bruker $ident har ingen AzureAD group fir tema")
+                log.warn("Bruker $ident har ingen AzureAD group for tema")
             }
             response.map {
                 requireNotNull(it.displayName.removePrefix(temaRolePrefix))
