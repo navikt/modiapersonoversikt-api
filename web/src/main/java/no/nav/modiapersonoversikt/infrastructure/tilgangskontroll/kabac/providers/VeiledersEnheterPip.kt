@@ -17,6 +17,6 @@ class VeiledersEnheterPip(
 
     override fun provide(ctx: EvaluationContext): List<EnhetId> {
         val ident = ctx.getValue(NavIdentPip)
-        return ansattService.hentEnhetsliste(ident).map { EnhetId(it.enhetId) }
+        return ansattService.hentEnhetIds(ident)
     }
 }

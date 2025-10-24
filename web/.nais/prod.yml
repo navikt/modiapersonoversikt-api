@@ -63,7 +63,6 @@ spec:
         - host: pdl-api.prod-fss-pub.nais.io
         - host: pdl-pip-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
-        - host: axsys.prod-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: pensjon-pen.prod-fss-pub.nais.io
@@ -182,10 +181,6 @@ spec:
       value: "U143410"
     - name: CXF_SECURE_LOG
       value: "disabled"
-    - name: AXSYS_URL
-      value: "https://axsys.prod-fss-pub.nais.io"
-    - name: AXSYS_SCOPE
-      value: "prod-fss:org:axsys"
     - name: NOM_URL
       value: "http://nom-api.nom"
     - name: NOM_SCOPE

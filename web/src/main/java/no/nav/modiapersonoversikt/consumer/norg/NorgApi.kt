@@ -45,6 +45,8 @@ interface NorgApi : Pingable {
         enhetStatuser: List<EnhetStatus> = IKKE_NEDLAGT,
     ): List<Enhet>
 
+    fun hentEnheter(): Map<EnhetId, Enhet>
+
     fun finnNavKontor(
         geografiskTilknytning: String,
         diskresjonskode: NorgDomain.DiskresjonsKode?,
@@ -132,6 +134,8 @@ class NorgApiImpl(
             .filter { enhetStatuser.contains(it.enhet.status) }
             .map { it.enhet }
     }
+
+    override fun hentEnheter(): Map<EnhetId, Enhet> = cache.values.map { it.enhet }.associateBy { EnhetId(it.enhetId) }
 
     override fun finnNavKontor(
         geografiskTilknytning: String,
@@ -225,23 +229,25 @@ class NorgApiImpl(
     private fun hentEnheterOgKontaktinformasjon() {
         runBlocking {
             retry.run {
-                cache =
-                    enhetKontaktInfoApi
-                        .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
-                            consumerId = AppConstants.APP_NAME,
-                        )?.mapNotNull {
-                            try {
-                                toInternalDomain(it)
-                            } catch (e: Exception) {
-                                log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
-                                null
-                            }
-                        }?.associateBy { EnhetId(it.enhet.enhetId) }
-                        .orEmpty()
+                cache = hentAlleEnheterInkludertKontaktinformasjon()
                 lastUpdateOfCache = LocalDateTime.now(clock)
             }
         }
     }
+
+    private fun hentAlleEnheterInkludertKontaktinformasjon() =
+        enhetKontaktInfoApi
+            .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
+                consumerId = AppConstants.APP_NAME,
+            )?.mapNotNull {
+                try {
+                    toInternalDomain(it)
+                } catch (e: Exception) {
+                    log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
+                    null
+                }
+            }?.associateBy { EnhetId(it.enhet.enhetId) }
+            .orEmpty()
 
     private fun <KEY, VALUE> createNorgCache() =
         CacheUtils.createCache<KEY, VALUE>(

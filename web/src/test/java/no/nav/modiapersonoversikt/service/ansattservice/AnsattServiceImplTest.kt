@@ -2,13 +2,15 @@ package no.nav.modiapersonoversikt.service.ansattservice
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.common.client.axsys.AxsysClient
-import no.nav.common.client.axsys.AxsysEnhet
 import no.nav.common.client.nom.NomClient
 import no.nav.common.client.nom.VeilederNavn
 import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.fn.UnsafeSupplier
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetStatus
+import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
 import no.nav.modiapersonoversikt.service.ansattservice.domain.AnsattEnhet
 import no.nav.modiapersonoversikt.service.azure.AzureADService
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
@@ -18,9 +20,9 @@ import org.junit.jupiter.api.extension.RegisterExtension
 
 internal class AnsattServiceImplTest {
     private val nomClient: NomClient = mockk()
-    private val axsys: AxsysClient = mockk()
+    private val norgApi: NorgApi = mockk()
     private val azureADService: AzureADService = mockk()
-    private val ansattServiceImpl: AnsattServiceImpl = AnsattServiceImpl(axsys, nomClient, azureADService)
+    private val ansattServiceImpl: AnsattServiceImpl = AnsattServiceImpl(norgApi, nomClient, azureADService)
 
     @JvmField
     @RegisterExtension
@@ -28,11 +30,13 @@ internal class AnsattServiceImplTest {
 
     @Test
     fun `skal hente alle ansatte for en enhet`() {
-        every { axsys.hentTilganger(NavIdent("Z994404")) } returns
-            listOf(
-                lagNavEnhet("111", "testEnhet"),
-                lagNavEnhet("222", "testEnhet2"),
-                lagNavEnhet("333", "testEnhet3"),
+        every { azureADService.hentEnheterForVeileder(NavIdent("Z994404")) } returns
+            listOf(EnhetId("111"), EnhetId("222"), EnhetId("333"))
+        every { norgApi.hentEnheter() } returns
+            mapOf(
+                EnhetId("111") to NorgDomain.Enhet("111", "testEnhet", EnhetStatus.AKTIV, false),
+                EnhetId("222") to NorgDomain.Enhet("222", "testEnhet2", EnhetStatus.AKTIV, false),
+                EnhetId("333") to NorgDomain.Enhet("333", "testEnhet3", EnhetStatus.AKTIV, false),
             )
 
         val enheter: List<AnsattEnhet> =
@@ -57,28 +61,22 @@ internal class AnsattServiceImplTest {
 
     @Test
     fun `skal kunne hente liste over ansatt sine fagområder`() {
-        every { axsys.hentTilganger(NavIdent("Z994404")) } returns
-            listOf(
-                lagNavEnhet("111", "enhet123", listOf("AAP", "DAG")),
-                lagNavEnhet("222", "testEnhet2", listOf("SYK", "SYM")),
-            )
+        every { azureADService.hentTemaerForVeileder(NavIdent("Z994404")) } returns
+            listOf("AAP", "DAG")
 
-        val fagomraader = ansattServiceImpl.hentAnsattFagomrader("Z994404", "111")
+        val fagomraader = ansattServiceImpl.hentAnsattFagomrader("Z994404")
 
         snapshot.assertMatches(fagomraader)
     }
 
     @Test
     fun `skal kunne hente ansatte for enhet`() {
-        val listeMedNavIder = listOf(NavIdent("111"), NavIdent("222"), NavIdent("333"), NavIdent("444"))
-
-        every { axsys.hentAnsatte(EnhetId("123")) } returns listeMedNavIder
-        every { nomClient.finnNavn(listeMedNavIder) } returns
+        every { azureADService.hentAnsatteForEnhet(EnhetId("123")) } returns
             listOf(
-                lagNavAnsatt("Kalle", "Karlsson", "111"),
-                lagNavAnsatt("Klara", "Svensson", "222"),
-                lagNavAnsatt("Knut", "Larsson", "333"),
-                lagNavAnsatt("Kristina", "Johansson", "444"),
+                Ansatt("Kalle", "Karlsson", "111"),
+                Ansatt("Klara", "Svensson", "222"),
+                Ansatt("Knut", "Larsson", "333"),
+                Ansatt("Kristina", "Johansson", "444"),
             )
 
         val ansatteListe =
@@ -102,14 +100,4 @@ internal class AnsattServiceImplTest {
             .setEtternavn(etternavn)
             .setNavIdent(NavIdent(id))
             .setVisningsNavn("$fornavn $etternavn")
-
-    private fun lagNavEnhet(
-        enhetsId: String,
-        enhetsNavn: String,
-        temaer: List<String>? = null,
-    ): AxsysEnhet =
-        AxsysEnhet()
-            .setEnhetId(EnhetId(enhetsId))
-            .setNavn(enhetsNavn)
-            .setTemaer(temaer)
 }

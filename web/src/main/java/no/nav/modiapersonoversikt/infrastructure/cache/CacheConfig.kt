@@ -36,7 +36,6 @@ open class CacheConfig {
             cache("utbetalingCache", 1800, 10000)
             cache("pdlCache", 3600, 100000)
             cache("pdlFullmaktCache", 3600, 10000)
-            cache("azureAdCache", 3600, 20000)
             cache("varslingCache", 180, 10000)
         }
 

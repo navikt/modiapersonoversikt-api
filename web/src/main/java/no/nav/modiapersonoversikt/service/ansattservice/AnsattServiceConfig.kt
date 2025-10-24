@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.ansattservice
 
-import no.nav.common.client.axsys.AxsysClient
 import no.nav.common.client.nom.NomClient
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.service.azure.AzureADService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration
 open class AnsattServiceConfig {
     @Bean
     open fun ansattService(
-        axsysClient: AxsysClient,
+        norgApi: NorgApi,
         nomClient: NomClient,
         azureADService: AzureADService,
-    ): AnsattService = AnsattServiceImpl(axsysClient, nomClient, azureADService)
+    ): AnsattService = AnsattServiceImpl(norgApi, nomClient, azureADService)
 }
