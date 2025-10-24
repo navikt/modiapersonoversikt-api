@@ -107,7 +107,7 @@ spec:
     - name: APP_ENVIRONMENT_NAME
       value: "q2"
     - name: MS_GRAPH_URL
-      value: "https://graph.microsoft.com/"
+      value: "https://graph.microsoft.com/v1.0"
     - name: MS_GRAPH_SCOPE
       value: "https://graph.microsoft.com/.default"
     - name: FELLES_KODEVERK_URL
