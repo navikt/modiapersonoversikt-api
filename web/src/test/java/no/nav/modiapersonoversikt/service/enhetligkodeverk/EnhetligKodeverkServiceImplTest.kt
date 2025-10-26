@@ -13,7 +13,6 @@ import no.nav.modiapersonoversikt.utils.MutableClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.*
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 internal class EnhetligKodeverkServiceImplTest {

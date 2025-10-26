@@ -22,7 +22,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class AzureADServiceImplTest {
-
     private lateinit var tokenClient: BoundedOnBehalfOfTokenClient
     private lateinit var msGraphClient: MsGraphClient
     private lateinit var azureADService: AzureADServiceImpl
@@ -46,10 +45,11 @@ class AzureADServiceImplTest {
     fun `skal hente roller for en veileder`() {
         AuthContextUtils.withContext(testSubject) {
             val ident = NavIdent("Z9999")
-            val mockGroups = listOf(
-                createGroupData("0000-GA-TEMA_AAP"),
-                createGroupData("0000-GA-TEMA_OPP")
-            )
+            val mockGroups =
+                listOf(
+                    createGroupData("0000-GA-TEMA_AAP"),
+                    createGroupData("0000-GA-TEMA_OPP"),
+                )
             `when`(msGraphClient.hentAdGroupsForUser(mockToken, ident.get()))
                 .thenReturn(mockGroups)
             val roles = azureADService.hentRollerForVeileder(ident)
@@ -72,16 +72,17 @@ class AzureADServiceImplTest {
     fun `skal hente enheter for en veileder`() {
         AuthContextUtils.withContext(testSubject) {
             val ident = NavIdent("Z9999")
-            val mockGroups = listOf(
-                createGroupData("0000-GA-ENHET_EN1"),
-                createGroupData("0000-GA-ENHET_EN2")
-            )
+            val mockGroups =
+                listOf(
+                    createGroupData("0000-GA-ENHET_EN1"),
+                    createGroupData("0000-GA-ENHET_EN2"),
+                )
             `when`(msGraphClient.hentAdGroupsForUser(mockToken, ident.get(), AdGroupFilter.ENHET))
                 .thenReturn(mockGroups)
             val enheter = azureADService.hentEnheterForVeileder(ident)
             assertEquals(
                 listOf(EnhetId("EN1"), EnhetId("EN2")),
-                enheter
+                enheter,
             )
         }
     }
@@ -90,16 +91,17 @@ class AzureADServiceImplTest {
     fun `skal hente temaer for en veileder`() {
         AuthContextUtils.withContext(testSubject) {
             val ident = NavIdent("VEILEDER123")
-            val mockGroups = listOf(
-                createGroupData("0000-GA-TEMA_T1"),
-                createGroupData("0000-GA-TEMA_T2")
-            )
+            val mockGroups =
+                listOf(
+                    createGroupData("0000-GA-TEMA_T1"),
+                    createGroupData("0000-GA-TEMA_T2"),
+                )
             `when`(msGraphClient.hentAdGroupsForUser(mockToken, ident.get(), AdGroupFilter.TEMA))
                 .thenReturn(mockGroups)
             val temaer = azureADService.hentTemaerForVeileder(ident)
             assertEquals(
                 listOf("T1", "T2"),
-                temaer
+                temaer,
             )
         }
     }
@@ -108,10 +110,11 @@ class AzureADServiceImplTest {
     fun `skal hente ansatte for en enhet`() {
         AuthContextUtils.withContext(testSubject) {
             val enhetId = EnhetId("ENHET123")
-            val mockUsers = listOf(
-                createUserData("John", "Doe", "s12345"),
-                createUserData("Jane", "Smith", "s67890")
-            )
+            val mockUsers =
+                listOf(
+                    createUserData("John", "Doe", "s12345"),
+                    createUserData("Jane", "Smith", "s67890"),
+                )
             `when`(msGraphClient.hentUserDataForGroup(mockToken, enhetId))
                 .thenReturn(mockUsers)
             val ansatte = azureADService.hentAnsatteForEnhet(enhetId)
@@ -119,9 +122,9 @@ class AzureADServiceImplTest {
             assertEquals(
                 listOf(
                     Ansatt("John", "Doe", "s12345"),
-                    Ansatt("Jane", "Smith", "s67890")
+                    Ansatt("Jane", "Smith", "s67890"),
                 ),
-                ansatte
+                ansatte,
             )
         }
     }
@@ -137,11 +140,12 @@ class AzureADServiceImplTest {
         }
     }
 
-    private fun createGroupData(displayName: String) = AdGroupData(AzureObjectId( UUID.randomUUID().toString()), displayName)
+    private fun createGroupData(displayName: String) = AdGroupData(AzureObjectId(UUID.randomUUID().toString()), displayName)
+
     private fun createUserData(
         givenName: String,
         surname: String,
-        accountName: String
+        accountName: String,
     ): UserData {
         val userData = UserData()
         userData.givenName = givenName
