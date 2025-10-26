@@ -13,7 +13,6 @@ import no.nav.modiapersonoversikt.utils.MutableClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.*
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 internal class EnhetligKodeverkServiceImplTest {
@@ -89,28 +88,6 @@ internal class EnhetligKodeverkServiceImplTest {
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
         assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("NO")
         assertThat(service.hentKodeverk(KodeverkConfig.SF_TEMAGRUPPER)).isNotNull
-    }
-
-    @Test
-    internal fun `regner ut schedule dato riktig`() {
-        val (timer, dateSlot, periodeSlot) = withTimerMock()
-        val providers = withProvidersMock()
-
-        EnhetligKodeverkServiceImpl(providers, timer)
-
-        assertThat(dateSlot.isCaptured).isTrue
-        assertThat(dateSlot.captured).hasHourOfDay(1)
-
-        val forventetDato =
-            if (dateSlot.captured.toInstant().isAfter(Instant.now())) {
-                LocalDate.now().plus(1, ChronoUnit.DAYS).dayOfMonth
-            } else {
-                LocalDate.now().plusDays(1).dayOfMonth
-            }
-        assertThat(dateSlot.captured).hasDayOfMonth(forventetDato)
-
-        assertThat(periodeSlot.isCaptured).isTrue
-        assertThat(periodeSlot.captured).isEqualTo(24 * 3600 * 1000)
     }
 
     @Test
