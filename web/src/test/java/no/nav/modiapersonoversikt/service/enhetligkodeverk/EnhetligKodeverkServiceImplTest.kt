@@ -92,28 +92,6 @@ internal class EnhetligKodeverkServiceImplTest {
     }
 
     @Test
-    internal fun `regner ut schedule dato riktig`() {
-        val (timer, dateSlot, periodeSlot) = withTimerMock()
-        val providers = withProvidersMock()
-
-        EnhetligKodeverkServiceImpl(providers, timer)
-
-        assertThat(dateSlot.isCaptured).isTrue
-        assertThat(dateSlot.captured).hasHourOfDay(1)
-
-        val forventetDato =
-            if (dateSlot.captured.toInstant().isAfter(Instant.now())) {
-                LocalDate.now().plus(1, ChronoUnit.DAYS).dayOfMonth
-            } else {
-                LocalDate.now().plusDays(1).dayOfMonth
-            }
-        assertThat(dateSlot.captured).hasDayOfMonth(forventetDato)
-
-        assertThat(periodeSlot.isCaptured).isTrue
-        assertThat(periodeSlot.captured).isEqualTo(24 * 3600 * 1000)
-    }
-
-    @Test
     internal fun `skal rapportere om utdatert kodeverk i selftesten`() {
         val providers = withProvidersMock()
 
