@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.oppgave
 
+import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -52,14 +53,19 @@ class OppgaveController
             tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Henvendelse.Oppgave.Metadata, AuditIdentifier.OPPGAVE_ID to oppgaveId)) {
-                    mapOppgave(oppgaveBehandlingService.hentOppgave(oppgaveId))
+                    val oppgave = mapOppgave(oppgaveBehandlingService.hentOppgave(oppgaveId))
+                    tilgangkontroll
+                        .check(Policies.tilgangTilBruker(Fnr(oppgave.fnr)))
+                        .get(Audit.skipAuditLog) {
+                            oppgave
+                        }
                 }
     }
 
 data class OppgaveDTO(
     val oppgaveId: String,
     val traadId: String?,
-    val fødselsnummer: String?,
+    val fnr: String?,
     val erSTOOppgave: Boolean,
     val tildeltEnhetsnr: String,
     val tema: String,
@@ -80,7 +86,7 @@ private fun mapOppgave(oppgave: Oppgave) =
     OppgaveDTO(
         oppgaveId = oppgave.oppgaveId,
         traadId = oppgave.henvendelseId,
-        fødselsnummer = oppgave.fnr,
+        fnr = oppgave.fnr,
         erSTOOppgave = oppgave.erSTOOppgave,
         tildeltEnhetsnr = oppgave.tildeltEnhetsnr,
         tema = oppgave.tema,
