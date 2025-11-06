@@ -12,13 +12,13 @@ data class Utbetalingsperioder(
     val utbetaltePerioder: List<Utbetalingsperiode>,
 )
 
-data class SykpengerRequest(
+data class SykepengerRequest(
     val personidentifikatorer: List<String>,
     val fom: LocalDate,
     val tom: LocalDate,
 )
 
-data class SykpengerVedtak(
+data class SykepengerVedtak(
     val vedtaksreferanse: String,
     val utbetalinger: List<Utbetalingsperiode>,
     val vedtattTidspunkt: LocalDateTime,
@@ -37,10 +37,10 @@ interface SpokelseClient {
         tom: LocalDate,
     ): Utbetalingsperioder
 
-    fun hentSykpengerVedtak(
+    fun hentSykepengerVedtak(
         fnr: String,
         fom: LocalDate,
-    ): List<SykpengerVedtak>
+    ): List<SykepengerVedtak>
 }
 
 open class SpokelseClientImpl(
@@ -55,14 +55,14 @@ open class SpokelseClientImpl(
         val requestBody =
             objectMapper
                 .writeValueAsString(
-                    SykpengerRequest(
+                    SykepengerRequest(
                         personidentifikatorer = listOf(fnr),
                         fom = fom,
                         tom = tom,
                     ),
                 ).toRequestBody("application/json".toMediaType())
 
-        val response =
+        val body =
             httpClient
                 .newCall(
                     Request
@@ -77,11 +77,11 @@ open class SpokelseClientImpl(
         return objectMapper.readValue(body, Utbetalingsperioder::class.java)
     }
 
-    override fun hentSykpengerVedtak(
+    override fun hentSykepengerVedtak(
         fnr: String,
         fom: LocalDate,
-    ): List<SykpengerVedtak> {
         val response =
+    ): List<SykepengerVedtak> {
             httpClient
                 .newCall(
                     Request
@@ -92,6 +92,6 @@ open class SpokelseClientImpl(
 
         val body = response.body?.string()
 
-        return objectMapper.readValue(body, objectMapper.typeFactory.constructCollectionType(List::class.java, SykpengerVedtak::class.java))
+        return objectMapper.readValue(body, objectMapper.typeFactory.constructCollectionType(List::class.java, SykepengerVedtak::class.java))
     }
 }

@@ -10,8 +10,8 @@ open class SpokelseClientMock() : SpokelseClient {
         tom: LocalDate,
     ): Utbetalingsperioder = Utbetalingsperioder(listOf())
 
-    override fun hentSykpengerVedtak(
+    override fun hentSykepengerVedtak(
         fnr: String,
         fom: LocalDate,
-    ): List<SykpengerVedtak> = listOf()
+    ): List<SykepengerVedtak> = listOf()
 }
