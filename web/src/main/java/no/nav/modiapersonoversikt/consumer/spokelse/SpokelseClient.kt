@@ -8,8 +8,8 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.LocalDate
 
-data class Utbetalingsperioder(
-    val utbetaltePerioder: List<Utbetalingsperiode>,
+data class UtbetaltePerioder(
+    val utbetaltePerioder: List<UtbetaltPeriode>,
 )
 
 data class SykepengerRequest(
@@ -20,22 +20,23 @@ data class SykepengerRequest(
 
 data class SykepengerVedtak(
     val vedtaksreferanse: String,
-    val utbetalinger: List<Utbetalingsperiode>,
+    val utbetalinger: List<UtbetaltPeriode>,
     val vedtattTidspunkt: LocalDateTime,
 )
 
-data class Utbetalingsperiode(
+data class UtbetaltPeriode(
     val fom: LocalDate,
     val tom: LocalDate,
+    val organisasjonsnummer: String, // probably
     val grad: Double,
 )
 
 interface SpokelseClient {
-    fun hentUtbetalingsperiode(
+    fun hentUtbetaltePerioder(
         fnr: String,
         fom: LocalDate,
         tom: LocalDate,
-    ): Utbetalingsperioder
+    ): UtbetaltePerioder
 
     fun hentSykepengerVedtak(
         fnr: String,
@@ -47,11 +48,11 @@ open class SpokelseClientImpl(
     private val baseUrl: String,
     private val httpClient: OkHttpClient,
 ) : SpokelseClient {
-    override fun hentUtbetalingsperiode(
+    override fun hentUtbetaltePerioder(
         fnr: String,
         fom: LocalDate,
         tom: LocalDate,
-    ): Utbetalingsperioder {
+    ): UtbetaltePerioder {
         val requestBody =
             objectMapper
                 .writeValueAsString(
@@ -67,14 +68,14 @@ open class SpokelseClientImpl(
                 .newCall(
                     Request
                         .Builder()
-                        .url("$baseUrl/utbetalte-perioder-dagpenger")
+                        .url("$baseUrl/utbetalte-perioder-personoversikt")
                         .post(requestBody)
                         .build(),
                 ).execute()
 
         val body = response.body?.string()
 
-        return objectMapper.readValue(body, Utbetalingsperioder::class.java)
+        return objectMapper.readValue(body, UtbetaltePerioder::class.java)
     }
 
     override fun hentSykepengerVedtak(

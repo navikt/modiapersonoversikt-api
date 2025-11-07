@@ -4,11 +4,11 @@ import java.time.LocalDate
 import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
 
 open class SpokelseClientMock() : SpokelseClient {
-    override fun hentUtbetalingsperiode(
+    override fun hentUtbetaltePerioder(
         fnr: String,
         fom: LocalDate,
         tom: LocalDate,
-    ): Utbetalingsperioder = Utbetalingsperioder(listOf())
+    ): UtbetaltePerioder = UtbetaltePerioder(listOf())
 
     override fun hentSykepengerVedtak(
         fnr: String,
