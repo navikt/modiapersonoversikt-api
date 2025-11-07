@@ -147,6 +147,22 @@ class YtelseController
                     pensjonService.hentSaker(fnrRequest.fnr)
                 }
 
+        @PostMapping("nykepenger")
+        fun hentUtbetaltePerioder(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): List<NykepengerUtbetaling> =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Nykepenger,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    spokelseClient.hentUtbetaltePerioder(fnrRequest.fnr)
+                }
+
         @PostMapping("arbeidsavklaringspenger")
         fun hentArbeidsavklaringsPenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
