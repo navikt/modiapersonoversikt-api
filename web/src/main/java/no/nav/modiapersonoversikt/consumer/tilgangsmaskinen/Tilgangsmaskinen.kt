@@ -5,12 +5,13 @@ import com.github.benmanes.caffeine.cache.Cache
 import no.nav.common.health.HealthCheckUtils
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.Fnr
+import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.UrlUtils
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.apis.TilgangControllerApi
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ApiResponse
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ClientError
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ResponseType
-import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.models.ForbiddenResponse
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.models.ProblemDetailResponse
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import no.nav.personoversikt.common.logging.TjenestekallLogger
@@ -20,12 +21,15 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 
 interface Tilgangsmaskinen : Pingable {
-    fun sjekkTilgang(fnr: Fnr): TilgangsMaskinResponse?
+    fun sjekkTilgang(
+        veilederIdent: NavIdent,
+        fnr: Fnr,
+    ): TilgangsMaskinResponse?
 }
 
 data class TilgangsMaskinResponse(
     val harTilgang: Boolean,
-    val error: ForbiddenResponse? = null,
+    val error: ProblemDetailResponse? = null,
 )
 
 @CacheConfig(cacheNames = ["tilgangsmaskinenCache"], keyGenerator = "userkeygenerator")
@@ -40,10 +44,13 @@ open class TilgangsmaskinenImpl(
     private val logger = LoggerFactory.getLogger(TilgangsmaskinenImpl::class.java)
 
     @Cacheable
-    override fun sjekkTilgang(fnr: Fnr): TilgangsMaskinResponse? =
+    override fun sjekkTilgang(
+        veilederIdent: NavIdent,
+        fnr: Fnr,
+    ): TilgangsMaskinResponse? =
         cache.get(fnr.get()) {
             runCatching {
-                val response = tilgangsMaskinenApi.kompletteReglerWithHttpInfo(fnr.get())
+                val response = tilgangsMaskinenApi.kompletteReglerCCFWithHttpInfo(veilederIdent.get(), fnr.get())
                 when (response.responseType) {
                     ResponseType.Success -> TilgangsMaskinResponse(harTilgang = true)
                     ResponseType.ClientError -> makeErrorResponse(response)
@@ -66,7 +73,7 @@ open class TilgangsmaskinenImpl(
         if (response.statusCode == 403) {
             response as ClientError<*>
             try {
-                val errorObject = objectMapper.readValue(response.body as String, ForbiddenResponse::class.java)
+                val errorObject = objectMapper.readValue(response.body as String, ProblemDetailResponse::class.java)
                 return TilgangsMaskinResponse(harTilgang = false, error = errorObject)
             } catch (e: Exception) {
                 logger.warn("Parse exception when parsing error response from tilgangsmaskinen: ${e.message}")
