@@ -6,6 +6,8 @@ import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
+import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
+import no.nav.modiapersonoversikt.consumer.spokelse.UtbetaltePerioder
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.VedtakDTO
 import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.Foreldrepenger
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/rest/ytelse")
@@ -36,6 +39,7 @@ class YtelseController
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
         private val aapApi: AapApi,
+        private val spokelseClient: SpokelseClient,
     ) {
         @PostMapping("alle-ytelser")
         fun hentYtelser(
@@ -150,7 +154,7 @@ class YtelseController
         @PostMapping("nykepenger")
         fun hentUtbetaltePerioder(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): List<NykepengerUtbetaling> =
+        ): UtbetaltePerioder =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
@@ -160,7 +164,11 @@ class YtelseController
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    spokelseClient.hentUtbetaltePerioder(fnrRequest.fnr)
+                    spokelseClient.hentUtbetaltePerioder(
+                        fnrRequest.fnr,
+                        fnrRequest.fom!!.let { LocalDate.parse(it) },
+                        fnrRequest.tom!!.let { LocalDate.parse(it) }
+                    )
                 }
 
         @PostMapping("arbeidsavklaringspenger")
