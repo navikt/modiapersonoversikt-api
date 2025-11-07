@@ -71,9 +71,7 @@ open class SpokelseClientImpl(
                         .url("$baseUrl/utbetalte-perioder-personoversikt")
                         .post(requestBody)
                         .build(),
-                ).execute()
-
-        val body = response.body?.string()
+                ).execute().body?.string()
 
         return objectMapper.readValue(body, UtbetaltePerioder::class.java)
     }
@@ -81,17 +79,15 @@ open class SpokelseClientImpl(
     override fun hentSykepengerVedtak(
         fnr: String,
         fom: LocalDate,
-        val response =
     ): List<SykepengerVedtak> {
+        val body =
             httpClient
                 .newCall(
                     Request
                         .Builder()
                         .url("$baseUrl/grunnlag?fodselsnummer=$fnr&fraDato=$fom")
                         .build(),
-                ).execute()
-
-        val body = response.body?.string()
+                ).execute().body?.string()
 
         return objectMapper.readValue(body, objectMapper.typeFactory.constructCollectionType(List::class.java, SykepengerVedtak::class.java))
     }
