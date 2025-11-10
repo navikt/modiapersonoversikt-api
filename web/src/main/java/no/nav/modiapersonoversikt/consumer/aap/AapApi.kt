@@ -17,7 +17,7 @@ interface AapApi {
     ): List<NonavaapapiinternVedtakUtenUtbetalingDTO>
 }
 
-@CacheConfig(cacheNames = ["tilgangsmaskinenCache"], keyGenerator = "userkeygenerator")
+@CacheConfig(cacheNames = ["aapCache"], keyGenerator = "userkeygenerator")
 open class AapApiImpl(
     baseUrl: String,
     httpClient: OkHttpClient,
