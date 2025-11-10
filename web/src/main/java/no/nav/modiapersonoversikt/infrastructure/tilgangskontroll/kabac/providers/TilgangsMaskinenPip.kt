@@ -23,7 +23,8 @@ class TilgangsMaskinenPip(
 
     override fun provide(ctx: EvaluationContext): TilgangsMaskinResult? {
         val fnr = ctx.getValue(CommonAttributes.FNR)
-        return tilgangsmaskinen.sjekkTilgang(fnr)?.let {
+        val ident = ctx.getValue(NavIdentPip)
+        return tilgangsmaskinen.sjekkTilgang(ident, fnr)?.let {
             TilgangsMaskinResult(it.harTilgang, it.error?.kanOverstyres, begrunnelse = it.error?.begrunnelse)
         }
     }

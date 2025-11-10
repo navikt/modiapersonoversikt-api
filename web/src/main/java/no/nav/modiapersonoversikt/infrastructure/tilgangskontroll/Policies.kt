@@ -7,7 +7,6 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.HenvendelseTilhorerBrukerPolicy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.KanBrukeInternalPolicy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerPolicy
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerPolicyV2
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilModiaPolicy
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilTemaPolicy
 import no.nav.personoversikt.common.kabac.AttributeValue
@@ -20,12 +19,6 @@ object Policies {
     @JvmStatic
     fun tilgangTilBruker(eksternBrukerId: EksternBrukerId) =
         TilgangTilBrukerPolicy.withAttributes(
-            eksternBrukerId.toAttributeValue(),
-        )
-
-    @JvmStatic
-    fun tilgangTilBrukerV2(eksternBrukerId: EksternBrukerId) =
-        TilgangTilBrukerPolicyV2.withAttributes(
             eksternBrukerId.toAttributeValue(),
         )
 
