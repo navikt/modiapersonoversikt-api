@@ -17,8 +17,6 @@ import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
-import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.Cacheable
 
 interface Tilgangsmaskinen : Pingable {
     fun sjekkTilgang(
@@ -32,7 +30,6 @@ data class TilgangsMaskinResponse(
     val error: ProblemDetailResponse? = null,
 )
 
-@CacheConfig(cacheNames = ["tilgangsmaskinenCache"], keyGenerator = "userkeygenerator")
 open class TilgangsmaskinenImpl(
     private val url: String,
     private val client: OkHttpClient,
@@ -43,12 +40,11 @@ open class TilgangsmaskinenImpl(
     private val tilgangsMaskinenApi = TilgangControllerApi(url, client)
     private val logger = LoggerFactory.getLogger(TilgangsmaskinenImpl::class.java)
 
-    @Cacheable
     override fun sjekkTilgang(
         veilederIdent: NavIdent,
         fnr: Fnr,
     ): TilgangsMaskinResponse? =
-        cache.get(fnr.get()) {
+        cache.get("${veilederIdent.get()}-${fnr.get()}") {
             runCatching {
                 val response = tilgangsMaskinenApi.kompletteReglerCCFWithHttpInfo(veilederIdent.get(), fnr.get())
                 when (response.responseType) {
