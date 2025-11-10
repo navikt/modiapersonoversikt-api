@@ -37,6 +37,7 @@ open class CacheConfig {
             cache("pdlCache", 3600, 100000)
             cache("pdlFullmaktCache", 3600, 10000)
             cache("varslingCache", 180, 10000)
+            cache("aapCache", 600)
         }
 
     @Bean("userkeygenerator")
