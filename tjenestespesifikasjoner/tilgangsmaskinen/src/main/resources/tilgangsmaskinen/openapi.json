@@ -22,6 +22,8 @@
         "tags": [
           "TilgangController"
         ],
+        "summary": "Overstyr regler for en bruker",
+        "description": "Setter overstyring for en bruker, slik at den kan saksbehandles selv om tilgang opprinnelig avslås.\n    BrukerId må være gyldig og finnes i PDL. Kjerneregelsettet vil bli kjørt før overstyring, og hvis de feiler vil overstyring ikke bli gjort.\n    Overstyring vil gjelde frem til og med utløpsdatoen.",
         "operationId": "overstyr",
         "requestBody": {
           "content": {
@@ -34,8 +36,46 @@
           "required": true
         },
         "responses": {
+          "204": {
+            "description": "Tilgang ble godkjent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Tilgang ble avvist",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetailResponse",
+                  "example": {
+                    "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                    "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                    "status": 403,
+                    "instance": "Z990883/03508331575",
+                    "brukerIdent": "03508331575",
+                    "navIdent": "Z990883",
+                    "traceId": "444290be30ed4fdd9a849654bad9dc1b",
+                    "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                    "kanOverstyres": false
+                  }
+                }
+              }
+            }
+          },
           "202": {
-            "description": "Accepted"
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -50,6 +90,7 @@
         "tags": [
           "TilgangController"
         ],
+        "summary": "Evaluer et komplett regelsett for en bruker, forutsetter OBO-token",
         "operationId": "kompletteRegler",
         "requestBody": {
           "content": {
@@ -63,14 +104,25 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Tilgang ble godkjent"
           },
           "403": {
-            "description": "Forbidden",
+            "description": "Tilgang ble avvist",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ForbiddenResponse"
+                  "$ref": "#/components/schemas/ProblemDetailResponse",
+                  "example": {
+                    "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                    "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                    "status": 403,
+                    "instance": "Z990883/03508331575",
+                    "brukerIdent": "03508331575",
+                    "navIdent": "Z990883",
+                    "traceId": "444290be30ed4fdd9a849654bad9dc1b",
+                    "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                    "kanOverstyres": false
+                  }
                 }
               }
             }
@@ -88,6 +140,7 @@
         "tags": [
           "TilgangController"
         ],
+        "summary": "Evaluer et kjerneregelsett for en bruker, forutsetter OBO-token",
         "operationId": "kjerneregler",
         "requestBody": {
           "content": {
@@ -101,7 +154,28 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Tilgang ble godkjent"
+          },
+          "403": {
+            "description": "Tilgang ble avvist",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetailResponse",
+                  "example": {
+                    "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                    "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                    "status": 403,
+                    "instance": "Z990883/03508331575",
+                    "brukerIdent": "03508331575",
+                    "navIdent": "Z990883",
+                    "traceId": "444290be30ed4fdd9a849654bad9dc1b",
+                    "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                    "kanOverstyres": false
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -111,19 +185,141 @@
         ]
       }
     },
-    "/api/v1/bulk": {
+    "/api/v1/ccf/komplett/{ansattId}": {
       "post": {
         "tags": [
           "TilgangController"
         ],
-        "operationId": "bulk",
+        "summary": "Evaluer et komplett regelsett for en bruker, forutsetter CCF-token",
+        "operationId": "kompletteReglerCCF",
+        "parameters": [
+          {
+            "name": "ansattId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Tilgang ble godkjent"
+          },
+          "403": {
+            "description": "Tilgang ble avvist",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetailResponse",
+                  "example": {
+                    "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                    "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                    "status": 403,
+                    "instance": "Z990883/03508331575",
+                    "brukerIdent": "03508331575",
+                    "navIdent": "Z990883",
+                    "traceId": "444290be30ed4fdd9a849654bad9dc1b",
+                    "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                    "kanOverstyres": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ccf/kjerne/{ansattId}": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "summary": "Evaluer et komplett regelsett for en bruker, forutsetter CCF-token",
+        "operationId": "kjerneReglerCCF",
+        "parameters": [
+          {
+            "name": "ansattId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Tilgang ble godkjent"
+          },
+          "403": {
+            "description": "Tilgang ble avvist",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetailResponse",
+                  "example": {
+                    "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                    "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                    "status": 403,
+                    "instance": "Z990883/03508331575",
+                    "brukerIdent": "03508331575",
+                    "navIdent": "Z990883",
+                    "traceId": "444290be30ed4fdd9a849654bad9dc1b",
+                    "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                    "kanOverstyres": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/bulk/obo": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "summary": "Kjør bulkregler for en ansatt",
+        "description": "Dette endepunktet er kun tilgjengelig for obo flow. Det evaluerer regler for en ansatt mot et sett av brukerId-er og regeltyper. Om ingen regeltype oppgis, evalueres det komplette regelsettet",
+        "operationId": "bulkOBO",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/IdOgType"
+                  "$ref": "#/components/schemas/BrukerIdOgRegelsett"
                 },
                 "uniqueItems": true
               }
@@ -132,12 +328,337 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "No Content",
+          "413": {
+            "description": "Mer enn 1000 id-er ble sendt i bulk",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AggregertBulkRespons"
+                }
+              }
+            }
+          },
+          "207": {
+            "description": "Tilganger ble evaluert for alle brukere i bulk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkSwaggerResultater",
+                  "example": {
+                    "ansattId": "Z990883",
+                    "resultater": [
+                      {
+                        "brukerId": "08526835671",
+                        "status": 204
+                      },
+                      {
+                        "brukerId": "03508331575",
+                        "status": 403,
+                        "detaljer": {
+                          "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                          "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                          "status": 403,
+                          "instance": "Z990883/03508331575",
+                          "brukerIdent": "03508331575",
+                          "navIdent": "Z990883",
+                          "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                          "traceId": "f85c9caa87a57b6dfde1068ce97f10a5",
+                          "kanOverstyres": false
+                        }
+                      },
+                      {
+                        "brukerId": "01011111111",
+                        "status": 404
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/bulk/obo/{regelType}": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "summary": "Kjør bulkregler for en ansatt",
+        "description": "Dette endepunktet er kun tilgjengelig for obo flow. Det evaluerer regler for en ansatt mot et sett av brukerId-er med gitt regeltype",
+        "operationId": "bulkOBOForRegelType",
+        "parameters": [
+          {
+            "name": "regelType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "KJERNE_REGELTYPE",
+                "TELLENDE_REGELTYPE",
+                "KOMPLETT_REGELTYPE",
+                "OVERSTYRBAR_REGELTYPE"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "413": {
+            "description": "Mer enn 1000 id-er ble sendt i bulk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregertBulkRespons"
+                }
+              }
+            }
+          },
+          "207": {
+            "description": "Tilganger ble evaluert for alle brukere i bulk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkSwaggerResultater",
+                  "example": {
+                    "ansattId": "Z990883",
+                    "resultater": [
+                      {
+                        "brukerId": "08526835671",
+                        "status": 204
+                      },
+                      {
+                        "brukerId": "03508331575",
+                        "status": 403,
+                        "detaljer": {
+                          "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                          "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                          "status": 403,
+                          "instance": "Z990883/03508331575",
+                          "brukerIdent": "03508331575",
+                          "navIdent": "Z990883",
+                          "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                          "traceId": "f85c9caa87a57b6dfde1068ce97f10a5",
+                          "kanOverstyres": false
+                        }
+                      },
+                      {
+                        "brukerId": "01011111111",
+                        "status": 404
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/bulk/ccf/{ansattId}": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "summary": "Kjør bulkregler for en ansatt",
+        "description": "Dette endepunktet er kun tilgjengelig for client credentials flow. Det evaluerer regler for en ansatt mot et sett av brukerId-er og regeltyper. Om ingen regeltype oppgis, evalueres det komplette regelsettet",
+        "operationId": "bulkCCF",
+        "parameters": [
+          {
+            "name": "ansattId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BrukerIdOgRegelsett"
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "413": {
+            "description": "Mer enn 1000 id-er ble sendt i bulk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregertBulkRespons"
+                }
+              }
+            }
+          },
+          "207": {
+            "description": "Tilganger ble evaluert for alle brukere i bulk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkSwaggerResultater",
+                  "example": {
+                    "ansattId": "Z990883",
+                    "resultater": [
+                      {
+                        "brukerId": "08526835671",
+                        "status": 204
+                      },
+                      {
+                        "brukerId": "03508331575",
+                        "status": 403,
+                        "detaljer": {
+                          "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                          "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                          "status": 403,
+                          "instance": "Z990883/03508331575",
+                          "brukerIdent": "03508331575",
+                          "navIdent": "Z990883",
+                          "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                          "traceId": "f85c9caa87a57b6dfde1068ce97f10a5",
+                          "kanOverstyres": false
+                        }
+                      },
+                      {
+                        "brukerId": "01011111111",
+                        "status": 404
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/bulk/ccf/{ansattId}/{regelType}": {
+      "post": {
+        "tags": [
+          "TilgangController"
+        ],
+        "summary": "Kjør bulkregler for en ansatt",
+        "description": "Dette endepunktet er kun tilgjengelig for client credentials flow. Det evaluerer regler for en ansatt mot et sett av brukerId-er med gitt regeltype",
+        "operationId": "bulkCCFForRegelType",
+        "parameters": [
+          {
+            "name": "ansattId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regelType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "KJERNE_REGELTYPE",
+                "TELLENDE_REGELTYPE",
+                "KOMPLETT_REGELTYPE",
+                "OVERSTYRBAR_REGELTYPE"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "413": {
+            "description": "Mer enn 1000 id-er ble sendt i bulk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregertBulkRespons"
+                }
+              }
+            }
+          },
+          "207": {
+            "description": "Tilganger ble evaluert for alle brukere i bulk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkSwaggerResultater",
+                  "example": {
+                    "ansattId": "Z990883",
+                    "resultater": [
+                      {
+                        "brukerId": "08526835671",
+                        "status": 204
+                      },
+                      {
+                        "brukerId": "03508331575",
+                        "status": 403,
+                        "detaljer": {
+                          "type": "https://confluence.adeo.no/display/TM/Tilgangsmaskin+API+og+regelsett",
+                          "title": "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+                          "status": 403,
+                          "instance": "Z990883/03508331575",
+                          "brukerIdent": "03508331575",
+                          "navIdent": "Z990883",
+                          "begrunnelse": "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+                          "traceId": "f85c9caa87a57b6dfde1068ce97f10a5",
+                          "kanOverstyres": false
+                        }
+                      },
+                      {
+                        "brukerId": "01011111111",
+                        "status": 404
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -155,6 +676,11 @@
     "schemas": {
       "OverstyringData": {
         "type": "object",
+        "example": {
+          "brukerId": "22420094160",
+          "begrunnelse": "En begrunnelse",
+          "gyldigtil": "2025-05-24"
+        },
         "properties": {
           "brukerId": {
             "type": "string"
@@ -170,37 +696,39 @@
         "required": [
           "begrunnelse",
           "brukerId",
+          "gyldigTil",
           "gyldigtil"
         ]
       },
-      "ForbiddenResponse": {
+      "ProblemDetailResponse": {
         "type": "object",
-        "required": [
-          "title",
-          "instance",
-          "navIdent",
-          "brukerIdent",
-          "begrunnelse",
-          "kanOverstyres"
-        ],
+        "description": "Problem Detail",
         "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
           "title": {
             "type": "string",
+            "description": "Avvisningskoder",
             "enum": [
               "AVVIST_STRENGT_FORTROLIG_ADRESSE",
               "AVVIST_STRENGT_FORTROLIG_UTLAND",
-              "AVVIST_FORTROLIG_ADRESSE",
-              "AVVIST_SKJERMING",
-              "AVVIST_GEOGRAFISK",
-              "AVVIST_HABILITET",
               "AVVIST_AVDØD",
               "AVVIST_PERSON_UTLAND",
-              "AVVIST_PERSON_UKJENT"
+              "AVVIST_SKJERMING",
+              "AVVIST_FORTROLIG_ADRESSE",
+              "AVVIST_UKJENT_BOSTED",
+              "AVVIST_GEOGRAFISK",
+              "AVVIST_HABILITET"
             ]
           },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
           "instance": {
-            "type": "string",
-            "description": "format ident/fnr"
+            "type": "string"
           },
           "brukerIdent": {
             "type": "string"
@@ -211,13 +739,32 @@
           "begrunnelse": {
             "type": "string"
           },
+          "traceId": {
+            "type": "string"
+          },
           "kanOverstyres": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "begrunnelse",
+          "brukerIdent",
+          "instance",
+          "kanOverstyres",
+          "navIdent",
+          "status",
+          "title",
+          "traceId",
+          "type"
+        ]
       },
-      "IdOgType": {
+      "BrukerIdOgRegelsett": {
         "type": "object",
+        "description": "Sett av identifikatorer og regelsett",
+        "example": {
+          "brukerId": "22420094160",
+          "type": "KOMPLETT_REGELTYPE"
+        },
         "properties": {
           "brukerId": {
             "type": "string"
@@ -226,6 +773,7 @@
             "type": "string",
             "enum": [
               "KJERNE_REGELTYPE",
+              "TELLENDE_REGELTYPE",
               "KOMPLETT_REGELTYPE",
               "OVERSTYRBAR_REGELTYPE"
             ]
@@ -234,6 +782,136 @@
         "required": [
           "brukerId",
           "type"
+        ]
+      },
+      "BulkSwaggerDetaljer": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "description": "Avvisningskoder",
+            "enum": [
+              "AVVIST_STRENGT_FORTROLIG_ADRESSE",
+              "AVVIST_STRENGT_FORTROLIG_UTLAND",
+              "AVVIST_AVDØD",
+              "AVVIST_PERSON_UTLAND",
+              "AVVIST_SKJERMING",
+              "AVVIST_FORTROLIG_ADRESSE",
+              "AVVIST_UKJENT_BOSTED",
+              "AVVIST_GEOGRAFISK",
+              "AVVIST_HABILITET"
+            ]
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "instance": {
+            "type": "string"
+          },
+          "brukerIdent": {
+            "type": "string"
+          },
+          "navIdent": {
+            "type": "string"
+          },
+          "begrunnelse": {
+            "type": "string"
+          },
+          "traceId": {
+            "type": "string"
+          },
+          "kanOverstyres": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "begrunnelse",
+          "brukerIdent",
+          "instance",
+          "kanOverstyres",
+          "navIdent",
+          "status",
+          "title",
+          "traceId",
+          "type"
+        ]
+      },
+      "BulkSwaggerResultat": {
+        "type": "object",
+        "properties": {
+          "brukerId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detaljer": {
+            "$ref": "#/components/schemas/BulkSwaggerDetaljer"
+          }
+        },
+        "required": [
+          "brukerId",
+          "status"
+        ]
+      },
+      "BulkSwaggerResultater": {
+        "type": "object",
+        "properties": {
+          "ansattId": {
+            "type": "string"
+          },
+          "resultater": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BulkSwaggerResultat"
+            }
+          }
+        },
+        "required": [
+          "ansattId",
+          "resultater"
+        ]
+      },
+      "AggregertBulkRespons": {
+        "type": "object",
+        "properties": {
+          "ansattId": {
+            "type": "string"
+          },
+          "resultater": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnkeltBulkRespons"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "ansattId",
+          "resultater"
+        ]
+      },
+      "EnkeltBulkRespons": {
+        "type": "object",
+        "properties": {
+          "brukerId": {
+            "type": "string"
+          },
+          "detaljer": {},
+          "status": {
+            "type": "integer",
+
+            "format": "int32"
+          }
+        },
+        "required": [
+          "brukerId",
+          "status"
         ]
       }
     },

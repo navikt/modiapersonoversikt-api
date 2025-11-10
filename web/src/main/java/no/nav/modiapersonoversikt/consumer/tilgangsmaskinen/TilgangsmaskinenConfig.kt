@@ -2,13 +2,12 @@ package no.nav.modiapersonoversikt.consumer.tilgangsmaskinen
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.common.rest.client.RestClient
-import no.nav.common.token_client.client.OnBehalfOfTokenClient
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
-import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.utils.DownstreamApi
-import no.nav.modiapersonoversikt.utils.bindTo
+import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
@@ -21,13 +20,11 @@ open class TilgangsmaskinenConfig {
 
     @Bean
     open fun tilgangsmaskinen(
-        tokenProvider: OnBehalfOfTokenClient,
+        machineToMachineTokenClient: MachineToMachineTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
         tjenestekallLogger: TjenestekallLogger,
         objectMapper: ObjectMapper,
     ): Tilgangsmaskinen {
-        val oboTokenProvider = tokenProvider.bindTo(scope)
-
         val httpClient: OkHttpClient =
             RestClient
                 .baseClient()
@@ -38,7 +35,7 @@ open class TilgangsmaskinenConfig {
                     },
                 ).addInterceptor(
                     AuthorizationInterceptor {
-                        AuthContextUtils.requireBoundedClientOboToken(oboTokenProvider)
+                        machineToMachineTokenClient.createMachineToMachineToken(scope)
                     },
                 ).build()
         return TilgangsmaskinenImpl(url, httpClient, tjenestekallLogger, objectMapper)
