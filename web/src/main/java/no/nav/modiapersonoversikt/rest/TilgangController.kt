@@ -23,7 +23,7 @@ import java.util.Date
 
 @RestController
 @RequestMapping("/rest/tilgang")
-class TilgangControllerV2
+class TilgangController
     @Autowired
     constructor(
         private val tilgangskontroll: Tilgangskontroll,
@@ -40,22 +40,6 @@ class TilgangControllerV2
 
         @PostMapping()
         fun harTilgang(
-            @RequestBody fnrRequest: FnrRequest,
-            @RequestParam("enhet", required = false) enhet: String?,
-            request: HttpServletRequest,
-        ): TilgangDTO =
-            tilgangskontroll
-                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .getDecision()
-                .makeResponse()
-                .sjekkAktivFolkeregistrIden(fnrRequest.fnr)
-                .logAudit(audit, fnrRequest.fnr)
-                .also {
-                    enhetTrace.log(enhet ?: "IKKE SATT")
-                }
-
-        @PostMapping("/v2")
-        fun harTilgangV2(
             @RequestBody fnrRequest: FnrRequest,
             @RequestParam("enhet", required = false) enhet: String?,
             request: HttpServletRequest,
