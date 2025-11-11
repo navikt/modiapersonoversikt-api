@@ -80,7 +80,7 @@ open class TilgangsmaskinenImpl(
                             ),
                     )
                     TilgangsMaskinResponse(harTilgang = false)
-                } else if (response.isInformational || response.isRedirect) {
+                } else {
                     tjenestekallLogger.error(
                         header = "UnsupportedOperationException ved tilgang sjekking fra tilgangsmaskin",
                         fields =
@@ -90,6 +90,7 @@ open class TilgangsmaskinenImpl(
                                 "message" to response.message,
                             ),
                     )
+                    null
                 }
             } catch (e: Exception) {
                 tjenestekallLogger.error(
@@ -97,7 +98,7 @@ open class TilgangsmaskinenImpl(
                     throwable = e,
                     fields = mapOf("veilederIdent" to veilederIdent.get(), "fnr" to fnr.get()),
                 )
+                null
             }
-            null
         }
 }
