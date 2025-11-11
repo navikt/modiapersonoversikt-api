@@ -71,10 +71,7 @@ open class TilgangsmaskinenImpl(
             }
         }
 
-    private fun makeErrorResponse(
-        statusCode: Int,
-        response: Response?,
-    ): TilgangsMaskinResponse {
+    private fun makeErrorResponse(statusCode: Int, response: Response?): TilgangsMaskinResponse {
         if (statusCode == 403) {
             try {
                 val errorObject = objectMapper.readValue(response as String, ProblemDetailResponse::class.java)
