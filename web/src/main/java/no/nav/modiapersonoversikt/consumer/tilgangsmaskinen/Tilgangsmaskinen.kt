@@ -8,12 +8,11 @@ import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
 import no.nav.common.utils.UrlUtils
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.apis.TilgangControllerApi
-import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ApiResponse
-import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ClientError
-import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.ResponseType
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.*
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.models.ProblemDetailResponse
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
 import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
@@ -45,38 +44,46 @@ open class TilgangsmaskinenImpl(
         fnr: Fnr,
     ): TilgangsMaskinResponse? =
         cache.get("${veilederIdent.get()}-${fnr.get()}") {
-            runCatching {
-                val response = tilgangsMaskinenApi.kompletteReglerCCFWithHttpInfo(veilederIdent.get(), fnr.get())
-                when (response.responseType) {
-                    ResponseType.Success -> TilgangsMaskinResponse(harTilgang = true)
-                    ResponseType.ClientError -> makeErrorResponse(response)
-                    else -> {
-                        logger.error("Received unexpected response type: ${response.responseType}")
-                        TilgangsMaskinResponse(harTilgang = false)
-                    }
-                }
-            }.getOrElse { err ->
-                tjenestekallLogger.error(
-                    header = "Greide ikke å hente tilgang fra tilgangsmaskinen",
-                    fields = mapOf("fnr" to fnr.get()),
-                    throwable = err,
+            try {
+                tilgangsMaskinenApi.kompletteReglerCCF(veilederIdent.get(), fnr.get())
+                TilgangsMaskinResponse(harTilgang = true)
+            } catch (e: ClientException) {
+                TjenestekallLogg.error(
+                    "ClientException",
+                    throwable = e,
+                    fields = mapOf("veilederIdent" to veilederIdent.get(), "fnr" to fnr.get()),
+                )
+                makeErrorResponse(e.statusCode, e.response)
+            } catch (e: ServerException) {
+                TjenestekallLogg.error(
+                    "ServerException",
+                    throwable = e,
+                    fields = mapOf("veilederIdent" to veilederIdent.get(), "fnr" to fnr.get()),
+                )
+                makeErrorResponse(e.statusCode, e.response)
+            } catch (e: Exception) {
+                TjenestekallLogg.error(
+                    "Greide ikke å hente tilgang fra tilgangsmaskinen",
+                    throwable = e,
+                    fields = mapOf("veilederIdent" to veilederIdent.get(), "fnr" to fnr.get()),
                 )
                 null
             }
         }
 
-    private fun makeErrorResponse(response: ApiResponse<*>): TilgangsMaskinResponse {
-        if (response.statusCode == 403) {
-            response as ClientError<*>
+    private fun makeErrorResponse(
+        statusCode: Int,
+        response: Response?,
+    ): TilgangsMaskinResponse {
+        if (statusCode == 403) {
             try {
-                val errorObject = objectMapper.readValue(response.body as String, ProblemDetailResponse::class.java)
+                val errorObject = objectMapper.readValue(response as String, ProblemDetailResponse::class.java)
                 return TilgangsMaskinResponse(harTilgang = false, error = errorObject)
             } catch (e: Exception) {
                 logger.warn("Parse exception when parsing error response from tilgangsmaskinen: ${e.message}")
                 return TilgangsMaskinResponse(harTilgang = false)
             }
         }
-        logger.warn("Received error response from tilgangsmaskinen: ${response.statusCode}")
         return TilgangsMaskinResponse(harTilgang = false)
     }
 
