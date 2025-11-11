@@ -7,7 +7,6 @@ import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.*
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.models.ProblemDetailResponse
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
-import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.logging.TjenestekallLogger
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -95,7 +94,7 @@ open class TilgangsmaskinenImpl(
                     }
                 }
             } catch (e: Exception) {
-                TjenestekallLogg.error(
+                tjenestekallLogger.error(
                     "Greide ikke å hente tilgang fra tilgangsmaskinen",
                     throwable = e,
                     fields =
