@@ -2,6 +2,8 @@ package no.nav.modiapersonoversikt.consumer.tilgangsmaskinen
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.benmanes.caffeine.cache.Cache
+import no.nav.common.types.identer.Fnr
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.infrastructure.*
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.generated.models.ProblemDetailResponse
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheUtils
@@ -13,8 +15,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 interface Tilgangsmaskinen {
     fun sjekkTilgang(
-        veilederIdent: String,
-        fnr: String,
+        veilederIdent: NavIdent,
+        fnr: Fnr,
     ): TilgangsMaskinResponse?
 }
 
@@ -31,13 +33,14 @@ open class TilgangsmaskinenImpl(
     private val cache: Cache<String, TilgangsMaskinResponse?> = CacheUtils.createCache(),
 ) : Tilgangsmaskinen {
     override fun sjekkTilgang(
-        veilederIdent: String,
-        fnr: String,
+        veilederIdent: NavIdent,
+        fnr: Fnr,
     ): TilgangsMaskinResponse? =
-        cache.get("$veilederIdent-$fnr") {
+        cache.get("${veilederIdent.get()}-${fnr.get()}") {
             try {
                 val requestBody =
                     fnr
+                        .get()
                         .toRequestBody("application/json".toMediaTypeOrNull())
 
                 val response =
@@ -59,8 +62,8 @@ open class TilgangsmaskinenImpl(
                         header = "ClientException ved tilgang sjekking fra tilgangsmaskin",
                         fields =
                             mapOf(
-                                "veilederIdent" to veilederIdent,
-                                "fnr" to fnr,
+                                "veilederIdent" to veilederIdent.get(),
+                                "fnr" to fnr.get(),
                                 "message" to response.message,
                                 "error" to errorObject,
                             ),
@@ -71,8 +74,8 @@ open class TilgangsmaskinenImpl(
                         header = "ServerException ved tilgang sjekking fra tilgangsmaskin",
                         fields =
                             mapOf(
-                                "veilederIdent" to veilederIdent,
-                                "fnr" to fnr,
+                                "veilederIdent" to veilederIdent.get(),
+                                "fnr" to fnr.get(),
                                 "message" to response.message,
                             ),
                     )
@@ -82,8 +85,8 @@ open class TilgangsmaskinenImpl(
                         header = "UnsupportedOperationException ved tilgang sjekking fra tilgangsmaskin",
                         fields =
                             mapOf(
-                                "veilederIdent" to veilederIdent,
-                                "fnr" to fnr,
+                                "veilederIdent" to veilederIdent.get(),
+                                "fnr" to fnr.get(),
                                 "message" to response.message,
                             ),
                     )
@@ -92,7 +95,7 @@ open class TilgangsmaskinenImpl(
                 tjenestekallLogger.error(
                     "Greide ikke å hente tilgang fra tilgangsmaskinen",
                     throwable = e,
-                    fields = mapOf("veilederIdent" to veilederIdent, "fnr" to fnr),
+                    fields = mapOf("veilederIdent" to veilederIdent.get(), "fnr" to fnr.get()),
                 )
             }
             null
