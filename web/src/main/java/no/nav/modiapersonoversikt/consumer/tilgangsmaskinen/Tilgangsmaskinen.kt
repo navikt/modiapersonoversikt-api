@@ -38,65 +38,70 @@ open class TilgangsmaskinenImpl(
     ): TilgangsMaskinResponse? =
         cache.get("${veilederIdent.get()}-${fnr.get()}") {
             try {
-                val requestBody =
-                    fnr
-                        .get()
-                        .toRequestBody("application/json".toMediaTypeOrNull())
-
+                val requestBody = fnr.get().toRequestBody("application/json".toMediaTypeOrNull())
                 val response =
                     client
                         .newCall(
                             Request
                                 .Builder()
-                                .url("$baseUrl/api/v1/ccf/komplett/$veilederIdent")
+                                .url("$baseUrl/api/v1/ccf/komplett/${veilederIdent.get()}")
                                 .post(requestBody)
                                 .build(),
                         ).execute()
 
-                if (response.isSuccessful) {
-                    TilgangsMaskinResponse(harTilgang = true)
-                } else if (response.isClientError) {
-                    val errorObject =
-                        objectMapper.readValue(response.body as String, ProblemDetailResponse::class.java)
-                    tjenestekallLogger.error(
-                        header = "ClientException ved tilgang sjekking fra tilgangsmaskin",
-                        fields =
-                            mapOf(
-                                "veilederIdent" to veilederIdent.get(),
-                                "fnr" to fnr.get(),
-                                "message" to response.message,
-                                "error" to errorObject,
-                            ),
-                    )
-                    TilgangsMaskinResponse(harTilgang = false, error = errorObject)
-                } else if (response.isServerError) {
-                    tjenestekallLogger.error(
-                        header = "ServerException ved tilgang sjekking fra tilgangsmaskin",
-                        fields =
-                            mapOf(
-                                "veilederIdent" to veilederIdent.get(),
-                                "fnr" to fnr.get(),
-                                "message" to response.message,
-                            ),
-                    )
-                    TilgangsMaskinResponse(harTilgang = false)
-                } else {
-                    tjenestekallLogger.error(
-                        header = "UnsupportedOperationException ved tilgang sjekking fra tilgangsmaskin",
-                        fields =
-                            mapOf(
-                                "veilederIdent" to veilederIdent.get(),
-                                "fnr" to fnr.get(),
-                                "message" to response.message,
-                            ),
-                    )
-                    null
+                when {
+                    response.isSuccessful -> TilgangsMaskinResponse(harTilgang = true)
+                    response.isClientError -> {
+                        val errorObject =
+                            objectMapper.readValue(response.body as String, ProblemDetailResponse::class.java)
+                        tjenestekallLogger.error(
+                            header = "ClientException ved tilgang sjekking fra tilgangsmaskin",
+                            fields =
+                                mapOf(
+                                    "veilederIdent" to veilederIdent.get(),
+                                    "fnr" to fnr.get(),
+                                    "message" to response.message,
+                                    "error" to errorObject,
+                                ),
+                        )
+                        TilgangsMaskinResponse(harTilgang = false, error = errorObject)
+                    }
+
+                    response.isServerError -> {
+                        tjenestekallLogger.error(
+                            header = "ServerException ved tilgang sjekking fra tilgangsmaskin",
+                            fields =
+                                mapOf(
+                                    "veilederIdent" to veilederIdent.get(),
+                                    "fnr" to fnr.get(),
+                                    "message" to response.message,
+                                ),
+                        )
+                        TilgangsMaskinResponse(harTilgang = false)
+                    }
+
+                    else -> {
+                        tjenestekallLogger.error(
+                            header = "UnsupportedOperationException ved tilgang sjekking fra tilgangsmaskin",
+                            fields =
+                                mapOf(
+                                    "veilederIdent" to veilederIdent.get(),
+                                    "fnr" to fnr.get(),
+                                    "message" to response.message,
+                                ),
+                        )
+                        null
+                    }
                 }
             } catch (e: Exception) {
                 tjenestekallLogger.error(
                     "Greide ikke å hente tilgang fra tilgangsmaskinen",
                     throwable = e,
-                    fields = mapOf("veilederIdent" to veilederIdent.get(), "fnr" to fnr.get()),
+                    fields =
+                        mapOf(
+                            "veilederIdent" to veilederIdent,
+                            "fnr" to fnr,
+                        ),
                 )
                 null
             }
