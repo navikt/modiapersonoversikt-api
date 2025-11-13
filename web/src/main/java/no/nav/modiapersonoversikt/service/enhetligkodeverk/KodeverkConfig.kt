@@ -1,8 +1,6 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.enumkodeverk.EnumKodeverk
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.enumkodeverk.Fagsystem
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 
 abstract class ObjectEnum<T> {
@@ -32,7 +30,7 @@ object KodeverkConfig : ObjectEnum<EnhetligKodeverk.Kilde<*, *>>() {
     val TEMA = add(FellesKodeverkKilde("Tema"))
     val SF_TEMAGRUPPER = add(SfHenvendelseKodeverkKilde())
     val OPPGAVE = add(OppgaveKodeverkKilde())
-    val FAGSYSTEM = add(EnumKodeverk.Kilde(Fagsystem::class))
+    val FAGSYSTEM = add(FellesKodeverkKilde("Applikasjoner"))
 }
 
 class FellesKodeverkKilde(
