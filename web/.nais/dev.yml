@@ -65,6 +65,7 @@ spec:
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: spokelse.dev-gcp-pub.nais.io
         - host: pensjon-pen-q2.dev-fss-pub.nais.io
+        - host: fpsak.dev-fss-pub.nais.io
       rules:
         - application: modia-soknadsstatus-api
         - application: sf-henvendelse-api-proxy
@@ -217,4 +218,8 @@ spec:
       value: "http://api-intern.aap"
     - name: AAP_SCOPE
       value: "dev-gcp:aap:api-intern"
+    - name: FP_SAK_URL
+      value: "https://fpabakus.dev-fss-pub.nais.io"
+    - name: FP_SAK_SCOPE
+      value: "dev-fss:teamforeldrepenger:fpsak"
 
