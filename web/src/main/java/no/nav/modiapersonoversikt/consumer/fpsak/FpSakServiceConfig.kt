@@ -15,15 +15,15 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableCaching
-open class FpSakConfig {
+open class FpSakServiceConfig {
     private val scope = DownstreamApi.Companion.parse(EnvironmentUtils.getRequiredProperty("FP_SAK_SCOPE"))
     private val url: String = EnvironmentUtils.getRequiredProperty("FP_SAK_URL")
 
     @Bean
-    open fun fpSakClient(
+    open fun fpSakService(
         machineToMachineTokenClient: MachineToMachineTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
-    ): FpSakClient {
+    ): FpSakService {
         val httpClient: OkHttpClient =
             RestClient
                 .baseClient()
@@ -40,6 +40,6 @@ open class FpSakConfig {
                         machineToMachineTokenClient.createMachineToMachineToken(scope)
                     },
                 ).build()
-        return FpSakClientImpl(url, httpClient)
+        return FpSakServiceImpl(url, httpClient)
     }
 }

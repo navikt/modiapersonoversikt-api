@@ -17,7 +17,7 @@ data class FpYtelse(
 
 data class YtelserRequest(
     val ident: Ident,
-    val fom: LocalDate,
+    val fom: LocalDate?,
     val tom: LocalDate?,
 )
 
@@ -25,10 +25,6 @@ data class Ident(
     val verdi: String,
 )
 
-data class Periode(
-    val fom: LocalDate,
-    val tom: LocalDate?,
-)
 
 data class Utbetaling(
     val fom: LocalDate,
@@ -44,28 +40,33 @@ enum class FpYtelseType {
 }
 
 
-interface FpSakClient {
+interface FpSakService {
     fun hentYtelser(
         fnr: String,
-        periode: Periode): List<FpYtelse>
+        fraOgMedDato: String?,
+        tilOgMedDato: String?,
+        ): List<FpYtelse>
 }
 
-open class FpSakClientImpl(
+open class FpSakServiceImpl(
     private val url: String,
     private val httpClient: OkHttpClient,
-) : FpSakClient {
+) : FpSakService {
 
     override fun hentYtelser(
         fnr: String,
-        periode: Periode,
-    ): List<FpYtelse> {
+        fraOgMedDato: String?,
+        tilOgMedDato: String?,
+        ): List<FpYtelse> {
+
+
         val requestBody =
             objectMapper
                 .writeValueAsString(
                     YtelserRequest(
-                        ident = Ident(verdi = fnr),
-                        fom = periode.fom,
-                        tom = periode.tom,
+                        Ident(verdi = fnr),
+                        fraOgMedDato?.let { LocalDate.parse(it) },
+                        tilOgMedDato?.let { LocalDate.parse(it) },
                     ),
                 ).toRequestBody("application/json".toMediaType())
 
