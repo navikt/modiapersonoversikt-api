@@ -27,7 +27,7 @@
         <kotlin.version>2.2.21</kotlin.version>
         <serialization.version>1.9.0</serialization.version>
         <mockk.version>1.14.6</mockk.version>
-        <wiremock.version>3.13.1</wiremock.version>
+        <wiremock.version>3.13.2</wiremock.version>
 
         <common.version>3.2025.10.10_08.21-bb7c7830d93c</common.version>
         <modia-common-utils.version>1.2025.09.15-12.01-37deb02592aa</modia-common-utils.version>
