@@ -75,7 +75,7 @@ open class FpSakServiceImpl(
                 .newCall(
                     Request
                         .Builder()
-                        .url("$url/fpsak/ekstern/api/ytelseinfo/basis")
+                        .url("$url/fpsak/ekstern/api/basis")
                         .post(requestBody)
                         .build(),
                 ).execute()
