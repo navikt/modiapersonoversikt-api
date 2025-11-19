@@ -4,8 +4,8 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.api.domain.aap.generated.models.NonavaapapiinternVedtakUtenUtbetalingDTO
 import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
+import no.nav.modiapersonoversikt.consumer.fpsak.ForeldrepengerFpSak
 import no.nav.modiapersonoversikt.consumer.fpsak.FpSakService
-import no.nav.modiapersonoversikt.consumer.fpsak.FpYtelse
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
@@ -40,7 +40,6 @@ class YtelseController
         private val fpSakService: FpSakService,
         private val spokelseClient: SpokelseClient,
     ) {
-
         @PostMapping("sykepenger")
         fun hentSykepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
@@ -127,29 +126,23 @@ class YtelseController
                     )
                 }
 
-
-    @PostMapping("fpytelser")
-    fun hentFpYtelser(
-        @RequestBody fnrRequest: FnrDatoRangeRequest,
-    ): List<FpYtelse> =
-        tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(
-                Audit.describe(
-                    Audit.Action.READ,
-                    AuditResources.Person.FpYtelser,
-                    AuditIdentifier.FNR to fnrRequest.fnr,
-                ),
-            ) {
-                fpSakService.hentYtelser(
-                    fnrRequest.fnr,
-                    fnrRequest.tom,
-                    fnrRequest.fom,
-                )
-            }
+        @PostMapping("foreldrepenger_fpsak")
+        fun hentForeldrepengerFpSak(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): List<ForeldrepengerFpSak> =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.FpYtelser,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    fpSakService.hentYtelserSortertMedPeriode(
+                        fnrRequest.fnr,
+                        fnrRequest.tom,
+                        fnrRequest.fom,
+                    )
+                }
     }
-
-
-
-
-
