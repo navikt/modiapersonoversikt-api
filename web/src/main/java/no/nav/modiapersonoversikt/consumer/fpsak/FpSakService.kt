@@ -7,13 +7,19 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.math.BigDecimal
 import java.time.LocalDate
 
-data class FpYtelse(
-    val ytelse: FpYtelseType,
+data class FpSakResponse(
+    val ytelse: YtelseType,
     val saksnummer: String,
     val utbetalinger: List<Utbetaling>,
-    )
+)
 
-
+data class ForeldrepengerFpSak(
+    val ytelse: YtelseType,
+    val saksnummer: String,
+    val perioder: List<Utbetaling>,
+    val fom: LocalDate,
+    val tom: LocalDate,
+)
 
 data class YtelserRequest(
     val ident: Ident,
@@ -25,41 +31,35 @@ data class Ident(
     val verdi: String,
 )
 
-
 data class Utbetaling(
     val fom: LocalDate,
     val tom: LocalDate,
     val grad: BigDecimal,
 )
 
-
-enum class FpYtelseType {
+enum class YtelseType {
     ENGANGSTØNAD,
     FORELDREPENGER,
     SVANGERSKAPSPENGER,
 }
 
-
 interface FpSakService {
-    fun hentYtelser(
+    fun hentYtelserSortertMedPeriode(
         fnr: String,
         fraOgMedDato: String?,
         tilOgMedDato: String?,
-        ): List<FpYtelse>
+    ): List<ForeldrepengerFpSak>
 }
 
 open class FpSakServiceImpl(
     private val url: String,
     private val httpClient: OkHttpClient,
 ) : FpSakService {
-
-    override fun hentYtelser(
+    fun hentYtelser(
         fnr: String,
         fraOgMedDato: String?,
         tilOgMedDato: String?,
-        ): List<FpYtelse> {
-
-
+    ): List<FpSakResponse> {
         val requestBody =
             objectMapper
                 .writeValueAsString(
@@ -81,6 +81,27 @@ open class FpSakServiceImpl(
                 ).execute()
 
         val body = response.body?.string()
-        return objectMapper.readValue(body, objectMapper.typeFactory.constructCollectionType(List::class.java, FpYtelse::class.java))
+        return objectMapper.readValue(
+            body,
+            objectMapper.typeFactory.constructCollectionType(List::class.java, ForeldrepengerFpSak::class.java),
+        )
+    }
+
+    override fun hentYtelserSortertMedPeriode(
+        fnr: String,
+        fraOgMedDato: String?,
+        tilOgMedDato: String?,
+    ): List<ForeldrepengerFpSak> {
+        val saker = hentYtelser(fnr, fraOgMedDato, tilOgMedDato)
+        return saker.map { sak ->
+            val sortertePerioder = sak.utbetalinger.sortedByDescending { it.fom }
+            ForeldrepengerFpSak(
+                ytelse = sak.ytelse,
+                saksnummer = sak.saksnummer,
+                perioder = sortertePerioder,
+                fom = sortertePerioder.last().fom,
+                tom = sortertePerioder.first().tom,
+            )
+        }
     }
 }
