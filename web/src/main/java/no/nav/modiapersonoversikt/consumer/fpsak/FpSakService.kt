@@ -55,7 +55,7 @@ open class FpSakServiceImpl(
     private val url: String,
     private val httpClient: OkHttpClient,
 ) : FpSakService {
-    fun hentYtelser(
+    internal fun hentYtelser(
         fnr: String,
         fraOgMedDato: String?,
         tilOgMedDato: String?,
@@ -83,7 +83,7 @@ open class FpSakServiceImpl(
         val body = response.body?.string()
         return objectMapper.readValue(
             body,
-            objectMapper.typeFactory.constructCollectionType(List::class.java, ForeldrepengerFpSak::class.java),
+            objectMapper.typeFactory.constructCollectionType(List::class.java, FpSakResponse::class.java),
         )
     }
 
@@ -93,7 +93,11 @@ open class FpSakServiceImpl(
         tilOgMedDato: String?,
     ): List<ForeldrepengerFpSak> {
         val saker = hentYtelser(fnr, fraOgMedDato, tilOgMedDato)
-        return saker.map { sak ->
+        return mapFpSakResponse(saker)
+    }
+
+    internal fun mapFpSakResponse(sakResponse: List<FpSakResponse>): List<ForeldrepengerFpSak> =
+        sakResponse.map { sak ->
             val sortertePerioder = sak.utbetalinger.sortedByDescending { it.fom }
             ForeldrepengerFpSak(
                 ytelse = sak.ytelse,
@@ -103,5 +107,4 @@ open class FpSakServiceImpl(
                 tom = sortertePerioder.first().tom,
             )
         }
-    }
 }
