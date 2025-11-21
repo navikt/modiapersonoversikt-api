@@ -141,8 +141,8 @@ class YtelseController
                 ) {
                     fpSakService.hentYtelserSortertMedPeriode(
                         fnrRequest.fnr,
-                        fnrRequest.tom,
                         fnrRequest.fom,
+                        fnrRequest.tom,
                     )
                 }
     }

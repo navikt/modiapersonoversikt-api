@@ -219,7 +219,7 @@ spec:
     - name: AAP_SCOPE
       value: "dev-gcp:aap:api-intern"
     - name: FP_SAK_URL
-      value: "https://fpabakus.dev-fss-pub.nais.io"
+      value: "https://fpsak-api.dev-fss-pub.nais.io"
     - name: FP_SAK_SCOPE
       value: "dev-fss:teamforeldrepenger:fpsak"
 
