@@ -22,13 +22,9 @@ data class ForeldrepengerFpSak(
 )
 
 data class YtelserRequest(
-    val ident: Ident,
+    val ident: String,
     val fom: LocalDate?,
     val tom: LocalDate?,
-)
-
-data class Ident(
-    val verdi: String,
 )
 
 data class Utbetaling(
@@ -64,7 +60,7 @@ open class FpSakServiceImpl(
             objectMapper
                 .writeValueAsString(
                     YtelserRequest(
-                        Ident(verdi = fnr),
+                        fnr,
                         fraOgMedDato?.let { LocalDate.parse(it) },
                         tilOgMedDato?.let { LocalDate.parse(it) },
                     ),
@@ -75,7 +71,7 @@ open class FpSakServiceImpl(
                 .newCall(
                     Request
                         .Builder()
-                        .url("$url/fpsak/ekstern/api/basis")
+                        .url("$url/fpsak/ekstern/api/ytelseinfo/basis")
                         .post(requestBody)
                         .build(),
                 ).execute()
