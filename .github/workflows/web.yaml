@@ -42,7 +42,7 @@ jobs:
           mvn -P ci -B test --settings .github/maven-settings.xml
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
-        if: github.ref == 'refs/heads/integrasjon-fpsak'
+        if: github.ref == 'refs/heads/master'
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -55,7 +55,7 @@ jobs:
   deploy-dev:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/integrasjon-fpsak'
+    if: github.ref == 'refs/heads/master'
     environment: dev-gcp
     runs-on: ubuntu-latest
     permissions:
