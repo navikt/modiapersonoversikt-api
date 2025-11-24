@@ -18,26 +18,15 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
     public Boolean finnesIGsak = false, finnesIPsak = false;
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
-    public static final String TEMAKODE_KLAGE_ANKE = "KLA";
     public static final String SAKSTYPE_GENERELL = "GEN";
     public static final String SAKSTYPE_MED_FAGSAK = "MFS";
     public static final String FAGSYSTEMKODE_ARENA = "AO01";
-    public static final String FAGSYSTEMKODE_PSAK = "PP01";
     public static final String FAGSYSTEMKODE_BIDRAG = "BISYS";
-    public static final String FAGSYSTEMKODE_KELVIN = "KELVIN";
 
-    public static final String FAGSYSTEMKODE_KOMPYS = "KOMPYS";
-    public static final String FAGSYSTEMKODE_ARBEIDSOPPFOLGING = "ARBEIDSOPPFOLGING";
-    public static final String FAGSYSTEMKODE_ETTERLATTE = "EY";
-    public static final String FAGSYSTEMKODE_BARNETRYGD = "BA";
     public static final String FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK = "FS22";
-    public static final String ENSLIG_FORSORGER = "EF";
-    public static final String FAGSYSTEMKODE_NEESSI = "NEESSI";
 
-    public static final List<String> GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER = List.of(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK, "");
     public static final List<String> GODKJENTE_TEMA_FOR_GENERELL_SAK = List.of("AAP", "AGR", "BAR", "BIL", "BID", "DAG", "ENF", "ERS", "EYO", "FEI", "FOR", "FOS", "FUL", "GEN", "GRA", "GRU", "HEL", "HJE", "IND", "KON", "KTR", "MED", "MOB", "OMS", "REH", "RVE", "RPO", "SAK", "SAP", "SER", "STO", "SUP", "SYK", "SYM", "TRK", "TRY", "TSR", "TSO", "UFM", "VEN", "YRA", "YRK", "FRI", TEMAKODE_OPPFOLGING,  "AKT", "POI", "PAI", "UNG");
 
-    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = List.of(FAGSYSTEMKODE_BIDRAG, FAGSYSTEMKODE_ARENA, FAGSYSTEMKODE_KELVIN, FAGSYSTEMKODE_PSAK, FAGSYSTEMKODE_ETTERLATTE, FAGSYSTEMKODE_BARNETRYGD, FAGSYSTEMKODE_NEESSI, "IT01", "OEBS", "V2", "AO11", "FS36", "FS38", "K9", "SUPSTONAD", ENSLIG_FORSORGER, FAGSYSTEMKODE_KOMPYS, FAGSYSTEMKODE_ARBEIDSOPPFOLGING);
 
     public boolean isSakstypeForVisningGenerell() {
         return SAKSTYPE_GENERELL.equals(sakstype);
