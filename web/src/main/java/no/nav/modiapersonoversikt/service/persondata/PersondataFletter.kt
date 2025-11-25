@@ -96,7 +96,7 @@ class PersondataFletter(
                     bostedAdresse = hentBostedAdresse(data),
                     kontaktAdresse = hentKontaktAdresse(data),
                     oppholdsAdresse = hentOppholdsAdresse(data),
-                    navEnhet = hentNavEnhet(data.navEnhet),
+                    navEnhet = hentNavEnhet(data),
                     statsborgerskap = hentStatsborgerskap(data),
                     adressebeskyttelse = hentAdressebeskyttelse(data.persondata.adressebeskyttelse),
                     sikkerhetstiltak = hentSikkerhetstiltak(data),
@@ -563,19 +563,47 @@ class PersondataFletter(
         gyldighetsPeriode = gyldighetsPeriode,
     )
 
-    private fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.PersonDataEnhet? =
-        navEnhet
-            .map {
-                if (it == null) {
-                    null
-                } else {
-                    Persondata.PersonDataEnhet(
-                        it.enhet.enhetId,
-                        it.enhet.enhetNavn,
-                        hentPublikumsmottak(it.publikumsmottak),
-                    )
-                }
-            }.getOrNull()
+    private fun hentNavEnhet(data: Data): Persondata.PersonDataEnhet? {
+        val publikumsmottak =
+            data.navEnhet
+                .map {
+                    it?.let { enhet ->
+                        Persondata.PersonDataEnhet(
+                            enhet.enhet.enhetId,
+                            enhet.enhet.enhetNavn,
+                            hentPublikumsmottak(enhet.publikumsmottak),
+                        )
+                    }
+                }.getOrNull() ?: return null
+
+        if (publikumsmottak.publikumsmottak.size <= 1) return publikumsmottak
+        val brukersPoststed =
+            hentBostedAdresse(data)
+                .firstOrNull()
+                ?.linje2
+                ?.let { it.split(" ").getOrNull(1) } ?: return publikumsmottak
+
+        val mottakMedMatchendePoststed =
+            publikumsmottak.publikumsmottak.filter { mottak ->
+                val mottakPoststed = mottak.besoksadresse.linje2?.let { it.split(" ").getOrNull(1) }
+                mottakPoststed?.contains(brukersPoststed, ignoreCase = true) == true
+            }
+
+        mottakMedMatchendePoststed.forEach { mottak ->
+            println(mottak.besoksadresse.linje2)
+        }
+
+        return if (mottakMedMatchendePoststed.isEmpty()) {
+            publikumsmottak
+        } else {
+            publikumsmottak.copy(
+                publikumsmottak =
+                    publikumsmottak.publikumsmottak.sortedBy {
+                        it !in mottakMedMatchendePoststed
+                    },
+            )
+        }
+    }
 
     private fun hentPublikumsmottak(publikumsmottak: List<NorgDomain.Publikumsmottak>): List<Persondata.Publikumsmottak> =
         publikumsmottak.map {
