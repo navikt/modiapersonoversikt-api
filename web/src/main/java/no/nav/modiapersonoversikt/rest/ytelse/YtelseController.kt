@@ -38,7 +38,7 @@ class YtelseController
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
         private val aapApi: AapApi,
-        private val spokelseClient: SpokelseClient
+        private val spokelseClient: SpokelseClient,
     ) {
         @PostMapping("alle-ytelser")
         fun hentYtelser(
