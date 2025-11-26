@@ -3,6 +3,9 @@ package no.nav.modiapersonoversikt.rest.ytelse
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.api.domain.aap.generated.models.NonavaapapiinternVedtakUtenUtbetalingDTO
 import no.nav.modiapersonoversikt.consumer.aap.AapApi
+import no.nav.modiapersonoversikt.consumer.abakus.AbakusClient
+import no.nav.modiapersonoversikt.consumer.abakus.Periode
+import no.nav.modiapersonoversikt.consumer.abakus.YtelseV1
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import no.nav.modiapersonoversikt.consumer.abakus.YtelseType as AbakusYtelseType
 
 @RestController
 @RequestMapping("/rest/ytelse")
@@ -36,6 +40,7 @@ class YtelseController
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
         private val aapApi: AapApi,
+        private val abakusClient: AbakusClient
     ) {
         @PostMapping("alle-ytelser")
         fun hentYtelser(
@@ -99,6 +104,18 @@ class YtelseController
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
                     arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
+                }
+
+        @PostMapping("abakus_ytelser")
+        fun hentAbakusYitelser(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): List<YtelseV1> =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.AbakusYtelser, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                    abakusClient.hentYtelser(fnrRequest.fnr, Periode(fnrRequest.fom, fnrRequest.tom),
+                        AbakusYtelseType.entries
+                    )
                 }
 
         @PostMapping("foreldrepenger")

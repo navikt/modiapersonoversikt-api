@@ -63,6 +63,7 @@ spec:
         - host: oppgave.dev-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
+        - host: fpabakus.dev-fss-pub.nais.io
         - host: pensjon-pen-q2.dev-fss-pub.nais.io
       rules:
         - application: modia-soknadsstatus-api
@@ -204,6 +205,10 @@ spec:
       value: "http://tiltakspenger-datadeling.tpts"
     - name: TILTAKSPENGER_SCOPE
       value: "dev-gcp:tpts:tiltakspenger-datadeling"
+    - name: FP_ABAKUS_URL
+      value: "https://fpabakus.dev-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1"
+    - name: FP_ABAKUS_SCOPE
+      value: "dev-fss:teamforeldrepenger:fpabakus"
     - name: TILGANGSMASKINEN_URL
       value: "http://populasjonstilgangskontroll.tilgangsmaskin"
     - name: TILGANGSMASKINEN_SCOPE

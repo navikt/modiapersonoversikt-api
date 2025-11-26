@@ -63,6 +63,7 @@ spec:
         - host: pdl-api.prod-fss-pub.nais.io
         - host: pdl-pip-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
+        - host: fpabakus.prod-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: pensjon-pen.prod-fss-pub.nais.io
@@ -207,6 +208,10 @@ spec:
       value: "http://tiltakspenger-datadeling.tpts"
     - name: TILTAKSPENGER_SCOPE
       value: "prod-gcp:tpts:tiltakspenger-datadeling"
+    - name: FP_ABAKUS_URL
+      value: "https://fpabakus.prod-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1"
+    - name: FP_ABAKUS_SCOPE
+      value: "prod-fss:teamforeldrepenger:fpabakus"
     - name: TILGANGSMASKINEN_URL
       value: "http://populasjonstilgangskontroll.tilgangsmaskin"
     - name: TILGANGSMASKINEN_SCOPE
