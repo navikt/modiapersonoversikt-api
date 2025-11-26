@@ -40,7 +40,7 @@ class YtelseController
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
         private val aapApi: AapApi,
-        private val abakusClient: AbakusClient
+        private val abakusClient: AbakusClient,
     ) {
         @PostMapping("alle-ytelser")
         fun hentYtelser(
@@ -113,8 +113,10 @@ class YtelseController
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.AbakusYtelser, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    abakusClient.hentYtelser(fnrRequest.fnr, Periode(fnrRequest.fom, fnrRequest.tom),
-                        AbakusYtelseType.entries
+                    abakusClient.hentYtelser(
+                        fnrRequest.fnr,
+                        Periode(fnrRequest.fom, fnrRequest.tom),
+                        AbakusYtelseType.entries,
                     )
                 }
 

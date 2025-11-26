@@ -6,7 +6,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class YtelseV1(
