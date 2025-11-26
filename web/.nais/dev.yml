@@ -63,6 +63,7 @@ spec:
         - host: oppgave.dev-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
+        - host: spokelse.dev-gcp-pub.nais.io
         - host: pensjon-pen-q2.dev-fss-pub.nais.io
       rules:
         - application: modia-soknadsstatus-api
@@ -204,6 +205,10 @@ spec:
       value: "http://tiltakspenger-datadeling.tpts"
     - name: TILTAKSPENGER_SCOPE
       value: "dev-gcp:tpts:tiltakspenger-datadeling"
+    - name: SPOKELSE_URL
+      value: "http://spokelse.tbd"
+    - name: SPOKELSE_SCOPE
+      value: "dev-gcp:tbd:spokelse"
     - name: TILGANGSMASKINEN_URL
       value: "http://populasjonstilgangskontroll.tilgangsmaskin"
     - name: TILGANGSMASKINEN_SCOPE
