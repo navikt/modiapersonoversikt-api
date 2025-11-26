@@ -14,8 +14,8 @@ data class Utbetalingsperioder(
 
 data class SykpengerRequest(
     val personidentifikatorer: List<String>,
-    val fom: LocalDate,
-    val tom: LocalDate,
+    val fom: String?,
+    val tom: String?,
 )
 
 data class SykpengerVedtak(
@@ -33,13 +33,13 @@ data class Utbetalingsperiode(
 interface SpokelseClient {
     fun hentUtbetalingsperiode(
         fnr: String,
-        fom: LocalDate,
-        tom: LocalDate,
+        fom: String?,
+        tom: String?,
     ): Utbetalingsperioder
 
     fun hentSykpengerVedtak(
         fnr: String,
-        fom: LocalDate,
+        fom: String?,
     ): List<SykpengerVedtak>
 }
 
@@ -49,8 +49,8 @@ open class SpokelseClientImpl(
 ) : SpokelseClient {
     override fun hentUtbetalingsperiode(
         fnr: String,
-        fom: LocalDate,
-        tom: LocalDate,
+        fom: String?,
+        tom: String?,
     ): Utbetalingsperioder {
         val requestBody =
             objectMapper
@@ -79,7 +79,7 @@ open class SpokelseClientImpl(
 
     override fun hentSykpengerVedtak(
         fnr: String,
-        fom: LocalDate,
+        fom: String?,
     ): List<SykpengerVedtak> {
         val response =
             httpClient

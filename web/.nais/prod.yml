@@ -66,6 +66,7 @@ spec:
         - host: pdl-pip-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
         - host: axsys.prod-fss-pub.nais.io
+        - host: spokelse.prod-gcp-pub.nais.io
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: pensjon-pen.prod-fss-pub.nais.io
@@ -210,6 +211,10 @@ spec:
       value: "http://tiltakspenger-datadeling.tpts"
     - name: TILTAKSPENGER_SCOPE
       value: "prod-gcp:tpts:tiltakspenger-datadeling"
+    - name: SPOKELSE_URL
+      value: "http://spokelse.tbd"
+    - name: SPOKELSE_SCOPE
+      value: "prod-gcp:tbd:spokelse"
     - name: TILGANGSMASKINEN_URL
       value: "http://populasjonstilgangskontroll.tilgangsmaskin"
     - name: TILGANGSMASKINEN_SCOPE

@@ -4,6 +4,8 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
+import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
+import no.nav.modiapersonoversikt.consumer.spokelse.SykpengerVedtak
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.VedtakDTO
 import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.Foreldrepenger
@@ -33,6 +35,7 @@ class YtelseController
         private val tilgangskontroll: Tilgangskontroll,
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
+        private val spokelseClient: SpokelseClient
     ) {
         @PostMapping("alle-ytelser")
         fun hentYtelser(
@@ -88,6 +91,16 @@ class YtelseController
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
                     arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
+                }
+
+        @PostMapping("spokelse_sykepenger")
+        fun hentSpokelseSykepenger(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): List<SykpengerVedtak> =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.SpokelseSykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                    spokelseClient.hentSykpengerVedtak(fnrRequest.fnr, fnrRequest.fom)
                 }
 
         @PostMapping("foreldrepenger")
