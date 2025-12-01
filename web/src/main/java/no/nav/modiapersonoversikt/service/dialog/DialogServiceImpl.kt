@@ -302,7 +302,6 @@ class DialogServiceImpl(
                     bruker = EksternBruker.Fnr(fnr),
                     enhet = meldingRequest.enhet,
                     temagruppe = meldingRequest.temagruppe!!,
-                    kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                     fritekst = meldingRequest.fritekst,
                 )
 
@@ -374,7 +373,6 @@ class DialogServiceImpl(
                     bruker = bruker,
                     enhet = enhet,
                     temagruppe = henvendelse.gjeldendeTemagruppe!!,
-                    kanal = SamtalereferatRequestDTO.Kanal.OPPMOTE,
                     fritekst = meldingRequest.fritekst,
                 )
 

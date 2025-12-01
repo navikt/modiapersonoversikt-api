@@ -56,7 +56,6 @@ interface SfHenvendelseService {
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
-        kanal: SamtalereferatRequestDTO.Kanal,
         fritekst: String,
     ): HenvendelseDTO
 
@@ -198,7 +197,6 @@ class SfHenvendelseServiceImpl(
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
-        kanal: SamtalereferatRequestDTO.Kanal,
         fritekst: String,
     ): HenvendelseDTO {
         val callId = getCallId()
@@ -212,7 +210,6 @@ class SfHenvendelseServiceImpl(
                     aktorId = aktorId,
                     temagruppe = temagruppe,
                     enhet = enhet,
-                    kanal = kanal,
                     fritekst = fritekst,
                 ),
             kjedeId = fixKjedeId,
