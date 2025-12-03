@@ -2,8 +2,6 @@ package no.nav.modiapersonoversikt.service.saf
 
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
-import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.utils.EnvironmentUtils

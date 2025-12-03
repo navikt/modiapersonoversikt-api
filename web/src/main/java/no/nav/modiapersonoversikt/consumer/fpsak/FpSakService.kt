@@ -13,10 +13,22 @@ data class FpSakResponse(
     val utbetalinger: List<Utbetaling>,
 )
 
+data class Utbetaling(
+    val fom: LocalDate,
+    val tom: LocalDate,
+    val grad: BigDecimal,
+)
+
+data class UtbetalingFpSak(
+    val fom: LocalDate,
+    val tom: LocalDate,
+    val grad: BigDecimal,
+)
+
 data class ForeldrepengerFpSak(
     val ytelse: YtelseType,
     val saksnummer: String,
-    val perioder: List<Utbetaling>,
+    val perioder: List<UtbetalingFpSak>,
     val fom: LocalDate,
     val tom: LocalDate,
 )
@@ -25,12 +37,6 @@ data class YtelserRequest(
     val ident: String,
     val fom: LocalDate?,
     val tom: LocalDate?,
-)
-
-data class Utbetaling(
-    val fom: LocalDate,
-    val tom: LocalDate,
-    val grad: BigDecimal,
 )
 
 enum class YtelseType {
@@ -62,7 +68,7 @@ open class FpSakServiceImpl(
 
     internal fun mapFpSakResponse(sakResponse: List<FpSakResponse>): List<ForeldrepengerFpSak> =
         sakResponse.map { sak ->
-            val sortertePerioder = sak.utbetalinger.sortedByDescending { it.fom }
+            val sortertePerioder = sak.utbetalinger.sortedByDescending { it.fom }.map { UtbetalingFpSak(it.fom, it.tom, it.grad) }
             ForeldrepengerFpSak(
                 ytelse = sak.ytelse,
                 saksnummer = sak.saksnummer,
