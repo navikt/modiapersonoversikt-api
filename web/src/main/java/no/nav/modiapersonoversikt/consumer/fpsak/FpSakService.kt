@@ -40,7 +40,7 @@ data class YtelserRequest(
 )
 
 enum class YtelseType {
-    ENGANGSTØNAD,
+    ENGANGSSTØNAD,
     FORELDREPENGER,
     SVANGERSKAPSPENGER,
 }
