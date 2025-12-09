@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.spokelse
 
-import kotlinx.datetime.LocalDateTime
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -21,7 +20,7 @@ data class SykpengerRequest(
 data class SykpengerVedtak(
     val vedtaksreferanse: String,
     val utbetalinger: List<Utbetalingsperiode>,
-    val vedtattTidspunkt: LocalDateTime,
+    val vedtattTidspunkt: LocalDate,
 )
 
 data class Utbetalingsperiode(
