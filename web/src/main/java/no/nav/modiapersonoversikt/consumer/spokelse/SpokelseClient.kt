@@ -21,7 +21,7 @@ data class SykpengerRequest(
 data class SykpengerVedtak(
     val vedtaksreferanse: String,
     val utbetalinger: List<Utbetalingsperiode>,
-    val vedtattTidspunkt: LocalDateTime,
+    val vedtattTidspunkt: LocalDate,
 )
 
 data class Utbetalingsperiode(
