@@ -9,7 +9,7 @@ import no.nav.modiapersonoversikt.consumer.fpsak.FpSakService
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
-import no.nav.modiapersonoversikt.consumer.spokelse.SykpengerVedtak
+import no.nav.modiapersonoversikt.consumer.spokelse.Utbetalingsperioder
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.VedtakDTO
 import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
@@ -53,11 +53,11 @@ class YtelseController
         @PostMapping("spokelse_sykepenger")
         fun hentSpokelseSykepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): List<SykpengerVedtak> =
+        ): Utbetalingsperioder =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.SpokelseSykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
-                    spokelseClient.hentSykpengerVedtak(fnrRequest.fnr, fnrRequest.fom)
+                    spokelseClient.hentUtbetalingsperiode(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
         @PostMapping("foreldrepenger")

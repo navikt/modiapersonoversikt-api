@@ -17,12 +17,6 @@ data class SykpengerRequest(
     val tom: String?,
 )
 
-data class SykpengerVedtak(
-    val vedtaksreferanse: String,
-    val utbetalinger: List<Utbetalingsperiode>,
-    val vedtattTidspunkt: LocalDate,
-)
-
 data class Utbetalingsperiode(
     val fom: LocalDate,
     val tom: LocalDate,
@@ -35,11 +29,6 @@ interface SpokelseClient {
         fom: String?,
         tom: String?,
     ): Utbetalingsperioder
-
-    fun hentSykpengerVedtak(
-        fnr: String,
-        fom: String?,
-    ): List<SykpengerVedtak>
 }
 
 open class SpokelseClientImpl(
@@ -66,7 +55,7 @@ open class SpokelseClientImpl(
                 .newCall(
                     Request
                         .Builder()
-                        .url("$baseUrl/utbetalte-perioder-dagpenger")
+                        .url("$baseUrl/utbetalte-perioder-personoversikt")
                         .post(requestBody)
                         .build(),
                 ).execute()
@@ -74,23 +63,5 @@ open class SpokelseClientImpl(
         val body = response.body?.string()
 
         return objectMapper.readValue(body, Utbetalingsperioder::class.java)
-    }
-
-    override fun hentSykpengerVedtak(
-        fnr: String,
-        fom: String?,
-    ): List<SykpengerVedtak> {
-        val response =
-            httpClient
-                .newCall(
-                    Request
-                        .Builder()
-                        .url("$baseUrl/grunnlag?fodselsnummer=$fnr&fraDato=$fom")
-                        .build(),
-                ).execute()
-
-        val body = response.body?.string()
-
-        return objectMapper.readValue(body, objectMapper.typeFactory.constructCollectionType(List::class.java, SykpengerVedtak::class.java))
     }
 }

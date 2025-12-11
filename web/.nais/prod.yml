@@ -63,7 +63,6 @@ spec:
         - host: pdl-api.prod-fss-pub.nais.io
         - host: pdl-pip-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
-        - host: spokelse.prod-gcp-pub.nais.io
         - host: modiapersonoversikt-api-proxy.prod-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
         - host: pensjon-pen.prod-fss-pub.nais.io
@@ -100,6 +99,8 @@ spec:
           namespace: nais-system
         - application: api-intern
           namespace: aap
+        - application: spokelse
+          namespace: tbd
     inbound:
       rules:
         - application: modiapersonoversikt

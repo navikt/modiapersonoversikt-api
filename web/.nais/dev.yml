@@ -63,7 +63,6 @@ spec:
         - host: oppgave.dev-fss-pub.nais.io
         - host: modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io
         - host: personoversikt-unleash-api.nav.cloud.nais.io
-        - host: spokelse.dev-gcp-pub.nais.io
         - host: pensjon-pen-q2.dev-fss-pub.nais.io
         - host: fpsak.dev-fss-pub.nais.io
       rules:
@@ -98,6 +97,8 @@ spec:
           namespace: nais-system
         - application: api-intern
           namespace: aap
+        - application: spokelse
+          namespace: tbd
     inbound:
       rules:
         - application: modiapersonoversikt
