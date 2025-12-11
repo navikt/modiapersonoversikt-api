@@ -53,7 +53,7 @@ open class PensjonServiceImpl(
                 .newCall(
                     Request
                         .Builder()
-                        .url("$baseUrl/pen/api/sak/alderspensjon/sammendrag")
+                        .url("$baseUrl/pen/api/ekstern/modia/sak/sammendrag")
                         .post(requestBody)
                         .build(),
                 ).execute()
