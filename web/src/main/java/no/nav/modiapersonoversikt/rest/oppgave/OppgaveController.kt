@@ -23,23 +23,12 @@ class OppgaveController
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val tilgangkontroll: Tilgangskontroll,
     ) {
-        @Deprecated("Ønsker å bytte om til å bare hente tildelte oppgaver gitt en person")
-        @GetMapping("/tildelt")
-        fun finnTildelte() =
-            tilgangkontroll
-                .check(Policies.tilgangTilModia)
-                .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                    oppgaveBehandlingService
-                        .finnTildelteOppgaverIGsak()
-                        .map { mapOppgave(it) }
-                }
-
         @PostMapping("/tildelt")
         fun finnTildelte(
             @RequestBody fnrRequest: FnrRequest,
         ): List<OppgaveDTO> =
             tilgangkontroll
-                .check(Policies.tilgangTilModia)
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
                     oppgaveBehandlingService
                         .finnTildelteOppgaverIGsak(fnrRequest.fnr)

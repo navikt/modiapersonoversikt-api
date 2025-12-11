@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
+import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
@@ -60,12 +61,12 @@ internal class OppgaveControllerTest {
                 ),
             )
 
-        every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
+        every { oppgavebehandlingService.finnTildelteOppgaverIGsak("") } returns oppgaveliste
         val resultat =
             AuthContextTestUtils.withIdent(
                 SAKSBEHANDLERS_IDENT,
                 UnsafeSupplier {
-                    oppgaveController.finnTildelte()
+                    oppgaveController.finnTildelte(FnrRequest(""))
                 },
             )
 

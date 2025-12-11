@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.common.types.identer.AktorId
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Behandling
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
@@ -12,7 +11,6 @@ import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.OppgaveJsonD
 import no.nav.modiapersonoversikt.consumer.oppgave.generated.models.PostOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
@@ -20,14 +18,11 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingSer
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInnslag
-import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
-import no.nav.modiapersonoversikt.utils.SafeListAggregate
-import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.logging.Logging
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -177,39 +172,19 @@ class RestOppgaveBehandlingServiceImpl(
             oppgave
                 .copy(
                     tilordnetRessurs = ident,
-                    endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet),
+                    endretAvEnhetsnr = saksbehandlersValgteEnhet,
                 ).toPutOppgaveRequestJsonDTO(),
         )
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun finnTildelteOppgaverIGsak(): MutableList<Oppgave> {
-        val ident: String = AuthContextUtils.requireIdent()
-        val correlationId = correlationId()
-
-        return hentOppgaverPaginertOgTilgangskontroll { offset ->
-            apiClient.finnOppgaver(
-                correlationId,
-                tilordnetRessurs = ident,
-                aktivDatoTom = LocalDate.now(clock).toString(),
-                statuskategori = "AAPEN",
-                limit = OPPGAVE_MAX_LIMIT,
-                offset = offset,
-            ) ?: throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Feil ved henting av oppgave.",
-            )
-        }
-    }
-
-    override fun finnTildelteOppgaverIGsak(fnr: String): MutableList<Oppgave> {
+    override fun finnTildelteOppgaverIGsak(fnr: String): List<Oppgave> {
         val ident: String = AuthContextUtils.requireIdent()
         val aktorId =
             pdlOppslagService.hentAktorId(fnr)
                 ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
         val correlationId = correlationId()
 
-        return hentOppgaverPaginertOgTilgangskontroll { offset ->
+        return hentOppgaverPaginert { offset ->
             apiClient.finnOppgaver(
                 correlationId,
                 aktoerId = listOf(aktorId),
@@ -268,7 +243,7 @@ class RestOppgaveBehandlingServiceImpl(
                                 clock = clock,
                             ),
                         ),
-                    endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe?.orElse(null), saksbehandlersValgteEnhet),
+                    endretAvEnhetsnr = saksbehandlersValgteEnhet,
                 ).toPutOppgaveRequestJsonDTO(),
         )
     }
@@ -304,7 +279,7 @@ class RestOppgaveBehandlingServiceImpl(
         val correlationId = correlationId()
 
         val oppgaver =
-            hentOppgaverPaginertOgTilgangskontroll { offset ->
+            hentOppgaverPaginert { offset ->
                 apiClient.finnOppgaver(
                     aktoerId = listOf(aktorId),
                     xCorrelationID = correlationId,
@@ -345,7 +320,7 @@ class RestOppgaveBehandlingServiceImpl(
         return oppgave.toOppgaveJsonDTO()
     }
 
-    private fun hentOppgaverPaginertOgTilgangskontroll(action: (offset: Long) -> GetOppgaverResponseJsonDTO): MutableList<Oppgave> {
+    private fun hentOppgaverPaginert(action: (offset: Long) -> GetOppgaverResponseJsonDTO): List<Oppgave> {
         val response =
             paginering(
                 total = { it.antallTreffTotalt ?: 0 },
@@ -353,29 +328,13 @@ class RestOppgaveBehandlingServiceImpl(
                 action = action,
             )
 
-        val oppgaver =
-            response
-                .filter { oppgaveJson ->
-                    val erTilknyttetHenvendelse =
-                        oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
-                    val harAktorId = !oppgaveJson.aktoerId.isNullOrBlank()
-                    erTilknyttetHenvendelse && harAktorId
-                }
-
-        val aktorIdTilganger: Map<String?, Decision.Type> = hentAktorIdTilgang(oppgaver)
-        return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
-            .filter { aktorIdTilganger[it.aktoerId] == Decision.Type.PERMIT }
-            .fold(
-                transformSuccess = this::mapTilOppgave,
-                transformFailure = { it },
-            ).getWithFailureHandling { failures ->
-                val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
-                tjenestekallLogg.warn(
-                    Logging.TEAM_LOGS_MARKER,
-                    "[OPPGAVE] hentOppgaverPaginertOgTilgangskontroll la tilbake oppgaver pga manglende tilgang: $oppgaveIds",
-                )
-                systemLeggTilbakeOppgaver(failures)
-            }.toMutableList()
+        return response
+            .filter { oppgaveJson ->
+                val erTilknyttetHenvendelse =
+                    oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
+                val harAktorId = !oppgaveJson.aktoerId.isNullOrBlank()
+                erTilknyttetHenvendelse && harAktorId
+            }.map { filtrertOppgave -> mapTilOppgave(filtrertOppgave) }
     }
 
     private fun mapTilOppgave(oppgave: OppgaveJsonDTO): Oppgave {
@@ -411,38 +370,6 @@ class RestOppgaveBehandlingServiceImpl(
             beskrivelse = oppgave.beskrivelse,
             opprettetTidspunkt = javaLocalDateTime,
         )
-    }
-
-    private fun hentAktorIdTilgang(oppgaver: List<OppgaveJsonDTO>): Map<String?, Decision.Type> {
-        val aktoerer = oppgaver.groupBy { it.aktoerId }
-        return aktoerer
-            .map { entry ->
-                val aktoerId = entry.key
-                val decision =
-                    if (aktoerId.isNullOrEmpty()) {
-                        Decision.Type.DENY
-                    } else {
-                        tilgangskontroll
-                            .check(Policies.tilgangTilBruker(AktorId(aktoerId)))
-                            .getDecision()
-                            .type
-                    }
-                Pair(aktoerId, decision)
-            }.toMap()
-    }
-
-    private fun systemLeggTilbakeOppgaver(oppgaver: List<OppgaveJsonDTO>) {
-        for (oppgave in oppgaver) {
-            systemApiClient.endreOppgave(
-                correlationId(),
-                requireNotNull(oppgave.id) { "Kan ikke legge tilbake oppgave uten oppgaveId" },
-                oppgave
-                    .copy(
-                        tilordnetRessurs = null,
-                        endretAvEnhetsnr = defaultEnhetGittTemagruppe(null, "4100"),
-                    ).toPutOppgaveRequestJsonDTO(),
-            )
-        }
     }
 
     private fun correlationId() = getCallId()

@@ -18,7 +18,6 @@ import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.testutils.AuthContextTestUtils
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
-import no.nav.personoversikt.common.kabac.Decision
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.*
@@ -190,34 +189,7 @@ class RestOppgaveBehandlingServiceImplTest {
     @Nested
     inner class TilordneOppgave {
         @Test
-        fun `skal hente og tilordne oppgave, setter 4100 som standard enhet`() {
-            every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
-            every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
-
-            withIdent("Z999999") {
-                oppgaveBehandlingService.tilordneOppgaveIGsak(
-                    "1234",
-                    Temagruppe.FMLI,
-                    "4110",
-                    false,
-                )
-            }
-
-            verifySequence {
-                apiClient.hentOppgave(any(), 1234)
-                apiClient.endreOppgave(
-                    any(),
-                    1234,
-                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
-                        endretAvEnhetsnr = "4100",
-                        tilordnetRessurs = "Z999999",
-                    ),
-                )
-            }
-        }
-
-        @Test
-        fun `skal hente og tilordne oppgave, bruker saksbehandlers valgte enhet for ANSOS etc `() {
+        fun `skal hente og tilordne oppgave, bruker saksbehandlers valgte enhet`() {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
 
@@ -285,7 +257,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     any(),
                     1234,
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
-                        endretAvEnhetsnr = "4100",
+                        endretAvEnhetsnr = "4110",
                         tilordnetRessurs = "Z999999",
                     ),
                 )
@@ -312,7 +284,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             val result: List<Oppgave> =
                 withIdent("Z999999") {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    oppgaveBehandlingService.finnTildelteOppgaverIGsak("07063000250")
                 }
             val oppgave: Oppgave = result[0]
 
@@ -324,6 +296,7 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.finnOppgaver(
                     xCorrelationID = any(),
+                    aktoerId = listOf("00007063000250000"),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -393,7 +366,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             val result: List<Oppgave> =
                 withIdent("Z999999") {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    oppgaveBehandlingService.finnTildelteOppgaverIGsak("07063000250")
                 }
             val oppgave: Oppgave = result[0]
 
@@ -405,6 +378,7 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.finnOppgaver(
                     xCorrelationID = any(),
+                    aktoerId = listOf("00007063000250000"),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -413,6 +387,7 @@ class RestOppgaveBehandlingServiceImplTest {
                 )
                 apiClient.finnOppgaver(
                     xCorrelationID = any(),
+                    aktoerId = listOf("00007063000250000"),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -421,59 +396,12 @@ class RestOppgaveBehandlingServiceImplTest {
                 )
                 apiClient.finnOppgaver(
                     xCorrelationID = any(),
+                    aktoerId = listOf("00007063000250000"),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
                     limit = 49,
                     offset = 98,
-                )
-            }
-        }
-
-        @Test
-        fun `skal legge tilbake tilordnet oppgave uten tilgang`() {
-            val henvendelseOppgave =
-                dummyOppgave
-                    .copy(
-                        aktoerId = "00007063000250000",
-                        metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to "henvid"),
-                    )
-            every { apiClient.finnOppgaver(allAny()) } returns
-                GetOppgaverResponseJsonDTO(
-                    antallTreffTotalt = 1,
-                    oppgaver = listOf(henvendelseOppgave),
-                )
-            every {
-                systemApiClient.endreOppgave(
-                    any(),
-                    any(),
-                    any(),
-                )
-            } returns henvendelseOppgave.toPutOppgaveResponseJsonDTO()
-            val result =
-                TilgangskontrollMock.withDecision(Decision.Deny("", Decision.NO_APPLICABLE_POLICY_FOUND)) {
-                    withIdent("Z999999") {
-                        oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                    }
-                }
-
-            assertThat(result).isEmpty()
-            verifySequence {
-                apiClient.finnOppgaver(
-                    xCorrelationID = any(),
-                    tilordnetRessurs = "Z999999",
-                    aktivDatoTom = now(fixedClock).toString(),
-                    statuskategori = "AAPEN",
-                    limit = 49,
-                    offset = 0,
-                )
-                systemApiClient.endreOppgave(
-                    any(),
-                    1234,
-                    henvendelseOppgave.toPutOppgaveRequestJsonDTO().copy(
-                        tilordnetRessurs = null,
-                        endretAvEnhetsnr = "4100",
-                    ),
                 )
             }
         }
@@ -503,13 +431,14 @@ class RestOppgaveBehandlingServiceImplTest {
 
             val result =
                 withIdent("Z999999") {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    oppgaveBehandlingService.finnTildelteOppgaverIGsak("07063000250")
                 }
 
             assertThat(result).isEmpty()
             verify {
                 apiClient.finnOppgaver(
                     xCorrelationID = any(),
+                    aktoerId = listOf("00007063000250000"),
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
                     statuskategori = "AAPEN",
@@ -524,56 +453,6 @@ class RestOppgaveBehandlingServiceImplTest {
             }
 
             confirmVerified(apiClient, systemApiClient)
-        }
-
-        @Test
-        fun `skal legge tilbake oppgave om aktørId fra oppgave ikke finnes i PDL`() {
-            val oppgave =
-                dummyOppgave
-                    .copy(
-                        aktoerId = "00007063000250000",
-                        metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to "henvid"),
-                    )
-            every { apiClient.finnOppgaver(allAny()) } returns
-                GetOppgaverResponseJsonDTO(
-                    antallTreffTotalt = 1,
-                    oppgaver = listOf(oppgave),
-                )
-            every {
-                systemApiClient.endreOppgave(
-                    any(),
-                    any(),
-                    any(),
-                )
-            } returns oppgave.toPutOppgaveResponseJsonDTO()
-
-            every { pdlOppslagService.hentAktorId(any()) } returns null
-            every { pdlOppslagService.hentFnr(any()) } returns null
-
-            val result =
-                withIdent("Z999999") {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                }
-
-            assertThat(result).isEmpty()
-            verifySequence {
-                apiClient.finnOppgaver(
-                    xCorrelationID = any(),
-                    statuskategori = "AAPEN",
-                    tilordnetRessurs = "Z999999",
-                    aktivDatoTom = now(fixedClock).toString(),
-                    limit = 49,
-                    offset = 0,
-                )
-                systemApiClient.endreOppgave(
-                    any(),
-                    1234,
-                    oppgave.toPutOppgaveRequestJsonDTO().copy(
-                        tilordnetRessurs = null,
-                        endretAvEnhetsnr = "4100",
-                    ),
-                )
-            }
         }
 
         @Test
@@ -603,7 +482,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             val result: List<Oppgave> =
                 withIdent("Z999999") {
-                    oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    oppgaveBehandlingService.finnTildelteOppgaverIGsak("07063000250")
                 }
             val oppgave: Oppgave = result[0]
 
@@ -616,6 +495,7 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.finnOppgaver(
                     xCorrelationID = any(),
+                    aktoerId = listOf("00007063000250000"),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
