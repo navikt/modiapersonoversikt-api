@@ -14,8 +14,6 @@ public interface OppgaveBehandlingService {
 
     void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet, boolean tvungenTilordning) throws FikkIkkeTilordnet;
 
-    @Deprecated
-    List<Oppgave> finnTildelteOppgaverIGsak();
     List<Oppgave> finnTildelteOppgaverIGsak(String fnr);
 
     void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet);
