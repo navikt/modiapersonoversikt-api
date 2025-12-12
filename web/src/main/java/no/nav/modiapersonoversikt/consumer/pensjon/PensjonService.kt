@@ -16,6 +16,10 @@ interface PensjonService {
     fun hentSaker(fnr: String): List<PensjonSak>
 }
 
+data class PensjonSakResponse(
+    val sakSammendragListe: List<PensjonSak>
+)
+
 data class PensjonSak(
     val sakid: Long,
     val sakType: String,
@@ -35,7 +39,10 @@ open class PensjonServiceImpl(
     private val httpClient: OkHttpClient,
 ) : PensjonService {
     @Cacheable("pensjonSaker")
-    override fun hentSaker(fnr: String): List<PensjonSak> = sendRequest(fnr) ?: listOf()
+    override fun hentSaker(fnr: String): List<PensjonSak>  {
+        val response: PensjonSakResponse? = sendRequest<PensjonSakResponse>(fnr)
+        return response?.sakSammendragListe ?: listOf()
+    }
 
     private inline fun <reified T> sendRequest(fnr: String): T? {
         val requestContent =
