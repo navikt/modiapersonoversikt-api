@@ -1,14 +1,13 @@
 package no.nav.modiapersonoversikt.consumer.spokelse
 
 import no.nav.common.rest.client.RestClient
-import no.nav.common.token_client.client.OnBehalfOfTokenClient
+import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
-import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.utils.DownstreamApi
-import no.nav.modiapersonoversikt.utils.exchangeOnBehalfOfToken
+import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
 import okhttp3.OkHttpClient
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
@@ -22,7 +21,7 @@ open class SpokelseConfig {
 
     @Bean
     open fun spokelseClient(
-        oboTokenProvider: OnBehalfOfTokenClient,
+        machineToMachineTokenClient: MachineToMachineTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
     ): SpokelseClient {
         val httpClient: OkHttpClient =
@@ -38,7 +37,7 @@ open class SpokelseConfig {
                     },
                 ).addInterceptor(
                     AuthorizationInterceptor {
-                        oboTokenProvider.exchangeOnBehalfOfToken(scope, AuthContextUtils.requireToken())
+                        machineToMachineTokenClient.createMachineToMachineToken(scope)
                     },
                 ).build()
         return SpokelseClientImpl(url, httpClient)

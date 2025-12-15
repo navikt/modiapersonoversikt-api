@@ -208,7 +208,7 @@ spec:
     - name: TILTAKSPENGER_SCOPE
       value: "dev-gcp:tpts:tiltakspenger-datadeling"
     - name: SPOKELSE_URL
-      value: "http://spokelse.tbd"
+      value: "https://spokelse.intern.dev.nav.no"
     - name: SPOKELSE_SCOPE
       value: "dev-gcp:tbd:spokelse"
     - name: TILGANGSMASKINEN_URL
