@@ -62,7 +62,7 @@ open class SpokelseClientImpl(
 
         val body = response.body?.string()
 
-        val perioder =  objectMapper.readValue(body, Utbetalingsperioder::class.java)
+        val perioder = objectMapper.readValue(body, Utbetalingsperioder::class.java)
 
         return Utbetalingsperioder(
             utbetaltePerioder = perioder.utbetaltePerioder.sortedByDescending { it.fom },
