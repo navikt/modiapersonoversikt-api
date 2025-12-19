@@ -128,7 +128,7 @@ object SakerApiMapper {
                 tilhorendeSaksid = behandlingskjede.tilhorendeSakid,
                 tilhorendeFagsaksid = behandlingskjede.tilhorendeFagsakId,
                 baksystem = behandlingskjede.baksystem,
-                temakode = behandlingskjede.temakode,
+                temakode = behandlingskjede.temakode ?: "",
                 temakodeVisning = behandlingskjede.temakodeVisning,
                 ettersending = false,
                 erJournalfort = behandlingskjede.isErJournalfort,
