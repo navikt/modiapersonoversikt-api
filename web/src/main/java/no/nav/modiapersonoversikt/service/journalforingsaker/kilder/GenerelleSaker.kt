@@ -7,7 +7,7 @@ import no.nav.modiapersonoversikt.service.journalforingsaker.SakerKilde
 import org.joda.time.DateTime
 
 internal class GenerelleSaker(
-    private val  kodeverkService: EnhetligKodeverk.Service
+    private val kodeverkService: EnhetligKodeverk.Service,
 ) : SakerKilde {
     override val kildeNavn: String
         get() = "GENERELLE"
