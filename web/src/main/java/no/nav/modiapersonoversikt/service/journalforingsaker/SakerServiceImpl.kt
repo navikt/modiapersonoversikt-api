@@ -35,7 +35,7 @@ class SakerServiceImpl : SakerService {
         safSaker = SafSaker(safService)
         arenaSaker = ArenaSaker(arenaInfotrygdApi)
         bidragSaker = BidragSaker()
-        generelleSaker = GenerelleSaker()
+        generelleSaker = GenerelleSaker(kodeverk)
         oppfolgingsSaker = OppfolgingsSaker()
     }
 
