@@ -78,17 +78,6 @@ class SakerServiceImplTest {
     @Test
     fun `transformerer response til saksliste nye temakoder`() {
         every { safService.hentSaker(any()) } returns createSaksliste()
-        every { kodeverk.hentKodeverk<String, String>(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
-        every { kodeverk.hentKodeverk<Any, Any>(any()) } returns
-            EnhetligKodeverk.Kodeverk(
-                "",
-                mapOf(
-                    "UNG" to "UNG",
-                    "PAI" to "PAI",
-                    "AKT" to "AKT",
-                    "POI" to "POI",
-                ),
-            )
 
         val saksliste: List<JournalforingSak> = sakerService.hentSaker(FNR).saker
 

@@ -1,14 +1,10 @@
 package no.nav.modiapersonoversikt.service.journalforingsaker.kilder
 
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerKilde
 import org.joda.time.DateTime
 
-internal class GenerelleSaker(
-    private val kodeverkService: EnhetligKodeverk.Service,
-) : SakerKilde {
+internal class GenerelleSaker : SakerKilde {
     override val kildeNavn: String
         get() = "GENERELLE"
 
@@ -16,14 +12,13 @@ internal class GenerelleSaker(
         fnr: String,
         saker: MutableList<JournalforingSak>,
     ) {
-        val temaer = kodeverkService.hentKodeverk(KodeverkConfig.TEMA).hentAlleVerdier().toList()
         val generelleSaker =
             saker
                 .filter { obj: JournalforingSak -> obj.isSakstypeForVisningGenerell }
 
         val manglendeGenerelleSaker =
-            temaer
-                .filter { temakode ->
+            JournalforingSak.GODKJENTE_TEMA_FOR_GENERELL_SAK
+                .filter { temakode: String ->
                     harIngenSakerMedTemakode(temakode, generelleSaker) && JournalforingSak.TEMAKODE_OPPFOLGING != temakode
                 }.map { temakode: String -> lagGenerellSakMedTema(temakode) }
 
