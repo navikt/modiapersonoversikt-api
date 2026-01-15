@@ -304,7 +304,7 @@
         <dependency>
             <groupId>io.getunleash</groupId>
             <artifactId>unleash-client-java</artifactId>
-            <version>11.2.1</version>
+            <version>12.0.0</version>
         </dependency>
 
         <dependency>
