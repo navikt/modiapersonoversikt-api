@@ -123,7 +123,7 @@ class OppfolgingController
                 ) {
                     val response = arenaInfotrygdApi.hentOppfolgingskontrakter(fnrRequest.fnr, start, slutt)
                     SykefravaerOppfolgingDTO(
-                        sykefravaersoppfolging = hentSyfoPunkt(response.syfoPunkter)
+                        sykefravaersoppfolging = hentSyfoPunkt(response.syfoPunkter),
                     )
                 }
 
