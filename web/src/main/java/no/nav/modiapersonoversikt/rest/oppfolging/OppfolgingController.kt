@@ -106,6 +106,54 @@ class OppfolgingController
                     Gjeldende14aVedtakResponse(gjeldende14aVedtak)
                 }
 
+        @PostMapping("/sykefravaeroppfolging")
+        fun hentSykefravaerOppfolging(
+            @RequestBody fnrRequest: FnrRequest,
+            @RequestParam("startDato") start: String?,
+            @RequestParam("sluttDato") slutt: String?,
+        ): SykefravaerOppfolgingDTO =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.sykefravaerOppfolging,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    val response = arenaInfotrygdApi.hentOppfolgingskontrakter(fnrRequest.fnr, start, slutt)
+                    SykefravaerOppfolgingDTO(
+                        sykefravaersoppfolging = hentSyfoPunkt(response.syfoPunkter),
+                    )
+                }
+
+        @PostMapping("/arbeidsoppfolging")
+        fun hentArbeidsOppfolging(
+            @RequestBody fnrRequest: FnrRequest,
+            @RequestParam("startDato") start: String?,
+            @RequestParam("sluttDato") slutt: String?,
+        ): ArbeidsOppfolgingDTO =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.arbeidsOppfolging,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    val response = arenaInfotrygdApi.hentOppfolgingskontrakter(fnrRequest.fnr, start, slutt)
+                    val oppfolgingStatus = runCatching { hent(fnrRequest) }
+
+                    ArbeidsOppfolgingDTO(
+                        oppfolging = oppfolgingStatus.getOrNull(),
+                        meldeplikt = response.bruker?.meldeplikt,
+                        formidlingsgruppe = response.bruker?.formidlingsgruppe,
+                        vedtaksdato = response.vedtaksdato?.toString(JODA_DATOFORMAT),
+                        rettighetsgruppe = response.bruker?.rettighetsgruppe,
+                    )
+                }
+
         private fun hentYtelser(ytelser: List<Ytelse>?): List<YtelseDTO> {
             if (ytelser == null) return emptyList()
 
@@ -205,6 +253,14 @@ open class OppfolgingsYtelseDTO(
     open val ukerIgjenMedBortfall: Int?,
 ) : YtelseDTO()
 
+data class ArbeidsOppfolgingDTO(
+    val oppfolging: OppfolgingDTO?,
+    val meldeplikt: Boolean?,
+    val formidlingsgruppe: String?,
+    val vedtaksdato: String?,
+    val rettighetsgruppe: String?,
+)
+
 data class DagpengeytelseDTO(
     override val type: String?,
     override val status: String?,
@@ -226,6 +282,10 @@ data class OppfolgingYtelseVedtakDTO(
     val aktivitetsfase: String?,
     val vedtakstatus: String?,
     val vedtakstype: String?,
+)
+
+data class SykefravaerOppfolgingDTO(
+    val sykefravaersoppfolging: List<SyfoPunktDTO>? = listOf(),
 )
 
 data class UtvidetOppfolgingDTO(
