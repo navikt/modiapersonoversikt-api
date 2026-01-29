@@ -91,7 +91,7 @@ class SakerServiceImplTest {
         assertThat(paiSak, notNullValue())
         assertThat(paiSak?.saksId, nullValue())
 
-        assertThat(saksliste.find { it.temaKode == Tema.AKT.toString() }, notNullValue())
+        assertThat(saksliste.find { it.temaKode == Tema.BBF.toString() }, notNullValue())
         assertThat(saksliste.find { it.temaKode == Tema.POI.toString() }, notNullValue())
     }
 
