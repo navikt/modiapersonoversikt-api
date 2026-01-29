@@ -76,6 +76,8 @@ class AuditResources {
             val Kontrakter = AuditResource("person.kontrakter")
             val YtelserOgKontrakter = AuditResource("person.ytelserogkontrakter")
             val oppfolging14aVedtak = AuditResource("person.14aVedtak")
+            val sykefravaerOppfolging = AuditResource("person.sykefravaerOppfolging")
+            val arbeidsOppfolging = AuditResource("person.arbeidsOppfolging")
 
             @JvmField
             val Personalia = AuditResource("person.personalia")
