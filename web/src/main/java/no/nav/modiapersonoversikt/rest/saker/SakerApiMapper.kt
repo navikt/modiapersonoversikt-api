@@ -110,6 +110,7 @@ object SakerApiMapper {
                         )
                     },
                 temaer = resultatWrapper.resultat.temaer,
+                dokumenter = resultatWrapper.resultat.dokumenter,
                 feilendeSystemer = resultatWrapper.feilendeSystemer.toList(),
             )
 

@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.commondomain.sak.Baksystem
 import no.nav.modiapersonoversikt.commondomain.sak.Entitet
 import no.nav.modiapersonoversikt.commondomain.sak.Feilmelding
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument.DokumentStatus
+import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.saf.domain.Kommunikasjonsretning
 import no.nav.modiapersonoversikt.service.soknadsstatus.Sakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.Soknadsstatus
@@ -73,6 +74,7 @@ object SakerApi {
 
     data class ResultatSaksDokumenter(
         val saker: List<SaksDokumenter>,
+        val dokumenter: List<DokumentMetadata>,
         val temaer: List<Sakstema>,
         val feilendeSystemer: List<Baksystem> = listOf(),
     )
