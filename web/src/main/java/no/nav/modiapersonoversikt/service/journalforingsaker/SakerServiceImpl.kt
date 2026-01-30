@@ -59,6 +59,7 @@ class SakerServiceImpl : SakerService {
             .leggTilDataFraKilde(fnr, bidragSaker)
             .leggTilTemaNavn(kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA))
             .leggTilFagsystemNavn(kodeverk.hentKodeverk(KodeverkConfig.FAGSYSTEM))
+            .fjernSakerSomIkkeSkalJournalforesMot()
             .fjernDuplikater()
     }
 
@@ -95,5 +96,11 @@ class SakerServiceImpl : SakerService {
             }
             return this
         }
+
+        private fun SakerService.Resultat.fjernSakerSomIkkeSkalJournalforesMot(): SakerService.Resultat =
+            // Temakode AKT skal ikke kunne journalføres mot
+            this.copy(
+                saker = this.saker.filter { it.temaKode != "AKT" }.toMutableList(),
+            )
     }
 }
