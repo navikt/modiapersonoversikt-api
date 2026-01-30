@@ -74,7 +74,7 @@ object SakerApi {
 
     data class ResultatSaksDokumenter(
         val saker: List<SaksDokumenter>,
-        val dokumenter: List<DokumentMetadata>,
+        val dokumenter: List<Dokumentmetadata>,
         val temaer: List<Sakstema>,
         val feilendeSystemer: List<Baksystem> = listOf(),
     )

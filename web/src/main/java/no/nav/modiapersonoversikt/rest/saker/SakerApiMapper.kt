@@ -110,7 +110,7 @@ object SakerApiMapper {
                         )
                     },
                 temaer = resultatWrapper.resultat.temaer,
-                dokumenter = resultatWrapper.resultat.dokumenter,
+                dokumenter = resultatWrapper.resultat.dokumenter.map(::mapTilDokumentMetadata),
                 feilendeSystemer = resultatWrapper.feilendeSystemer.toList(),
             )
 
