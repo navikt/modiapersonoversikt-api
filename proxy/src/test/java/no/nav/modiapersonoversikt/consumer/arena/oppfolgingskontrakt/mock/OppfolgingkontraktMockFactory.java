@@ -157,10 +157,10 @@ public final class OppfolgingkontraktMockFactory {
         return vedtak;
     }
 
-    private static WSYtelseskontrakt createYtelseskontrakt(String status, String type, Date datoKravMottat) {
+    private static WSYtelseskontrakt createYtelseskontrakt(String status, String type, Date datoKravMottatt) {
         WSYtelseskontrakt kontrakt = new WSYtelseskontrakt();
 
-        kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(requireNonNullElse(datoKravMottat, DATO_KRAV_MOTTATT)));
+        kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(requireNonNullElse(datoKravMottatt, DATO_KRAV_MOTTATT)));
         kontrakt.setStatus(requireNonNullElse(status, YTELSESKONTRAKT_STATUS));
         kontrakt.setYtelsestype(requireNonNullElse(type, YTELSESTYPE));
 

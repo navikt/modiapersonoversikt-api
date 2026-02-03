@@ -61,7 +61,7 @@ public class YtelseskontraktMapper {
         }
         ytelse.setType(source.getYtelsestype());
         ytelse.setStatus(source.getStatus());
-        ytelse.setDatoKravMottat(map(source.getDatoKravMottatt()));
+        ytelse.setDatoKravMottatt(map(source.getDatoKravMottatt()));
         ytelse.setDagerIgjenMedBortfall(source.getBortfallsprosentDagerIgjen());
         ytelse.setUkerIgjenMedBortfall(source.getBortfallsprosentUkerIgjen());
 

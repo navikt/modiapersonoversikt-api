@@ -161,7 +161,7 @@ class OppfolgingController
                 when (it) {
                     is Dagpengeytelse ->
                         DagpengeytelseDTO(
-                            datoKravMottat = it.datoKravMottat?.toString(JODA_DATOFORMAT),
+                            datoKravMottatt = it.datoKravMottatt?.toString(JODA_DATOFORMAT),
                             fom = it.fom?.toString(JODA_DATOFORMAT),
                             tom = it.tom?.toString(JODA_DATOFORMAT),
                             status = it.status,
@@ -177,7 +177,7 @@ class OppfolgingController
 
                     else ->
                         OppfolgingsYtelseDTO(
-                            datoKravMottat = it.datoKravMottat?.toString(JODA_DATOFORMAT),
+                            datoKravMottatt = it.datoKravMottatt?.toString(JODA_DATOFORMAT),
                             fom = it.fom?.toString(JODA_DATOFORMAT),
                             tom = it.tom?.toString(JODA_DATOFORMAT),
                             status = it.status,
@@ -245,7 +245,7 @@ sealed class YtelseDTO
 open class OppfolgingsYtelseDTO(
     open val type: String?,
     open val status: String?,
-    open val datoKravMottat: String?,
+    open val datoKravMottatt: String?,
     open val vedtak: List<OppfolgingYtelseVedtakDTO>? = listOf(),
     open val fom: String?,
     open val tom: String?,
@@ -264,7 +264,7 @@ data class ArbeidsOppfolgingDTO(
 data class DagpengeytelseDTO(
     override val type: String?,
     override val status: String?,
-    override val datoKravMottat: String?,
+    override val datoKravMottatt: String?,
     override val vedtak: List<OppfolgingYtelseVedtakDTO>? = listOf(),
     override val fom: String?,
     override val tom: String?,
@@ -274,7 +274,7 @@ data class DagpengeytelseDTO(
     val ukerIgjenPermittering: Int?,
     val dagerIgjen: Int?,
     val ukerIgjen: Int?,
-) : OppfolgingsYtelseDTO(type, status, datoKravMottat, vedtak, fom, tom, dagerIgjenMedBortfall, ukerIgjenMedBortfall)
+) : OppfolgingsYtelseDTO(type, status, datoKravMottatt, vedtak, fom, tom, dagerIgjenMedBortfall, ukerIgjenMedBortfall)
 
 data class OppfolgingYtelseVedtakDTO(
     val aktivFra: String?,

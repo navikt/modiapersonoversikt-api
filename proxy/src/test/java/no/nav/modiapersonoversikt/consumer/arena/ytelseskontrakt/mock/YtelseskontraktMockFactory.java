@@ -18,7 +18,7 @@ import java.util.List;
  */
 public final class YtelseskontraktMockFactory {
 
-    public static final Date DATO_KRAV_MOTTAT = new LocalDate(2020, 10, 14).toDate();
+    public static final Date DATO_KRAV_MOTTATT = new LocalDate(2020, 10, 14).toDate();
     public static final Date FOM_GYLDIGHETSPERIODE = new LocalDate(2020, 10, 14).toDate();
     public static final Date TOM_GYLDIGHETSPERIODE = new LocalDate(2020, 10, 14).toDate();
     public static final Date VEDTAK_BESLUTNINGSDATO = new LocalDate(2020, 10, 14).toDate();
@@ -51,7 +51,7 @@ public final class YtelseskontraktMockFactory {
      * @return A mock Ytelseskontrakt object
      */
     public static FimYtelseskontrakt createYtelsesKontrakt() {
-        FimYtelseskontrakt ytelsesKontrakt = createYtelsesKontrakt(DATO_KRAV_MOTTAT, FOM_GYLDIGHETSPERIODE, TOM_GYLDIGHETSPERIODE, YTELSESSTATUS_AKTIV, YTELSESTYPE_APP, BORTFALL_PROSENT_DAGER_IGJEN);
+        FimYtelseskontrakt ytelsesKontrakt = createYtelsesKontrakt(DATO_KRAV_MOTTATT, FOM_GYLDIGHETSPERIODE, TOM_GYLDIGHETSPERIODE, YTELSESSTATUS_AKTIV, YTELSESTYPE_APP, BORTFALL_PROSENT_DAGER_IGJEN);
         ytelsesKontrakt.withIhtVedtak(createVedtak());
         return ytelsesKontrakt;
     }
@@ -174,9 +174,9 @@ public final class YtelseskontraktMockFactory {
         return kontrakt;
     }
 
-    private static FimDagpengekontrakt createDagpengekontrakt(Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, int antallDagerIgjen, FimVedtak... vedtak) {
+    private static FimDagpengekontrakt createDagpengekontrakt(Date datoKravMottatt, Date fom, Date tom, String status, String ytelsestype, int antallDagerIgjen, FimVedtak... vedtak) {
         FimDagpengekontrakt kontrakt = new FimDagpengekontrakt();
-        populateYtelsesKontrakt(kontrakt, datoKravMottat, fom, tom, status, ytelsestype, BORTFALL_PROSENT_DAGER_IGJEN);
+        populateYtelsesKontrakt(kontrakt, datoKravMottatt, fom, tom, status, ytelsestype, BORTFALL_PROSENT_DAGER_IGJEN);
         kontrakt.setAntallDagerIgjen(antallDagerIgjen);
         kontrakt.setAntallUkerIgjen(antallDagerIgjen / 5);
         kontrakt.setAntallDagerIgjenUnderPermittering(DAGER_IGJEN_PERMITTERING);
@@ -186,20 +186,20 @@ public final class YtelseskontraktMockFactory {
         return kontrakt;
     }
 
-    private static FimYtelseskontrakt createYtelsesKontrakt(Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, String vedtaksstatus, String vedtakstype, Integer bortfallProsentDagerIgjen) {
-        FimYtelseskontrakt kontrakt = createYtelsesKontrakt(datoKravMottat, fom, tom, status, ytelsestype, bortfallProsentDagerIgjen);
+    private static FimYtelseskontrakt createYtelsesKontrakt(Date datoKravMottatt, Date fom, Date tom, String status, String ytelsestype, String vedtaksstatus, String vedtakstype, Integer bortfallProsentDagerIgjen) {
+        FimYtelseskontrakt kontrakt = createYtelsesKontrakt(datoKravMottatt, fom, tom, status, ytelsestype, bortfallProsentDagerIgjen);
         kontrakt.withIhtVedtak(createVedtakWithRandomDates(vedtaksstatus, vedtakstype));
         return kontrakt;
     }
 
-    private static FimYtelseskontrakt createYtelsesKontrakt(Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, Integer bortfallProsentDagerIgjen) {
+    private static FimYtelseskontrakt createYtelsesKontrakt(Date datoKravMottatt, Date fom, Date tom, String status, String ytelsestype, Integer bortfallProsentDagerIgjen) {
         FimYtelseskontrakt kontrakt = new FimYtelseskontrakt();
-        populateYtelsesKontrakt(kontrakt, datoKravMottat, fom, tom, status, ytelsestype, bortfallProsentDagerIgjen);
+        populateYtelsesKontrakt(kontrakt, datoKravMottatt, fom, tom, status, ytelsestype, bortfallProsentDagerIgjen);
         return kontrakt;
     }
 
-    private static FimYtelseskontrakt populateYtelsesKontrakt(FimYtelseskontrakt kontrakt, Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, Integer bortfallProsentDagerIgjen) {
-        kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(datoKravMottat));
+    private static FimYtelseskontrakt populateYtelsesKontrakt(FimYtelseskontrakt kontrakt, Date datoKravMottatt, Date fom, Date tom, String status, String ytelsestype, Integer bortfallProsentDagerIgjen) {
+        kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(datoKravMottatt));
 
         kontrakt.setFomGyldighetsperiode(DateUtils.convertDateToXmlGregorianCalendar(fom));
         kontrakt.setTomGyldighetsperiode(DateUtils.convertDateToXmlGregorianCalendar(tom));

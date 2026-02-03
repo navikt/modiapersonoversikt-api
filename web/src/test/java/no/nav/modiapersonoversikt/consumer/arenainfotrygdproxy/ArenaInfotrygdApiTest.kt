@@ -36,7 +36,7 @@ class ArenaInfotrygdApiTest {
     {
       "type": "Dagpenger",
       "status": "Aktiv",
-      "datoKravMottat": "2023-09-01",
+      "datoKravMottatt": "2023-09-01",
       "vedtak": [
         {
           "vedtakstype": "Innvilgelse",
@@ -63,7 +63,7 @@ class ArenaInfotrygdApiTest {
     {
       "type": "Arbeidsavklaringspenger",
       "status": "Avsluttet",
-      "datoKravMottat": "2023-06-01",
+      "datoKravMottatt": "2023-06-01",
       "vedtak": [
         {
           "vedtakstype": "Avslag",
