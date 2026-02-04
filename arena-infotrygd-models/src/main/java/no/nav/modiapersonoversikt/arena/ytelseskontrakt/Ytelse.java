@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.arena.ytelseskontrakt;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ public class Ytelse implements Serializable {
 
     private String type;
     private String status;
+    @JsonProperty("datoKravMottat")
     private LocalDate datoKravMottatt;
     private List<Vedtak> vedtak;
     private LocalDate fom;
