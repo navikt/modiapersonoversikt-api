@@ -131,11 +131,11 @@ object SafDokumentMapper {
         return Dokument().apply {
             tittel = dokumentInfo.tittel
             dokumentreferanse = dokumentInfo.dokumentInfoId
-            isKanVises = true
             isLogiskDokument = false
             variantformat = variantFormat
             skjerming = getSkjerming(dokumentInfo)?.toString()
             dokumentStatus = getDokumentStatus(dokumentInfo)
+            saksbehandlerHarTilgang = getTilgang(dokumentInfo)
         }
     }
 
@@ -170,6 +170,8 @@ object SafDokumentMapper {
 
     private fun getSkjerming(dokumentInfo: DokumentInfo): SkjermingType? = getVariant(dokumentInfo)?.skjerming
 
+    private fun getTilgang(dokumentInfo: DokumentInfo): Boolean? = getVariant(dokumentInfo)?.saksbehandlerHarTilgang
+
     private fun getVariant(dokumentInfo: DokumentInfo): Dokumentvariant? =
         dokumentInfo.dokumentvarianter.let {
             it.find { variant -> variant?.variantformat == Variantformat.SLADDET }
@@ -180,7 +182,6 @@ object SafDokumentMapper {
         Dokument().apply {
             tittel = logiskVedlegg.tittel
             dokumentreferanse = null
-            isKanVises = true
             isLogiskDokument = true
         }
 }
