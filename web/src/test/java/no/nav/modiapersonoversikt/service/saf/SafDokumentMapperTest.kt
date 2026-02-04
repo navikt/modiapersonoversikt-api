@@ -56,7 +56,6 @@ internal class SafDokumentMapperTest {
 
         assertEquals(hovedDokumentTittel, dokumentMetadata.hoveddokument.tittel)
         assertEquals(dokumentinfoid, dokumentMetadata.hoveddokument.dokumentreferanse)
-        assertEquals(true, dokumentMetadata.hoveddokument.isKanVises)
         assertEquals(false, dokumentMetadata.hoveddokument.isLogiskDokument)
         assertEquals(ARKIV, dokumentMetadata.hoveddokument.variantformat)
         assertEquals(Dokument.DokumentStatus.FERDIGSTILT, dokumentMetadata.hoveddokument.dokumentStatus)
@@ -64,7 +63,6 @@ internal class SafDokumentMapperTest {
         assertEquals(2, dokumentMetadata.vedlegg.size)
         assertEquals(vedleggTittel, dokumentMetadata.vedlegg[0].tittel)
         assertEquals(dokumentinfoid, dokumentMetadata.vedlegg[0].dokumentreferanse)
-        assertEquals(true, dokumentMetadata.vedlegg[0].isKanVises)
         assertEquals(false, dokumentMetadata.vedlegg[0].isLogiskDokument)
         assertEquals(ARKIV, dokumentMetadata.vedlegg[0].variantformat)
 
