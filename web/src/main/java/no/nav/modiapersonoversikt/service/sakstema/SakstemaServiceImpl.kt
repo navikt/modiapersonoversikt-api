@@ -10,6 +10,8 @@ import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.FilterUtils.fjernGamleDokumenter
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.soknadsstatus.*
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils
+import no.nav.personoversikt.common.science.scientist.Scientist
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.function.Predicate
@@ -203,10 +205,27 @@ class SakstemaServiceImpl
                 soknadsstatuser: Map<String, Soknadsstatus>,
             ): Set<String> {
                 val sakerTema = saker.map { it.temakode }
-                val dokumentTema =
-                    dokumentMetadata.filter { it.baksystem.contains(Baksystem.HENVENDELSE) }.map { it.temakode }
-                val soknadsstatusTema = soknadsstatuser.keys
-                return (sakerTema + dokumentTema + soknadsstatusTema).toSet()
+
+                return Scientist
+                    .createExperiment<Set<String>>(
+                        Scientist.Config(
+                            name = "hentAlleTema",
+                            rate = { true },
+                            threadSwappingFn = ConcurrencyUtils::makeThreadSwappable,
+                        ),
+                    ).run({
+                        val soknadsstatusTema = soknadsstatuser.keys
+                        val dokumentTema =
+                            dokumentMetadata.filter { it.baksystem.contains(Baksystem.HENVENDELSE) }.map { it.temakode }
+                        val temaer = (sakerTema + dokumentTema + soknadsstatusTema).toSet()
+                        LOG.info("Dokument soknadsstatuser tema", temaer)
+                        temaer
+                    }, {
+                        val dokumentTema = dokumentMetadata.map { it.temakode }
+                        val temaer = (sakerTema + dokumentTema).toSet()
+                        LOG.info("Dokument tema", temaer)
+                        temaer
+                    })
             }
 
             private fun tilhorendeFraJoark(
