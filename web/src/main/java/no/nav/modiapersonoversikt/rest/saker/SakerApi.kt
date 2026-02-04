@@ -51,7 +51,6 @@ object SakerApi {
         val dokumentreferanse: String?,
         val logiskDokument: Boolean,
         val skjerming: String?,
-        val erKassert: Boolean,
         val dokumentStatus: DokumentStatus?,
         val saksbehandlerHarTilgang: Boolean
     )
