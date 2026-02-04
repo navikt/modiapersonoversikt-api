@@ -146,7 +146,6 @@ object SakerApiMapper {
                 dokumentreferanse = dokument.dokumentreferanse,
                 logiskDokument = dokument.isLogiskDokument,
                 skjerming = dokument.skjerming,
-                erKassert = dokument.isKassert,
                 dokumentStatus = dokument.dokumentStatus,
                 saksbehandlerHarTilgang = dokument.saksbehandlerHarTilgang
             )
