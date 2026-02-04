@@ -63,8 +63,8 @@ public class YtelseskontraktMapperTest {
         FimHentYtelseskontraktListeResponse fimHentYtelseskontraktListeResponse = new FimHentYtelseskontraktListeResponse();
         fimHentYtelseskontraktListeResponse.setBruker(new FimBruker().withRettighetsgruppe(new FimRettighetsgruppe().withRettighetsGruppe("Rettighetsgruppe:test")));
         FimDagpengekontrakt dagpengekontrakt = new FimDagpengekontrakt();
-        LocalDate datoKravMottat = new LocalDate();
-        dagpengekontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(datoKravMottat.toDate()));
+        LocalDate datoKravMottatt = new LocalDate();
+        dagpengekontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(datoKravMottatt.toDate()));
         int dagerIgjen = 2;
         dagpengekontrakt.setAntallDagerIgjen(dagerIgjen);
         int ukerIgjen = 3;
@@ -100,7 +100,7 @@ public class YtelseskontraktMapperTest {
         assertEquals(Integer.valueOf(ukerIgjen), dagpengeytelse.getAntallUkerIgjen());
         assertEquals(Integer.valueOf(dagerIgjenPermittering), dagpengeytelse.getAntallDagerIgjenPermittering());
         assertEquals(Integer.valueOf(ukerIgjenPermittering), dagpengeytelse.getAntallUkerIgjenPermittering());
-        assertEquals(datoKravMottat, ytelseskontraktResponse.getYtelser().get(0).getDatoKravMottat());
+        assertEquals(datoKravMottatt, ytelseskontraktResponse.getYtelser().get(0).getDatoKravMottatt());
         DatatypeFactory.newInstance().newXMLGregorianCalendar(to);
         assertEquals(fomGyldighetsperiode, toXMLGregorian(dagpengeytelse.getFom()));
         assertEquals(tomGyldighetsperiode, toXMLGregorian(dagpengeytelse.getTom()));

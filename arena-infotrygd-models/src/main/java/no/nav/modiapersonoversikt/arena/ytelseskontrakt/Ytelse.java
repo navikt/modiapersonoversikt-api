@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.arena.ytelseskontrakt;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -10,7 +11,8 @@ public class Ytelse implements Serializable {
 
     private String type;
     private String status;
-    private LocalDate datoKravMottat;
+    @JsonProperty("datoKravMottat")
+    private LocalDate datoKravMottatt;
     private List<Vedtak> vedtak;
     private LocalDate fom;
     private LocalDate tom;
@@ -39,12 +41,12 @@ public class Ytelse implements Serializable {
         this.type = type;
     }
 
-    public LocalDate getDatoKravMottat() {
-        return datoKravMottat;
+    public LocalDate getDatoKravMottatt() {
+        return datoKravMottatt;
     }
 
-    public void setDatoKravMottat(LocalDate datoKravMottat) {
-        this.datoKravMottat = datoKravMottat;
+    public void setDatoKravMottatt(LocalDate datoKravMottatt) {
+        this.datoKravMottatt = datoKravMottatt;
     }
 
     public String getStatus() {
