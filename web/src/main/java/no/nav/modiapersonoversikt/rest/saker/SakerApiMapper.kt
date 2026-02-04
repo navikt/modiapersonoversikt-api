@@ -147,7 +147,7 @@ object SakerApiMapper {
                 logiskDokument = dokument.isLogiskDokument,
                 skjerming = dokument.skjerming,
                 dokumentStatus = dokument.dokumentStatus,
-                saksbehandlerHarTilgang = dokument.saksbehandlerHarTilgang
+                saksbehandlerHarTilgang = dokument.saksbehandlerHarTilgang,
             )
 
         private fun mapTilTilhorendeSak(sak: Sak) =

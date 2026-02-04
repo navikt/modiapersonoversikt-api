@@ -52,7 +52,7 @@ object SakerApi {
         val logiskDokument: Boolean,
         val skjerming: String?,
         val dokumentStatus: DokumentStatus?,
-        val saksbehandlerHarTilgang: Boolean
+        val saksbehandlerHarTilgang: Boolean,
     )
 
     data class Feil(
