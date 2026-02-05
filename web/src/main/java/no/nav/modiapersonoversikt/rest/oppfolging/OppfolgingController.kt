@@ -158,34 +158,33 @@ class OppfolgingController
             if (ytelser == null) return emptyList()
 
             return ytelser.map {
-                when (it) {
-                    is Dagpengeytelse ->
-                        DagpengeytelseDTO(
-                            datoKravMottatt = it.datoKravMottatt?.toString(JODA_DATOFORMAT),
-                            fom = it.fom?.toString(JODA_DATOFORMAT),
-                            tom = it.tom?.toString(JODA_DATOFORMAT),
-                            status = it.status,
-                            type = it.type,
-                            vedtak = hentVedtak(it.vedtak),
-                            dagerIgjenMedBortfall = it.dagerIgjenMedBortfall,
-                            ukerIgjenMedBortfall = it.ukerIgjenMedBortfall,
-                            dagerIgjenPermittering = it.antallDagerIgjenPermittering,
-                            ukerIgjenPermittering = it.antallUkerIgjenPermittering,
-                            dagerIgjen = it.antallDagerIgjen,
-                            ukerIgjen = it.antallUkerIgjen,
-                        )
-
-                    else ->
-                        OppfolgingsYtelseDTO(
-                            datoKravMottatt = it.datoKravMottatt?.toString(JODA_DATOFORMAT),
-                            fom = it.fom?.toString(JODA_DATOFORMAT),
-                            tom = it.tom?.toString(JODA_DATOFORMAT),
-                            status = it.status,
-                            type = it.type,
-                            vedtak = hentVedtak(it.vedtak),
-                            dagerIgjenMedBortfall = it.dagerIgjenMedBortfall,
-                            ukerIgjenMedBortfall = it.ukerIgjenMedBortfall,
-                        )
+                if (it.type === "Dagpenger") {
+                    val dagpengeYtelse = it as Dagpengeytelse
+                    DagpengeytelseDTO(
+                        datoKravMottatt = dagpengeYtelse.datoKravMottatt?.toString(JODA_DATOFORMAT),
+                        fom = dagpengeYtelse.fom?.toString(JODA_DATOFORMAT),
+                        tom = dagpengeYtelse.tom?.toString(JODA_DATOFORMAT),
+                        status = dagpengeYtelse.status,
+                        type = dagpengeYtelse.type,
+                        vedtak = hentVedtak(dagpengeYtelse.vedtak),
+                        dagerIgjenMedBortfall = dagpengeYtelse.dagerIgjenMedBortfall,
+                        ukerIgjenMedBortfall = dagpengeYtelse.ukerIgjenMedBortfall,
+                        dagerIgjenPermittering = dagpengeYtelse.antallDagerIgjenPermittering,
+                        ukerIgjenPermittering = dagpengeYtelse.antallUkerIgjenPermittering,
+                        dagerIgjen = dagpengeYtelse.antallDagerIgjen,
+                        ukerIgjen = dagpengeYtelse.antallUkerIgjen,
+                    )
+                } else {
+                    OppfolgingsYtelseDTO(
+                        datoKravMottatt = it.datoKravMottatt?.toString(JODA_DATOFORMAT),
+                        fom = it.fom?.toString(JODA_DATOFORMAT),
+                        tom = it.tom?.toString(JODA_DATOFORMAT),
+                        status = it.status,
+                        type = it.type,
+                        vedtak = hentVedtak(it.vedtak),
+                        dagerIgjenMedBortfall = it.dagerIgjenMedBortfall,
+                        ukerIgjenMedBortfall = it.ukerIgjenMedBortfall,
+                    )
                 }
             }
         }
