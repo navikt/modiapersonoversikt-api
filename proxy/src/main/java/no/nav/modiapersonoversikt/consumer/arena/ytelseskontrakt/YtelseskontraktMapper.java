@@ -56,7 +56,7 @@ public class YtelseskontraktMapper {
         Ytelse ytelse;
         logger.info("Starter mapping av ytelse av type: " + source.getYtelsestype());
         System.out.println("Starter mapping av ytelse av type: " + source.getYtelsestype());
-        if (source instanceof FimDagpengekontrakt) {
+        if (source.getYtelsestype().toLowerCase().contains("dagpenger")) {
             System.out.println("Treff på dagpengekontrakt");
             logger.info("Treff på dagpengekontrakt");
             ytelse = mapDagpengekontrakt((FimDagpengekontrakt)source);
