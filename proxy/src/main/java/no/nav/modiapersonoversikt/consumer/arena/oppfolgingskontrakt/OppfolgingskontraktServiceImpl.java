@@ -40,6 +40,7 @@ public class OppfolgingskontraktServiceImpl implements OppfolgingskontraktServic
         WSHentOppfoelgingskontraktListeResponse rawResponse = null;
         try {
             rawResponse = oppfolgingskontraktService.hentOppfoelgingskontraktListe(rawRequest);
+            logger.info("Printer rawresponse: " + rawResponse.toString());
             if (!CollectionUtils.isEmpty(rawResponse.getOppfoelgingskontraktListe())) {
                 auditLogger.log(rawRequest);
             }

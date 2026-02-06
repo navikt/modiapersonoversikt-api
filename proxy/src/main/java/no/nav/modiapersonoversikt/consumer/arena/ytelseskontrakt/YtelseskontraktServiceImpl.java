@@ -36,6 +36,7 @@ public class YtelseskontraktServiceImpl implements YtelseskontraktService {
         FimHentYtelseskontraktListeResponse rawResponse = null;
         try {
             rawResponse = ytelseskontraktService.hentYtelseskontraktListe(rawRequest);
+            logger.info("Printer rawresponse: " + rawResponse.toString());
             if (!CollectionUtils.isEmpty(rawResponse.getYtelseskontraktListe())) {
                 auditLogger.log(rawRequest);
             }

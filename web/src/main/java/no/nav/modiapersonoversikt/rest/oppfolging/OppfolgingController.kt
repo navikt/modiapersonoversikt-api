@@ -158,7 +158,7 @@ class OppfolgingController
             if (ytelser == null) return emptyList()
 
             return ytelser.map {
-                if (it.type === "Dagpenger") {
+                if (it.type == "Dagpenger") {
                     val dagpengeYtelse = it as Dagpengeytelse
                     DagpengeytelseDTO(
                         datoKravMottatt = dagpengeYtelse.datoKravMottatt?.toString(JODA_DATOFORMAT),
