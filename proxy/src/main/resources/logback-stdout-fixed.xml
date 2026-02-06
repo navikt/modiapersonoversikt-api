@@ -32,10 +32,10 @@
     <logger name="org.apache" level="INFO">
         <appender-ref ref="team-logs" />
     </logger>
-    <logger name="org.apache.cxf" level="ERROR">
+    <logger name="org.apache.cxf" level="INFO">
         <appender-ref ref="team-logs" />
     </logger>
-    <logger name="no.nav.common.cxf" level="ERROR">
+    <logger name="no.nav.common.cxf" level="INFO">
         <appender-ref ref="team-logs" />
     </logger>
 
