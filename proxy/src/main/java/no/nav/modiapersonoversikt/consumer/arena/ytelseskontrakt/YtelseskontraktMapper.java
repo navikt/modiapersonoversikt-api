@@ -54,15 +54,9 @@ public class YtelseskontraktMapper {
 
     public Ytelse mapYtelse(FimYtelseskontrakt source) {
         Ytelse ytelse;
-        logger.info("Starter mapping av ytelse av type: " + source.getYtelsestype());
-        System.out.println("Starter mapping av ytelse av type: " + source.getYtelsestype());
         if (source instanceof FimDagpengekontrakt) {
-            System.out.println("Treff på dagpengekontrakt");
-            logger.info("Treff på dagpengekontrakt");
             ytelse = mapDagpengekontrakt((FimDagpengekontrakt)source);
         } else {
-            System.out.println("Ikke treff på dagpengekontrakt, blir vanlig ytelse!");
-            logger.info("Ikke treff på dagpengekontrakt, blir vanlig ytelse!");
             ytelse = new Ytelse();
         }
         ytelse.setType(source.getYtelsestype());
@@ -78,7 +72,6 @@ public class YtelseskontraktMapper {
             vedtak.add(map(fimVedtak));
         }
         ytelse.setVedtak(vedtak);
-        logger.info("Ytelsestypen som returneres er: " + ytelse.getClass());
         return ytelse;
     }
 
