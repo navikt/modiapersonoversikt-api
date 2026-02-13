@@ -14,35 +14,38 @@ class BrukernotifikasjonTest {
                 type = Brukernotifikasjon.Type.OPPGAVE,
                 varselId = "12345",
                 aktiv = true,
-                produsent = Brukernotifikasjon.Produsent(
-                    namespace = "test-space",
-                    appnavn = "et app-navn",
-                ),
+                produsent =
+                    Brukernotifikasjon.Produsent(
+                        namespace = "test-space",
+                        appnavn = "et app-navn",
+                    ),
                 sensitivitet = "high",
-                innhold = Brukernotifikasjon.Innhold(
-                    tekst = "Et nytt samtalereferat er tilgjengelig i din innboks",
-                    link = "https://nav.test.no",
-                ),
-                eksternVarsling = Brukernotifikasjon.EksternVarslingInfo(
-                    sendt = true,
-                    sendtTidspunkt = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
-                    sendtSomBatch = null,
-                    renotifikasjonSendt = null,
-                    renotifikasjonTidspunkt = null,
-                    sendteKanaler = null,
-                    feilHistorikk =
-                        listOf(
-                            Brukernotifikasjon.Feilhistorikk(
-                                feilmelding = "En feil",
-                                tidspunkt = ZonedDateTime.parse("2026-01-31T09:02:00.000Z"),
+                innhold =
+                    Brukernotifikasjon.Innhold(
+                        tekst = "Et nytt samtalereferat er tilgjengelig i din innboks",
+                        link = "https://nav.test.no",
+                    ),
+                eksternVarsling =
+                    Brukernotifikasjon.EksternVarslingInfo(
+                        sendt = true,
+                        sendtTidspunkt = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
+                        sendtSomBatch = null,
+                        renotifikasjonSendt = null,
+                        renotifikasjonTidspunkt = null,
+                        sendteKanaler = null,
+                        feilHistorikk =
+                            listOf(
+                                Brukernotifikasjon.Feilhistorikk(
+                                    feilmelding = "En feil",
+                                    tidspunkt = ZonedDateTime.parse("2026-01-31T09:02:00.000Z"),
+                                ),
+                                Brukernotifikasjon.Feilhistorikk(
+                                    feilmelding = "Enda en feil",
+                                    tidspunkt = ZonedDateTime.parse("2026-02-06T09:01:11.000Z"),
+                                ),
                             ),
-                            Brukernotifikasjon.Feilhistorikk(
-                                feilmelding = "Enda en feil",
-                                tidspunkt = ZonedDateTime.parse("2026-02-06T09:01:11.000Z"),
-                            ),
-                        ),
-                    sistOppdatert = ZonedDateTime.parse("2026-02-06T09:03:00.000Z"),
-                ),
+                        sistOppdatert = ZonedDateTime.parse("2026-02-06T09:03:00.000Z"),
+                    ),
                 opprettet = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
                 aktivFremTil = ZonedDateTime.parse("2026-02-06T09:02:00.000Z"),
                 inaktivert = false,

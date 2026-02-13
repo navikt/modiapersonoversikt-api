@@ -32,6 +32,6 @@ interface VarslerService {
         val renotifikasjonTidspunkt: ZonedDateTime,
         val sendteKanaler: List<String>,
         val feilhistorikk: List<Brukernotifikasjon.Feilhistorikk>,
-        val sistOppdatert: ZonedDateTime
+        val sistOppdatert: ZonedDateTime,
     )
 }

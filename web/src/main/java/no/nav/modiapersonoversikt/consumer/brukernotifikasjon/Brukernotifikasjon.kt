@@ -56,7 +56,7 @@ object Brukernotifikasjon {
     }
 
     object Mapper {
-        fun lagVarselFraEvent(event : Event): VarslerService.Varsel {
+        fun lagVarselFraEvent(event: Event): VarslerService.Varsel {
             val cutoverDate = ZonedDateTime.parse("2026-01-31T00:00:00.000Z")
             var renotifikasjonSendt: Boolean
             var renotifikasjonTidspunkt: ZonedDateTime
@@ -75,19 +75,21 @@ object Brukernotifikasjon {
                 aktiv = event.aktiv,
                 produsent = "${event.produsent.namespace}:${event.produsent.appnavn}",
                 sensitivitet = event.sensitivitet,
-                innhold = Innhold(
-                    tekst = event.innhold.tekst,
-                    link = event.innhold.link,
-                ),
-                eksternVarsling = VarslerService.VarselInfo(
-                    sendt = event.eksternVarsling.sendt ?: false,
-                    sendtTidspunkt = event.eksternVarsling.sendtTidspunkt ?: event.opprettet,
-                    renotifikasjonSendt = renotifikasjonSendt,
-                    renotifikasjonTidspunkt = renotifikasjonTidspunkt,
-                    sendteKanaler = event.eksternVarsling.sendteKanaler ?: emptyList(),
-                    feilhistorikk = event.eksternVarsling.feilHistorikk ?: emptyList(),
-                    sistOppdatert = event.eksternVarsling.sistOppdatert,
-                ),
+                innhold =
+                    Innhold(
+                        tekst = event.innhold.tekst,
+                        link = event.innhold.link,
+                    ),
+                eksternVarsling =
+                    VarslerService.VarselInfo(
+                        sendt = event.eksternVarsling.sendt ?: false,
+                        sendtTidspunkt = event.eksternVarsling.sendtTidspunkt ?: event.opprettet,
+                        renotifikasjonSendt = renotifikasjonSendt,
+                        renotifikasjonTidspunkt = renotifikasjonTidspunkt,
+                        sendteKanaler = event.eksternVarsling.sendteKanaler ?: emptyList(),
+                        feilhistorikk = event.eksternVarsling.feilHistorikk ?: emptyList(),
+                        sistOppdatert = event.eksternVarsling.sistOppdatert,
+                    ),
                 opprettet = event.opprettet,
             )
         }

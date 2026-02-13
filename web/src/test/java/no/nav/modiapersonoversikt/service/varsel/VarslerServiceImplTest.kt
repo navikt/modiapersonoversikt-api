@@ -41,35 +41,38 @@ class VarslerServiceImplTest {
         assertThat(varsler.feil).isEmpty()
     }
 
-    private val varsel = VarslerService.Varsel(
-        type = "OPPGAVE",
-        varselId = "12345",
-        aktiv = true,
-        produsent = "et app-navn",
-        sensitivitet = "high",
-        innhold = Brukernotifikasjon.Innhold(
-            tekst = "Et nytt samtalereferat er tilgjengelig i din innboks",
-            link = "https://nav.test.no",
-        ),
-        eksternVarsling = VarslerService.VarselInfo(
-            sendt = true,
-            sendtTidspunkt = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
-            renotifikasjonSendt = true,
-            renotifikasjonTidspunkt = ZonedDateTime.parse("2026-02-06T09:03:00.000Z"),
-            sendteKanaler = listOf("SMS", "EPOST"),
-            feilhistorikk =
-                listOf(
-                    Brukernotifikasjon.Feilhistorikk(
-                        feilmelding = "En feil",
-                        tidspunkt = ZonedDateTime.parse("2026-01-31T09:02:00.000Z"),
-                    ),
-                    Brukernotifikasjon.Feilhistorikk(
-                        feilmelding = "Enda en feil",
-                        tidspunkt = ZonedDateTime.parse("2026-02-06T09:01:11.000Z"),
-                    ),
+    private val varsel =
+        VarslerService.Varsel(
+            type = "OPPGAVE",
+            varselId = "12345",
+            aktiv = true,
+            produsent = "et app-navn",
+            sensitivitet = "high",
+            innhold =
+                Brukernotifikasjon.Innhold(
+                    tekst = "Et nytt samtalereferat er tilgjengelig i din innboks",
+                    link = "https://nav.test.no",
                 ),
-            sistOppdatert = ZonedDateTime.parse("2026-02-06T09:03:00.000Z"),
-        ),
-        opprettet = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
-    )
+            eksternVarsling =
+                VarslerService.VarselInfo(
+                    sendt = true,
+                    sendtTidspunkt = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
+                    renotifikasjonSendt = true,
+                    renotifikasjonTidspunkt = ZonedDateTime.parse("2026-02-06T09:03:00.000Z"),
+                    sendteKanaler = listOf("SMS", "EPOST"),
+                    feilhistorikk =
+                        listOf(
+                            Brukernotifikasjon.Feilhistorikk(
+                                feilmelding = "En feil",
+                                tidspunkt = ZonedDateTime.parse("2026-01-31T09:02:00.000Z"),
+                            ),
+                            Brukernotifikasjon.Feilhistorikk(
+                                feilmelding = "Enda en feil",
+                                tidspunkt = ZonedDateTime.parse("2026-02-06T09:01:11.000Z"),
+                            ),
+                        ),
+                    sistOppdatert = ZonedDateTime.parse("2026-02-06T09:03:00.000Z"),
+                ),
+            opprettet = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
+        )
 }

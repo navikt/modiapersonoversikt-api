@@ -13,8 +13,10 @@ class BrukernotifikasjonClient(
     val httpClient: OkHttpClient,
 ) : Brukernotifikasjon.Client {
     override fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Brukernotifikasjon.Event> {
-        val requestBody = objectMapper.writeValueAsString(mapOf("ident" to fnr.get()))
-            .toRequestBody("application/json".toMediaType())
+        val requestBody =
+            objectMapper
+                .writeValueAsString(mapOf("ident" to fnr.get()))
+                .toRequestBody("application/json".toMediaType())
 
         val response =
             httpClient
