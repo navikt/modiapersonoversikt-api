@@ -170,7 +170,7 @@ object SafDokumentMapper {
 
     private fun getSkjerming(dokumentInfo: DokumentInfo): SkjermingType? = getVariant(dokumentInfo)?.skjerming
 
-    private fun getTilgang(dokumentInfo: DokumentInfo): Boolean? = getVariant(dokumentInfo)?.saksbehandlerHarTilgang
+    private fun getTilgang(dokumentInfo: DokumentInfo): Boolean = getVariant(dokumentInfo)?.saksbehandlerHarTilgang == true
 
     private fun getVariant(dokumentInfo: DokumentInfo): Dokumentvariant? =
         dokumentInfo.dokumentvarianter.let {

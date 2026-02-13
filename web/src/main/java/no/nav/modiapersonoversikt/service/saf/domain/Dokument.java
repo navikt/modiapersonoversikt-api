@@ -8,7 +8,7 @@ public class Dokument {
     private Variantformat variantformat;
     private String skjerming;
     private DokumentStatus dokumentStatus;
-    private Boolean saksbehandlerHarTilgang;
+    private boolean saksbehandlerHarTilgang;
 
     public enum DokumentStatus {
         UNDER_REDIGERING,
@@ -49,11 +49,11 @@ public class Dokument {
         return variantformat;
     }
 
-    public Boolean getSaksbehandlerHarTilgang() {
+    public boolean getSaksbehandlerHarTilgang() {
         return saksbehandlerHarTilgang;
     }
 
-    public void setSaksbehandlerHarTilgang(Boolean saksbehandlerHarTilgang) {
+    public void setSaksbehandlerHarTilgang(boolean saksbehandlerHarTilgang) {
         this.saksbehandlerHarTilgang = saksbehandlerHarTilgang;
     }
 
