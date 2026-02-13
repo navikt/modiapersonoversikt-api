@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 
+import no.nav.modiapersonoversikt.service.varsel.VarslerService
 import org.junit.jupiter.api.Test
 import java.time.ZonedDateTime
 import kotlin.test.assertEquals
@@ -7,89 +8,51 @@ import kotlin.test.assertTrue
 
 class BrukernotifikasjonTest {
     @Test
-    fun `skal bygge opp varslingstidspunkt korrekt`() {
+    fun `skal opprette nytt Varsel-objekt ved mottak av event og sette obligatoriske verdier for eldre eventer`() {
         val event =
             Brukernotifikasjon.Event(
-                fodselsnummer = "10108000398",
-                grupperingsId = "1",
-                eventId = "2",
-                forstBehandlet = ZonedDateTime.parse("2023-01-01T00:00:00.000Z"),
-                produsent = "sf-brukernotifikasjon",
-                sistOppdatert = ZonedDateTime.parse("2023-08-11T11:11:11.000Z"),
-                tekst = "Et nytt samtalereferat er tilgjengelig i din innboks",
-                link = "https://innboks.nav.no",
-                aktiv = false,
-                eksternVarslingSendt = true,
-                eksternVarslingKanaler = listOf("SMS", "EPOST"),
-                sikkerhetsnivaa = 4,
-                eksternVarsling =
-                    Brukernotifikasjon.EksternVarslingInfo(
-                        sendt = true,
-                        renotifikasjonSendt = true,
-                        sendteKanaler = listOf("SMS", "EPOST"),
-                        prefererteKanaler = listOf("SMS", "EPOST"),
-                        historikk =
-                            listOf(
-                                Brukernotifikasjon.HistorikkEntry(
-                                    melding = "Feil telefonummer",
-                                    status = "feilet",
-                                    distribusjonsId = 1,
-                                    kanal = "SMS",
-                                    renotifikasjon = false,
-                                    tidspunkt = ZonedDateTime.parse("2023-01-01T00:00:00.000Z"),
-                                ),
-                                Brukernotifikasjon.HistorikkEntry(
-                                    melding = "Et nytt samtalereferat er tilgjengelig i din innboks",
-                                    status = "sendt",
-                                    distribusjonsId = 1,
-                                    kanal = "EPOST",
-                                    renotifikasjon = false,
-                                    tidspunkt = ZonedDateTime.parse("2023-01-11T11:11:11.000Z"),
-                                ),
-                                Brukernotifikasjon.HistorikkEntry(
-                                    melding = "Et nytt samtalereferat er tilgjengelig i din innboks",
-                                    status = "sendt",
-                                    distribusjonsId = 1,
-                                    kanal = "SMS",
-                                    renotifikasjon = true,
-                                    tidspunkt = ZonedDateTime.parse("2023-08-01T00:00:00.000Z"),
-                                ),
-                                Brukernotifikasjon.HistorikkEntry(
-                                    melding = "Feil epost",
-                                    status = "feilet",
-                                    distribusjonsId = 1,
-                                    kanal = "EPOST",
-                                    renotifikasjon = true,
-                                    tidspunkt = ZonedDateTime.parse("2023-08-11T11:11:11.000Z"),
-                                ),
+                type = Brukernotifikasjon.Type.OPPGAVE,
+                varselId = "12345",
+                aktiv = true,
+                produsent = Brukernotifikasjon.Produsent(
+                    namespace = "test-space",
+                    appnavn = "et app-navn",
+                ),
+                sensitivitet = "high",
+                innhold = Brukernotifikasjon.Innhold(
+                    tekst = "Et nytt samtalereferat er tilgjengelig i din innboks",
+                    link = "https://nav.test.no",
+                ),
+                eksternVarsling = Brukernotifikasjon.EksternVarslingInfo(
+                    sendt = true,
+                    sendtTidspunkt = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
+                    sendtSomBatch = null,
+                    renotifikasjonSendt = null,
+                    renotifikasjonTidspunkt = null,
+                    sendteKanaler = null,
+                    feilHistorikk =
+                        listOf(
+                            Brukernotifikasjon.Feilhistorikk(
+                                feilmelding = "En feil",
+                                tidspunkt = ZonedDateTime.parse("2026-01-31T09:02:00.000Z"),
                             ),
-                    ),
+                            Brukernotifikasjon.Feilhistorikk(
+                                feilmelding = "Enda en feil",
+                                tidspunkt = ZonedDateTime.parse("2026-02-06T09:01:11.000Z"),
+                            ),
+                        ),
+                    sistOppdatert = ZonedDateTime.parse("2026-02-06T09:03:00.000Z"),
+                ),
+                opprettet = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
+                aktivFremTil = ZonedDateTime.parse("2026-02-06T09:02:00.000Z"),
+                inaktivert = false,
+                inaktivertAv = null,
             )
 
-        val mappedEvent = Brukernotifikasjon.Mapper.byggVarslingsTidspunkt(event)
+        val mappedEvent = Brukernotifikasjon.Mapper.lagVarselFraEvent(event)
 
-        assertTrue(mappedEvent.varslingsTidspunkt!!.sendt)
-        assertEquals(event.eksternVarsling!!.historikk[1].tidspunkt, mappedEvent.varslingsTidspunkt!!.tidspunkt)
-        assertEquals(
-            event.eksternVarsling!!.historikk[2].tidspunkt,
-            mappedEvent.varslingsTidspunkt!!.renotifikasjonTidspunkt,
-        )
-        assertEquals(listOf("SMS", "EPOST"), mappedEvent.eksternVarslingKanaler)
-        assertTrue(mappedEvent.varslingsTidspunkt!!.harFeilteVarslinger)
-        assertTrue(mappedEvent.varslingsTidspunkt!!.harFeilteRevarslinger)
-        assertEquals(
-            "Feil telefonummer",
-            mappedEvent.varslingsTidspunkt!!
-                .feilteVarsliner
-                .first()
-                .feilmelding,
-        )
-        assertEquals(
-            "Feil epost",
-            mappedEvent.varslingsTidspunkt!!
-                .feilteRevarslinger
-                .first()
-                .feilmelding,
-        )
+        assertTrue(mappedEvent.eksternVarsling.renotifikasjonSendt)
+        assertEquals(event.eksternVarsling.sistOppdatert, mappedEvent.eksternVarsling.renotifikasjonTidspunkt)
+        assertEquals(mappedEvent.javaClass, VarslerService.Varsel::class.java)
     }
 }
