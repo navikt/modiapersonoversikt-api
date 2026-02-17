@@ -4,6 +4,8 @@ on:
   push:
     paths-ignore:
       - 'proxy/**'
+  issue_comment:
+    types: [created]
 
 concurrency:
   group: web-${{ github.ref }}
@@ -42,7 +44,7 @@ jobs:
           mvn -P ci -B test --settings .github/maven-settings.xml
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' || github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '.deploy web')
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -55,7 +57,7 @@ jobs:
   deploy-dev:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '.deploy web')
     environment: dev-gcp
     runs-on: ubuntu-latest
     permissions:
