@@ -48,7 +48,7 @@ internal class SfHenvendelseServiceIntegrationTest {
             AuthContextUtils.withContext(testSubject) {
                 val api = SfHenvendelseApiFactory.createHenvendelseInfoApi(httpClient)
                 val result = api.henvendelseinfoHenvendelselisteGet("aktorid", "coorId")
-                assertThat(result).hasSize(1)
+                assertThat(result?.data).hasSize(1)
             }
         }
     }
