@@ -49,8 +49,10 @@ object Brukernotifikasjon {
     enum class Type {
         @JsonProperty("oppgave")
         OPPGAVE,
+
         @JsonProperty("innboks")
         INNBOKS,
+
         @JsonProperty("beskjed")
         BESKJED,
     }
