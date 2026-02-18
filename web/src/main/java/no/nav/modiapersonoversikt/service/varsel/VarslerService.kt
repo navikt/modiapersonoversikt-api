@@ -29,7 +29,7 @@ interface VarslerService {
         val sendt: Boolean,
         val sendtTidspunkt: ZonedDateTime,
         val renotifikasjonSendt: Boolean,
-        val renotifikasjonTidspunkt: ZonedDateTime,
+        val renotifikasjonTidspunkt: ZonedDateTime? = null,
         val sendteKanaler: List<String>,
         val feilhistorikk: List<Brukernotifikasjon.Feilhistorikk>,
         val sistOppdatert: ZonedDateTime,

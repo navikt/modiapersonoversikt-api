@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.service.varsel.VarslerService
 import java.time.ZonedDateTime
@@ -12,7 +13,7 @@ object Brukernotifikasjon {
         val produsent: Produsent,
         val sensitivitet: String,
         val innhold: Innhold,
-        val eksternVarsling: EksternVarslingInfo,
+        val eksternVarsling: EksternVarslingInfo?,
         val opprettet: ZonedDateTime,
         val aktivFremTil: ZonedDateTime? = null,
         val inaktivert: Boolean? = null,
@@ -46,8 +47,11 @@ object Brukernotifikasjon {
     )
 
     enum class Type {
+        @JsonProperty("oppgave")
         OPPGAVE,
+        @JsonProperty("innboks")
         INNBOKS,
+        @JsonProperty("beskjed")
         BESKJED,
     }
 
@@ -59,9 +63,12 @@ object Brukernotifikasjon {
         fun lagVarselFraEvent(event: Event): VarslerService.Varsel {
             val cutoverDate = ZonedDateTime.parse("2026-01-31T00:00:00.000Z")
             var renotifikasjonSendt: Boolean
-            var renotifikasjonTidspunkt: ZonedDateTime
+            var renotifikasjonTidspunkt: ZonedDateTime?
 
-            if (event.opprettet.isBefore(cutoverDate) || event.eksternVarsling.sistOppdatert.isBefore(cutoverDate)) {
+            if (event.eksternVarsling == null) {
+                renotifikasjonSendt = false
+                renotifikasjonTidspunkt = null
+            } else if (event.opprettet.isBefore(cutoverDate) && event.eksternVarsling.sistOppdatert != event.opprettet) {
                 renotifikasjonSendt = true
                 renotifikasjonTidspunkt = event.eksternVarsling.sistOppdatert
             } else {
@@ -82,13 +89,13 @@ object Brukernotifikasjon {
                     ),
                 eksternVarsling =
                     VarslerService.VarselInfo(
-                        sendt = event.eksternVarsling.sendt ?: false,
-                        sendtTidspunkt = event.eksternVarsling.sendtTidspunkt ?: event.opprettet,
+                        sendt = event.eksternVarsling?.sendt ?: false,
+                        sendtTidspunkt = event.eksternVarsling?.sendtTidspunkt ?: event.opprettet,
                         renotifikasjonSendt = renotifikasjonSendt,
                         renotifikasjonTidspunkt = renotifikasjonTidspunkt,
-                        sendteKanaler = event.eksternVarsling.sendteKanaler ?: emptyList(),
-                        feilhistorikk = event.eksternVarsling.feilHistorikk ?: emptyList(),
-                        sistOppdatert = event.eksternVarsling.sistOppdatert,
+                        sendteKanaler = event.eksternVarsling?.sendteKanaler ?: emptyList(),
+                        feilhistorikk = event.eksternVarsling?.feilHistorikk ?: emptyList(),
+                        sistOppdatert = event.eksternVarsling?.sistOppdatert ?: event.opprettet,
                     ),
                 opprettet = event.opprettet,
             )

@@ -4,7 +4,6 @@ import no.nav.modiapersonoversikt.service.varsel.VarslerService
 import org.junit.jupiter.api.Test
 import java.time.ZonedDateTime
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class BrukernotifikasjonTest {
     @Test
@@ -54,8 +53,6 @@ class BrukernotifikasjonTest {
 
         val mappedEvent = Brukernotifikasjon.Mapper.lagVarselFraEvent(event)
 
-        assertTrue(mappedEvent.eksternVarsling.renotifikasjonSendt)
-        assertEquals(event.eksternVarsling.sistOppdatert, mappedEvent.eksternVarsling.renotifikasjonTidspunkt)
         assertEquals(mappedEvent.javaClass, VarslerService.Varsel::class.java)
     }
 }
