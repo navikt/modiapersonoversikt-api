@@ -43,7 +43,7 @@ object Brukernotifikasjon {
 
     data class Innhold(
         val tekst: String,
-        val link: String,
+        val link: String?,
     )
 
     enum class Type {
