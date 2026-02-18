@@ -4,6 +4,8 @@ on:
   push:
     paths-ignore:
       - 'proxy/**'
+  issue_comment:
+    types: [created]
 
 concurrency:
   group: web-${{ github.ref }}
@@ -17,6 +19,13 @@ jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      (
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request != '' &&
+        startsWith(github.event.comment.body, '.deploy')
+      )
     permissions:
       packages: write
       contents: read
@@ -42,7 +51,7 @@ jobs:
           mvn -P ci -B test --settings .github/maven-settings.xml
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
-        if: github.ref == 'refs/heads/revarslinger-fiks'
+        if: github.ref == 'refs/heads/master' || github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '.deploy')
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -55,7 +64,7 @@ jobs:
   deploy-dev:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/revarslinger-fiks'
+    if: github.ref == 'refs/heads/master' || github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '.deploy')
     environment: dev-gcp
     runs-on: ubuntu-latest
     permissions:
