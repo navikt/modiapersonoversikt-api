@@ -110,6 +110,7 @@ object SakerApiMapper {
                         )
                     },
                 temaer = resultatWrapper.resultat.temaer,
+                dokumenter = resultatWrapper.resultat.dokumenter.map(::mapTilDokumentMetadata),
                 feilendeSystemer = resultatWrapper.feilendeSystemer.toList(),
             )
 
@@ -143,11 +144,10 @@ object SakerApiMapper {
             SakerApi.Dokument(
                 tittel = dokument.tittel,
                 dokumentreferanse = dokument.dokumentreferanse,
-                kanVises = dokument.isKanVises,
                 logiskDokument = dokument.isLogiskDokument,
                 skjerming = dokument.skjerming,
-                erKassert = dokument.isKassert,
                 dokumentStatus = dokument.dokumentStatus,
+                saksbehandlerHarTilgang = dokument.saksbehandlerHarTilgang,
             )
 
         private fun mapTilTilhorendeSak(sak: Sak) =
