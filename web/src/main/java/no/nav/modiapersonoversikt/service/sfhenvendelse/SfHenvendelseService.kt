@@ -127,13 +127,13 @@ class SfHenvendelseServiceImpl(
         val callId = getCallId()
 
         val allHenvendelser = mutableListOf<HenvendelseDTO>()
-        var currentPage = 0
+        var page = 1
         var hasNextPage = true
         val pageSize = 100
 
         while (hasNextPage) {
             val res =
-                henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(aktorId, callId, currentPage, pageSize)
+                henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(aktorId, callId, page, pageSize)
                     ?: throw ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "Feil ved henting av paginerte henvendelser",
@@ -141,7 +141,7 @@ class SfHenvendelseServiceImpl(
 
             allHenvendelser.addAll(res.data)
             hasNextPage = res.hasNextPage
-            currentPage++
+            page = res.currentPage + 1
         }
 
         return loggFeilSomErSpesialHandtert(bruker, allHenvendelser)
