@@ -16,7 +16,7 @@ object Brukernotifikasjon {
         val eksternVarsling: EksternVarslingInfo?,
         val opprettet: ZonedDateTime,
         val aktivFremTil: ZonedDateTime? = null,
-        val inaktivert: Boolean? = null,
+        val inaktivert: ZonedDateTime? = null,
         val inaktivertAv: String? = null,
     ) : VarslerService.UnifiedVarsel
 

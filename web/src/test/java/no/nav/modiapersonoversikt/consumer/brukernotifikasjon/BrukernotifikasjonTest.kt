@@ -47,7 +47,7 @@ class BrukernotifikasjonTest {
                     ),
                 opprettet = ZonedDateTime.parse("2026-01-29T09:03:00.000Z"),
                 aktivFremTil = ZonedDateTime.parse("2026-02-06T09:02:00.000Z"),
-                inaktivert = false,
+                inaktivert = null,
                 inaktivertAv = null,
             )
 
