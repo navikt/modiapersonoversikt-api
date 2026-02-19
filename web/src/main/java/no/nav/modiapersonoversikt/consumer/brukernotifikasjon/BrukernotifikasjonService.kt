@@ -10,5 +10,5 @@ class BrukernotifikasjonService(
         client
             .hentAlleBrukernotifikasjoner(fnr)
             .map { Brukernotifikasjon.Mapper.lagVarselFraEvent(it) }
-            .sortedBy { it.eksternVarsling.sistOppdatert }
+            .sortedByDescending { it.eksternVarsling.sistOppdatert }
 }
