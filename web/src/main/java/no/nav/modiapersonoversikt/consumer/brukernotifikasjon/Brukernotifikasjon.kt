@@ -63,19 +63,21 @@ object Brukernotifikasjon {
 
     object Mapper {
         fun lagVarselFraEvent(event: Event): VarslerService.Varsel {
-            val cutoverDate = ZonedDateTime.parse("2026-01-31T00:00:00.000Z")
             var renotifikasjonSendt: Boolean
             var renotifikasjonTidspunkt: ZonedDateTime?
+            val cutoverDate = ZonedDateTime.parse("2026-01-31T00:00:00.000Z")
+            val opprettetDato = event.opprettet.toLocalDate()
+            val sistOppdatertDato = event.eksternVarsling?.sistOppdatert?.toLocalDate()
 
             if (event.eksternVarsling == null) {
                 renotifikasjonSendt = false
                 renotifikasjonTidspunkt = null
-            } else if (event.opprettet.isBefore(cutoverDate) && event.eksternVarsling.sistOppdatert != event.opprettet) {
+            } else if (event.opprettet.isBefore(cutoverDate) && opprettetDato != sistOppdatertDato) {
                 renotifikasjonSendt = true
                 renotifikasjonTidspunkt = event.eksternVarsling.sistOppdatert
             } else {
                 renotifikasjonSendt = event.eksternVarsling.renotifikasjonSendt ?: false
-                renotifikasjonTidspunkt = event.eksternVarsling.renotifikasjonTidspunkt!!
+                renotifikasjonTidspunkt = event.eksternVarsling.renotifikasjonTidspunkt
             }
 
             return VarslerService.Varsel(

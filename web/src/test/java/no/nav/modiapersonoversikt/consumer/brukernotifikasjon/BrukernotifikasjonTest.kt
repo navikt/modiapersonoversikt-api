@@ -31,7 +31,7 @@ class BrukernotifikasjonTest {
                         sendtSomBatch = null,
                         renotifikasjonSendt = null,
                         renotifikasjonTidspunkt = null,
-                        sendteKanaler = null,
+                        sendteKanaler = listOf("SMS", "EPOST"),
                         feilHistorikk =
                             listOf(
                                 Brukernotifikasjon.Feilhistorikk(
@@ -53,6 +53,7 @@ class BrukernotifikasjonTest {
 
         val mappedEvent = Brukernotifikasjon.Mapper.lagVarselFraEvent(event)
 
+        println(mappedEvent)
         assertEquals(mappedEvent.javaClass, VarslerService.Varsel::class.java)
     }
 }
