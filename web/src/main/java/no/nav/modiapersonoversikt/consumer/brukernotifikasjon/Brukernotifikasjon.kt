@@ -26,7 +26,7 @@ object Brukernotifikasjon {
         val sendtSomBatch: Boolean?,
         var renotifikasjonSendt: Boolean?,
         var renotifikasjonTidspunkt: ZonedDateTime? = null,
-        val sendteKanaler: List<String>?,
+        val kanaler: List<String>?,
         val feilHistorikk: List<Feilhistorikk>?,
         val sistOppdatert: ZonedDateTime,
     )
@@ -84,7 +84,7 @@ object Brukernotifikasjon {
                 type = event.type.name,
                 varselId = event.varselId,
                 aktiv = event.aktiv,
-                produsent = "${event.produsent.namespace}:${event.produsent.appnavn}",
+                produsent = event.produsent.appnavn,
                 sensitivitet = event.sensitivitet,
                 innhold =
                     Innhold(
@@ -97,7 +97,7 @@ object Brukernotifikasjon {
                         sendtTidspunkt = event.eksternVarsling?.sendtTidspunkt ?: event.opprettet,
                         renotifikasjonSendt = renotifikasjonSendt,
                         renotifikasjonTidspunkt = renotifikasjonTidspunkt,
-                        sendteKanaler = event.eksternVarsling?.sendteKanaler ?: emptyList(),
+                        sendteKanaler = event.eksternVarsling?.kanaler ?: emptyList(),
                         feilhistorikk = event.eksternVarsling?.feilHistorikk ?: emptyList(),
                         sistOppdatert = event.eksternVarsling?.sistOppdatert ?: event.opprettet,
                     ),

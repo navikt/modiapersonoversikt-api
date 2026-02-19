@@ -31,7 +31,7 @@ class BrukernotifikasjonTest {
                         sendtSomBatch = null,
                         renotifikasjonSendt = null,
                         renotifikasjonTidspunkt = null,
-                        sendteKanaler = listOf("SMS", "EPOST"),
+                        kanaler = listOf("SMS", "EPOST"),
                         feilHistorikk =
                             listOf(
                                 Brukernotifikasjon.Feilhistorikk(
