@@ -1,0 +1,514 @@
+openapi: 3.0.0
+info:
+  title: Datadeling API
+  version: 1.0.0
+
+  description: |
+    Tjenesten vil hente perioder personen har hatt dagpengerettighet av følgende varianter:
+    * Ordinær dagpengerettighet for arbeidsledige
+    * Dagpenger under permittering
+    * Dagpenger under permittering fra fiskeindustrien
+    
+    Undervarianter av disse rettighetene vil også inkluderes:
+    * Personer som har dagpenger på bakgrunn av vernepliktregelen (verneplikt tre av de siste tolv måneder)
+    * Personer som har dagpenger på bakgrunn av lærlingeregelverket under koronapandemien
+    
+    Tjenesten vil ikke hente vedtak med informasjon om
+    * Rett til forskutterte lønnsgarantimidler utbetalt som dagpenger
+    * Rett til å ta med dagpengene til utlandet
+    * Sanksjonsvedtak (forlenget ventetid eller tidsbegrenset bortfall – medfører at personen ikke får utbetaling i en periode)
+    * Annullering av sanksjon
+    
+    Tjenesten vil hente perioder der personen har hatt vedtak om rett til dagpenger, selv om personen ikke har fått 
+    utbetaling i hele/deler av perioden grunnet sanksjonsvedtak.
+    
+    Tjenesten vil hente perioder der personen har hatt vedtak om rett til dagpenger, selv om personen har hatt 
+    enkeltdager eller meldeperioder uten rett til utbetaling, for eksempel grunnet arbeid over terskel for tapt 
+    arbeidstid eller enkeltdager med fravær eller sykdom.
+    
+    Det er en utfordring med datakvaliteten, ved at endringer med tilbakevirkende kraft ikke reflekteres. Dataene som 
+    utleveres tar ikke hensyn til eventuelle feilutbetalingssaker. Der en feilutbetalingssak har resultert i omgjøring 
+    av vedtaksperioden, blir ikke dette reflektert i dataene som utleveres. Dette gjelder både for ferdig behandlede 
+    feilutbetalingssaker og eventuelle etterfølgende feilutbetalingssaker. Vedtaksperiodene er dermed ikke nødvendigvis 
+    korrekte. Det er imidlertid sjeldent at en feilutbetalingssak får betydning for vedtaksperiode, og det vil berøre 
+    et lite antall saker.
+
+servers:
+  - url: https://dp-datadeling.ekstern.dev.nav.no
+    description: dev for eksterne
+  - url: https://dp-datadeling.intern.dev.nav.no
+    description: dev for interne
+  - url: https://www.nav.no
+    description: prod
+
+paths:
+  /dagpenger/datadeling/v1/periode:
+    post:
+      description: |-
+        Opprett ny ressurs basert på innsendte data, returnerer URL til opprettede ressursen
+        
+        Scope: `nav:dagpenger:afpprivat.read`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatadelingRequest'
+      responses:
+        201:
+          description: Created
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: En url man kaller for å få svar på hvilke perioder en person har hatt retten til dagpenger
+      security:
+        - maskinporten: [ ]
+    get:
+      description: |-
+        Hent informasjon eksisterende ressurs ved hjelp av ressursens UUID
+        
+        Scope: `nav:dagpenger:afpprivat.read`
+      parameters:
+        - in: path
+          name: ressursUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ressurs'
+      security:
+        - maskinporten: [ ]
+  /dagpenger/datadeling/v1/perioder:
+    post:
+      description: |-
+        Returnerer perioder basert på innsendte data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatadelingRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatadelingResponse'
+      security:
+        - azure: [ ]
+  /dagpenger/datadeling/v1/meldekort:
+    post:
+      description: |-
+        Returnerer meldekort basert på innsendte data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatadelingRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meldekort'
+      security:
+        - azure: [ ]
+  /dagpenger/datadeling/v1/soknader:
+    post:
+      description: |-
+        Returnerer søknader basert på innsendte data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatadelingRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Soknadsliste"
+      security:
+        - azure: [ ]
+  /dagpenger/datadeling/v1/siste_soknad:
+    post:
+      description: |-
+        Returnerer siste innsendt søknad
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Personens fødselsnummer eller D-nummer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Soknad"
+        404:
+          description: Det finnes ikke søknader
+      security:
+        - azure: [ ]
+  /dagpenger/datadeling/v1/vedtak:
+    post:
+      description: |-
+        Returnerer vedtak basert på innsendte data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatadelingRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vedtaksliste"
+      security:
+        - azure: [ ]
+
+
+components:
+  schemas:
+    # TODO: Bruke openapi genererte objekter. Objektene kommer fra dp-kontrakter, ikke autogenerert som vi burde
+
+    DatadelingRequest:
+      type: object
+      required:
+        - personIdent
+        - fraOgMedDato
+      properties:
+        personIdent:
+          type: string
+          description: Personens fødselsnummer eller D-nummer
+        fraOgMedDato:
+          type: string
+          format: date
+          description: Tidligste dato man trenger informasjon om dagpengerettighet. Vedtak som er gyldige på denne dato vil bli med i responsen, selv om de starter tidligere. Vedtak som starter senere enn denne dato vil bli med i responsen hvis de ikke begrenses av tilOgMedDato (se beskrivelse under).
+        tilOgMedDato:
+          type: string
+          format: date
+          description: Seneste dato man trenger informasjon om dagpengerettighet. Vedtak som er gyldige på denne dato vil bli med i responsen, selv om de slutter senere. Vedtak med åpen til-dato vil bli med i responsen hvis de er gyldige på gitt tilOgMedDato.
+
+    Ressurs:
+      type: object
+      required:
+        - uuid
+        - status
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/RessursStatus'
+        response:
+          $ref: '#/components/schemas/DatadelingResponse'
+
+    RessursStatus:
+      type: string
+      enum:
+        - OPPRETTET
+        - FERDIG
+        - FEILET
+
+    DatadelingResponse:
+      type: object
+      required:
+        - personIdent
+        - perioder
+      properties:
+        personIdent:
+          type: string
+          description: Personens fødselsnummer eller D-nummer
+        perioder:
+          type: array
+          description: Liste med perioder bruker har hatt retten til dagpenger. Kan være en tom liste.
+          items:
+            $ref: '#/components/schemas/Periode'
+
+    Periode:
+      type: object
+      required:
+        - fraOgMedDato
+        - ytelseType
+      properties:
+        fraOgMedDato:
+          type: string
+          format: date
+          description: Første dato ytelsen gjelder. Dersom ytelsen startet tidligere enn requestens fraOgMedDato, vil requestens fraOgMedDato benyttes.
+        tilOgMedDato:
+          type: string
+          format: date
+          description: Siste dato ytelsen gjelder. Hvis elementet er tomt eller ikke er angitt, er ytelsen fortsatt aktiv. Dersom det er gitt en tilOgMedDato i request og ytelsen varer lenger enn tilOgMedDatoen, vil requestens tilOgMedDato benyttes.
+        ytelseType:
+          $ref: '#/components/schemas/YtelseType'
+
+    YtelseType:
+      type: string
+      description: Type ytelse som gjelder i perioden.
+      enum:
+        - DAGPENGER_ARBEIDSSOKER_ORDINAER
+        - DAGPENGER_PERMITTERING_ORDINAER
+        - DAGPENGER_PERMITTERING_FISKEINDUSTRI
+
+    Meldekort:
+      type: object
+      required:
+        - id
+        - ident
+        - status
+        - periode
+        - dager
+        - kanSendes
+        - kanEndres
+        - kanSendesFra
+        - sisteFristForTrekk
+        - opprettetAv
+        - type
+        - migrert
+      properties:
+        id:
+          type: string
+        ident:
+          type: string
+          description: Ident til dagpengebruker
+        status:
+          type: string
+          enum: [ TilUtfylling, Innsendt ]
+        type:
+          type: string
+          enum: [ Ordinaert, Korrigert, Etterregistrert ]
+        periode:
+          $ref: '#/components/schemas/MeldekortPeriode'
+        dager:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dag'
+        kanSendes:
+          type: boolean
+        kanEndres:
+          type: boolean
+        kanSendesFra:
+          type: string
+          format: date
+        sisteFristForTrekk:
+          type: string
+          format: date
+        opprettetAv:
+          $ref: '#/components/schemas/OpprettetAv'
+        # Kun relevant ved korrigering eller innsending av saksbehandler
+        originalMeldekortId:
+          type: string
+        begrunnelse:
+          type: string
+        # Kun relevant ved Innsendt
+        kilde:
+          $ref: '#/components/schemas/MeldekortKilde'
+        innsendtTidspunkt:
+          type: string
+          format: date-time
+        registrertArbeidssoker:
+          type: boolean
+        meldedato:
+          type: string
+          format: date
+        migrert:
+          type: boolean
+
+    MeldekortPeriode:
+      type: object
+      required: [ fraOgMed, tilOgMed ]
+      properties:
+        fraOgMed:
+          type: string
+          format: date
+        tilOgMed:
+          type: string
+          format: date
+
+    Dag:
+      type: object
+      required: [ dato, aktiviteter, dagIndex ]
+      properties:
+        dato:
+          type: string
+          format: date
+        aktiviteter:
+          type: array
+          items:
+            $ref: '#/components/schemas/Aktivitet'
+        dagIndex:
+          type: integer
+
+    Aktivitet:
+      type: object
+      required: [ id, type ]
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [ Arbeid, Syk, Utdanning, Fravaer ]
+        timer:
+          type: string
+          nullable: true
+
+    OpprettetAv:
+      type: string
+      enum: [ Arena, Dagpenger ]
+
+    MeldekortKilde:
+      type: object
+      description: Eksempelvis Bruker eller Saksbehandler
+      required: [ rolle, ident ]
+      properties:
+        rolle:
+          type: string
+          enum: [ Bruker, Saksbehandler ]
+        ident:
+          type: string
+
+    Soknad:
+      type: object
+      required:
+        - søknadId
+        - journalpostId
+        - søknadsType
+        - skjemaKode
+        - kanal
+        - datoInnsendt
+      properties:
+        søknadId:
+          type: string
+          format: uuid
+          description: Søknad ID
+        journalpostId:
+          type: string
+          description: Journalpost ID
+        søknadstype:
+          $ref: '#/components/schemas/Soknadstype'
+        skjemaKode:
+          type: string
+          description: Skjemakode f.eks. NAV 04-16.03
+        kanal:
+          $ref: '#/components/schemas/Kanal'
+        datoInnsendt:
+          type: string
+          format: date-time
+          description: Tidspunkt for innsending
+
+    Soknadstype:
+      type: string
+      description: Søknadstype
+      enum:
+        - NySøknad
+        - Gjenopptak
+
+    Kanal:
+      type: string
+      description: Kanal
+      enum:
+        - Digital
+        - Papir
+
+    Soknadsliste:
+      type: array
+      description: Liste med søknader bruker har. Kan være en tom liste.
+      items:
+        $ref: '#/components/schemas/Soknad'
+
+    Vedtak:
+      type: object
+      required:
+        - vedtakId
+        - fagsakId
+        - utfall
+        - stønadType
+        - fraOgMedDato
+        - kilde
+      properties:
+        vedtakId:
+          type: string
+        fagsakId:
+          type: string
+        utfall:
+          $ref: '#/components/schemas/Utfall'
+        stønadType:
+          $ref: '#/components/schemas/StonadType'
+        fraOgMedDato:
+          type: string
+          format: date
+          description: Dato som vedtak gjelder fra og med
+        tilOgMedDato:
+          type: string
+          format: date
+          description: Dato som vedtak gjelder til og med
+        dagsats:
+          type: integer
+        barnetillegg:
+          type: integer
+        kilde:
+          $ref: '#/components/schemas/Kilde'
+
+    Utfall:
+      type: string
+      description: Utfall
+      enum:
+        - INNVILGET
+        - AVSLÅTT
+
+    StonadType:
+      type: string
+      description: Stønadstype
+      enum:
+        - DAGPENGER_ARBEIDSSOKER_ORDINAER
+        - DAGPENGER_PERMITTERING_ORDINAER
+        - DAGPENGER_PERMITTERING_FISKEINDUSTRI
+
+    Kilde:
+      type: string
+      description: Kilde
+      enum:
+        - ARENA
+        - DP
+
+    Vedtaksliste:
+      type: array
+      description: Liste med vedtak bruker har. Kan være en tom liste.
+      items:
+        $ref: '#/components/schemas/Vedtak'
+
+  securitySchemes:
+    maskinporten:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Bearer token utstedt av Maskinporten.
+    azure:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Bruker [Azure AD](https://docs.nais.io/auth/entra-id/) til autentisering.
+        
+        For å teste APIet kan du lage et gyldig OBO-token ved å bruke wonderwalled:
+        - [dev-gcp](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:teamdagpenger:dp-datadeling)
