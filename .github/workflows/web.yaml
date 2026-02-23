@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - 'proxy/**'
   issue_comment:
-    types: [created]
+    types: [ created ]
 
 concurrency:
   group: web-${{ github.ref }}
