@@ -63,9 +63,12 @@ object Brukernotifikasjon {
 
     object Mapper {
         fun lagVarselFraEvent(event: Event): VarslerService.Varsel {
+            // Teamet som eier endepunktet vi henter eventer fra la på nye attributter den 30.1.26. For eventer opprettet
+            // før cutover-datoen må vi selv finne ut om renotifikasjon er sendt ved å sammenligne opprettet-datoen og
+            // sistOppdatert-datoen.
+            val cutoverDate = ZonedDateTime.parse("2026-01-31T00:00:00.000Z")
             var renotifikasjonSendt: Boolean
             var renotifikasjonTidspunkt: ZonedDateTime?
-            val cutoverDate = ZonedDateTime.parse("2026-01-31T00:00:00.000Z")
             val opprettetDato = event.opprettet.toLocalDate()
             val sistOppdatertDato = event.eksternVarsling?.sistOppdatert?.toLocalDate()
 
