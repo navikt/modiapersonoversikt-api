@@ -4,6 +4,8 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.api.domain.aap.generated.models.NonavaapapiinternVedtakUtenUtbetalingDTO
 import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
+import no.nav.modiapersonoversikt.consumer.dagpenger.DagpengerService
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.PeriodeDagpengerDto
 import no.nav.modiapersonoversikt.consumer.fpsak.ForeldrepengerFpSak
 import no.nav.modiapersonoversikt.consumer.fpsak.FpSakService
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
@@ -38,6 +40,7 @@ class YtelseController
         private val pensjonService: PensjonService,
         private val aapApi: AapApi,
         private val fpSakService: FpSakService,
+        private val dagpengerService: DagpengerService,
         private val spokelseClient: SpokelseClient,
     ) {
         @PostMapping("sykepenger")
@@ -144,5 +147,21 @@ class YtelseController
                         fnrRequest.fom,
                         fnrRequest.tom,
                     )
+                }
+
+        @PostMapping("dagpenger")
+        fun hentDagpenger(
+            @RequestBody fnrRequest: FnrDatoRangeRequest,
+        ): List<PeriodeDagpengerDto> =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Dagpenger,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    dagpengerService.hentPerioder(fnrRequest)
                 }
     }

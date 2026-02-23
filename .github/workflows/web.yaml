@@ -51,7 +51,7 @@ jobs:
           mvn -P ci -B test --settings .github/maven-settings.xml
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
-        if: github.ref == 'refs/heads/master' || github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '.deploy')
+        if: github.ref == 'refs/heads/master' || github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '.deploy') || github.ref == 'refs/heads/dagsquash'
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -64,7 +64,7 @@ jobs:
   deploy-dev:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/master' || github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '.deploy')
+    if: github.ref == 'refs/heads/master' || github.event.issue.pull_request != '' && startsWith(github.event.comment.body, '.deploy') || github.ref == 'refs/heads/dagsquash'
     environment: dev-gcp
     runs-on: ubuntu-latest
     permissions:

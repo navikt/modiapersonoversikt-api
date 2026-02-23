@@ -15,7 +15,7 @@ object MainTest {
         System.setProperty("NAIS_CLUSTER_NAME", "dev-gcp")
         System.setProperty("UNLEASH_SERVER_API_URL", "https://unleash-api.dev-gcp.nais.io/api")
         System.setProperty("UNLEASH_SERVER_API_TOKEN", "test")
-        NaisYamlUtils.loadFromYaml("web/.nais/dev.yml")
+        NaisYamlUtils.loadFromYaml(".nais/dev.yml")
         SSLTestUtils.disableCertificateChecks()
     }
 

@@ -40,8 +40,12 @@ Denne jobben oppdaterer kodeverk for Arkivtemaer ved midnatt hver dag.
 
 ## Starte appen lokalt
 
-Om du vil kjøre appen lokatl kan du starte appen ved å kjøre
-`mvn exec:java -Dexec.classpathScope="test" -Dexec.mainClass="no.nav.modiapersonoversikt.MainTest"`.
+Om du vil kjøre appen lokalt kan du starte appen ved å kjøre
+```
+mvn clean install
+cd web
+mvn exec:java -Dexec.classpathScope="test" -Dexec.mainClass="no.nav.modiapersonoversikt.MainTest"
+```
 
 Det vil kjøre appen under `local`-profilen med mockede bønner som er definert
 i [LocalBeans.kt](web/src/test/java/no/nav/modiapersonoversikt/LocalBeans.kt).

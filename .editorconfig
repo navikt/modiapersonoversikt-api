@@ -1,2 +1,12 @@
 [*.kt]
 ktlint_standard_no-wildcard-imports = disabled
+
+# this makes it hard to separate comments from commented out code
+ktlint_standard_comment-spacing = disabled
+
+# hundreds of hits here in newer versions of ktlint
+ktlint_standard_when-entry-bracing = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+
+# this may be a problem later
+ktlint_standard_kdoc = disabled
