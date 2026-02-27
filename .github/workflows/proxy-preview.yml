@@ -1,13 +1,7 @@
-name: modiapersonoversikt-api-proxy build, push, and deploy
+name: Manual deploy proxy to dev-fss
 
 on:
-  push:
-    paths-ignore:
-      - 'web/**'
-
-concurrency:
-  group: proxy-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_dispatch:
 
 env:
   CI: true
@@ -42,7 +36,6 @@ jobs:
           mvn -P ci -B test --settings .github/maven-settings.xml
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
-        if: github.ref == 'refs/heads/master'
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -55,7 +48,6 @@ jobs:
   deploy-dev:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/master'
     environment: dev-fss
     runs-on: ubuntu-latest
     permissions:
@@ -68,22 +60,4 @@ jobs:
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
           RESOURCE: proxy/.nais/nais-q1.yml
-          VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
-
-  deploy-prod:
-    name: Deploy to prod
-    needs: build
-    if: github.ref == 'refs/heads/master'
-    environment: prod-fss
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v6
-      - uses: nais/deploy/actions/deploy@v2
-        env:
-          PRINT_PAYLOAD: true
-          CLUSTER: prod-fss
-          RESOURCE: proxy/.nais/prod.yml
           VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
