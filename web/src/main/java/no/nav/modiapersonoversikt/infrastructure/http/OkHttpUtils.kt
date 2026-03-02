@@ -62,8 +62,14 @@ class LoggingInterceptor(
     private fun Response.peekContent(): String {
         if (!unleashService.isEnabled(Feature.LOG_RESPONSE_BODY)) return "IGNORED"
         return when {
-            this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
-            this.code == 204 -> "StatusCode: 204, didn't try to peek at body"
+            this.header("Content-Length") == "0" -> {
+                "Content-Length: 0, didn't try to peek at body"
+            }
+
+            this.code == 204 -> {
+                "StatusCode: 204, didn't try to peek at body"
+            }
+
             else -> {
                 val responseBody = this.body
                 val contentLength = responseBody?.contentLength() ?: 0
