@@ -4,11 +4,11 @@ public class Dokument {
 
     private String tittel;
     private String dokumentreferanse;
-    private boolean kanVises;
     private boolean logiskDokument;
     private Variantformat variantformat;
     private String skjerming;
     private DokumentStatus dokumentStatus;
+    private boolean saksbehandlerHarTilgang;
 
     public enum DokumentStatus {
         UNDER_REDIGERING,
@@ -23,10 +23,6 @@ public class Dokument {
         FULLVERSJON,
         PRODUKSJON,
         PRODUKSJON_DLF
-    }
-
-    public boolean isKassert() {
-        return dokumentStatus == DokumentStatus.KASSERT;
     }
 
     public DokumentStatus getDokumentStatus() {
@@ -45,10 +41,6 @@ public class Dokument {
         return dokumentreferanse;
     }
 
-    public boolean isKanVises() {
-        return kanVises;
-    }
-
     public boolean isLogiskDokument() {
         return logiskDokument;
     }
@@ -57,9 +49,18 @@ public class Dokument {
         return variantformat;
     }
 
+    public boolean getSaksbehandlerHarTilgang() {
+        return saksbehandlerHarTilgang;
+    }
+
+    public void setSaksbehandlerHarTilgang(boolean saksbehandlerHarTilgang) {
+        this.saksbehandlerHarTilgang = saksbehandlerHarTilgang;
+    }
+
     public String getSkjerming() {
         return skjerming;
     }
+
 
     public Dokument withTittel(final String tittel) {
         this.tittel = tittel;
@@ -72,10 +73,6 @@ public class Dokument {
 
     public void setDokumentreferanse(String dokumentreferanse) {
         this.dokumentreferanse = dokumentreferanse;
-    }
-
-    public void setKanVises(boolean kanVises) {
-        this.kanVises = kanVises;
     }
 
     public void setLogiskDokument(boolean logiskDokument) {

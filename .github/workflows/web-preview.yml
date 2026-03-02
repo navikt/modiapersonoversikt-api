@@ -1,13 +1,7 @@
-name: modiapersonoversikt-api-proxy build, push, and deploy
+name: Manual deploy web to dev-gcp
 
 on:
-  push:
-    paths-ignore:
-      - 'web/**'
-
-concurrency:
-  group: proxy-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_dispatch:
 
 env:
   CI: true
@@ -32,7 +26,7 @@ jobs:
           cache: 'maven'
       - uses: nbadal/action-ktlint-setup@v1
         with:
-          ktlint_version: '1.2.1'
+          ktlint_version: '1.3.1'
       - name: Ktlint
         run: bash ./linting.sh
       - name: Build using maven
@@ -42,21 +36,19 @@ jobs:
           mvn -P ci -B test --settings .github/maven-settings.xml
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
-        if: github.ref == 'refs/heads/master'
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
           team: personoversikt
-          image_suffix: proxy
-          dockerfile: proxy/Dockerfile
+          image_suffix: web
+          dockerfile: web/Dockerfile
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
   deploy-dev:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/master'
-    environment: dev-fss
+    environment: dev-gcp
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -66,24 +58,6 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           PRINT_PAYLOAD: true
-          CLUSTER: dev-fss
-          RESOURCE: proxy/.nais/nais-q1.yml
-          VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}
-
-  deploy-prod:
-    name: Deploy to prod
-    needs: build
-    if: github.ref == 'refs/heads/master'
-    environment: prod-fss
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v6
-      - uses: nais/deploy/actions/deploy@v2
-        env:
-          PRINT_PAYLOAD: true
-          CLUSTER: prod-fss
-          RESOURCE: proxy/.nais/prod.yml
+          CLUSTER: dev-gcp
+          RESOURCE: web/.nais/dev.yml
           VAR: version=${{ github.sha }},image=${{ needs.build.outputs.image }}

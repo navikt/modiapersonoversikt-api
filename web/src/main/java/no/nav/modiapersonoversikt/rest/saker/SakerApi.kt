@@ -49,11 +49,10 @@ object SakerApi {
     data class Dokument(
         val tittel: String,
         val dokumentreferanse: String?,
-        val kanVises: Boolean,
         val logiskDokument: Boolean,
         val skjerming: String?,
-        val erKassert: Boolean,
         val dokumentStatus: DokumentStatus?,
+        val saksbehandlerHarTilgang: Boolean,
     )
 
     data class Feil(
@@ -73,6 +72,7 @@ object SakerApi {
 
     data class ResultatSaksDokumenter(
         val saker: List<SaksDokumenter>,
+        val dokumenter: List<Dokumentmetadata>,
         val temaer: List<Sakstema>,
         val feilendeSystemer: List<Baksystem> = listOf(),
     )
