@@ -1,77 +1,40 @@
 package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.service.varsel.VarslerService
 import java.time.ZonedDateTime
 
 object Brukernotifikasjon {
     data class Event(
-        val fodselsnummer: String,
-        val grupperingsId: String? = null,
-        val eventId: String,
-        val forstBehandlet: ZonedDateTime,
-        val produsent: String,
-        val sikkerhetsnivaa: Int,
-        val sistOppdatert: ZonedDateTime,
-        val tekst: String,
-        val link: String,
-        val aktiv: Boolean,
-        val eksternVarslingSendt: Boolean,
-        val eksternVarslingKanaler: List<String>,
-        val eksternVarsling: EksternVarslingInfo? = null,
-        val varslingsTidspunkt: VarslingsTidspunkt? = null,
-    ) : VarslerService.UnifiedVarsel
-
-    data class EksternVarslingInfo(
-        val sendt: Boolean,
-        val renotifikasjonSendt: Boolean,
-        val prefererteKanaler: List<String>,
-        val sendteKanaler: List<String>,
-        val historikk: List<HistorikkEntry>,
-    )
-
-    data class HistorikkEntry(
-        val melding: String,
-        val status: String,
-        val distribusjonsId: Long? = null,
-        val kanal: String? = null,
-        val renotifikasjon: Boolean? = null,
-        val tidspunkt: ZonedDateTime,
-    )
-
-    data class VarslingsTidspunkt(
-        val sendt: Boolean,
-        val tidspunkt: ZonedDateTime?,
-        val renotifikasjonSendt: Boolean,
-        val renotifikasjonTidspunkt: ZonedDateTime?,
-        val sendteKanaler: List<String>,
-        val renotifikasjonsKanaler: List<String>,
-        val harFeilteVarslinger: Boolean,
-        val harFeilteRevarslinger: Boolean,
-        val feilteVarsliner: List<FeiletVarsling>,
-        val feilteRevarslinger: List<FeiletVarsling>,
-    )
-
-    data class FeiletVarsling(
-        val tidspunkt: ZonedDateTime,
-        val feilmelding: String,
-        val kanal: String?,
-    )
-
-    data class EventV2(
-        val type: String,
+        val type: Type,
         val varselId: String,
         val aktiv: Boolean,
         val produsent: Produsent,
         val sensitivitet: String,
         val innhold: Innhold,
-        val eksternVarsling: EksternVarslingInfoV2? = null,
+        val eksternVarsling: EksternVarslingInfo?,
         val opprettet: ZonedDateTime,
         val aktivFremTil: ZonedDateTime? = null,
         val inaktivert: ZonedDateTime? = null,
         val inaktivertAv: String? = null,
-        val varslingsTidspunkt: VarslingsTidspunkt? = null,
     ) : VarslerService.UnifiedVarsel
+
+    data class EksternVarslingInfo(
+        val sendt: Boolean?,
+        val sendtTidspunkt: ZonedDateTime?,
+        val sendtSomBatch: Boolean?,
+        var renotifikasjonSendt: Boolean?,
+        var renotifikasjonTidspunkt: ZonedDateTime? = null,
+        val kanaler: List<String>?,
+        val feilHistorikk: List<Feilhistorikk>?,
+        val sistOppdatert: ZonedDateTime,
+    )
+
+    data class Feilhistorikk(
+        val feilmelding: String,
+        val tidspunkt: ZonedDateTime,
+    )
 
     data class Produsent(
         val namespace: String,
@@ -80,168 +43,73 @@ object Brukernotifikasjon {
 
     data class Innhold(
         val tekst: String,
-        val link: String? = null,
-    )
-
-    data class EksternVarslingInfoV2(
-        val sendt: Boolean,
-        val renotifikasjonSendt: Boolean,
-        val kanaler: List<String>,
-        val historikk: List<HistorikkEntry>,
-        val sistOppdatert: ZonedDateTime,
+        val link: String?,
     )
 
     enum class Type {
+        @JsonProperty("oppgave")
         OPPGAVE,
+
+        @JsonProperty("innboks")
         INNBOKS,
+
+        @JsonProperty("beskjed")
         BESKJED,
     }
 
     interface Client {
-        fun hentBrukernotifikasjoner(
-            type: Type,
-            fnr: Fnr,
-        ): List<Event>
-
-        fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<EventV2>
+        fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Event>
     }
 
     object Mapper {
-        private fun filtrerUtRevarslinger(historikk: List<HistorikkEntry>): Pair<List<HistorikkEntry>, List<HistorikkEntry>> {
-            val varslinger = mutableListOf<HistorikkEntry>()
-            val revarslinger = mutableListOf<HistorikkEntry>()
+        fun lagVarselFraEvent(event: Event): VarslerService.Varsel {
+            /* Teamet som eier endepunktet vi henter eventer fra la på nye attributter den 30.1.26. For eventer opprettet
+             før cutover-datoen må vi selv finne ut om renotifikasjon er sendt ved å sammenligne opprettet-datoen og
+             sistOppdatert-datoen. */
+            val cutoverDate = ZonedDateTime.parse("2026-01-31T00:00:00.000Z")
+            var renotifikasjonSendt: Boolean
+            var renotifikasjonTidspunkt: ZonedDateTime?
+            val opprettetDato = event.opprettet.toLocalDate()
+            val sistOppdatertDato = event.eksternVarsling?.sistOppdatert?.toLocalDate()
 
-            for (entry in historikk) {
-                if (entry.renotifikasjon == null || !entry.renotifikasjon) {
-                    varslinger.add(entry)
-                } else {
-                    revarslinger.add(entry)
-                }
-            }
-            return Pair(varslinger, revarslinger)
-        }
-
-        private fun finnTidspunktFraVarslingsHistorikk(historikk: List<HistorikkEntry>): ZonedDateTime? =
-            historikk.filter { it.status == "sendt" }.minByOrNull { it.tidspunkt }?.tidspunkt
-
-        private fun finnFeilteVarslinger(historikk: List<HistorikkEntry>): List<FeiletVarsling> {
-            val feilteVarsliner = mutableListOf<FeiletVarsling>()
-
-            for (entry in historikk) {
-                if (entry.status == "feilet") {
-                    feilteVarsliner.add(
-                        FeiletVarsling(
-                            tidspunkt = entry.tidspunkt,
-                            feilmelding = entry.melding,
-                            kanal = entry.kanal,
-                        ),
-                    )
-                }
+            if (event.eksternVarsling == null) {
+                renotifikasjonSendt = false
+                renotifikasjonTidspunkt = null
+            } else if (event.opprettet.isBefore(cutoverDate) && opprettetDato != sistOppdatertDato) {
+                renotifikasjonSendt = true
+                renotifikasjonTidspunkt = event.eksternVarsling.sistOppdatert
+            } else {
+                renotifikasjonSendt = event.eksternVarsling.renotifikasjonSendt ?: false
+                renotifikasjonTidspunkt = event.eksternVarsling.renotifikasjonTidspunkt
             }
 
-            return feilteVarsliner
-        }
-
-        fun byggVarslingsTidspunkt(event: Event): Event {
-            val eksternVarsling = event.eksternVarsling ?: return event
-
-            val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)
-            val feilteVarsliner = finnFeilteVarslinger(varslinger)
-            val feilteRevarslinger = finnFeilteVarslinger(revarslinger)
-
-            val varslingsTidspunkt =
-                VarslingsTidspunkt(
-                    sendt = eksternVarsling.sendt,
-                    tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
-                    renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
-                    renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
-                    sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
-                    renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
-                    feilteVarsliner = feilteVarsliner,
-                    harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
-                    feilteRevarslinger = feilteRevarslinger,
-                    harFeilteRevarslinger = feilteRevarslinger.isNotEmpty(),
-                )
-
-            return Event(
-                fodselsnummer = event.fodselsnummer,
-                grupperingsId = event.grupperingsId,
-                eventId = event.eventId,
-                forstBehandlet = event.forstBehandlet,
-                produsent = event.produsent,
-                sikkerhetsnivaa = event.sikkerhetsnivaa,
-                sistOppdatert = event.sistOppdatert,
-                tekst = event.tekst,
-                link = event.link,
+            return VarslerService.Varsel(
+                type = event.type.name,
+                varselId = event.varselId,
                 aktiv = event.aktiv,
-                eksternVarslingSendt = event.eksternVarslingSendt,
-                eksternVarslingKanaler = event.eksternVarslingKanaler,
-                varslingsTidspunkt = varslingsTidspunkt,
+                produsent = event.produsent.appnavn,
+                sensitivitet = event.sensitivitet,
+                innhold =
+                    Innhold(
+                        tekst = event.innhold.tekst,
+                        link = event.innhold.link,
+                    ),
+                eksternVarsling =
+                    VarslerService.VarselInfo(
+                        sendt = event.eksternVarsling?.sendt ?: false,
+                        sendtTidspunkt = event.eksternVarsling?.sendtTidspunkt ?: event.opprettet,
+                        renotifikasjonSendt = renotifikasjonSendt,
+                        renotifikasjonTidspunkt = renotifikasjonTidspunkt,
+                        sendteKanaler = event.eksternVarsling?.kanaler ?: emptyList(),
+                        feilhistorikk = event.eksternVarsling?.feilHistorikk ?: emptyList(),
+                        sistOppdatert = event.eksternVarsling?.sistOppdatert ?: event.opprettet,
+                    ),
+                opprettet = event.opprettet,
             )
         }
-
-        fun byggVarslingsTidspunktV2(
-            fnr: String,
-            eventV2: EventV2,
-        ): Event {
-            val eksternVarsling = eventV2.eksternVarsling
-            val event =
-                Event(
-                    fodselsnummer = fnr,
-                    eventId = eventV2.varselId,
-                    forstBehandlet = eventV2.opprettet,
-                    produsent = eventV2.produsent.appnavn,
-                    sikkerhetsnivaa = toSikkerhetsnivaa(eventV2.sensitivitet),
-                    sistOppdatert = eventV2.opprettet,
-                    tekst = eventV2.innhold.tekst,
-                    link = eventV2.innhold.link ?: "",
-                    aktiv = eventV2.aktiv,
-                    eksternVarslingSendt = eventV2.eksternVarsling?.sendt ?: false,
-                    eksternVarslingKanaler = eventV2.eksternVarsling?.kanaler ?: listOf(),
-                )
-
-            if (eksternVarsling != null) {
-                val (varslinger, revarslinger) = filtrerUtRevarslinger(eksternVarsling.historikk)
-                val feilteVarsliner = finnFeilteVarslinger(varslinger)
-                val feilteRevarslinger = finnFeilteVarslinger(revarslinger)
-
-                val varslingsTidspunkt =
-                    VarslingsTidspunkt(
-                        sendt = eksternVarsling.sendt,
-                        tidspunkt = finnTidspunktFraVarslingsHistorikk(varslinger),
-                        renotifikasjonSendt = eksternVarsling.renotifikasjonSendt,
-                        renotifikasjonTidspunkt = finnTidspunktFraVarslingsHistorikk(revarslinger),
-                        sendteKanaler = varslinger.filter { it.kanal != null }.map { it.kanal!! },
-                        renotifikasjonsKanaler = revarslinger.filter { it.kanal != null }.map { it.kanal!! },
-                        feilteVarsliner = feilteVarsliner,
-                        harFeilteVarslinger = feilteVarsliner.isNotEmpty(),
-                        feilteRevarslinger = feilteRevarslinger,
-                        harFeilteRevarslinger = feilteRevarslinger.isNotEmpty(),
-                    )
-
-                return event.copy(
-                    sistOppdatert = eksternVarsling.sistOppdatert,
-                    varslingsTidspunkt = varslingsTidspunkt,
-                )
-            }
-
-            return event
-        }
-
-        fun toSikkerhetsnivaa(sensitivitet: String): Int =
-            when (sensitivitet) {
-                "substantial" -> 3
-                "high" -> 4
-                else -> throw IllegalArgumentException("Ugyldig sikkerhetsnivaa")
-            }
     }
 
     interface Service {
-        fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Event>
-
-        fun hentBrukernotifikasjoner(
-            type: Type,
-            fnr: Fnr,
-        ): List<Event>
+        fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<VarslerService.Varsel>
     }
 }
