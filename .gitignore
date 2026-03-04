@@ -15,7 +15,6 @@ target
 node_modules/
 web/src/test/resources/.vault.properties
 
-
 # misc
 .*.sw?
 *.vim
