@@ -97,6 +97,8 @@ spec:
           namespace: aap
         - application: spokelse
           namespace: tbd
+        - application: dp-datadeling
+          namespace: teamdagpenger
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -221,4 +223,7 @@ spec:
       value: "https://fpsak-api.dev-fss-pub.nais.io"
     - name: FP_SAK_SCOPE
       value: "dev-fss:teamforeldrepenger:fpsak"
-
+    - name: DAGPENGER_URL
+      value: "http://dp-datadeling.teamdagpenger"
+    - name: DAGPENGER_SCOPE
+      value: "dev-gcp:teamdagpenger:dp-datadeling"

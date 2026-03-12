@@ -224,3 +224,7 @@ spec:
       value: "https://fpsak-api.prod-fss-pub.nais.io"
     - name: FP_SAK_SCOPE
       value: "prod-fss:teamforeldrepenger:fpsak"
+    - name: DAGPENGER_URL
+      value: "http://dp-datadeling.teamdagpenger"
+    - name: DAGPENGER_SCOPE
+      value: "prod-gcp:teamdagpenger:dp-datadeling"
