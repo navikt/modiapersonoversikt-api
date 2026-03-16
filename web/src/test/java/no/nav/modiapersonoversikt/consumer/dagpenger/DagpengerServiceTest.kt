@@ -3,11 +3,11 @@ package no.nav.modiapersonoversikt.consumer.dagpenger
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingResponseDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.FagsystemDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.PeriodeDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.YtelseTypeDagpengerDto
-import no.nav.modiapersonoversikt.rest.common.FnrDatoRangeRequest
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -56,7 +56,7 @@ internal class DagpengerServiceTest {
         val result =
             method.call(
                 dagpengerService,
-                FnrDatoRangeRequest("12345678910", "2009-01-03"),
+                DatadelingRequestDagpengerDto("12345678910", LocalDate.of(2010, 2, 4)),
             )
         //snapshot.assertMatches(result) // chill with the snaps until done
     }

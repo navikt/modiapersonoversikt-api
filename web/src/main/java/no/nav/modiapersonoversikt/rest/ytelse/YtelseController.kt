@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.dagpenger.DagpengerService
 import no.nav.modiapersonoversikt.consumer.dagpenger.PseudoDagpengerVedtak
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
 import no.nav.modiapersonoversikt.consumer.fpsak.ForeldrepengerFpSak
 import no.nav.modiapersonoversikt.consumer.fpsak.FpSakService
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
@@ -151,17 +152,17 @@ class YtelseController
 
         @PostMapping("dagpenger")
         fun hentDagpenger(
-            @RequestBody fnrRequest: FnrDatoRangeRequest,
+            @RequestBody datodelingRequest: DatadelingRequestDagpengerDto,
         ): PseudoDagpengerVedtak =
             tilgangskontroll
-                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .check(Policies.tilgangTilBruker(Fnr(datodelingRequest.personIdent)))
                 .get(
                     Audit.describe(
                         Audit.Action.READ,
                         AuditResources.Person.Dagpenger,
-                        AuditIdentifier.FNR to fnrRequest.fnr,
+                        AuditIdentifier.FNR to datodelingRequest.personIdent,
                     ),
                 ) {
-                    dagpengerService.hentVedtak(fnrRequest)
+                    dagpengerService.hentVedtak(datodelingRequest)
                 }
     }
