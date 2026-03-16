@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.Datadeling
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.PeriodeDagpengerDto
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
-import no.nav.modiapersonoversikt.rest.common.FnrDatoRangeRequest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -32,24 +31,20 @@ data class PseudoDagpengerVedtak(
 }
 
 interface DagpengerService {
-    fun hentVedtak(fnrRequest: FnrDatoRangeRequest): PseudoDagpengerVedtak
+    fun hentVedtak(datodelingRequest: DatadelingRequestDagpengerDto): PseudoDagpengerVedtak
 }
 
 open class DagpengerServiceImpl(
     val baseUrl: String,
     val client: OkHttpClient,
 ) : DagpengerService {
-    override fun hentVedtak(fnrRequest: FnrDatoRangeRequest): PseudoDagpengerVedtak {
+    override fun hentVedtak(datodelingRequest: DatadelingRequestDagpengerDto): PseudoDagpengerVedtak {
         val url = "$baseUrl/dagpenger/datadeling/v1/perioder"
         val mapper = ObjectMapper()
         mapper.registerModule(JavaTimeModule())
         val requestContent =
             mapper.writeValueAsString(
-                DatadelingRequestDagpengerDto(
-                    fnrRequest.fnr,
-                    LocalDate.parse(fnrRequest.fom!!), // TODO handle nicelier
-                    fnrRequest.tom?.let { LocalDate.parse(it) },
-                ),
+                datodelingRequest,
             )
         val requestBody =
             requestContent
