@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.consumer.dagpenger
 
-import no.nav.modiapersonoversikt.consumer.dagpenger.PseudoDagpengerVedtak
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.FagsystemDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.PeriodeDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.YtelseTypeDagpengerDto
