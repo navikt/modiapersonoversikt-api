@@ -1,25 +1,21 @@
 package no.nav.modiapersonoversikt.consumer.dagpenger
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.DefaultApi
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingResponseDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.FagsystemDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.PeriodeDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.YtelseTypeDagpengerDto
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
-import okhttp3.Call
-import okhttp3.OkHttpClient
-import okhttp3.Response
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.LocalDate
 
 internal class DagpengerServiceTest {
-    private val httpClient: OkHttpClient = mockk()
-    private val objectMapper: ObjectMapper = ObjectMapper().findAndRegisterModules()
-    private val dagpengerService: DagpengerService = DagpengerServiceImpl("http://0", httpClient)
+    private val apiClient: DefaultApi = mockk()
+    private val dagpengerService: DagpengerService = DagpengerServiceImpl(apiClient)
 
     val ongoingPeriodResponse =
         DatadelingResponseDagpengerDto(
@@ -34,7 +30,7 @@ internal class DagpengerServiceTest {
                 ),
         )
 
-    // writes "expected" test result to file for us
+    // writes expected test result to file for us
     @JvmField
     @RegisterExtension
     val snapshot = SnapshotExtension()
@@ -44,20 +40,14 @@ internal class DagpengerServiceTest {
      */
     @Test
     fun `metode for å hente perioder er velutformet`() {
-        val mockResponse = mockk<Response>()
-        val mockCall = mockk<Call>()
-
-        every { httpClient.newCall(any()) } returns mockCall
-        every { mockCall.execute() } returns mockResponse
-        every { mockResponse.body?.string() } returns objectMapper.writeValueAsString(ongoingPeriodResponse)
-        every { mockResponse.body?.contentLength() } returns objectMapper.writeValueAsString(ongoingPeriodResponse).length.toLong()
-
+        val mockResponse = mockk<DatadelingResponseDagpengerDto>()
+        every { apiClient.dagpengerDatadelingV1PerioderPost(any()) } returns ongoingPeriodResponse
         val method = DagpengerServiceImpl::class.members.first { it.name == "hentVedtak" }
         val result =
             method.call(
                 dagpengerService,
                 DatadelingRequestDagpengerDto("12345678910", LocalDate.of(2010, 2, 4)),
             )
-        //snapshot.assertMatches(result) // chill with the snaps until done
+        snapshot.assertMatches(result) // chill with the snaps until done
     }
 }

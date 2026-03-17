@@ -10,3 +10,6 @@ ktlint_standard_blank-line-between-when-conditions = disabled
 
 # this may be a problem later
 ktlint_standard_kdoc = disabled
+
+# removed by default in ktlint 1.7
+ktlint_standard_no-unused-imports = enabled
