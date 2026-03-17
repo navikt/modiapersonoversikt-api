@@ -4,7 +4,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingInterceptorFactory
-import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.DefaultApi
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.InterntApi
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.utils.DownstreamApi
@@ -41,7 +41,7 @@ open class DagpengerServiceConfig {
                         machineToMachineTokenClient.createMachineToMachineToken(scope)
                     },
                 ).build()
-        val apiClient = DefaultApi(baseUrl, okClient)
+        val apiClient = InterntApi(baseUrl, okClient)
         return DagpengerServiceImpl(apiClient)
     }
 }

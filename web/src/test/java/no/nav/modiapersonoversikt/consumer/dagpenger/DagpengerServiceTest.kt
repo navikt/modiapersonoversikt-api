@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.consumer.dagpenger
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.DefaultApi
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.InterntApi
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingResponseDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.FagsystemDagpengerDto
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.LocalDate
 
 internal class DagpengerServiceTest {
-    private val apiClient: DefaultApi = mockk()
+    private val apiClient: InterntApi = mockk()
     private val dagpengerService: DagpengerService = DagpengerServiceImpl(apiClient)
 
     val ongoingPeriodResponse =

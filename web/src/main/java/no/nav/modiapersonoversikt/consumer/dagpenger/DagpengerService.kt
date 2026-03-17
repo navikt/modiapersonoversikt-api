@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.dagpenger
 
-import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.DefaultApi
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.InterntApi
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.PeriodeDagpengerDto
 import java.time.LocalDate
@@ -26,7 +26,7 @@ interface DagpengerService {
 }
 
 open class DagpengerServiceImpl(
-    val client: DefaultApi,
+    val client: InterntApi,
 ) : DagpengerService {
     override fun hentVedtak(datodelingRequest: DatadelingRequestDagpengerDto): PseudoDagpengerVedtak {
         val response = client.dagpengerDatadelingV1PerioderPost(datodelingRequest)
