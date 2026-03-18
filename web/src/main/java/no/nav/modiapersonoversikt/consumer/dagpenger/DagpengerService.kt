@@ -32,8 +32,9 @@ open class DagpengerServiceImpl(
 ) : DagpengerService {
     override fun hentVedtak(datodelingRequest: DatadelingRequestDagpengerDto): PseudoDagpengerVedtak {
         val response = client.dagpengerDatadelingV1PerioderPost(datodelingRequest)
-        // the above should throw an exception upon failure, so we can safely
-        // assume we have a DatadelingResponseDagpengerDto.
-        return PseudoDagpengerVedtak(response!!.perioder)
+        // the above should throw an exception upon failure, so we can probably
+        // assume we have a DatadelingResponseDagpengerDto. TODO consider
+        // instead throwing some custom exception if it still somehow is null.
+        return PseudoDagpengerVedtak(response?.perioder ?: listOf())
     }
 }
