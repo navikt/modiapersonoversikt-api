@@ -4,6 +4,9 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.api.domain.aap.generated.models.NonavaapapiinternVedtakUtenUtbetalingDTO
 import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
+import no.nav.modiapersonoversikt.consumer.dagpenger.DagpengerService
+import no.nav.modiapersonoversikt.consumer.dagpenger.PseudoDagpengerVedtak
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
 import no.nav.modiapersonoversikt.consumer.fpsak.ForeldrepengerFpSak
 import no.nav.modiapersonoversikt.consumer.fpsak.FpSakService
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
@@ -38,6 +41,7 @@ class YtelseController
         private val pensjonService: PensjonService,
         private val aapApi: AapApi,
         private val fpSakService: FpSakService,
+        private val dagpengerService: DagpengerService,
         private val spokelseClient: SpokelseClient,
     ) {
         @PostMapping("sykepenger")
@@ -144,5 +148,21 @@ class YtelseController
                         fnrRequest.fom,
                         fnrRequest.tom,
                     )
+                }
+
+        @PostMapping("dagpenger")
+        fun hentDagpenger(
+            @RequestBody datodelingRequest: DatadelingRequestDagpengerDto,
+        ): PseudoDagpengerVedtak =
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(datodelingRequest.personIdent)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Dagpenger,
+                        AuditIdentifier.FNR to datodelingRequest.personIdent,
+                    ),
+                ) {
+                    dagpengerService.hentVedtak(datodelingRequest)
                 }
     }

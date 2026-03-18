@@ -1,0 +1,9 @@
+{
+  "perioder" : [ "java.util.Collections$SingletonList", [ {
+    "fraOgMedDato" : "2025-01-03",
+    "kilde" : "DP_SAK",
+    "tilOgMedDato" : null,
+    "ytelseType" : "DAGPENGER_PERMITTERING_FISKEINDUSTRI"
+  } ] ],
+  "nyesteFraOgMedDato" : "2025-01-03"
+}
