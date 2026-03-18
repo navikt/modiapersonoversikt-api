@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.dagpenger
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.InterntApi
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.PeriodeDagpengerDto
@@ -13,6 +14,7 @@ import java.time.LocalDate
 data class PseudoDagpengerVedtak(
     val perioder: List<PeriodeDagpengerDto>,
 ) {
+    @get:JsonProperty
     val nyesteFraOgMedDato: LocalDate? get() =
         perioder
             .map {
