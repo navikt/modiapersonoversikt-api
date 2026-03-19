@@ -6,6 +6,7 @@ import io.mockk.mockk
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.consumer.kontoregister.generated.apis.KontoregisterV1Api
+import no.nav.modiapersonoversikt.consumer.lumi.LumiService
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.VeilarbvedtaksstotteService
@@ -24,6 +25,7 @@ val localBeans =
                     every { isEnabled(any()) } returns true
                 }
             }
+            bean<LumiService>(isPrimary = true) { mockk() }
             bean<VeilarbvedtaksstotteService>(isPrimary = true) { mockk() }
             bean<TiltakspengerService>(isPrimary = true) { mockk() }
         }
