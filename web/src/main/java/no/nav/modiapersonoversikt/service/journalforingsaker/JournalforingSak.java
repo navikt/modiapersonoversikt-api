@@ -11,10 +11,10 @@ import java.util.function.Predicate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JournalforingSak implements Serializable, Comparable<JournalforingSak> {
     public String fnr = null;
-    public String saksId = null;
-    public String fagsystemSaksId = null;
+    public String saksId = "-";
+    public String fagsystemSaksId = "-";
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
-    public DateTime opprettetDato;
+    public DateTime opprettetDato = DateTime.now();
     public Boolean finnesIGsak = false, finnesIPsak = false;
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
