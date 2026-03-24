@@ -6,7 +6,7 @@ object OppgaveOverstyring {
     private const val VURD_HENV = "VURD_HENV"
     private const val VUR_KONS_YTE = "VUR_KONS_YTE"
 
-    val godkjenteOppgavetyper: List<String> = listOf("VURD_HENV", "KONT_BRUK", "VUR_KONS_YTE")
+    val godkjenteOppgavetyper: List<String> = listOf("VURD_HENV", "KONT_BRUK", "VUR_KONS_YTE", "VUR_SVAR", "SVAR_IK_MOT")
 
     val underkjenteTemaer: List<String> = listOf("OPA", "SAA", "IAR", "KNA", "OVR", "BII", "MOT", "TIL", "REK", "PER")
 
