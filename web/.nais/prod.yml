@@ -99,6 +99,8 @@ spec:
           namespace: aap
         - application: spokelse
           namespace: tbd
+        - application: dp-datadeling
+          namespace: teamdagpenger
     inbound:
       rules:
         - application: modiapersonoversikt
