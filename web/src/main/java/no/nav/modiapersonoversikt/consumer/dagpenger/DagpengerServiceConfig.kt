@@ -13,7 +13,6 @@ import okhttp3.OkHttpClient
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.util.concurrent.TimeUnit
 
 @Configuration
 @EnableCaching
@@ -41,9 +40,7 @@ open class DagpengerServiceConfig {
                     AuthorizationInterceptor {
                         machineToMachineTokenClient.createMachineToMachineToken(scope)
                     },
-                ).connectTimeout(10L, TimeUnit.SECONDS)
-                .readTimeout(10L, TimeUnit.SECONDS)
-                .build()
+                ).build()
         val apiClient = InterntApi(baseUrl, okClient)
         return DagpengerServiceImpl(apiClient)
     }
