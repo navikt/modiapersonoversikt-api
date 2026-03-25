@@ -183,7 +183,7 @@ internal class EnhetligKodeverkServiceImplTest {
         val kodeverk = provider.hentKodeverk(KodeverkConfig.OPPGAVE.navn)
         val kodeverkVerdier = kodeverk.hentAlleVerdier().toList()
 
-        assertThat(kodeverkVerdier.size).isEqualTo(2)
+        assertThat(kodeverkVerdier.size).isEqualTo(3)
         assertThat(kodeverkVerdier[1].prioriteter.size).isEqualTo(3)
         assertThat(kodeverkVerdier[1].prioriteter[0].tekst).isEqualTo("Høy")
         assertThat(kodeverkVerdier[1].oppgavetyper.size).isEqualTo(2)
