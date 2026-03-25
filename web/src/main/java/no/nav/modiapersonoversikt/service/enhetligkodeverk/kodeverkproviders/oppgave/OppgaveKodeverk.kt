@@ -107,7 +107,8 @@ object OppgaveKodeverk {
                     prioriteter = hentPrioriteter(it),
                     underkategorier = hentUnderkategorier(it.gjelderverdier),
                 )
-            }.sortedBy { it.tekst }
+            }.plus(lagOrdinaerTema())
+            .sortedBy { it.tekst }
             .associateBy { it.kode }
 
     private fun hentPrioriteter(oppgaveKodeverk: KodeverkkombinasjonDTO): List<Prioritet> =
@@ -150,4 +151,20 @@ object OppgaveKodeverk {
             ?.get(oppgavetype)
             ?.frist
             ?: OppgaveOverstyring.overstyrtKodeverk.frist
+
+    private fun lagOrdinaerTema(): Tema =
+        Tema(
+            kode = "ORDINAER",
+            tekst = "Ordinært tema",
+            oppgavetyper =
+                OppgaveOverstyring.godkjenteInnkommendeOppgavetyper.map {
+                    Oppgavetype(
+                        kode = it,
+                        tekst = it,
+                        dagerFrist = OppgaveOverstyring.overstyrtKodeverk.frist,
+                    )
+                },
+            prioriteter = OppgaveOverstyring.allePrioriteter.map { Prioritet(it) },
+            underkategorier = emptyList(),
+        )
 }
