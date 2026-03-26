@@ -44,9 +44,9 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
 
     @JsonGetter
     public String getSaksIdVisning() {
-        if(!fagsystemSaksId.equals("-")) return fagsystemSaksId;
-        else if (!saksId.equals("-")) return saksId;
-        else return "";
+        if(fagsystemSaksId != null && !fagsystemSaksId.equals("-")) return fagsystemSaksId;
+        else if (saksId != null && !saksId.equals("-")) return saksId;
+        else return "-";
     }
 
     @Override
@@ -64,7 +64,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
         }
 
         JournalforingSak sak = (JournalforingSak) obj;
-        if (!saksId.equals("-") && saksId.equals(sak.saksId)) {
+        if (saksId != null && !saksId.equals("-") && saksId.equals(sak.saksId)) {
             return true;
         } else {
             return temaKode != null && sak.temaKode != null
@@ -78,7 +78,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
 
     @Override
     public int hashCode() {
-        if (!saksId.equals("-")) {
+        if (saksId != null && !saksId.equals("-")) {
             return saksId.hashCode();
         } else if (temaKode != null
                 && fagsystemKode != null
