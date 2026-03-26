@@ -1963,6 +1963,7 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
+            - KRITISK
             - HOY
             - NORM
             - LAV
@@ -2157,6 +2158,7 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
+            - KRITISK
             - HOY
             - NORM
             - LAV
@@ -2370,6 +2372,7 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
+            - KRITISK
             - HOY
             - NORM
             - LAV
@@ -2725,6 +2728,7 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
+            - KRITISK
             - HOY
             - NORM
             - LAV
@@ -2938,6 +2942,7 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
+            - KRITISK
             - HOY
             - NORM
             - LAV
@@ -3100,6 +3105,7 @@ components:
           description: Hvilken prioritet oppgaven har
           example: NORM
           enum:
+            - KRITISK
             - HOY
             - NORM
             - LAV
@@ -3177,6 +3183,7 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
+            - KRITISK
             - HOY
             - NORM
             - LAV
