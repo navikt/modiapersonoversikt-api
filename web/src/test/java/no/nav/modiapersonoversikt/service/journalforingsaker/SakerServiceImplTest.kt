@@ -25,6 +25,7 @@ import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -88,7 +89,7 @@ class SakerServiceImplTest {
 
         val paiSak = saksliste.find { it.temaKode == Tema.PAI.toString() }
         assertThat(paiSak, notNullValue())
-        assertThat(paiSak?.saksId, `is`("-"))
+        assertThat(paiSak?.saksId, nullValue())
 
         assertThat(saksliste.find { it.temaKode == Tema.BBF.toString() }, notNullValue())
         assertThat(saksliste.find { it.temaKode == Tema.POI.toString() }, notNullValue())
