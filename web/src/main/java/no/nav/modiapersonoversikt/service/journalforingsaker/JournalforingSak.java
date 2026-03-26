@@ -11,10 +11,10 @@ import java.util.function.Predicate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JournalforingSak implements Serializable, Comparable<JournalforingSak> {
     public String fnr = null;
-    public String saksId = null;
-    public String fagsystemSaksId = null;
+    public String saksId = "-";
+    public String fagsystemSaksId = "-";
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
-    public DateTime opprettetDato;
+    public DateTime opprettetDato = DateTime.now();
     public Boolean finnesIGsak = false, finnesIPsak = false;
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
@@ -44,8 +44,8 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
 
     @JsonGetter
     public String getSaksIdVisning() {
-        if(fagsystemSaksId != null) return fagsystemSaksId;
-        else if (saksId != null) return saksId;
+        if(!fagsystemSaksId.equals("-")) return fagsystemSaksId;
+        else if (!saksId.equals("-")) return saksId;
         else return "";
     }
 
@@ -64,7 +64,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
         }
 
         JournalforingSak sak = (JournalforingSak) obj;
-        if (saksId != null && saksId.equals(sak.saksId)) {
+        if (!saksId.equals("-") && saksId.equals(sak.saksId)) {
             return true;
         } else {
             return temaKode != null && sak.temaKode != null
@@ -78,7 +78,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
 
     @Override
     public int hashCode() {
-        if (saksId != null) {
+        if (!saksId.equals("-")) {
             return saksId.hashCode();
         } else if (temaKode != null
                 && fagsystemKode != null
