@@ -33,7 +33,7 @@ public class JournalforingSakTest {
 
     @Test
     public void returnererTomStrengDersomFagsystemSaksIdOgSaksIdIkkeErSatt() {
-        assertThat(new JournalforingSak().getSaksIdVisning(), is(""));
+        assertThat(new JournalforingSak().getSaksIdVisning(), is("-"));
     }
 
     @Test
