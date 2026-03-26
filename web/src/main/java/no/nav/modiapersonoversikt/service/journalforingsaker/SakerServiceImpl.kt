@@ -66,7 +66,7 @@ class SakerServiceImpl : SakerService {
     companion object {
         private fun SakerService.Resultat.fjernDuplikater(): SakerService.Resultat =
             this.copy(
-                saker = this.saker.distinctBy { Triple(it.temaKode, it.fagsystemSaksId, it.sakstype) }.toMutableList(),
+                saker = this.saker.distinctBy { Pair(it.temaKode, it.fagsystemSaksId) }.toMutableList(),
                 feiledeSystemer = this.feiledeSystemer.distinct().toMutableList(),
             )
 
