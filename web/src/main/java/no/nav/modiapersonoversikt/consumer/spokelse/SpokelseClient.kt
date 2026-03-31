@@ -21,6 +21,7 @@ data class Utbetalingsperiode(
     val fom: LocalDate,
     val tom: LocalDate,
     val grad: Double,
+    val tags: Set<String> = emptySet(),
 )
 
 interface SpokelseClient {
