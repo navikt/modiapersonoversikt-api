@@ -50,7 +50,13 @@ class YtelseController
         ): SykepengerResponse =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Sykepenger,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
                     arenaInfotrygdApi.hentSykepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
@@ -60,7 +66,13 @@ class YtelseController
         ): Utbetalingsperioder =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.SpokelseSykepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.SpokelseSykepenger,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
                     spokelseClient.hentUtbetalingsperiode(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
@@ -70,7 +82,13 @@ class YtelseController
         ): ForeldrepengerResponse =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Foreldrepenger,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
                     arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
@@ -80,7 +98,13 @@ class YtelseController
         ): PleiepengerResponse =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Pleiepenger,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
                     arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
@@ -90,7 +114,13 @@ class YtelseController
         ): List<VedtakDTO> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Tiltakspenger, AuditIdentifier.FNR to fnrRequest.fnr)) {
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.Tiltakspenger,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
                     tiltakspengerService.hentVedtakPerioder(Fnr(fnrRequest.fnr), fnrRequest.fom, fnrRequest.tom)
                 }
 
