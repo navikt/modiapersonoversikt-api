@@ -12,7 +12,7 @@ import no.nav.modiapersonoversikt.consumer.foreldrepenger.ForeldrepengerService
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
-import no.nav.modiapersonoversikt.consumer.spokelse.Utbetalingsperioder
+import no.nav.modiapersonoversikt.consumer.spokelse.SykepengerSpokelse
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.VedtakDTO
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
@@ -61,7 +61,7 @@ class YtelseController
         @PostMapping("spokelse_sykepenger")
         fun hentSpokelseSykepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): Utbetalingsperioder =
+        ): SykepengerSpokelse =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(

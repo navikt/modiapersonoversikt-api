@@ -7,7 +7,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.LocalDate
 
-data class Utbetalingsperioder(
+data class SykepengerSpokelse(
     val utbetaltePerioder: List<Utbetalingsperiode>,
 )
 
@@ -29,7 +29,7 @@ interface SpokelseClient {
         fnr: String,
         fom: String?,
         tom: String?,
-    ): Utbetalingsperioder
+    ): SykepengerSpokelse
 }
 
 open class SpokelseClientImpl(
@@ -40,7 +40,7 @@ open class SpokelseClientImpl(
         fnr: String,
         fom: String?,
         tom: String?,
-    ): Utbetalingsperioder {
+    ): SykepengerSpokelse {
         val requestBody =
             objectMapper
                 .writeValueAsString(
@@ -63,9 +63,9 @@ open class SpokelseClientImpl(
 
         val body = response.body?.string()
 
-        val perioder = objectMapper.readValue(body, Utbetalingsperioder::class.java)
+        val perioder = objectMapper.readValue(body, SykepengerSpokelse::class.java)
 
-        return Utbetalingsperioder(
+        return SykepengerSpokelse(
             utbetaltePerioder =
                 perioder.utbetaltePerioder
                     // Infotrygd-perioder filtreres ut fordi de allerede hentes fra Infotrygd direkte via
