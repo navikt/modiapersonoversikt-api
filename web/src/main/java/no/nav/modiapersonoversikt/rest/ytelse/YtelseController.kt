@@ -73,8 +73,7 @@ class YtelseController
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    val perioder = spokelseClient.hentUtbetalingsperiode(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
-                    perioder.copy(utbetaltePerioder = perioder.utbetaltePerioder.filter { "Infotrygd" !in it.tags })
+                    spokelseClient.hentUtbetalingsperiode(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
         @PostMapping("foreldrepenger")

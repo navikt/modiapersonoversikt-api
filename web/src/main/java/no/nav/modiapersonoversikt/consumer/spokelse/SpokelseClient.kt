@@ -66,7 +66,12 @@ open class SpokelseClientImpl(
         val perioder = objectMapper.readValue(body, Utbetalingsperioder::class.java)
 
         return Utbetalingsperioder(
-            utbetaltePerioder = perioder.utbetaltePerioder.sortedByDescending { it.fom },
+            utbetaltePerioder =
+                perioder.utbetaltePerioder
+                    // Infotrygd-perioder filtreres ut fordi de allerede hentes fra Infotrygd direkte via
+                    // /rest/ytelse/sykepenger.
+                    .filter { "Infotrygd" !in it.tags }
+                    .sortedByDescending { it.fom },
         )
     }
 }
