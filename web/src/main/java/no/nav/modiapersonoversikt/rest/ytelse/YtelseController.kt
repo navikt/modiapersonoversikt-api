@@ -74,7 +74,6 @@ class YtelseController
                     spokelseClient.hentUtbetalingsperiode(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
-
         @PostMapping("tiltakspenger")
         fun hentTiltakspenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,

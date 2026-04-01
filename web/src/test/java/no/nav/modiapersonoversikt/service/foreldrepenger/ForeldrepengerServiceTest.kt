@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.foreldrepenger.Foreldrepenger
-import no.nav.modiapersonoversikt.consumer.foreldrepenger.FpSakResponse
 import no.nav.modiapersonoversikt.consumer.foreldrepenger.ForeldrepengerService
 import no.nav.modiapersonoversikt.consumer.foreldrepenger.ForeldrepengerServiceImpl
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.FpSakResponse
 import no.nav.modiapersonoversikt.consumer.foreldrepenger.Utbetaling
 import no.nav.modiapersonoversikt.consumer.foreldrepenger.YtelseType
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension

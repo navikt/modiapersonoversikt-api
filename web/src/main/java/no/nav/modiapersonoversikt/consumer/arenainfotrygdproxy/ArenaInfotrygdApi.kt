@@ -93,7 +93,6 @@ open class ArenaInfotrygdApiImpl(
         return sendRequest("sykepenger", requestContent) ?: SykepengerResponse(sykepenger = null)
     }
 
-
     private inline fun <reified T> sendRequest(
         url: String,
         requestContent: String,

@@ -249,5 +249,4 @@ class ArenaInfotrygdApiTest {
         assertEquals(1, result.sykepenger?.size)
         verify { httpClient.newCall(any()) }
     }
-
 }
