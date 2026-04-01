@@ -27,7 +27,6 @@
     <modules>
         <module>ytelseskontrakt-v3-tjenestespesifikasjon</module>
         <module>nav-sykepenger-v2-tjenestespesifikasjon</module>
-        <module>nav-foreldrepenger-v2-tjenestespesifikasjon</module>
         <module>oppgave-api</module>
         <module>sf-henvendelse-api</module>
         <module>pdl-api</module>
@@ -40,7 +39,6 @@
         <module>modia-soknadsstatus-api</module>
         <module>utbetaling-api</module>
         <module>arenasakvedtakservice</module>
-        <module>pleiepenger-v1-tjenestespesifikasjon</module>
         <module>oppfoelging-v1-tjenestespesifikasjon</module>
         <module>pdl-pip-api</module>
         <module>tiltakspenger</module>

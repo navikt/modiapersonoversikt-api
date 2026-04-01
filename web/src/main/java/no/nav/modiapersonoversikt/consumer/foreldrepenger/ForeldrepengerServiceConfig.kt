@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.fpsak
+package no.nav.modiapersonoversikt.consumer.foreldrepenger
 
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.MachineToMachineTokenClient
@@ -15,15 +15,15 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableCaching
-open class FpSakServiceConfig {
+open class ForeldrepengerServiceConfig {
     private val scope = DownstreamApi.Companion.parse(EnvironmentUtils.getRequiredProperty("FP_SAK_SCOPE"))
     private val url: String = EnvironmentUtils.getRequiredProperty("FP_SAK_URL")
 
     @Bean
-    open fun fpSakService(
+    open fun foreldrepengerService(
         machineToMachineTokenClient: MachineToMachineTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
-    ): FpSakService {
+    ): ForeldrepengerService {
         val httpClient: OkHttpClient =
             RestClient
                 .baseClient()
@@ -40,6 +40,6 @@ open class FpSakServiceConfig {
                         machineToMachineTokenClient.createMachineToMachineToken(scope)
                     },
                 ).build()
-        return FpSakServiceImpl(url, httpClient)
+        return ForeldrepengerServiceImpl(url, httpClient)
     }
 }

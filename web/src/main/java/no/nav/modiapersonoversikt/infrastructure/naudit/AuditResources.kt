@@ -112,9 +112,6 @@ class AuditResources {
             val ArbeidsavklaringsPenger = AuditResource("person.arbeidsavklaringspenger")
 
             @JvmField
-            val Pleiepenger = AuditResource("person.pleiepenger")
-
-            @JvmField
             val FpYtelser = AuditResource("person.fpytelser")
 
             @JvmField

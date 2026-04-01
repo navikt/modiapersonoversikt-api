@@ -231,17 +231,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
-            <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
             <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
-            <artifactId>nav-foreldrepenger-v2-tjenestespesifikasjon</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

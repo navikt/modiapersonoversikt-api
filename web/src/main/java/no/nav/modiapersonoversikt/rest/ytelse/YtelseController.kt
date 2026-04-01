@@ -7,16 +7,14 @@ import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.dagpenger.DagpengerService
 import no.nav.modiapersonoversikt.consumer.dagpenger.PseudoDagpengerVedtak
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
-import no.nav.modiapersonoversikt.consumer.fpsak.ForeldrepengerFpSak
-import no.nav.modiapersonoversikt.consumer.fpsak.FpSakService
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.Foreldrepenger
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.ForeldrepengerService
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
 import no.nav.modiapersonoversikt.consumer.spokelse.Utbetalingsperioder
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.VedtakDTO
-import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
-import no.nav.modiapersonoversikt.infotrgd.pleiepenger.PleiepengerResponse
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -40,7 +38,7 @@ class YtelseController
         private val tiltakspengerService: TiltakspengerService,
         private val pensjonService: PensjonService,
         private val aapApi: AapApi,
-        private val fpSakService: FpSakService,
+        private val foreldrepengerService: ForeldrepengerService,
         private val dagpengerService: DagpengerService,
         private val spokelseClient: SpokelseClient,
     ) {
@@ -76,37 +74,6 @@ class YtelseController
                     spokelseClient.hentUtbetalingsperiode(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
                 }
 
-        @PostMapping("foreldrepenger")
-        fun hentForeldrepenger(
-            @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): ForeldrepengerResponse =
-            tilgangskontroll
-                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(
-                    Audit.describe(
-                        Audit.Action.READ,
-                        AuditResources.Person.Foreldrepenger,
-                        AuditIdentifier.FNR to fnrRequest.fnr,
-                    ),
-                ) {
-                    arenaInfotrygdApi.hentForeldrepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
-                }
-
-        @PostMapping("pleiepenger")
-        fun hentPleiepenger(
-            @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): PleiepengerResponse =
-            tilgangskontroll
-                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-                .get(
-                    Audit.describe(
-                        Audit.Action.READ,
-                        AuditResources.Person.Pleiepenger,
-                        AuditIdentifier.FNR to fnrRequest.fnr,
-                    ),
-                ) {
-                    arenaInfotrygdApi.hentPleiepenger(fnrRequest.fnr, fnrRequest.fom, fnrRequest.tom)
-                }
 
         @PostMapping("tiltakspenger")
         fun hentTiltakspenger(
@@ -160,20 +127,20 @@ class YtelseController
                     )
                 }
 
-        @PostMapping("foreldrepenger_fpsak")
-        fun hentForeldrepengerFpSak(
+        @PostMapping("foreldrepenger")
+        fun hentForeldrepenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): List<ForeldrepengerFpSak> =
+        ): List<Foreldrepenger> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
                     Audit.describe(
                         Audit.Action.READ,
-                        AuditResources.Person.FpYtelser,
+                        AuditResources.Person.Foreldrepenger,
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    fpSakService.hentYtelserSortertMedPeriode(
+                    foreldrepengerService.hentForeldrepengerSortertPaaPeriode(
                         fnrRequest.fnr,
                         fnrRequest.fom,
                         fnrRequest.tom,

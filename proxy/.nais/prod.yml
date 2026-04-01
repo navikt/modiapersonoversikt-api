@@ -75,12 +75,8 @@ spec:
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/ws/samltoken"
     - name: EREG_ENDPOINTURL
       value: "https://ereg-services.intern.nav.no/"
-    - name: VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL
-      value: "https://modapp.adeo.no/infotrygd-ws/ForeldrepengerService/v2"
     - name: VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL
       value: "https://arena.adeo.no/ail_ws/Oppfoelging_v1"
-    - name: VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL
-      value: "https://modapp.adeo.no/infotrygd-ws/Pleiepenger/v1"
     - name: VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL
       value: "https://modapp.adeo.no/infotrygd-ws/SykepengerService/v2"
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL

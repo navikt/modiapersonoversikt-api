@@ -6,8 +6,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse
 import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse
-import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
-import no.nav.modiapersonoversikt.infotrgd.pleiepenger.PleiepengerResponse
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
@@ -35,18 +33,6 @@ interface ArenaInfotrygdApi {
         fom: String?,
         tom: String?,
     ): SykepengerResponse
-
-    fun hentForeldrepenger(
-        fnr: String,
-        fom: String?,
-        tom: String?,
-    ): ForeldrepengerResponse
-
-    fun hentPleiepenger(
-        fnr: String,
-        fom: String?,
-        tom: String?,
-    ): PleiepengerResponse
 
     fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak?
 
@@ -107,27 +93,6 @@ open class ArenaInfotrygdApiImpl(
         return sendRequest("sykepenger", requestContent) ?: SykepengerResponse(sykepenger = null)
     }
 
-    @Cacheable(value = ["foreldrePengerCache"])
-    override fun hentForeldrepenger(
-        fnr: String,
-        fom: String?,
-        tom: String?,
-    ): ForeldrepengerResponse {
-        val requestContent = Json.encodeToString(RequestBodyContent(fnr, fom, tom))
-        return sendRequest("foreldrepenger", requestContent) ?: ForeldrepengerResponse(
-            foreldrepenger = null,
-        )
-    }
-
-    @Cacheable(value = ["pleiePengerCache"])
-    override fun hentPleiepenger(
-        fnr: String,
-        fom: String?,
-        tom: String?,
-    ): PleiepengerResponse {
-        val requestContent = Json.encodeToString(RequestBodyContent(fnr, fom, tom))
-        return sendRequest("pleiepenger", requestContent) ?: PleiepengerResponse(pleiepenger = null)
-    }
 
     private inline fun <reified T> sendRequest(
         url: String,
