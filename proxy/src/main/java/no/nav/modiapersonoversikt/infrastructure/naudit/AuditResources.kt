@@ -94,12 +94,6 @@ class AuditResources {
             val Sykepenger = AuditResource("person.sykepenger")
 
             @JvmField
-            val Foreldrepenger = AuditResource("person.foreldrepenger")
-
-            @JvmField
-            val Pleiepenger = AuditResource("person.pleiepenger")
-
-            @JvmField
             val Varsler = AuditResource("person.varsler")
 
             val EnhetTrace = AuditResource("trace.enhet-bruk")

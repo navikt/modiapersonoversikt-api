@@ -18,9 +18,7 @@ open class CacheConfig {
         CaffeineCacheManager().apply {
             cache("endpointCache", 3, 10000)
             cache("ytelseskontrakterCache", 600)
-            cache("pleiePengerCache", 300)
             cache("oppfolgingskontraktCache", 600)
-            cache("foreldrePengerCache", 300)
             cache("sykePengerCache", 300)
         }
 

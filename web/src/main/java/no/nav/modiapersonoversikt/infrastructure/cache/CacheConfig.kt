@@ -28,10 +28,8 @@ open class CacheConfig {
             )
 
             cache("endpointCache", 3, 10000)
-            cache("pleiePengerCache", 300)
             cache("oppfolgingsinfoCache", 300)
             cache("oppfolgingskontraktCache", 600)
-            cache("foreldrePengerCache", 300)
             cache("sykePengerCache", 300)
             cache("utbetalingCache", 1800, 10000)
             cache("pdlCache", 3600, 100000)

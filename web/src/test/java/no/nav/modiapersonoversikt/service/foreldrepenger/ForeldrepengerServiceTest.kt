@@ -1,14 +1,14 @@
-package no.nav.modiapersonoversikt.service.fpsak
+package no.nav.modiapersonoversikt.service.foreldrepenger
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.consumer.fpsak.ForeldrepengerFpSak
-import no.nav.modiapersonoversikt.consumer.fpsak.FpSakResponse
-import no.nav.modiapersonoversikt.consumer.fpsak.FpSakService
-import no.nav.modiapersonoversikt.consumer.fpsak.FpSakServiceImpl
-import no.nav.modiapersonoversikt.consumer.fpsak.Utbetaling
-import no.nav.modiapersonoversikt.consumer.fpsak.YtelseType
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.Foreldrepenger
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.ForeldrepengerService
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.ForeldrepengerServiceImpl
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.FpSakResponse
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.Utbetaling
+import no.nav.modiapersonoversikt.consumer.foreldrepenger.YtelseType
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -20,10 +20,10 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.collections.List
 
-internal class FpSakServiceTest {
+internal class ForeldrepengerServiceTest {
     private val httpClient: OkHttpClient = mockk()
     private val objectMapper: ObjectMapper = ObjectMapper().findAndRegisterModules()
-    private val fpSakService: FpSakService = FpSakServiceImpl("http://test-url", httpClient)
+    private val foreldrepengerService: ForeldrepengerService = ForeldrepengerServiceImpl("http://test-url", httpClient)
 
     @JvmField
     @RegisterExtension
@@ -51,15 +51,15 @@ internal class FpSakServiceTest {
         every { mockCall.execute() } returns mockResponse
         every { mockResponse.body?.string() } returns objectMapper.writeValueAsString(ytelseResponse)
 
-        val method = FpSakServiceImpl::class.members.first { it.name == "hentYtelser" }
-        val result = method.call(fpSakService, "12345678910", null, null)
+        val method = ForeldrepengerServiceImpl::class.members.first { it.name == "hentYtelser" }
+        val result = method.call(foreldrepengerService, "12345678910", null, null)
         snapshot.assertMatches(result)
     }
 
     @Test
     fun `skal sortere utbetalinger og beregne fom og tom`() {
-        val method = FpSakServiceImpl::class.members.first { it.name == "mapFpSakResponse" }
-        val ytelseSortert = method.call(fpSakService, ytelseResponse) as List<ForeldrepengerFpSak>
+        val method = ForeldrepengerServiceImpl::class.members.first { it.name == "mapFpSakResponse" }
+        val ytelseSortert = method.call(foreldrepengerService, ytelseResponse) as List<Foreldrepenger>
 
         assertThat(ytelseSortert[0].fom).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(ytelseSortert[0].tom).isEqualTo(LocalDate.of(2024, 6, 30))

@@ -3,12 +3,7 @@ package no.nav.modiapersonoversikt.rest.ytelse
 import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktRequest
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService
-import no.nav.modiapersonoversikt.consumer.ereg.OrganisasjonService
-import no.nav.modiapersonoversikt.consumer.infotrygd.foreldrepenger.ForeldrepengerServiceBi
-import no.nav.modiapersonoversikt.consumer.infotrygd.pleiepenger.PleiepengerService
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.SykepengerServiceBi
-import no.nav.modiapersonoversikt.infotrgd.foreldrepenger.ForeldrepengerResponse
-import no.nav.modiapersonoversikt.infotrgd.pleiepenger.PleiepengerResponse
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import no.nav.modiapersonoversikt.rest.RequestBodyContent
@@ -23,10 +18,7 @@ class YtelseController
     @Autowired
     constructor(
         private val sykepengerService: SykepengerServiceBi,
-        private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
-        private val pleiepengerService: PleiepengerService,
         private val ytelseskontraktService: YtelseskontraktService,
-        private val organisasjonService: OrganisasjonService,
     ) {
         @PostMapping("/ytelseskontrakter")
         fun hentYtelseskontrakter(
@@ -49,31 +41,6 @@ class YtelseController
                 body.start?.let { lagRiktigDato(it) },
                 body.slutt?.let { lagRiktigDato(it) },
             )
-
-        @PostMapping("foreldrepenger")
-        fun hentForeldrepenger(
-            @RequestBody body: RequestBodyContent,
-        ): ForeldrepengerResponse =
-            ForeldrepengerUttrekk(getForeldrepengerService()).hent(
-                body.fnr,
-                body.start?.let { lagRiktigDato(it) },
-                body.slutt?.let { lagRiktigDato(it) },
-            )
-
-        @PostMapping("pleiepenger")
-        fun hentPleiepenger(
-            @RequestBody body: RequestBodyContent,
-        ): PleiepengerResponse =
-            PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(
-                body.fnr,
-                body.start?.let { lagRiktigDato(it) },
-                body.slutt?.let { lagRiktigDato(it) },
-            )
-
-        private fun getForeldrepengerService(): ForeldrepengerServiceBi =
-            ForeldrepengerServiceBi { request ->
-                foreldrepengerServiceDefault.hentForeldrepengerListe(request)
-            }
 
         private fun lagYtelseRequest(
             fnr: String,

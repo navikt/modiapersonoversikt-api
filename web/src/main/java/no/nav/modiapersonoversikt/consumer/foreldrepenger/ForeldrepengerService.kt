@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.fpsak
+package no.nav.modiapersonoversikt.consumer.foreldrepenger
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -19,16 +19,16 @@ data class Utbetaling(
     val grad: BigDecimal,
 )
 
-data class UtbetalingFpSak(
+data class ForeldrepengerPeriode(
     val fom: LocalDate,
     val tom: LocalDate,
     val grad: BigDecimal,
 )
 
-data class ForeldrepengerFpSak(
+data class Foreldrepenger(
     val ytelse: YtelseType,
     val saksnummer: String,
-    val perioder: List<UtbetalingFpSak>,
+    val perioder: List<ForeldrepengerPeriode>,
     val fom: LocalDate,
     val tom: LocalDate,
 )
@@ -45,31 +45,31 @@ enum class YtelseType {
     SVANGERSKAPSPENGER,
 }
 
-interface FpSakService {
-    fun hentYtelserSortertMedPeriode(
+interface ForeldrepengerService {
+    fun hentForeldrepengerSortertPaaPeriode(
         fnr: String,
         fraOgMedDato: String?,
         tilOgMedDato: String?,
-    ): List<ForeldrepengerFpSak>
+    ): List<Foreldrepenger>
 }
 
-open class FpSakServiceImpl(
+open class ForeldrepengerServiceImpl(
     private val url: String,
     private val httpClient: OkHttpClient,
-) : FpSakService {
-    override fun hentYtelserSortertMedPeriode(
+) : ForeldrepengerService {
+    override fun hentForeldrepengerSortertPaaPeriode(
         fnr: String,
         fraOgMedDato: String?,
         tilOgMedDato: String?,
-    ): List<ForeldrepengerFpSak> {
+    ): List<Foreldrepenger> {
         val saker = hentYtelser(fnr, fraOgMedDato, tilOgMedDato)
         return mapFpSakResponse(saker)
     }
 
-    internal fun mapFpSakResponse(sakResponse: List<FpSakResponse>): List<ForeldrepengerFpSak> =
+    internal fun mapFpSakResponse(sakResponse: List<FpSakResponse>): List<Foreldrepenger> =
         sakResponse.map { sak ->
-            val sortertePerioder = sak.utbetalinger.sortedByDescending { it.fom }.map { UtbetalingFpSak(it.fom, it.tom, it.grad) }
-            ForeldrepengerFpSak(
+            val sortertePerioder = sak.utbetalinger.sortedByDescending { it.fom }.map { ForeldrepengerPeriode(it.fom, it.tom, it.grad) }
+            Foreldrepenger(
                 ytelse = sak.ytelse,
                 saksnummer = sak.saksnummer,
                 perioder = sortertePerioder,
