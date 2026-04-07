@@ -169,7 +169,7 @@ class SfHenvendelseServiceImpl(
         val fixKjedeId = kjedeId.fixKjedeId()
 
         val fagsaksystem =
-            if (saksId != null) {
+            if (saksId != null && saksId != "-") {
                 JournalRequestDTO.Fagsaksystem.valueOf(
                     requireNotNull(fagsakSystem) {
                         "Ved journalføring mot $saksId er det påkrevd å sende med fagsakSystem saken kommer fra"
