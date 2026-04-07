@@ -167,13 +167,13 @@ class SfHenvendelseServiceImpl(
     ) {
         val callId = getCallId()
         val fixKjedeId = kjedeId.fixKjedeId()
-        val saksId = if (saksId == "-") null else saksId
+        val rensetSaksId = if (saksId == "-") null else saksId
 
         val fagsaksystem =
-            if (saksId != null) {
+            if (rensetSaksId != null) {
                 JournalRequestDTO.Fagsaksystem.valueOf(
                     requireNotNull(fagsakSystem) {
-                        "Ved journalføring mot $saksId er det påkrevd å sende med fagsakSystem saken kommer fra"
+                        "Ved journalføring mot $rensetSaksId er det påkrevd å sende med fagsakSystem saken kommer fra"
                     },
                 )
             } else {
@@ -187,7 +187,7 @@ class SfHenvendelseServiceImpl(
                     journalforendeEnhet = enhet,
                     kjedeId = fixKjedeId,
                     temakode = saksTema,
-                    fagsakId = if (saksTema == "BID") null else saksId,
+                    fagsakId = if (saksTema == "BID") null else rensetSaksId,
                     fagsaksystem = if (saksTema == "BID") null else fagsaksystem,
                 ),
             )
