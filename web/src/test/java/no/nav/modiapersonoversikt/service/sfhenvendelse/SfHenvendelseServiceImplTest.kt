@@ -67,10 +67,17 @@ internal class SfHenvendelseServiceImplTest {
                     geografiskOmraade = "005678",
                 ),
             )
-        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns
-            listOf(
-                dummyHenvendelse.medJournalpost("DAG"),
-                dummyHenvendelse.medJournalpost("SYK"),
+
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any(), any(), any()) } returns
+            PaginertHenvendelseListeDTO(
+                listOf(
+                    dummyHenvendelse.medJournalpost("DAG"),
+                    dummyHenvendelse.medJournalpost("SYK"),
+                ),
+                1,
+                10,
+                100,
+                false,
             )
 
         val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")
@@ -91,9 +98,13 @@ internal class SfHenvendelseServiceImplTest {
                     geografiskOmraade = "005678",
                 ),
             )
-        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns
-            listOf(
-                dummyHenvendelse.somKassert(),
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any(), any(), any()) } returns
+            PaginertHenvendelseListeDTO(
+                listOf(dummyHenvendelse.somKassert()),
+                1,
+                10,
+                100,
+                false,
             )
 
         val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")
@@ -111,11 +122,18 @@ internal class SfHenvendelseServiceImplTest {
                     geografiskOmraade = "005678",
                 ),
             )
-        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns
-            listOf(
-                dummyHenvendelse.medJournalpost("DAG"),
-                dummyHenvendelse.copy(meldinger = emptyList()),
-                dummyHenvendelse.medJournalpost("SYK"),
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any(), any(), any()) } returns
+            PaginertHenvendelseListeDTO(
+                data =
+                    listOf(
+                        dummyHenvendelse.medJournalpost("DAG"),
+                        dummyHenvendelse.copy(meldinger = emptyList()),
+                        dummyHenvendelse.medJournalpost("SYK"),
+                    ),
+                1,
+                10,
+                100,
+                false,
             )
 
         val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")
@@ -137,33 +155,39 @@ internal class SfHenvendelseServiceImplTest {
                     geografiskOmraade = "005678",
                 ),
             )
-        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns
-            listOf(
-                dummyHenvendelse.copy(
-                    meldinger =
-                        listOf(
-                            MeldingDTO(
-                                meldingsId = UUID.randomUUID().toString(),
-                                fritekst = "Andre melding",
-                                sendtDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
-                                fra =
-                                    MeldingFraDTO(
-                                        identType = MeldingFraDTO.IdentType.NAVIDENT,
-                                        ident = "Z123456",
-                                    ),
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any(), any(), any()) } returns
+            PaginertHenvendelseListeDTO(
+                listOf(
+                    dummyHenvendelse.copy(
+                        meldinger =
+                            listOf(
+                                MeldingDTO(
+                                    meldingsId = UUID.randomUUID().toString(),
+                                    fritekst = "Andre melding",
+                                    sendtDato = OffsetDateTime.of(2021, 2, 2, 12, 37, 37, 0, ZoneOffset.UTC),
+                                    fra =
+                                        MeldingFraDTO(
+                                            identType = MeldingFraDTO.IdentType.NAVIDENT,
+                                            ident = "Z123456",
+                                        ),
+                                ),
+                                MeldingDTO(
+                                    meldingsId = UUID.randomUUID().toString(),
+                                    fritekst = "Første melding",
+                                    sendtDato = OffsetDateTime.of(2021, 2, 1, 12, 37, 37, 0, ZoneOffset.UTC),
+                                    fra =
+                                        MeldingFraDTO(
+                                            identType = MeldingFraDTO.IdentType.NAVIDENT,
+                                            ident = "Z123456",
+                                        ),
+                                ),
                             ),
-                            MeldingDTO(
-                                meldingsId = UUID.randomUUID().toString(),
-                                fritekst = "Første melding",
-                                sendtDato = OffsetDateTime.of(2021, 2, 1, 12, 37, 37, 0, ZoneOffset.UTC),
-                                fra =
-                                    MeldingFraDTO(
-                                        identType = MeldingFraDTO.IdentType.NAVIDENT,
-                                        ident = "Z123456",
-                                    ),
-                            ),
-                        ),
+                    ),
                 ),
+                1,
+                10,
+                100,
+                false,
             )
 
         val henvendelser = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId("00012345678910"), "0101")

@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
-import no.nav.common.types.identer.EnhetId
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.apis.*
@@ -121,30 +120,37 @@ class SfHenvendelseServiceImpl(
         bruker: EksternBruker,
         enhet: String,
     ): List<HenvendelseDTO> {
-        val enhetOgGTListe =
-            norgApi
-                .runCatching {
-                    hentGeografiskTilknyttning(EnhetId(enhet))
-                }.onFailure { logger.error("Kunne ikke hente geografisk tilknyttning", it) }
-                .getOrDefault(emptyList())
-                .mapNotNull { it.geografiskOmraade }
-                .plus(enhet)
         val tematilganger =
             ansattService.hentAnsattFagomrader(AuthContextUtils.requireIdent())
 
         val aktorId = bruker.aktorId()
         val callId = getCallId()
 
-        return henvendelseInfoApi
-            .henvendelseinfoHenvendelselisteGet(aktorId, callId)
-            ?.let { loggFeilSomErSpesialHandtert(bruker, it) }
-            ?.asSequence()
-            ?.map(kassertInnhold(OffsetDateTime.now()))
-            ?.map(journalfortTemaTilgang(tematilganger))
-            ?.map(::sorterMeldinger)
-            ?.map(::unikeJournalposter)
-            ?.toList()
-            .orEmpty()
+        val allHenvendelser = mutableListOf<HenvendelseDTO>()
+        var page = 1
+        var hasNextPage = true
+        val pageSize = 100
+
+        while (hasNextPage) {
+            val res =
+                henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(aktorId, callId, page, pageSize)
+                    ?: throw ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Feil ved henting av paginerte henvendelser",
+                    )
+
+            allHenvendelser.addAll(res.data)
+            hasNextPage = res.hasNextPage
+            page = res.currentPage + 1
+        }
+
+        return loggFeilSomErSpesialHandtert(bruker, allHenvendelser)
+            .asSequence()
+            .map(kassertInnhold(OffsetDateTime.now()))
+            .map(journalfortTemaTilgang(tematilganger))
+            .map(::sorterMeldinger)
+            .map(::unikeJournalposter)
+            .toList()
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
