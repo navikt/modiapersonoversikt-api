@@ -50,7 +50,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/navikt/crm-henvendelse/refs/heads/henvendelselist_pagination/Api/henvendelse_api.json</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/navikt/crm-henvendelse/refs/heads/main/Api/henvendelse_api.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp4</library>
                             <packageName>no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated</packageName>
