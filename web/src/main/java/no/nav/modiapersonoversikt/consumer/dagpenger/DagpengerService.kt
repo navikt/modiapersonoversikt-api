@@ -15,6 +15,15 @@ data class PseudoDagpengerVedtak(
     val perioder: List<PeriodeDagpengerDto>,
 ) {
     @get:JsonProperty
+    val eldsteFraOgMedDato: LocalDate? get() =
+        perioder
+            .map {
+                it.fraOgMedDato
+            }.sorted()
+            .firstOrNull()
+
+    @get:JsonProperty
+    @Deprecated("now sorting by the first period, not the last")
     val nyesteFraOgMedDato: LocalDate? get() =
         perioder
             .map {
@@ -27,6 +36,12 @@ interface DagpengerService {
     fun hentVedtak(datodelingRequest: DatadelingRequestDagpengerDto): PseudoDagpengerVedtak
 }
 
+/**
+ * Our implementation of vedtak from dagpenger. The periods come sorted in
+ * ascending order from dp-datadeling, as far as we can tell. We'd like to
+ * display them in descending order, so we simply sort them thusly in
+ * hentVedtak.
+ */
 open class DagpengerServiceImpl(
     val client: InterntApi,
 ) : DagpengerService {
@@ -35,6 +50,6 @@ open class DagpengerServiceImpl(
         // the above should throw an exception upon failure, so we can probably
         // assume we have a DatadelingResponseDagpengerDto. TODO consider
         // instead throwing some custom exception if it still somehow is null.
-        return PseudoDagpengerVedtak(response?.perioder ?: listOf())
+        return PseudoDagpengerVedtak((response?.perioder ?: listOf()).sortedByDescending { it.fraOgMedDato })
     }
 }
