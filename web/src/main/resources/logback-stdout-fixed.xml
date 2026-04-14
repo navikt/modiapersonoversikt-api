@@ -2,11 +2,13 @@
 <included>
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 
-    <appender name="stdout_json_masked" class="no.nav.common.log.MaskingAppender">
-        <appender-ref ref="consoleAppender"/>
-    </appender>
+
     <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <appender name="stdout_json_masked" class="no.nav.common.log.MaskingAppender">
+        <appender-ref ref="consoleAppender"/>
     </appender>
 
     <appender name="team-logs" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
@@ -17,6 +19,15 @@
         </encoder>
     </appender>
 
+    <!-- Trenger vi to ulike OTEL appenders? -->
+    <appender name="OTEL_team-logs" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
+        <appender-ref ref="stdout_json_masked"/>
+    </appender>
+
+    <appender name="OTEL_stdout_json_masked" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
+        <appender-ref ref="team-logs"/>
+    </appender>
+
     <!-- Prometheus metrikker for antall ganger logget per nivå -->
     <appender name="metrics" class="io.prometheus.client.logback.InstrumentedAppender"/>
 
@@ -24,13 +35,13 @@
     <logger name="org.apache.tomcat.util.http.parser.Cookie" level="OFF" />
 
     <logger name="org.apache" level="INFO">
-        <appender-ref ref="team-logs" />
+        <appender-ref ref="OTEL_team-logs" />
     </logger>
     <logger name="org.apache.cxf" level="ERROR">
-        <appender-ref ref="team-logs" />
+        <appender-ref ref="OTEL_team-logs" />
     </logger>
     <logger name="no.nav.common.cxf" level="ERROR">
-        <appender-ref ref="team-logs" />
+        <appender-ref ref="OTEL_team-logs" />
     </logger>
 
     <logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="ERROR"/>
@@ -40,13 +51,13 @@
 
 
     <root level="INFO">
-        <appender-ref ref="stdout_json_masked"/>
+        <appender-ref ref="OTEL_stdout_json_masked" />
         <appender-ref ref="metrics"/>
-        <appender-ref ref="team-logs" />
+        <appender-ref ref="OTEL_team-logs" />
     </root>
 
     <logger name="TeamLog" level="INFO" additivity="false">
-        <appender-ref ref="team-logs" />
+        <appender-ref ref="OTEL_team-logs" />
     </logger>
 
 </included>
