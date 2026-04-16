@@ -99,6 +99,8 @@ spec:
           namespace: tbd
         - application: dp-datadeling
           namespace: teamdagpenger
+        - application: lumi-submission-proxy
+          namespace: team-esyfo
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -197,6 +199,10 @@ spec:
       value: "http://modia-soknadsstatus-api"
     - name: MODIA_SOKNADSSTATUS_SCOPE
       value: "dev-gcp:personoversikt:modia-soknadsstatus-api"
+    - name: LUMI_API_HOST
+      value: "http://lumi-submission-proxy.team-esyfo"
+    - name: LUMI_AUDIENCE
+      value: "api://dev-gcp.team-esyfo.lumi-submission-proxy/.default"
     - name: MODIAPERSONOVERSIKT_API_PROXY_URL
       value: "https://modiapersonoversikt-api-proxy-q1.dev-fss-pub.nais.io"
     - name: MODIAPERSONOVERSIKT_API_PROXY_SCOPE
