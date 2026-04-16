@@ -24,7 +24,7 @@ internal class PseudoDagpengerVedtakTest {
         )
 
     @Test
-    fun `nyesteFraOgMedDato returnerer nyeste periode`() {
-        assertThat(vedtak.nyesteFraOgMedDato).isEqualTo(latestDate)
+    fun `eldsteFraOgMedDato returnerer første periode`() {
+        assertThat(vedtak.eldsteFraOgMedDato).isEqualTo(earliestDate)
     }
 }
