@@ -164,7 +164,7 @@ class DialogServiceImpl(
         val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
         val meldinger: List<MeldingDTO> =
             (henvendelse.meldinger ?: emptyList()).map { melding ->
-                val skrevetAv = getIdent(melding.fra.ident, melding.fra.identType)
+                val skrevetAv = getIdent(melding.fra.ident, melding.fra.identType, melding.fra.navEnhet)
                 val status =
                     when {
                         melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
@@ -210,14 +210,24 @@ class DialogServiceImpl(
     private fun DialogMappingContext.getIdent(
         ident: String?,
         identType: MeldingFraDTO.IdentType,
-    ) = when (identType) {
-        MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID ->
-            getVeileder(ident)
-                ?.let { "${it.navn} (${it.ident})" }
-                ?: ident?.let { "($ident)" }
-
-        MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
-    }
+        enhet: String?,
+    ): String =
+        when (identType) {
+            MeldingFraDTO.IdentType.AKTORID ->
+                getVeileder(ident)
+                    ?.let { "${it.navn} (${it.ident})" }
+                    ?: ident?.let { "Ukjent navn ($ident)" }
+                    ?: ""
+            MeldingFraDTO.IdentType.NAVIDENT ->
+                getVeileder(ident)
+                    ?.let { veileder ->
+                        enhet?.let { "${veileder.navn} (${veileder.ident}, $it)" }
+                            ?: "${veileder.navn} (${veileder.ident})"
+                    }
+                    ?: ident?.let { "Ukjent navn ($ident)" }
+                    ?: ""
+            MeldingFraDTO.IdentType.SYSTEM -> "Salesforce-system"
+        }
 
     private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) =
         DialogService.Journalpost(
