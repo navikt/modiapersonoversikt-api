@@ -11,7 +11,6 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.mapping.to.Sykep
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.*
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
-import org.joda.time.Years
 
 class SykepengerUttrekk constructor(
     private val sykepengerService: SykepengerServiceBi,
@@ -23,24 +22,39 @@ class SykepengerUttrekk constructor(
     ): SykepengerResponse {
         val from = start ?: LocalDate.now().minusYears(2)
         val to = slutt ?: LocalDate.now()
-        val diff = Years.yearsBetween(from, to)
-        val period =
-            if (diff.years > 2) {
-                Periode(to.minusYears(2), to)
-            } else {
-                Periode(from, to)
-            }
-        val sykepenger =
-            sykepengerService.hentSykmeldingsperioder(
-                SykepengerRequest(fnr, period.from, period.to),
-            )
+
+        val allSykepenger =
+            splitTilPerioderPaaToAar(from, to)
+                .flatMap { period ->
+                    sykepengerService
+                        .hentSykmeldingsperioder(SykepengerRequest(fnr, period.from, period.to))
+                        ?.sykmeldingsperioder
+                        ?.let { mapSykemeldingsperioder(it) }
+                        ?: emptyList()
+                }.distinctBy { it.fodselsnummer to it.sykmeldtFom }
 
         return SykepengerResponse(
-            sykepenger = sykepenger?.sykmeldingsperioder?.let { hentSykemeldingsperioder(it) },
+            sykepenger = allSykepenger.ifEmpty { null },
         )
     }
 
-    private fun hentSykemeldingsperioder(sykmeldingsperioder: List<Sykmeldingsperiode>): List<Sykepenger> =
+    // Infotrygd tilbyr kun uthenting av sykepenger på to-årsintervall.
+    // Kjører flere requester om perioden er over to år
+    private fun splitTilPerioderPaaToAar(
+        from: LocalDate,
+        to: LocalDate,
+    ): List<Periode> {
+        val perioder = mutableListOf<Periode>()
+        var chunkStart = from
+        do {
+            val chunkEnd = if (chunkStart.plusYears(2).isBefore(to)) chunkStart.plusYears(2) else to
+            perioder.add(Periode(chunkStart, chunkEnd))
+            chunkStart = chunkEnd
+        } while (chunkStart.isBefore(to))
+        return perioder
+    }
+
+    private fun mapSykemeldingsperioder(sykmeldingsperioder: List<Sykmeldingsperiode>): List<Sykepenger> =
         sykmeldingsperioder.map {
             Sykepenger(
                 fodselsnummer = it.fodselsnummer,
