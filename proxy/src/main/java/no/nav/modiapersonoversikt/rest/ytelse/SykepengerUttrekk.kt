@@ -49,8 +49,8 @@ class SykepengerUttrekk constructor(
         do {
             val chunkEnd = if (chunkStart.plusYears(2).isBefore(to)) chunkStart.plusYears(2) else to
             perioder.add(Periode(chunkStart, chunkEnd))
-            chunkStart = chunkEnd
-        } while (chunkStart.isBefore(to))
+            chunkStart = chunkEnd.plusDays(1)
+        } while (chunkStart.isBefore(to) || chunkStart.isEqual(to))
         return perioder
     }
 
