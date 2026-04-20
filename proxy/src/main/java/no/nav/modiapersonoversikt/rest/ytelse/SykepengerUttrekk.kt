@@ -11,7 +11,6 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.mapping.to.Sykep
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.*
 import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
 import org.joda.time.LocalDate
-import org.joda.time.Years
 
 class SykepengerUttrekk constructor(
     private val sykepengerService: SykepengerServiceBi,
@@ -23,13 +22,8 @@ class SykepengerUttrekk constructor(
     ): SykepengerResponse {
         val from = start ?: LocalDate.now().minusYears(2)
         val to = slutt ?: LocalDate.now()
-        val diff = Years.yearsBetween(from, to)
-        val period =
-            if (diff.years > 2) {
-                Periode(to.minusYears(2), to)
-            } else {
-                Periode(from, to)
-            }
+        val period = Periode(from, to)
+
         val sykepenger =
             sykepengerService.hentSykmeldingsperioder(
                 SykepengerRequest(fnr, period.from, period.to),
