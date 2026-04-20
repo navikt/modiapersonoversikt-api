@@ -109,7 +109,7 @@ internal class SykepengerUttrekkSplitTest {
     }
 
     @Test
-    fun `Periode på nøyaktig to år gir ett kall`() {
+    fun `Periode på nøyaktig to år (og en dag) gir ett kall`() {
         val from = LocalDate(2020, 1, 1)
         val to = from.plusYears(2)
 
