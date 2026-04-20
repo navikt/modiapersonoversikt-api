@@ -21,15 +21,6 @@ data class PseudoDagpengerVedtak(
                 it.fraOgMedDato
             }.sorted()
             .firstOrNull()
-
-    @get:JsonProperty
-    @Deprecated("now sorting by the first period, not the last")
-    val nyesteFraOgMedDato: LocalDate? get() =
-        perioder
-            .map {
-                it.fraOgMedDato
-            }.sortedDescending()
-            .firstOrNull()
 }
 
 interface DagpengerService {
