@@ -125,7 +125,7 @@ class DialogServiceImpl(
         val temakodeMap: Map<String, String>,
         val identMap: Map<String, Veileder>,
     ) {
-        fun getVeileder(ident: String?): Veileder? = identMap[ident ?: ""]
+        fun getVeileder(ident: String?): Veileder? = identMap[ident]
     }
 
     private fun lagMappingContext(henvendelser: List<HenvendelseDTO>): DialogMappingContext {
