@@ -125,6 +125,7 @@ class DialogServiceImpl(
         val temakodeMap: Map<String, String>,
         val identMap: Map<String, Veileder>,
     ) {
+        // map lookup will return null on missing key
         fun getVeileder(ident: String?): Veileder? = identMap[ident]
     }
 
