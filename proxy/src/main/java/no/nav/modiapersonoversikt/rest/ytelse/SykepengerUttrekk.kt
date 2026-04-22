@@ -24,7 +24,7 @@ class SykepengerUttrekk constructor(
         val to = slutt ?: LocalDate.now()
 
         val allSykepenger =
-            splitTilPerioderPaaToAar(from, to)
+            splitTilPerioderPaaToAarOgEnDag(from, to)
                 .flatMap { period ->
                     sykepengerService
                         .hentSykmeldingsperioder(SykepengerRequest(fnr, period.from, period.to))
@@ -40,7 +40,7 @@ class SykepengerUttrekk constructor(
 
     // Infotrygd tilbyr kun uthenting av sykepenger på to-årsintervall.
     // Kjører flere requester om perioden er over to år
-    private fun splitTilPerioderPaaToAar(
+    private fun splitTilPerioderPaaToAarOgEnDag(
         from: LocalDate,
         to: LocalDate,
     ): List<Periode> {
@@ -49,8 +49,8 @@ class SykepengerUttrekk constructor(
         do {
             val chunkEnd = if (chunkStart.plusYears(2).isBefore(to)) chunkStart.plusYears(2) else to
             perioder.add(Periode(chunkStart, chunkEnd))
-            chunkStart = chunkEnd
-        } while (chunkStart.isBefore(to))
+            chunkStart = chunkEnd.plusDays(1)
+        } while (chunkStart.isBefore(to) || chunkStart.isEqual(to))
         return perioder
     }
 

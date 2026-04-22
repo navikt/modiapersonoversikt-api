@@ -109,7 +109,7 @@ internal class SykepengerUttrekkSplitTest {
     }
 
     @Test
-    fun `Periode på nøyaktig to år gir ett kall`() {
+    fun `Periode på nøyaktig to år (og en dag) gir ett kall`() {
         val from = LocalDate(2020, 1, 1)
         val to = from.plusYears(2)
 
@@ -130,7 +130,7 @@ internal class SykepengerUttrekkSplitTest {
         assertEquals(2, capturedRequests.size)
         assertEquals(from, capturedRequests[0].from)
         assertEquals(from.plusYears(2), capturedRequests[0].to)
-        assertEquals(from.plusYears(2), capturedRequests[1].from)
+        assertEquals(from.plusYears(2).plusDays(1), capturedRequests[1].from)
         assertEquals(to, capturedRequests[1].to)
     }
 
@@ -143,8 +143,8 @@ internal class SykepengerUttrekkSplitTest {
 
         assertEquals(3, capturedRequests.size)
         assertEquals(from, capturedRequests[0].from)
-        assertEquals(from.plusYears(2), capturedRequests[1].from)
-        assertEquals(from.plusYears(4), capturedRequests[2].from)
+        assertEquals(from.plusYears(2).plusDays(1), capturedRequests[1].from)
+        assertEquals(from.plusYears(4).plusDays(2), capturedRequests[2].from)
         assertEquals(to, capturedRequests[2].to)
     }
 
