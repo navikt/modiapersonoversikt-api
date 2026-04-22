@@ -178,7 +178,7 @@ class DialogServiceImpl(
                     meldingsId = melding.meldingsId,
                     meldingstype = meldingstypeFraSfTyper(henvendelse, melding),
                     temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe), // TODO error in api-spec
-                    skrevetAvTekst = skrevetAv ?: "",
+                    skrevetAvTekst = skrevetAv,
                     fritekst = hentFritekstFraMelding(henvendelseErKassert, melding),
                     lestDato = melding.lestDato,
                     status = status,
