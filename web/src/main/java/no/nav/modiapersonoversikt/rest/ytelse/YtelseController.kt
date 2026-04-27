@@ -14,7 +14,7 @@ import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
 import no.nav.modiapersonoversikt.consumer.spokelse.SykepengerSpokelse
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
-import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.VedtakDTO
+import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.HentVedtaksperioder200ResponseInner
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -77,7 +77,7 @@ class YtelseController
         @PostMapping("tiltakspenger")
         fun hentTiltakspenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): List<VedtakDTO> =
+        ): List<HentVedtaksperioder200ResponseInner> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
