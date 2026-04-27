@@ -125,7 +125,8 @@ class DialogServiceImpl(
         val temakodeMap: Map<String, String>,
         val identMap: Map<String, Veileder>,
     ) {
-        fun getVeileder(ident: String?): Veileder? = identMap[ident ?: ""]
+        // map lookup will return null on missing key
+        fun getVeileder(ident: String?): Veileder? = identMap[ident]
     }
 
     private fun lagMappingContext(henvendelser: List<HenvendelseDTO>): DialogMappingContext {
@@ -164,7 +165,7 @@ class DialogServiceImpl(
         val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
         val meldinger: List<MeldingDTO> =
             (henvendelse.meldinger ?: emptyList()).map { melding ->
-                val skrevetAv = getIdent(melding.fra.ident, melding.fra.identType)
+                val skrevetAv = formatSender(melding.fra.ident, melding.fra.identType, melding.fra.navEnhet)
                 val status =
                     when {
                         melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
@@ -177,7 +178,7 @@ class DialogServiceImpl(
                     meldingsId = melding.meldingsId,
                     meldingstype = meldingstypeFraSfTyper(henvendelse, melding),
                     temagruppe = requireNotNull(henvendelse.gjeldendeTemagruppe), // TODO error in api-spec
-                    skrevetAvTekst = skrevetAv ?: "",
+                    skrevetAvTekst = skrevetAv,
                     fritekst = hentFritekstFraMelding(henvendelseErKassert, melding),
                     lestDato = melding.lestDato,
                     status = status,
@@ -207,17 +208,34 @@ class DialogServiceImpl(
 
     private fun List<MarkeringDTO>?.getForType(type: MarkeringDTO.Markeringstype): MarkeringDTO? = this?.find { it.markeringstype == type }
 
-    private fun DialogMappingContext.getIdent(
+    /**
+     * pen streng, formatert ut fra identtype, for å vise hva/hvem en melding er
+     * sendt fra. plukker ut navn basert på ident, og eventuelt enhet basert på
+     * hvor meldingen er sendt fra. _ident_ burde aldri være null for
+     * AKTORID/NAVIDENT, og tilsvarende for _enhet_ ved NAVIDENT, men vi safer
+     * uansett.
+     */
+    private fun DialogMappingContext.formatSender(
         ident: String?,
         identType: MeldingFraDTO.IdentType,
-    ) = when (identType) {
-        MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID ->
-            getVeileder(ident)
-                ?.let { "${it.navn} (${it.ident})" }
-                ?: ident?.let { "($ident)" }
-
-        MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
-    }
+        enhet: String?,
+    ): String =
+        when (identType) {
+            MeldingFraDTO.IdentType.AKTORID ->
+                getVeileder(ident)
+                    ?.let { "${it.navn} (${it.ident})" }
+                    ?: ident?.let { "Ukjent navn ($ident)" }
+                    ?: ""
+            MeldingFraDTO.IdentType.NAVIDENT ->
+                getVeileder(ident)
+                    ?.let { veileder ->
+                        enhet?.let { "${veileder.navn} (${veileder.ident}, $it)" }
+                            ?: "${veileder.navn} (${veileder.ident})"
+                    }
+                    ?: ident?.let { "Ukjent navn ($ident)" }
+                    ?: ""
+            MeldingFraDTO.IdentType.SYSTEM -> "Salesforce-system"
+        }
 
     private fun DialogMappingContext.tilJournalpostDTO(journalpost: JournalpostDTO) =
         DialogService.Journalpost(
