@@ -190,7 +190,7 @@ class XCorrelationIdInterceptor :
 class AuthorizationInterceptor(
     tokenProvider: () -> String,
 ) : HeadersInterceptor({
-    mapOf("Authorization" to "Bearer ${tokenProvider()}")
-})
+        mapOf("Authorization" to "Bearer ${tokenProvider()}")
+    })
 
 fun getCallId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
