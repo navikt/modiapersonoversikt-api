@@ -60,7 +60,11 @@ class LoggingInterceptor(
     }
 
     private fun Response.peekContent(): String {
-        if (!unleashService.isEnabled(Feature.LOG_RESPONSE_BODY)) return "IGNORED"
+        // I tilfeller hvor responsen ikke er 200 logger vi uansett body for å gjøre det enklere å debugge feil
+        if (!unleashService.isEnabled(Feature.LOG_RESPONSE_BODY) && this.code in 200..299) {
+            return "IGNORED"
+        }
+
         return when {
             this.header("Content-Length") == "0" -> {
                 "Content-Length: 0, didn't try to peek at body"
