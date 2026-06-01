@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.sakstema
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saf.SafService
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusService
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -13,5 +14,6 @@ open class SakstemaServiceConfig {
         safService: SafService,
         kodeverk: EnhetligKodeverk.Service,
         soknadsstatusService: SoknadsstatusService,
-    ): SakstemaServiceImpl = SakstemaServiceImpl(safService, kodeverk, soknadsstatusService)
+        unleashService: UnleashService,
+    ): SakstemaServiceImpl = SakstemaServiceImpl(safService, kodeverk, soknadsstatusService, unleashService)
 }

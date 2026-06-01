@@ -10,6 +10,8 @@ import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.sakstema.FilterUtils.fjernGamleDokumenter
 import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.soknadsstatus.*
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils
 import no.nav.personoversikt.common.science.scientist.Scientist
 import org.slf4j.LoggerFactory
@@ -62,6 +64,7 @@ class SakstemaServiceImpl
         private val safService: SafService,
         private val kodeverk: EnhetligKodeverk.Service,
         private val soknadsstatusService: SoknadsstatusService,
+        private val unleashService: UnleashService,
     ) : SakstemaService {
         override fun hentSakstemaSoknadsstatus(
             saker: List<Sak>,
@@ -70,15 +73,7 @@ class SakstemaServiceImpl
             val wrapper = safService.hentJournalposter(fnr)
 
             return try {
-                var soknadsstatuser: Map<String, Soknadsstatus>
-                try {
-                    soknadsstatuser =
-                        soknadsstatusService.hentBehandlingerGruppertPaaTema(fnr)
-                } catch (e: Exception) {
-                    soknadsstatuser = emptyMap()
-                    LOG.error("Klarte ikke å hente ut soknadsstatus", e)
-                }
-
+                val soknadsstatuser = hentSoknadsstatus(fnr)
                 val temakoder = hentAlleTemaSoknadsstatus(saker, wrapper.resultat, soknadsstatuser)
                 opprettSakstemaresultatSoknadsstatus(saker, wrapper, temakoder, soknadsstatuser)
             } catch (e: FeilendeBaksystemException) {
@@ -96,15 +91,7 @@ class SakstemaServiceImpl
             val feilendeSystem: MutableSet<Baksystem> = mutableSetOf()
 
             return try {
-                var soknadsstatuser: Map<String, Soknadsstatus>
-                try {
-                    soknadsstatuser =
-                        soknadsstatusService.hentBehandlingerGruppertPaaTema(fnr)
-                } catch (e: Exception) {
-                    soknadsstatuser = emptyMap()
-                    LOG.error("Klarte ikke å hente ut soknadsstatus", e)
-                }
-
+                val soknadsstatuser = hentSoknadsstatus(fnr)
                 val temakoder = hentAlleTemaSoknadsstatus(saker, wrapper.resultat, soknadsstatuser)
                 val temaer =
                     temakoder.map { temakode: String ->
@@ -152,7 +139,8 @@ class SakstemaServiceImpl
             val sakstema =
                 temakoder.map { temakode: String ->
                     val tilhorendeSaker = sakerITemagruppe(alleSaker, temakode)
-                    val tilhorendeDokumentMetadata = tilhorendeDokumentMetadata(alleDokumentMetadata, temakode, tilhorendeSaker)
+                    val tilhorendeDokumentMetadata =
+                        tilhorendeDokumentMetadata(alleDokumentMetadata, temakode, tilhorendeSaker)
                     val temanavn = getTemanavnForTemakode(temakode)
                     feilendeBaksystem.addAll(temanavn.feilendeSystemer)
                     SoknadsstatusSakstema(
@@ -195,6 +183,18 @@ class SakstemaServiceImpl
                 ResultatWrapper(temanavn)
             }
         }
+
+        private fun hentSoknadsstatus(fnr: String): Map<String, Soknadsstatus> =
+            try {
+                if (unleashService.isEnabled(Feature.SOKNADSSTATUS)) {
+                    soknadsstatusService.hentBehandlingerGruppertPaaTema(fnr)
+                } else {
+                    emptyMap()
+                }
+            } catch (e: Exception) {
+                LOG.error("Klarte ikke å hente ut soknadsstatus", e)
+                emptyMap()
+            }
 
         companion object {
             private val LOG = LoggerFactory.getLogger(SakstemaServiceImpl::class.java)

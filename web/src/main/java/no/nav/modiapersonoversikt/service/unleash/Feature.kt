@@ -7,4 +7,5 @@ enum class Feature(
     LOG_REQUEST_BODY("modiapersonoversikt.log-request-body"),
     LOG_RESPONSE_BODY("modiapersonoversikt.log-response-body"),
     TJENESTEKALL_LOGGING("modiapersonoversikt.tjenestekall-logging"),
+    SOKNADSSTATUS("modiapersonoversikt.soknadsstatus"),
 }
