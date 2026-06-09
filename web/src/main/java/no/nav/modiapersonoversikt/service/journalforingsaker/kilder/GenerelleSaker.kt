@@ -12,25 +12,16 @@ internal class GenerelleSaker : SakerKilde {
         fnr: String,
         saker: MutableList<JournalforingSak>,
     ) {
-        val generelleSaker =
-            saker
-                .filter { obj: JournalforingSak -> obj.isSakstypeForVisningGenerell }
-
-        val manglendeGenerelleSaker =
+        val lagGenerellSakMedTema =
             JournalforingSak.GODKJENTE_TEMA_FOR_GENERELL_SAK
                 .filter { temakode: String ->
-                    harIngenSakerMedTemakode(temakode, generelleSaker) && JournalforingSak.TEMAKODE_OPPFOLGING != temakode
+                    JournalforingSak.TEMAKODE_OPPFOLGING != temakode
                 }.map { temakode: String -> lagGenerellSakMedTema(temakode) }
 
-        saker.addAll(manglendeGenerelleSaker)
+        saker.addAll(lagGenerellSakMedTema)
     }
 
     companion object {
-        private fun harIngenSakerMedTemakode(
-            temakode: String,
-            generelleSaker: List<JournalforingSak>,
-        ): Boolean = generelleSaker.none { it.temaKode == temakode }
-
         private fun lagGenerellSakMedTema(temakode: String): JournalforingSak =
             JournalforingSak().apply {
                 temaKode = temakode
