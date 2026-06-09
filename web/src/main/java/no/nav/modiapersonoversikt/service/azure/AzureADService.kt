@@ -34,9 +34,7 @@ open class AzureADServiceImpl(
             if (response.isEmpty()) {
                 log.warn("Bruker $ident har ingen AzureAD group")
             }
-            response.map {
-                requireNotNull(it.displayName)
-            }
+            response.mapNotNull { it.displayName }
         } catch (e: Exception) {
             log.error("Kall til azureAD feilet", ident, e)
             return listOf()
