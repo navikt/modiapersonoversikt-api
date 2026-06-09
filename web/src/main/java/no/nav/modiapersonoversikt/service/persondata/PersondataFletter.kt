@@ -852,7 +852,7 @@ class PersondataFletter(
         return Persondata.PersonSomAdressat(
             fnr = adressat.identifikasjonsnummer,
             navn =
-                adressatPerson?.navn
+                adressatPerson?.navn?.takeIf { it.isNotEmpty() }
                     ?: adressat.personnavn?.let { listOf(hentNavn(it)) }
                     ?: emptyList(),
             fodselsdato = adressat.foedselsdato,
