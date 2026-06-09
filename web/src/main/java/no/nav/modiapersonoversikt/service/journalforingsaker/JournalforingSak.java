@@ -14,7 +14,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
     public String saksId = "-";
     public String fagsystemSaksId = "-";
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
-    public DateTime opprettetDato = DateTime.now();
+    public DateTime opprettetDato = null;
     public Boolean finnesIGsak = false, finnesIPsak = false;
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
