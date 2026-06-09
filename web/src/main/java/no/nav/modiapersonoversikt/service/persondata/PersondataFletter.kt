@@ -851,7 +851,10 @@ class PersondataFletter(
         val adressatPerson = tredjepartsPerson.map { it[adressat.identifikasjonsnummer] }.getOrNull()
         return Persondata.PersonSomAdressat(
             fnr = adressat.identifikasjonsnummer,
-            navn = adressatPerson?.navn ?: emptyList(),
+            navn =
+                adressatPerson?.navn
+                    ?: adressat.personnavn?.let { listOf(hentNavn(it)) }
+                    ?: emptyList(),
             fodselsdato = adressat.foedselsdato,
         )
     }

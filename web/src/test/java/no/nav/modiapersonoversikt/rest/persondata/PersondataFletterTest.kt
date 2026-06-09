@@ -11,6 +11,8 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
 import no.nav.modiapersonoversikt.service.persondata.PersondataResult
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -188,5 +190,30 @@ internal class PersondataFletterTest {
             )
 
         snapshot.assertMatches(result)
+    }
+
+    @Test
+    internal fun `skal bruke personnavn fra adressat når identifikasjonsnummer mangler`() {
+        val result =
+            mapper.flettSammenData(
+                data =
+                    testData.copy(
+                        personIdent = fnr,
+                        persondata =
+                            testPerson.copy(
+                                kontaktinformasjonForDoedsbo = listOf(kontaktinformasjonDodsboUtenIdentifikasjonsnummer),
+                            ),
+                    ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            )
+
+        val personSomAdressat =
+            result.person.dodsbo
+                .first()
+                .adressat.personSomAdressat
+        assertNull(personSomAdressat?.fnr, "fnr skal være null når identifikasjonsnummer mangler")
+        assertEquals(1, personSomAdressat?.navn?.size, "Navn skal hentes fra personnavn-feltet")
+        assertEquals("Ola", personSomAdressat?.navn?.first()?.fornavn)
+        assertEquals("Nordmann", personSomAdressat?.navn?.first()?.etternavn)
     }
 }
