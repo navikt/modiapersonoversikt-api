@@ -284,6 +284,34 @@ internal val kontaktinformasjonDodsbo =
             ),
     )
 
+internal val kontaktinformasjonDodsboUtenIdentifikasjonsnummer =
+    KontaktinformasjonForDoedsbo(
+        skifteform = KontaktinformasjonForDoedsboSkifteform.OFFENTLIG,
+        attestutstedelsesdato = gittDato("2014-05-02"),
+        personSomKontakt =
+            KontaktinformasjonForDoedsboPersonSomKontakt(
+                identifikasjonsnummer = null,
+                foedselsdato = gittDato("1960-01-01"),
+                personnavn =
+                    Personnavn(
+                        fornavn = "Ola",
+                        mellomnavn = null,
+                        etternavn = "Nordmann",
+                    ),
+            ),
+        advokatSomKontakt = null,
+        organisasjonSomKontakt = null,
+        metadata = metadata,
+        adresse =
+            KontaktinformasjonForDoedsboAdresse(
+                adresselinje1 = "Gateveien",
+                adresselinje2 = null,
+                poststedsnavn = "Poststed",
+                postnummer = "9988",
+                landkode = null,
+            ),
+    )
+
 internal val digitalKontaktinformasjon =
     Krr.DigitalKontaktinformasjon(
         personident = "12345678910",
