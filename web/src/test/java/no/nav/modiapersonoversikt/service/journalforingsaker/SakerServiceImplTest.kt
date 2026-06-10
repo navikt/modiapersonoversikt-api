@@ -81,7 +81,7 @@ class SakerServiceImplTest {
         val saksliste: List<JournalforingSak> = sakerService.hentSaker(FNR).saker
 
         val ungSaker = saksliste.filter { it.temaKode == Tema.UNG.toString() }
-        assertThat(ungSaker.size, `is`(2))
+        assertThat(ungSaker.size, `is`(3))
 
         assertThat(ungSaker[0].saksId, `is`(SakId_6))
         assertThat(ungSaker[1].saksId, `is`(SakId_7))
