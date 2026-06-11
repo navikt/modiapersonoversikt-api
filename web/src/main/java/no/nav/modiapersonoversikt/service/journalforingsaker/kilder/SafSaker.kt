@@ -17,13 +17,16 @@ class SafSaker(
         fnr: String,
         saker: MutableList<JournalforingSak>,
     ) {
-        val resultat =
+        val fagSaker =
             service
                 .hentSaker(fnr)
                 .data
                 ?.saker
                 ?.filterNotNull()
-                ?.map {
+                ?.filter {
+                    // Generelle saker håndteres av GenerelleSaker-kilden, og skal derfor ikke inkluderes her
+                    it.sakstype != Sakstype.GENERELL_SAK
+                }?.map {
                     JournalforingSak().apply {
                         opprettetDato = it.datoOpprettet?.let { convertJavaDateTimeToJoda(it) }
                         saksId = it.arkivsaksnummer
@@ -40,7 +43,7 @@ class SafSaker(
                 }
                 ?: emptyList()
 
-        saker.addAll(resultat)
+        saker.addAll(fagSaker)
     }
 
     companion object {

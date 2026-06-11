@@ -68,7 +68,7 @@ class SakerServiceImplTest {
         val saksliste: List<JournalforingSak> = sakerService.hentSaker(FNR).saker
 
         assertThat(saksliste[0].saksId, `is`(SakId_1))
-        assertThat(saksliste[3].fagsystemKode, `is`(""))
+        assertThat(saksliste[3].fagsystemKode, `is`("FS22"))
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
         assertThat(saksliste[saksliste.size - 1].temaKode, `is`("BID"))
         assertThat(saksliste[saksliste.size - 1].fagsystemKode, `is`("BISYS"))
@@ -81,10 +81,9 @@ class SakerServiceImplTest {
         val saksliste: List<JournalforingSak> = sakerService.hentSaker(FNR).saker
 
         val ungSaker = saksliste.filter { it.temaKode == Tema.UNG.toString() }
-        assertThat(ungSaker.size, `is`(2))
+        assertThat(ungSaker.size, `is`(1))
 
-        assertThat(ungSaker[0].saksId, `is`(SakId_6))
-        assertThat(ungSaker[1].saksId, `is`(SakId_7))
+        assertThat(ungSaker[0].saksId, `is`("-"))
 
         val paiSak = saksliste.find { it.temaKode == Tema.PAI.toString() }
         assertThat(paiSak, notNullValue())
@@ -92,6 +91,22 @@ class SakerServiceImplTest {
 
         assertThat(saksliste.find { it.temaKode == Tema.BBF.toString() }, notNullValue())
         assertThat(saksliste.find { it.temaKode == Tema.POI.toString() }, notNullValue())
+    }
+
+    @Test
+    fun `oppretter noyaktig en generell sak per tema`() {
+        every { safService.hentSaker(any()) } returns GenericGraphQlResponse()
+
+        val generelleSaker =
+            sakerService
+                .hentSaker(FNR)
+                .saker
+                .filter { it.sakstype == SAKSTYPE_GENERELL }
+
+        val sakerPerTema = generelleSaker.groupBy { it.temaKode }
+        sakerPerTema.forEach { (tema, saker) ->
+            assertThat("Tema $tema skal ha nøyaktig én generell sak", saker.size, `is`(1))
+        }
     }
 
     @Test
