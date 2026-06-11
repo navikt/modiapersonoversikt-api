@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -22,7 +23,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
 
     public static final String FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK = "FS22";
 
-    public static final Set<String> GODKJENTE_TEMA_FOR_GENERELL_SAK = Set.of("AAP", "AGR", "BAR", "BIL", "BID", "DAG", "ENF", "ERS", "EYO", "FEI", "FOR", "FOS", "FUL", "GEN", "GRA", "GRU", "HEL", "HJE", "IND", "KON", "KTR", "MED", "MOB", "OMS", "REH", "RVE", "RPO", "SAK", "SAP", "SER", "STO", "SUP", "SYK", "SYM", "TRK", "TRY", "TSR", "TSO", "UFM", "VEN", "YRA", "YRK", "FRI", TEMAKODE_OPPFOLGING, "POI", "PAI", "UNG", "OLJ", "BBF");
+    public static final List<String> GODKJENTE_TEMA_FOR_GENERELL_SAK = List.of("AAP", "AGR", "BAR", "BIL", "BID", "DAG", "ENF", "ERS", "EYO", "FEI", "FOR", "FOS", "FUL", "GEN", "GRA", "GRU", "HEL", "HJE", "IND", "KON", "KTR", "MED", "MOB", "OMS", "REH", "RVE", "RPO", "SAK", "SAP", "SER", "STO", "SUP", "SYK", "SYM", "TRK", "TRY", "TSR", "TSO", "UFM", "VEN", "YRA", "YRK", "FRI", TEMAKODE_OPPFOLGING, "POI", "PAI", "UNG", "OLJ", "BBF");
 
     public static final Predicate<JournalforingSak> IS_GENERELL_SAK = sak -> SAKSTYPE_GENERELL.equals(sak.sakstype);
 

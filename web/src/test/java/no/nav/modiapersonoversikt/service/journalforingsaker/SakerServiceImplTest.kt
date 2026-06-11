@@ -104,6 +104,7 @@ class SakerServiceImplTest {
                 .filter { it.sakstype == SAKSTYPE_GENERELL }
 
         val sakerPerTema = generelleSaker.groupBy { it.temaKode }
+        assertThat(sakerPerTema.keys.filterNotNull().toList(), `is`(JournalforingSak.GODKJENTE_TEMA_FOR_GENERELL_SAK))
         sakerPerTema.forEach { (tema, saker) ->
             assertThat("Tema $tema skal ha nøyaktig én generell sak", saker.size, `is`(1))
         }
