@@ -177,7 +177,6 @@ class SakerController
             val saker =
                 this.saker.map {
                     Sak()
-                        .withSaksId(it.saksId)
                         .withFagsaksnummer(it.fagsystemSaksId)
                         .withTemakode(it.temaKode)
                         .withBaksystem(Baksystem.SAF)

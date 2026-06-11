@@ -29,7 +29,6 @@ class SafSaker(
                 }?.map {
                     JournalforingSak().apply {
                         opprettetDato = it.datoOpprettet?.let { convertJavaDateTimeToJoda(it) }
-                        saksId = it.arkivsaksnummer
                         fagsystemSaksId = it.fagsakId
                         temaKode = it.tema?.name ?: ""
                         fagsystemKode = it.fagsaksystem ?: ""

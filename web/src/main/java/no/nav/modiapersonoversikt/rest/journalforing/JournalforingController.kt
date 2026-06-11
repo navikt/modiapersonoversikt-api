@@ -42,7 +42,7 @@ class JournalforingController
             @RequestBody sak: JournalforingSak,
             @RequestParam(value = "enhet") enhet: String?,
         ) {
-            val auditIdentifier = arrayOf(FNR to sak.fnr, TRAAD_ID to traadId, SAK_ID to sak.saksId)
+            val auditIdentifier = arrayOf(FNR to sak.fnr, TRAAD_ID to traadId, SAK_ID to sak.fagsystemSaksId)
             return tilgangskontroll
                 .check(tilgangTilBruker(Fnr.of(sak.fnr)))
                 .check(henvendelseTilhorerBruker(Fnr.of(sak.fnr), traadId))

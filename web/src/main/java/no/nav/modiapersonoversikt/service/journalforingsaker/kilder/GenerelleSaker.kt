@@ -21,7 +21,6 @@ internal class GenerelleSaker : SakerKilde {
         private fun lagGenerellSakMedTema(temakode: String): JournalforingSak =
             JournalforingSak().apply {
                 temaKode = temakode
-                finnesIGsak = false
                 fagsystemKode = JournalforingSak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
                 sakstype = JournalforingSak.SAKSTYPE_GENERELL
                 opprettetDato = DateTime.now()

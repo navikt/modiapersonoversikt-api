@@ -12,16 +12,12 @@ internal class BidragSaker : SakerKilde {
     ) {
         val bidragSak =
             JournalforingSak().apply {
-                saksId = "-"
-                fagsystemSaksId = "-"
                 temaKode = "BID"
                 temaNavn = "Bidrag"
                 fagsystemKode = JournalforingSak.FAGSYSTEMKODE_BIDRAG
                 fagsystemNavn = "Kopiert inn i Bisys"
                 sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
                 opprettetDato = null
-                finnesIGsak = false
-                finnesIPsak = false
             }
 
         saker.add(bidragSak)
