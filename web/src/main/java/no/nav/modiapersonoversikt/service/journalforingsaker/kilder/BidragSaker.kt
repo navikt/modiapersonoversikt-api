@@ -12,6 +12,7 @@ internal class BidragSaker : SakerKilde {
     ) {
         val bidragSak =
             JournalforingSak().apply {
+                fagsystemSaksId = "-"
                 temaKode = "BID"
                 temaNavn = "Bidrag"
                 fagsystemKode = JournalforingSak.FAGSYSTEMKODE_BIDRAG
