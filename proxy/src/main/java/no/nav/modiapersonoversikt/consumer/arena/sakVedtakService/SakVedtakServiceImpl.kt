@@ -55,13 +55,11 @@ class SakVedtakServiceImpl(
     companion object {
         private val TIL_SAK = { arenaSak: no.nav.arena.services.lib.sakvedtak.SaksInfo ->
             JournalforingSak().apply {
-                saksId = arenaSak.saksId
                 fagsystemSaksId = arenaSak.saksId
                 fagsystemKode = JournalforingSak.FAGSYSTEMKODE_ARENA
                 sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
                 temaKode = arenaSak.tema
                 opprettetDato = DateTime(arenaSak.sakOpprettet.toGregorianCalendar().time)
-                finnesIGsak = false
             }
         }
     }

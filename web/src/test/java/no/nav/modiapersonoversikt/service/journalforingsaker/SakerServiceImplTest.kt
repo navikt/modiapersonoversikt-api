@@ -25,6 +25,7 @@ import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -67,8 +68,8 @@ class SakerServiceImplTest {
 
         val saksliste: List<JournalforingSak> = sakerService.hentSaker(FNR).saker
 
-        assertThat(saksliste[0].saksId, `is`(SakId_1))
-        assertThat(saksliste[3].fagsystemKode, `is`(""))
+        assertThat(saksliste[0].fagsystemSaksId, `is`(FagsystemSakId_1))
+        assertThat(saksliste[3].fagsystemKode, `is`("FS22"))
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
         assertThat(saksliste[saksliste.size - 1].temaKode, `is`("BID"))
         assertThat(saksliste[saksliste.size - 1].fagsystemKode, `is`("BISYS"))
@@ -77,21 +78,36 @@ class SakerServiceImplTest {
     @Test
     fun `transformerer response til saksliste nye temakoder`() {
         every { safService.hentSaker(any()) } returns createSaksliste()
-
         val saksliste: List<JournalforingSak> = sakerService.hentSaker(FNR).saker
 
         val ungSaker = saksliste.filter { it.temaKode == Tema.UNG.toString() }
-        assertThat(ungSaker.size, `is`(2))
+        assertThat(ungSaker.size, `is`(1))
 
-        assertThat(ungSaker[0].saksId, `is`(SakId_6))
-        assertThat(ungSaker[1].saksId, `is`(SakId_7))
+        assertThat(ungSaker[0].fagsystemSaksId, nullValue())
 
         val paiSak = saksliste.find { it.temaKode == Tema.PAI.toString() }
         assertThat(paiSak, notNullValue())
-        assertThat(paiSak?.saksId, `is`("-"))
+        assertThat(paiSak?.fagsystemSaksId, nullValue())
 
         assertThat(saksliste.find { it.temaKode == Tema.BBF.toString() }, notNullValue())
         assertThat(saksliste.find { it.temaKode == Tema.POI.toString() }, notNullValue())
+    }
+
+    @Test
+    fun `oppretter noyaktig en generell sak per tema`() {
+        every { safService.hentSaker(any()) } returns GenericGraphQlResponse()
+
+        val generelleSaker =
+            sakerService
+                .hentSaker(FNR)
+                .saker
+                .filter { it.sakstype == SAKSTYPE_GENERELL }
+
+        val sakerPerTema = generelleSaker.groupBy { it.temaKode }
+        assertThat(sakerPerTema.keys.filterNotNull().toList(), `is`(JournalforingSak.GODKJENTE_TEMA_FOR_GENERELL_SAK))
+        sakerPerTema.forEach { (tema, saker) ->
+            assertThat("Tema $tema skal ha nøyaktig én generell sak", saker.size, `is`(1))
+        }
     }
 
     @Test
@@ -132,13 +148,11 @@ class SakerServiceImplTest {
 
         every { arenaInfotrygdApi.hentOppfolgingssakFraArena(any()) } answers {
             JournalforingSak().apply {
-                saksId = sakId
-                fagsystemSaksId = saksId
+                fagsystemSaksId = sakId
                 fagsystemKode = JournalforingSak.FAGSYSTEMKODE_ARENA
                 sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
                 temaKode = TEMAKODE_OPPFOLGING
                 opprettetDato = DateTime(xmlDato.toGregorianCalendar().time)
-                finnesIGsak = false
             }
         }
 
@@ -150,10 +164,9 @@ class SakerServiceImplTest {
                 .filter(harTemaKode(TEMAKODE_OPPFOLGING))
                 .toList()
         assertThat(saker.size, `is`(1))
-        assertThat(saker[0].saksIdVisning, `is`(sakId))
+        assertThat(saker[0].fagsystemSaksId, `is`(sakId))
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
         assertThat(saker[0].fagsystemKode, `is`(FAGSYSTEMKODE_ARENA))
-        assertThat(saker[0].finnesIGsak, `is`(false))
     }
 
     @Test
