@@ -74,6 +74,21 @@ class LoggingGraphqlClient(
                 tjenestekallLogger.error("$name-response: $callId ($requestId)", tjenestekallFelt)
             }
 
+            (response.extensions?.get("warnings") as? List<*>)
+                ?.filterIsInstance<Map<*, *>>()
+                ?.forEach { w ->
+                    tjenestekallLogger.warn(
+                        "$name-warning: ${w["message"]}: $callId ($requestId)",
+                        mapOf(
+                            "query" to w["query"],
+                            "id" to w["id"],
+                            "code" to w["code"],
+                            "message" to w["message"],
+                            "details" to w["details"],
+                        ),
+                    )
+                }
+
             response
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot $name (ID: $callId)", exception)
