@@ -24,7 +24,6 @@ internal class OppfolgingsSaker : SakerKilde {
             saker.add(
                 JournalforingSak().apply {
                     temaKode = JournalforingSak.TEMAKODE_OPPFOLGING
-                    finnesIGsak = false
                     fagsystemKode = JournalforingSak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
                     sakstype = JournalforingSak.SAKSTYPE_GENERELL
                     opprettetDato = DateTime.now()
