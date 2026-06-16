@@ -74,6 +74,26 @@ class LoggingGraphqlClient(
                 tjenestekallLogger.error("$name-response: $callId ($requestId)", tjenestekallFelt)
             }
 
+            (response.extensions?.get("warnings") as? List<*>)
+                ?.filterIsInstance<Map<*, *>>()
+                ?.forEach { w ->
+                    tjenestekallLogger.warn(
+                        "$name-warning: ${w["message"]}: $callId ($requestId)",
+                        mapOf(
+                            "query" to w["query"],
+                            "id" to w["id"],
+                            "code" to w["code"],
+                            "message" to w["message"],
+                            "details" to w["details"],
+                        ),
+                    )
+                    // Custom sjekk for å registrere om vi mangler opplysningstyper i behandlingskatalogen
+                    val missing = (w["details"] as? Map<*, *>)?.get("missing") as? List<*>
+                    if (!missing.isNullOrEmpty()) {
+                        log.warn("Mangler opplysningstyper for {} (ID: {}): {}", name, callId, missing)
+                    }
+                }
+
             response
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot $name (ID: $callId)", exception)
