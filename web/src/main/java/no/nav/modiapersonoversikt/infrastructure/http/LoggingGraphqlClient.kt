@@ -87,7 +87,7 @@ class LoggingGraphqlClient(
                             "details" to w["details"],
                         ),
                     )
-                    // Custom sjekk for PDL for å registrere om vi mangler opplysningstyper i behandlingskatalogen
+                    // Custom sjekk for å registrere om vi mangler opplysningstyper i behandlingskatalogen
                     val missing = (w["details"] as? Map<*, *>)?.get("missing") as? List<*>
                     if (!missing.isNullOrEmpty()) {
                         log.warn("Mangler opplysningstyper for {} (ID: {}): {}", name, callId, missing)
