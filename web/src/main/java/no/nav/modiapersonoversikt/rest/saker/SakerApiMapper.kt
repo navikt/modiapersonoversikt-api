@@ -91,12 +91,10 @@ object SakerApiMapper {
                         val harTilgang = tematilgang[sak.temakode] == true
                         val tilhorendeDokumenter =
                             resultatWrapper.resultat.dokumenter.filter {
-                                (it.tilhorendeSakid == sak.saksId && it.tilhorendeSakid != null) ||
-                                    (it.tilhorendeFagsakId == sak.fagsaksnummer && it.tilhorendeFagsakId != null)
+                                (it.tilhorendeFagsakId == sak.fagsaksnummer && it.tilhorendeFagsakId != null)
                             }
                         val sakstema = resultatWrapper.resultat.temaer.find { it.temakode == sak.temakode }
                         SakerApi.SaksDokumenter(
-                            saksid = sak.saksId,
                             temakode = sak.temakode,
                             temanavn = sakstema?.temanavn ?: "",
                             tilhorendeDokumenter = tilhorendeDokumenter.map(::mapTilDokumentMetadata),
@@ -153,7 +151,6 @@ object SakerApiMapper {
         private fun mapTilTilhorendeSak(sak: Sak) =
             SakerApi.Sak(
                 temakode = sak.temakode,
-                saksid = sak.saksId,
                 fagsaksnummer = sak.fagsaksnummer,
                 avsluttet = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
                 fagsystem = sak.fagsystem,

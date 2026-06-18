@@ -9,7 +9,7 @@ import static java.util.Optional.empty;
 
 public class Sak {
     private String temakode;
-    private String saksId;
+    private Optional<String> saksId;
     private String fagsaksnummer;
     private Optional<DateTime> avsluttet = empty();
     private String fagsystem;
@@ -41,20 +41,12 @@ public class Sak {
         return temakode;
     }
 
-    public String getSaksId() {
-        return saksId;
-    }
-
     public String temakode() {
         return this.temakode;
     }
 
     public String getFagsaksnummer() {
         return fagsaksnummer;
-    }
-
-    public String saksId() {
-        return this.saksId;
     }
 
     public Optional<DateTime> avsluttet() {
@@ -67,11 +59,6 @@ public class Sak {
 
     public Sak withTemakode(final String temakode) {
         this.temakode = temakode;
-        return this;
-    }
-
-    public Sak withSaksId(final String saksId) {
-        this.saksId = saksId;
         return this;
     }
 
