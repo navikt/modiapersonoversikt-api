@@ -62,7 +62,6 @@ object SakerApi {
 
     data class Sak(
         val temakode: String,
-        val saksid: String,
         val fagsaksnummer: String?,
         val avsluttet: LocalDateTime?,
         val fagsystem: String,
@@ -80,7 +79,6 @@ object SakerApi {
     data class SaksDokumenter(
         val temakode: String,
         val temanavn: String,
-        val saksid: String,
         val fagsaksnummer: String?,
         val tilhorendeDokumenter: List<Dokumentmetadata> = listOf(),
         val avsluttet: LocalDateTime?,

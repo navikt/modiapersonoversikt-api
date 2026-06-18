@@ -240,14 +240,7 @@ class SakstemaServiceImpl
                             .filter { it != null }
                             .toList()
 
-                    val saksIds =
-                        tilhorendeSaker
-                            .stream()
-                            .map { obj: Sak -> obj.saksId }
-                            .filter { it != null }
-                            .toList()
-
-                    (fagsakIds.contains(dm.tilhorendeFagsakId) || saksIds.contains(dm.tilhorendeSakid)) && dm.temakode == temakode
+                    (fagsakIds.contains(dm.tilhorendeFagsakId) && dm.temakode == temakode)
                 }
 
             private fun tilhorendeFraHenvendelse(temakode: String): Predicate<DokumentMetadata> =
