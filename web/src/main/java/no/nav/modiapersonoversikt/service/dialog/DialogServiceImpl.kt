@@ -14,9 +14,9 @@ import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
+import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
-import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.slf4j.LoggerFactory
@@ -209,8 +209,7 @@ class DialogServiceImpl(
         )
     }
 
-    private fun List<MarkeringDTO>?.getForType(type: MarkeringDTO.Markeringstype): MarkeringDTO? =
-        this?.find { it.markeringstype == type }
+    private fun List<MarkeringDTO>?.getForType(type: MarkeringDTO.Markeringstype): MarkeringDTO? = this?.find { it.markeringstype == type }
 
     /**
      * pen streng, formatert ut fra identtype, for å vise hva/hvem en melding er
@@ -432,7 +431,11 @@ class DialogServiceImpl(
         return parseFraHenvendelseTilTraad(henvendelse).copy(journalforingFeilet = journalforingFeilet)
     }
 
-    private fun journalfor(enhet: String, kjedeId: String, sak: JournalforingSak): Boolean =
+    private fun journalfor(
+        enhet: String,
+        kjedeId: String,
+        sak: JournalforingSak,
+    ): Boolean =
         runCatching {
             sfHenvendelseService.journalforHenvendelse(
                 enhet = enhet,
@@ -442,9 +445,13 @@ class DialogServiceImpl(
                 fagsakSystem = sak.fagsystemKode,
             )
         }.onFailure { e -> log.warn("Journalføring feilet", e) }
-         .isFailure
+            .isFailure
 
-    private fun journalfor(enhet: String, kjedeId: String, journalpost: JournalpostDTO): Boolean =
+    private fun journalfor(
+        enhet: String,
+        kjedeId: String,
+        journalpost: JournalpostDTO,
+    ): Boolean =
         runCatching {
             sfHenvendelseService.journalforHenvendelse(
                 enhet = enhet,
@@ -454,5 +461,5 @@ class DialogServiceImpl(
                 fagsakSystem = journalpost.fagsaksystem?.name,
             )
         }.onFailure { e -> log.warn("Journalføring feilet", e) }
-         .isFailure
+            .isFailure
 }
