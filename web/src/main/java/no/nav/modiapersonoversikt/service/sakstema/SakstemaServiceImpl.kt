@@ -216,7 +216,7 @@ class SakstemaServiceImpl
                     ).run({
                         val soknadsstatusTema = soknadsstatuser.keys
                         val dokumentTema =
-                            dokumentMetadata.filter { it.baksystem.contains(Baksystem.HENVENDELSE) }.map { it.temakode }
+                            dokumentMetadata.map { it.temakode }
                         val temaer = (sakerTema + dokumentTema + soknadsstatusTema).toSet()
                         LOG.info("Dokument soknadsstatuser tema", temaer)
                         temaer
