@@ -86,31 +86,25 @@ object SakerApiMapper {
 
         fun mapTilResultatSaksDokumenter(resultatWrapper: ResultatWrapper<SaksData>) =
             SakerApi.ResultatSaksDokumenter(
-                saker =
-                    resultatWrapper.resultat.saker.map { sak ->
-                        val harTilgang = tematilgang[sak.temakode] == true
-                        val tilhorendeDokumenter =
-                            resultatWrapper.resultat.dokumenter.filter {
-                                (it.tilhorendeFagsakId == sak.fagsaksnummer && it.tilhorendeFagsakId != null)
-                            }
-                        val sakstema = resultatWrapper.resultat.temaer.find { it.temakode == sak.temakode }
-                        SakerApi.SaksDokumenter(
-                            temakode = sak.temakode,
-                            temanavn = sakstema?.temanavn ?: "",
-                            tilhorendeDokumenter = tilhorendeDokumenter.map(::mapTilDokumentMetadata),
-                            harTilgang = harTilgang,
-                            fagsaksnummer = sak.fagsaksnummer,
-                            fagsystemNavn = sak.fagsystemNavn.orElse(null),
-                            opprettet = sak.opprettetDato.map { it.toJavaDateTime() }.orElse(null),
-                            avsluttet = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
-                            fagsystem = sak.fagsystem,
-                            baksystem = sak.baksystem,
-                        )
-                    },
-                temaer = resultatWrapper.resultat.temaer,
+                temaer = hentTemaerMedTilgangOgDato(resultatWrapper.resultat.temaer, resultatWrapper.resultat.dokumenter),
                 dokumenter = resultatWrapper.resultat.dokumenter.map(::mapTilDokumentMetadata),
                 feilendeSystemer = resultatWrapper.feilendeSystemer.toList(),
             )
+
+        private fun hentTemaerMedTilgangOgDato(
+            temaer: List<Sakstema>,
+            dokumenter: List<DokumentMetadata>,
+        ): List<SakerApi.Sakstema> {
+            val dokumenterGruppertEtterTema = dokumenter.groupBy { it.temakode }
+            return temaer.map { tema ->
+                SakerApi.Sakstema(
+                    temakode = tema.temakode,
+                    temanavn = tema.temanavn,
+                    harTilgang = tematilgang[tema.temakode] == true,
+                    nyesteDokumentDato = dokumenterGruppertEtterTema[tema.temakode]?.maxByOrNull { it.dato }?.dato,
+                )
+            }
+        }
 
         private fun mapTilDokumentMetadata(behandlingskjede: DokumentMetadata) =
             SakerApi.Dokumentmetadata(
