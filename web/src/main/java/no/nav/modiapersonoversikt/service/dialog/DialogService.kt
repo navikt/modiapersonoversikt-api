@@ -67,6 +67,7 @@ data class TraadDTO(
     val sladding: Boolean?,
     val meldinger: List<MeldingDTO>,
     val journalposter: List<DialogService.Journalpost>,
+    val journalforingFeilet: Boolean = false,
 )
 
 data class MeldingDTO(
