@@ -78,7 +78,7 @@ object SakerApi {
     data class Sakstema(
         val temakode: String,
         val temanavn: String,
-        val harTilgang: Boolean? = false,
+        val harTilgang: Boolean = false,
         val nyesteDokumentDato: LocalDateTime?,
     )
 }
