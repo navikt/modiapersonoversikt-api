@@ -3,18 +3,23 @@ package no.nav.modiapersonoversikt.service.dialog
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
-import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.*
-import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.*
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.JournalpostDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MarkeringDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.Kanal
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingFraDTO
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
 import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
+import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Oppgave
 import no.nav.modiapersonoversikt.service.oppgavebehandling.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
@@ -25,6 +30,10 @@ class DialogServiceImpl(
     private val ansattService: AnsattService,
     private val kodeverk: EnhetligKodeverk.Service,
 ) : DialogService {
+    companion object {
+        private val log = LoggerFactory.getLogger(DialogServiceImpl::class.java)
+    }
+
     override fun hentMeldinger(
         fnr: String,
         enhet: String,
@@ -62,15 +71,9 @@ class DialogServiceImpl(
             )
 
         sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
-        sfHenvendelseService.journalforHenvendelse(
-            enhet = infomeldingRequest.enhet,
-            kjedeId = henvendelse.kjedeId,
-            saksId = infomeldingRequest.sak.fagsystemSaksId,
-            saksTema = infomeldingRequest.sak.temaKode,
-            fagsakSystem = infomeldingRequest.sak.fagsystemKode,
-        )
+        val journalforingFeilet = journalfor(infomeldingRequest.enhet, henvendelse.kjedeId, infomeldingRequest.sak)
 
-        return parseFraHenvendelseTilTraad(henvendelse)
+        return parseFraHenvendelseTilTraad(henvendelse).copy(journalforingFeilet = journalforingFeilet)
     }
 
     override fun startFortsettDialog(
@@ -226,6 +229,7 @@ class DialogServiceImpl(
                     ?.let { "${it.navn} (${it.ident})" }
                     ?: ident?.let { "Ukjent navn ($ident)" }
                     ?: ""
+
             MeldingFraDTO.IdentType.NAVIDENT ->
                 getVeileder(ident)
                     ?.let { veileder ->
@@ -234,6 +238,7 @@ class DialogServiceImpl(
                     }
                     ?: ident?.let { "Ukjent navn ($ident)" }
                     ?: ""
+
             MeldingFraDTO.IdentType.SYSTEM -> "Salesforce-system"
         }
 
@@ -289,12 +294,14 @@ class DialogServiceImpl(
                         } else {
                             Meldingstype.SVAR_SBL_INNGAAENDE
                         }
+
                     MeldingFraDTO.IdentType.NAVIDENT ->
                         if (erForsteMelding) {
                             Meldingstype.SPORSMAL_MODIA_UTGAAENDE
                         } else {
                             Meldingstype.SVAR_SKRIFTLIG
                         }
+
                     MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.SVAR_SKRIFTLIG
                 }
             }
@@ -341,15 +348,9 @@ class DialogServiceImpl(
                 sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
             }
 
-            sfHenvendelseService.journalforHenvendelse(
-                enhet = meldingRequest.enhet,
-                kjedeId = henvendelse.kjedeId,
-                saksId = sak.fagsystemSaksId,
-                saksTema = sak.temaKode,
-                fagsakSystem = sak.fagsystemKode,
-            )
+            val journalforingFeilet = journalfor(meldingRequest.enhet, henvendelse.kjedeId, sak)
 
-            return parseFraHenvendelseTilTraad(henvendelse)
+            return parseFraHenvendelseTilTraad(henvendelse).copy(journalforingFeilet = journalforingFeilet)
         }
     }
 
@@ -384,6 +385,8 @@ class DialogServiceImpl(
             }
         }
 
+        var journalforingFeilet = false
+
         if (meldingRequest.traadType == TraadType.SAMTALEREFERAT) {
             henvendelse =
                 sfHenvendelseService.sendSamtalereferat(
@@ -397,15 +400,7 @@ class DialogServiceImpl(
             val journalposter =
                 (henvendelse.journalposter ?: emptyList())
                     .distinctBy { it.fagsakId }
-            journalposter.forEach {
-                sfHenvendelseService.journalforHenvendelse(
-                    enhet = enhet,
-                    kjedeId = henvendelse.kjedeId,
-                    saksId = it.fagsakId,
-                    saksTema = it.journalfortTema,
-                    fagsakSystem = it.fagsaksystem?.name,
-                )
-            }
+            journalforingFeilet = journalposter.map { journalfor(enhet, henvendelse.kjedeId, it) }.any { it }
         } else {
             val sak = meldingRequest.sak
             henvendelse =
@@ -422,13 +417,7 @@ class DialogServiceImpl(
             }
 
             if (sak != null) {
-                sfHenvendelseService.journalforHenvendelse(
-                    enhet = enhet,
-                    kjedeId = henvendelse.kjedeId,
-                    saksId = sak.fagsystemSaksId,
-                    saksTema = sak.temaKode,
-                    fagsakSystem = sak.fagsystemKode,
-                )
+                journalforingFeilet = journalfor(enhet, henvendelse.kjedeId, sak)
             }
         }
         if (oppgaveId != null) {
@@ -439,6 +428,38 @@ class DialogServiceImpl(
             )
         }
 
-        return parseFraHenvendelseTilTraad(henvendelse)
+        return parseFraHenvendelseTilTraad(henvendelse).copy(journalforingFeilet = journalforingFeilet)
     }
+
+    private fun journalfor(
+        enhet: String,
+        kjedeId: String,
+        sak: JournalforingSak,
+    ): Boolean =
+        runCatching {
+            sfHenvendelseService.journalforHenvendelse(
+                enhet = enhet,
+                kjedeId = kjedeId,
+                saksId = sak.fagsystemSaksId,
+                saksTema = sak.temaKode,
+                fagsakSystem = sak.fagsystemKode,
+            )
+        }.onFailure { e -> log.warn("Journalføring feilet", e) }
+            .isFailure
+
+    private fun journalfor(
+        enhet: String,
+        kjedeId: String,
+        journalpost: JournalpostDTO,
+    ): Boolean =
+        runCatching {
+            sfHenvendelseService.journalforHenvendelse(
+                enhet = enhet,
+                kjedeId = kjedeId,
+                saksId = journalpost.fagsakId,
+                saksTema = journalpost.journalfortTema,
+                fagsakSystem = journalpost.fagsaksystem?.name,
+            )
+        }.onFailure { e -> log.warn("Journalføring feilet", e) }
+            .isFailure
 }
