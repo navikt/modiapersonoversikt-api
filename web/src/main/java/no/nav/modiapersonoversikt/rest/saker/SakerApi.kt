@@ -70,23 +70,15 @@ object SakerApi {
     )
 
     data class ResultatSaksDokumenter(
-        val saker: List<SaksDokumenter>,
         val dokumenter: List<Dokumentmetadata>,
         val temaer: List<Sakstema>,
         val feilendeSystemer: List<Baksystem> = listOf(),
     )
 
-    data class SaksDokumenter(
+    data class Sakstema(
         val temakode: String,
         val temanavn: String,
-        val fagsaksnummer: String?,
-        val tilhorendeDokumenter: List<Dokumentmetadata> = listOf(),
-        val avsluttet: LocalDateTime?,
-        val opprettet: LocalDateTime?,
-        val fagsystem: String,
-        val fagsystemNavn: String?,
-        val baksystem: Baksystem,
-        val harTilgang: Boolean,
-        var feilendeSystemer: List<Baksystem> = listOf(),
+        val harTilgang: Boolean = false,
+        val nyesteDokumentDato: LocalDateTime?,
     )
 }
