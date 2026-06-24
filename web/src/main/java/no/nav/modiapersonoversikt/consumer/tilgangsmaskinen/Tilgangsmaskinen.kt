@@ -53,7 +53,7 @@ open class TilgangsmaskinenImpl(
                     response.isSuccessful -> TilgangsMaskinResponse(harTilgang = true)
                     response.isClientError -> {
                         val errorObject =
-                            objectMapper.readValue(response.body as String, ProblemDetailResponse::class.java)
+                            objectMapper.readValue(response.body?.string(), ProblemDetailResponse::class.java)
                         tjenestekallLogger.error(
                             header = "ClientException ved tilgang sjekking fra tilgangsmaskin",
                             fields =
