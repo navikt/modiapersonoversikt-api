@@ -34,9 +34,7 @@ open class DagpengerServiceImpl(
 ) : DagpengerService {
     override fun hentDagpenger(datodelingRequest: DatadelingRequestDagpengerDto): Dagpenger {
         val response = client.dagpengerDatadelingV1BeregningerPost(datodelingRequest)
-        // the above should throw an exception upon failure, so we can probably
-        // assume we have a DatadelingResponseDagpengerDto. TODO consider
-        // instead throwing some custom exception if it still somehow is null.
+        // Den genererte klienten kan returnere null; håndter dette som en tom liste.
         return Dagpenger((response ?: listOf()).sortedByDescending { it.fraOgMed })
     }
 }
