@@ -4,8 +4,8 @@ import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.api.domain.aap.generated.models.NonavaapapiinternVedtakUtenUtbetalingDTO
 import no.nav.modiapersonoversikt.consumer.aap.AapApi
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
+import no.nav.modiapersonoversikt.consumer.dagpenger.Dagpenger
 import no.nav.modiapersonoversikt.consumer.dagpenger.DagpengerService
-import no.nav.modiapersonoversikt.consumer.dagpenger.PseudoDagpengerVedtak
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
 import no.nav.modiapersonoversikt.consumer.foreldrepenger.Foreldrepenger
 import no.nav.modiapersonoversikt.consumer.foreldrepenger.ForeldrepengerService
@@ -13,8 +13,8 @@ import no.nav.modiapersonoversikt.consumer.pensjon.PensjonSak
 import no.nav.modiapersonoversikt.consumer.pensjon.PensjonService
 import no.nav.modiapersonoversikt.consumer.spokelse.SpokelseClient
 import no.nav.modiapersonoversikt.consumer.spokelse.SykepengerSpokelse
+import no.nav.modiapersonoversikt.consumer.tiltakspenger.Tiltakspenger
 import no.nav.modiapersonoversikt.consumer.tiltakspenger.TiltakspengerService
-import no.nav.modiapersonoversikt.consumer.tiltakspenger.generated.models.HentVedtaksperioder200ResponseInner
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -77,7 +77,7 @@ class YtelseController
         @PostMapping("tiltakspenger")
         fun hentTiltakspenger(
             @RequestBody fnrRequest: FnrDatoRangeRequest,
-        ): List<HentVedtaksperioder200ResponseInner> =
+        ): List<Tiltakspenger> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
@@ -149,7 +149,7 @@ class YtelseController
         @PostMapping("dagpenger")
         fun hentDagpenger(
             @RequestBody datodelingRequest: DatadelingRequestDagpengerDto,
-        ): PseudoDagpengerVedtak =
+        ): Dagpenger =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(datodelingRequest.personIdent)))
                 .get(
@@ -159,6 +159,6 @@ class YtelseController
                         AuditIdentifier.FNR to datodelingRequest.personIdent,
                     ),
                 ) {
-                    dagpengerService.hentVedtak(datodelingRequest)
+                    dagpengerService.hentDagpenger(datodelingRequest)
                 }
     }

@@ -1,9 +1,11 @@
 {
   "perioder" : [ "java.util.Collections$SingletonList", [ {
-    "fraOgMedDato" : "2025-01-03",
+    "fraOgMed" : "2025-01-03",
+    "gjenståendeDager" : 200,
     "kilde" : "DP_SAK",
-    "tilOgMedDato" : null,
-    "ytelseType" : "DAGPENGER_PERMITTERING_FISKEINDUSTRI"
+    "sats" : 1000,
+    "tilOgMed" : "2025-01-17",
+    "utbetaltBeløp" : 950
   } ] ],
   "eldsteFraOgMedDato" : "2025-01-03"
 }
