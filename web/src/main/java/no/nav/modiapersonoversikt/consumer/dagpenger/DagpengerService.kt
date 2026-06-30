@@ -2,45 +2,41 @@ package no.nav.modiapersonoversikt.consumer.dagpenger
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.apis.InterntApi
+import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.BeregnetDagDagpengerDto
 import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.DatadelingRequestDagpengerDto
-import no.nav.modiapersonoversikt.consumer.dagpenger.generated.models.PeriodeDagpengerDto
 import java.time.LocalDate
 
 /**
- * Not actually a vedtak, but rather a collection of periods in which payment is
- * granted. Treated as a vedtak by our frontend for more compact display. To be
- * replaced if/when the /vedtak end point is activated.
+ * BeregnetDagDagpengerDto representerer utbetalinger av dagpenger basert på meldekort som sendes hver 14. dag.
+ * Meldekortet beregnes og en får utbetalt en sum per dag i den 14. dagers perioden.
  */
-data class PseudoDagpengerVedtak(
-    val perioder: List<PeriodeDagpengerDto>,
+data class Dagpenger(
+    val perioder: List<BeregnetDagDagpengerDto>,
 ) {
     @get:JsonProperty
     val eldsteFraOgMedDato: LocalDate? get() =
-        perioder
-            .map {
-                it.fraOgMedDato
-            }.sorted()
-            .firstOrNull()
+        perioder.minOfOrNull {
+            it.fraOgMed
+        }
 }
 
 interface DagpengerService {
-    fun hentVedtak(datodelingRequest: DatadelingRequestDagpengerDto): PseudoDagpengerVedtak
+    fun hentDagpenger(datodelingRequest: DatadelingRequestDagpengerDto): Dagpenger
 }
 
 /**
- * Our implementation of vedtak from dagpenger. The periods come sorted in
+ * The periods come sorted in
  * ascending order from dp-datadeling, as far as we can tell. We'd like to
- * display them in descending order, so we simply sort them thusly in
- * hentVedtak.
+ * display them in descending order.
  */
 open class DagpengerServiceImpl(
     val client: InterntApi,
 ) : DagpengerService {
-    override fun hentVedtak(datodelingRequest: DatadelingRequestDagpengerDto): PseudoDagpengerVedtak {
-        val response = client.dagpengerDatadelingV1PerioderPost(datodelingRequest)
+    override fun hentDagpenger(datodelingRequest: DatadelingRequestDagpengerDto): Dagpenger {
+        val response = client.dagpengerDatadelingV1BeregningerPost(datodelingRequest)
         // the above should throw an exception upon failure, so we can probably
         // assume we have a DatadelingResponseDagpengerDto. TODO consider
         // instead throwing some custom exception if it still somehow is null.
-        return PseudoDagpengerVedtak((response?.perioder ?: listOf()).sortedByDescending { it.fraOgMedDato })
+        return Dagpenger((response ?: listOf()).sortedByDescending { it.fraOgMed })
     }
 }
