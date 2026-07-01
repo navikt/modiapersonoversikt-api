@@ -307,6 +307,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>oppslag-arbeidssoekerregisteret</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.getunleash</groupId>
             <artifactId>unleash-client-java</artifactId>
             <version>12.2.1</version>

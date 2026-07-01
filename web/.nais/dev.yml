@@ -99,6 +99,8 @@ spec:
           namespace: tbd
         - application: dp-datadeling
           namespace: teamdagpenger
+        - application: paw-arbeidssoekerregisteret-api-oppslag-v2
+          namespace: paw
     inbound:
       rules:
         - application: modiapersonoversikt
@@ -227,3 +229,7 @@ spec:
       value: "http://dp-datadeling.teamdagpenger"
     - name: DAGPENGER_SCOPE
       value: "dev-gcp:teamdagpenger:dp-datadeling"
+    - name: ARBEIDSSOEKERREGISTERET_URL
+      value: "http://paw-arbeidssoekerregisteret-api-oppslag-v2.paw"
+    - name: ARBEIDSSOEKERREGISTERET_SCOPE
+      value: "dev-gcp:paw:paw-arbeidssoekerregisteret-api-oppslag-v2"
