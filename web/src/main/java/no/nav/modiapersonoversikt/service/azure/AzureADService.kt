@@ -51,7 +51,7 @@ open class AzureADServiceImpl(
 
             return modiaTilganger
         } catch (e: Exception) {
-            log.error("Kall til azureAD feilet", ident, e)
+            log.error("Kall til azureAD feilet for {}", ident, e)
             return listOf()
         }
     }
@@ -88,7 +88,7 @@ open class AzureADServiceImpl(
                 requireNotNull(EnhetId(it.displayName.removePrefix(enhetRolePrefix)))
             }
         } catch (e: Exception) {
-            log.error("Kall til azureAD feilet", ident, e)
+            log.error("Kall til azureAD feilet for {}", ident, e)
             return listOf()
         }
     }
@@ -104,7 +104,7 @@ open class AzureADServiceImpl(
                 requireNotNull(it.displayName.removePrefix(temaRolePrefix))
             }
         } catch (e: Exception) {
-            log.error("Kall til azureAD feilet", ident, e)
+            log.error("Kall til azureAD feilet for {}", ident, e)
             return listOf()
         }
     }
@@ -120,7 +120,7 @@ open class AzureADServiceImpl(
                 )
             }
         } catch (e: Exception) {
-            log.error("Kall til azureAD feilet", enhetId, e)
+            log.error("Kall til azureAD feilet for {}", enhetId, e)
             return listOf()
         }
     }
