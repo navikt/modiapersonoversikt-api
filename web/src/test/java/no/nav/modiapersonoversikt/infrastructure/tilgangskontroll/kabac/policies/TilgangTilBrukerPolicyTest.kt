@@ -3,7 +3,9 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policie
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.client.nom.NomClient
-import no.nav.common.types.identer.*
+import no.nav.common.types.identer.EnhetId
+import no.nav.common.types.identer.Fnr
+import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.TilgangsMaskinResponse
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsmaskinen
@@ -34,53 +36,65 @@ class TilgangTilBrukerPolicyTest {
 
     @Test
     fun `permit om veileder har tilgang til 0000-ga-modia-oppfolging og brukeren`() {
-        every { azureADService.hentRollerForVeileder(veilederIdent) } returns listOf("0000-ga-modia-oppfolging")
-        every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
-        every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
-        policy.assertPermit(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        withTestGruppeIder {
+            every { azureADService.hentRollerForVeileder(veilederIdent) } returns listOf("uuid-modia-oppfolging")
+            every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
+            every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
+            policy.assertPermit(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        }
     }
 
     @Test
     fun `permit om veileder har tilgang til bd06_modiagenerelltilgang og brukeren`() {
-        every { azureADService.hentRollerForVeileder(veilederIdent) } returns listOf("0000-ga-bd06_modiagenerelltilgang")
-        every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
-        every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
-        policy.assertPermit(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        withTestGruppeIder {
+            every { azureADService.hentRollerForVeileder(veilederIdent) } returns listOf("uuid-modia-generell")
+            every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
+            every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
+            policy.assertPermit(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        }
     }
 
     @Test
     fun `permit om veileder har tilgang til modia og brukeren men har ingen enhet`() {
-        every { azureADService.hentRollerForVeileder(veilederIdent) } returns
-            listOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-gosys_nasjonal")
-        every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf()
-        every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
-        policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        withTestGruppeIder {
+            every { azureADService.hentRollerForVeileder(veilederIdent) } returns
+                    listOf("uuid-modia-generell")
+            every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf()
+            every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
+            policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        }
     }
 
     @Test
     fun `permit om veileder har tilgang bruker men ikke til modia og og ingen enhet`() {
-        every { azureADService.hentRollerForVeileder(veilederIdent) } returns listOf("annen-rolle")
-        every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf()
-        every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
-        policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        withTestGruppeIder {
+            every { azureADService.hentRollerForVeileder(veilederIdent) } returns listOf("annen-uuid")
+            every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf()
+            every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
+            policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        }
     }
 
     @Test
     fun `permit om veileder har tilgang til modia og enhet men ikke til brukeren`() {
-        every { azureADService.hentRollerForVeileder(veilederIdent) } returns
-            listOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-gosys_nasjonal")
-        every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
-        every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(false)
-        policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        withTestGruppeIder {
+            every { azureADService.hentRollerForVeileder(veilederIdent) } returns
+                    listOf("uuid-modia-generell")
+            every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
+            every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(false)
+            policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        }
     }
 
     @Test
     fun `deny om tilgangsmaskinen feiler`() {
-        every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns null
-        every { azureADService.hentRollerForVeileder(veilederIdent) } returns
-            listOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-gosys_nasjonal")
-        every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
-        policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        withTestGruppeIder {
+            every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns null
+            every { azureADService.hentRollerForVeileder(veilederIdent) } returns
+                    listOf("uuid-modia-generell")
+            every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
+            policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
+        }
     }
 
     private fun fellesPipTjenester(): Array<Kabac.PolicyInformationPoint<*>> =

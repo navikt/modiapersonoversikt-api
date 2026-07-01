@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleLis
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 import no.nav.personoversikt.common.kabac.Kabac
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.withTestGruppeIder
 import no.nav.personoversikt.common.kabac.impl.PolicyDecisionPointImpl
 import no.nav.personoversikt.common.kabac.impl.PolicyEnforcementPointImpl
 import no.nav.personoversikt.common.kabac.utils.Key
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Test
 internal class TilgangskontrollKabacTest {
     private val rollelistePip =
         object : Kabac.PolicyInformationPoint<RolleListe> {
-            override fun provide(ctx: Kabac.EvaluationContext): RolleListe = RolleListe("0000-ga-bd06_modiagenerelltilgang")
+            override fun provide(ctx: Kabac.EvaluationContext): RolleListe = RolleListe("uuid-modia-generell")
 
             override val key: Key<RolleListe> = VeiledersRollerPip.key
         }
@@ -35,13 +36,15 @@ internal class TilgangskontrollKabacTest {
 
     @Test
     internal fun `should be able to run in parallell`(): Unit =
-        runBlocking {
-            inParallell(times = 64) {
-                tilgangskontroll
-                    .check(Policies.tilgangTilModia)
-                    .get(Audit.skipAuditLog) {
-                        "Some content"
-                    }
+        withTestGruppeIder {
+            runBlocking {
+                inParallell(times = 64) {
+                    tilgangskontroll
+                        .check(Policies.tilgangTilModia)
+                        .get(Audit.skipAuditLog) {
+                            "Some content"
+                        }
+                }
             }
         }
 
