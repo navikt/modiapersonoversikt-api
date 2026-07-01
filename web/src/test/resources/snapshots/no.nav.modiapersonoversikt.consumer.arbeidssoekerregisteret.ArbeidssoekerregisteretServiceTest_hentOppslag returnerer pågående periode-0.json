@@ -1,0 +1,24 @@
+{
+  "avsluttet" : null,
+  "bekreftelse" : null,
+  "egenvurdering" : null,
+  "id" : "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "identitetsnummer" : "12345678910",
+  "opplysning" : null,
+  "profilering" : null,
+  "startet" : {
+    "sendtInnAv" : {
+      "aarsak" : "Registrering",
+      "kilde" : "VEILARBREGISTRERING",
+      "tidspunkt" : "2024-01-15T10:00:00Z",
+      "tidspunktFraKilde" : null,
+      "utfoertAv" : {
+        "id" : "12345678910",
+        "sikkerhetsnivaa" : null,
+        "type" : "SLUTTBRUKER"
+      }
+    },
+    "tidspunkt" : "2024-01-15T10:00:00Z",
+    "type" : "PERIODE_STARTET_V1"
+  }
+}
