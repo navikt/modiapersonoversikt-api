@@ -69,14 +69,15 @@ class AzureADServiceImplTest {
                 val ident = NavIdent("Z9999")
                 every { msGraphClient.hentAzureIdMedNavIdent(mockToken, ident.get()) } returns mockUserId
                 every { mockResponseBody.string() } returns
-                        objectMapper.writeValueAsString(
-                            mapOf(
-                                "value" to listOf(
+                    objectMapper.writeValueAsString(
+                        mapOf(
+                            "value" to
+                                listOf(
                                     "uuid-modia-generell",
-                                    "uuid-modia-oppfolging"
-                                )
-                            )
-                        )
+                                    "uuid-modia-oppfolging",
+                                ),
+                        ),
+                    )
                 val roles = azureADService.hentRollerForVeileder(ident)
                 assertEquals(listOf("uuid-modia-generell", "uuid-modia-oppfolging"), roles)
             }
@@ -155,7 +156,7 @@ class AzureADServiceImplTest {
                 every {
                     msGraphClient.hentAzureIdMedNavIdent(
                         mockToken,
-                        ident.get()
+                        ident.get(),
                     )
                 } throws RuntimeException("Test Exception")
                 val roles = azureADService.hentRollerForVeileder(ident)
@@ -180,8 +181,7 @@ class AzureADServiceImplTest {
         }
     }
 
-    private fun createGroupData(displayName: String) =
-        AdGroupData(AzureObjectId(UUID.randomUUID().toString()), displayName)
+    private fun createGroupData(displayName: String) = AdGroupData(AzureObjectId(UUID.randomUUID().toString()), displayName)
 
     private fun createUserData(
         givenName: String,
@@ -195,4 +195,3 @@ class AzureADServiceImplTest {
         return userData
     }
 }
-

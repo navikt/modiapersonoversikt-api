@@ -58,7 +58,7 @@ class TilgangTilBrukerPolicyTest {
     fun `permit om veileder har tilgang til modia og brukeren men har ingen enhet`() {
         withTestGruppeIder {
             every { azureADService.hentRollerForVeileder(veilederIdent) } returns
-                    listOf("uuid-modia-generell")
+                listOf("uuid-modia-generell")
             every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf()
             every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(true)
             policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
@@ -79,7 +79,7 @@ class TilgangTilBrukerPolicyTest {
     fun `permit om veileder har tilgang til modia og enhet men ikke til brukeren`() {
         withTestGruppeIder {
             every { azureADService.hentRollerForVeileder(veilederIdent) } returns
-                    listOf("uuid-modia-generell")
+                listOf("uuid-modia-generell")
             every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
             every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns TilgangsMaskinResponse(false)
             policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
@@ -91,7 +91,7 @@ class TilgangTilBrukerPolicyTest {
         withTestGruppeIder {
             every { tilgangsmaskinen.sjekkTilgang(veilederIdent, fnr) } returns null
             every { azureADService.hentRollerForVeileder(veilederIdent) } returns
-                    listOf("uuid-modia-generell")
+                listOf("uuid-modia-generell")
             every { azureADService.hentEnheterForVeileder(veilederIdent) } returns listOf(EnhetId("0202"))
             policy.assertDeny(*fellesPipTjenester(), CommonAttributes.FNR.withValue(fnr))
         }

@@ -22,12 +22,13 @@ object AdGruppeConfig {
         get() = EnvironmentUtils.getRequiredProperty("EGNE_ANSATTE_ID")
 
     val alleModiaTilgangsGrupper: List<String>
-        get() = listOf(
-            modiaGenerellTilgang,
-            modiaOppfolging,
-            syfoSensitiv,
-            strengtFortroligAdresse,
-            fortroligAdresse,
-            egneAnsatte,
-        )
+        get() =
+            listOf(
+                modiaGenerellTilgang,
+                modiaOppfolging,
+                syfoSensitiv,
+                strengtFortroligAdresse,
+                fortroligAdresse,
+                egneAnsatte,
+            )
 }

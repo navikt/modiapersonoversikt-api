@@ -35,7 +35,9 @@ open class AzureADServiceImpl(
     private val temaRolePrefix = "0000-GA-TEMA_"
     private val enhetRolePrefix = "0000-GA-ENHET_"
 
-    private data class CheckMemberObjectsResponse(val value: List<String>)
+    private data class CheckMemberObjectsResponse(
+        val value: List<String>,
+    )
 
     override fun hentRollerForVeileder(ident: NavIdent): List<String> {
         val token = tokenClient.exchangeOnBehalfOfToken(AuthContextUtils.requireToken())
