@@ -95,12 +95,25 @@ internal class TilgangTilModiaPolicyTest {
 }
 
 internal fun withTestGruppeIder(fn: TestUtils.UnsafeRunneable) {
-    TestUtils.withEnv("MODIA_GENERELL_TILGANG_ID", "uuid-modia-generell") {
-        TestUtils.withEnv("MODIA_OPPFOLGING_ID", "uuid-modia-oppfolging") {
-            TestUtils.withEnv("SYFO_SENSITIV_ID", "uuid-syfo-sensitiv") {
-                TestUtils.withEnv("STRENGT_FORTROLIG_ADRESSE_ID", "uuid-strengt-fortrolig") {
-                    TestUtils.withEnv("FORTROLIG_ADRESSE_ID", "uuid-fortrolig") {
-                        TestUtils.withEnv("EGNE_ANSATTE_ID", "uuid-egne-ansatte") {
+    fun withProp(name: String, value: String, inner: () -> Unit) {
+        val original = System.getProperty(name)
+        System.setProperty(name, value)
+        try {
+            inner()
+        } finally {
+            if (original == null) {
+                System.clearProperty(name)
+            } else {
+                System.setProperty(name, original)
+            }
+        }
+    }
+    withProp("MODIA_GENERELL_TILGANG_ID", "uuid-modia-generell") {
+        withProp("MODIA_OPPFOLGING_ID", "uuid-modia-oppfolging") {
+            withProp("SYFO_SENSITIV_ID", "uuid-syfo-sensitiv") {
+                withProp("STRENGT_FORTROLIG_ADRESSE_ID", "uuid-strengt-fortrolig") {
+                    withProp("FORTROLIG_ADRESSE_ID", "uuid-fortrolig") {
+                        withProp("EGNE_ANSATTE_ID", "uuid-egne-ansatte") {
                             fn.call()
                         }
                     }
