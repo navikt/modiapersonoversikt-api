@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersSkjermingPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
+import no.nav.modiapersonoversikt.service.azure.AdGruppeConfig
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
@@ -11,7 +12,8 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 object TilgangTilBrukerMedSkjermingPolicy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(TilgangTilBrukerMedSkjermingPolicy)
-    private val skjermingRoller = RolleListe("0000-ga-egne_ansatte")
+    private val skjermingRoller
+        get() = RolleListe(AdGruppeConfig.egneAnsatte)
 
     override fun evaluate(ctx: EvaluationContext): Decision {
         val veilederRoller = ctx.getValue(VeiledersRollerPip)

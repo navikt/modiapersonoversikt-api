@@ -113,6 +113,18 @@ spec:
       value: "https://graph.microsoft.com/v1.0"
     - name: MS_GRAPH_SCOPE
       value: "https://graph.microsoft.com/.default"
+    - name: MODIA_GENERELL_TILGANG_ID
+      value: "67a06857-0028-4a90-bf4c-9c9a92c7d733"
+    - name: MODIA_OPPFOLGING_ID
+      value: "554a66fb-fbec-4b92-90c1-0d9c085c362c"
+    - name: SYFO_SENSITIV_ID
+      value: "c8957e0a-909c-4b62-8e11-93aae6d295e6"
+    - name: STRENGT_FORTROLIG_ADRESSE_ID
+      value: "a1b518e2-3947-478d-8929-e5d685c47cac"
+    - name: FORTROLIG_ADRESSE_ID
+      value: "2e1dc582-f762-4510-a660-88bf68fb7128"
+    - name: EGNE_ANSATTE_ID
+      value: "dbe4ad45-320b-4e9a-aaa1-73cca4ee124d"
     - name: FELLES_KODEVERK_URL
       value: "http://kodeverk-api.team-rocket"
     - name: FELLES_KODEVERK_SCOPE
