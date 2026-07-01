@@ -8,6 +8,8 @@ import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Dagpengeytelse
 import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Vedtak
 import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Ytelse
 import no.nav.modiapersonoversikt.commondomain.Veileder
+import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.ArbeidssoekerregisteretService
+import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.OppslagArbeidssoekerregisteret
 import no.nav.modiapersonoversikt.consumer.arenainfotrygdproxy.ArenaInfotrygdApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.Gjeldende14aVedtakResponse
@@ -31,6 +33,7 @@ class OppfolgingController
         private val veilarbvedtaksstotteService: VeilarbvedtaksstotteService,
         private val service: ArbeidsrettetOppfolging.Service,
         private val tilgangskontroll: Tilgangskontroll,
+        private val arbeidssoekerregisteretService: ArbeidssoekerregisteretService,
     ) {
         @PostMapping
         fun hent(
@@ -153,6 +156,25 @@ class OppfolgingController
                         rettighetsgruppe = response.bruker?.rettighetsgruppe,
                     )
                 }
+
+        @PostMapping("/oppslag-arbeidssoekerregisteret")
+        fun hentOppslagArbeidssoekerregisteret(
+            @RequestBody fnrRequest: FnrRequest,
+        ): OppslagArbeidssoekerregisteret? {
+            var result: OppslagArbeidssoekerregisteret? = null
+            tilgangskontroll
+                .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
+                .get(
+                    Audit.describe(
+                        Audit.Action.READ,
+                        AuditResources.Person.oppslagArbeidssoekerregisteret,
+                        AuditIdentifier.FNR to fnrRequest.fnr,
+                    ),
+                ) {
+                    result = arbeidssoekerregisteretService.hentOppslag(fnrRequest.fnr)
+                }
+            return result
+        }
 
         private fun hentYtelser(ytelser: List<Ytelse>?): List<YtelseDTO> {
             if (ytelser == null) return emptyList()
