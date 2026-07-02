@@ -4,9 +4,9 @@ import kotlinx.coroutines.*
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
-import no.nav.modiapersonoversikt.utils.withTestGruppeIder
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
+import no.nav.modiapersonoversikt.utils.withTestGruppeIder
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.impl.PolicyDecisionPointImpl
 import no.nav.personoversikt.common.kabac.impl.PolicyEnforcementPointImpl
