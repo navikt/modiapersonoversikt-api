@@ -11,12 +11,14 @@ import no.nav.modiapersonoversikt.infrastructure.ping.Pingable
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 
+typealias Tiltakspenger = HentVedtaksperioder200ResponseInner
+
 interface TiltakspengerService {
     fun hentVedtakPerioder(
         fodselsnummer: Fnr,
         fom: String?,
         tom: String?,
-    ): List<HentVedtaksperioder200ResponseInner>
+    ): List<Tiltakspenger>
 }
 
 @CacheConfig(cacheNames = ["tiltakspengerCache"], keyGenerator = "userkeygenerator")
