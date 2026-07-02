@@ -73,7 +73,8 @@ open class AzureADServiceImpl(
             if (!response.isSuccessful) {
                 throw IllegalStateException("Kall til azureAD feilet med HTTP ${response.code}")
             }
-            return objectMapper.readValue(response.body?.string(), CheckMemberObjectsResponse::class.java).value
+            val responseBody = response.body?.string() ?: throw IllegalStateException("Kall til azureAD feilet: tom respons-body")
+            return objectMapper.readValue(responseBody, CheckMemberObjectsResponse::class.java).value
         }
     }
 
