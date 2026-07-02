@@ -45,6 +45,9 @@ open class AzureADServiceImpl(
             val userId = msGraphClient.hentAzureIdMedNavIdent(token, ident.get())
             val modiaTilganger = checkMemberObjects(token, userId, AdGruppeConfig.alleModiaTilgangsGrupper)
 
+            // TODO: Fjern før produksjon — midlertidig debug-logging
+            log.info("[DEBUG] hentRollerForVeileder: ident=$ident, tilganger=$modiaTilganger")
+
             if (modiaTilganger.isEmpty()) {
                 log.warn("Bruker $ident er ikke medlem av noen tilgangsgrupper")
             }
