@@ -9,7 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
-import no.nav.modiapersonoversikt.utils.TestUtils
+import no.nav.modiapersonoversikt.utils.withTestGruppeIder
 import no.nav.personoversikt.common.kabac.KabacTestUtils
 import org.junit.jupiter.api.Test
 
@@ -90,35 +90,6 @@ internal class TilgangTilModiaPolicyTest {
                     VeiledersEnheterPip.key.withValue(emptyList()),
                     VeiledersRollerPip(ansattService),
                 ).withMessage("Veileder har ikke tilgang til noen enheter")
-        }
-    }
-}
-
-internal fun withTestGruppeIder(fn: TestUtils.UnsafeRunneable) {
-    fun withProp(name: String, value: String, inner: () -> Unit) {
-        val original = System.getProperty(name)
-        System.setProperty(name, value)
-        try {
-            inner()
-        } finally {
-            if (original == null) {
-                System.clearProperty(name)
-            } else {
-                System.setProperty(name, original)
-            }
-        }
-    }
-    withProp("MODIA_GENERELL_TILGANG_ID", "uuid-modia-generell") {
-        withProp("MODIA_OPPFOLGING_ID", "uuid-modia-oppfolging") {
-            withProp("SYFO_SENSITIV_ID", "uuid-syfo-sensitiv") {
-                withProp("STRENGT_FORTROLIG_ADRESSE_ID", "uuid-strengt-fortrolig") {
-                    withProp("FORTROLIG_ADRESSE_ID", "uuid-fortrolig") {
-                        withProp("EGNE_ANSATTE_ID", "uuid-egne-ansatte") {
-                            fn.call()
-                        }
-                    }
-                }
-            }
         }
     }
 }

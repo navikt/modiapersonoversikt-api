@@ -19,7 +19,7 @@ import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.service.ansattservice.domain.Ansatt
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
-import no.nav.modiapersonoversikt.utils.TestUtils
+import no.nav.modiapersonoversikt.utils.withTestGruppeIder
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -161,35 +161,6 @@ class AzureADServiceImplTest {
                 } throws RuntimeException("Test Exception")
                 val roles = azureADService.hentRollerForVeileder(ident)
                 assertTrue(roles.isEmpty())
-            }
-        }
-    }
-
-    private fun withTestGruppeIder(fn: TestUtils.UnsafeRunneable) {
-        fun withProp(name: String, value: String, inner: () -> Unit) {
-            val original = System.getProperty(name)
-            System.setProperty(name, value)
-            try {
-                inner()
-            } finally {
-                if (original == null) {
-                    System.clearProperty(name)
-                } else {
-                    System.setProperty(name, original)
-                }
-            }
-        }
-        withProp("MODIA_GENERELL_TILGANG_ID", "uuid-modia-generell") {
-            withProp("MODIA_OPPFOLGING_ID", "uuid-modia-oppfolging") {
-                withProp("SYFO_SENSITIV_ID", "uuid-syfo-sensitiv") {
-                    withProp("STRENGT_FORTROLIG_ADRESSE_ID", "uuid-strengt-fortrolig") {
-                        withProp("FORTROLIG_ADRESSE_ID", "uuid-fortrolig") {
-                            withProp("EGNE_ANSATTE_ID", "uuid-egne-ansatte") {
-                                fn.call()
-                            }
-                        }
-                    }
-                }
             }
         }
     }

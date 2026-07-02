@@ -16,6 +16,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattServiceImpl
 import no.nav.modiapersonoversikt.service.azure.AzureADService
+import no.nav.modiapersonoversikt.utils.withTestGruppeIder
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.KabacTestUtils
 import org.junit.jupiter.api.Test
