@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret
 
+import com.fasterxml.jackson.annotation.JsonTypeName
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.apis.DefaultApi
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.models.AggregertPeriodeArbeidssoekerregisteretDto
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.models.QueryRequestArbeidssoekerregisteretDto
@@ -11,6 +12,7 @@ interface ArbeidssoekerregisteretService {
     fun hentOppslag(fnr: String): OppslagArbeidssoekerregisteret?
 }
 
+@JsonTypeName("IDENTITETSNUMMER")
 private data class IdentitetsnummerRequest(
     override val identitetsnummer: String,
     override val type: QueryRequestArbeidssoekerregisteretDto.Type = QueryRequestArbeidssoekerregisteretDto.Type.IDENTITETSNUMMER,

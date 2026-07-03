@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.OffsetDateTime
 import java.util.UUID
+import kotlin.test.assertEquals
 
 internal class ArbeidssoekerregisteretServiceTest {
     private val api: DefaultApi = mockk()
@@ -81,7 +82,7 @@ internal class ArbeidssoekerregisteretServiceTest {
 
         verify { api.apiV3SnapshotPost(capture(requestSlot)) }
         val request = requestSlot.captured
-        assert(request.type == QueryRequestArbeidssoekerregisteretDto.Type.IDENTITETSNUMMER)
-        assert(request.identitetsnummer == fnr)
+        assertEquals(request.type, QueryRequestArbeidssoekerregisteretDto.Type.IDENTITETSNUMMER)
+        assertEquals(request.identitetsnummer, fnr)
     }
 }
