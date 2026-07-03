@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.apis.DefaultApi
+import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.infrastructure.ClientException
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.models.AggregertPeriodeArbeidssoekerregisteretDto
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.models.BrukerArbeidssoekerregisteretDto
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.models.BrukerTypeArbeidssoekerregisteretDto
@@ -14,6 +15,7 @@ import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.mod
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -71,6 +73,22 @@ internal class ArbeidssoekerregisteretServiceTest {
         val result = service.hentOppslag(fnr)
 
         assertNull(result)
+    }
+
+    @Test
+    fun `hentOppslag returnerer null når API svarer 404`() {
+        every { api.apiV3SnapshotPost(any()) } throws ClientException(statusCode = 404)
+
+        val result = service.hentOppslag(fnr)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `hentOppslag kaster videre ved andre ClientException-statuser`() {
+        every { api.apiV3SnapshotPost(any()) } throws ClientException(statusCode = 500)
+
+        assertThrows<ClientException> { service.hentOppslag(fnr) }
     }
 
     @Test

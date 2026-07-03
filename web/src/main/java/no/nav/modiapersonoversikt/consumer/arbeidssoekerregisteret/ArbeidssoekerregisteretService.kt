@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret
 
 import com.fasterxml.jackson.annotation.JsonTypeName
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.apis.DefaultApi
+import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.infrastructure.ClientException
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.models.AggregertPeriodeArbeidssoekerregisteretDto
 import no.nav.modiapersonoversikt.consumer.arbeidssoekerregisteret.generated.models.QueryRequestArbeidssoekerregisteretDto
 import java.util.UUID
@@ -22,5 +23,11 @@ private data class IdentitetsnummerRequest(
 open class ArbeidssoekerregisteretServiceImpl(
     private val api: DefaultApi,
 ) : ArbeidssoekerregisteretService {
-    override fun hentOppslag(fnr: String): OppslagArbeidssoekerregisteret? = api.apiV3SnapshotPost(IdentitetsnummerRequest(fnr))
+    override fun hentOppslag(fnr: String): OppslagArbeidssoekerregisteret? =
+        try {
+            api.apiV3SnapshotPost(IdentitetsnummerRequest(fnr))
+        } catch (e: ClientException) {
+            // Når det ikke finnes oppslag på personen returnerer APIet 403. Vi ønsker å returnere null med status 200
+            if (e.statusCode == 404) null else throw e
+        }
 }
