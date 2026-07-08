@@ -98,10 +98,12 @@ class SakerServiceImpl : SakerService {
         }
 
         private fun SakerService.Resultat.fjernSakerSomIkkeSkalJournalforesMot(): SakerService.Resultat =
-            // Temakode AKT (Aktivitetsplan med dialoger) skal ikke kunne journalføres mot
-            // Temakode TIL (Tiltak) skal ikke kunne journalføres mot
+        // Temakode AKT (Aktivitetsplan med dialoger) skal ikke kunne journalføres mot
+        // Temakode TIL (Tiltak) skal ikke kunne journalføres mot
+            // Temakode VEN (Ventelønn) skal ikke kunne journalføres mot
             this.copy(
-                saker = this.saker.filter { it.temaKode != "AKT" && it.temaKode != "TIL" }.toMutableList(),
+                saker = this.saker.filter { it.temaKode != "AKT" && it.temaKode != "TIL" && it.temaKode != "VEN" }
+                    .toMutableList(),
             )
     }
 }
