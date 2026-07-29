@@ -1,25 +1,28 @@
 package no.nav.modiapersonoversikt.consumer.veilarboppfolging
 
+import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
+import io.ktor.client.request.header
+import kotlinx.coroutines.runBlocking
 import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
-import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
-import no.nav.modiapersonoversikt.rest.common.FnrRequest
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfolgingStatus
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfolgingsEnhetOgVeileder
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
+import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
-import kotlin.reflect.KClass
 
 @CacheConfig(cacheNames = ["oppfolgingsinfoCache"], keyGenerator = "userkeygenerator")
 open class ArbeidsrettetOppfolgingServiceImpl(
     apiUrl: String,
     private val ansattService: AnsattService,
-    private val httpClient: OkHttpClient,
+    private val graphQLClient: GraphQLKtorClient,
+    private val oboTokenClient: BoundedOnBehalfOfTokenClient,
 ) : ArbeidsrettetOppfolging.Service {
     private val url = apiUrl.removeSuffix("/")
 
@@ -45,11 +48,20 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     }
 
     @Cacheable
-    override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status =
-        httpClient.fetchJson(
-            url = "$url/underoppfolging?fnr=${fodselsnummer.get()}",
-            type = ArbeidsrettetOppfolging.Status::class,
+    override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
+        val result =
+            runBlocking {
+                graphQLClient.execute(
+                    HentOppfolgingStatus(HentOppfolgingStatus.Variables(fnr = fodselsnummer.get())),
+                    userTokenAuthorizationHeaders,
+                )
+            }
+        val data = requireNotNull(result.data) { "Mangler data i HentOppfolgingStatus-respons" }
+        return ArbeidsrettetOppfolging.Status(
+            underOppfolging = data.oppfolging?.erUnderOppfolging ?: false,
+            erManuell = data.brukerStatus?.manuell?.erManuell ?: false,
         )
+    }
 
     override fun ping() {
         val request =
@@ -66,37 +78,34 @@ open class ArbeidsrettetOppfolgingServiceImpl(
             ?.string()
     }
 
-    private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder =
-        httpClient.fetchJson(
-            url = "$url/v2/person/hent-oppfolgingsstatus",
-            requestBody = FnrRequest(fnr = fodselsnummer.get()).toRequestBody(),
-            type = ArbeidsrettetOppfolging.EnhetOgVeileder::class,
+    private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder {
+        val result =
+            runBlocking {
+                graphQLClient.execute(
+                    HentOppfolgingsEnhetOgVeileder(
+                        HentOppfolgingsEnhetOgVeileder.Variables(fnr = fodselsnummer.get()),
+                    ),
+                    userTokenAuthorizationHeaders,
+                )
+            }
+        val data = requireNotNull(result.data) { "Mangler data i HentOppfolgingsEnhetOgVeileder-respons" }
+        return ArbeidsrettetOppfolging.EnhetOgVeileder(
+            oppfolgingsenhet =
+                data.oppfolgingsEnhet?.enhet?.let {
+                    ArbeidsrettetOppfolging.OppfolgingsEnhet(
+                        enhetId = it.id,
+                        navn = it.navn,
+                    )
+                },
+            veilederId = data.brukerStatus?.veilederTilordning?.veilederIdent,
         )
+    }
 
-    private fun <T : Any> OkHttpClient.fetchJson(
-        url: String,
-        requestBody: RequestBody? = null,
-        type: KClass<T>,
-    ): T {
-        val request =
-            Request
-                .Builder()
-                .url(url)
-                .apply {
-                    requestBody?.let {
-                        this.post(it)
-                    }
-                }.build()
-        val response = this.newCall(request).execute()
-        val statusCode = response.code
-        val body = response.body?.string()
-
-        if (statusCode in 200 until 300) {
-            return objectMapper.readValue(body, type.java)
-        } else {
-            throw IllegalStateException("Forventet 200-range svar og body fra oppfolging-api, men fikk: $statusCode\n$body")
-        }
+    private val userTokenAuthorizationHeaders: HeadersBuilder = {
+        val token = AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
+        val callId = getCallId()
+        header("Authorization", "Bearer $token")
+        header("Content-Type", "application/json")
+        header("X-Correlation-ID", callId)
     }
 }
-
-fun FnrRequest.toRequestBody(): RequestBody = objectMapper.writeValueAsString(this).toRequestBody("application/json".toMediaType())
