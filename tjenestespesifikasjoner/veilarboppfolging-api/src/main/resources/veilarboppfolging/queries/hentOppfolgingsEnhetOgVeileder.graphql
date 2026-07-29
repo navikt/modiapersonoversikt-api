@@ -1,0 +1,13 @@
+query HentOppfolgingsEnhetOgVeileder($fnr: String!) {
+    oppfolgingsEnhet(fnr: $fnr) {
+        enhet {
+            id
+            navn
+        }
+    }
+    brukerStatus(fnr: $fnr) {
+        veilederTilordning {
+            veilederIdent
+        }
+    }
+}

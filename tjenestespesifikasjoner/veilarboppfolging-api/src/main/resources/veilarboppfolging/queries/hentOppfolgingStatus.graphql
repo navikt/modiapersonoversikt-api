@@ -1,0 +1,10 @@
+query HentOppfolgingStatus($fnr: String!) {
+    oppfolging(fnr: $fnr) {
+        erUnderOppfolging
+    }
+    brukerStatus(fnr: $fnr) {
+        manuell {
+            erManuell
+        }
+    }
+}
