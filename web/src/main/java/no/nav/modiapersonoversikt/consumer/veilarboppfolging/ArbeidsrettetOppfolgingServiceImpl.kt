@@ -10,7 +10,6 @@ import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfo
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfolgingsEnhetOgVeileder
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
-import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import okhttp3.Request
@@ -104,9 +103,7 @@ override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.S
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
         val token = AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
-        val callId = getCallId()
         header("Authorization", "Bearer $token")
         header("Content-Type", "application/json")
-        header("X-Correlation-ID", callId)
     }
 }
