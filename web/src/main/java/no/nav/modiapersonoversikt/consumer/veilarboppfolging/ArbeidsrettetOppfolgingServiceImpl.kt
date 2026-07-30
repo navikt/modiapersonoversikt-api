@@ -48,15 +48,16 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     }
 
     @Cacheable
-    override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
-        val result =
+override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
+        val data =
             runBlocking {
-                graphQLClient.execute(
-                    HentOppfolgingStatus(HentOppfolgingStatus.Variables(fnr = fodselsnummer.get())),
-                    userTokenAuthorizationHeaders,
-                )
-            }
-        val data = requireNotNull(result.data) { "Mangler data i HentOppfolgingStatus-respons" }
+                no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors(
+                    graphQLClient.execute(
+                        HentOppfolgingStatus(HentOppfolgingStatus.Variables(fnr = fodselsnummer.get())),
+                        userTokenAuthorizationHeaders,
+                    ),
+                ).data
+            } ?: error("Mangler data i HentOppfolgingStatus-respons")
         return ArbeidsrettetOppfolging.Status(
             underOppfolging = data.oppfolging?.erUnderOppfolging ?: false,
             erManuell = data.brukerStatus?.manuell?.erManuell ?: false,
