@@ -91,7 +91,7 @@ internal class KrrServiceImplTest {
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
         assertThat(response.reservasjon).isEqualTo(null)
-        assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
-        assertThat(response.epostadresse?.value).isEqualTo("")
+        assertThat(response.mobiltelefonnummer?.value).isNull()
+        assertThat(response.epostadresse?.value).isNull()
     }
 }
