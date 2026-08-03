@@ -48,6 +48,7 @@ class PersondataFletter(
     ) {
         private val ekstraDatapunker =
             listOf(
+                oppfolging,
                 fullmektige,
                 geografiskeTilknytning,
                 erEgenAnsatt,
