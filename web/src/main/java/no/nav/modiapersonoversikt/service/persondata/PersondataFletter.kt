@@ -48,6 +48,7 @@ class PersondataFletter(
     ) {
         private val ekstraDatapunker =
             listOf(
+                fullmektige,
                 geografiskeTilknytning,
                 erEgenAnsatt,
                 navEnhet,
@@ -106,35 +107,13 @@ class PersondataFletter(
                     foreldreansvar = hentForeldreansvar(data),
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
-                    fullmakt =
-                        hentFullmakt(data).fold(
-                            onSuccess = { it },
-                            onNotRelevant = { emptyList() },
-                            onFailure = { system, cause ->
-                                feilendeSystemer.add(system)
-                                Logging.teamLog.error(
-                                    Logging.TEAM_LOGS_MARKER,
-                                    "Persondata feilet system: $system",
-                                    cause,
-                                )
-                                emptyList()
-                            },
-                        ),
+                    fullmakt = hentFullmakt(data).getOrElse(emptyList()),
                     vergemal = hentVergemal(data),
                     tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                     rettsligHandleevne = hentRettsligHandleevne(data),
                     telefonnummer = hentTelefonnummer(data),
-                    kontaktInformasjon = hantKontaktinformasjon(data),
-                    bankkonto =
-                        hentBankkonto(data).fold(
-                            onSuccess = { it },
-                            onNotRelevant = { null },
-                            onFailure = { system, cause ->
-                                feilendeSystemer.add(system)
-                                Logging.teamLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: $system", cause)
-                                null
-                            },
-                        ),
+                    kontaktInformasjon = hentKontaktinformasjon(data),
+                    bankkonto = hentBankkonto(data).getOrNull(),
                     forelderBarnRelasjon = hentForelderBarnRelasjon(data, clock),
                     innflyttingTilNorge = hentInnflyttingTilNorge(data),
                     utflyttingFraNorge = hentUtflyttingFraNorge(data),
@@ -1082,7 +1061,7 @@ class PersondataFletter(
             )
         }
 
-    private fun hantKontaktinformasjon(data: Data): Persondata.KontaktInformasjon {
+    private fun hentKontaktinformasjon(data: Data): Persondata.KontaktInformasjon {
         val krrData = data.krrData.getOrNull()
         val oppfolging = data.oppfolging.getOrNull()
         return Persondata.KontaktInformasjon(
