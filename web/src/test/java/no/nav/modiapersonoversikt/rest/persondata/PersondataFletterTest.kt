@@ -13,6 +13,7 @@ import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -215,5 +216,60 @@ internal class PersondataFletterTest {
         assertEquals(1, personSomAdressat?.navn?.size, "Navn skal hentes fra personnavn-feltet")
         assertEquals("Ola", personSomAdressat?.navn?.first()?.fornavn)
         assertEquals("Nordmann", personSomAdressat?.navn?.first()?.etternavn)
+    }
+
+    @Test
+    internal fun `KRR-feil skal legges til feilendeSystemer og gi tom kontaktinformasjon`() {
+        val result =
+            mapper.flettSammenData(
+                data =
+                    testData.copy(
+                        krrData = PersondataResult.Failure(PersondataResult.InformasjonElement.DKIF, Throwable("KRR nede")),
+                    ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            )
+
+        assertTrue(result.feilendeSystemer.contains(PersondataResult.InformasjonElement.DKIF))
+        assertNull(result.person.kontaktInformasjon.epost)
+        assertNull(result.person.kontaktInformasjon.mobil)
+        assertNull(result.person.kontaktInformasjon.erReservert)
+    }
+
+    @Test
+    internal fun `bankkonto-feil skal legges til feilendeSystemer og gi null bankkonto`() {
+        val result =
+            mapper.flettSammenData(
+                data =
+                    testData.copy(
+                        bankkonto =
+                            PersondataResult.Failure(
+                                PersondataResult.InformasjonElement.BANKKONTO,
+                                Throwable("Kontoregister nede"),
+                            ),
+                    ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            )
+
+        assertTrue(result.feilendeSystemer.contains(PersondataResult.InformasjonElement.BANKKONTO))
+        assertNull(result.person.bankkonto)
+    }
+
+    @Test
+    internal fun `fullmektige-feil skal legges til feilendeSystemer og gi tom fullmakt-liste`() {
+        val result =
+            mapper.flettSammenData(
+                data =
+                    testData.copy(
+                        fullmektige =
+                            PersondataResult.Failure(
+                                PersondataResult.InformasjonElement.FULLMAKT,
+                                Throwable("PDL fullmakt nede"),
+                            ),
+                    ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            )
+
+        assertTrue(result.feilendeSystemer.contains(PersondataResult.InformasjonElement.FULLMAKT))
+        assertTrue(result.person.fullmakt.isEmpty())
     }
 }
