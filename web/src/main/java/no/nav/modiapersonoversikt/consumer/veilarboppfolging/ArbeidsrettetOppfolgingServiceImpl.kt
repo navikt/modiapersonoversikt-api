@@ -7,8 +7,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.config.AppConstants
-import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfolgingStatus
-import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfolgingsEnhetOgVeileder
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfolgingsinfo
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
@@ -30,39 +29,35 @@ open class ArbeidsrettetOppfolgingServiceImpl(
 
     @Cacheable
     override fun hentOppfolgingsinfo(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Info {
-        val oppfolgingstatus = hentOppfolgingStatus(fodselsnummer)
-        val enhetOgVeileder =
-            when (oppfolgingstatus.underOppfolging) {
-                true -> hentOppfolgingsEnhetOgVeileder(fodselsnummer)
-                else -> null
-            }
-        return ArbeidsrettetOppfolging.Info(
-            oppfolgingstatus.underOppfolging,
-            oppfolgingstatus.erManuell,
-            enhetOgVeileder?.veilederId?.let { ansattService.hentVeileder(NavIdent(it)) },
-            enhetOgVeileder?.oppfolgingsenhet?.let {
-                ArbeidsrettetOppfolging.OppfolgingsEnhet(
-                    it.enhetId,
-                    it.navn,
-                )
-            },
-        )
-    }
-
-    @Cacheable
-    override fun hentOppfolgingStatus(fodselsnummer: Fnr): ArbeidsrettetOppfolging.Status {
         val data =
             runBlocking {
                 graphQLClient
                     .execute(
-                        HentOppfolgingStatus(HentOppfolgingStatus.Variables(fnr = fodselsnummer.get())),
+                        HentOppfolgingsinfo(HentOppfolgingsinfo.Variables(fnr = fodselsnummer.get())),
                         userTokenAuthorizationHeaders,
                     ).assertNoErrors()
                     .data
-            } ?: error("Mangler data i HentOppfolgingStatus-respons")
-        return ArbeidsrettetOppfolging.Status(
-            underOppfolging = data.oppfolging?.erUnderOppfolging ?: false,
+            } ?: return ArbeidsrettetOppfolging.Info(
+                erUnderOppfolging = false,
+                erManuell = false,
+                veileder = null,
+                oppfolgingsenhet = null,
+            )
+        return ArbeidsrettetOppfolging.Info(
+            erUnderOppfolging = data.oppfolging?.erUnderOppfolging ?: false,
             erManuell = data.brukerStatus?.manuell?.erManuell ?: false,
+            veileder =
+                data.brukerStatus
+                    ?.veilederTilordning
+                    ?.veilederIdent
+                    ?.let { ansattService.hentVeileder(NavIdent(it)) },
+            oppfolgingsenhet =
+                data.oppfolgingsEnhet?.enhet?.let {
+                    ArbeidsrettetOppfolging.OppfolgingsEnhet(
+                        enhetId = it.id,
+                        navn = it.navn,
+                    )
+                },
         )
     }
 
@@ -79,30 +74,6 @@ open class ArbeidsrettetOppfolgingServiceImpl(
             .execute()
             .body
             ?.string()
-    }
-
-    private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder {
-        val data =
-            runBlocking {
-                graphQLClient
-                    .execute(
-                        HentOppfolgingsEnhetOgVeileder(
-                            HentOppfolgingsEnhetOgVeileder.Variables(fnr = fodselsnummer.get()),
-                        ),
-                        userTokenAuthorizationHeaders,
-                    ).assertNoErrors()
-                    .data
-            } ?: error("Mangler data i HentOppfolgingsEnhetOgVeileder-respons")
-        return ArbeidsrettetOppfolging.EnhetOgVeileder(
-            oppfolgingsenhet =
-                data.oppfolgingsEnhet?.enhet?.let {
-                    ArbeidsrettetOppfolging.OppfolgingsEnhet(
-                        enhetId = it.id,
-                        navn = it.navn,
-                    )
-                },
-            veilederId = data.brukerStatus?.veilederTilordning?.veilederIdent,
-        )
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {

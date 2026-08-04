@@ -41,7 +41,7 @@ class PersondataFletter(
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
         val krrData: PersondataResult<Krr.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<KontonummerService.Konto?>,
-        val oppfolging: PersondataResult<ArbeidsrettetOppfolging.Status>,
+        val oppfolging: PersondataResult<ArbeidsrettetOppfolging.Info>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
         val kontaktinformasjonTredjepartsperson: PersondataResult<Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson>>,
         val harTilgangTilSkjermetPerson: Boolean,

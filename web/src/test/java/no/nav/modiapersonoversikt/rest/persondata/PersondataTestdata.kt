@@ -321,9 +321,11 @@ internal val digitalKontaktinformasjon =
     )
 
 internal val arbeidsrettetOppfolgingStatus =
-    ArbeidsrettetOppfolging.Status(
-        underOppfolging = true,
+    ArbeidsrettetOppfolging.Info(
+        erUnderOppfolging = true,
         erManuell = true,
+        veileder = null,
+        oppfolgingsenhet = null,
     )
 
 internal val sivilstandPerson =

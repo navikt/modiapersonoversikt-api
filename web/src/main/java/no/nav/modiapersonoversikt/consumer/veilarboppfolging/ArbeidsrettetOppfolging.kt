@@ -7,26 +7,14 @@ object ArbeidsrettetOppfolging {
     interface Service {
         fun hentOppfolgingsinfo(fodselsnummer: Fnr): Info
 
-        fun hentOppfolgingStatus(fodselsnummer: Fnr): Status
-
         fun ping()
     }
-
-    data class Status(
-        val underOppfolging: Boolean,
-        val erManuell: Boolean,
-    )
 
     data class Info(
         val erUnderOppfolging: Boolean,
         val erManuell: Boolean,
         val veileder: Veileder?,
         val oppfolgingsenhet: OppfolgingsEnhet?,
-    )
-
-    data class EnhetOgVeileder(
-        val oppfolgingsenhet: OppfolgingsEnhet?,
-        val veilederId: String?,
     )
 
     data class OppfolgingsEnhet(
