@@ -80,16 +80,17 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     }
 
     private fun hentOppfolgingsEnhetOgVeileder(fodselsnummer: Fnr): ArbeidsrettetOppfolging.EnhetOgVeileder {
-        val result =
+        val data =
             runBlocking {
-                graphQLClient.execute(
-                    HentOppfolgingsEnhetOgVeileder(
-                        HentOppfolgingsEnhetOgVeileder.Variables(fnr = fodselsnummer.get()),
-                    ),
-                    userTokenAuthorizationHeaders,
-                )
-            }
-        val data = requireNotNull(result.data) { "Mangler data i HentOppfolgingsEnhetOgVeileder-respons" }
+                graphQLClient
+                    .execute(
+                        HentOppfolgingsEnhetOgVeileder(
+                            HentOppfolgingsEnhetOgVeileder.Variables(fnr = fodselsnummer.get()),
+                        ),
+                        userTokenAuthorizationHeaders,
+                    ).assertNoErrors()
+                    .data
+            } ?: error("Mangler data i HentOppfolgingsEnhetOgVeileder-respons")
         return ArbeidsrettetOppfolging.EnhetOgVeileder(
             oppfolgingsenhet =
                 data.oppfolgingsEnhet?.enhet?.let {
