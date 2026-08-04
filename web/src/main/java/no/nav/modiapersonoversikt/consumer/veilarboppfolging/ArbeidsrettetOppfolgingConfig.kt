@@ -16,7 +16,7 @@ import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import java.net.URL
+import java.net.URI
 
 @Configuration
 @EnableCaching
@@ -48,7 +48,7 @@ open class ArbeidsrettetOppfolgingConfig {
         val graphQLClient =
             LoggingGraphqlClient(
                 "Veilarboppfolging",
-                URL("$url/api/graphql"),
+                URI("$url/graphql").toURL(),
                 gqlHttpClient,
                 tjenestekallLogger,
             )
