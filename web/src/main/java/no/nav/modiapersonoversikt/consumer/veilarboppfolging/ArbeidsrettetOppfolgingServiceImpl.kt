@@ -6,9 +6,11 @@ import kotlinx.coroutines.runBlocking
 import no.nav.common.rest.client.RestClient
 import no.nav.common.types.identer.Fnr
 import no.nav.common.types.identer.NavIdent
+import no.nav.modiapersonoversikt.config.AppConstants
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfolgingStatus
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.generated.HentOppfolgingsEnhetOgVeileder
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.RestConstants
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
@@ -107,5 +109,6 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         val token = AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
         header("Authorization", "Bearer $token")
         header("Content-Type", "application/json")
+        header(RestConstants.NAV_CONSUMER_ID_HEADER, AppConstants.APP_NAME)
     }
 }
