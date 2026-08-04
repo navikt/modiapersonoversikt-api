@@ -68,7 +68,7 @@ class KrrServiceImpl(
                                     "exception" to it,
                                 ),
                         )
-                        Krr.INGEN_KONTAKTINFO
+                        throw it
                     }
             },
         )

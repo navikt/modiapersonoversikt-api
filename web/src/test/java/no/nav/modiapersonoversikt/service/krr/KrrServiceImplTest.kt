@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.utils.WireMockUtils.status
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -49,8 +50,9 @@ internal class KrrServiceImplTest {
     private val jsonFeilResponse =
         """
         {
-            "feil": "fortrolig_adresse"
-            
+            "feil": {
+                "10108000123": "fortrolig_adresse"
+            }
         }
         """.trimIndent()
 
@@ -74,11 +76,8 @@ internal class KrrServiceImplTest {
         wiremock.post { status(404) }
         val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
 
-        val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
-        assertThat(response.personident).isNull()
-        assertThat(response.reservasjon).isEqualTo(null)
-        assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
-        assertThat(response.epostadresse?.value).isEqualTo("")
+        assertThatThrownBy { krrDirRestService.hentDigitalKontaktinformasjon("10108000123") }
+            .isInstanceOf(Exception::class.java)
     }
 
     @Test
@@ -92,18 +91,7 @@ internal class KrrServiceImplTest {
         val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
         assertThat(response.personident).isNull()
         assertThat(response.reservasjon).isEqualTo(null)
-        assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
-        assertThat(response.epostadresse?.value).isEqualTo("")
-    }
-
-    @Test
-    fun `trigg server-feil ved henting av kontaktinformasjon fra KrrRestApi`() {
-        wiremock.post { status(500) }
-        val krrDirRestService = KrrServiceImpl("http://localhost:${wiremock.port}", httpClient, TjenestekallLogg)
-        val response = krrDirRestService.hentDigitalKontaktinformasjon("10108000123")
-        assertThat(response.personident).isNull()
-        assertThat(response.reservasjon).isEqualTo(null)
-        assertThat(response.mobiltelefonnummer?.value).isEqualTo("")
-        assertThat(response.epostadresse?.value).isEqualTo("")
+        assertThat(response.mobiltelefonnummer?.value).isNull()
+        assertThat(response.epostadresse?.value).isNull()
     }
 }

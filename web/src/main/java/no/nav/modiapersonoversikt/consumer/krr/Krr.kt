@@ -35,7 +35,7 @@ object Krr {
     val INGEN_KONTAKTINFO =
         DigitalKontaktinformasjon(
             reservasjon = null,
-            epostadresse = Epostadresse(value = ""),
-            mobiltelefonnummer = MobilTelefon(value = ""),
+            epostadresse = null,
+            mobiltelefonnummer = null,
         )
 }
