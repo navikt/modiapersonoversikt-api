@@ -24,6 +24,7 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     private val ansattService: AnsattService,
     private val graphQLClient: GraphQLKtorClient,
     private val oboTokenClient: BoundedOnBehalfOfTokenClient,
+    private val consumerId: String = AppConstants.APP_NAME,
 ) : ArbeidsrettetOppfolging.Service {
     private val url = apiUrl.removeSuffix("/")
 
@@ -80,6 +81,6 @@ open class ArbeidsrettetOppfolgingServiceImpl(
         val token = AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
         header("Authorization", "Bearer $token")
         header("Content-Type", "application/json")
-        header(RestConstants.NAV_CONSUMER_ID_HEADER, AppConstants.APP_NAME)
+        header(RestConstants.NAV_CONSUMER_ID_HEADER, consumerId)
     }
 }

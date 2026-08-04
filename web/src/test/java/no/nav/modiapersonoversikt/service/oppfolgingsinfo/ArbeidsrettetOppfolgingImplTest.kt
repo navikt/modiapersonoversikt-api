@@ -78,10 +78,7 @@ class ArbeidsrettetOppfolgingImplTest {
     }
 
     private fun setup(underOppfolging: Boolean): Pair<ArbeidsrettetOppfolging.Service, AnsattService> {
-        gittOppfolgingStatusResponse(underOppfolging)
-        if (underOppfolging) {
-            gittOppfolgingsEnhetOgVeilederResponse()
-        }
+        gittOppfolgingsinfoResponse(underOppfolging)
 
         val ansattService = mockk<AnsattService>()
         every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns
@@ -106,53 +103,30 @@ class ArbeidsrettetOppfolgingImplTest {
                 ansattService = ansattService,
                 graphQLClient = gqlClient,
                 oboTokenClient = oboTokenProvider,
+                consumerId = "test",
             )
         return Pair(apiClient, ansattService)
     }
 
-    private fun gittOppfolgingStatusResponse(underOppfolging: Boolean) {
+    private fun gittOppfolgingsinfoResponse(underOppfolging: Boolean) {
         @Language("json")
         val body =
             """
             {
                 "data": {
                     "oppfolging": { "erUnderOppfolging": $underOppfolging },
-                    "brukerStatus": { "manuell": { "erManuell": true } }
-                }
-            }
-            """.trimIndent()
-
-        wiremock.stubFor(
-            post(urlEqualTo("/api/graphql"))
-                .withRequestBody(matchingJsonPath("$.operationName", equalTo("HentOppfolgingStatus")))
-                .willReturn(
-                    aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(body),
-                ),
-        )
-    }
-
-    private fun gittOppfolgingsEnhetOgVeilederResponse() {
-        @Language("json")
-        val body =
-            """
-            {
-                "data": {
-                    "oppfolgingsEnhet": {
-                        "enhet": { "id": "1234", "navn": "NAV Enhet" }
-                    },
                     "brukerStatus": {
-                        "veilederTilordning": { "veilederIdent": "Z999999" }
-                    }
+                        "manuell": { "erManuell": true },
+                        "veilederTilordning": ${if (underOppfolging) """{ "veilederIdent": "Z999999" }""" else "null"}
+                    },
+                    "oppfolgingsEnhet": ${if (underOppfolging) """{ "enhet": { "id": "1234", "navn": "NAV Enhet" } }""" else "null"}
                 }
             }
             """.trimIndent()
 
         wiremock.stubFor(
             post(urlEqualTo("/api/graphql"))
-                .withRequestBody(matchingJsonPath("$.operationName", equalTo("HentOppfolgingsEnhetOgVeileder")))
+                .withRequestBody(matchingJsonPath("$.operationName", equalTo("HentOppfolgingsinfo")))
                 .willReturn(
                     aResponse()
                         .withStatus(200)
