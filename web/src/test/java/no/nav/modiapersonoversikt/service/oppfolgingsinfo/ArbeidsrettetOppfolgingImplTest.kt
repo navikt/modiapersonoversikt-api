@@ -46,7 +46,7 @@ class ArbeidsrettetOppfolgingImplTest {
     }
 
     @Test
-    fun `henter ut oppfolgingsstatus for bruker under oppfolging`() {
+    fun `henter ut oppfolgingsinfo for bruker under oppfolging`() {
         val (apiClient) = setup(underOppfolging = true)
 
         val oppfolgingsinfo: ArbeidsrettetOppfolging.Info =
@@ -63,7 +63,7 @@ class ArbeidsrettetOppfolgingImplTest {
     }
 
     @Test
-    fun `henter ut oppfolgingsstatus for bruker ikke under oppfolging`() {
+    fun `henter ut oppfolgingsinfo for bruker ikke under oppfolging`() {
         val (apiClient, ansattService) = setup(underOppfolging = false)
 
         val oppfolgingsinfo: ArbeidsrettetOppfolging.Info =
