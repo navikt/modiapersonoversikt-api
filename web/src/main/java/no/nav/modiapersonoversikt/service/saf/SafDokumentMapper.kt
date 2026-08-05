@@ -117,7 +117,7 @@ object SafDokumentMapper {
             .mapNotNull { dok -> fraSafDokumentInfo(dok) }
 
     private fun getHoveddokumentet(journalpost: Journalpost): DokumentInfo =
-        journalpost.dokumenter?.get(0) ?: throw RuntimeException("Fant sak uten hoveddokument!")
+        journalpost.dokumenter?.firstOrNull() ?: throw RuntimeException("Fant sak uten hoveddokument!")
 
     private fun getLogiskeVedlegg(journalpost: Journalpost): List<Dokument> =
         getHoveddokumentet(journalpost)
