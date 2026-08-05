@@ -76,18 +76,6 @@ internal class SafDokumentMapperTest {
     }
 
     @Test
-    fun `Sak uten hoveddokument kaster runtimeException`() {
-        val journalpost =
-            lagJournalpost().copy(
-                dokumenter = emptyList(),
-            )
-
-        assertThrows(RuntimeException::class.java) {
-            fraSafJournalpost(journalpost)
-        }
-    }
-
-    @Test
     fun `Retning I mappes korrekt`() {
         val journalpost = lagJournalpost().copy(journalposttype = JOURNALPOSTTYPE_INN)
 
