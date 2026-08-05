@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukersdokumenter.L
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.saf.domain.Kommunikasjonsretning
+import no.nav.personoversikt.common.logging.Logging
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
@@ -17,7 +18,8 @@ object SafDokumentMapper {
     private val log = LoggerFactory.getLogger(SafService::class.java)
 
     fun fraSafJournalpost(journalpost: Journalpost): DokumentMetadata? {
-        val hovedDokument = fraSafDokumentInfo(getHoveddokumentet(journalpost)) ?: return null
+        val dokumentInfo = getHoveddokumentet(journalpost) ?: return null
+        val hovedDokument = fraSafDokumentInfo(dokumentInfo) ?: return null
         return DokumentMetadata().apply {
             retning = getRetning(journalpost)
             dato = getDato(journalpost)
@@ -116,14 +118,20 @@ object SafDokumentMapper {
             .filterNotNull()
             .mapNotNull { dok -> fraSafDokumentInfo(dok) }
 
-    private fun getHoveddokumentet(journalpost: Journalpost): DokumentInfo =
-        journalpost.dokumenter?.firstOrNull() ?: throw RuntimeException("Fant sak uten hoveddokument!")
+    private fun getHoveddokumentet(journalpost: Journalpost): DokumentInfo? {
+        val hoveddokument = journalpost.dokumenter?.firstOrNull()
+        if (hoveddokument == null) {
+            Logging.teamLog.warn(Logging.TEAM_LOGS_MARKER, "Journalpost ${journalpost.journalpostId} har ikke hoveddokument")
+        }
+        return hoveddokument
+    }
 
-    private fun getLogiskeVedlegg(journalpost: Journalpost): List<Dokument> =
-        getHoveddokumentet(journalpost)
+    private fun getLogiskeVedlegg(journalpost: Journalpost): List<Dokument> {
+        return (getHoveddokumentet(journalpost) ?: return emptyList())
             .logiskeVedlegg
             .filterNotNull()
             .map { logiskVedlegg -> fraSafLogiskVedlegg(logiskVedlegg) }
+    }
 
     private fun fraSafDokumentInfo(dokumentInfo: DokumentInfo): Dokument? {
         val variantFormat = getVariantformat(dokumentInfo) ?: return null
