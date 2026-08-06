@@ -35,6 +35,8 @@
         <org.jvnet.jaxb.version>4.0.12</org.jvnet.jaxb.version>
         <graphql-kotlin.version>8.8.1</graphql-kotlin.version>
         <kotlin-coroutines.version>1.10.2</kotlin-coroutines.version>
+        <!-- Patcher for å unngå sårbarhet, fjern når Spring 4 er på plass-->
+        <tomcat.version>10.1.55</tomcat.version>
 
     </properties>
 
