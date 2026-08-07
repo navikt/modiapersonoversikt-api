@@ -45,18 +45,10 @@ class KrrServiceImpl(
                                         "feilmelding" to data.feil,
                                     ),
                             )
-                            Krr.INGEN_KONTAKTINFO
                         }
                         if (dto != null) {
                             mapToDigitalKontaktInformasjon(dto)
                         } else {
-                            tjenestekallLogger.warn(
-                                header = "Feil ved henting av digital kontaktinformasjon fra krr: Tom respons for bruker",
-                                fields =
-                                    mapOf(
-                                        "fnr" to fnr,
-                                    ),
-                            )
                             Krr.INGEN_KONTAKTINFO
                         }
                     }.getOrElse {
