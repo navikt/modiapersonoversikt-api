@@ -37,7 +37,7 @@ class KrrServiceImpl(
                         )
                     }.map { data ->
                         val dto = data?.personer?.get(fnr)
-                        if (data?.feil !== null) {
+                        if (!data?.feil.isNullOrEmpty()) {
                             tjenestekallLogger.warn(
                                 header = "Feil ved henting av digital kontaktinformasjon fra krr",
                                 fields =
