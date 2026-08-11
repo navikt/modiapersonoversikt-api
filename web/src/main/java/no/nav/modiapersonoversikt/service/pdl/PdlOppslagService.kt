@@ -29,8 +29,8 @@ interface PdlOppslagService {
         EQUALS,
         CONTAINS,
         FUZZY_MATCH,
-        AFTER,
-        BEFORE,
+        FROM,
+        TO,
     }
 
     enum class PdlSokeOmfang(
@@ -49,8 +49,8 @@ interface PdlOppslagService {
         TELEFON_NUMMER("person.telefonnummer.nummer", EQUALS),
         ADRESSE("fritekst.adresser", CONTAINS),
         UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", EQUALS),
-        FODSELSDATO_FRA("person.foedselsdato.foedselsdato", AFTER),
-        FODSELSDATO_TIL("person.foedselsdato.foedselsdato", BEFORE),
+        FODSELSDATO_FRA("person.foedselsdato.foedselsdato", FROM),
+        FODSELSDATO_TIL("person.foedselsdato.foedselsdato", TO),
         KJONN("person.kjoenn.kjoenn", EQUALS),
     }
 
@@ -71,8 +71,8 @@ interface PdlOppslagService {
                             EQUALS -> SearchRule(equals = this.value, boost = boost)
                             CONTAINS -> SearchRule(contains = this.value, boost = boost)
                             FUZZY_MATCH -> SearchRule(fuzzy = this.value, boost = boost)
-                            AFTER -> SearchRule(after = this.value, boost = boost)
-                            BEFORE -> SearchRule(before = this.value, boost = boost)
+                            FROM -> SearchRule(from = this.value, boost = boost)
+                            TO -> SearchRule(to = this.value, boost = boost)
                         },
                     searchHistorical = searchHistorical.verdi,
                 )
