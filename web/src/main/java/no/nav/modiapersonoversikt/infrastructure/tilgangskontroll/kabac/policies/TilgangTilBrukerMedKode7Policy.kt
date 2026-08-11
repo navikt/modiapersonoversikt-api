@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.BrukersDiskresjonskodePip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
+import no.nav.modiapersonoversikt.service.azure.AdGruppeConfig
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
@@ -11,10 +12,8 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 object TilgangTilBrukerMedKode7Policy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(TilgangTilBrukerMedKode7Policy)
-    private val kode7Roller =
-        RolleListe(
-            "0000-ga-fortrolig_adresse",
-        )
+    private val kode7Roller
+        get() = RolleListe(AdGruppeConfig.fortroligAdresse)
 
     override fun evaluate(ctx: EvaluationContext): Decision {
         val veilederRoller = ctx.getValue(VeiledersRollerPip)

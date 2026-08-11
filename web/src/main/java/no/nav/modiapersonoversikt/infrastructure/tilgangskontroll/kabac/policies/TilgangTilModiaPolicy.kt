@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.DenyCauseCode
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.RolleListe
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
+import no.nav.modiapersonoversikt.service.azure.AdGruppeConfig
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.kabac.Kabac.EvaluationContext
@@ -12,8 +13,13 @@ import no.nav.personoversikt.common.kabac.utils.Key
 
 internal object TilgangTilModiaPolicy : Kabac.Policy {
     override val key = Key<Kabac.Policy>(TilgangTilModiaPolicy)
-    private val modiaRoller =
-        RolleListe("0000-ga-bd06_modiagenerelltilgang", "0000-ga-modia-oppfolging", "0000-ga-syfo-sensitiv")
+    private val modiaRoller
+        get() =
+            RolleListe(
+                AdGruppeConfig.modiaGenerellTilgang,
+                AdGruppeConfig.modiaOppfolging,
+                AdGruppeConfig.syfoSensitiv,
+            )
 
     override fun evaluate(ctx: EvaluationContext): Decision {
         val veilederRoller = ctx.getValue(VeiledersRollerPip)

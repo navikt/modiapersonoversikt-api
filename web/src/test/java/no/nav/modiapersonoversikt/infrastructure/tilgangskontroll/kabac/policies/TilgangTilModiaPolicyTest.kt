@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.provider
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersEnheterPip
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.providers.VeiledersRollerPip
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
+import no.nav.modiapersonoversikt.utils.withTestGruppeIder
 import no.nav.personoversikt.common.kabac.KabacTestUtils
 import org.junit.jupiter.api.Test
 
@@ -19,64 +20,76 @@ internal class TilgangTilModiaPolicyTest {
 
     @Test
     internal fun `permit med modia-generell rolle`() {
-        every { ansattService.hentVeilederRoller(ident) } returns RolleListe("0000-ga-bd06_modiagenerelltilgang")
-        policy.assertPermit(
-            NavIdentPip.key.withValue(ident),
-            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
-            VeiledersRollerPip(ansattService),
-        )
+        withTestGruppeIder {
+            every { ansattService.hentVeilederRoller(ident) } returns RolleListe("uuid-modia-generell")
+            policy.assertPermit(
+                NavIdentPip.key.withValue(ident),
+                VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
+                VeiledersRollerPip(ansattService),
+            )
+        }
     }
 
     @Test
     internal fun `permit med modia-oppfolging rolle`() {
-        every { ansattService.hentVeilederRoller(ident) } returns RolleListe("0000-ga-modia-oppfolging")
-        policy.assertPermit(
-            NavIdentPip.key.withValue(ident),
-            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
-            VeiledersRollerPip(ansattService),
-        )
+        withTestGruppeIder {
+            every { ansattService.hentVeilederRoller(ident) } returns RolleListe("uuid-modia-oppfolging")
+            policy.assertPermit(
+                NavIdentPip.key.withValue(ident),
+                VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
+                VeiledersRollerPip(ansattService),
+            )
+        }
     }
 
     @Test
     internal fun `permit med modia-syfo rolle`() {
-        every { ansattService.hentVeilederRoller(ident) } returns RolleListe("0000-ga-syfo-sensitiv")
-        policy.assertPermit(
-            NavIdentPip.key.withValue(ident),
-            VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
-            VeiledersRollerPip(ansattService),
-        )
-    }
-
-    @Test
-    internal fun `deny om rolle manger`() {
-        every { ansattService.hentVeilederRoller(ident) } returns RolleListe("annen-rolle")
-        policy
-            .assertDeny(
+        withTestGruppeIder {
+            every { ansattService.hentVeilederRoller(ident) } returns RolleListe("uuid-syfo-sensitiv")
+            policy.assertPermit(
                 NavIdentPip.key.withValue(ident),
                 VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
                 VeiledersRollerPip(ansattService),
-            ).withMessage("Veileder har ikke tilgang til modia")
+            )
+        }
+    }
+
+    @Test
+    internal fun `deny om rolle mangler`() {
+        withTestGruppeIder {
+            every { ansattService.hentVeilederRoller(ident) } returns RolleListe("annen-uuid")
+            policy
+                .assertDeny(
+                    NavIdentPip.key.withValue(ident),
+                    VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
+                    VeiledersRollerPip(ansattService),
+                ).withMessage("Veileder har ikke tilgang til modia")
+        }
     }
 
     @Test
     internal fun `deny om ingen roller`() {
-        every { ansattService.hentVeilederRoller(ident) } returns RolleListe()
-        policy
-            .assertDeny(
-                NavIdentPip.key.withValue(ident),
-                VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
-                VeiledersRollerPip(ansattService),
-            ).withMessage("Veileder har ikke tilgang til modia")
+        withTestGruppeIder {
+            every { ansattService.hentVeilederRoller(ident) } returns RolleListe()
+            policy
+                .assertDeny(
+                    NavIdentPip.key.withValue(ident),
+                    VeiledersEnheterPip.key.withValue(listOf(EnhetId("1234"))),
+                    VeiledersRollerPip(ansattService),
+                ).withMessage("Veileder har ikke tilgang til modia")
+        }
     }
 
     @Test
     internal fun `deny om ingen enheter`() {
-        every { ansattService.hentVeilederRoller(ident) } returns RolleListe("0000-ga-syfo-sensitiv")
-        policy
-            .assertDeny(
-                NavIdentPip.key.withValue(ident),
-                VeiledersEnheterPip.key.withValue(emptyList()),
-                VeiledersRollerPip(ansattService),
-            ).withMessage("Veileder har ikke tilgang til noen enheter")
+        withTestGruppeIder {
+            every { ansattService.hentVeilederRoller(ident) } returns RolleListe("uuid-syfo-sensitiv")
+            policy
+                .assertDeny(
+                    NavIdentPip.key.withValue(ident),
+                    VeiledersEnheterPip.key.withValue(emptyList()),
+                    VeiledersRollerPip(ansattService),
+                ).withMessage("Veileder har ikke tilgang til noen enheter")
+        }
     }
 }

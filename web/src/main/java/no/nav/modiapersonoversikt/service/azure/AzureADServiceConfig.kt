@@ -1,11 +1,13 @@
 package no.nav.modiapersonoversikt.service.azure
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.common.client.msgraph.CachedMsGraphClient
 import no.nav.common.client.msgraph.MsGraphClient
 import no.nav.common.client.msgraph.MsGraphHttpClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.utils.bindTo
+import okhttp3.OkHttpClient
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,9 +22,14 @@ open class AzureADServiceConfig {
     open fun azureADService(
         oboflowTokenProvider: OnBehalfOfTokenClient,
         msGraphClient: MsGraphClient,
+        okHttpClient: OkHttpClient,
+        objectMapper: ObjectMapper,
     ): AzureADService =
         AzureADServiceImpl(
             tokenClient = oboflowTokenProvider.bindTo(EnvironmentUtils.getRequiredProperty("MS_GRAPH_SCOPE")),
             msGraphClient = msGraphClient,
+            msGraphUrl = EnvironmentUtils.getRequiredProperty("MS_GRAPH_URL"),
+            httpClient = okHttpClient,
+            objectMapper = objectMapper,
         )
 }
