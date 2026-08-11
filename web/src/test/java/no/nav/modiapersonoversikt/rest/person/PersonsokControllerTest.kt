@@ -15,6 +15,10 @@ import java.time.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Bostedsadresse as PdlBostedsadresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Kjoenn as PdlKjoenn
 
+/**
+ * Doesn't actually test PersonsokController – too much going on there to
+ * sensibly fake all the dependencies. Does test a few of its components.
+ */
 class PersonsokControllerTest {
     @Nested
     inner class PersonResponseMapper {
