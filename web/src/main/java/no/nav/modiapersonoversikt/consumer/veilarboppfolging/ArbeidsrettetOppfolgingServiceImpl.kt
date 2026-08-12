@@ -80,7 +80,6 @@ open class ArbeidsrettetOppfolgingServiceImpl(
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
         val token = AuthContextUtils.requireBoundedClientOboToken(oboTokenClient)
         header("Authorization", "Bearer $token")
-        header("Content-Type", "application/json")
         header(RestConstants.NAV_CONSUMER_ID_HEADER, consumerId)
     }
 }
