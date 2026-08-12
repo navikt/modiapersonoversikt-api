@@ -34,6 +34,7 @@ class LoggingGraphqlClient(
     url: URL,
     httpClient: HttpClient,
     private val tjenestekallLogger: TjenestekallLogger,
+    private val logData: Boolean = true,
 ) : GraphQLKtorClient(url, httpClient) {
     private val log = LoggerFactory.getLogger(LoggingGraphqlClient::class.java)
 
@@ -62,7 +63,8 @@ class LoggingGraphqlClient(
 
             val tjenestekallFelt =
                 mapOf(
-                    "data" to response.data,
+                    "data" to if (logData) response.data else null,
+                    "hasData" to (response.data != null),
                     "errors" to response.errors,
                     "extensions" to response.extensions,
                     "time" to timer.measure(),
