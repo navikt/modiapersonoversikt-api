@@ -60,7 +60,7 @@ open class SafConfig {
                     )
                 }
             }
-        val graphQlClient = LoggingGraphqlClient("SAF", URL(safGraphQLBaseUrl), gqlHttpClient, tjenestekallLogger)
+        val graphQlClient = LoggingGraphqlClient("SAF", URL(safGraphQLBaseUrl), gqlHttpClient, tjenestekallLogger, logData = false)
 
         return SafServiceImpl(
             oboTokenClient.bindTo(downstreamapi),

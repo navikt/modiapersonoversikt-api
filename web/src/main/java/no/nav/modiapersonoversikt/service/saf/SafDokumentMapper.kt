@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukersdokumenter.D
 import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukersdokumenter.Dokumentvariant
 import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukersdokumenter.Journalpost
 import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukersdokumenter.LogiskVedlegg
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.saf.domain.Dokument
 import no.nav.modiapersonoversikt.service.saf.domain.DokumentMetadata
 import no.nav.modiapersonoversikt.service.saf.domain.Kommunikasjonsretning
@@ -121,7 +122,10 @@ object SafDokumentMapper {
     private fun getHoveddokumentet(journalpost: Journalpost): DokumentInfo? {
         val hoveddokument = journalpost.dokumenter?.firstOrNull()
         if (hoveddokument == null) {
-            Logging.teamLog.warn(Logging.TEAM_LOGS_MARKER, "Journalpost ${journalpost.journalpostId} har ikke hoveddokument")
+            Logging.teamLog.warn(
+                Logging.TEAM_LOGS_MARKER,
+                "Journalpost ${journalpost.journalpostId} har ikke hoveddokument (callId: ${getCallId()})",
+            )
         }
         return hoveddokument
     }

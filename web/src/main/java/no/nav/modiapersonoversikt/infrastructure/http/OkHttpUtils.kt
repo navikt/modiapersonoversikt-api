@@ -80,7 +80,15 @@ class LoggingInterceptor(
                 if (contentLength > 10_000_000) {
                     return "Payload too large to peek: Size $contentLength bytes"
                 } else {
-                    return this.peekBody(Long.MAX_VALUE).string()
+                    val limit = 200_000L
+                    runCatching {
+                        val peeked = this.peekBody(limit).string()
+                        if (contentLength !in 0..limit) {
+                            "$peeked... [truncated, total size: $contentLength bytes]"
+                        } else {
+                            peeked
+                        }
+                    }.getOrElse { e -> "Failed to peek body (size=$contentLength): ${e.message}" }
                 }
             }
         }
