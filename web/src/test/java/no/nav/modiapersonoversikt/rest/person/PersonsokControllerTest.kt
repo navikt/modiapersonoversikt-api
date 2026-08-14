@@ -117,7 +117,10 @@ class PersonsokControllerTest {
     inner class PdlKriterierMapper {
         private val clock: Clock =
             Clock.fixed(
-                Instant.parse("2020-12-02T12:00:00.00Z"),
+                LocalDateTime
+                    .parse("2020-12-02T12:00:00.00")
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant(),
                 ZoneId.systemDefault(),
             )
 
