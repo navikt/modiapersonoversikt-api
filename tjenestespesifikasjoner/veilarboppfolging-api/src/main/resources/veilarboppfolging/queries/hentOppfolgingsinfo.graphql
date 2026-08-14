@@ -1,0 +1,19 @@
+query HentOppfolgingsinfo($fnr: String!) {
+    oppfolging(fnr: $fnr) {
+        erUnderOppfolging
+    }
+    brukerStatus(fnr: $fnr) {
+        manuell {
+            erManuell
+        }
+        veilederTilordning {
+            veilederIdent
+        }
+    }
+    oppfolgingsEnhet(fnr: $fnr) {
+        enhet {
+            id
+            navn
+        }
+    }
+}

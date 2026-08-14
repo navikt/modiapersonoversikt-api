@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.ktor.util.toLowerCasePreservingASCIIRules
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.service.unleash.Feature
@@ -113,7 +114,7 @@ class LoggingInterceptor(
             "$name-request: $callId ($requestId)",
             mapOf(
                 "url" to request.url.toString(),
-                "headers" to requestHeaders,
+                "headers" to requestHeaders.filterKeys { it.toLowerCasePreservingASCIIRules() != "authorization" },
                 "body" to requestBody,
             ),
         )

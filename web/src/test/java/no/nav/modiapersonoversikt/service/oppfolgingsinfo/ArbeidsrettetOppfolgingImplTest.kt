@@ -1,12 +1,16 @@
 package no.nav.modiapersonoversikt.service.oppfolgingsinfo
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
-import com.marcinziolo.kotlin.wiremock.post
-import com.marcinziolo.kotlin.wiremock.returns
-import com.marcinziolo.kotlin.wiremock.returnsJson
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
 import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
@@ -20,17 +24,12 @@ import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfol
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolgingServiceImpl
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
-import no.nav.modiapersonoversikt.service.unleash.Feature
-import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
-import no.nav.modiapersonoversikt.utils.WireMockUtils.get
-import no.nav.modiapersonoversikt.utils.WireMockUtils.json
-import no.nav.modiapersonoversikt.utils.WireMockUtils.status
-import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import java.net.URL
 
 class ArbeidsrettetOppfolgingImplTest {
     companion object {
@@ -38,7 +37,6 @@ class ArbeidsrettetOppfolgingImplTest {
         @RegisterExtension
         val wiremock = WireMockExtension.newInstance().build()
 
-        private val httpClient = OkHttpClient()
         private const val FNR = "12345678910"
         private val testSubject =
             AuthContext(
@@ -48,7 +46,7 @@ class ArbeidsrettetOppfolgingImplTest {
     }
 
     @Test
-    fun `henter ut oppfolgingsstatus for bruker under oppfolging`() {
+    fun `henter ut oppfolgingsinfo for bruker under oppfolging`() {
         val (apiClient) = setup(underOppfolging = true)
 
         val oppfolgingsinfo: ArbeidsrettetOppfolging.Info =
@@ -65,7 +63,7 @@ class ArbeidsrettetOppfolgingImplTest {
     }
 
     @Test
-    fun `henter ut oppfolgingsstatus for bruker ikke under oppfolging`() {
+    fun `henter ut oppfolgingsinfo for bruker ikke under oppfolging`() {
         val (apiClient, ansattService) = setup(underOppfolging = false)
 
         val oppfolgingsinfo: ArbeidsrettetOppfolging.Info =
@@ -80,12 +78,7 @@ class ArbeidsrettetOppfolgingImplTest {
     }
 
     private fun setup(underOppfolging: Boolean): Pair<ArbeidsrettetOppfolging.Service, AnsattService> {
-        gittUnderOppfolging(underOppfolging)
-        gittOppfolgingStatus()
-
-        val unleashService = mockk<UnleashService>()
-        every { unleashService.isEnabled(Feature.LOG_REQUEST_BODY.propertyKey) } returns true
-        every { unleashService.isEnabled(Feature.LOG_REQUEST_BODY.propertyKey) } returns true
+        gittOppfolgingsinfoResponse(underOppfolging)
 
         val ansattService = mockk<AnsattService>()
         every { ansattService.hentVeileder(eq(NavIdent("Z999999"))) } returns
@@ -98,51 +91,48 @@ class ArbeidsrettetOppfolgingImplTest {
         val oboTokenProvider = mockk<BoundedOnBehalfOfTokenClient>()
         every { oboTokenProvider.exchangeOnBehalfOfToken(testSubject.idToken.serialize()) } returns "OBO-TOKEN"
 
+        val gqlClient =
+            GraphQLKtorClient(
+                url = URL("http://localhost:${wiremock.port}/api/graphql"),
+                httpClient = HttpClient(OkHttp),
+            )
+
         val apiClient =
             ArbeidsrettetOppfolgingServiceImpl(
                 apiUrl = "http://localhost:${wiremock.port}",
                 ansattService = ansattService,
-                httpClient = httpClient,
+                graphQLClient = gqlClient,
+                oboTokenClient = oboTokenProvider,
+                consumerId = "test",
             )
         return Pair(apiClient, ansattService)
     }
 
-    private fun gittOppfolgingStatus() {
-        @Language("json")
-        val returnbody =
-            """
-            {
-                "oppfolgingsenhet": {
-                  "navn": "NAV Enhet",
-                  "enhetId": "1234"
-                },
-                "veilederId": "Z999999",
-                "formidlingsgruppe": "IARBS"
-            }
-            """.trimIndent()
-
-        wiremock
-            .post {
-                urlMatching("/v2/person/hent-oppfolgingsstatus")
-            }.returnsJson {
-                status(200)
-                body = returnbody
-            }
-    }
-
-    private fun gittUnderOppfolging(underOppfolging: Boolean) {
+    private fun gittOppfolgingsinfoResponse(underOppfolging: Boolean) {
         @Language("json")
         val body =
             """
             {
-                "erManuell": true,
-                "underOppfolging": $underOppfolging
+                "data": {
+                    "oppfolging": { "erUnderOppfolging": $underOppfolging },
+                    "brukerStatus": {
+                        "manuell": { "erManuell": true },
+                        "veilederTilordning": ${if (underOppfolging) """{ "veilederIdent": "Z999999" }""" else "null"}
+                    },
+                    "oppfolgingsEnhet": ${if (underOppfolging) """{ "enhet": { "id": "1234", "navn": "NAV Enhet" } }""" else "null"}
+                }
             }
             """.trimIndent()
 
-        wiremock.get(urlMatching("/underoppfolging\\?fnr.*")) {
-            status(200)
-            json(body)
-        }
+        wiremock.stubFor(
+            post(urlEqualTo("/api/graphql"))
+                .withRequestBody(matchingJsonPath("$.operationName", equalTo("HentOppfolgingsinfo")))
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(body),
+                ),
+        )
     }
 }

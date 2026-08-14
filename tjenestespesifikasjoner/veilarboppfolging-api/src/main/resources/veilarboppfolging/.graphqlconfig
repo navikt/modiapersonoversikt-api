@@ -1,0 +1,15 @@
+{
+  "name": "veilarboppfolging-api",
+  "schemaPath": "schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "Veilarboppfolging GraphQL Endpoint": {
+        "url": "https://veilarboppfolging.intern.dev.nav.no/api/graphql",
+        "headers": {
+          "user-agent": "srvmodiabrukerdialog"
+        },
+        "introspect": false
+      }
+    }
+  }
+}

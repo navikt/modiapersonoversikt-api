@@ -110,7 +110,7 @@ class PersondataServiceImpl(
             }
         val oppfolging =
             PersondataResult.runCatching(InformasjonElement.OPPFOLGING) {
-                oppfolgingService.hentOppfolgingStatus(Fnr(personIdent))
+                oppfolgingService.hentOppfolgingsinfo(Fnr(personIdent))
             }
 
         return persondataFletter.flettSammenData(

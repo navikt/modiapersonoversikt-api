@@ -49,7 +49,6 @@ class OppfolgingController
                     ),
                 ) {
                     val oppfolging = service.hentOppfolgingsinfo(Fnr(fnrRequest.fnr))
-
                     OppfolgingDTO(oppfolging.erUnderOppfolging, oppfolging.veileder, oppfolging.oppfolgingsenhet)
                 }
 
@@ -133,8 +132,6 @@ class OppfolgingController
         @PostMapping("/arbeidsoppfolging")
         fun hentArbeidsOppfolging(
             @RequestBody fnrRequest: FnrRequest,
-            @RequestParam("startDato") start: String?,
-            @RequestParam("sluttDato") slutt: String?,
         ): ArbeidsOppfolgingDTO =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
@@ -145,15 +142,8 @@ class OppfolgingController
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    val response = arenaInfotrygdApi.hentOppfolgingskontrakter(fnrRequest.fnr, start, slutt)
-                    val oppfolgingStatus = runCatching { hent(fnrRequest) }
-
                     ArbeidsOppfolgingDTO(
-                        oppfolging = oppfolgingStatus.getOrNull(),
-                        meldeplikt = response.bruker?.meldeplikt,
-                        formidlingsgruppe = response.bruker?.formidlingsgruppe,
-                        vedtaksdato = response.vedtaksdato?.toString(JODA_DATOFORMAT),
-                        rettighetsgruppe = response.bruker?.rettighetsgruppe,
+                        oppfolging = hent(fnrRequest),
                     )
                 }
 
@@ -276,10 +266,6 @@ open class OppfolgingsYtelseDTO(
 
 data class ArbeidsOppfolgingDTO(
     val oppfolging: OppfolgingDTO?,
-    val meldeplikt: Boolean?,
-    val formidlingsgruppe: String?,
-    val vedtaksdato: String?,
-    val rettighetsgruppe: String?,
 )
 
 data class DagpengeytelseDTO(
