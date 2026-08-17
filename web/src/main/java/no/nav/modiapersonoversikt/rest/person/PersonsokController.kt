@@ -273,6 +273,8 @@ data class KodeverdiDTO(
 data class PersonsokRequestV3(
     val enhet: String?,
     val navn: String?,
+    val fornavn: String?,
+    val etternavn: String?,
     val utenlandskID: String?,
     val alderFra: Int?,
     val alderTil: Int?,
@@ -295,6 +297,8 @@ fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone())
 
     return listOf(
         PdlKriterie(PdlFelt.NAVN, this.navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+        PdlKriterie(PdlFelt.FORNAVN, this.fornavn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+        PdlKriterie(PdlFelt.ETTERNAVN, this.etternavn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
         PdlKriterie(PdlFelt.ADRESSE, this.adresse, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
         PdlKriterie(PdlFelt.TELEFON_NUMMER, this.telefonnummer, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
         PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),

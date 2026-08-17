@@ -29,6 +29,7 @@ interface PdlOppslagService {
         EQUALS,
         CONTAINS,
         FUZZY_MATCH,
+        FUZZY_OR_INITIAL,
         FROM,
         TO,
     }
@@ -46,6 +47,8 @@ interface PdlOppslagService {
         val rule: SokKriterieRule,
     ) {
         NAVN("fritekst.navn", FUZZY_MATCH),
+        FORNAVN("person.navn.fornavn", FUZZY_OR_INITIAL),
+        ETTERNAVN("person.navn.etternavn", FUZZY_OR_INITIAL),
         TELEFON_NUMMER("person.telefonnummer.nummer", EQUALS),
         ADRESSE("fritekst.adresser", CONTAINS),
         UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", EQUALS),
@@ -71,6 +74,18 @@ interface PdlOppslagService {
                             EQUALS -> SearchRule(equals = this.value, boost = boost)
                             CONTAINS -> SearchRule(contains = this.value, boost = boost)
                             FUZZY_MATCH -> SearchRule(fuzzy = this.value, boost = boost)
+                            FUZZY_OR_INITIAL ->
+                                when (this.value?.length) {
+                                    1 -> SearchRule(regex = "%s.*".format(this.value), boost = boost)
+                                    2 ->
+                                        // someone might type a. instead of a
+                                        if (this.value[1] == '.') {
+                                            SearchRule(regex = "%c.*".format(this.value[0]), boost = boost)
+                                        } else {
+                                            SearchRule(fuzzy = this.value, boost = boost)
+                                        }
+                                    else -> SearchRule(fuzzy = this.value, boost = boost)
+                                }
                             FROM -> SearchRule(from = this.value, boost = boost)
                             TO -> SearchRule(to = this.value, boost = boost)
                         },
