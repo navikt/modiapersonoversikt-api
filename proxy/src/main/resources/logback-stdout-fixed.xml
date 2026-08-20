@@ -8,13 +8,13 @@
                 <marker>TEAM_LOGS</marker>
             </evaluator>
             <OnMatch>DENY</OnMatch>
-            <OnMismatch>ACCEPT</OnMismatch>
+            <OnMismatch>NEUTRAL</OnMismatch>
         </filter>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="no.nav.modiapersonoversikt.infrastructure.CXFEvaluatorFilter">
             </evaluator>
             <onMatch>DENY</onMatch>
-            <onMismatch>ACCEPT</onMismatch>
+            <onMismatch>NEUTRAL</onMismatch>
         </filter>
         <appender-ref ref="consoleAppender"/>
     </appender>
