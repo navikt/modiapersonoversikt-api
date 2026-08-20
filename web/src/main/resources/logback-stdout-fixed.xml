@@ -8,7 +8,7 @@
                 <marker>TEAM_LOGS</marker>
             </evaluator>
             <OnMatch>DENY</OnMatch>
-            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMismatch>ACCEPT</OnMismatch>
         </filter>
         <appender-ref ref="consoleAppender"/>
     </appender>
