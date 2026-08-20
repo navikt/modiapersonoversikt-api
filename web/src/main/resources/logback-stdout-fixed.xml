@@ -32,16 +32,6 @@
     <!-- Logger cookies dersom den ikke parses riktig, noe vi ikke ønsker -->
     <logger name="org.apache.tomcat.util.http.parser.Cookie" level="OFF"/>
 
-    <logger name="org.apache" level="INFO" additivity="false">
-        <appender-ref ref="team-logs"/>
-    </logger>
-    <logger name="org.apache.cxf" level="ERROR" additivity="false">
-        <appender-ref ref="team-logs"/>
-    </logger>
-    <logger name="no.nav.common.cxf" level="ERROR" additivity="false">
-        <appender-ref ref="team-logs"/>
-    </logger>
-
     <logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="ERROR"/>
     <logger name="org.apache.wss4j.common.crypto.CryptoBase" level="ERROR"/>
     <logger name="no.nav.common.rest.client.LogRequestInterceptor" level="INFO"/>
