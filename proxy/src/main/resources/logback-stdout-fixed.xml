@@ -4,6 +4,13 @@
 
     <appender name="stdout_json_masked" class="no.nav.common.log.MaskingAppender">
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>TEAM_LOGS</marker>
+            </evaluator>
+            <OnMatch>DENY</OnMatch>
+            <OnMismatch>NEUTRAL</OnMismatch>
+        </filter>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="no.nav.modiapersonoversikt.infrastructure.CXFEvaluatorFilter">
             </evaluator>
             <onMatch>DENY</onMatch>
@@ -18,7 +25,9 @@
     <appender name="team-logs" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>team-logs.nais-system:5170</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"google_cloud_project":"${GOOGLE_CLOUD_PROJECT}","nais_namespace_name":"${NAIS_NAMESPACE}","nais_pod_name":"${NAIS_POD_NAME}","nais_container_name":"${NAIS_APP_NAME}"}</customFields>
+            <customFields>
+                {"google_cloud_project":"${GOOGLE_CLOUD_PROJECT}","nais_namespace_name":"${NAIS_NAMESPACE}","nais_pod_name":"${NAIS_POD_NAME}","nais_container_name":"${NAIS_APP_NAME}"}
+            </customFields>
             <includeContext>false</includeContext>
         </encoder>
     </appender>
@@ -27,16 +36,16 @@
     <appender name="metrics" class="io.prometheus.client.logback.InstrumentedAppender"/>
 
     <!-- Logger cookies dersom den ikke parses riktig, noe vi ikke ønsker -->
-    <logger name="org.apache.tomcat.util.http.parser.Cookie" level="OFF" />
+    <logger name="org.apache.tomcat.util.http.parser.Cookie" level="OFF"/>
 
-    <logger name="org.apache" level="ERROR">
-        <appender-ref ref="team-logs" />
+    <logger name="org.apache" level="ERROR" additivity="false">
+        <appender-ref ref="team-logs"/>
     </logger>
-    <logger name="org.apache.cxf" level="INFO">
-        <appender-ref ref="team-logs" />
+    <logger name="org.apache.cxf" level="INFO" additivity="false">
+        <appender-ref ref="team-logs"/>
     </logger>
-    <logger name="no.nav.common.cxf" level="INFO">
-        <appender-ref ref="team-logs" />
+    <logger name="no.nav.common.cxf" level="INFO" additivity="false">
+        <appender-ref ref="team-logs"/>
     </logger>
 
     <logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="ERROR"/>
@@ -48,11 +57,10 @@
     <root level="INFO">
         <appender-ref ref="stdout_json_masked"/>
         <appender-ref ref="metrics"/>
-        <appender-ref ref="team-logs" />
     </root>
 
     <logger name="TeamLog" level="INFO" additivity="false">
-        <appender-ref ref="team-logs" />
+        <appender-ref ref="team-logs"/>
     </logger>
 
 </included>
