@@ -24,13 +24,6 @@
             </customFields>
             <includeContext>false</includeContext>
         </encoder>
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>TEAM_LOGS</marker>
-            </evaluator>
-            <OnMatch>ACCEPT</OnMatch>
-            <OnMismatch>DENY</OnMismatch>
-        </filter>
     </appender>
 
     <!-- Prometheus metrikker for antall ganger logget per nivå -->
@@ -39,9 +32,15 @@
     <!-- Logger cookies dersom den ikke parses riktig, noe vi ikke ønsker -->
     <logger name="org.apache.tomcat.util.http.parser.Cookie" level="OFF"/>
 
-    <logger name="org.apache" level="INFO"/>
-    <logger name="org.apache.cxf" level="ERROR"/>
-    <logger name="no.nav.common.cxf" level="ERROR"/>
+    <logger name="org.apache" level="INFO" additivity="false">
+        <appender-ref ref="team-logs"/>
+    </logger>
+    <logger name="org.apache.cxf" level="ERROR" additivity="false">
+        <appender-ref ref="team-logs"/>
+    </logger>
+    <logger name="no.nav.common.cxf" level="ERROR" additivity="false">
+        <appender-ref ref="team-logs"/>
+    </logger>
 
     <logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="ERROR"/>
     <logger name="org.apache.wss4j.common.crypto.CryptoBase" level="ERROR"/>
@@ -56,7 +55,6 @@
     <root level="INFO">
         <appender-ref ref="stdout_json_masked"/>
         <appender-ref ref="metrics"/>
-        <appender-ref ref="team-logs"/>
     </root>
 
 
