@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>4.1.0</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -24,7 +24,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <kotlin.version>2.2.21</kotlin.version>
+        <kotlin.version>2.4.10</kotlin.version>
         <serialization.version>1.9.0</serialization.version>
         <mockk.version>1.14.7</mockk.version>
         <wiremock.version>3.13.2</wiremock.version>
@@ -35,8 +35,6 @@
         <org.jvnet.jaxb.version>4.0.12</org.jvnet.jaxb.version>
         <graphql-kotlin.version>10.0.0</graphql-kotlin.version>
         <kotlin-coroutines.version>1.10.2</kotlin-coroutines.version>
-        <!-- Patcher for å unngå sårbarhet, fjern når Spring 4 er på plass-->
-        <tomcat.version>10.1.55</tomcat.version>
 
     </properties>
 
@@ -247,6 +245,7 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration/>
                     </execution>
                     <execution>
                         <id>test-compile</id>
@@ -260,12 +259,18 @@
                     <jvmTarget>21</jvmTarget>
                     <compilerPlugins>
                         <plugin>kotlinx-serialization</plugin>
+                        <plugin>spring</plugin>
                     </compilerPlugins>
                 </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-serialization</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>

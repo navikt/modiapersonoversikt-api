@@ -7,7 +7,6 @@ import no.nav.common.utils.SslUtils;
 import no.nav.modiapersonoversikt.config.MetricsConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import static no.nav.common.utils.EnvironmentUtils.Type.PUBLIC;
 
@@ -26,7 +25,7 @@ public class Main {
     }
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilder()  {
-        return builder -> builder.modulesToInstall(new JodaModule()).build();
+    public JodaModule jodaModule() {
+        return new JodaModule();
     }
 }
