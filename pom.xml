@@ -26,7 +26,7 @@
         <java.version>21</java.version>
         <kotlin.version>2.2.21</kotlin.version>
         <serialization.version>1.9.0</serialization.version>
-        <mockk.version>1.14.7</mockk.version>
+        <mockk.version>1.14.11</mockk.version>
         <wiremock.version>3.13.2</wiremock.version>
 
         <common.version>4.2026.08.03_08.40-c4e43f2ee45b</common.version>
