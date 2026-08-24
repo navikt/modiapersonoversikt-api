@@ -29,5 +29,7 @@ class JodaCompatConfigTest {
         assertTrue(result.`object`.value.year == 2024)
     }
 
-    data class DateTimeWrapper(val value: DateTime)
+    data class DateTimeWrapper(
+        val value: DateTime,
+    )
 }
