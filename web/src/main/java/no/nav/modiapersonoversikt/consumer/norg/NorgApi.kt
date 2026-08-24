@@ -142,33 +142,31 @@ class NorgApiImpl(
         diskresjonskode: NorgDomain.DiskresjonsKode?,
     ): Enhet? {
         val key = "finnNavKontor[$geografiskTilknytning,$diskresjonskode]"
-        return navkontorCache.get(key) {
-            if (geografiskTilknytning.isNumeric()) {
-                enhetApi
-                    .getEnhetByGeografiskOmraadeUsingGET(
-                        geografiskOmraade = geografiskTilknytning,
-                        disk = diskresjonskode?.name,
-                    )?.let(::toInternalDomain)
-            } else {
-                /**
-                 * Ikke numerisk GT tilsier at det er landkode pga utenlandsk GT og da har vi ingen enhet
-                 */
-                null
-            }
+        return navkontorCache.getIfPresent(key) ?: if (geografiskTilknytning.isNumeric()) {
+            enhetApi
+                .getEnhetByGeografiskOmraadeUsingGET(
+                    geografiskOmraade = geografiskTilknytning,
+                    disk = diskresjonskode?.name,
+                )?.let(::toInternalDomain)
+                ?.also { navkontorCache.put(key, it) }
+        } else {
+            /**
+             * Ikke numerisk GT tilsier at det er landkode pga utenlandsk GT og da har vi ingen enhet
+             */
+            null
         }
     }
 
     override fun hentRegionalEnheter(enhet: List<EnhetId>): List<EnhetId> = enhet.mapNotNull(::hentRegionalEnhet)
 
     override fun hentRegionalEnhet(enhet: EnhetId): EnhetId? =
-        regionalkontorCache.get(enhet) { enhetId ->
-            organiseringApi
-                .getAllOrganiseringerForEnhetUsingGET(enhetId.get())
-                ?.firstOrNull { it.orgType == "FYLKE" }
-                ?.organiserer
-                ?.nr
-                ?.let(::EnhetId)
-        }
+        regionalkontorCache.getIfPresent(enhet) ?: organiseringApi
+            .getAllOrganiseringerForEnhetUsingGET(enhet.get())
+            ?.firstOrNull { it.orgType == "FYLKE" }
+            ?.organiserer
+            ?.nr
+            ?.let(::EnhetId)
+            ?.also { regionalkontorCache.put(enhet, it) }
 
     override fun hentBehandlendeEnheter(
         behandling: Behandling?,

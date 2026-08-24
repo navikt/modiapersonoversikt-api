@@ -49,9 +49,10 @@ class VeilarbvedtaksstotteServiceImpl(
     }
 
     override fun hentGjeldende14aVedtak(fnr: Fnr): Gjeldende14aVedtak? =
-        cache.get(fnr) {
-            gjeldende14AVedtakApi.hentGjeldende14aVedtakEksternt(Gjeldende14aVedtakRequest(fnr.get()))?.let { mapToGjeldende14aVedtak(it) }
-        }
+        cache.getIfPresent(fnr) ?: gjeldende14AVedtakApi
+            .hentGjeldende14aVedtakEksternt(Gjeldende14aVedtakRequest(fnr.get()))
+            ?.let { mapToGjeldende14aVedtak(it) }
+            ?.also { cache.put(fnr, it) }
 
     override fun ping() =
         SelfTestCheck(
@@ -66,8 +67,8 @@ class VeilarbvedtaksstotteServiceImpl(
 
     private fun mapToGjeldende14aVedtak(dto: Gjeldende14aVedtakDto) =
         Gjeldende14aVedtak(
-            innsatsgruppe = innsatsgruppeCache.get(dto.innsatsgruppe.value) { getInnsatsgruppe(dto.innsatsgruppe.value) },
-            hovedmal = dto.hovedmal?.let { hovedmal -> hovedmalCache.get(hovedmal.value) { getHovedmal(hovedmal.value) } },
+            innsatsgruppe = innsatsgruppeCache.getIfPresent(dto.innsatsgruppe.value) ?: getInnsatsgruppe(dto.innsatsgruppe.value),
+            hovedmal = dto.hovedmal?.let { hovedmal -> hovedmalCache.getIfPresent(hovedmal.value) ?: getHovedmal(hovedmal.value) },
             fattetDato = dto.fattetDato.toLocalDateTime(),
         )
 
