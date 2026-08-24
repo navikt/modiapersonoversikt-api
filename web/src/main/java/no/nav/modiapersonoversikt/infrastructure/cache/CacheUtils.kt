@@ -5,7 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import java.time.Duration
 
 object CacheUtils {
-    fun <KEY, VALUE> createCache(
+    fun <KEY : Any, VALUE> createCache(
         expireAfterWrite: Duration = Duration.ofHours(1),
         maximumSize: Long = 10_000,
     ): Cache<KEY, VALUE> =
@@ -16,5 +16,5 @@ object CacheUtils {
             .build()
 
     @JvmStatic
-    fun <KEY, VALUE> createDefaultCache() = createCache<KEY, VALUE>()
+    fun <KEY : Any, VALUE> createDefaultCache() = createCache<KEY, VALUE>()
 }

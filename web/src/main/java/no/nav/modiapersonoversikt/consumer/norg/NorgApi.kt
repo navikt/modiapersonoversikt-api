@@ -79,9 +79,9 @@ class NorgApiImpl(
     private val cacheGraceperiod = Duration.ofMinutes(2)
     private var cache: Map<EnhetId, EnhetKontaktinformasjon> = emptyMap()
     private var lastUpdateOfCache: LocalDateTime? = null
-    private val navkontorCache = createNorgCache<String, Enhet>()
+    private val navkontorCache = createNorgCache<String, Enhet?>()
     private val gtCache = createNorgCache<String, List<EnhetGeografiskTilknyttning>>()
-    private val regionalkontorCache = createNorgCache<EnhetId, EnhetId>()
+    private val regionalkontorCache = createNorgCache<EnhetId, EnhetId?>()
 
     private val retry =
         Retry(
@@ -113,7 +113,7 @@ class NorgApiImpl(
         gtCache.get(enhet.get()) {
             enhetApi
                 .getNavKontorerByEnhetsnummerUsingGET(it)
-                ?.map(::toInternalDomain)
+                ?.map(::toInternalDomain) ?: emptyList()
         } ?: emptyList()
 
     override fun hentEnheter(
@@ -249,7 +249,7 @@ class NorgApiImpl(
             }?.associateBy { EnhetId(it.enhet.enhetId) }
             .orEmpty()
 
-    private fun <KEY, VALUE> createNorgCache() =
+    private fun <KEY : Any, VALUE> createNorgCache() =
         CacheUtils.createCache<KEY, VALUE>(
             expireAfterWrite = cacheRetention,
             maximumSize = 2000,
