@@ -5,7 +5,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import no.nav.common.utils.fn.UnsafeSupplier
-import no.nav.modiapersonoversikt.config.ObjectMapperConfig
+import no.nav.modiapersonoversikt.config.JodaCompatConfig
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
@@ -28,7 +28,7 @@ import org.springframework.web.server.ResponseStatusException
 import kotlin.test.assertEquals
 
 @WebMvcTest(JournalforingController::class)
-@Import(ObjectMapperConfig::class)
+@Import(JodaCompatConfig::class)
 internal class JournalforingControllerTest {
     companion object {
         val ident = "Z999643"
