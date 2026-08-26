@@ -2,5 +2,10 @@
 <configuration>
     <include resource="logback-stdout-fixed.xml"/>
     <include resource="no/nav/common/log/logback-naudit.xml"/>
-    <include resource="no/nav/common/log/logback-cxf.xml"/>
+    <!--
+        logback-cxf.xml og logback-naudit.xml fra no.nav.common:log er bevisst ikke inkludert.
+        Den definerer org.apache.cxf og no.nav.common.cxf til appenderen "secureLog",
+        som ble fjernet herfra i e9bb764b (fjern securelogs). CXF-logging styres nå
+        av TEAM_LOGS-markøren i logback-stdout-fixed.xml.
+    -->
 </configuration>
