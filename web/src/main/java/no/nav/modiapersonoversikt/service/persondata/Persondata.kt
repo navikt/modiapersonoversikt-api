@@ -173,6 +173,8 @@ object Persondata {
         val id: String,
         val navn: String,
         val publikumsmottak: List<Publikumsmottak>,
+        val telefonnummer: String? = null,
+        val epost: String? = null,
     )
 
     data class Dodsbo(

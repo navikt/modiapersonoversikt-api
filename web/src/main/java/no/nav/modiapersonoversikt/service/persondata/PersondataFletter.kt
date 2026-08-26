@@ -552,6 +552,8 @@ class PersondataFletter(
                             enhet.enhet.enhetId,
                             enhet.enhet.enhetNavn,
                             hentPublikumsmottak(enhet.publikumsmottak),
+                            enhet.telefonnummer,
+                            enhet.epost,
                         )
                     }
                 }.getOrNull() ?: return null

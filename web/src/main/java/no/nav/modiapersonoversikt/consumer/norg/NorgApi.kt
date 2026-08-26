@@ -277,6 +277,13 @@ class NorgApiImpl(
                 enhet = toInternalDomain(requireNotNull(enhet.enhet)),
                 publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList(),
                 overordnetEnhet = enhet.overordnetEnhet?.let(::EnhetId),
+                telefonnummer = enhet.kontaktinformasjon?.telefonnummer?.takeIf { it.isNotBlank() },
+                epost =
+                    enhet.kontaktinformasjon
+                        ?.epost
+                        ?.takeIf { it.kunIntern != true }
+                        ?.adresse
+                        ?.takeIf { it.isNotBlank() },
             )
 
         private fun toInternalDomain(mottak: RsPublikumsmottakDTO) =

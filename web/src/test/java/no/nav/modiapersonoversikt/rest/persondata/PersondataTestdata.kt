@@ -208,6 +208,8 @@ internal fun gittNavKontorEnhet(
             ),
         ),
     overordnetEnhet = null,
+    telefonnummer = "55553333",
+    epost = "nav.oslo@nav.no",
 )
 
 internal fun gittEndring(

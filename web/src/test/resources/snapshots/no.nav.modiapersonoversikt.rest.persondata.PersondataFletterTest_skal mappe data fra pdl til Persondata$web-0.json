@@ -280,6 +280,7 @@
       }
     },
     "navEnhet" : {
+      "epost" : "nav.oslo@nav.no",
       "id" : "0123",
       "navn" : "NAV Oslo",
       "publikumsmottak" : [ "java.util.ArrayList", [ {
@@ -299,7 +300,8 @@
           "linje3" : null,
           "sistEndret" : null
         }
-      } ] ]
+      } ] ],
+      "telefonnummer" : "55553333"
     },
     "navn" : [ "java.util.ArrayList", [ {
       "etternavn" : "McTestesen",

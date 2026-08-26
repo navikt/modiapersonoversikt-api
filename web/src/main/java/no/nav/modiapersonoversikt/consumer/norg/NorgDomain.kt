@@ -45,6 +45,8 @@ object NorgDomain {
         val enhet: Enhet,
         val publikumsmottak: List<Publikumsmottak>,
         val overordnetEnhet: EnhetId?,
+        val telefonnummer: String? = null,
+        val epost: String? = null,
     )
 
     data class Publikumsmottak(
