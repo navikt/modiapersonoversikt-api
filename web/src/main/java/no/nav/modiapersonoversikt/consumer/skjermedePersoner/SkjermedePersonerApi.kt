@@ -18,7 +18,7 @@ interface SkjermedePersonerApi : Pingable {
 class SkjermedePersonerApiImpl(
     private val url: String,
     private val client: OkHttpClient,
-    private val cache: Cache<Fnr, Boolean> = CacheUtils.createCache(),
+    private val cache: Cache<Fnr, Boolean?> = CacheUtils.createCache(),
 ) : SkjermedePersonerApi {
     private val skjermingPipApi = SkjermingPipApi(url, client)
 

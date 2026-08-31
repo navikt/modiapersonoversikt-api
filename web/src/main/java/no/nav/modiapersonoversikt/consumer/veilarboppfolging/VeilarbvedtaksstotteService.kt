@@ -22,7 +22,7 @@ data class Gjeldende14aVedtakResponse(
 )
 
 data class Gjeldende14aVedtak(
-    val innsatsgruppe: Innsatsgruppe,
+    val innsatsgruppe: Innsatsgruppe?,
     val hovedmal: Hovedmal?,
     val fattetDato: LocalDateTime,
 )
@@ -40,18 +40,19 @@ data class Hovedmal(
 class VeilarbvedtaksstotteServiceImpl(
     private val gjeldende14AVedtakApi: Gjeldende14AVedtakApi,
     private val kodeverkFor14AVedtakApi: KodeverkFor14AVedtakApi,
-    private val cache: Cache<Fnr, Gjeldende14aVedtak> = CacheUtils.createCache(),
-    private val innsatsgruppeCache: Cache<String, Innsatsgruppe> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
-    private val hovedmalCache: Cache<String, Hovedmal> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
+    private val cache: Cache<Fnr, Gjeldende14aVedtak?> = CacheUtils.createCache(),
+    private val innsatsgruppeCache: Cache<String, Innsatsgruppe?> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
+    private val hovedmalCache: Cache<String, Hovedmal?> = CacheUtils.createCache(expireAfterWrite = Duration.ofHours(24)),
 ) : VeilarbvedtaksstotteService {
     init {
         prepopulerCache()
     }
 
     override fun hentGjeldende14aVedtak(fnr: Fnr): Gjeldende14aVedtak? =
-        cache.get(fnr) {
-            gjeldende14AVedtakApi.hentGjeldende14aVedtakEksternt(Gjeldende14aVedtakRequest(fnr.get()))?.let { mapToGjeldende14aVedtak(it) }
-        }
+        cache.getIfPresent(fnr) ?: gjeldende14AVedtakApi
+            .hentGjeldende14aVedtakEksternt(Gjeldende14aVedtakRequest(fnr.get()))
+            ?.let { mapToGjeldende14aVedtak(it) }
+            ?.also { cache.put(fnr, it) }
 
     override fun ping() =
         SelfTestCheck(
@@ -66,8 +67,8 @@ class VeilarbvedtaksstotteServiceImpl(
 
     private fun mapToGjeldende14aVedtak(dto: Gjeldende14aVedtakDto) =
         Gjeldende14aVedtak(
-            innsatsgruppe = innsatsgruppeCache.get(dto.innsatsgruppe.value) { getInnsatsgruppe(dto.innsatsgruppe.value) },
-            hovedmal = dto.hovedmal?.let { hovedmal -> hovedmalCache.get(hovedmal.value) { getHovedmal(hovedmal.value) } },
+            innsatsgruppe = innsatsgruppeCache.getIfPresent(dto.innsatsgruppe.value) ?: getInnsatsgruppe(dto.innsatsgruppe.value),
+            hovedmal = dto.hovedmal?.let { hovedmal -> hovedmalCache.getIfPresent(hovedmal.value) ?: getHovedmal(hovedmal.value) },
             fattetDato = dto.fattetDato.toLocalDateTime(),
         )
 

@@ -85,7 +85,7 @@ class SakerController
             @RequestBody fnrRequest: FnrRequest,
             @PathVariable("journalpostId") journalpostId: String,
             @PathVariable("dokumentreferanse") dokumentreferanse: String,
-        ): ResponseEntity<Any?> =
+        ): ResponseEntity<Any> =
             tilgangskontroll
                 .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
                 .get(
