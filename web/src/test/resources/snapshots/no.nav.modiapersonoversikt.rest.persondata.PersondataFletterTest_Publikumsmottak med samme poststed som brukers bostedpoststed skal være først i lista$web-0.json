@@ -280,6 +280,7 @@
       }
     },
     "navEnhet" : {
+      "epost" : null,
       "id" : "0123",
       "navn" : "NAV Test",
       "publikumsmottak" : [ "java.util.Arrays$ArrayList", [ {
@@ -315,7 +316,8 @@
           "linje3" : null,
           "sistEndret" : null
         }
-      } ] ]
+      } ] ],
+      "telefonnummer" : null
     },
     "navn" : [ "java.util.ArrayList", [ {
       "etternavn" : "McTestesen",
