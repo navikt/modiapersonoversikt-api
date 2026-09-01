@@ -178,9 +178,12 @@ query hentPersondata($ident: ID!){
                 ...endringerOgMaster
             }
         }
-        vergemaalEllerFremtidsfullmakt {
+        vergemaalEllerFremtidsfullmakt(historikk: true) {
             type
             embete
+            metadata {
+                historisk
+            }
             vergeEllerFullmektig {
                 identifiserendeInformasjon {
                     navn  {

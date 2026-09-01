@@ -162,6 +162,11 @@ internal val tredjepartsPersoner =
                 fnr = "55555111000",
                 navn = "Person Vergemål",
             ),
+        "55555222000" to
+            gittTredjepartsperson(
+                fnr = "55555222000",
+                navn = "Person HistoriskVergemål",
+            ),
         "55333111000" to
             gittTredjepartsperson(
                 fnr = "55333111000",
@@ -378,10 +383,30 @@ internal val vergemal =
                 omfang = null,
                 omfangetErInnenPersonligOmraade = false,
             ),
+        metadata = Metadata2(historisk = false),
         folkeregistermetadata =
             Folkeregistermetadata(
                 gyldighetstidspunkt = gittDateTime("2018-02-02T00:00:00"),
                 opphoerstidspunkt = null,
+            ),
+    )
+
+internal val historiskVergemal =
+    VergemaalEllerFremtidsfullmakt(
+        type = "voksen",
+        embete = "fylkesmannenIOsloOgViken",
+        vergeEllerFullmektig =
+            VergeEllerFullmektig(
+                identifiserendeInformasjon = gittIdentifiserendeInformasjon("Person HistoriskVergemål", "M"),
+                motpartsPersonident = "55555222000",
+                omfang = null,
+                omfangetErInnenPersonligOmraade = false,
+            ),
+        metadata = Metadata2(historisk = true),
+        folkeregistermetadata =
+            Folkeregistermetadata(
+                gyldighetstidspunkt = gittDateTime("2010-02-02T00:00:00"),
+                opphoerstidspunkt = gittDateTime("2015-02-02T00:00:00"),
             ),
     )
 
@@ -541,7 +566,7 @@ internal val testPerson =
         kontaktinformasjonForDoedsbo = listOf(kontaktinformasjonDodsbo),
         tilrettelagtKommunikasjon = listOf(tilrettelagtKommunikasjonData),
         telefonnummer = listOf(Telefonnummer("47", "90909090", 1, metadata)),
-        vergemaalEllerFremtidsfullmakt = listOf(vergemal),
+        vergemaalEllerFremtidsfullmakt = listOf(vergemal, historiskVergemal),
         rettsligHandleevne = listOf(rettsligHandleevne),
         foreldreansvar = listOf(foreldreansvarData),
         forelderBarnRelasjon = forelderBarnRelasjonData,

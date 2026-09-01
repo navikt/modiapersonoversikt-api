@@ -76,6 +76,7 @@ class PersondataFletter(
         clock: Clock = Clock.systemDefaultZone(),
     ): Persondata.Data {
         val feilendeSystemer = data.feilendeSystemer().toMutableList()
+        val (historiskeVergemal, gjeldendeVergemal) = mapVergemal(data).partition { it.historisk }
         return Persondata.Data(
             feilendeSystemer = feilendeSystemer,
             person =
@@ -109,7 +110,8 @@ class PersondataFletter(
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
                     fullmakt = hentFullmakt(data).getOrElse(emptyList()),
-                    vergemal = hentVergemal(data),
+                    vergemal = gjeldendeVergemal,
+                    historiskeVergemal = historiskeVergemal,
                     tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                     rettsligHandleevne = hentRettsligHandleevne(data),
                     telefonnummer = hentTelefonnummer(data),
@@ -895,7 +897,7 @@ class PersondataFletter(
             )
         }
 
-    private fun hentVergemal(data: Data): List<Persondata.Verge> =
+    private fun mapVergemal(data: Data): List<Persondata.Verge> =
         data.persondata.vergemaalEllerFremtidsfullmakt.map { vergemal ->
             val motpart =
                 data.tredjepartsPerson
@@ -919,6 +921,7 @@ class PersondataFletter(
                         vergemal.folkeregistermetadata?.gyldighetstidspunkt,
                         vergemal.folkeregistermetadata?.opphoerstidspunkt,
                     ),
+                historisk = vergemal.metadata.historisk,
             )
         }
 

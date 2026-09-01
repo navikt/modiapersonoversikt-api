@@ -5,7 +5,9 @@ import io.mockk.mockk
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Doedsfall
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Folkeregistermetadata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata2
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
 import no.nav.modiapersonoversikt.service.persondata.PersondataResult
@@ -271,5 +273,85 @@ internal class PersondataFletterTest {
 
         assertTrue(result.feilendeSystemer.contains(PersondataResult.InformasjonElement.FULLMAKT))
         assertTrue(result.person.fullmakt.isEmpty())
+    }
+
+    @Test
+    internal fun `skal skille historiske vergemal fra gjeldende vergemal`() {
+        val result =
+            mapper.flettSammenData(
+                data = testData.copy(personIdent = fnr, persondata = testPerson),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            )
+
+        assertEquals(1, result.person.vergemal.size)
+        assertEquals(
+            false,
+            result.person.vergemal
+                .first()
+                .historisk,
+        )
+        assertEquals(
+            "55555111000",
+            result.person.vergemal
+                .first()
+                .ident,
+        )
+
+        assertEquals(1, result.person.historiskeVergemal.size)
+        assertEquals(
+            true,
+            result.person.historiskeVergemal
+                .first()
+                .historisk,
+        )
+        assertEquals(
+            "55555222000",
+            result.person.historiskeVergemal
+                .first()
+                .ident,
+        )
+    }
+
+    @Test
+    internal fun `historisk skal hentes fra metadata og ikke utledes fra gyldighetsperiode`() {
+        val avsluttetMenGjeldende =
+            vergemal.copy(
+                metadata = Metadata2(historisk = false),
+                folkeregistermetadata =
+                    Folkeregistermetadata(
+                        gyldighetstidspunkt = gittDateTime("2010-02-02T00:00:00"),
+                        opphoerstidspunkt = gittDateTime("2015-02-02T00:00:00"),
+                    ),
+            )
+
+        val result =
+            mapper.flettSammenData(
+                data =
+                    testData.copy(
+                        personIdent = fnr,
+                        persondata = testPerson.copy(vergemaalEllerFremtidsfullmakt = listOf(avsluttetMenGjeldende)),
+                    ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            )
+
+        assertEquals(1, result.person.vergemal.size)
+        assertTrue(result.person.historiskeVergemal.isEmpty())
+    }
+
+    @Test
+    internal fun `historiske vergemal skal fa navn fra tredjepartsoppslag`() {
+        val result =
+            mapper.flettSammenData(
+                data = testData.copy(personIdent = fnr, persondata = testPerson),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            )
+
+        assertEquals(
+            "HistoriskVergemål",
+            result.person.historiskeVergemal
+                .first()
+                .navn
+                ?.etternavn,
+        )
     }
 }

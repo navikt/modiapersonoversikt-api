@@ -33,6 +33,7 @@ object Persondata {
         val dodsbo: List<Dodsbo>,
         val fullmakt: List<Fullmakt>,
         val vergemal: List<Verge>,
+        val historiskeVergemal: List<Verge>,
         val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon,
         val rettsligHandleevne: List<RettsligHandleevne>,
         val telefonnummer: List<Telefon>,
@@ -277,6 +278,7 @@ object Persondata {
         val tjenesteOppgaver: List<String>?,
         val embete: String?,
         val gyldighetsPeriode: GyldighetsPeriode?,
+        val historisk: Boolean = false,
     )
 
     data class RettsligHandleevne(

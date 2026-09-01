@@ -224,6 +224,23 @@
       } ] ]
     } ] ],
     "geografiskTilknytning" : null,
+    "historiskeVergemal" : [ "java.util.ArrayList", [ {
+      "embete" : "Fylkesmannen i Oslo og Viken",
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2010-02-02",
+        "gyldigTilOgMed" : "2015-02-02"
+      },
+      "historisk" : true,
+      "ident" : "55555222000",
+      "navn" : {
+        "etternavn" : "HistoriskVergemål",
+        "fornavn" : "Person",
+        "mellomnavn" : null
+      },
+      "omfang" : "Ikke oppgitt",
+      "tjenesteOppgaver" : null,
+      "vergesakstype" : "Voksen"
+    } ] ],
     "innflyttingTilNorge" : [ "java.util.ArrayList", [ {
       "fraflyttingsland" : "SWD",
       "gyldighetsPeriode" : null,
@@ -392,6 +409,7 @@
         "gyldigFraOgMed" : "2018-02-02",
         "gyldigTilOgMed" : null
       },
+      "historisk" : false,
       "ident" : "55555111000",
       "navn" : {
         "etternavn" : "Vergemål",
