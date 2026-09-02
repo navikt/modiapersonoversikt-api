@@ -63,7 +63,11 @@ class PersondataFletter(
             ekstraDatapunker
                 .mapNotNull {
                     if (it is PersondataResult.Failure<*>) {
-                        Logging.teamLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: ${it.system}", it.exception)
+                        Logging.teamLog.error(
+                            Logging.TEAM_LOGS_MARKER,
+                            "Persondata feilet system: ${it.system}",
+                            it.exception,
+                        )
                         it.system
                     } else {
                         null
@@ -76,7 +80,7 @@ class PersondataFletter(
         clock: Clock = Clock.systemDefaultZone(),
     ): Persondata.Data {
         val feilendeSystemer = data.feilendeSystemer().toMutableList()
-        val (historiskeVergemal, gjeldendeVergemal) = mapVergemal(data).partition { it.historisk }
+        val (historiskeVergemal, gjeldendeVergemal) = hentVergemal(data).partition { it.historisk }
         return Persondata.Data(
             feilendeSystemer = feilendeSystemer,
             person =
@@ -897,7 +901,7 @@ class PersondataFletter(
             )
         }
 
-    private fun mapVergemal(data: Data): List<Persondata.Verge> =
+    private fun hentVergemal(data: Data): List<Persondata.Verge> =
         data.persondata.vergemaalEllerFremtidsfullmakt.map { vergemal ->
             val motpart =
                 data.tredjepartsPerson
