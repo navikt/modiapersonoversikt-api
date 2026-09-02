@@ -63,7 +63,11 @@ class PersondataFletter(
             ekstraDatapunker
                 .mapNotNull {
                     if (it is PersondataResult.Failure<*>) {
-                        Logging.teamLog.error(Logging.TEAM_LOGS_MARKER, "Persondata feilet system: ${it.system}", it.exception)
+                        Logging.teamLog.error(
+                            Logging.TEAM_LOGS_MARKER,
+                            "Persondata feilet system: ${it.system}",
+                            it.exception,
+                        )
                         it.system
                     } else {
                         null
@@ -76,6 +80,7 @@ class PersondataFletter(
         clock: Clock = Clock.systemDefaultZone(),
     ): Persondata.Data {
         val feilendeSystemer = data.feilendeSystemer().toMutableList()
+        val (historiskeVergemal, gjeldendeVergemal) = hentVergemal(data).partition { it.historisk }
         return Persondata.Data(
             feilendeSystemer = feilendeSystemer,
             person =
@@ -109,7 +114,8 @@ class PersondataFletter(
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
                     fullmakt = hentFullmakt(data).getOrElse(emptyList()),
-                    vergemal = hentVergemal(data),
+                    vergemal = gjeldendeVergemal,
+                    historiskeVergemal = historiskeVergemal,
                     tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                     rettsligHandleevne = hentRettsligHandleevne(data),
                     telefonnummer = hentTelefonnummer(data),
@@ -919,6 +925,7 @@ class PersondataFletter(
                         vergemal.folkeregistermetadata?.gyldighetstidspunkt,
                         vergemal.folkeregistermetadata?.opphoerstidspunkt,
                     ),
+                historisk = vergemal.metadata.historisk,
             )
         }
 
