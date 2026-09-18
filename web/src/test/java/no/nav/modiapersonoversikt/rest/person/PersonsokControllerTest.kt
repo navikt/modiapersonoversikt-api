@@ -189,18 +189,69 @@ class PersonsokControllerTest {
             ).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
         }
 
+        @Test
+        internal fun `mapper fornavn til pdl-format`() {
+            val kriterier =
+                requestV3
+                    .copy(fornavn = "Fornavn")
+                    .tilPdlKriterier(clock)
+
+            assertThat(
+                kriterier,
+            ).contains(PdlKriterie(PdlFelt.FORNAVN, "Fornavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
+            assertThat(kriterier.filter { it.felt == PdlFelt.ETTERNAVN }).isEmpty()
+        }
+
+        @Test
+        internal fun `mapper etternavn til pdl-format`() {
+            val kriterier =
+                requestV3
+                    .copy(etternavn = "Etternavn")
+                    .tilPdlKriterier(clock)
+
+            assertThat(
+                kriterier,
+            ).contains(PdlKriterie(PdlFelt.ETTERNAVN, "Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE))
+            assertThat(kriterier.filter { it.felt == PdlFelt.FORNAVN }).isEmpty()
+        }
+
+        @Test
+        internal fun `mapper både fornavn og etternavn til to kriterier`() {
+            val kriterier =
+                requestV3
+                    .copy(fornavn = "Fornavn", etternavn = "Etternavn")
+                    .tilPdlKriterier(clock)
+
+            assertThat(kriterier).contains(
+                PdlKriterie(PdlFelt.FORNAVN, "Fornavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+                PdlKriterie(PdlFelt.ETTERNAVN, "Etternavn", searchHistorical = PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+            )
+        }
+
+        @Test
+        internal fun `tomme navnefelt gir ingen navnekriterier`() {
+            val kriterier =
+                requestV3
+                    .copy(fornavn = "", etternavn = "   ")
+                    .tilPdlKriterier(clock)
+
+            assertThat(kriterier.filter { it.felt == PdlFelt.FORNAVN || it.felt == PdlFelt.ETTERNAVN }).isEmpty()
+        }
+
         private val requestV3 =
             PersonsokRequestV3(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                enhet = null,
+                navn = null,
+                fornavn = null,
+                etternavn = null,
+                utenlandskID = null,
+                alderFra = null,
+                alderTil = null,
+                fodselsdatoFra = null,
+                fodselsdatoTil = null,
+                kjonn = null,
+                adresse = null,
+                telefonnummer = null,
             )
     }
 }

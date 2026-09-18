@@ -46,6 +46,8 @@ interface PdlOppslagService {
         val rule: SokKriterieRule,
     ) {
         NAVN("fritekst.navn", FUZZY_MATCH),
+        FORNAVN("person.navn.fornavn", CONTAINS),
+        ETTERNAVN("person.navn.etternavn", CONTAINS),
         TELEFON_NUMMER("person.telefonnummer.nummer", EQUALS),
         ADRESSE("fritekst.adresser", CONTAINS),
         UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", EQUALS),
