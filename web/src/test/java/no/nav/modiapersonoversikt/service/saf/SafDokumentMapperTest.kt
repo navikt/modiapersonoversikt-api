@@ -111,17 +111,17 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.SLADDET, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.SLADDET, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                     ),
@@ -143,17 +143,17 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                     ),
@@ -175,22 +175,22 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.SLADDET, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                     ),
@@ -211,13 +211,13 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, SkjermingType.POL),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, SkjermingType.POL),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, POL),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, POL),
                                 ),
                         ),
                     ),
@@ -240,8 +240,8 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, POL),
-                                    Dokumentvariant(true, Variantformat.SLADDET, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, POL),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, null),
                                 ),
                         ),
                     ),
@@ -262,8 +262,8 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.SLADDET, POL),
-                                    Dokumentvariant(true, Variantformat.ARKIV, POL),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, POL),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, POL),
                                 ),
                         ),
                     ),
@@ -577,4 +577,4 @@ private fun lagDokumentInfo(tittel: String): DokumentInfo =
         dokumentstatus = dokumentStatus,
     )
 
-private fun lagDokumentVariant(): Dokumentvariant = Dokumentvariant(true, variantformat, null)
+private fun lagDokumentVariant(): Dokumentvariant = Dokumentvariant(true, true, variantformat, null)

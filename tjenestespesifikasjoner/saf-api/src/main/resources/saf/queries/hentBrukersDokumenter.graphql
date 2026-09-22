@@ -2,7 +2,6 @@ query hentBrukersDokumenter($brukerId: BrukerIdInput!) {
     dokumentoversiktBruker(
         brukerId: $brukerId,
         journalstatuser: [JOURNALFOERT, FERDIGSTILT, EKSPEDERT],
-        fraDato: "2016-06-04",
         foerste: 9999
     ) {
         journalposter {
@@ -15,6 +14,7 @@ query hentBrukersDokumenter($brukerId: BrukerIdInput!) {
                 tittel
                 dokumentInfoId
                 dokumentvarianter{
+                    brukerHarTilgang
                     saksbehandlerHarTilgang
                     variantformat
                     skjerming

@@ -148,6 +148,7 @@ object SafDokumentMapper {
             skjerming = getSkjerming(dokumentInfo)?.toString()
             dokumentStatus = getDokumentStatus(dokumentInfo)
             saksbehandlerHarTilgang = getTilgang(dokumentInfo)
+            brukerHarTilgang = getTilgangBruker(dokumentInfo)
         }
     }
 
@@ -183,6 +184,8 @@ object SafDokumentMapper {
     private fun getSkjerming(dokumentInfo: DokumentInfo): SkjermingType? = getVariant(dokumentInfo)?.skjerming
 
     private fun getTilgang(dokumentInfo: DokumentInfo): Boolean = getVariant(dokumentInfo)?.saksbehandlerHarTilgang == true
+
+    private fun getTilgangBruker(dokumentInfo: DokumentInfo): Boolean = getVariant(dokumentInfo)?.brukerHarTilgang == true
 
     private fun getVariant(dokumentInfo: DokumentInfo): Dokumentvariant? =
         dokumentInfo.dokumentvarianter.let {
