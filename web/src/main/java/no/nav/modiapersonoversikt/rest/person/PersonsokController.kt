@@ -273,6 +273,8 @@ data class KodeverdiDTO(
 data class PersonsokRequestV3(
     val enhet: String?,
     val navn: String?,
+    val fornavn: String?,
+    val etternavn: String?,
     val utenlandskID: String?,
     val alderFra: Int?,
     val alderTil: Int?,
@@ -293,15 +295,30 @@ fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone())
             else -> null
         }
 
-    return listOf(
-        PdlKriterie(PdlFelt.NAVN, this.navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
-        PdlKriterie(PdlFelt.ADRESSE, this.adresse, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-        PdlKriterie(PdlFelt.TELEFON_NUMMER, this.telefonnummer, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-        PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
-        PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-        PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-        PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-    )
+    val navnekriterier =
+        listOfNotNull(
+            this.fornavn
+                ?.takeIf { it.isNotBlank() }
+                ?.let { PdlKriterie(PdlFelt.FORNAVN, it, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE) },
+            this.etternavn
+                ?.takeIf { it.isNotBlank() }
+                ?.let { PdlKriterie(PdlFelt.ETTERNAVN, it, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE) },
+        )
+
+    return navnekriterier +
+        listOf(
+            PdlKriterie(PdlFelt.NAVN, this.navn, searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE),
+            PdlKriterie(PdlFelt.ADRESSE, this.adresse, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+            PdlKriterie(PdlFelt.TELEFON_NUMMER, this.telefonnummer, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+            PdlKriterie(
+                PdlFelt.UTENLANDSK_ID,
+                this.utenlandskID,
+                searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE,
+            ),
+            PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+            PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+            PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        )
 }
 
 private fun finnSenesteDatoGittAlder(
