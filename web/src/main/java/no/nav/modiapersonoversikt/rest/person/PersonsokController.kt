@@ -91,10 +91,25 @@ class PersonsokController
                     .joinToString(", ") { it.felt.name }
             sokefelterTrace.log(enhet to feltnavn)
 
-            val pageNumber = personsokRequestV3.pageNumber ?: 1
+            val pageNumber =
+                (personsokRequestV3.pageNumber ?: 1)
+                    .also {
+                        if (it < 1) {
+                            throw ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                "pageNumber må være 1 eller høyere",
+                            )
+                        }
+                    }
             val resultsPerPage =
                 (personsokRequestV3.resultsPerPage ?: 50)
                     .also {
+                        if (it < 1) {
+                            throw ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                "resultsPerPage må være 1 eller høyere",
+                            )
+                        }
                         if (it > PdlOppslagService.MAKS_RESULTATER_PER_SIDE) {
                             throw ResponseStatusException(
                                 HttpStatus.BAD_REQUEST,
