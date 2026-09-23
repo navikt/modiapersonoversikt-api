@@ -23,129 +23,129 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/rest/personsok")
 class PersonsokController
-@Autowired
-constructor(
-    private val pdlOppslagService: PdlOppslagService,
-    val tilgangskontroll: Tilgangskontroll,
-) {
-    private val sokefelterTrace =
-        Audit.describe<Pair<String, String>>(Audit.Action.READ, AuditResources.Personsok.Sokefelter) { data ->
-            val (enhet, felter) = requireNotNull(data)
-            listOf(
-                AuditIdentifier.ENHET_ID to enhet,
-                AuditIdentifier.SOKEFELTER to felter,
-            )
-        }
-    private val auditDescriptor =
-        Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
-            val fnr = resultat?.joinToString(", ") { it.ident.ident } ?: "--"
-            listOf(
-                AuditIdentifier.FNR to fnr,
-            )
-        }
-    private val auditDescriptorV4 =
-        Audit.describe<PersonSokResponsV4>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
-            val fnr = resultat?.treff?.joinToString(", ") { it.ident.ident } ?: "--"
-            listOf(
-                AuditIdentifier.FNR to fnr,
-            )
-        }
-
-    @PostMapping("/v3")
-    fun sokPdlV3(
-        @RequestBody personsokRequestV3: PersonsokRequestV3,
-    ): List<PersonSokResponsDTO> =
-        tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(auditDescriptor) {
-                handterFeil {
-                    // v3 er bakoverkompatibel og skal ikke ta imot paging-parametre fra klienten
-                    utforSok(personsokRequestV3.copy(pageNumber = 1, resultsPerPage = 30)).hits
-                }
+    @Autowired
+    constructor(
+        private val pdlOppslagService: PdlOppslagService,
+        val tilgangskontroll: Tilgangskontroll,
+    ) {
+        private val sokefelterTrace =
+            Audit.describe<Pair<String, String>>(Audit.Action.READ, AuditResources.Personsok.Sokefelter) { data ->
+                val (enhet, felter) = requireNotNull(data)
+                listOf(
+                    AuditIdentifier.ENHET_ID to enhet,
+                    AuditIdentifier.SOKEFELTER to felter,
+                )
+            }
+        private val auditDescriptor =
+            Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
+                val fnr = resultat?.joinToString(", ") { it.ident.ident } ?: "--"
+                listOf(
+                    AuditIdentifier.FNR to fnr,
+                )
+            }
+        private val auditDescriptorV4 =
+            Audit.describe<PersonSokResponsV4>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
+                val fnr = resultat?.treff?.joinToString(", ") { it.ident.ident } ?: "--"
+                listOf(
+                    AuditIdentifier.FNR to fnr,
+                )
             }
 
-    @PostMapping("/v4")
-    fun sokPdlV4(
-        @RequestBody personsokRequestV3: PersonsokRequestV3,
-    ): PersonSokResponsV4 =
-        tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(auditDescriptorV4) {
-                handterFeil {
-                    val resultat = utforSok(personsokRequestV3)
-                    PersonSokResponsV4(
-                        treff = resultat.hits,
-                        pageNumber = resultat.pageNumber,
-                        totalHits = resultat.totalHits,
-                        totalPages = resultat.totalPages,
-                    )
+        @PostMapping("/v3")
+        fun sokPdlV3(
+            @RequestBody personsokRequestV3: PersonsokRequestV3,
+        ): List<PersonSokResponsDTO> =
+            tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(auditDescriptor) {
+                    handterFeil {
+                        // v3 er bakoverkompatibel og skal ikke ta imot paging-parametre fra klienten
+                        utforSok(personsokRequestV3.copy(pageNumber = 1, resultsPerPage = 30)).hits
+                    }
                 }
-            }
 
-    private fun utforSok(personsokRequestV3: PersonsokRequestV3): SokresultatMedTreff {
-        val enhet = personsokRequestV3.enhet ?: "Ukjent"
-        val pdlKriterier = personsokRequestV3.tilPdlKriterier()
-        val feltnavn =
-            pdlKriterier
-                .filter { it.value.isNullOrEmpty().not() }
-                .joinToString(", ") { it.felt.name }
-        sokefelterTrace.log(enhet to feltnavn)
-
-        val pageNumber = personsokRequestV3.pageNumber ?: 1
-        val resultsPerPage =
-            (personsokRequestV3.resultsPerPage ?: 50)
-                .also {
-                    if (it > PdlOppslagService.MAKS_RESULTATER_PER_SIDE) {
-                        throw ResponseStatusException(
-                            HttpStatus.BAD_REQUEST,
-                            "resultsPerPage kan ikke være større enn ${PdlOppslagService.MAKS_RESULTATER_PER_SIDE}",
+        @PostMapping("/v4")
+        fun sokPdlV4(
+            @RequestBody personsokRequestV3: PersonsokRequestV3,
+        ): PersonSokResponsV4 =
+            tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(auditDescriptorV4) {
+                    handterFeil {
+                        val resultat = utforSok(personsokRequestV3)
+                        PersonSokResponsV4(
+                            treff = resultat.hits,
+                            pageNumber = resultat.pageNumber,
+                            totalHits = resultat.totalHits,
+                            totalPages = resultat.totalPages,
                         )
                     }
                 }
 
-        val resultat = pdlOppslagService.sokPerson(pdlKriterier, pageNumber, resultsPerPage)
-        return SokresultatMedTreff(
-            hits = resultat.hits.mapNotNull(::lagPersonResponse),
-            pageNumber = resultat.pageNumber,
-            totalHits = resultat.totalHits,
-            totalPages = resultat.totalPages,
-        )
-    }
+        private fun utforSok(personsokRequestV3: PersonsokRequestV3): SokresultatMedTreff {
+            val enhet = personsokRequestV3.enhet ?: "Ukjent"
+            val pdlKriterier = personsokRequestV3.tilPdlKriterier()
+            val feltnavn =
+                pdlKriterier
+                    .filter { it.value.isNullOrEmpty().not() }
+                    .joinToString(", ") { it.felt.name }
+            sokefelterTrace.log(enhet to feltnavn)
 
-    private data class SokresultatMedTreff(
-        val hits: List<PersonSokResponsDTO>,
-        val pageNumber: Int?,
-        val totalHits: Int?,
-        val totalPages: Int?,
-    )
+            val pageNumber = personsokRequestV3.pageNumber ?: 1
+            val resultsPerPage =
+                (personsokRequestV3.resultsPerPage ?: 50)
+                    .also {
+                        if (it > PdlOppslagService.MAKS_RESULTATER_PER_SIDE) {
+                            throw ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                "resultsPerPage kan ikke være større enn ${PdlOppslagService.MAKS_RESULTATER_PER_SIDE}",
+                            )
+                        }
+                    }
 
-    private fun <T> handterFeil(block: () -> T): T =
-        try {
-            block()
-        } catch (ex: Exception) {
-            when {
-                ex.message == "For mange forekomster funnet" ->
-                    throw ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "Søket gav mer enn 200 treff. Forsøk å begrense søket.",
-                    )
-
-                ex is GraphQLException ->
-                    throw ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "Søket gav feil ved kall til PDL: ${ex.message}",
-                        ex,
-                    )
-
-                else ->
-                    throw ResponseStatusException(
-                        HttpStatus.INTERNAL_SERVER_ERROR,
-                        "Feil fra søketjeneste: ${ex.message}",
-                        ex,
-                    )
-            }
+            val resultat = pdlOppslagService.sokPerson(pdlKriterier, pageNumber, resultsPerPage)
+            return SokresultatMedTreff(
+                hits = resultat.hits.mapNotNull(::lagPersonResponse),
+                pageNumber = resultat.pageNumber,
+                totalHits = resultat.totalHits,
+                totalPages = resultat.totalPages,
+            )
         }
-}
+
+        private data class SokresultatMedTreff(
+            val hits: List<PersonSokResponsDTO>,
+            val pageNumber: Int?,
+            val totalHits: Int?,
+            val totalPages: Int?,
+        )
+
+        private fun <T> handterFeil(block: () -> T): T =
+            try {
+                block()
+            } catch (ex: Exception) {
+                when {
+                    ex.message == "For mange forekomster funnet" ->
+                        throw ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Søket gav mer enn 200 treff. Forsøk å begrense søket.",
+                        )
+
+                    ex is GraphQLException ->
+                        throw ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Søket gav feil ved kall til PDL: ${ex.message}",
+                            ex,
+                        )
+
+                    else ->
+                        throw ResponseStatusException(
+                            HttpStatus.INTERNAL_SERVER_ERROR,
+                            "Feil fra søketjeneste: ${ex.message}",
+                            ex,
+                        )
+                }
+            }
+    }
 
 fun lagPersonResponse(searchHit: PersonSearchHit): PersonSokResponsDTO? {
     val ident: Folkeregisteridentifikator = searchHit.person?.folkeregisteridentifikator?.firstOrNull() ?: return null
@@ -377,7 +377,7 @@ fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone())
                     PdlKriterie(
                         PdlFelt.FORNAVN,
                         it,
-                        searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE
+                        searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE,
                     )
                 },
             this.etternavn
@@ -386,45 +386,45 @@ fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone())
                     PdlKriterie(
                         PdlFelt.ETTERNAVN,
                         it,
-                        searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE
+                        searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE,
                     )
                 },
         )
 
     return navnekriterier +
-            listOf(
-                PdlKriterie(
-                    PdlFelt.NAVN,
-                    this.navn,
-                    searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE
-                ),
-                PdlKriterie(
-                    PdlFelt.ADRESSE,
-                    this.adresse,
-                    searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE
-                ),
-                PdlKriterie(
-                    PdlFelt.TELEFON_NUMMER,
-                    this.telefonnummer,
-                    searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE
-                ),
-                PdlKriterie(
-                    PdlFelt.UTENLANDSK_ID,
-                    this.utenlandskID,
-                    searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE,
-                ),
-                PdlKriterie(
-                    PdlFelt.FODSELSDATO_FRA,
-                    fodselsdatoFra,
-                    searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE
-                ),
-                PdlKriterie(
-                    PdlFelt.FODSELSDATO_TIL,
-                    fodselsdatoTil,
-                    searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE
-                ),
-                PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
-            )
+        listOf(
+            PdlKriterie(
+                PdlFelt.NAVN,
+                this.navn,
+                searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE,
+            ),
+            PdlKriterie(
+                PdlFelt.ADRESSE,
+                this.adresse,
+                searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE,
+            ),
+            PdlKriterie(
+                PdlFelt.TELEFON_NUMMER,
+                this.telefonnummer,
+                searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE,
+            ),
+            PdlKriterie(
+                PdlFelt.UTENLANDSK_ID,
+                this.utenlandskID,
+                searchHistorical = PdlOppslagService.PdlSokeOmfang.HISTORISK_OG_GJELDENDE,
+            ),
+            PdlKriterie(
+                PdlFelt.FODSELSDATO_FRA,
+                fodselsdatoFra,
+                searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE,
+            ),
+            PdlKriterie(
+                PdlFelt.FODSELSDATO_TIL,
+                fodselsdatoTil,
+                searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE,
+            ),
+            PdlKriterie(PdlFelt.KJONN, kjonn, searchHistorical = PdlOppslagService.PdlSokeOmfang.GJELDENDE),
+        )
 }
 
 private fun finnSenesteDatoGittAlder(
