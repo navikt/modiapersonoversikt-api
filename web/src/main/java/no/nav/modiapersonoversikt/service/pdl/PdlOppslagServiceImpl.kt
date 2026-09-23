@@ -95,29 +95,38 @@ open class PdlOppslagServiceImpl(
     override fun hentFnr(aktorid: String): String? = hentAktivIdent(aktorid, IdentGruppe.FOLKEREGISTERIDENT)
 
     @Cacheable(unless = "#result == null")
-    override fun sokPerson(kriterier: List<PdlKriterie>): List<PersonSearchHit> =
+    override fun sokPerson(
+        kriterier: List<PdlKriterie>,
+        pageNumber: Int,
+        resultsPerPage: Int,
+    ): PdlOppslagService.PdlSokResultat =
         runBlocking {
             val paging =
                 Paging(
-                    pageNumber = 1,
-                    resultsPerPage = 30,
+                    pageNumber = pageNumber,
+                    resultsPerPage = resultsPerPage.coerceAtMost(PdlOppslagService.MAKS_RESULTATER_PER_SIDE),
                 )
 
             val criteria = kriterier.mapNotNull { it.asCriterion() }
             if (criteria.isEmpty()) {
-                emptyList()
+                PdlOppslagService.PdlSokResultat(emptyList(), null, null, null)
             } else {
-                pdlClient
-                    .execute(
-                        SokPerson(
-                            SokPerson.Variables(paging, criteria),
-                        ),
-                        userTokenAuthorizationHeaders,
-                    ).assertNoErrors()
-                    .data
-                    ?.sokPerson
-                    ?.hits
-                    ?: emptyList()
+                val resultat =
+                    pdlClient
+                        .execute(
+                            SokPerson(
+                                SokPerson.Variables(paging, criteria),
+                            ),
+                            userTokenAuthorizationHeaders,
+                        ).assertNoErrors()
+                        .data
+                        ?.sokPerson
+                PdlOppslagService.PdlSokResultat(
+                    hits = resultat?.hits ?: emptyList(),
+                    pageNumber = resultat?.pageNumber,
+                    totalHits = resultat?.totalHits,
+                    totalPages = resultat?.totalPages,
+                )
             }
         }
 

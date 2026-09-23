@@ -43,6 +43,13 @@ class PersonsokController
                     AuditIdentifier.FNR to fnr,
                 )
             }
+        private val auditDescriptorV4 =
+            Audit.describe<PersonSokResponsV4>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
+                val fnr = resultat?.treff?.joinToString(", ") { it.ident.ident } ?: "--"
+                listOf(
+                    AuditIdentifier.FNR to fnr,
+                )
+            }
 
         @PostMapping("/v3")
         fun sokPdlV3(
@@ -52,18 +59,64 @@ class PersonsokController
                 .check(Policies.tilgangTilModia)
                 .get(auditDescriptor) {
                     handterFeil {
-                        val enhet = personsokRequestV3.enhet ?: "Ukjent"
-                        val pdlKriterier = personsokRequestV3.tilPdlKriterier()
-                        val feltnavn =
-                            pdlKriterier
-                                .filter { it.value.isNullOrEmpty().not() }
-                                .joinToString(", ") { it.felt.name }
-                        sokefelterTrace.log(enhet to feltnavn)
-                        pdlOppslagService
-                            .sokPerson(pdlKriterier)
-                            .mapNotNull(::lagPersonResponse)
+                        utforSok(personsokRequestV3).hits
                     }
                 }
+
+        @PostMapping("/v4")
+        fun sokPdlV4(
+            @RequestBody personsokRequestV3: PersonsokRequestV3,
+        ): PersonSokResponsV4 =
+            tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(auditDescriptorV4) {
+                    handterFeil {
+                        val resultat = utforSok(personsokRequestV3)
+                        PersonSokResponsV4(
+                            treff = resultat.hits,
+                            pageNumber = resultat.pageNumber,
+                            totalHits = resultat.totalHits,
+                            totalPages = resultat.totalPages,
+                        )
+                    }
+                }
+
+        private fun utforSok(personsokRequestV3: PersonsokRequestV3): SokresultatMedTreff {
+            val enhet = personsokRequestV3.enhet ?: "Ukjent"
+            val pdlKriterier = personsokRequestV3.tilPdlKriterier()
+            val feltnavn =
+                pdlKriterier
+                    .filter { it.value.isNullOrEmpty().not() }
+                    .joinToString(", ") { it.felt.name }
+            sokefelterTrace.log(enhet to feltnavn)
+
+            val pageNumber = personsokRequestV3.pageNumber ?: 1
+            val resultsPerPage =
+                (personsokRequestV3.resultsPerPage ?: 50)
+                    .also {
+                        if (it > PdlOppslagService.MAKS_RESULTATER_PER_SIDE) {
+                            throw ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                "resultsPerPage kan ikke være større enn ${PdlOppslagService.MAKS_RESULTATER_PER_SIDE}",
+                            )
+                        }
+                    }
+
+            val resultat = pdlOppslagService.sokPerson(pdlKriterier, pageNumber, resultsPerPage)
+            return SokresultatMedTreff(
+                hits = resultat.hits.mapNotNull(::lagPersonResponse),
+                pageNumber = resultat.pageNumber,
+                totalHits = resultat.totalHits,
+                totalPages = resultat.totalPages,
+            )
+        }
+
+        private data class SokresultatMedTreff(
+            val hits: List<PersonSokResponsDTO>,
+            val pageNumber: Int?,
+            val totalHits: Int?,
+            val totalPages: Int?,
+        )
 
         private fun <T> handterFeil(block: () -> T): T =
             try {
@@ -283,6 +336,15 @@ data class PersonsokRequestV3(
     val kjonn: String?,
     val adresse: String?,
     val telefonnummer: String?,
+    val pageNumber: Int? = null,
+    val resultsPerPage: Int? = null,
+)
+
+data class PersonSokResponsV4(
+    val treff: List<PersonSokResponsDTO>,
+    val pageNumber: Int?,
+    val totalHits: Int?,
+    val totalPages: Int?,
 )
 
 fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
