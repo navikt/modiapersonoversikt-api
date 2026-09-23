@@ -9,6 +9,7 @@ public class Dokument {
     private String skjerming;
     private DokumentStatus dokumentStatus;
     private boolean saksbehandlerHarTilgang;
+    private boolean brukerHarTilgang;
 
     public enum DokumentStatus {
         UNDER_REDIGERING,
@@ -55,6 +56,13 @@ public class Dokument {
 
     public void setSaksbehandlerHarTilgang(boolean saksbehandlerHarTilgang) {
         this.saksbehandlerHarTilgang = saksbehandlerHarTilgang;
+    }
+    public boolean getBrukerHarTilgang() {
+        return brukerHarTilgang;
+    }
+
+    public void setBrukerHarTilgang(boolean brukerHarTilgang) {
+        this.brukerHarTilgang = brukerHarTilgang;
     }
 
     public String getSkjerming() {

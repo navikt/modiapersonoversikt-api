@@ -111,17 +111,17 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.SLADDET, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.SLADDET, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                     ),
@@ -143,17 +143,17 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                     ),
@@ -175,22 +175,22 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.SLADDET, null),
-                                    Dokumentvariant(true, Variantformat.__UNKNOWN_VALUE, null),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, null),
+                                    Dokumentvariant(true, true, Variantformat.__UNKNOWN_VALUE, null),
                                 ),
                         ),
                     ),
@@ -211,13 +211,13 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, SkjermingType.POL),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, SkjermingType.POL),
                                 ),
                         ),
                         lagVedlegg().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, POL),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, POL),
                                 ),
                         ),
                     ),
@@ -240,8 +240,8 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.ARKIV, POL),
-                                    Dokumentvariant(true, Variantformat.SLADDET, null),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, POL),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, null),
                                 ),
                         ),
                     ),
@@ -262,8 +262,8 @@ internal class SafDokumentMapperTest {
                         lagHoveddokument().copy(
                             dokumentvarianter =
                                 listOf(
-                                    Dokumentvariant(true, Variantformat.SLADDET, POL),
-                                    Dokumentvariant(true, Variantformat.ARKIV, POL),
+                                    Dokumentvariant(true, true, Variantformat.SLADDET, POL),
+                                    Dokumentvariant(true, true, Variantformat.ARKIV, POL),
                                 ),
                         ),
                     ),
@@ -531,6 +531,97 @@ internal class SafDokumentMapperTest {
 
         assertEquals(lestDato, dokumentMetadata.lestDato)
     }
+
+    @Test
+    fun `saksbehandlerHarTilgang og brukerHarTilgang mappes for hoveddokument og vedlegg`() {
+        val journalpost = lagJournalpost()
+
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
+
+        assertEquals(true, dokumentMetadata.hoveddokument.saksbehandlerHarTilgang)
+        assertEquals(true, dokumentMetadata.hoveddokument.brukerHarTilgang)
+        assertEquals(true, dokumentMetadata.vedlegg[0].saksbehandlerHarTilgang)
+        assertEquals(true, dokumentMetadata.vedlegg[0].brukerHarTilgang)
+    }
+
+    @Test
+    fun `saksbehandlerHarTilgang og brukerHarTilgang mappes uavhengig av hverandre`() {
+        val journalpost =
+            lagJournalpost().copy(
+                dokumenter =
+                    listOf(
+                        lagHoveddokument().copy(
+                            dokumentvarianter =
+                                listOf(
+                                    Dokumentvariant(
+                                        brukerHarTilgang = false,
+                                        saksbehandlerHarTilgang = true,
+                                        variantformat = Variantformat.ARKIV,
+                                    ),
+                                ),
+                        ),
+                        lagVedlegg().copy(
+                            dokumentvarianter =
+                                listOf(
+                                    Dokumentvariant(
+                                        brukerHarTilgang = true,
+                                        saksbehandlerHarTilgang = false,
+                                        variantformat = Variantformat.ARKIV,
+                                    ),
+                                ),
+                        ),
+                    ),
+            )
+
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
+
+        assertEquals(true, dokumentMetadata.hoveddokument.saksbehandlerHarTilgang)
+        assertEquals(false, dokumentMetadata.hoveddokument.brukerHarTilgang)
+        assertEquals(false, dokumentMetadata.vedlegg[0].saksbehandlerHarTilgang)
+        assertEquals(true, dokumentMetadata.vedlegg[0].brukerHarTilgang)
+    }
+
+    @Test
+    fun `tilgangsflagg hentes fra SLADDET-varianten naar den eksisterer`() {
+        val journalpost =
+            lagJournalpost().copy(
+                dokumenter =
+                    listOf(
+                        lagHoveddokument().copy(
+                            dokumentvarianter =
+                                listOf(
+                                    Dokumentvariant(
+                                        brukerHarTilgang = true,
+                                        saksbehandlerHarTilgang = true,
+                                        variantformat = Variantformat.ARKIV,
+                                    ),
+                                    Dokumentvariant(
+                                        brukerHarTilgang = false,
+                                        saksbehandlerHarTilgang = false,
+                                        variantformat = Variantformat.SLADDET,
+                                    ),
+                                ),
+                        ),
+                        lagVedlegg(),
+                    ),
+            )
+
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(journalpost))
+
+        assertEquals(SLADDET, dokumentMetadata.hoveddokument.variantformat)
+        assertEquals(false, dokumentMetadata.hoveddokument.saksbehandlerHarTilgang)
+        assertEquals(false, dokumentMetadata.hoveddokument.brukerHarTilgang)
+    }
+
+    @Test
+    fun `logisk vedlegg har ikke tilgang satt`() {
+        val dokumentMetadata = requireNotNull(fraSafJournalpost(lagJournalpost()))
+
+        val logiskVedlegg = dokumentMetadata.vedlegg.first { it.isLogiskDokument }
+
+        assertEquals(false, logiskVedlegg.saksbehandlerHarTilgang)
+        assertEquals(false, logiskVedlegg.brukerHarTilgang)
+    }
 }
 
 private fun lagJournalpost(): Journalpost {
@@ -577,4 +668,4 @@ private fun lagDokumentInfo(tittel: String): DokumentInfo =
         dokumentstatus = dokumentStatus,
     )
 
-private fun lagDokumentVariant(): Dokumentvariant = Dokumentvariant(true, variantformat, null)
+private fun lagDokumentVariant(): Dokumentvariant = Dokumentvariant(true, true, variantformat, null)
