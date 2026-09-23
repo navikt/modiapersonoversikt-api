@@ -18,12 +18,12 @@ import no.nav.modiapersonoversikt.testutils.AuthContextRule
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.TestUtils
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
 import java.net.URL
 
 internal class PdlOppslagServiceImplTest {

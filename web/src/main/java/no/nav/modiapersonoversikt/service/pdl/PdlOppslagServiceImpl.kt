@@ -8,7 +8,6 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.IdentGruppe
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
 import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Paging
-import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.PersonSearchHit
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.RestConstants.*
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
