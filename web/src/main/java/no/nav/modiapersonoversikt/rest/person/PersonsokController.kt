@@ -137,6 +137,10 @@ class PersonsokController
         private fun <T> handterFeil(block: () -> T): T =
             try {
                 block()
+            } catch (ex: ResponseStatusException) {
+                // Ikke fang opp våre egne valideringsfeil (f.eks. ugyldig paging) i den generiske
+                // exception-håndteringen under, ellers blir de skrevet om til 500 INTERNAL_SERVER_ERROR.
+                throw ex
             } catch (ex: Exception) {
                 when {
                     ex.message == "For mange forekomster funnet" ->
