@@ -1,23 +1,37 @@
 package no.nav.modiapersonoversikt.rest.person
 
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
+import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Matrikkeladresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Person
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Telefonnummer
+import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.PolicyWithAttributes
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollInstance
+import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.*
+import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.time.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Bostedsadresse as PdlBostedsadresse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.Kjoenn as PdlKjoenn
 
 /**
- * Doesn't actually test PersonsokController – too much going on there to
- * sensibly fake all the dependencies. Does test a few of its components.
+ * PersonResponseMapper og PdlKriterierMapper tester enkeltdeler av
+ * PersonsokController. PersonsokControllerV4Test tester selve controlleren
+ * ende-til-ende med en fake PdlOppslagService og en tilgangskontroll som
+ * alltid tillater kallet.
  */
 class PersonsokControllerTest {
     @Nested
@@ -254,4 +268,161 @@ class PersonsokControllerTest {
                 telefonnummer = null,
             )
     }
+
+    @Nested
+    inner class PersonsokControllerV4Test {
+        private val minimalPersonSearchHit =
+            PersonSearchHit(
+                score = 1.0,
+                person =
+                    Person(
+                        navn = listOf(Navn(fornavn = "Fornavn", mellomnavn = null, etternavn = "Etternavn", originaltNavn = null)),
+                        kjoenn = emptyList(),
+                        utenlandskIdentifikasjonsnummer = emptyList(),
+                        folkeregisteridentifikator =
+                            listOf(Folkeregisteridentifikator(identifikasjonsnummer = "12345678910", status = "AKTIV", type = "FNR")),
+                        kontaktadresse = emptyList(),
+                        bostedsadresse = emptyList(),
+                        telefonnummer = emptyList(),
+                    ),
+            )
+
+        private val requestV4 =
+            PersonsokRequestV3(
+                enhet = "0219",
+                navn = null,
+                fornavn = null,
+                etternavn = null,
+                utenlandskID = null,
+                alderFra = null,
+                alderTil = null,
+                fodselsdatoFra = "1990-01-01",
+                fodselsdatoTil = "1990-01-31",
+                kjonn = null,
+                adresse = null,
+                telefonnummer = null,
+            )
+
+        private fun lagController(sokPersonFn: (List<PdlKriterie>, Int, Int) -> PdlOppslagService.PdlSokResultat) =
+            PersonsokController(
+                pdlOppslagService = FakePdlOppslagService(sokPersonFn),
+                tilgangskontroll = AllowAllTilgangskontroll,
+            )
+
+        @Test
+        internal fun `v4 returnerer treff og paginerings-metadata fra pdl`() {
+            var mottattPageNumber: Int? = null
+            var mottattResultsPerPage: Int? = null
+            val controller =
+                lagController { _, pageNumber, resultsPerPage ->
+                    mottattPageNumber = pageNumber
+                    mottattResultsPerPage = resultsPerPage
+                    PdlOppslagService.PdlSokResultat(
+                        hits = listOf(minimalPersonSearchHit),
+                        pageNumber = 2,
+                        totalHits = 120,
+                        totalPages = 3,
+                    )
+                }
+
+            val respons = controller.sokPdlV4(requestV4.copy(pageNumber = 2, resultsPerPage = 50))
+
+            assertThat(respons.treff).hasSize(1)
+            assertThat(respons.pageNumber).isEqualTo(2)
+            assertThat(respons.totalHits).isEqualTo(120)
+            assertThat(respons.totalPages).isEqualTo(3)
+            assertThat(mottattPageNumber).isEqualTo(2)
+            assertThat(mottattResultsPerPage).isEqualTo(50)
+        }
+
+        @Test
+        internal fun `v4 avviser pageNumber mindre enn 1`() {
+            val controller = lagController { _, _, _ -> throw AssertionError("skal ikke kalle pdl ved ugyldig input") }
+
+            val ex =
+                assertThrows(ResponseStatusException::class.java) {
+                    controller.sokPdlV4(requestV4.copy(pageNumber = 0))
+                }
+            assertThat(ex.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        }
+
+        @Test
+        internal fun `v4 avviser resultsPerPage mindre enn 1`() {
+            val controller = lagController { _, _, _ -> throw AssertionError("skal ikke kalle pdl ved ugyldig input") }
+
+            val ex =
+                assertThrows(ResponseStatusException::class.java) {
+                    controller.sokPdlV4(requestV4.copy(resultsPerPage = 0))
+                }
+            assertThat(ex.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        }
+
+        @Test
+        internal fun `v4 avviser resultsPerPage over pdl sitt maks`() {
+            val controller = lagController { _, _, _ -> throw AssertionError("skal ikke kalle pdl ved ugyldig input") }
+
+            val ex =
+                assertThrows(ResponseStatusException::class.java) {
+                    controller.sokPdlV4(requestV4.copy(resultsPerPage = PdlOppslagService.MAKS_RESULTATER_PER_SIDE + 1))
+                }
+            assertThat(ex.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        }
+
+        @Test
+        internal fun `v3 ignorerer paginering fra klienten og bruker faste verdier`() {
+            var mottattPageNumber: Int? = null
+            var mottattResultsPerPage: Int? = null
+            val controller =
+                lagController { _, pageNumber, resultsPerPage ->
+                    mottattPageNumber = pageNumber
+                    mottattResultsPerPage = resultsPerPage
+                    PdlOppslagService.PdlSokResultat(hits = emptyList(), pageNumber = 1, totalHits = 0, totalPages = 0)
+                }
+
+            controller.sokPdlV3(requestV4.copy(pageNumber = 5, resultsPerPage = 90))
+
+            assertThat(mottattPageNumber).isEqualTo(1)
+            assertThat(mottattResultsPerPage).isEqualTo(30)
+        }
+    }
+}
+
+private class FakePdlOppslagService(
+    private val sokPersonFn: (List<PdlKriterie>, Int, Int) -> PdlOppslagService.PdlSokResultat,
+) : PdlOppslagService {
+    override fun sokPerson(
+        kriterier: List<PdlKriterie>,
+        pageNumber: Int,
+        resultsPerPage: Int,
+    ): PdlOppslagService.PdlSokResultat = sokPersonFn(kriterier, pageNumber, resultsPerPage)
+
+    override fun hentPersondata(fnr: String): HentPersondata.Result? = null
+
+    override fun hentTredjepartspersondata(fnrs: List<String>): List<HentPersonBolkResult> = emptyList()
+
+    override fun hentGeografiskTilknyttning(fnr: String): String? = null
+
+    override fun hentIdenter(fnr: String): Identliste? = null
+
+    override fun hentFolkeregisterIdenter(fnr: String): Identliste? = null
+
+    override fun hentAktorId(fnr: String): String? = null
+
+    override fun hentFnr(aktorid: String): String? = null
+}
+
+private object AllowAllTilgangskontroll : Tilgangskontroll {
+    private val instance =
+        object : TilgangskontrollInstance {
+            override fun <S> get(
+                audit: Audit.AuditDescriptor<in S>,
+                block: () -> S,
+            ): S = block()
+
+            override fun getDecision(): Decision = Decision.Permit()
+
+            override fun check(policy: PolicyWithAttributes): TilgangskontrollInstance = this
+        }
+
+    override fun check(policy: PolicyWithAttributes): TilgangskontrollInstance = instance
 }

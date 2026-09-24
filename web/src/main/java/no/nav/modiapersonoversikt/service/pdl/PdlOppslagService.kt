@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.pdl
 
-import no.nav.modiapersonoversikt.consumer.pdl.generated.*
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentidenter.Identliste
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
 import no.nav.modiapersonoversikt.consumer.pdl.generated.inputs.Criterion
@@ -9,7 +9,11 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.sokperson.PersonSearchH
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService.SokKriterieRule.*
 
 interface PdlOppslagService {
-    fun sokPerson(kriterier: List<PdlKriterie>): List<PersonSearchHit>
+    fun sokPerson(
+        kriterier: List<PdlKriterie>,
+        pageNumber: Int = 1,
+        resultsPerPage: Int = 50,
+    ): PdlSokResultat
 
     fun hentPersondata(fnr: String): HentPersondata.Result?
 
@@ -24,6 +28,18 @@ interface PdlOppslagService {
     fun hentAktorId(fnr: String): String?
 
     fun hentFnr(aktorid: String): String?
+
+    companion object {
+        // PDL sitt sokPerson-skjema tillater maks 100 treff per side
+        const val MAKS_RESULTATER_PER_SIDE = 100
+    }
+
+    data class PdlSokResultat(
+        val hits: List<PersonSearchHit>,
+        val pageNumber: Int?,
+        val totalHits: Int?,
+        val totalPages: Int?,
+    )
 
     enum class SokKriterieRule {
         EQUALS,
