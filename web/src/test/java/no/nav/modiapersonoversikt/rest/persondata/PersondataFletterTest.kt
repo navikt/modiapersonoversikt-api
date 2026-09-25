@@ -52,6 +52,52 @@ internal class PersondataFletterTest {
     }
 
     @Test
+    internal fun `skal mappe alle bostedsadresser fra historikken inkludert gjeldende adresse`() {
+        val gjeldendeAdresse = bostedadresseData.copy(vegadresse = gittVegadresse(husnummer = "3"))
+        val historiskAdresse1 =
+            bostedadresseData.copy(
+                vegadresse = gittVegadresse(husnummer = "7"),
+                gyldigFraOgMed = gittDateTime("2020-01-01T00:00:00"),
+                gyldigTilOgMed = gittDateTime("2021-01-01T00:00:00"),
+                angittFlyttedato = gittDato("2020-01-01"),
+            )
+        val historiskAdresse2 =
+            bostedadresseData.copy(
+                vegadresse = gittVegadresse(husnummer = "12"),
+                gyldigFraOgMed = gittDateTime("2018-01-01T00:00:00"),
+                gyldigTilOgMed = gittDateTime("2019-01-01T00:00:00"),
+                angittFlyttedato = gittDato("2018-01-01"),
+            )
+
+        val result =
+            mapper.flettSammenData(
+                data =
+                    testData.copy(
+                        persondata =
+                            testPerson.copy(
+                                bostedsadresse = listOf(gjeldendeAdresse),
+                                historiskeBostedsadresser =
+                                    listOf(gjeldendeAdresse, historiskAdresse1, historiskAdresse2),
+                            ),
+                    ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
+            )
+
+        assertEquals(1, result.person.bostedAdresse.size)
+        assertEquals(
+            "Vegadressestien 3",
+            result.person.bostedAdresse
+                .single()
+                .linje1,
+        )
+        assertEquals(3, result.person.historiskeBostedAdresser.size)
+        assertEquals(
+            listOf("Vegadressestien 3", "Vegadressestien 7", "Vegadressestien 12"),
+            result.person.historiskeBostedAdresser.map { it.linje1 },
+        )
+    }
+
+    @Test
     internal fun `skal mappe data fra pdl til Persondata når person er dod`() {
         snapshot.assertMatches(
             mapper.flettSammenData(
