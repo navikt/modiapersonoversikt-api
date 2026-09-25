@@ -19,6 +19,7 @@ object Persondata {
         val alder: Int?,
         val dodsdato: List<Dodsdato>,
         val bostedAdresse: List<Adresse>,
+        val historiskeBostedAdresser: List<Adresse>,
         val kontaktAdresse: List<Adresse>,
         val oppholdsAdresse: List<Adresse>,
         val navEnhet: PersonDataEnhet?,

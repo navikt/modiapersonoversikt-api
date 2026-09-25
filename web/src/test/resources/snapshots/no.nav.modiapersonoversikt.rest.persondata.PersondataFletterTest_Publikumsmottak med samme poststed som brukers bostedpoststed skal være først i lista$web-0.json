@@ -221,6 +221,55 @@
       } ] ]
     } ] ],
     "geografiskTilknytning" : "0123",
+    "historiskeBostedAdresser" : [ "java.util.Arrays$ArrayList", [ {
+      "angittFlyttedato" : null,
+      "coAdresse" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-10-01",
+        "gyldigTilOgMed" : null
+      },
+      "linje1" : "Vegadressestien 3",
+      "linje2" : "1444 TestPoststed",
+      "linje3" : null,
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
+        "system" : "folkeregisteret",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    }, {
+      "angittFlyttedato" : "2020-01-01",
+      "coAdresse" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2020-01-01",
+        "gyldigTilOgMed" : "2021-01-01"
+      },
+      "linje1" : "Vegadressestien 7",
+      "linje2" : "1444 TestPoststed",
+      "linje3" : null,
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
+        "system" : "folkeregisteret",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    }, {
+      "angittFlyttedato" : "2018-01-01",
+      "coAdresse" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2018-01-01",
+        "gyldigTilOgMed" : "2019-01-01"
+      },
+      "linje1" : "Vegadressestien 12",
+      "linje2" : "1444 TestPoststed",
+      "linje3" : null,
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "kilde" : "Bruker",
+        "system" : "folkeregisteret",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    } ] ],
     "historiskeVergemal" : [ "java.util.ArrayList", [ {
       "embete" : "Fylkesmannen i Oslo og Viken",
       "gyldighetsPeriode" : {

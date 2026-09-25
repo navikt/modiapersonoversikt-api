@@ -274,6 +274,30 @@ query hentPersondata($ident: ID!){
                 bostedskommune
             }
         }
+        historiskeBostedsadresser: bostedsadresse(historikk: true) {
+            angittFlyttedato
+            gyldigFraOgMed
+            gyldigTilOgMed
+            metadata {
+                ...endringerOgMaster
+            }
+            folkeregistermetadata {
+                ajourholdstidspunkt
+                kilde
+            }
+            vegadresse {
+                ...vegadresse
+            }
+            matrikkeladresse {
+                ...matrikkeladresse
+            }
+            utenlandskAdresse {
+                ...utenlandskadresse
+            }
+            ukjentBosted {
+                bostedskommune
+            }
+        }
         kontaktadresse {
             gyldigFraOgMed
             gyldigTilOgMed

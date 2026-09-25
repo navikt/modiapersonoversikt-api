@@ -579,6 +579,25 @@ internal val testPerson =
                     gyldigTilOgMed = null,
                 ),
             ),
+        historiskeBostedsadresser =
+            listOf(
+                bostedadresseData.copy(
+                    gyldigFraOgMed = gittDateTime("2021-10-01T00:00:00"),
+                    gyldigTilOgMed = null,
+                ),
+                bostedadresseData.copy(
+                    vegadresse = gittVegadresse(husnummer = "7"),
+                    gyldigFraOgMed = gittDateTime("2020-01-01T00:00:00"),
+                    gyldigTilOgMed = gittDateTime("2021-01-01T00:00:00"),
+                    angittFlyttedato = gittDato("2020-01-01"),
+                ),
+                bostedadresseData.copy(
+                    vegadresse = gittVegadresse(husnummer = "12"),
+                    gyldigFraOgMed = gittDateTime("2018-01-01T00:00:00"),
+                    gyldigTilOgMed = gittDateTime("2019-01-01T00:00:00"),
+                    angittFlyttedato = gittDato("2018-01-01"),
+                ),
+            ),
         kontaktadresse =
             listOf(
                 kontaktadresseData,
