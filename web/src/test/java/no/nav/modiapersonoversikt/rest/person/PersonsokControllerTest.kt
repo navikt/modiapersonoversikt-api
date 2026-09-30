@@ -253,7 +253,7 @@ class PersonsokControllerTest {
         }
 
         private val requestV3 =
-            PersonsokRequestV3(
+            PersonsokRequest(
                 enhet = null,
                 navn = null,
                 fornavn = null,
@@ -288,7 +288,7 @@ class PersonsokControllerTest {
             )
 
         private val requestV4 =
-            PersonsokRequestV3(
+            PersonsokRequest(
                 enhet = "0219",
                 navn = null,
                 fornavn = null,

@@ -53,26 +53,31 @@ class PersonsokController
 
         @PostMapping("/v3")
         fun sokPdlV3(
-            @RequestBody personsokRequestV3: PersonsokRequestV3,
+            @RequestBody personsokRequest: PersonsokRequest,
         ): List<PersonSokResponsDTO> =
             tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(auditDescriptor) {
                     handterFeil {
-                        // v3 er bakoverkompatibel og skal ikke ta imot paging-parametre fra klienten
-                        utforSok(personsokRequestV3.copy(pageNumber = 1, resultsPerPage = 30)).hits
+                        // v3 er bakoverkompatibel og ignorerer pageNumber/resultsPerPage fra klienten
+                        utforSok(personsokRequest, pageNumber = 1, resultsPerPage = 30).hits
                     }
                 }
 
         @PostMapping("/v4")
         fun sokPdlV4(
-            @RequestBody personsokRequestV3: PersonsokRequestV3,
+            @RequestBody personsokRequest: PersonsokRequest,
         ): PersonSokResponsV4 =
             tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(auditDescriptorV4) {
                     handterFeil {
-                        val resultat = utforSok(personsokRequestV3)
+                        val resultat =
+                            utforSok(
+                                personsokRequest,
+                                pageNumber = personsokRequest.pageNumber ?: 1,
+                                resultsPerPage = personsokRequest.resultsPerPage ?: 50,
+                            )
                         PersonSokResponsV4(
                             treff = resultat.hits,
                             pageNumber = resultat.pageNumber,
@@ -82,41 +87,37 @@ class PersonsokController
                     }
                 }
 
-        private fun utforSok(personsokRequestV3: PersonsokRequestV3): SokresultatMedTreff {
-            val enhet = personsokRequestV3.enhet ?: "Ukjent"
-            val pdlKriterier = personsokRequestV3.tilPdlKriterier()
+        private fun utforSok(
+            kriterier: PersonsokRequest,
+            pageNumber: Int,
+            resultsPerPage: Int,
+        ): SokresultatMedTreff {
+            if (pageNumber < 1) {
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "pageNumber må være 1 eller høyere",
+                )
+            }
+            if (resultsPerPage < 1) {
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "resultsPerPage må være 1 eller høyere",
+                )
+            }
+            if (resultsPerPage > PdlOppslagService.MAKS_RESULTATER_PER_SIDE) {
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "resultsPerPage kan ikke være større enn ${PdlOppslagService.MAKS_RESULTATER_PER_SIDE}",
+                )
+            }
+
+            val enhet = kriterier.enhet ?: "Ukjent"
+            val pdlKriterier = kriterier.tilPdlKriterier()
             val feltnavn =
                 pdlKriterier
                     .filter { it.value.isNullOrEmpty().not() }
                     .joinToString(", ") { it.felt.name }
             sokefelterTrace.log(enhet to feltnavn)
-
-            val pageNumber =
-                (personsokRequestV3.pageNumber ?: 1)
-                    .also {
-                        if (it < 1) {
-                            throw ResponseStatusException(
-                                HttpStatus.BAD_REQUEST,
-                                "pageNumber må være 1 eller høyere",
-                            )
-                        }
-                    }
-            val resultsPerPage =
-                (personsokRequestV3.resultsPerPage ?: 50)
-                    .also {
-                        if (it < 1) {
-                            throw ResponseStatusException(
-                                HttpStatus.BAD_REQUEST,
-                                "resultsPerPage må være 1 eller høyere",
-                            )
-                        }
-                        if (it > PdlOppslagService.MAKS_RESULTATER_PER_SIDE) {
-                            throw ResponseStatusException(
-                                HttpStatus.BAD_REQUEST,
-                                "resultsPerPage kan ikke være større enn ${PdlOppslagService.MAKS_RESULTATER_PER_SIDE}",
-                            )
-                        }
-                    }
 
             val resultat = pdlOppslagService.sokPerson(pdlKriterier, pageNumber, resultsPerPage)
             return SokresultatMedTreff(
@@ -354,7 +355,10 @@ data class KodeverdiDTO(
     val beskrivelse: String?,
 )
 
-data class PersonsokRequestV3(
+/**
+ * Felles request for /v3 og /v4. pageNumber og resultsPerPage brukes bare av /v4.
+ */
+data class PersonsokRequest(
     val enhet: String?,
     val navn: String?,
     val fornavn: String?,
@@ -378,7 +382,7 @@ data class PersonSokResponsV4(
     val totalPages: Int?,
 )
 
-fun PersonsokRequestV3.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
+fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
     val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
     val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
     val kjonn =
