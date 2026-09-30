@@ -32,28 +32,12 @@
         "kode" : "NOK"
       }
     },
-    "bostedAdresse" : [ "java.util.Arrays$ArrayList", [ {
+    "bostedAdresse" : [ "java.util.Collections$SingletonList", [ {
       "angittFlyttedato" : null,
       "coAdresse" : null,
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-10-01",
         "gyldigTilOgMed" : null
-      },
-      "linje1" : "Vegadressestien 3",
-      "linje2" : "1444 TestPoststed",
-      "linje3" : null,
-      "sistEndret" : {
-        "ident" : "Folkeregisteret",
-        "kilde" : "Bruker",
-        "system" : "folkeregisteret",
-        "tidspunkt" : "2020-07-01T10:00:00"
-      }
-    }, {
-      "angittFlyttedato" : null,
-      "coAdresse" : null,
-      "gyldighetsPeriode" : {
-        "gyldigFraOgMed" : "2021-02-02",
-        "gyldigTilOgMed" : "2021-02-02"
       },
       "linje1" : "Vegadressestien 3",
       "linje2" : "1444 TestPoststed",

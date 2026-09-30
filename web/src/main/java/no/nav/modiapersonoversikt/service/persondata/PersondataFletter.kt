@@ -202,10 +202,10 @@ class PersondataFletter(
     }
 
     private fun hentBostedAdresse(data: Data): List<Persondata.Adresse> =
-        hentBostedAdresse(data.persondata.bostedsadresse, data.personIdent)
+        hentBostedAdresse(data.persondata.bostedsadresse.filterNot { it.metadata.historisk }, data.personIdent)
 
     private fun hentHistoriskeBostedAdresser(data: Data): List<Persondata.Adresse> =
-        hentBostedAdresse(data.persondata.historiskeBostedsadresser, data.personIdent)
+        hentBostedAdresse(data.persondata.bostedsadresse, data.personIdent)
 
     private fun hentBostedAdresse(
         adresser: List<Bostedsadresse>,
@@ -213,7 +213,7 @@ class PersondataFletter(
     ): List<Persondata.Adresse> =
         adresser
             .mapNotNull { adresse ->
-                val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                val sisteEndring = hentSisteEndringFraEndringer(adresse.metadata.endringer)
                 val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
                 when {
                     adresse.vegadresse != null ->
@@ -386,8 +386,10 @@ class PersondataFletter(
         gyldighetsPeriode = gyldighetsPeriode,
     )
 
-    private fun hentSisteEndringFraMetadata(metadata: Metadata): Persondata.SistEndret? =
-        metadata.endringer
+    private fun hentSisteEndringFraMetadata(metadata: Metadata): Persondata.SistEndret? = hentSisteEndringFraEndringer(metadata.endringer)
+
+    private fun hentSisteEndringFraEndringer(endringer: List<Endring>): Persondata.SistEndret? =
+        endringer
             .maxByOrNull { it.registrert }
             ?.let {
                 Persondata.SistEndret(
