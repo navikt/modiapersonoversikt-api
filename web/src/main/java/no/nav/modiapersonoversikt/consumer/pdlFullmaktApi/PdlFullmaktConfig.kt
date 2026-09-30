@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class PdlFullmaktConfig {
-    private val scope = DownstreamApi.parse(getRequiredProperty("PDL_FULLMAKT_SCOPE"))
-    private val url: String = getRequiredProperty("PDL_FULLMAKT_URL")
+    private val scope = DownstreamApi.parse(getRequiredProperty("REPR_API_SCOPE"))
+    private val url: String = getRequiredProperty("REPR_API_URL")
 
     @Bean
     open fun pdlFullmakt(
