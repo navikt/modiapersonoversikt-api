@@ -18,6 +18,7 @@ import no.nav.modiapersonoversikt.testutils.AuthContextRule
 import no.nav.modiapersonoversikt.utils.BoundedMachineToMachineTokenClient
 import no.nav.modiapersonoversikt.utils.BoundedOnBehalfOfTokenClient
 import no.nav.modiapersonoversikt.utils.TestUtils
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -75,6 +76,86 @@ internal class PdlOppslagServiceImplTest {
                 oboTokenProvider,
             ).hentTredjepartspersondata(listOf("ident"))
         }
+    }
+
+    @Test
+    fun `sender pageNumber og resultsPerPage som paging til pdl`() {
+        var capturedBody: String? = null
+        val client =
+            createMockGraphQLClient { request ->
+                capturedBody = (request.body as io.ktor.http.content.TextContent).text
+                respond(
+                    """{"data":{"sokPerson":{"hits":[],"pageNumber":2,"totalHits":120,"totalPages":3}}}""",
+                    HttpStatusCode.OK,
+                    headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+
+        TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
+            PdlOppslagServiceImpl(client, machineToMachineTokenClient, oboTokenProvider)
+                .sokPerson(
+                    listOf(PdlOppslagService.PdlKriterie(PdlOppslagService.PdlFelt.FODSELSDATO_FRA, "1990-01-01")),
+                    pageNumber = 2,
+                    resultsPerPage = 50,
+                )
+        }
+
+        assertNotNull(capturedBody)
+        assertThat(capturedBody).contains("\"pageNumber\":2")
+        assertThat(capturedBody).contains("\"resultsPerPage\":50")
+    }
+
+    @Test
+    fun `mapper totalHits, totalPages og pageNumber fra pdl-respons`() {
+        val client =
+            createMockGraphQLClient {
+                respond(
+                    """{"data":{"sokPerson":{"hits":[],"pageNumber":2,"totalHits":120,"totalPages":3}}}""",
+                    HttpStatusCode.OK,
+                    headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+
+        var resultat: PdlOppslagService.PdlSokResultat? = null
+        TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
+            resultat =
+                PdlOppslagServiceImpl(client, machineToMachineTokenClient, oboTokenProvider)
+                    .sokPerson(
+                        listOf(PdlOppslagService.PdlKriterie(PdlOppslagService.PdlFelt.FODSELSDATO_FRA, "1990-01-01")),
+                        pageNumber = 2,
+                        resultsPerPage = 50,
+                    )
+        }
+
+        assertEquals(2, resultat?.pageNumber)
+        assertEquals(120, resultat?.totalHits)
+        assertEquals(3, resultat?.totalPages)
+    }
+
+    @Test
+    fun `resultsPerPage begrenses til pdl sitt maks paa 100`() {
+        var capturedBody: String? = null
+        val client =
+            createMockGraphQLClient { request ->
+                capturedBody = (request.body as io.ktor.http.content.TextContent).text
+                respond(
+                    """{"data":{"sokPerson":{"hits":[],"pageNumber":1,"totalHits":0,"totalPages":0}}}""",
+                    HttpStatusCode.OK,
+                    headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+
+        TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
+            PdlOppslagServiceImpl(client, machineToMachineTokenClient, oboTokenProvider)
+                .sokPerson(
+                    listOf(PdlOppslagService.PdlKriterie(PdlOppslagService.PdlFelt.FODSELSDATO_FRA, "1990-01-01")),
+                    pageNumber = 1,
+                    resultsPerPage = 500,
+                )
+        }
+
+        assertNotNull(capturedBody)
+        assertThat(capturedBody).contains("\"resultsPerPage\":100")
     }
 
     private fun verifyUserTokenHeaders(request: HttpRequestData) {
