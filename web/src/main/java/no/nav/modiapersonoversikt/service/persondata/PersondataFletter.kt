@@ -24,7 +24,7 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Period
-import no.nav.modiapersonoversikt.consumer.reprApi.generated.models.FullmaktDto as ReprFullmaktDto
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto as RepresentasjonFullmaktDto
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
 val log: Logger = LoggerFactory.getLogger(PersondataFletter::class.java)
@@ -37,7 +37,7 @@ class PersondataFletter(
         val personIdent: String,
         val persondata: Person,
         val fullmektige: PersondataResult<List<FullmaktDto>>,
-        val fullmektigeV2: PersondataResult<List<ReprFullmaktDto>>,
+        val fullmektigeV2: PersondataResult<List<RepresentasjonFullmaktDto>>,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
@@ -884,10 +884,38 @@ class PersondataFletter(
                     ident = ident,
                     navn = person?.navn?.firstOrNull(),
                     digitalKontaktinformasjonTredjepartsperson = person?.digitalKontaktinformasjon,
-                    fullmakter = fullmakter,
+                    fullmakter = fullmakter.map(::hentFullmaktV2),
                 )
             }
     }
+
+    private fun hentFullmaktV2(fullmakt: RepresentasjonFullmaktDto): Persondata.FullmaktV2 =
+        Persondata.FullmaktV2(
+            fullmaktId = fullmakt.fullmaktId,
+            fullmaktsgiver = fullmakt.fullmaktsgiver,
+            fullmektig = fullmakt.fullmektig,
+            gyldigFraOgMed = fullmakt.gyldigFraOgMed,
+            gyldigTilOgMed = fullmakt.gyldigTilOgMed,
+            leserettigheter = hentTemaer(fullmakt.leserettigheter),
+            skriverettigheter = hentTemaer(fullmakt.skriverettigheter),
+            endringslogg =
+                fullmakt.endringslogg.map { endring ->
+                    Persondata.FullmaktEndring(
+                        endringId = endring.endringId,
+                        registrert = endring.registrert,
+                        registrertAv = endring.registrertAv,
+                        kilde = endring.kilde,
+                        hendelse = endring.hendelse,
+                        gyldigFraOgMed = endring.gyldigFraOgMed,
+                        gyldigTilOgMed = endring.gyldigTilOgMed,
+                        leserettigheter = hentTemaer(endring.leserettigheter),
+                        skriverettigheter = hentTemaer(endring.skriverettigheter),
+                    )
+                },
+        )
+
+    private fun hentTemaer(koder: Set<String>): List<Persondata.KodeBeskrivelse<String>> =
+        koder.sorted().map { kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, it) }
 
     private fun hentFullmakt(data: Data): PersondataResult<List<Persondata.Fullmakt>> =
         data.fullmektige.map { fullmakter ->

@@ -8,7 +8,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.PdlFullmaktApi
-import no.nav.modiapersonoversikt.consumer.representasjon.ReprApi
+import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
@@ -22,7 +22,7 @@ import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.logging.TjenestekallLogger
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto as PdlFullmaktDto
-import no.nav.modiapersonoversikt.consumer.reprApi.generated.models.FullmaktDto as ReprFullmaktDto
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto as RepresentasjonFullmaktDto
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
@@ -35,7 +35,7 @@ interface PersondataService {
 
 class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
-    private val reprApi: ReprApi,
+    private val representasjonApi: RepresentasjonApi,
     private val pdlFullmakt: PdlFullmaktApi,
     private val krrService: Krr.Service,
     private val norgApi: NorgApi,
@@ -80,7 +80,7 @@ class PersondataServiceImpl(
             }
         val fullmektigeV2 =
             PersondataResult.runCatching(InformasjonElement.REPR_API) {
-                reprApi.hentfullmakterforfullmaktsgiver(Fnr(personIdent))
+                representasjonApi.hentfullmakterforfullmaktsgiver(Fnr(personIdent))
             }
         val fullmektigIdenter = finnFullmektigIdenter(fullmektigeV1, fullmektigeV2)
         val kontaktinformasjonTredjepartsperson =
@@ -215,7 +215,7 @@ class PersondataServiceImpl(
 
     internal fun finnFullmektigIdenter(
         fullmektige: PersondataResult<List<PdlFullmaktDto>>,
-        fullmektigeV2: PersondataResult<List<ReprFullmaktDto>>,
+        fullmektigeV2: PersondataResult<List<RepresentasjonFullmaktDto>>,
     ): List<String> =
         (
             fullmektige.getOrElse(emptyList()).mapNotNull { it.fullmektig } +

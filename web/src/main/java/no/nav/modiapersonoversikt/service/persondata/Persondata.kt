@@ -1,8 +1,9 @@
 package no.nav.modiapersonoversikt.service.persondata
 
-import no.nav.modiapersonoversikt.consumer.reprApi.generated.models.FullmaktDto
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 
 object Persondata {
     data class Data(
@@ -265,7 +266,30 @@ object Persondata {
         val ident: String,
         val navn: Navn?,
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
-        val fullmakter: List<FullmaktDto>,
+        val fullmakter: List<FullmaktV2>,
+    )
+
+    data class FullmaktV2(
+        val fullmaktId: UUID,
+        val fullmaktsgiver: String,
+        val fullmektig: String,
+        val gyldigFraOgMed: LocalDate,
+        val gyldigTilOgMed: LocalDate?,
+        val leserettigheter: List<KodeBeskrivelse<String>>,
+        val skriverettigheter: List<KodeBeskrivelse<String>>,
+        val endringslogg: List<FullmaktEndring>,
+    )
+
+    data class FullmaktEndring(
+        val endringId: Long,
+        val registrert: LocalDateTime,
+        val registrertAv: String,
+        val kilde: FullmaktEndringDto.Kilde,
+        val hendelse: FullmaktEndringDto.Hendelse,
+        val gyldigFraOgMed: LocalDate,
+        val gyldigTilOgMed: LocalDate?,
+        val leserettigheter: List<KodeBeskrivelse<String>>,
+        val skriverettigheter: List<KodeBeskrivelse<String>>,
     )
 
     data class DigitalKontaktinformasjonTredjepartsperson(
