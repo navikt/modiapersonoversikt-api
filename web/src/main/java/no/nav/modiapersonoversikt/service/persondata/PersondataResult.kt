@@ -17,6 +17,7 @@ sealed class PersondataResult<T>(
         NORG_NAVKONTOR,
         NORG_KONTAKTINFORMASJON,
         FULLMAKT,
+        REPR_API,
     }
 
     fun <S> map(
