@@ -14,15 +14,15 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class ReprApiConfig {
+open class RepresentasjonApiConfig {
     private val scope = DownstreamApi.parse(getRequiredProperty("REPR_API_SCOPE"))
     private val url: String = getRequiredProperty("REPR_API_URL")
 
     @Bean
-    open fun reprApi(
+    open fun representasjonApi(
         tokenProvider: OnBehalfOfTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
-    ): ReprApi {
+    ): RepresentasjonApi {
         val oboTokenProvider = tokenProvider.bindTo(scope)
         val httpClient: OkHttpClient =
             RestClient
@@ -30,7 +30,7 @@ open class ReprApiConfig {
                 .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    tjenestekallLoggingInterceptorFactory("ReprApi") { request ->
+                    tjenestekallLoggingInterceptorFactory("RepresentasjonApi") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
@@ -41,6 +41,6 @@ open class ReprApiConfig {
                     },
                 ).build()
 
-        return ReprApiImpl(url, httpClient)
+        return RepresentasjonApiImpl(url, httpClient)
     }
 }

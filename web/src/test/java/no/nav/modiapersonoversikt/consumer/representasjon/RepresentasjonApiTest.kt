@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.representasjon
 
 import no.nav.common.types.identer.Fnr
-import no.nav.modiapersonoversikt.consumer.reprApi.generated.infrastructure.ClientException
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.infrastructure.ClientException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-internal class ReprApiTest {
+internal class RepresentasjonApiTest {
     private val path = "/api/v2/internbruker/fullmakt/bruker-som-fullmaktsgiver/alle-fullmakter"
 
     private fun client(
@@ -80,7 +80,7 @@ internal class ReprApiTest {
                 assertEquals("Bearer test-token", request.header("Authorization"))
             }
 
-        val result = ReprApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
+        val result = RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
 
         assertEquals("55555666000", result.single().fullmektig)
         assertEquals(
@@ -107,7 +107,7 @@ internal class ReprApiTest {
         val client = client(503, """{"message":"utilgjengelig"}""")
 
         assertThrows(Exception::class.java) {
-            ReprApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
+            RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
         }
     }
 
@@ -115,14 +115,14 @@ internal class ReprApiTest {
     fun `404 betyr ingen fullmakter`() {
         val client = client(404, """{"title":"Not Found"}""")
 
-        assertTrue(ReprApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910")).isEmpty())
+        assertTrue(RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910")).isEmpty())
     }
 
     @Test
     fun `tom 200-liste betyr ingen fullmakter`() {
         val client = client(200, "[]")
 
-        assertTrue(ReprApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910")).isEmpty())
+        assertTrue(RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910")).isEmpty())
     }
 
     @Test
@@ -132,7 +132,7 @@ internal class ReprApiTest {
         assertEquals(
             403,
             assertThrows(ClientException::class.java) {
-                ReprApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
+                RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
             }.statusCode,
         )
     }
@@ -142,7 +142,7 @@ internal class ReprApiTest {
         val client = client(204, "")
 
         assertThrows(IllegalArgumentException::class.java) {
-            ReprApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
+            RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
         }
     }
 }

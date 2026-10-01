@@ -27,7 +27,7 @@ internal class PersondataServiceImplTest {
             oppfolgingService = mockk(),
             policyEnforcementPoint = mockk(),
             kodeverk = mockk(),
-            reprApi = mockk(),
+            representasjonApi = mockk(),
             pdlFullmakt = mockk(),
             tjenestekallLogger = TjenestekallLogg,
         )
