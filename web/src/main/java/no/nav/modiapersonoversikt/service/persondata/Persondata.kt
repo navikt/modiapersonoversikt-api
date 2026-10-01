@@ -1,4 +1,6 @@
 package no.nav.modiapersonoversikt.service.persondata
+
+import no.nav.modiapersonoversikt.consumer.reprApi.generated.models.FullmaktDto
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -33,6 +35,7 @@ object Persondata {
         val deltBosted: List<DeltBosted>,
         val dodsbo: List<Dodsbo>,
         val fullmakt: List<Fullmakt>,
+        val fullmektige: List<Fullmektig>,
         val vergemal: List<Verge>,
         val historiskeVergemal: List<Verge>,
         val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon,
@@ -257,6 +260,13 @@ object Persondata {
         val gyldighetsPeriode: GyldighetsPeriode?,
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
         val kilde: String?,
+    )
+
+    data class Fullmektig(
+        val ident: String,
+        val navn: Navn?,
+        val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
+        val fullmakter: List<FullmaktDto>,
     )
 
     data class DigitalKontaktinformasjonTredjepartsperson(
