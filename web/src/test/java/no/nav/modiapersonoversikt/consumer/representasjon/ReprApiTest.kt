@@ -83,7 +83,14 @@ internal class ReprApiTest {
         val result = ReprApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
 
         assertEquals("55555666000", result.single().fullmektig)
-        assertEquals(1, result.single().endringslogg.single().endringId)
+        assertEquals(
+            1,
+            result
+                .single()
+                .endringslogg
+                .single()
+                .endringId,
+        )
         assertEquals(true, requested)
     }
 
