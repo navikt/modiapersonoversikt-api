@@ -279,6 +279,11 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>representasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>pdl-fullmakt-api</artifactId>
             <version>${project.version}</version>
         </dependency>

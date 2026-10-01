@@ -5,8 +5,9 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraaderMedHandlingDto
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.infrastructure.Serializer
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -16,6 +17,7 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataResult
 import no.nav.modiapersonoversikt.service.persondata.PersondataResult.InformasjonElement
 import java.time.LocalDate
 import java.time.LocalDateTime
+import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto as PdlFullmaktDto
 
 fun gittKodeverk() =
     EnhetligKodeverk.Kodeverk(
@@ -32,6 +34,7 @@ fun gittKodeverk() =
                 "1444" to "TestPoststed",
                 "47" to "+47",
                 "ESP" to "Spania",
+                "AAP" to "Arbeidsavklaringspenger",
             ),
     )
 
@@ -123,9 +126,7 @@ internal val kontaktinformasjonTredjepartsperson =
     )
 
 internal val kontaktinformasjonTredjepartspersonMap =
-    mapOf(
-        "55555666000" to kontaktinformasjonTredjepartsperson,
-    )
+    mapOf("55555666000" to kontaktinformasjonTredjepartsperson)
 
 internal val tredjepartsPersoner =
     mapOf(
@@ -364,7 +365,40 @@ internal val tilrettelagtKommunikasjonData =
     )
 
 internal val fullmaktPerson =
-    FullmaktDto(
+    Serializer.jacksonObjectMapper.readValue(
+        """
+        {
+          "fullmaktId": "db40e7d2-44dd-4dab-a954-114513c761d1",
+          "fullmaktsgiver": "12345678910",
+          "fullmektig": "55555666000",
+          "leserettigheter": ["SAP", "AAP"],
+          "skriverettigheter": ["AAP"],
+          "gyldigFraOgMed": "2018-01-03",
+          "gyldigTilOgMed": "2018-10-03",
+          "endringslogg": []
+        }
+        """.trimIndent(),
+        FullmaktDto::class.java,
+    )
+
+internal val forventetFullmaktV2 =
+    Persondata.FullmaktV2(
+        fullmaktId = fullmaktPerson.fullmaktId,
+        fullmaktsgiver = "12345678910",
+        fullmektig = "55555666000",
+        gyldigFraOgMed = LocalDate.parse("2018-01-03"),
+        gyldigTilOgMed = LocalDate.parse("2018-10-03"),
+        leserettigheter =
+            listOf(
+                Persondata.KodeBeskrivelse("AAP", "Arbeidsavklaringspenger"),
+                Persondata.KodeBeskrivelse("SAP", "SAP"),
+            ),
+        skriverettigheter = listOf(Persondata.KodeBeskrivelse("AAP", "Arbeidsavklaringspenger")),
+        endringslogg = emptyList(),
+    )
+
+internal val pdlFullmaktPerson =
+    PdlFullmaktDto(
         fullmaktId = 1232133123,
         fullmektig = "55555666000",
         omraade = listOf(OmraaderMedHandlingDto(tema = "SAP", handling = listOf(OmraaderMedHandlingDto.Handling.LES))),
@@ -604,10 +638,11 @@ internal val testData =
         oppfolging = PersondataResult.runCatching(InformasjonElement.OPPFOLGING) { arbeidsrettetOppfolgingStatus },
         bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
         tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
+        fullmektige = PersondataResult.runCatching(InformasjonElement.FULLMAKT) { listOf(pdlFullmaktPerson) },
+        fullmektigeV2 = PersondataResult.runCatching(InformasjonElement.REPR_API) { listOf(fullmaktPerson) },
         kontaktinformasjonTredjepartsperson =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
                 kontaktinformasjonTredjepartspersonMap
             },
-        fullmektige = PersondataResult.runCatching(InformasjonElement.FULLMAKT) { listOf(fullmaktPerson) },
         harTilgangTilSkjermetPerson = false,
     )

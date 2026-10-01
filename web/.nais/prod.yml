@@ -180,9 +180,9 @@ spec:
       value: "https://pdl-pip-api.prod-fss-pub.nais.io"
     - name: PDL_PIP_SCOPE
       value: "prod-fss:pdl:pdl-pip-api"
-    - name: PDL_FULLMAKT_URL
+    - name: REPR_API_URL
       value: "http://repr-api.repr"
-    - name: PDL_FULLMAKT_SCOPE
+    - name: REPR_API_SCOPE
       value: "prod-gcp:repr:repr-api"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.intern.nav.no/endreperson"

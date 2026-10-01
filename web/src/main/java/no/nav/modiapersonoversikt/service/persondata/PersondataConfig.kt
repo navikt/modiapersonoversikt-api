@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.service.persondata
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.PdlFullmaktApi
+import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -25,11 +26,13 @@ open class PersondataConfig {
         oppfolgingConfig: ArbeidsrettetOppfolging.Service,
         policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
         kodeverk: EnhetligKodeverk.Service,
+        representasjonApi: RepresentasjonApi,
         pdlFullmakt: PdlFullmaktApi,
         tjenestekallLogger: TjenestekallLogger,
     ): PersondataService =
         PersondataServiceImpl(
             pdl,
+            representasjonApi,
             pdlFullmakt,
             krrService,
             norgApi,

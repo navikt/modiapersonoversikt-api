@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.pdlFullmaktApi
+package no.nav.modiapersonoversikt.consumer.representasjon
 
 import no.nav.common.rest.client.RestClient
 import no.nav.common.token_client.client.OnBehalfOfTokenClient
@@ -14,24 +14,23 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class PdlFullmaktConfig {
+open class RepresentasjonApiConfig {
     private val scope = DownstreamApi.parse(getRequiredProperty("REPR_API_SCOPE"))
     private val url: String = getRequiredProperty("REPR_API_URL")
 
     @Bean
-    open fun pdlFullmakt(
+    open fun representasjonApi(
         tokenProvider: OnBehalfOfTokenClient,
         tjenestekallLoggingInterceptorFactory: TjenestekallLoggingInterceptorFactory,
-    ): PdlFullmaktApi {
+    ): RepresentasjonApi {
         val oboTokenProvider = tokenProvider.bindTo(scope)
-
         val httpClient: OkHttpClient =
             RestClient
                 .baseClient()
                 .newBuilder()
                 .addInterceptor(XCorrelationIdInterceptor())
                 .addInterceptor(
-                    tjenestekallLoggingInterceptorFactory("PdlFullmaktApi") { request ->
+                    tjenestekallLoggingInterceptorFactory("RepresentasjonApi") { request ->
                         requireNotNull(request.header("X-Correlation-ID")) {
                             "Kall uten \"X-Correlation-ID\" er ikke lov"
                         }
@@ -42,6 +41,6 @@ open class PdlFullmaktConfig {
                     },
                 ).build()
 
-        return PdlFullmaktApiImpl(url, httpClient)
+        return RepresentasjonApiImpl(url, httpClient)
     }
 }

@@ -220,6 +220,37 @@
         }
       } ] ]
     } ] ],
+    "fullmektige" : [ "java.util.ArrayList", [ {
+      "digitalKontaktinformasjonTredjepartsperson" : {
+        "mobiltelefonnummer" : "90909090",
+        "reservasjon" : false
+      },
+      "fullmakter" : [ "java.util.ArrayList", [ {
+        "endringslogg" : [ "java.util.ArrayList", [ ] ],
+        "fullmaktId" : "db40e7d2-44dd-4dab-a954-114513c761d1",
+        "fullmaktsgiver" : "12345678910",
+        "fullmektig" : "55555666000",
+        "gyldigFraOgMed" : "2018-01-03",
+        "gyldigTilOgMed" : "2018-10-03",
+        "leserettigheter" : [ "java.util.ArrayList", [ {
+          "beskrivelse" : "Arbeidsavklaringspenger",
+          "kode" : "AAP"
+        }, {
+          "beskrivelse" : "SAP",
+          "kode" : "SAP"
+        } ] ],
+        "skriverettigheter" : [ "java.util.ArrayList", [ {
+          "beskrivelse" : "Arbeidsavklaringspenger",
+          "kode" : "AAP"
+        } ] ]
+      } ] ],
+      "ident" : "55555666000",
+      "navn" : {
+        "etternavn" : "MedFullmakt",
+        "fornavn" : "Person",
+        "mellomnavn" : null
+      }
+    } ] ],
     "geografiskTilknytning" : "0123",
     "historiskeVergemal" : [ "java.util.ArrayList", [ {
       "embete" : "Fylkesmannen i Oslo og Viken",
