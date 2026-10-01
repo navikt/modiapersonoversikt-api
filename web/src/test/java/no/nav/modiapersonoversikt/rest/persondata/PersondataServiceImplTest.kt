@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataResult
 import no.nav.modiapersonoversikt.service.persondata.PersondataServiceImpl
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 
 internal class PersondataServiceImplTest {
@@ -26,6 +27,7 @@ internal class PersondataServiceImplTest {
             oppfolgingService = mockk(),
             policyEnforcementPoint = mockk(),
             kodeverk = mockk(),
+            reprApi = mockk(),
             pdlFullmakt = mockk(),
             tjenestekallLogger = TjenestekallLogg,
         )
@@ -57,5 +59,25 @@ internal class PersondataServiceImplTest {
         assertTrue(navEnhet is PersondataResult.Success<*>)
         verify(exactly = 1) { norgApi.finnNavKontor(any(), any()) }
         verify(exactly = 1) { norgApi.hentKontaktinfo(any()) }
+    }
+
+    @Test
+    internal fun `fullmektige fra begge kilder skal slaas opp som tredjeparter uten duplikater`() {
+        val pdl = PersondataResult.of(listOf(pdlFullmaktPerson))
+        val repr = PersondataResult.of(listOf(fullmaktPerson, fullmaktPerson.copy(fullmektig = "99999999999")))
+
+        assertEquals(listOf("55555666000", "99999999999"), persondataServiceImpl.finnFullmektigIdenter(pdl, repr))
+    }
+
+    @Test
+    internal fun `repr-fullmektiger skal slaas opp selv om pdl-fullmakt feiler`() {
+        val pdl =
+            PersondataResult.Failure<List<no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto>>(
+                PersondataResult.InformasjonElement.FULLMAKT,
+                IllegalStateException("PDL fullmakt nede"),
+            )
+        val repr = PersondataResult.of(listOf(fullmaktPerson))
+
+        assertEquals(listOf("55555666000"), persondataServiceImpl.finnFullmektigIdenter(pdl, repr))
     }
 }
