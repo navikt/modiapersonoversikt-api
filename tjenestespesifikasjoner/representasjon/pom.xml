@@ -45,6 +45,7 @@
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp4</library>
                             <packageName>no.nav.modiapersonoversikt.consumer.reprApi.generated</packageName>
+                            <typeMappings>java.time.OffsetDateTime=java.time.LocalDateTime</typeMappings>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <configOptions>
                                 <enumPropertyNaming>original</enumPropertyNaming>

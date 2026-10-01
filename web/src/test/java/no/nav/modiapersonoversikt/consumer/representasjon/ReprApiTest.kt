@@ -59,7 +59,7 @@ internal class ReprApiTest {
                   "skriverettigheter": [],
                   "endringslogg": [{
                     "endringId": 1,
-                    "registrert": "2026-01-02T10:00:00Z",
+                    "registrert": "2026-09-29T12:39:32.425883",
                     "registrertAv": "system",
                     "kilde": "SYSTEM",
                     "hendelse": "OPPRETTELSE_AV_BRUKER",
@@ -90,6 +90,14 @@ internal class ReprApiTest {
                 .endringslogg
                 .single()
                 .endringId,
+        )
+        assertEquals(
+            java.time.LocalDateTime.parse("2026-09-29T12:39:32.425883"),
+            result
+                .single()
+                .endringslogg
+                .single()
+                .registrert,
         )
         assertEquals(true, requested)
     }
