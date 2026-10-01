@@ -219,8 +219,17 @@
         "fullmektig" : "55555666000",
         "gyldigFraOgMed" : "2018-01-03",
         "gyldigTilOgMed" : "2018-10-03",
-        "leserettigheter" : [ "java.util.HashSet", [ "SAP" ] ],
-        "skriverettigheter" : [ "java.util.HashSet", [ ] ]
+        "leserettigheter" : [ "java.util.ArrayList", [ {
+          "beskrivelse" : "Arbeidsavklaringspenger",
+          "kode" : "AAP"
+        }, {
+          "beskrivelse" : "SAP",
+          "kode" : "SAP"
+        } ] ],
+        "skriverettigheter" : [ "java.util.ArrayList", [ {
+          "beskrivelse" : "Arbeidsavklaringspenger",
+          "kode" : "AAP"
+        } ] ]
       } ] ],
       "ident" : "55555666000",
       "navn" : {
