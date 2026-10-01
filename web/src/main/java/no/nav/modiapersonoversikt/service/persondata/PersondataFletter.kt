@@ -24,6 +24,7 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Period
+import no.nav.modiapersonoversikt.consumer.reprApi.generated.models.FullmaktDto as ReprFullmaktDto
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
 val log: Logger = LoggerFactory.getLogger(PersondataFletter::class.java)
@@ -36,6 +37,7 @@ class PersondataFletter(
         val personIdent: String,
         val persondata: Person,
         val fullmektige: PersondataResult<List<FullmaktDto>>,
+        val fullmektigeV2: PersondataResult<List<ReprFullmaktDto>>,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
@@ -50,6 +52,7 @@ class PersondataFletter(
             listOf(
                 oppfolging,
                 fullmektige,
+                fullmektigeV2,
                 geografiskeTilknytning,
                 erEgenAnsatt,
                 navEnhet,
@@ -113,7 +116,11 @@ class PersondataFletter(
                     foreldreansvar = hentForeldreansvar(data),
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
+                    /* FullmaktDTOer fra repr-api v1.
+                    Skal fases ut når hjemsiden er ute og gamle modia er borte */
                     fullmakt = hentFullmakt(data).getOrElse(emptyList()),
+                    /* FullmaktDTOer fra repr-api v2. Brukes på hjemsiden*/
+                    fullmektige = hentFullmektige(data),
                     vergemal = gjeldendeVergemal,
                     historiskeVergemal = historiskeVergemal,
                     tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
@@ -864,6 +871,22 @@ class PersondataFletter(
             linje3 = if (adresse.adresselinje2 == null) null else sisteLinje,
             sistEndret = null,
         )
+    }
+
+    private fun hentFullmektige(data: Data): List<Persondata.Fullmektig> {
+        val tredjepartsPersoner = data.tredjepartsPerson.getOrElse(emptyMap())
+        return data.fullmektigeV2
+            .getOrElse(emptyList())
+            .groupBy { it.fullmektig }
+            .map { (ident, fullmakter) ->
+                val person = tredjepartsPersoner[ident]
+                Persondata.Fullmektig(
+                    ident = ident,
+                    navn = person?.navn?.firstOrNull(),
+                    digitalKontaktinformasjonTredjepartsperson = person?.digitalKontaktinformasjon,
+                    fullmakter = fullmakter,
+                )
+            }
     }
 
     private fun hentFullmakt(data: Data): PersondataResult<List<Persondata.Fullmakt>> =
