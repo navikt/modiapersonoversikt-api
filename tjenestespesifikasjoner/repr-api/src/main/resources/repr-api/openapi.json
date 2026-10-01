@@ -1,0 +1,2056 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Representasjonsdata API",
+    "description": "Automatisk token-generering for: [eksternbruker](https://tokenx-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:repr:repr-api) og [internbruker](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:repr:repr-api)",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://repr-api.intern.dev.nav.no",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "Authorization": [
+        "api_key"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Representasjon",
+      "description": "Representasjonsforhold med lese- og skriverettigheter på Nav-temaer. OBS: Responsen fra dette endepunktet kommer garantert til å utvides den dagen vi får støtte for flere representasjonsforhold, som for eksempel vergemål eller foreldreansvar. Det er viktig at konsumenter klarer å håndtere at det når som helst kan legges til flere felter på alle nivåer av responsen. For eksempel i Jackson kan dette løses med @JsonIgnoreProperties(ignoreUnknown = true)"
+    },
+    {
+      "name": "Fullmakt",
+      "description": "Fullmaktsforhold med lese- og skriverettigheter på Nav-temaer."
+    }
+  ],
+  "paths": {
+    "/api/v2/internbruker/vergemaal/kan-representeres-av": {
+      "post": {
+        "tags": [
+          "Vergemål"
+        ],
+        "summary": "Hent hvem <ident> på nåværende tidspunkt kan bli representert av gjennom vergemål og på hvilke Nav-temaer.",
+        "operationId": "hentHvemIdentKanBliRepresentertAvBasertPaaAktiveVergemaal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Vergemål med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VergemaalsforholdDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/vergemaal/kan-representere": {
+      "post": {
+        "tags": [
+          "Vergemål"
+        ],
+        "summary": "Hent hvem <ident> på nåværende tidspunkt kan representere gjennom vergemål og på hvilke Nav-temaer",
+        "operationId": "hentHvemIdentKanRepresentereBasertPaaAktiveVergemaal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Vergemål med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VergemaalsforholdDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/vergemaal/bruker-som-vergehaver/aktive-og-utgaatte-vergemaal": {
+      "post": {
+        "tags": [
+          "Vergemål"
+        ],
+        "summary": "Hent alle vergemål (aktive, avsluttede/utgåtte) hvor <ident> er vergemålsgiver.",
+        "operationId": "hentAlleVergemaalHvorIdentErVergehaver",
+        "parameters": [
+          {
+            "name": "endringslogg",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Vergemål",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VergemaalDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/vergemaal/bruker-som-verge/aktive-og-utgaatte-vergemaal": {
+      "post": {
+        "tags": [
+          "Vergemål"
+        ],
+        "summary": "Hent alle vergemål (aktive, avsluttede/utgåtte) hvor <ident> er verge.",
+        "operationId": "hentAlleVergemaalHvorIdentErVerge",
+        "parameters": [
+          {
+            "name": "endringslogg",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Vergemål",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VergemaalDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/kan-representeres-av": {
+      "post": {
+        "tags": [
+          "Representasjon"
+        ],
+        "summary": "Hent hvem <ident> på nåværende tidspunkt kan bli representert av og på hvilke Nav-temaer.",
+        "operationId": "hentHvemIdentKanBliRepresentertAvBasertPaaAktiveRepresentasjonsforhold",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Representasjonsforhold med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepresentasjonsforholdDto"
+                },
+                "example": {
+                  "fullmakt": [
+                    {
+                      "fullmaktsgiver": "11111111111",
+                      "fullmektig": "22222222222",
+                      "leserettigheter": [
+                        "DAG",
+                        "FOS"
+                      ],
+                      "skriverettigheter": [
+                        "DAG"
+                      ]
+                    }
+                  ],
+                  "vergemaal": [
+                    {
+                      "vergehaver": "11111111111",
+                      "verge": "33333333333",
+                      "leserettigheter": [
+                        "PEN"
+                      ],
+                      "skriverettigheter": []
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/kan-representere": {
+      "post": {
+        "tags": [
+          "Representasjon"
+        ],
+        "summary": "Hent hvem <ident> på nåværende tidspunkt kan representere og på hvilke Nav-temaer",
+        "operationId": "hentHvemIdentKanRepresentereBasertPaaAktiveRepresentasjonsforhold",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Representasjonsforhold med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepresentasjonsforholdDto"
+                },
+                "example": {
+                  "fullmakt": [
+                    {
+                      "fullmaktsgiver": "22222222222",
+                      "fullmektig": "11111111111",
+                      "leserettigheter": [
+                        "DAG",
+                        "FOS"
+                      ],
+                      "skriverettigheter": [
+                        "DAG"
+                      ]
+                    }
+                  ],
+                  "vergemaal": [
+                    {
+                      "vergehaver": "33333333333",
+                      "verge": "11111111111",
+                      "leserettigheter": [
+                        "PEN"
+                      ],
+                      "skriverettigheter": []
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/fullmakt/kan-representeres-av": {
+      "post": {
+        "tags": [
+          "Fullmakt"
+        ],
+        "summary": "Hent hvem <ident> på nåværende tidspunkt kan bli representert av gjennom fullmakt og på hvilke Nav-temaer.",
+        "operationId": "hentHvemIdentKanBliRepresentertAvBasertPaaAktiveFullmakter",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fullmaktsforhold med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktsforholdDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/fullmakt/kan-representere": {
+      "post": {
+        "tags": [
+          "Fullmakt"
+        ],
+        "summary": "Hent hvem <ident> på nåværende tidspunkt kan representere gjennom fullmakt og på hvilke Nav-temaer",
+        "operationId": "hentHvemIdentKanRepresentereBasertPaaAktiveFullmakter",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fullmaktsforhold med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktsforholdDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/fullmakt/bruker-som-fullmektig/alle-fullmakter": {
+      "post": {
+        "tags": [
+          "Fullmakt"
+        ],
+        "summary": "Hent alle fullmakter (aktive, avsluttede/utgåtte, og snart aktive) hvor <ident> er fullmektig.",
+        "operationId": "hentAlleFullmakterMedEndringerHvorIdentErFullmektig",
+        "parameters": [
+          {
+            "name": "endringslogg",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fullmakter",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/internbruker/fullmakt/bruker-som-fullmaktsgiver/alle-fullmakter": {
+      "post": {
+        "tags": [
+          "Fullmakt"
+        ],
+        "summary": "Hent alle fullmakter (aktive, avsluttede/utgåtte, og snart aktive) hvor <ident> er fullmaktsgiver.",
+        "operationId": "hentAlleFullmakterMedEndringerHvorIdentErFullmaktsgiver",
+        "parameters": [
+          {
+            "name": "endringslogg",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FolkeregisterIdentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fullmakter",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request inneholder ugyldig data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "Bad Request",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/eksternbruker/vergemaal/kan-representere": {
+      "get": {
+        "tags": [
+          "Vergemål"
+        ],
+        "summary": "Hent hvem <innlogget bruker> på nåværende tidspunkt kan representere gjennom vergemål og på hvilke Nav-temaer.",
+        "operationId": "hentAktiveVergemaalHvorIdentErVergeGruppertPaaVergehaver",
+        "responses": {
+          "200": {
+            "description": "Vergemål med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VergemaalsforholdDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/eksternbruker/kan-representere": {
+      "get": {
+        "tags": [
+          "Representasjon"
+        ],
+        "summary": "Hent hvem <innlogget bruker> på nåværende tidspunkt kan representere",
+        "operationId": "hentAktiveRepresentasjonsforholdHvorIdentErRepresentantGruppertPaaDenRepresenterte",
+        "responses": {
+          "200": {
+            "description": "Representasjonsforhold med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepresentasjonsforholdDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/eksternbruker/fullmakt/kan-representere": {
+      "get": {
+        "tags": [
+          "Fullmakt"
+        ],
+        "summary": "Hent hvem <innlogget bruker> på nåværende tidspunkt kan representere gjennom fullmakt og på hvilke Nav-temaer.",
+        "operationId": "hentAktiveFullmakterHvorIdentErFullmektigGruppertPaaFullmaktsgiver",
+        "responses": {
+          "200": {
+            "description": "Fullmaktsforhold med lese- og skriverettigheter på Nav-temaer.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FullmaktsforholdDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "JWT-token er enten ikke-eksisterende, utløp eller er ugyldig av andre grunner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Unauthorized",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personen finnes ikke i PDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": "\n                        {\n                            \"type\": \"about:blank\",\n                            \"title\": \"Not Found\",\n                            \"status\": 404,\n                            \"detail\": \"Not Found\",\n                            \"instance\": \"https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av\",\n                            \"traceId\": \"4ede204f55227679fa96c8f34d0fdd7c\",\n                            \"timestamp\": \"2025-05-05T09:35:59.055+00:00\"\n                            \"errorCode\": \"PERSON_FINNES_IKKE_I_PDL\"\n                        }\n                "
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Method Not Allowed",
+                  "status": 404,
+                  "detail": "Method Not Allowed",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "METHOD_NOT_ALLOWED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Uventet feil på serversiden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "Internal Server Error",
+                  "instance": "https://repr-api.intern.dev.nav.no/api/v2/...bruker/kan-representeres-av",
+                  "traceId": "4ede204f55227679fa96c8f34d0fdd7c",
+                  "timestamp": "2025-05-05T09:35:59.055+00:00",
+                  "errorCode": "UVENTET_FEIL"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FolkeregisterIdentRequestDto": {
+        "type": "object",
+        "properties": {
+          "ident": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ident"
+        ]
+      },
+      "ProblemDetail": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "instance": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "properties": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {}
+          }
+        }
+      },
+      "VergemaalsforholdDto": {
+        "type": "object",
+        "properties": {
+          "vergehaver": {
+            "type": "string",
+            "description": "Fødselsnummer eller D-nummer til den representerte.",
+            "example": "12345678910",
+            "title": ""
+          },
+          "verge": {
+            "type": "string",
+            "description": "Fødselsnummer eller D-nummer til representanten.",
+            "example": "12345678910",
+            "title": ""
+          },
+          "leserettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          },
+          "skriverettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "leserettigheter",
+          "skriverettigheter",
+          "verge",
+          "vergehaver"
+        ]
+      },
+      "VergemaalDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "verge": {
+            "type": "string",
+            "description": "Fødselsnummer eller D-nummer til representanten.",
+            "example": "12345678910",
+            "title": ""
+          },
+          "vergehaver": {
+            "type": "string",
+            "description": "Fødselsnummer eller D-nummer til den representerte.",
+            "example": "12345678910",
+            "title": ""
+          },
+          "vergemaalstype": {
+            "type": "string"
+          },
+          "leserettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          },
+          "skriverettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          },
+          "gyldigFraOgMed": {
+            "type": "string",
+            "format": "date"
+          },
+          "aktivt": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "aktivt",
+          "gyldigFraOgMed",
+          "id",
+          "leserettigheter",
+          "skriverettigheter",
+          "verge",
+          "vergehaver",
+          "vergemaalstype"
+        ]
+      },
+      "FullmaktsforholdDto": {
+        "type": "object",
+        "properties": {
+          "fullmaktsgiver": {
+            "type": "string",
+            "description": "Fødselsnummer eller D-nummer til den representerte.",
+            "example": "12345678910",
+            "title": ""
+          },
+          "fullmektig": {
+            "type": "string",
+            "description": "Fødselsnummer eller D-nummer til representanten.",
+            "example": "12345678910",
+            "title": ""
+          },
+          "leserettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          },
+          "skriverettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "fullmaktsgiver",
+          "fullmektig",
+          "leserettigheter",
+          "skriverettigheter"
+        ]
+      },
+      "RepresentasjonsforholdDto": {
+        "type": "object",
+        "properties": {
+          "fullmakt": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FullmaktsforholdDto"
+            }
+          },
+          "vergemaal": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VergemaalsforholdDto"
+            }
+          }
+        },
+        "required": [
+          "fullmakt",
+          "vergemaal"
+        ]
+      },
+      "FullmaktDto": {
+        "type": "object",
+        "properties": {
+          "fullmaktId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullmaktsgiver": {
+            "type": "string",
+            "description": "Fødselsnummer eller D-nummer til den representerte.",
+            "example": "12345678910",
+            "title": ""
+          },
+          "fullmektig": {
+            "type": "string",
+            "description": "Fødselsnummer eller D-nummer til representanten.",
+            "example": "12345678910",
+            "title": ""
+          },
+          "gyldigFraOgMed": {
+            "type": "string",
+            "format": "date"
+          },
+          "gyldigTilOgMed": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "leserettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          },
+          "skriverettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          },
+          "endringslogg": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FullmaktEndringDto"
+            }
+          }
+        },
+        "required": [
+          "endringslogg",
+          "fullmaktId",
+          "fullmaktsgiver",
+          "fullmektig",
+          "gyldigFraOgMed",
+          "leserettigheter",
+          "skriverettigheter"
+        ]
+      },
+      "FullmaktEndringDto": {
+        "type": "object",
+        "properties": {
+          "endringId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "registrert": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "registrertAv": {
+            "type": "string"
+          },
+          "kilde": {
+            "type": "string",
+            "enum": [
+              "BRUKER",
+              "SYSTEM",
+              "ANSATT"
+            ]
+          },
+          "hendelse": {
+            "type": "string",
+            "enum": [
+              "OPPRETTELSE_AV_BRUKER",
+              "ENDRING_AV_BRUKER",
+              "OPPHOER_AV_BRUKER",
+              "OPPHOER_AV_NAV"
+            ]
+          },
+          "gyldigFraOgMed": {
+            "type": "string",
+            "format": "date"
+          },
+          "gyldigTilOgMed": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "leserettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Leserettigheter gir kun tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, men gir IKKE tilgang til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\", \"PEN\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          },
+          "skriverettigheter": {
+            "type": "array",
+            "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+            "example": "[\"DAG\", \"FOS\"]",
+            "items": {
+              "type": "string",
+              "description": "Liste over hvilke arkiv-temaer en person kan representere en annen person ved. Temaer man har skriverettighet til vil nødvendigvis også ligge i listen over temaer man har leserettighet til. Det betyr at man nødvendigvis har leserettighet når man har skriverettighet. Skriverettigheter gir tilgang til å få innsyn i saker, dokumentasjon og lignende på de aktuelle temaene, i tillegg til å søke, klage, ettersende dokumentasjon eller lignende. Det er opp til hvert fagområde å vurdere hvilke ytelser/tjenester/funksjonaliteter som ligger bak hvilke Nav-temaer.",
+              "example": "[\"DAG\", \"FOS\"]",
+              "title": ""
+            },
+            "title": "",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "endringId",
+          "gyldigFraOgMed",
+          "hendelse",
+          "kilde",
+          "leserettigheter",
+          "registrert",
+          "registrertAv",
+          "skriverettigheter"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "http",
+        "description": "Legg inn kun token, uten \"Bearer\"",
+        "name": "Authorization",
+        "in": "header",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
