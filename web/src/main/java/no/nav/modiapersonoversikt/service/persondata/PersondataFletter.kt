@@ -119,7 +119,7 @@ class PersondataFletter(
                     /* FullmaktDTOer fra repr-api v1.
                     Skal fases ut når hjemsiden er ute og gamle modia er borte */
                     fullmakt = hentFullmakt(data).getOrElse(emptyList()),
-                    /* FullmaktDTOer fra repr-api v2. Brukes på hjemsiden*/
+                    // FullmaktDTOer fra repr-api v2. Brukes på hjemsiden
                     fullmektige = hentFullmektige(data),
                     vergemal = gjeldendeVergemal,
                     historiskeVergemal = historiskeVergemal,
