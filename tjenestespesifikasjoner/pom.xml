@@ -43,7 +43,7 @@
         <module>pdl-pip-api</module>
         <module>tiltakspenger</module>
         <module>pdl-fullmakt-api</module>
-        <module>repr-api</module>
+        <module>representasjon</module>
         <module>veilarbvedtaksstotte-api</module>
         <module>tilgangsmaskinen</module>
         <module>aap-api-intern</module>
