@@ -6,7 +6,7 @@
         <version>dev</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>repr-api</artifactId>
+    <artifactId>representasjon</artifactId>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -41,7 +41,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/repr-api/openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/representasjon/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp4</library>
                             <packageName>no.nav.modiapersonoversikt.consumer.reprApi.generated</packageName>
