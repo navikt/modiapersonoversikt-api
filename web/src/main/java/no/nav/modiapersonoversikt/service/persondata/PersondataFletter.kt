@@ -101,6 +101,7 @@ class PersondataFletter(
                         ),
                     dodsdato = hentDodsdato(data),
                     bostedAdresse = hentBostedAdresse(data),
+                    historiskeBostedAdresser = hentHistoriskeBostedAdresser(data),
                     kontaktAdresse = hentKontaktAdresse(data),
                     oppholdsAdresse = hentOppholdsAdresse(data),
                     navEnhet = hentNavEnhet(data),
@@ -201,9 +202,18 @@ class PersondataFletter(
     }
 
     private fun hentBostedAdresse(data: Data): List<Persondata.Adresse> =
-        data.persondata.bostedsadresse
+        hentBostedAdresse(data.persondata.bostedsadresse.filterNot { it.metadata.historisk }, data.personIdent)
+
+    private fun hentHistoriskeBostedAdresser(data: Data): List<Persondata.Adresse> =
+        hentBostedAdresse(data.persondata.bostedsadresse, data.personIdent)
+
+    private fun hentBostedAdresse(
+        adresser: List<Bostedsadresse>,
+        personIdent: String,
+    ): List<Persondata.Adresse> =
+        adresser
             .mapNotNull { adresse ->
-                val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                val sisteEndring = hentSisteEndringFraEndringer(adresse.metadata.endringer)
                 val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
                 when {
                     adresse.vegadresse != null ->
@@ -238,7 +248,7 @@ class PersondataFletter(
                         tjenestekallLogger.warn(
                             "PersondataFletter",
                             mapOf(
-                                "personIdent" to data.personIdent,
+                                "personIdent" to personIdent,
                                 "feil" to "Ukjent bostedsadresse struktur",
                                 "addresse" to adresse,
                             ),
@@ -376,8 +386,10 @@ class PersondataFletter(
         gyldighetsPeriode = gyldighetsPeriode,
     )
 
-    private fun hentSisteEndringFraMetadata(metadata: Metadata): Persondata.SistEndret? =
-        metadata.endringer
+    private fun hentSisteEndringFraMetadata(metadata: Metadata): Persondata.SistEndret? = hentSisteEndringFraEndringer(metadata.endringer)
+
+    private fun hentSisteEndringFraEndringer(endringer: List<Endring>): Persondata.SistEndret? =
+        endringer
             .maxByOrNull { it.registrert }
             ?.let {
                 Persondata.SistEndret(

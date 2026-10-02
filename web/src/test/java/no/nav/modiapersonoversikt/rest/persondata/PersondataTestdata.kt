@@ -243,7 +243,7 @@ internal val adresse =
     Bostedsadresse(
         gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
         gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
-        metadata = metadata,
+        metadata = Metadata3(historisk = false, master = metadata.master, endringer = metadata.endringer),
         folkeregistermetadata = null,
         vegadresse = null,
         matrikkeladresse = null,
@@ -528,7 +528,7 @@ internal val bostedadresseData =
     Bostedsadresse(
         gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
         gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
-        metadata = metadata,
+        metadata = Metadata3(historisk = false, master = metadata.master, endringer = metadata.endringer),
         vegadresse = gittVegadresse(),
         utenlandskAdresse = null,
         ukjentBosted = null,
@@ -573,10 +573,23 @@ internal val testPerson =
         deltBosted = listOf(deltBostedData),
         bostedsadresse =
             listOf(
-                bostedadresseData,
                 bostedadresseData.copy(
                     gyldigFraOgMed = gittDateTime("2021-10-01T00:00:00"),
                     gyldigTilOgMed = null,
+                ),
+                bostedadresseData.copy(
+                    metadata = bostedadresseData.metadata.copy(historisk = true),
+                    vegadresse = gittVegadresse(husnummer = "7"),
+                    gyldigFraOgMed = gittDateTime("2020-01-01T00:00:00"),
+                    gyldigTilOgMed = gittDateTime("2021-01-01T00:00:00"),
+                    angittFlyttedato = gittDato("2020-01-01"),
+                ),
+                bostedadresseData.copy(
+                    metadata = bostedadresseData.metadata.copy(historisk = true),
+                    vegadresse = gittVegadresse(husnummer = "12"),
+                    gyldigFraOgMed = gittDateTime("2018-01-01T00:00:00"),
+                    gyldigTilOgMed = gittDateTime("2019-01-01T00:00:00"),
+                    angittFlyttedato = gittDato("2018-01-01"),
                 ),
             ),
         kontaktadresse =

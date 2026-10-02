@@ -250,12 +250,13 @@ query hentPersondata($ident: ID!){
                 bostedskommune
             }
         }
-        bostedsadresse {
+        bostedsadresse(historikk: true) {
             angittFlyttedato
             gyldigFraOgMed
             gyldigTilOgMed
             metadata {
                 ...endringerOgMaster
+                historisk
             }
             folkeregistermetadata {
                 ajourholdstidspunkt
