@@ -365,7 +365,7 @@ internal class PersondataFletterTest {
     }
 
     @Test
-    internal fun `returnerer aktive og inaktive fullmakter paa fullmektigen`() {
+    internal fun `returnerer ett fullmektig-objekt per fullmakt`() {
         val fremtidigFullmakt = fullmaktPerson.copy(gyldigFraOgMed = gittDato("2030-01-01"), gyldigTilOgMed = null)
         val result =
             mapper.flettSammenData(
@@ -379,13 +379,15 @@ internal class PersondataFletterTest {
             )
 
         assertEquals(
+            listOf("55555666000", "55555666000"),
+            result.person.fullmektige.map { it.ident },
+        )
+        assertEquals(
             listOf(
                 forventetFullmakt,
                 forventetFullmakt.copy(gyldigFraOgMed = gittDato("2030-01-01"), gyldigTilOgMed = null),
             ),
-            result.person.fullmektige
-                .single()
-                .fullmakter,
+            result.person.fullmektige.map { it.fullmakt },
         )
     }
 
@@ -433,10 +435,10 @@ internal class PersondataFletterTest {
                 .digitalKontaktinformasjonTredjepartsperson,
         )
         assertEquals(
-            listOf(forventetFullmakt),
+            forventetFullmakt,
             utenPerson.person.fullmektige
                 .single()
-                .fullmakter,
+                .fullmakt,
         )
     }
 

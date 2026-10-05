@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
 import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
@@ -20,7 +21,6 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataResult.Informasjo
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.logging.TjenestekallLogger
-import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
@@ -205,9 +205,7 @@ class PersondataServiceImpl(
             *andrePersoner.toTypedArray(),
         ).toList()
 
-    internal fun finnFullmektigIdenter(
-        fullmektige: PersondataResult<List<FullmaktDto>>,
-    ): List<String> =
+    internal fun finnFullmektigIdenter(fullmektige: PersondataResult<List<FullmaktDto>>): List<String> =
         fullmektige.getOrElse(emptyList()).map { it.fullmektig }.distinct()
 
     private fun hentTilganger(): PersondataService.Tilganger {

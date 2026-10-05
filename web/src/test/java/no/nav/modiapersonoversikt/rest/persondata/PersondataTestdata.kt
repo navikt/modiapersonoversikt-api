@@ -640,7 +640,7 @@ internal val testData =
         oppfolging = PersondataResult.runCatching(InformasjonElement.OPPFOLGING) { arbeidsrettetOppfolgingStatus },
         bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
         tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
-        fullmektige= PersondataResult.runCatching(InformasjonElement.REPR_API) { listOf(fullmaktPerson) },
+        fullmektige = PersondataResult.runCatching(InformasjonElement.REPR_API) { listOf(fullmaktPerson) },
         kontaktinformasjonTredjepartsperson =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
                 kontaktinformasjonTredjepartspersonMap

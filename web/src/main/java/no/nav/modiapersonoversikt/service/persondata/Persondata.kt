@@ -249,7 +249,7 @@ object Persondata {
         val ident: String,
         val navn: Navn?,
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
-        val fullmakter: List<Fullmakt>,
+        val fullmakt: Fullmakt,
     )
 
     data class Fullmakt(
