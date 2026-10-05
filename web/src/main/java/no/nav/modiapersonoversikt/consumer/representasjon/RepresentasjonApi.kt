@@ -14,7 +14,7 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 
 interface RepresentasjonApi : Pingable {
-    fun hentfullmakterforfullmaktsgiver(fnr: Fnr): List<FullmaktDto>
+    fun hentFullmakterForFullmaktsgiver(fnr: Fnr): List<FullmaktDto>
 }
 
 @CacheConfig(cacheNames = ["representasjonApiCache"], keyGenerator = "userkeygenerator")
@@ -25,7 +25,7 @@ open class RepresentasjonApiImpl(
     private val api = FullmaktApi(url, client)
 
     @Cacheable
-    override fun hentfullmakterforfullmaktsgiver(fnr: Fnr): List<FullmaktDto> =
+    override fun hentFullmakterForFullmaktsgiver(fnr: Fnr): List<FullmaktDto> =
         try {
             requireNotNull(
                 api.hentAlleFullmakterMedEndringerHvorIdentErFullmaktsgiver(
@@ -34,6 +34,7 @@ open class RepresentasjonApiImpl(
                 ),
             ) { "repr-api returnerte tom respons for fullmaktsgiver" }
         } catch (e: ClientException) {
+            // Om personen ikke finnes i PDl så returneres 404
             if (e.statusCode == 404) emptyList() else throw e
         }
 

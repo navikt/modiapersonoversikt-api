@@ -80,7 +80,7 @@ class PersondataServiceImpl(
             }
         val fullmektigeV2 =
             PersondataResult.runCatching(InformasjonElement.REPR_API) {
-                representasjonApi.hentfullmakterforfullmaktsgiver(Fnr(personIdent))
+                representasjonApi.hentFullmakterForFullmaktsgiver(Fnr(personIdent))
             }
         val fullmektigIdenter = finnFullmektigIdenter(fullmektigeV1, fullmektigeV2)
         val kontaktinformasjonTredjepartsperson =
