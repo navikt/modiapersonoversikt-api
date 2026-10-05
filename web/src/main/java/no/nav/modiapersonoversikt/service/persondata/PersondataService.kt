@@ -7,7 +7,6 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.PdlFullmaktApi
 import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
@@ -21,7 +20,6 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataResult.Informasjo
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.logging.TjenestekallLogger
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto as PdlFullmaktDto
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto as RepresentasjonFullmaktDto
 
 interface PersondataService {
@@ -36,7 +34,6 @@ interface PersondataService {
 class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
     private val representasjonApi: RepresentasjonApi,
-    private val pdlFullmakt: PdlFullmaktApi,
     private val krrService: Krr.Service,
     private val norgApi: NorgApi,
     private val skjermedePersonerApi: SkjermedePersonerApi,
@@ -74,15 +71,11 @@ class PersondataServiceImpl(
                 .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
                 .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
 
-        val fullmektigeV1 =
-            PersondataResult.runCatching(InformasjonElement.FULLMAKT) {
-                pdlFullmakt.hentFullmakterForFullmaktsgiver(Fnr(personIdent)) ?: emptyList()
-            }
-        val fullmektigeV2 =
+        val fullmektige =
             PersondataResult.runCatching(InformasjonElement.REPR_API) {
                 representasjonApi.hentFullmakterForFullmaktsgiver(Fnr(personIdent))
             }
-        val fullmektigIdenter = finnFullmektigIdenter(fullmektigeV1, fullmektigeV2)
+        val fullmektigIdenter = finnFullmektigIdenter(fullmektige)
         val kontaktinformasjonTredjepartsperson =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
                 fullmektigIdenter
@@ -120,8 +113,7 @@ class PersondataServiceImpl(
             PersondataFletter.Data(
                 personIdent,
                 persondata,
-                fullmektigeV1,
-                fullmektigeV2,
+                fullmektige,
                 geografiskeTilknytning,
                 erEgenAnsatt,
                 navEnhet,
@@ -214,13 +206,9 @@ class PersondataServiceImpl(
         ).toList()
 
     internal fun finnFullmektigIdenter(
-        fullmektige: PersondataResult<List<PdlFullmaktDto>>,
-        fullmektigeV2: PersondataResult<List<RepresentasjonFullmaktDto>>,
+        fullmektige: PersondataResult<List<RepresentasjonFullmaktDto>>,
     ): List<String> =
-        (
-            fullmektige.getOrElse(emptyList()).mapNotNull { it.fullmektig } +
-                fullmektigeV2.getOrElse(emptyList()).map { it.fullmektig }
-        ).distinct()
+        fullmektige.getOrElse(emptyList()).map { it.fullmektig }.distinct()
 
     private fun hentTilganger(): PersondataService.Tilganger {
         val ctx = policyEnforcementPoint.createEvaluationContext()

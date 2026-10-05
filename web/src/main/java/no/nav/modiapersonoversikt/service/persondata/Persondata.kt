@@ -35,7 +35,6 @@ object Persondata {
         val foreldreansvar: List<Foreldreansvar>,
         val deltBosted: List<DeltBosted>,
         val dodsbo: List<Dodsbo>,
-        val fullmakt: List<Fullmakt>,
         val fullmektige: List<Fullmektig>,
         val vergemal: List<Verge>,
         val historiskeVergemal: List<Verge>,
@@ -246,31 +245,14 @@ object Persondata {
         val sistEndret: SistEndret? = null,
     )
 
-    enum class Handling { LES, KOMMUNISER, SKRIV }
-
-    data class OmraadeMedHandling<T>(
-        val omraade: KodeBeskrivelse<T>,
-        val handling: List<Handling>,
-    )
-
-    data class Fullmakt(
-        val motpartsPersonident: String,
-        val motpartsPersonNavn: Navn,
-        val motpartsRolle: FullmaktsRolle,
-        val omrade: List<OmraadeMedHandling<String>>,
-        val gyldighetsPeriode: GyldighetsPeriode?,
-        val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
-        val kilde: String?,
-    )
-
     data class Fullmektig(
         val ident: String,
         val navn: Navn?,
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
-        val fullmakter: List<FullmaktRepresentasjon>,
+        val fullmakter: List<Fullmakt>,
     )
 
-    data class FullmaktRepresentasjon(
+    data class Fullmakt(
         val fullmaktId: UUID,
         val fullmaktsgiver: String,
         val fullmektig: String,
@@ -415,12 +397,6 @@ object Persondata {
     enum class Skifteform {
         OFFENTLIG,
         ANNET,
-        UKJENT,
-    }
-
-    enum class FullmaktsRolle {
-        FULLMAKTSGIVER,
-        FULLMEKTIG,
         UKJENT,
     }
 

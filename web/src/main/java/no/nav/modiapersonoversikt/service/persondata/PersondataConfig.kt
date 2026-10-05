@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.service.persondata
 
 import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.PdlFullmaktApi
 import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
@@ -27,13 +26,11 @@ open class PersondataConfig {
         policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
         kodeverk: EnhetligKodeverk.Service,
         representasjonApi: RepresentasjonApi,
-        pdlFullmakt: PdlFullmaktApi,
         tjenestekallLogger: TjenestekallLogger,
     ): PersondataService =
         PersondataServiceImpl(
             pdl,
             representasjonApi,
-            pdlFullmakt,
             krrService,
             norgApi,
             skjermedePersonerApi,

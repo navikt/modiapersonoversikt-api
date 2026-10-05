@@ -16,7 +16,6 @@ sealed class PersondataResult<T>(
         VEILEDER_ROLLER,
         NORG_NAVKONTOR,
         NORG_KONTAKTINFORMASJON,
-        FULLMAKT,
         REPR_API,
     }
 
