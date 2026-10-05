@@ -9,8 +9,6 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Kontaktinformasjo
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraaderMedHandlingDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -36,8 +34,7 @@ class PersondataFletter(
     data class Data(
         val personIdent: String,
         val persondata: Person,
-        val fullmektige: PersondataResult<List<FullmaktDto>>,
-        val fullmektigeV2: PersondataResult<List<RepresentasjonFullmaktDto>>,
+        val fullmektige: PersondataResult<List<RepresentasjonFullmaktDto>>,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
@@ -52,7 +49,6 @@ class PersondataFletter(
             listOf(
                 oppfolging,
                 fullmektige,
-                fullmektigeV2,
                 geografiskeTilknytning,
                 erEgenAnsatt,
                 navEnhet,
@@ -117,10 +113,6 @@ class PersondataFletter(
                     foreldreansvar = hentForeldreansvar(data),
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
-                    /* FullmaktDTOer fra repr-api v1.
-                    Skal fases ut når hjemsiden er ute og gamle modia er borte */
-                    fullmakt = hentFullmakt(data).getOrElse(emptyList()),
-                    // FullmaktDTOer fra repr-api v2. Brukes på hjemsiden
                     fullmektige = hentFullmektige(data),
                     vergemal = gjeldendeVergemal,
                     historiskeVergemal = historiskeVergemal,
@@ -887,7 +879,7 @@ class PersondataFletter(
 
     private fun hentFullmektige(data: Data): List<Persondata.Fullmektig> {
         val tredjepartsPersoner = data.tredjepartsPerson.getOrElse(emptyMap())
-        return data.fullmektigeV2
+        return data.fullmektige
             .getOrElse(emptyList())
             .groupBy { it.fullmektig }
             .map { (ident, fullmakter) ->
@@ -896,13 +888,13 @@ class PersondataFletter(
                     ident = ident,
                     navn = person?.navn?.firstOrNull(),
                     digitalKontaktinformasjonTredjepartsperson = person?.digitalKontaktinformasjon,
-                    fullmakter = fullmakter.map(::hentFullmaktRepresentasjon),
+                    fullmakter = fullmakter.map(::hentFullmakt),
                 )
             }
     }
 
-    private fun hentFullmaktRepresentasjon(fullmakt: RepresentasjonFullmaktDto): Persondata.FullmaktRepresentasjon =
-        Persondata.FullmaktRepresentasjon(
+    private fun hentFullmakt(fullmakt: RepresentasjonFullmaktDto): Persondata.Fullmakt =
+        Persondata.Fullmakt(
             fullmaktId = fullmakt.fullmaktId,
             fullmaktsgiver = fullmakt.fullmaktsgiver,
             fullmektig = fullmakt.fullmektig,
@@ -928,41 +920,6 @@ class PersondataFletter(
 
     private fun hentTemaer(koder: Set<String>): List<Persondata.KodeBeskrivelse<String>> =
         koder.sorted().map { kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, it) }
-
-    private fun hentFullmakt(data: Data): PersondataResult<List<Persondata.Fullmakt>> =
-        data.fullmektige.map { fullmakter ->
-            fullmakter.map {
-                val tredjepartsPerson =
-                    data.tredjepartsPerson.map { personer -> personer[it.fullmektig as String] }.getOrNull()
-                val navn = tredjepartsPerson?.navn
-
-                Persondata.Fullmakt(
-                    motpartsPersonident = it.fullmektig as String,
-                    motpartsPersonNavn = navn?.firstOrNull() ?: Persondata.Navn.UKJENT,
-                    motpartsRolle = Persondata.FullmaktsRolle.FULLMEKTIG,
-                    omrade = hentOmrade(it.omraade ?: emptyList()),
-                    gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
-                    digitalKontaktinformasjonTredjepartsperson = tredjepartsPerson?.digitalKontaktinformasjon,
-                    kilde = it.kilde,
-                )
-            }
-        }
-
-    private fun hentOmrade(omraader: List<OmraaderMedHandlingDto>): List<Persondata.OmraadeMedHandling<String>> =
-        omraader.map { omrade ->
-            val omraadeBeskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade.tema as String)
-            Persondata.OmraadeMedHandling(
-                omraade = omraadeBeskrivelse,
-                handling =
-                    omrade.handling?.map {
-                        when (it) {
-                            OmraaderMedHandlingDto.Handling.LES -> Persondata.Handling.LES
-                            OmraaderMedHandlingDto.Handling.KOMMUNISER -> Persondata.Handling.KOMMUNISER
-                            OmraaderMedHandlingDto.Handling.SKRIV -> Persondata.Handling.SKRIV
-                        }
-                    } ?: emptyList(),
-            )
-        }
 
     private fun hentVergemal(data: Data): List<Persondata.Verge> =
         data.persondata.vergemaalEllerFremtidsfullmakt.map { vergemal ->

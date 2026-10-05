@@ -28,7 +28,6 @@ internal class PersondataServiceImplTest {
             policyEnforcementPoint = mockk(),
             kodeverk = mockk(),
             representasjonApi = mockk(),
-            pdlFullmakt = mockk(),
             tjenestekallLogger = TjenestekallLogg,
         )
 
@@ -62,22 +61,9 @@ internal class PersondataServiceImplTest {
     }
 
     @Test
-    internal fun `fullmektige fra begge kilder skal slaas opp som tredjeparter uten duplikater`() {
-        val pdl = PersondataResult.of(listOf(pdlFullmaktPerson))
+    internal fun `representasjon-fullmektige skal slaas opp som tredjeparter uten duplikater`() {
         val repr = PersondataResult.of(listOf(fullmaktPerson, fullmaktPerson.copy(fullmektig = "99999999999")))
 
-        assertEquals(listOf("55555666000", "99999999999"), persondataServiceImpl.finnFullmektigIdenter(pdl, repr))
-    }
-
-    @Test
-    internal fun `repr-fullmektiger skal slaas opp selv om pdl-fullmakt feiler`() {
-        val pdl =
-            PersondataResult.Failure<List<no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto>>(
-                PersondataResult.InformasjonElement.FULLMAKT,
-                IllegalStateException("PDL fullmakt nede"),
-            )
-        val repr = PersondataResult.of(listOf(fullmaktPerson))
-
-        assertEquals(listOf("55555666000"), persondataServiceImpl.finnFullmektigIdenter(pdl, repr))
+        assertEquals(listOf("55555666000", "99999999999"), persondataServiceImpl.finnFullmektigIdenter(repr))
     }
 }

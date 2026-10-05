@@ -5,7 +5,6 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.*
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraaderMedHandlingDto
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.infrastructure.Serializer
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
@@ -17,7 +16,6 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataResult
 import no.nav.modiapersonoversikt.service.persondata.PersondataResult.InformasjonElement
 import java.time.LocalDate
 import java.time.LocalDateTime
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto as PdlFullmaktDto
 
 fun gittKodeverk() =
     EnhetligKodeverk.Kodeverk(
@@ -381,8 +379,8 @@ internal val fullmaktPerson =
         FullmaktDto::class.java,
     )
 
-internal val forventetFullmaktRepresentasjon =
-    Persondata.FullmaktRepresentasjon(
+internal val forventetFullmakt =
+    Persondata.Fullmakt(
         fullmaktId = fullmaktPerson.fullmaktId,
         fullmaktsgiver = "12345678910",
         fullmektig = "55555666000",
@@ -395,15 +393,6 @@ internal val forventetFullmaktRepresentasjon =
             ),
         skriverettigheter = listOf(Persondata.KodeBeskrivelse("AAP", "Arbeidsavklaringspenger")),
         endringslogg = emptyList(),
-    )
-
-internal val pdlFullmaktPerson =
-    PdlFullmaktDto(
-        fullmaktId = 1232133123,
-        fullmektig = "55555666000",
-        omraade = listOf(OmraaderMedHandlingDto(tema = "SAP", handling = listOf(OmraaderMedHandlingDto.Handling.LES))),
-        gyldigFraOgMed = gittDato("2018-01-03"),
-        gyldigTilOgMed = gittDato("2018-10-03"),
     )
 
 internal val vergemal =
@@ -651,8 +640,7 @@ internal val testData =
         oppfolging = PersondataResult.runCatching(InformasjonElement.OPPFOLGING) { arbeidsrettetOppfolgingStatus },
         bankkonto = PersondataResult.runCatching(InformasjonElement.BANKKONTO) { utenlandskBankkonto },
         tredjepartsPerson = PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) { tredjepartsPersoner },
-        fullmektige = PersondataResult.runCatching(InformasjonElement.FULLMAKT) { listOf(pdlFullmaktPerson) },
-        fullmektigeV2 = PersondataResult.runCatching(InformasjonElement.REPR_API) { listOf(fullmaktPerson) },
+        fullmektige= PersondataResult.runCatching(InformasjonElement.REPR_API) { listOf(fullmaktPerson) },
         kontaktinformasjonTredjepartsperson =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
                 kontaktinformasjonTredjepartspersonMap

@@ -338,12 +338,12 @@ internal class PersondataFletterTest {
     }
 
     @Test
-    internal fun `repr-api-feil skal legges til feilendeSystemer uten aa paavirke pdl-fullmakt`() {
+    internal fun `repr-api-feil skal legges til feilendeSystemer`() {
         val result =
             mapper.flettSammenData(
                 data =
                     testData.copy(
-                        fullmektigeV2 =
+                        fullmektige =
                             PersondataResult.Failure(
                                 PersondataResult.InformasjonElement.REPR_API,
                                 Throwable("repr-api nede"),
@@ -354,57 +354,14 @@ internal class PersondataFletterTest {
 
         assertTrue(result.feilendeSystemer.contains(PersondataResult.InformasjonElement.REPR_API))
         assertTrue(result.person.fullmektige.isEmpty())
-        assertEquals(
-            "55555666000",
-            result.person.fullmakt
-                .single()
-                .motpartsPersonident,
-        )
-        assertEquals(
-            kontaktinformasjonTredjepartsperson,
-            result.person.fullmakt
-                .single()
-                .digitalKontaktinformasjonTredjepartsperson,
-        )
     }
 
     @Test
     internal fun `ingen repr-fullmakter gir tomme fullmektige uten feil`() {
-        val result = mapper.flettSammenData(testData.copy(fullmektigeV2 = PersondataResult.of(emptyList())))
+        val result = mapper.flettSammenData(testData.copy(fullmektige = PersondataResult.of(emptyList())))
 
         assertTrue(result.person.fullmektige.isEmpty())
         assertTrue(PersondataResult.InformasjonElement.REPR_API !in result.feilendeSystemer)
-        assertEquals(
-            "55555666000",
-            result.person.fullmakt
-                .single()
-                .motpartsPersonident,
-        )
-    }
-
-    @Test
-    internal fun `pdl-fullmakt-feil skal ikke skjule repr-api-fullmakter`() {
-        val result =
-            mapper.flettSammenData(
-                testData.copy(
-                    fullmektige = PersondataResult.Failure(PersondataResult.InformasjonElement.FULLMAKT, Throwable("PDL fullmakt nede")),
-                ),
-            )
-
-        assertTrue(result.feilendeSystemer.contains(PersondataResult.InformasjonElement.FULLMAKT))
-        assertTrue(result.person.fullmakt.isEmpty())
-        assertEquals(
-            listOf(forventetFullmaktRepresentasjon),
-            result.person.fullmektige
-                .single()
-                .fullmakter,
-        )
-        assertEquals(
-            kontaktinformasjonTredjepartsperson,
-            result.person.fullmektige
-                .single()
-                .digitalKontaktinformasjonTredjepartsperson,
-        )
     }
 
     @Test
@@ -414,7 +371,7 @@ internal class PersondataFletterTest {
             mapper.flettSammenData(
                 data =
                     testData.copy(
-                        fullmektigeV2 =
+                        fullmektige =
                             PersondataResult.runCatching(PersondataResult.InformasjonElement.REPR_API) {
                                 listOf(fullmaktPerson, fremtidigFullmakt)
                             },
@@ -423,8 +380,8 @@ internal class PersondataFletterTest {
 
         assertEquals(
             listOf(
-                forventetFullmaktRepresentasjon,
-                forventetFullmaktRepresentasjon.copy(gyldigFraOgMed = gittDato("2030-01-01"), gyldigTilOgMed = null),
+                forventetFullmakt,
+                forventetFullmakt.copy(gyldigFraOgMed = gittDato("2030-01-01"), gyldigTilOgMed = null),
             ),
             result.person.fullmektige
                 .single()
@@ -437,8 +394,7 @@ internal class PersondataFletterTest {
         val result =
             mapper.flettSammenData(
                 testData.copy(
-                    fullmektige = PersondataResult.of(emptyList()),
-                    fullmektigeV2 = PersondataResult.of(listOf(fullmaktPerson)),
+                    fullmektige = PersondataResult.of(listOf(fullmaktPerson)),
                 ),
             )
         assertEquals(
@@ -477,7 +433,7 @@ internal class PersondataFletterTest {
                 .digitalKontaktinformasjonTredjepartsperson,
         )
         assertEquals(
-            listOf(forventetFullmaktRepresentasjon),
+            listOf(forventetFullmakt),
             utenPerson.person.fullmektige
                 .single()
                 .fullmakter,
