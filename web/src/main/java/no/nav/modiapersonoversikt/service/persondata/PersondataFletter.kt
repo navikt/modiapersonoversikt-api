@@ -22,7 +22,7 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Period
-import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto as RepresentasjonFullmaktDto
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
 val log: Logger = LoggerFactory.getLogger(PersondataFletter::class.java)
@@ -34,7 +34,7 @@ class PersondataFletter(
     data class Data(
         val personIdent: String,
         val persondata: Person,
-        val fullmektige: PersondataResult<List<RepresentasjonFullmaktDto>>,
+        val fullmektige: PersondataResult<List<FullmaktDto>>,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
         val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
@@ -893,7 +893,7 @@ class PersondataFletter(
             }
     }
 
-    private fun hentFullmakt(fullmakt: RepresentasjonFullmaktDto): Persondata.Fullmakt =
+    private fun hentFullmakt(fullmakt: FullmaktDto): Persondata.Fullmakt =
         Persondata.Fullmakt(
             fullmaktId = fullmakt.fullmaktId,
             fullmaktsgiver = fullmakt.fullmaktsgiver,

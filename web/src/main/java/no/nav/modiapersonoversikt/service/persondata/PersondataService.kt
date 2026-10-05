@@ -20,7 +20,7 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataResult.Informasjo
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.logging.TjenestekallLogger
-import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto as RepresentasjonFullmaktDto
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
@@ -206,7 +206,7 @@ class PersondataServiceImpl(
         ).toList()
 
     internal fun finnFullmektigIdenter(
-        fullmektige: PersondataResult<List<RepresentasjonFullmaktDto>>,
+        fullmektige: PersondataResult<List<FullmaktDto>>,
     ): List<String> =
         fullmektige.getOrElse(emptyList()).map { it.fullmektig }.distinct()
 
