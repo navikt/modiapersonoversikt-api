@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Kontaktinformasjo
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -22,7 +23,6 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Period
-import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
 val log: Logger = LoggerFactory.getLogger(PersondataFletter::class.java)
@@ -881,14 +881,14 @@ class PersondataFletter(
         val tredjepartsPersoner = data.tredjepartsPerson.getOrElse(emptyMap())
         return data.fullmektige
             .getOrElse(emptyList())
-            .groupBy { it.fullmektig }
-            .map { (ident, fullmakter) ->
+            .map { fullmakt ->
+                val ident = fullmakt.fullmektig
                 val person = tredjepartsPersoner[ident]
                 Persondata.Fullmektig(
                     ident = ident,
                     navn = person?.navn?.firstOrNull(),
                     digitalKontaktinformasjonTredjepartsperson = person?.digitalKontaktinformasjon,
-                    fullmakter = fullmakter.map(::hentFullmakt),
+                    fullmakt = hentFullmakt(fullmakt),
                 )
             }
     }
