@@ -267,10 +267,10 @@ object Persondata {
         val ident: String,
         val navn: Navn?,
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
-        val fullmakter: List<FullmaktV2>,
+        val fullmakter: List<FullmaktRepresentasjon>,
     )
 
-    data class FullmaktV2(
+    data class FullmaktRepresentasjon(
         val fullmaktId: UUID,
         val fullmaktsgiver: String,
         val fullmektig: String,

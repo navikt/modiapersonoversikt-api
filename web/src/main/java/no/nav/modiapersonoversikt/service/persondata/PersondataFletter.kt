@@ -896,13 +896,13 @@ class PersondataFletter(
                     ident = ident,
                     navn = person?.navn?.firstOrNull(),
                     digitalKontaktinformasjonTredjepartsperson = person?.digitalKontaktinformasjon,
-                    fullmakter = fullmakter.map(::hentFullmaktV2),
+                    fullmakter = fullmakter.map(::hentFullmaktRepresentasjon),
                 )
             }
     }
 
-    private fun hentFullmaktV2(fullmakt: RepresentasjonFullmaktDto): Persondata.FullmaktV2 =
-        Persondata.FullmaktV2(
+    private fun hentFullmaktRepresentasjon(fullmakt: RepresentasjonFullmaktDto): Persondata.FullmaktRepresentasjon =
+        Persondata.FullmaktRepresentasjon(
             fullmaktId = fullmakt.fullmaktId,
             fullmaktsgiver = fullmakt.fullmaktsgiver,
             fullmektig = fullmakt.fullmektig,

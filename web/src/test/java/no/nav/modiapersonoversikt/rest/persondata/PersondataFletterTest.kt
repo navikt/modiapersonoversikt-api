@@ -394,7 +394,7 @@ internal class PersondataFletterTest {
         assertTrue(result.feilendeSystemer.contains(PersondataResult.InformasjonElement.FULLMAKT))
         assertTrue(result.person.fullmakt.isEmpty())
         assertEquals(
-            listOf(forventetFullmaktV2),
+            listOf(forventetFullmaktRepresentasjon),
             result.person.fullmektige
                 .single()
                 .fullmakter,
@@ -423,8 +423,8 @@ internal class PersondataFletterTest {
 
         assertEquals(
             listOf(
-                forventetFullmaktV2,
-                forventetFullmaktV2.copy(gyldigFraOgMed = gittDato("2030-01-01"), gyldigTilOgMed = null),
+                forventetFullmaktRepresentasjon,
+                forventetFullmaktRepresentasjon.copy(gyldigFraOgMed = gittDato("2030-01-01"), gyldigTilOgMed = null),
             ),
             result.person.fullmektige
                 .single()
@@ -477,7 +477,7 @@ internal class PersondataFletterTest {
                 .digitalKontaktinformasjonTredjepartsperson,
         )
         assertEquals(
-            listOf(forventetFullmaktV2),
+            listOf(forventetFullmaktRepresentasjon),
             utenPerson.person.fullmektige
                 .single()
                 .fullmakter,
