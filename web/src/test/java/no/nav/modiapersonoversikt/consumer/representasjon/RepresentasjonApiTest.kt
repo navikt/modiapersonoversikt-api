@@ -80,7 +80,7 @@ internal class RepresentasjonApiTest {
                 assertEquals("Bearer test-token", request.header("Authorization"))
             }
 
-        val result = RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
+        val result = RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmaktsgiver(Fnr("12345678910"))
 
         assertEquals("55555666000", result.single().fullmektig)
         assertEquals(
@@ -107,7 +107,7 @@ internal class RepresentasjonApiTest {
         val client = client(503, """{"message":"utilgjengelig"}""")
 
         assertThrows(Exception::class.java) {
-            RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
+            RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmaktsgiver(Fnr("12345678910"))
         }
     }
 
@@ -115,14 +115,14 @@ internal class RepresentasjonApiTest {
     fun `404 betyr ingen fullmakter`() {
         val client = client(404, """{"title":"Not Found"}""")
 
-        assertTrue(RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910")).isEmpty())
+        assertTrue(RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmaktsgiver(Fnr("12345678910")).isEmpty())
     }
 
     @Test
     fun `tom 200-liste betyr ingen fullmakter`() {
         val client = client(200, "[]")
 
-        assertTrue(RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910")).isEmpty())
+        assertTrue(RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmaktsgiver(Fnr("12345678910")).isEmpty())
     }
 
     @Test
@@ -132,7 +132,7 @@ internal class RepresentasjonApiTest {
         assertEquals(
             403,
             assertThrows(ClientException::class.java) {
-                RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
+                RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmaktsgiver(Fnr("12345678910"))
             }.statusCode,
         )
     }
@@ -142,7 +142,7 @@ internal class RepresentasjonApiTest {
         val client = client(204, "")
 
         assertThrows(IllegalArgumentException::class.java) {
-            RepresentasjonApiImpl("http://localhost", client).hentfullmakterforfullmaktsgiver(Fnr("12345678910"))
+            RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmaktsgiver(Fnr("12345678910"))
         }
     }
 }

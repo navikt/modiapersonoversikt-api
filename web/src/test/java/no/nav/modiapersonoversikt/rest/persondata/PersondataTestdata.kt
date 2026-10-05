@@ -381,8 +381,8 @@ internal val fullmaktPerson =
         FullmaktDto::class.java,
     )
 
-internal val forventetFullmaktV2 =
-    Persondata.FullmaktV2(
+internal val forventetFullmaktRepresentasjon =
+    Persondata.FullmaktRepresentasjon(
         fullmaktId = fullmaktPerson.fullmaktId,
         fullmaktsgiver = "12345678910",
         fullmektig = "55555666000",
