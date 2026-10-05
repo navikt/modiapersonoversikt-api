@@ -34,7 +34,7 @@ open class RepresentasjonApiImpl(
                 ),
             ) { "repr-api returnerte tom respons for fullmaktsgiver" }
         } catch (e: ClientException) {
-            // Om personen ikke finnes i PDl så returneres 404
+            // Om personen ikke finnes i PDL så returneres 404
             if (e.statusCode == 404) emptyList() else throw e
         }
 
