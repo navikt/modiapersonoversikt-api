@@ -139,15 +139,11 @@ class SfHenvendelseServiceImpl(
                         "Feil ved henting av paginerte henvendelser",
                     )
 
-            check(
-                res.currentPage == page && (
-                    res.totalPages >= page || (
-                        page == 1 && res.totalPages == 0 &&
-                            res.data.isEmpty()
-                    )
-                ) &&
-                    res.hasNextPage == (page < res.totalPages),
-            ) {
+            val tomForsteSide = page == 1 && res.totalPages == 0 && res.data.isEmpty()
+            val riktigSidenummer = res.currentPage == page
+            val riktigAntallSider = res.totalPages >= page || tomForsteSide
+            val riktigNesteSide = res.hasNextPage == (page < res.totalPages)
+            check(riktigSidenummer && riktigAntallSider && riktigNesteSide) {
                 "Ugyldig paginering fra Salesforce"
             }
             allHenvendelser.addAll(res.data)
