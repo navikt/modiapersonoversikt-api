@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.persondata
 
-import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Oppholdstillatelse
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
