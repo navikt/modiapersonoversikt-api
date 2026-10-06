@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.service.persondata
 
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Oppholdstillatelse
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
@@ -247,7 +248,7 @@ object Persondata {
     )
 
     data class Opphold(
-        val type: String,
+        val type: Oppholdstillatelse,
         val oppholdFra: LocalDate?,
         val oppholdTil: LocalDate?,
     )

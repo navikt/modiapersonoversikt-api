@@ -76,7 +76,7 @@ internal class PersondataFletterTest {
             )
 
         assertEquals(
-            listOf(Persondata.Opphold("MIDLERTIDIG", oppholdFra, oppholdTil)),
+            listOf(Persondata.Opphold(Oppholdstillatelse.MIDLERTIDIG, oppholdFra, oppholdTil)),
             result.person.opphold,
         )
     }

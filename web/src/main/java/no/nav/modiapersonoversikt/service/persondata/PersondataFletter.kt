@@ -998,7 +998,7 @@ class PersondataFletter(
     private fun hentOpphold(data: Data): List<Persondata.Opphold> =
         data.persondata.opphold.map { opphold ->
             Persondata.Opphold(
-                type = opphold.type.name,
+                type = opphold.type,
                 oppholdFra = opphold.oppholdFra,
                 oppholdTil = opphold.oppholdTil,
             )
