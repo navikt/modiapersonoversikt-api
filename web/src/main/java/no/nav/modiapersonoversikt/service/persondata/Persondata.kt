@@ -46,6 +46,7 @@ object Persondata {
         val forelderBarnRelasjon: List<ForelderBarnRelasjon>,
         val innflyttingTilNorge: List<InnflyttingTilNorge>,
         val utflyttingFraNorge: List<UtflyttingFraNorge>,
+        val opphold: List<Opphold>,
     )
 
     data class Dodsdato(
@@ -243,6 +244,12 @@ object Persondata {
         val utflyttingsdato: LocalDate? = null,
         val gyldighetsPeriode: GyldighetsPeriode? = null,
         val sistEndret: SistEndret? = null,
+    )
+
+    data class Opphold(
+        val type: String,
+        val oppholdFra: LocalDate?,
+        val oppholdTil: LocalDate?,
     )
 
     data class Fullmektig(

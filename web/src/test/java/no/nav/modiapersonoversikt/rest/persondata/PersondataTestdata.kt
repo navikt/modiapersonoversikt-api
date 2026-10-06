@@ -627,6 +627,7 @@ internal val testPerson =
         oppholdsadresse = listOf(oppholdsadresseData),
         innflyttingTilNorge = listOf(innflyttingTilNorge),
         utflyttingFraNorge = listOf(),
+        opphold = emptyList(),
     )
 
 internal val testData =
