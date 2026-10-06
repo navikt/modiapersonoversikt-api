@@ -140,7 +140,12 @@ class SfHenvendelseServiceImpl(
                     )
 
             check(
-                res.currentPage == page && (res.totalPages >= page || (page == 1 && res.totalPages == 0 && res.data.isEmpty())) &&
+                res.currentPage == page && (
+                    res.totalPages >= page || (
+                        page == 1 && res.totalPages == 0 &&
+                            res.data.isEmpty()
+                    )
+                ) &&
                     res.hasNextPage == (page < res.totalPages),
             ) {
                 "Ugyldig paginering fra Salesforce"
