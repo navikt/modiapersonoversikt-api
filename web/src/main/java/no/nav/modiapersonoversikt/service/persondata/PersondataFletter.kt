@@ -9,8 +9,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Kontaktinformasjo
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.OmraaderMedHandlingDto
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -114,7 +113,7 @@ class PersondataFletter(
                     foreldreansvar = hentForeldreansvar(data),
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
-                    fullmakt = hentFullmakt(data).getOrElse(emptyList()),
+                    fullmektige = hentFullmektige(data),
                     vergemal = gjeldendeVergemal,
                     historiskeVergemal = historiskeVergemal,
                     tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
@@ -878,40 +877,49 @@ class PersondataFletter(
         )
     }
 
-    private fun hentFullmakt(data: Data): PersondataResult<List<Persondata.Fullmakt>> =
-        data.fullmektige.map { fullmakter ->
-            fullmakter.map {
-                val tredjepartsPerson =
-                    data.tredjepartsPerson.map { personer -> personer[it.fullmektig as String] }.getOrNull()
-                val navn = tredjepartsPerson?.navn
-
-                Persondata.Fullmakt(
-                    motpartsPersonident = it.fullmektig as String,
-                    motpartsPersonNavn = navn?.firstOrNull() ?: Persondata.Navn.UKJENT,
-                    motpartsRolle = Persondata.FullmaktsRolle.FULLMEKTIG,
-                    omrade = hentOmrade(it.omraade ?: emptyList()),
-                    gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed),
-                    digitalKontaktinformasjonTredjepartsperson = tredjepartsPerson?.digitalKontaktinformasjon,
-                    kilde = it.kilde,
+    private fun hentFullmektige(data: Data): List<Persondata.Fullmektig> {
+        val tredjepartsPersoner = data.tredjepartsPerson.getOrElse(emptyMap())
+        return data.fullmektige
+            .getOrElse(emptyList())
+            .map { fullmakt ->
+                val ident = fullmakt.fullmektig
+                val person = tredjepartsPersoner[ident]
+                Persondata.Fullmektig(
+                    ident = ident,
+                    navn = person?.navn?.firstOrNull(),
+                    digitalKontaktinformasjonTredjepartsperson = person?.digitalKontaktinformasjon,
+                    fullmakt = hentFullmakt(fullmakt),
                 )
             }
-        }
+    }
 
-    private fun hentOmrade(omraader: List<OmraaderMedHandlingDto>): List<Persondata.OmraadeMedHandling<String>> =
-        omraader.map { omrade ->
-            val omraadeBeskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade.tema as String)
-            Persondata.OmraadeMedHandling(
-                omraade = omraadeBeskrivelse,
-                handling =
-                    omrade.handling?.map {
-                        when (it) {
-                            OmraaderMedHandlingDto.Handling.LES -> Persondata.Handling.LES
-                            OmraaderMedHandlingDto.Handling.KOMMUNISER -> Persondata.Handling.KOMMUNISER
-                            OmraaderMedHandlingDto.Handling.SKRIV -> Persondata.Handling.SKRIV
-                        }
-                    } ?: emptyList(),
-            )
-        }
+    private fun hentFullmakt(fullmakt: FullmaktDto): Persondata.Fullmakt =
+        Persondata.Fullmakt(
+            fullmaktId = fullmakt.fullmaktId,
+            fullmaktsgiver = fullmakt.fullmaktsgiver,
+            fullmektig = fullmakt.fullmektig,
+            gyldigFraOgMed = fullmakt.gyldigFraOgMed,
+            gyldigTilOgMed = fullmakt.gyldigTilOgMed,
+            leserettigheter = hentTemaer(fullmakt.leserettigheter),
+            skriverettigheter = hentTemaer(fullmakt.skriverettigheter),
+            endringslogg =
+                fullmakt.endringslogg.map { endring ->
+                    Persondata.FullmaktEndring(
+                        endringId = endring.endringId,
+                        registrert = endring.registrert,
+                        registrertAv = endring.registrertAv,
+                        kilde = endring.kilde,
+                        hendelse = endring.hendelse,
+                        gyldigFraOgMed = endring.gyldigFraOgMed,
+                        gyldigTilOgMed = endring.gyldigTilOgMed,
+                        leserettigheter = hentTemaer(endring.leserettigheter),
+                        skriverettigheter = hentTemaer(endring.skriverettigheter),
+                    )
+                },
+        )
+
+    private fun hentTemaer(koder: Set<String>): List<Persondata.KodeBeskrivelse<String>> =
+        koder.sorted().map { kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, it) }
 
     private fun hentVergemal(data: Data): List<Persondata.Verge> =
         data.persondata.vergemaalEllerFremtidsfullmakt.map { vergemal ->

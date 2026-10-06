@@ -7,8 +7,8 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.PdlFullmaktApi
-import no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated.models.FullmaktDto
+import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
@@ -21,8 +21,6 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataResult.Informasjo
 import no.nav.personoversikt.common.kabac.Decision
 import no.nav.personoversikt.common.kabac.Kabac
 import no.nav.personoversikt.common.logging.TjenestekallLogger
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
@@ -35,7 +33,7 @@ interface PersondataService {
 
 class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
-    private val pdlFullmakt: PdlFullmaktApi,
+    private val representasjonApi: RepresentasjonApi,
     private val krrService: Krr.Service,
     private val norgApi: NorgApi,
     private val skjermedePersonerApi: SkjermedePersonerApi,
@@ -47,8 +45,6 @@ class PersondataServiceImpl(
 ) : PersondataService {
     private val persondataFletter = PersondataFletter(kodeverk, tjenestekallLogger)
     private val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
-
-    private val log: Logger = LoggerFactory.getLogger(PersondataService::class.java)
 
     override fun hentPerson(personIdent: String): Persondata.Data {
         val persondataResult = pdl.hentPersondata(personIdent)
@@ -76,13 +72,13 @@ class PersondataServiceImpl(
                 .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
 
         val fullmektige =
-            PersondataResult.runCatching(InformasjonElement.FULLMAKT) {
-                pdlFullmakt.hentFullmakterForFullmaktsgiver(Fnr(personIdent)) ?: emptyList()
+            PersondataResult.runCatching(InformasjonElement.REPR_API) {
+                representasjonApi.hentFullmakterForFullmaktsgiver(Fnr(personIdent))
             }
+        val fullmektigIdenter = finnFullmektigIdenter(fullmektige)
         val kontaktinformasjonTredjepartsperson =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
-                fullmektige
-                    .findKontaktinformasjonTredjepartspersoner()
+                fullmektigIdenter
                     .associateWith { krrService.hentDigitalKontaktinformasjon(it) }
                     .mapValues { tredjepartspersonMapper.tilKontaktinformasjonTredjepartsperson(it.value) }
             }
@@ -90,7 +86,7 @@ class PersondataServiceImpl(
         val tredjepartsPerson =
             PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
                 persondata
-                    .findTredjepartsPersoner(fullmektige.findKontaktinformasjonTredjepartspersoner())
+                    .findTredjepartsPersoner(fullmektigIdenter)
                     .let { pdl.hentTredjepartspersondata(it) }
                     .mapNotNull {
                         tredjepartspersonMapper.lagTredjepartsperson(
@@ -195,7 +191,7 @@ class PersondataServiceImpl(
             }
     }
 
-    private fun Person.findTredjepartsPersoner(andrePersoner: List<String>?): List<String> =
+    private fun Person.findTredjepartsPersoner(andrePersoner: List<String>): List<String> =
         setOf(
             *this.vergemaalEllerFremtidsfullmakt
                 .mapNotNull {
@@ -206,20 +202,11 @@ class PersondataServiceImpl(
             *this.sivilstand.mapNotNull { it.relatertVedSivilstand }.toTypedArray(),
             *this.forelderBarnRelasjon.mapNotNull { it.relatertPersonsIdent }.toTypedArray(),
             *this.kontaktinformasjonForDoedsbo.mapNotNull { it.personSomKontakt?.identifikasjonsnummer }.toTypedArray(),
-            *(andrePersoner ?: emptyList()).toTypedArray(),
+            *andrePersoner.toTypedArray(),
         ).toList()
 
-    private fun PersondataResult<List<FullmaktDto>>.findKontaktinformasjonTredjepartspersoner(): List<String> =
-        this
-            .fold(
-                onSuccess = { it.mapNotNull { it.fullmektig } },
-                onFailure = { system, cause ->
-                    log.error("Kunne ikke hente kontaktinfo for tredjeparter fra $system", cause)
-                    emptyList()
-                },
-                onNotRelevant = { emptyList() },
-            ).toSet()
-            .toList()
+    internal fun finnFullmektigIdenter(fullmektige: PersondataResult<List<FullmaktDto>>): List<String> =
+        fullmektige.getOrElse(emptyList()).map { it.fullmektig }.distinct()
 
     private fun hentTilganger(): PersondataService.Tilganger {
         val ctx = policyEnforcementPoint.createEvaluationContext()

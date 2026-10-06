@@ -182,30 +182,36 @@
         }
       }
     } ] ],
-    "fullmakt" : [ "java.util.ArrayList", [ {
+    "fullmektige" : [ "java.util.ArrayList", [ {
       "digitalKontaktinformasjonTredjepartsperson" : {
         "mobiltelefonnummer" : "90909090",
         "reservasjon" : false
       },
-      "gyldighetsPeriode" : {
+      "fullmakt" : {
+        "endringslogg" : [ "java.util.ArrayList", [ ] ],
+        "fullmaktId" : "db40e7d2-44dd-4dab-a954-114513c761d1",
+        "fullmaktsgiver" : "12345678910",
+        "fullmektig" : "55555666000",
         "gyldigFraOgMed" : "2018-01-03",
-        "gyldigTilOgMed" : "2018-10-03"
+        "gyldigTilOgMed" : "2018-10-03",
+        "leserettigheter" : [ "java.util.ArrayList", [ {
+          "beskrivelse" : "Arbeidsavklaringspenger",
+          "kode" : "AAP"
+        }, {
+          "beskrivelse" : "SAP",
+          "kode" : "SAP"
+        } ] ],
+        "skriverettigheter" : [ "java.util.ArrayList", [ {
+          "beskrivelse" : "Arbeidsavklaringspenger",
+          "kode" : "AAP"
+        } ] ]
       },
-      "kilde" : null,
-      "motpartsPersonNavn" : {
+      "ident" : "55555666000",
+      "navn" : {
         "etternavn" : "MedFullmakt",
         "fornavn" : "Person",
         "mellomnavn" : null
-      },
-      "motpartsPersonident" : "55555666000",
-      "motpartsRolle" : "FULLMEKTIG",
-      "omrade" : [ "java.util.ArrayList", [ {
-        "handling" : [ "java.util.ArrayList", [ "LES" ] ],
-        "omraade" : {
-          "beskrivelse" : "SAP",
-          "kode" : "SAP"
-        }
-      } ] ]
+      }
     } ] ],
     "geografiskTilknytning" : null,
     "historiskeBostedAdresser" : [ "java.util.Arrays$ArrayList", [ {

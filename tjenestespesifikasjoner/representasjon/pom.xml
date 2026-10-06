@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>tjenestespesifikasjoner</artifactId>
+        <groupId>no.nav.sbl.dialogarena</groupId>
         <version>dev</version>
     </parent>
-
-    <artifactId>pdl-fullmakt-api</artifactId>
-
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>representasjon</artifactId>
     <properties>
-        <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>no.nav.common</groupId>
@@ -34,7 +29,6 @@
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -47,10 +41,11 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/pdl-fullmakt-api/openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/representasjon/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp4</library>
-                            <packageName>no.nav.modiapersonoversikt.consumer.pdlFullmaktApi.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.consumer.representasjon.generated</packageName>
+                            <typeMappings>java.time.OffsetDateTime=java.time.LocalDateTime</typeMappings>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <configOptions>
                                 <enumPropertyNaming>original</enumPropertyNaming>
@@ -80,6 +75,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>
