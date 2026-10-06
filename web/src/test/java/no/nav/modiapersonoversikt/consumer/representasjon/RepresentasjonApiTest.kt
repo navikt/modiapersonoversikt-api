@@ -112,7 +112,7 @@ internal class RepresentasjonApiTest {
     }
 
     @Test
-    fun `404 betyr ingen fullmakter`() {
+    fun `404 betyr at personen ikke finnes i PDL`() {
         val client = client(404, """{"title":"Not Found"}""")
 
         assertTrue(RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmaktsgiver(Fnr("12345678910")).isEmpty())
