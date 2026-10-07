@@ -204,7 +204,7 @@ internal class SfHenvendelseServiceImplTest {
         val head =
             dummyHenvendelse.copy(
                 henvendelseType = HenvendelseDTO.HenvendelseType.SAMTALEREFERAT,
-                kjedeId = "",
+                kjedeId = "head",
                 meldinger = listOf(dummyHenvendelse.meldinger!!.single().copy(meldingsId = "head")),
             )
         val child =

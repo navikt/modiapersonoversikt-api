@@ -2,9 +2,11 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
 
+private fun HenvendelseDTO.erHovedreferat(): Boolean = kjedeId.isBlank() || kjedeId == meldinger?.singleOrNull()?.meldingsId
+
 internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
     val referater = henvendelser.filter { it.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT }
-    val heads = referater.filter { it.kjedeId.isBlank() }
+    val heads = referater.filter { it.erHovedreferat() }
     val headsWithId =
         heads.map { head ->
             val melding = head.meldinger?.singleOrNull()
@@ -18,13 +20,13 @@ internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<H
     }
     val headId = headsWithId.toMap()
     val headById = headsWithId.associate { (head, id) -> id to head }
-    val children = referater.filter { it.kjedeId.isNotBlank() }.groupBy { it.kjedeId }
+    val children = referater.filterNot { it.erHovedreferat() }.groupBy { it.kjedeId }
     require(children.keys.all { it in headById }) { "Samtalereferat mangler hovedmelding" }
 
     return henvendelser.mapNotNull { henvendelse ->
         if (henvendelse.henvendelseType != HenvendelseDTO.HenvendelseType.SAMTALEREFERAT) {
             henvendelse
-        } else if (henvendelse.kjedeId.isNotBlank()) {
+        } else if (!henvendelse.erHovedreferat()) {
             null
         } else {
             val id = headId.getValue(henvendelse)

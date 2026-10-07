@@ -43,6 +43,24 @@ internal class SamtalereferatGrupperingTest {
     }
 
     @Test
+    fun `eget meldingsId som kjedeId er hovedreferat og kan samle senere referater`() {
+        val head = referat("head", "head")
+        val child = referat("head", "child")
+        val annen = referat("annen", "annen-melding", HenvendelseDTO.HenvendelseType.MELDINGSKJEDE)
+
+        assertThat(grupperSamtalereferater(listOf(head, annen)))
+            .containsExactly(head.copy(journalposter = emptyList(), markeringer = emptyList()), annen)
+        val resultat = grupperSamtalereferater(listOf(child, annen, head))
+        assertThat(resultat).hasSize(2)
+        assertThat(
+            resultat
+                .single { it.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT }
+                .meldinger
+                ?.map { it.meldingsId },
+        ).containsExactly("head", "child")
+    }
+
+    @Test
     fun `samler journalposter for hele kjeden slik at tematilgang gjelder alle meldinger`() {
         val journalpost =
             JournalpostDTO(
