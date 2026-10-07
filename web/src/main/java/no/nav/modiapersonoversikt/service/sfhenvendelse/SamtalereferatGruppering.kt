@@ -34,21 +34,27 @@ internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<H
             require(
                 kjede.all {
                     it.fnr == henvendelse.fnr &&
-                        it.aktorId == henvendelse.aktorId &&
-                        it.gjeldendeTemagruppe == henvendelse.gjeldendeTemagruppe
+                        it.aktorId == henvendelse.aktorId
                 },
-            ) { "Samtalereferater i samme kjede har ulike eiere eller temagrupper" }
+            ) { "Samtalereferater i samme kjede har ulike eiere" }
             require(kjede.all { it.meldinger?.size == 1 }) {
                 "Samtalereferat har ikke nøyaktig én melding"
             }
-            val meldinger = kjede.flatMap { it.meldinger.orEmpty() }
+            val referaterMedMelding = kjede.map { it to it.meldinger.orEmpty().single() }
+            val meldinger = referaterMedMelding.map { it.second }
             require(
                 meldinger.all { !it.meldingsId.isNullOrBlank() } &&
                     meldinger.map { it.meldingsId }.distinct().size == meldinger.size,
             ) { "Samtalereferat har manglende eller duplikat meldings-ID" }
+            val nyesteSendtDato = meldinger.maxOf { it.sendtDato.toInstant() }
+            val nyesteReferater = referaterMedMelding.filter { (_, melding) -> melding.sendtDato.toInstant() == nyesteSendtDato }
+            require(nyesteReferater.map { it.first.gjeldendeTemagruppe }.distinct().size == 1) {
+                "Samtalereferater med samme sendetidspunkt har ulike temagrupper"
+            }
 
             henvendelse.copy(
                 kjedeId = id,
+                gjeldendeTemagruppe = nyesteReferater.first().first.gjeldendeTemagruppe,
                 meldinger = meldinger,
                 journalposter = kjede.flatMap { it.journalposter.orEmpty() },
                 markeringer = kjede.flatMap { it.markeringer.orEmpty() },

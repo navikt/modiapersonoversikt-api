@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 internal class SamtalereferatGrupperingTest {
     private val dato = OffsetDateTime.parse("2024-01-01T12:00:00Z")
@@ -77,11 +78,64 @@ internal class SamtalereferatGrupperingTest {
     }
 
     @Test
+    fun `nyeste meldings temagruppe gjelder selv om referatene kommer i annen rekkefolge`() {
+        val head = referat("head", "head")
+        val siste =
+            referat("head", "siste")
+                .copy(
+                    gjeldendeTemagruppe = "FMLI",
+                    meldinger = listOf(MeldingDTO(sendtDato = dato.plusMinutes(2), fra = fra, meldingsId = "siste")),
+                )
+        val mellom =
+            referat("head", "mellom")
+                .copy(
+                    gjeldendeTemagruppe = "PENS",
+                    meldinger = listOf(MeldingDTO(sendtDato = dato.plusMinutes(1), fra = fra, meldingsId = "mellom")),
+                )
+
+        val resultat = grupperSamtalereferater(listOf(siste, mellom, head)).single()
+
+        assertThat(resultat.kjedeId).isEqualTo("head")
+        assertThat(resultat.gjeldendeTemagruppe).isEqualTo("FMLI")
+        assertThat(resultat.meldinger?.map { it.meldingsId }).containsExactly("head", "siste", "mellom")
+        assertThat(grupperSamtalereferater(listOf(siste.copy(gjeldendeTemagruppe = "ARBD"), mellom, head)).single().gjeldendeTemagruppe)
+            .isEqualTo("ARBD")
+    }
+
+    @Test
+    fun `avviser ulik temagruppe ved likt sendetidspunkt for nyeste meldinger`() {
+        assertThatThrownBy {
+            grupperSamtalereferater(
+                listOf(referat("head", "head"), referat("head", "child").copy(gjeldendeTemagruppe = "FMLI")),
+            )
+        }.isInstanceOf(IllegalArgumentException::class.java)
+    }
+
+    @Test
+    fun `hovedreferatets tema gjelder hvis det har nyeste melding`() {
+        val head =
+            referat("head", "head")
+                .copy(meldinger = listOf(MeldingDTO(sendtDato = dato.plusHours(1), fra = fra, meldingsId = "head")))
+        val child =
+            referat("head", "child")
+                .copy(
+                    gjeldendeTemagruppe = "FMLI",
+                    meldinger =
+                        listOf(MeldingDTO(sendtDato = dato.withOffsetSameInstant(ZoneOffset.ofHours(2)), fra = fra, meldingsId = "child")),
+                )
+
+        assertThat(grupperSamtalereferater(listOf(child, head)).single().gjeldendeTemagruppe).isEqualTo("ARBD")
+    }
+
+    @Test
     fun `avviser foreldrelos melding og ulike eiere`() {
         assertThatThrownBy { grupperSamtalereferater(listOf(referat("missing", "child"))) }
             .isInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy {
             grupperSamtalereferater(listOf(referat("", "head"), referat("head", "child").copy(fnr = "annen")))
+        }.isInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy {
+            grupperSamtalereferater(listOf(referat("", "head"), referat("head", "child").copy(aktorId = "annen")))
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
 

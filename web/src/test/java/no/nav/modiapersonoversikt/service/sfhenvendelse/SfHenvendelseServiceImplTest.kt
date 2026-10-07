@@ -207,10 +207,19 @@ internal class SfHenvendelseServiceImplTest {
                 kjedeId = "head",
                 meldinger = listOf(dummyHenvendelse.meldinger!!.single().copy(meldingsId = "head")),
             )
+        val headMelding = head.meldinger!!.single()
         val child =
             head.copy(
                 kjedeId = "head",
-                meldinger = listOf(head.meldinger!!.single().copy(meldingsId = "child", fritekst = "Andre melding")),
+                gjeldendeTemagruppe = "FMLI",
+                meldinger =
+                    listOf(
+                        headMelding.copy(
+                            meldingsId = "child",
+                            sendtDato = headMelding.sendtDato.plusMinutes(1),
+                            fritekst = "Andre melding",
+                        ),
+                    ),
             )
         every { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 1, 100) } returns
             PaginertHenvendelseListeDTO(listOf(child, dummyHenvendelse), 1, 100, 2, true)
@@ -222,6 +231,7 @@ internal class SfHenvendelseServiceImplTest {
         assertThat(result).hasSize(2)
         assertThat(result.first()).isEqualTo(dummyHenvendelse)
         assertThat(result.last().kjedeId).isEqualTo("head")
+        assertThat(result.last().gjeldendeTemagruppe).isEqualTo("FMLI")
         assertThat(result.last().meldinger?.map { it.meldingsId }).containsExactly("head", "child")
         verify(exactly = 1) { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 1, 100) }
         verify(exactly = 1) { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 2, 100) }
@@ -248,10 +258,13 @@ internal class SfHenvendelseServiceImplTest {
                 kjedeId = "",
                 meldinger = listOf(dummyHenvendelse.meldinger!!.single().copy(meldingsId = "head")),
             )
+        val headMelding = head.meldinger!!.single()
         val child =
             head.copy(
                 kjedeId = "head",
-                meldinger = listOf(head.meldinger!!.single().copy(meldingsId = "child")),
+                gjeldendeTemagruppe = "FMLI",
+                meldinger =
+                    listOf(headMelding.copy(meldingsId = "child", sendtDato = headMelding.sendtDato.plusMinutes(1))),
                 journalposter = dummyHenvendelse.medJournalpost("SYK").journalposter,
             )
         every { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 1, 100) } returns
@@ -260,6 +273,7 @@ internal class SfHenvendelseServiceImplTest {
         val resultat = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId(dummyHenvendelse.aktorId), "0101")
 
         assertThat(resultat.single().meldinger).hasSize(2)
+        assertThat(resultat.single().gjeldendeTemagruppe).isEqualTo("FMLI")
         assertThat(
             resultat
                 .single()

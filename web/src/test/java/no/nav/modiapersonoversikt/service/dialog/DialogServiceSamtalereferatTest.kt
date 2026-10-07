@@ -35,6 +35,7 @@ internal class DialogServiceSamtalereferatTest {
         val neste =
             head.copy(
                 kjedeId = "head",
+                gjeldendeTemagruppe = "FMLI",
                 meldinger =
                     listOf(
                         MeldingDTO(meldingsId = "andre", sendtDato = tidspunkt.plusMinutes(1), fra = fra, fritekst = "Andre melding"),
@@ -46,7 +47,12 @@ internal class DialogServiceSamtalereferatTest {
         every { ansatt.hentVeiledere(any()) } returns emptyMap()
         val sf = mockk<SfHenvendelseService>()
         val dialog = DialogServiceImpl(sf, mockk<OppgaveBehandlingService>(), ansatt, kodeverk)
-        val v1 = head.copy(kjedeId = "head", meldinger = head.meldinger.orEmpty() + neste.meldinger.orEmpty())
+        val v1 =
+            head.copy(
+                kjedeId = "head",
+                gjeldendeTemagruppe = "FMLI",
+                meldinger = head.meldinger.orEmpty() + neste.meldinger.orEmpty(),
+            )
 
         every { sf.hentHenvendelser(any<EksternBruker>(), any()) } returns listOf(v1)
         val forventet = dialog.hentMeldinger(head.fnr, "0101")
@@ -54,6 +60,8 @@ internal class DialogServiceSamtalereferatTest {
 
         assertThat(dialog.hentMeldinger(head.fnr, "0101")).isEqualTo(forventet)
         assertThat(forventet.single().traadId).isEqualTo("head")
+        assertThat(forventet.single().temagruppe).isEqualTo("FMLI")
+        assertThat(forventet.single().meldinger.map { it.temagruppe }).containsExactly("FMLI", "FMLI")
         assertThat(forventet.single().meldinger).hasSize(2)
     }
 }
