@@ -124,6 +124,7 @@ class PersondataFletter(
                     forelderBarnRelasjon = hentForelderBarnRelasjon(data, clock),
                     innflyttingTilNorge = hentInnflyttingTilNorge(data),
                     utflyttingFraNorge = hentUtflyttingFraNorge(data),
+                    opphold = hentOpphold(data),
                 ),
         )
     }
@@ -991,6 +992,15 @@ class PersondataFletter(
                         utflytting.folkeregistermetadata?.gyldighetstidspunkt,
                         utflytting.folkeregistermetadata?.opphoerstidspunkt,
                     ),
+            )
+        }
+
+    private fun hentOpphold(data: Data): List<Persondata.Opphold> =
+        data.persondata.opphold.map { opphold ->
+            Persondata.Opphold(
+                type = opphold.type,
+                oppholdFra = opphold.oppholdFra,
+                oppholdTil = opphold.oppholdTil,
             )
         }
 

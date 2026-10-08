@@ -101,6 +101,11 @@ query hentPersondata($ident: ID!){
             gyldigFraOgMed,
             gyldigTilOgMed
         }
+        opphold(historikk: false) {
+            type
+            oppholdFra
+            oppholdTil
+        }
         doedsfall {
             doedsdato,
             metadata {

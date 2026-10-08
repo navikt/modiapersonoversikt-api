@@ -4,11 +4,14 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Oppholdstillatelse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Doedsfall
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Folkeregistermetadata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata2
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Opphold
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.persondata.Persondata
 import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
 import no.nav.modiapersonoversikt.service.persondata.PersondataResult
 import no.nav.personoversikt.common.logging.TjenestekallLogg
@@ -48,6 +51,33 @@ internal class PersondataFletterTest {
                     ),
                 clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
             ),
+        )
+    }
+
+    @Test
+    internal fun `skal mappe opphold fra pdl`() {
+        val oppholdFra = gittDato("2024-01-01")
+        val oppholdTil = gittDato("2025-01-01")
+        val result =
+            mapper.flettSammenData(
+                testData.copy(
+                    persondata =
+                        testPerson.copy(
+                            opphold =
+                                listOf(
+                                    Opphold(
+                                        type = Oppholdstillatelse.MIDLERTIDIG,
+                                        oppholdFra = oppholdFra,
+                                        oppholdTil = oppholdTil,
+                                    ),
+                                ),
+                        ),
+                ),
+            )
+
+        assertEquals(
+            listOf(Persondata.Opphold(Oppholdstillatelse.MIDLERTIDIG, oppholdFra, oppholdTil)),
+            result.person.opphold,
         )
     }
 

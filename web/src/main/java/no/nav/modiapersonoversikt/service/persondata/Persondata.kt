@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.persondata
 
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Oppholdstillatelse
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -46,6 +47,7 @@ object Persondata {
         val forelderBarnRelasjon: List<ForelderBarnRelasjon>,
         val innflyttingTilNorge: List<InnflyttingTilNorge>,
         val utflyttingFraNorge: List<UtflyttingFraNorge>,
+        val opphold: List<Opphold>,
     )
 
     data class Dodsdato(
@@ -243,6 +245,12 @@ object Persondata {
         val utflyttingsdato: LocalDate? = null,
         val gyldighetsPeriode: GyldighetsPeriode? = null,
         val sistEndret: SistEndret? = null,
+    )
+
+    data class Opphold(
+        val type: Oppholdstillatelse,
+        val oppholdFra: LocalDate?,
+        val oppholdTil: LocalDate?,
     )
 
     data class Fullmektig(

@@ -348,6 +348,7 @@
       "fornavn" : "Teste",
       "mellomnavn" : "Ruud"
     } ] ],
+    "opphold" : [ "java.util.ArrayList", [ ] ],
     "oppholdsAdresse" : [ "java.util.ArrayList", [ {
       "angittFlyttedato" : null,
       "coAdresse" : "Kari Hansen",
