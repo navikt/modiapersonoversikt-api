@@ -84,12 +84,14 @@ internal class SamtalereferatGrupperingTest {
             referat("head", "siste")
                 .copy(
                     gjeldendeTemagruppe = "FMLI",
+                    opprettetDato = dato.plusMinutes(1).plusSeconds(30),
                     meldinger = listOf(MeldingDTO(sendtDato = dato.plusMinutes(2), fra = fra, meldingsId = "siste")),
                 )
         val mellom =
             referat("head", "mellom")
                 .copy(
                     gjeldendeTemagruppe = "PENS",
+                    opprettetDato = dato.plusMinutes(1),
                     meldinger = listOf(MeldingDTO(sendtDato = dato.plusMinutes(1), fra = fra, meldingsId = "mellom")),
                 )
 
@@ -97,6 +99,8 @@ internal class SamtalereferatGrupperingTest {
 
         assertThat(resultat.kjedeId).isEqualTo("head")
         assertThat(resultat.gjeldendeTemagruppe).isEqualTo("FMLI")
+        assertThat(resultat.opprettetDato).isEqualTo(siste.opprettetDato)
+        assertThat(resultat.opprettetDato).isNotEqualTo(siste.meldinger!!.single().sendtDato)
         assertThat(resultat.meldinger?.map { it.meldingsId }).containsExactly("head", "siste", "mellom")
         assertThat(grupperSamtalereferater(listOf(siste.copy(gjeldendeTemagruppe = "ARBD"), mellom, head)).single().gjeldendeTemagruppe)
             .isEqualTo("ARBD")
@@ -115,7 +119,10 @@ internal class SamtalereferatGrupperingTest {
     fun `hovedreferatets tema gjelder hvis det har nyeste melding`() {
         val head =
             referat("head", "head")
-                .copy(meldinger = listOf(MeldingDTO(sendtDato = dato.plusHours(1), fra = fra, meldingsId = "head")))
+                .copy(
+                    opprettetDato = dato.plusHours(1),
+                    meldinger = listOf(MeldingDTO(sendtDato = dato.plusHours(1), fra = fra, meldingsId = "head")),
+                )
         val child =
             referat("head", "child")
                 .copy(
@@ -124,7 +131,9 @@ internal class SamtalereferatGrupperingTest {
                         listOf(MeldingDTO(sendtDato = dato.withOffsetSameInstant(ZoneOffset.ofHours(2)), fra = fra, meldingsId = "child")),
                 )
 
-        assertThat(grupperSamtalereferater(listOf(child, head)).single().gjeldendeTemagruppe).isEqualTo("ARBD")
+        val resultat = grupperSamtalereferater(listOf(child, head)).single()
+        assertThat(resultat.gjeldendeTemagruppe).isEqualTo("ARBD")
+        assertThat(resultat.opprettetDato).isEqualTo(head.opprettetDato)
     }
 
     @Test

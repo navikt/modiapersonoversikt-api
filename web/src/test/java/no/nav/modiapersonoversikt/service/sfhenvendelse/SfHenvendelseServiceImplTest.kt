@@ -212,6 +212,7 @@ internal class SfHenvendelseServiceImplTest {
             head.copy(
                 kjedeId = "head",
                 gjeldendeTemagruppe = "FMLI",
+                opprettetDato = head.opprettetDato.plusMinutes(1),
                 meldinger =
                     listOf(
                         headMelding.copy(
@@ -232,6 +233,7 @@ internal class SfHenvendelseServiceImplTest {
         assertThat(result.first()).isEqualTo(dummyHenvendelse)
         assertThat(result.last().kjedeId).isEqualTo("head")
         assertThat(result.last().gjeldendeTemagruppe).isEqualTo("FMLI")
+        assertThat(result.last().opprettetDato).isEqualTo(child.opprettetDato)
         assertThat(result.last().meldinger?.map { it.meldingsId }).containsExactly("head", "child")
         verify(exactly = 1) { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 1, 100) }
         verify(exactly = 1) { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 2, 100) }

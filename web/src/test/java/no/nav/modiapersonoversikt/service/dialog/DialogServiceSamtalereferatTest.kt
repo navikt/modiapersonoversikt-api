@@ -36,6 +36,7 @@ internal class DialogServiceSamtalereferatTest {
             head.copy(
                 kjedeId = "head",
                 gjeldendeTemagruppe = "FMLI",
+                opprettetDato = tidspunkt.plusMinutes(1),
                 meldinger =
                     listOf(
                         MeldingDTO(meldingsId = "andre", sendtDato = tidspunkt.plusMinutes(1), fra = fra, fritekst = "Andre melding"),
@@ -51,6 +52,7 @@ internal class DialogServiceSamtalereferatTest {
             head.copy(
                 kjedeId = "head",
                 gjeldendeTemagruppe = "FMLI",
+                opprettetDato = neste.opprettetDato,
                 meldinger = head.meldinger.orEmpty() + neste.meldinger.orEmpty(),
             )
 
@@ -60,6 +62,7 @@ internal class DialogServiceSamtalereferatTest {
 
         assertThat(dialog.hentMeldinger(head.fnr, "0101")).isEqualTo(forventet)
         assertThat(forventet.single().traadId).isEqualTo("head")
+        assertThat(forventet.single().opprettetDato).isEqualTo(neste.opprettetDato)
         assertThat(forventet.single().temagruppe).isEqualTo("FMLI")
         assertThat(forventet.single().meldinger.map { it.temagruppe }).containsExactly("FMLI", "FMLI")
         assertThat(forventet.single().meldinger).hasSize(2)

@@ -51,10 +51,12 @@ internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<H
             require(nyesteReferater.map { it.first.gjeldendeTemagruppe }.distinct().size == 1) {
                 "Samtalereferater med samme sendetidspunkt har ulike temagrupper"
             }
+            val nyesteReferat = nyesteReferater.maxBy { (referat, _) -> referat.opprettetDato.toInstant() }.first
 
             henvendelse.copy(
                 kjedeId = id,
-                gjeldendeTemagruppe = nyesteReferater.first().first.gjeldendeTemagruppe,
+                gjeldendeTemagruppe = nyesteReferat.gjeldendeTemagruppe,
+                opprettetDato = nyesteReferat.opprettetDato,
                 meldinger = meldinger,
                 journalposter = kjede.flatMap { it.journalposter.orEmpty() },
                 markeringer = kjede.flatMap { it.markeringer.orEmpty() },
