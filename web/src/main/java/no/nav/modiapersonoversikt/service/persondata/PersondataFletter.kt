@@ -114,6 +114,7 @@ class PersondataFletter(
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
                     fullmektige = hentFullmektige(data),
+                    fullmakt = emptyList(),
                     vergemal = gjeldendeVergemal,
                     historiskeVergemal = historiskeVergemal,
                     tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
