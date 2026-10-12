@@ -179,6 +179,7 @@
         }
       }
     } ] ],
+    "fullmakt" : [ "kotlin.collections.EmptyList", [ ] ],
     "fullmektige" : [ "java.util.ArrayList", [ {
       "digitalKontaktinformasjonTredjepartsperson" : {
         "mobiltelefonnummer" : "90909090",
