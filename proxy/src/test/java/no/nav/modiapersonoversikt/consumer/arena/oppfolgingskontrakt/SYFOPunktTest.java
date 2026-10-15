@@ -1,13 +1,15 @@
 package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
 import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.SYFOPunkt;
-import org.joda.time.LocalDate;
+import no.nav.modiapersonoversikt.utils.DateUtils;
+import java.time.LocalDate;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import java.util.Date;
 
 public class SYFOPunktTest {
 
-    public static final LocalDate DATE = new LocalDate(System.currentTimeMillis() + 897987);
+    public static final LocalDate DATE = DateUtils.toLocalDate(new Date(System.currentTimeMillis() + 897987));
     public static final boolean FAST_OPPFOLGINGSPUNKT = false;
     public static final String STATUSMELDING = "statusmelding";
     public static final String HENDELSE = "Hendelse";

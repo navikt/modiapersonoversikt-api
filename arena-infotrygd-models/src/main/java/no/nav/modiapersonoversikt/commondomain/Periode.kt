@@ -1,20 +1,20 @@
 package no.nav.modiapersonoversikt.commondomain
 
-import org.joda.time.LocalDate
-import org.joda.time.LocalDateTime
 import java.io.Serializable
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Periode(
     var from: LocalDate? = null,
     var to: LocalDate? = null,
 ) : Serializable {
     constructor(from: LocalDateTime, toan: LocalDateTime) : this() {
-        this.from = LocalDate(from)
-        this.to = LocalDate(toan)
+        this.from = from.toLocalDate()
+        this.to = toan.toLocalDate()
     }
 
     fun erGyldig(): Boolean {
-        val today = LocalDate()
+        val today = LocalDate.now()
 
         return when {
             from == null -> false

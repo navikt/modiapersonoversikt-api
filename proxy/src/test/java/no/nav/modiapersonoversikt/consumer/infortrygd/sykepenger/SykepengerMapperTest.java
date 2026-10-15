@@ -14,7 +14,7 @@ import no.nav.personoversikt.common.test.snapshot.SnapshotRule;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeRequest;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeResponse;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,7 +65,7 @@ public class SykepengerMapperTest {
         FimsykSykmeldingsperiode sykmeldingsperiode = new FimsykSykmeldingsperiode();
         long forbrukteDager = 100L;
         sykmeldingsperiode.setForbrukteDager(BigInteger.valueOf(forbrukteDager));
-        Date iddato = new LocalDate(2012, 12, 20).toDate();
+        Date iddato = DateUtils.toDate(LocalDate.of(2012, 12, 20));
         sykmeldingsperiode.setSykmeldtFom(DateUtils.convertDateToXmlGregorianCalendar(iddato));
 
         FimsykSykmelding sykmelding = new FimsykSykmelding();
@@ -111,45 +111,45 @@ public class SykepengerMapperTest {
         assertThat(utbetalingPaaVent.getOppgjoerstype().getKode(), equalTo(SykepengerMockFactory.UTBETALING_PA_VENT_OPPGJORSTYPE_KODE));
         assertThat(utbetalingPaaVent.getOppgjoerstype().getTermnavn(), equalTo(SykepengerMockFactory.UTBETALING_PA_VENT_OPPGJORSTYPE_TERM));
         assertThat(utbetalingPaaVent.getUtbetalingsgrad(), equalTo(SykepengerMockFactory.UTBETALING_PA_VENT_UTBETALINGSGRAD));
-        assertThat(utbetalingPaaVent.getVedtak().getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.UTBETALING_PA_VENT_PERIODE_FOM)));
-        assertThat(utbetalingPaaVent.getVedtak().getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.UTBETALING_PA_VENT_PERIODE_TOM)));
+        assertThat(utbetalingPaaVent.getVedtak().getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.UTBETALING_PA_VENT_PERIODE_FOM)));
+        assertThat(utbetalingPaaVent.getVedtak().getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.UTBETALING_PA_VENT_PERIODE_TOM)));
 
         KommendeUtbetaling kommendeUtbetaling = sykmeldingsperiode.getKommendeUtbetalinger().get(0);
         assertThat(kommendeUtbetaling.getUtbetalingsgrad(), equalTo(SykepengerMockFactory.KOMMENDE_UTBETALING1_UTBETALINGSGRAD));
-        assertThat(kommendeUtbetaling.getVedtak().getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.KOMMENDE_UTBETALING1_PERIODE_FOM)));
-        assertThat(kommendeUtbetaling.getVedtak().getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.KOMMENDE_UTBETALING1_PERIODE_TOM)));
+        assertThat(kommendeUtbetaling.getVedtak().getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.KOMMENDE_UTBETALING1_PERIODE_FOM)));
+        assertThat(kommendeUtbetaling.getVedtak().getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.KOMMENDE_UTBETALING1_PERIODE_TOM)));
         assertThat(kommendeUtbetaling.getType().getTermnavn(), equalTo(SykepengerMockFactory.KOMMENDE_UTBETALING1_TYPE_TERMNAVN));
 
         Sykmelding sykmelding1 = sykmeldingsperiode.getSykmeldinger().get(0);
-        assertThat(sykmelding1.getBehandlet(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING1_BEHANDLINGSDATO)));
-        assertThat(sykmelding1.getSykmeldt().getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING1_PERIODE_FOM)));
-        assertThat(sykmelding1.getSykmeldt().getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING1_PERIODE_TOM)));
+        assertThat(sykmelding1.getBehandlet(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING1_BEHANDLINGSDATO)));
+        assertThat(sykmelding1.getSykmeldt().getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING1_PERIODE_FOM)));
+        assertThat(sykmelding1.getSykmeldt().getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING1_PERIODE_TOM)));
         assertThat(sykmelding1.getSykmelder(), equalTo(SykepengerMockFactory.SYKMELDING1_SYKMELDER));
         assertThat(sykmelding1.getSykmeldingsgrad(), equalTo(SykepengerMockFactory.SYKMELDING1_GRADERING3_GRAD));
-        assertThat(sykmelding1.getGradAvSykmeldingListe().get(0).getGradert().getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING1_GRADERING1_PERIODE_FOM)));
-        assertThat(sykmelding1.getGradAvSykmeldingListe().get(0).getGradert().getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING1_GRADERING1_PERIODE_TOM)));
+        assertThat(sykmelding1.getGradAvSykmeldingListe().get(0).getGradert().getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING1_GRADERING1_PERIODE_FOM)));
+        assertThat(sykmelding1.getGradAvSykmeldingListe().get(0).getGradert().getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING1_GRADERING1_PERIODE_TOM)));
         assertThat(sykmelding1.getGradAvSykmeldingListe().get(0).getSykmeldingsgrad(), equalTo(SykepengerMockFactory.SYKMELDING1_GRADERING1_GRAD));
 
         Yrkesskade yrkesskade = sykmelding1.getGjelderYrkesskade();
-        assertThat(yrkesskade.getSkadet(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING1_YRKESSKADE_SKADET_DATO)));
-        assertThat(yrkesskade.getVedtatt(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMEDLING1_YRKESSKADE_VEDTAKS_DATO)));
+        assertThat(yrkesskade.getSkadet(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING1_YRKESSKADE_SKADET_DATO)));
+        assertThat(yrkesskade.getVedtatt(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMEDLING1_YRKESSKADE_VEDTAKS_DATO)));
         assertThat(yrkesskade.getYrkesskadeart().getKode(), equalTo(SykepengerMockFactory.SYKMEDLING1_YRKESSKADE_SKADEART_KODE));
         assertThat(yrkesskade.getYrkesskadeart().getTermnavn(), equalTo(SykepengerMockFactory.SYKMEDLING1_YRKESSKADE_SKADEART_TERM));
 
         Sykmelding sykmelding2 = sykmeldingsperiode.getSykmeldinger().get(1);
-        assertThat(sykmelding2.getBehandlet(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING2_BEHANDLINGSDATO)));
-        assertThat(sykmelding2.getSykmeldt().getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING2_PERIODE_FOM)));
-        assertThat(sykmelding2.getSykmeldt().getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING2_PERIODE_TOM)));
+        assertThat(sykmelding2.getBehandlet(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING2_BEHANDLINGSDATO)));
+        assertThat(sykmelding2.getSykmeldt().getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING2_PERIODE_FOM)));
+        assertThat(sykmelding2.getSykmeldt().getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING2_PERIODE_TOM)));
         assertThat(sykmelding2.getSykmelder(), equalTo(SykepengerMockFactory.SYKMELDING2_SYKMELDER));
         assertThat(sykmelding2.getSykmeldingsgrad(), equalTo(SykepengerMockFactory.SYKMELDING2_GRADERING1_GRAD));
         assertThat(sykmelding2.getGradAvSykmeldingListe().get(0).getSykmeldingsgrad(), equalTo(SykepengerMockFactory.SYKMELDING2_GRADERING1_GRAD));
-        assertThat(sykmelding2.getGradAvSykmeldingListe().get(0).getGradert().getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING2_GRADERING1_PERIODE_FOM)));
-        assertThat(sykmelding2.getGradAvSykmeldingListe().get(0).getGradert().getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.SYKMELDING2_GRADERING1_PERIODE_TOM)));
+        assertThat(sykmelding2.getGradAvSykmeldingListe().get(0).getGradert().getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING2_GRADERING1_PERIODE_FOM)));
+        assertThat(sykmelding2.getGradAvSykmeldingListe().get(0).getGradert().getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.SYKMELDING2_GRADERING1_PERIODE_TOM)));
 
         Arbeidsforhold arbeidsforhold = sykmeldingsperiode.getArbeidsforholdListe().get(0);
         assertThat(arbeidsforhold.getArbeidsgiverNavn(), equalTo(SykepengerMockFactory.ARBEIDSFORHOLD_NAVN));
         assertThat(arbeidsforhold.getArbeidsgiverKontonr(), equalTo(SykepengerMockFactory.ARBEIDSFORHOLD_KONTONUMMER));
-        assertThat(arbeidsforhold.getRefusjonTom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.ARBEIDSFORFOLD_REFUSJON_TOM)));
+        assertThat(arbeidsforhold.getRefusjonTom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.ARBEIDSFORFOLD_REFUSJON_TOM)));
         assertThat(arbeidsforhold.getRefusjonstype().getTermnavn(), equalTo(SykepengerMockFactory.ARBEIDSFORHOLD_REFUSJONSTYPE_TERM));
         assertThat(arbeidsforhold.getInntektForPerioden(), equalTo(SykepengerMockFactory.ARBEIDSFORHOLD_INNTEKT));
         assertThat(arbeidsforhold.getInntektsperiode().getTermnavn(), equalTo(SykepengerMockFactory.ARBEIDSFORHOLD_INNTEKTPERIODE_TERM));
@@ -164,38 +164,38 @@ public class SykepengerMapperTest {
         Bruker bruker = sykmeldingsperiode.getBruker();
         assertThat(bruker.getIdent(), equalTo(SykepengerMockFactory.PERSON_ID));
 
-        assertThat(sykmeldingsperiode.getMidlertidigStanset(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.MIDLERTIDIGSTANSDATO)));
+        assertThat(sykmeldingsperiode.getMidlertidigStanset(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.MIDLERTIDIGSTANSDATO)));
 
         Periode ferieperiode = sykmeldingsperiode.getFerie1();
-        assertThat(ferieperiode.getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.FERIEPERIODE_FOM)));
-        assertThat(ferieperiode.getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.FERIEPERIODE_TOM)));
+        assertThat(ferieperiode.getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.FERIEPERIODE_FOM)));
+        assertThat(ferieperiode.getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.FERIEPERIODE_TOM)));
 
         Periode ferieperiode2 = sykmeldingsperiode.getFerie2();
-        assertThat(ferieperiode2.getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.FERIEPERIODE2_FOM)));
-        assertThat(ferieperiode2.getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.FERIEPERIODE2_TOM)));
+        assertThat(ferieperiode2.getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.FERIEPERIODE2_FOM)));
+        assertThat(ferieperiode2.getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.FERIEPERIODE2_TOM)));
 
         assertThat(sykmeldingsperiode.getForbrukteDager(), equalTo(SykepengerMockFactory.FORBRUKTE_DAGER));
-        assertThat(sykmeldingsperiode.getSykmeldtFom().toDate(), equalTo(SykepengerMockFactory.IDDATO));
+        assertThat(DateUtils.toDate(sykmeldingsperiode.getSykmeldtFom()), equalTo(SykepengerMockFactory.IDDATO));
 
         Forsikring gjeldendeForsikring = sykmeldingsperiode.getGjeldendeForsikring();
         assertThat(gjeldendeForsikring.getErGyldig(), equalTo(SykepengerMockFactory.FORSIKRING_GYLDIG));
         assertThat(gjeldendeForsikring.getForsikringsordning(), equalTo(SykepengerMockFactory.FORSIKRINGSORDNING));
-        assertThat(gjeldendeForsikring.getForsikret().getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.FORSIKRING_FOM)));
-        assertThat(gjeldendeForsikring.getForsikret().getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.FORSIKRING_TOM)));
+        assertThat(gjeldendeForsikring.getForsikret().getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.FORSIKRING_FOM)));
+        assertThat(gjeldendeForsikring.getForsikret().getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.FORSIKRING_TOM)));
         assertThat(gjeldendeForsikring.getPremiegrunnlag(), equalTo(SykepengerMockFactory.FORSIKRING_PREMIEGRUNNLAG));
 
         Periode sanksjonsPeriode = sykmeldingsperiode.getSanksjon();
         compareDates(sanksjonsPeriode.getFrom(), DateUtils.convertDateToXmlGregorianCalendar(SykepengerMockFactory.SANKSJON_FOM));
         compareDates(sanksjonsPeriode.getTo(), DateUtils.convertDateToXmlGregorianCalendar(SykepengerMockFactory.SANKSJON_TOM));
-        assertThat(sykmeldingsperiode.getSlutt(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.MAKSDATO)));
+        assertThat(sykmeldingsperiode.getSlutt(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.MAKSDATO)));
         assertThat(sykmeldingsperiode.getStansarsak().getKode(), equalTo(SykepengerMockFactory.STANSAARSAK_KODE));
         assertThat(sykmeldingsperiode.getStansarsak().getTermnavn(), equalTo(SykepengerMockFactory.STANSARRSAK_TERM));
         assertThat(sykmeldingsperiode.getUnntakAktivitet().getTermnavn(), equalTo(SykepengerMockFactory.UNNTAK_AKTIVITET_TERM));
 
         Sykmeldingsperiode sykmeldingsperiode1 = resResponse.getSykmeldingsperioder().get(1);
         Periode ferieperiode3 = sykmeldingsperiode1.getFerie1();
-        assertThat(ferieperiode3.getFrom(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.FERIEPERIODE_FOM)));
-        assertThat(ferieperiode3.getTo(), equalTo(LocalDate.fromDateFields(SykepengerMockFactory.FERIEPERIODE_TOM)));
+        assertThat(ferieperiode3.getFrom(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.FERIEPERIODE_FOM)));
+        assertThat(ferieperiode3.getTo(), equalTo(DateUtils.toLocalDate(SykepengerMockFactory.FERIEPERIODE_TOM)));
         Periode ferieperiode4 = sykmeldingsperiode1.getFerie2();
         assertThat(ferieperiode4, equalTo(null));
         assertThat(sykmeldingsperiode1.getStansarsak().getKode(), equalTo(SykepengerMockFactory.STANSAARSAK_MANGLENDE_AKTIVITET_KODE));
@@ -219,7 +219,7 @@ public class SykepengerMapperTest {
 
     private void compareDates(LocalDate from, XMLGregorianCalendar sykmeldtFraFom) {
         assertThat(sykmeldtFraFom.getDay(), equalTo(from.getDayOfMonth()));
-        assertThat(sykmeldtFraFom.getMonth(), equalTo(from.getMonthOfYear()));
+        assertThat(sykmeldtFraFom.getMonth(), equalTo(from.getMonthValue()));
         assertThat(sykmeldtFraFom.getYear(), equalTo(from.getYear()));
     }
 }

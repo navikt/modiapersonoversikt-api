@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.domain.sykepenger;
 
 import no.nav.modiapersonoversikt.commondomain.Periode;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.List;

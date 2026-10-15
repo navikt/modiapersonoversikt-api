@@ -7,8 +7,9 @@ import no.nav.arena.services.sakvedtakservice.FaultFeilIInputMsg
 import no.nav.arena.services.sakvedtakservice.FaultGeneriskMsg
 import no.nav.arena.services.sakvedtakservice.HentSaksInfoListeRequestV2
 import no.nav.arena.services.sakvedtakservice.SakVedtakPortType
-import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import javax.naming.ServiceUnavailableException
 
 class SakVedtakServiceImpl(
@@ -59,7 +60,11 @@ class SakVedtakServiceImpl(
                 fagsystemKode = JournalforingSak.FAGSYSTEMKODE_ARENA
                 sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
                 temaKode = arenaSak.tema
-                opprettetDato = DateTime(arenaSak.sakOpprettet.toGregorianCalendar().time)
+                opprettetDato =
+                    OffsetDateTime.ofInstant(
+                        arenaSak.sakOpprettet.toGregorianCalendar().toInstant(),
+                        ZoneId.systemDefault(),
+                    )
             }
         }
     }

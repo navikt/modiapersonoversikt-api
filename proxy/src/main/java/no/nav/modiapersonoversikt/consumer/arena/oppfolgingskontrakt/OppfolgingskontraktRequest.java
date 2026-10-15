@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.Objects;

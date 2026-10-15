@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.domain;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import java.util.List;
 

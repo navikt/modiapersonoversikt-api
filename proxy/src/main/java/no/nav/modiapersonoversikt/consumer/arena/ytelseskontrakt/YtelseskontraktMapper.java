@@ -7,7 +7,7 @@ import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.*;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +108,7 @@ public class YtelseskontraktMapper {
         if (source == null) {
             return null;
         }
-        return new LocalDate(source.getYear(), source.getMonth(), source.getDay());
+        return LocalDate.of(source.getYear(), source.getMonth(), source.getDay());
     }
 
     private XMLGregorianCalendar map(LocalDate source) {
@@ -118,7 +118,7 @@ public class YtelseskontraktMapper {
         try {
             return DatatypeFactory
                     .newInstance()
-                    .newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
+                    .newXMLGregorianCalendarDate(source.getYear(), source.getMonthValue(), source.getDayOfMonth(), 0);
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException("Could not map to XMLGregorianCalendar", e);
         }

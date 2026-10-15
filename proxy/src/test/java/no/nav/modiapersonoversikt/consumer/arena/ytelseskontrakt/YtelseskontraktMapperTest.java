@@ -9,7 +9,7 @@ import no.nav.personoversikt.common.test.snapshot.SnapshotRule;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.*;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class YtelseskontraktMapperTest {
         assertEquals(ytelseskontraktRequest.getFodselsnummer(), fimHentYtelseskontraktListeRequest.getPersonidentifikator());
 
         GregorianCalendar from = new GregorianCalendar();
-        from.setTime(ytelseskontraktRequest.getFrom().toDate());
+        from.setTime(DateUtils.toDate(ytelseskontraktRequest.getFrom()));
         XMLGregorianCalendar expectedFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(from);
         XMLGregorianCalendar actualFrom = fimHentYtelseskontraktListeRequest.getPeriode().getFom();
         assertEquals(expectedFrom.getDay(), actualFrom.getDay());
@@ -53,7 +53,7 @@ public class YtelseskontraktMapperTest {
         assertEquals(expectedFrom.getYear(), actualFrom.getYear());
 
         GregorianCalendar to = new GregorianCalendar();
-        to.setTime(ytelseskontraktRequest.getTo().toDate());
+        to.setTime(DateUtils.toDate(ytelseskontraktRequest.getTo()));
         XMLGregorianCalendar expectedTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(to);
         XMLGregorianCalendar actualTo = fimHentYtelseskontraktListeRequest.getPeriode().getTom();
         assertEquals(expectedTo.getDay(), actualTo.getDay());
@@ -63,8 +63,8 @@ public class YtelseskontraktMapperTest {
         FimHentYtelseskontraktListeResponse fimHentYtelseskontraktListeResponse = new FimHentYtelseskontraktListeResponse();
         fimHentYtelseskontraktListeResponse.setBruker(new FimBruker().withRettighetsgruppe(new FimRettighetsgruppe().withRettighetsGruppe("Rettighetsgruppe:test")));
         FimDagpengekontrakt dagpengekontrakt = new FimDagpengekontrakt();
-        LocalDate datoKravMottatt = new LocalDate();
-        dagpengekontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(datoKravMottatt.toDate()));
+        LocalDate datoKravMottatt = LocalDate.now();
+        dagpengekontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(DateUtils.toDate(datoKravMottatt)));
         int dagerIgjen = 2;
         dagpengekontrakt.setAntallDagerIgjen(dagerIgjen);
         int ukerIgjen = 3;
@@ -156,7 +156,7 @@ public class YtelseskontraktMapperTest {
     private XMLGregorianCalendar toXMLGregorian(LocalDate date) {
 
         try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendarDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(), 0);
+            return DatatypeFactory.newInstance().newXMLGregorianCalendarDate(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0);
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException("Klarer ikke å lage dato", e);
         }

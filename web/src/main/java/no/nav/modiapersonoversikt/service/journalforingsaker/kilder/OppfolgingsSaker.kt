@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.service.journalforingsaker.kilder
 
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerKilde
-import org.joda.time.DateTime
+import java.time.OffsetDateTime
 
 internal class OppfolgingsSaker : SakerKilde {
     override val kildeNavn: String
@@ -26,7 +26,7 @@ internal class OppfolgingsSaker : SakerKilde {
                     temaKode = JournalforingSak.TEMAKODE_OPPFOLGING
                     fagsystemKode = JournalforingSak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
                     sakstype = JournalforingSak.SAKSTYPE_GENERELL
-                    opprettetDato = DateTime.now()
+                    opprettetDato = OffsetDateTime.now()
                 },
             )
         }
