@@ -14,7 +14,7 @@ open class JavaTimeCompatConfig {
     @Bean
     open fun javaTimeCompatModule(): SimpleModule =
         SimpleModule("JavaTimeCompat").also { module ->
-            module.addSerializer(OffsetDateTime::class.java, OffsetDateTimeSerializer())
+            module.addSerializer(OffsetDateTimeSerializer())
         }
 
     private class OffsetDateTimeSerializer : StdSerializer<OffsetDateTime>(OffsetDateTime::class.java) {
@@ -23,7 +23,12 @@ open class JavaTimeCompatConfig {
             gen: JsonGenerator,
             ctxt: SerializationContext,
         ) {
-            gen.writeString(value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")))
+            gen.writeString(value.format(legacyJodaTimestampFormatter))
         }
+    }
+
+    private companion object {
+        val legacyJodaTimestampFormatter: DateTimeFormatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     }
 }

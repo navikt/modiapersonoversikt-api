@@ -1,9 +1,11 @@
 package no.nav.modiapersonoversikt.service.sakstema.domain;
 
+import no.nav.modiapersonoversikt.config.LegacyJodaOffsetDateTimeSerializer;
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem;
 import java.time.OffsetDateTime;
 
 import java.util.Optional;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 import static java.util.Optional.empty;
 
@@ -11,10 +13,12 @@ public class Sak {
     private String temakode;
     private Optional<String> saksId;
     private String fagsaksnummer;
+    @JsonSerialize(contentUsing = LegacyJodaOffsetDateTimeSerializer.class)
     private Optional<OffsetDateTime> avsluttet = empty();
     private String fagsystem;
     private Optional<String> fagsystemNavn;
     private Baksystem baksystem;
+    @JsonSerialize(contentUsing = LegacyJodaOffsetDateTimeSerializer.class)
     private Optional<OffsetDateTime> opprettetDato = empty();
 
     public Optional<OffsetDateTime> getAvsluttet() {

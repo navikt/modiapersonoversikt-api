@@ -1,33 +1,43 @@
 package no.nav.modiapersonoversikt.rest.arena
 
+import no.nav.modiapersonoversikt.config.JavaTimeCompatConfig
 import no.nav.modiapersonoversikt.consumer.arena.sakVedtakService.JournalforingSak
 import no.nav.modiapersonoversikt.consumer.arena.sakVedtakService.SakVedtakService
-import no.nav.modiapersonoversikt.infrastructure.OkHttpUtils
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import java.time.OffsetDateTime
 
+@WebMvcTest(SakVedtakController::class)
+@AutoConfigureMockMvc(addFilters = false)
+@Import(JavaTimeCompatConfig::class, SakVedtakDateTimeCompatibilityTest.TestConfig::class)
 internal class SakVedtakDateTimeCompatibilityTest {
+    @Autowired
+    lateinit var mockMvc: MockMvc
+
+    @TestConfiguration
+    open class TestConfig {
+        @Bean
+        open fun sakVedtakService(): SakVedtakService =
+            object : SakVedtakService {
+                override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak =
+                    JournalforingSak().apply {
+                        opprettetDato = OffsetDateTime.parse("2024-01-15T10:30:00.000Z")
+                    }
+            }
+    }
+
     @Test
     fun `serves journal timestamps using the existing millisecond ISO format`() {
-        val sak = JournalforingSak()
-        val dateField = sak.javaClass.getField("opprettetDato")
-        val parseMethod = dateField.type.methods.single { it.name == "parse" && it.parameterCount == 1 }
-        dateField.set(sak, parseMethod.invoke(null, "2024-01-15T10:30:00.000Z"))
-        val service =
-            object : SakVedtakService {
-                override fun hentOppfolgingssakFraArena(fnr: String): JournalforingSak = sak
-            }
-        val mockMvc =
-            MockMvcBuilders
-                .standaloneSetup(SakVedtakController(service))
-                .setMessageConverters(MappingJackson2HttpMessageConverter(OkHttpUtils.objectMapper))
-                .build()
-
         mockMvc
             .perform(
                 post("/rest/sakvedtak")

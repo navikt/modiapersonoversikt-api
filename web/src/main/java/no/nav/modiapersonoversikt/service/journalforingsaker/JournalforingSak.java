@@ -1,7 +1,9 @@
 package no.nav.modiapersonoversikt.service.journalforingsaker;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import no.nav.modiapersonoversikt.config.LegacyJodaOffsetDateTimeSerializer;
 import java.time.OffsetDateTime;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,6 +14,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
     public String fnr = null;
     public String fagsystemSaksId = null;
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
+    @JsonSerialize(using = LegacyJodaOffsetDateTimeSerializer.class)
     public OffsetDateTime opprettetDato = OffsetDateTime.now();
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
