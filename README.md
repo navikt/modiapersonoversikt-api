@@ -14,6 +14,16 @@ Spørsmål knyttet til koden eller prosjektet kan rettes mot:
 
 Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.no/pages/viewpage.action?pageId=272512650
 
+## Git hooks
+
+Aktiver pre-commit-hooken for å kjøre linting før hver commit:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+Hooken kjører `linting.sh` og avbryter commit hvis lintingen feiler.
+
 ### Caching
 
 Cacheoppsett er hovedsakelig beskrevet ved bruk av annotasjon og benytter seg av Springs cache abstraction og en
