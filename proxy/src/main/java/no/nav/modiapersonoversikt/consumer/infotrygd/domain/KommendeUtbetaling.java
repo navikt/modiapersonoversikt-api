@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.infotrygd.domain;
 
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 public class KommendeUtbetaling extends Utbetaling {
     private LocalDate utbetalingsdato;

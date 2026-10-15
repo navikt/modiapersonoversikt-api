@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.sakstema.domain;
 
 import no.nav.modiapersonoversikt.commondomain.sak.Baksystem;
-import org.joda.time.DateTime;
+import java.time.OffsetDateTime;
 
 import java.util.Optional;
 
@@ -11,17 +11,17 @@ public class Sak {
     private String temakode;
     private Optional<String> saksId;
     private String fagsaksnummer;
-    private Optional<DateTime> avsluttet = empty();
+    private Optional<OffsetDateTime> avsluttet = empty();
     private String fagsystem;
     private Optional<String> fagsystemNavn;
     private Baksystem baksystem;
-    private Optional<DateTime> opprettetDato = empty();
+    private Optional<OffsetDateTime> opprettetDato = empty();
 
-    public Optional<DateTime> getAvsluttet() {
+    public Optional<OffsetDateTime> getAvsluttet() {
         return avsluttet;
     }
 
-    public Optional<DateTime> getOpprettetDato() {
+    public Optional<OffsetDateTime> getOpprettetDato() {
         return opprettetDato;
     }
 
@@ -49,7 +49,7 @@ public class Sak {
         return fagsaksnummer;
     }
 
-    public Optional<DateTime> avsluttet() {
+    public Optional<OffsetDateTime> avsluttet() {
         return this.avsluttet;
     }
 
@@ -67,7 +67,7 @@ public class Sak {
         return this;
     }
 
-    public Sak withAvsluttet(final Optional<DateTime> avsluttet) {
+    public Sak withAvsluttet(final Optional<OffsetDateTime> avsluttet) {
         this.avsluttet = avsluttet;
         return this;
     }
@@ -87,9 +87,8 @@ public class Sak {
         return this;
     }
 
-    public Sak withOpprettetDato(final Optional<DateTime> opprettetDato) {
+    public Sak withOpprettetDato(final Optional<OffsetDateTime> opprettetDato) {
         this.opprettetDato = opprettetDato;
         return this;
     }
 }
-

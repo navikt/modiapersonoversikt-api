@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.to;
 
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktRequest;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Test;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertEquals;

@@ -3,12 +3,12 @@ package no.nav.modiapersonoversikt.rest.oppfolging
 import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktRequest
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService
-import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
+import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.RequestBodyContent
-import org.joda.time.IllegalFieldValueException
-import org.joda.time.LocalDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.time.DateTimeException
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/rest")
@@ -41,8 +41,8 @@ class OppfolgingController
         private fun lagRiktigDato(dato: String?): LocalDate? =
             dato?.let {
                 try {
-                    LocalDate.parse(dato, JODA_DATOFORMAT)
-                } catch (exception: IllegalFieldValueException) {
+                    LocalDate.parse(dato, DATOFORMAT)
+                } catch (exception: DateTimeException) {
                     throw RuntimeException(exception.message)
                 }
             }

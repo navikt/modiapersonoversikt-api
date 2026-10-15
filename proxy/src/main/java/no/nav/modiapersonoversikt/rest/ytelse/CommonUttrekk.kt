@@ -7,14 +7,14 @@ import no.nav.modiapersonoversikt.infotrgd.CommonHistoriskUtbetaling
 import no.nav.modiapersonoversikt.infotrgd.CommonKommendeUtbetaling
 import no.nav.modiapersonoversikt.infotrgd.CommonKreditortrekk
 import no.nav.modiapersonoversikt.infotrgd.CommonPeriode
-import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
+import no.nav.modiapersonoversikt.rest.DATOFORMAT
 
 fun hentHistoriskeUtbetalinger(historiskeUtbetalinger: List<HistoriskUtbetaling>) =
     historiskeUtbetalinger.map {
         CommonHistoriskUtbetaling(
             vedtak = it.vedtak?.let { vedtak -> toCommonPeriode(vedtak) },
             utbetalingsgrad = it.utbetalingsgrad,
-            utbetalingsdato = it.utbetalingsdato?.toString(JODA_DATOFORMAT),
+            utbetalingsdato = it.utbetalingsdato?.format(DATOFORMAT),
             nettobelop = it.nettobelop,
             bruttobelop = it.bruttobeloep,
             skattetrekk = it.skattetrekk,
@@ -31,7 +31,7 @@ fun hentKommendeUtbetalinger(kommendeUtbetalinger: List<KommendeUtbetaling>) =
         CommonKommendeUtbetaling(
             vedtak = it.vedtak?.let { vedtak -> toCommonPeriode(vedtak) },
             utbetalingsgrad = it.utbetalingsgrad,
-            utbetalingsdato = it.utbetalingsdato?.toString(JODA_DATOFORMAT),
+            utbetalingsdato = it.utbetalingsdato?.format(DATOFORMAT),
             bruttobelop = it.bruttobeloep,
             arbeidsgiverNavn = it.arbeidsgiverNavn,
             arbeidsgiverKontonr = it.arbeidsgiverKontonr,
@@ -42,7 +42,7 @@ fun hentKommendeUtbetalinger(kommendeUtbetalinger: List<KommendeUtbetaling>) =
         )
     }
 
-fun toCommonPeriode(period: Periode) = CommonPeriode(period.from?.toString(JODA_DATOFORMAT), period.to?.toString(JODA_DATOFORMAT))
+fun toCommonPeriode(period: Periode) = CommonPeriode(period.from?.format(DATOFORMAT), period.to?.format(DATOFORMAT))
 
 private fun hentKreditorTrekk(
     kreditortrekk: List<no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kreditortrekk>,

@@ -4,7 +4,7 @@ import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykArbeidsforhold;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykInntektsperiode;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykRefusjonstype;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import java.math.BigDecimal;
 
@@ -18,9 +18,9 @@ public class CommonMockFactory {
 		FimsykArbeidsforhold fimArbeidsforhold = new FimsykArbeidsforhold();
 		fimArbeidsforhold.setArbeidsgiverKontonr(kontonummer);
 		fimArbeidsforhold.setArbeidsgiverNavn(arbeidsgivernavn);
-		fimArbeidsforhold.setRefusjonTom(DateUtils.convertDateToXmlGregorianCalendar(refusjonTom.toDate()));
+		fimArbeidsforhold.setRefusjonTom(DateUtils.convertDateToXmlGregorianCalendar(DateUtils.toDate(refusjonTom)));
 		fimArbeidsforhold.setRefusjonstype(refusjonstype);
-		fimArbeidsforhold.setSykepengerFom(DateUtils.convertDateToXmlGregorianCalendar(refusjonFom.toDate()));
+		fimArbeidsforhold.setSykepengerFom(DateUtils.convertDateToXmlGregorianCalendar(DateUtils.toDate(refusjonFom)));
 		fimArbeidsforhold.setInntektForPerioden(BigDecimal.valueOf(inntekt));
 		fimArbeidsforhold.setInntektsperiode(inntektperiode);
 		return fimArbeidsforhold;

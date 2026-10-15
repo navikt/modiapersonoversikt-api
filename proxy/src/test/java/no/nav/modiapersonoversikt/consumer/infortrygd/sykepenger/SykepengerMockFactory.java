@@ -4,7 +4,7 @@ import no.nav.modiapersonoversikt.consumer.infortrygd.common.CommonMockFactory;
 import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeResponse;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -24,39 +24,39 @@ public class SykepengerMockFactory {
     public static final String ARBEIDSFORHOLD_KONTONUMMER = "1234.12.7845";
     public static final String ARBEIDSFORHOLD_NAVN = "Google Inc.";
     public static final String ARBEIDSFORHOLD2_NAVN = "Microsoft";
-    public static final Date ARBEIDSFORFOLD_REFUSJON_TOM = new LocalDate(2013, 8, 1).toDate();
+    public static final Date ARBEIDSFORFOLD_REFUSJON_TOM = DateUtils.toDate(LocalDate.of(2013, 8, 1));
     public static final String ARBEIDSFORHOLD_REFUSJONSTYPE_KODE = "Refusjonstype";
     public static final String ARBEIDSFORHOLD_REFUSJONSTYPE_TERM = "Generell refusjon";
     public static final String ARBEIDSFORHOLD_REFUSJONSTYPE_KODE2 = "Refusjonstype2";
     public static final String ARBEIDSFORHOLD_REFUSJONSTYPE_TERM2 = "Generell refusjon2";
     public static final String ARBEIDSFORHOLD_INNTEKTPERIODE_KODE = "inntektsperiode";
     public static final String ARBEIDSFORHOLD_INNTEKTPERIODE_TERM = "inntektsperiode 1";
-    public static final Date ARBEIDSFORFOLD_SYKEPENGER_FOM = new LocalDate(2013, 6, 4).toDate();
+    public static final Date ARBEIDSFORFOLD_SYKEPENGER_FOM = DateUtils.toDate(LocalDate.of(2013, 6, 4));
     public static final String ARBEIDSFORHOLD_KONTONUMMER2 = "9999.12.7845";
     public static final String ARBEIDSFORHOLD2_KONTONUMMER = "11111.11.99999";
     public static final String ARBEIDSFORHOLD_NAVN2 = "Hydro";
-    public static final Date ARBEIDSFORFOLD_REFUSJON_TOM2 = new LocalDate(2013, 2, 1).toDate();
-    public static final Date ARBEIDSFORFOLD_SYKEPENGER_FOM2 = new LocalDate(2012, 8, 1).toDate();
+    public static final Date ARBEIDSFORFOLD_REFUSJON_TOM2 = DateUtils.toDate(LocalDate.of(2013, 2, 1));
+    public static final Date ARBEIDSFORFOLD_SYKEPENGER_FOM2 = DateUtils.toDate(LocalDate.of(2012, 8, 1));
     public static final Double ARBEIDSFORHOLD_INNTEKT = 3652.20;
     public static final String ARBEIDSKATEGORI_TERM_ARBEIDSLEDIG = "Arbeidsledig";
     public static final String ARBEIDSKATEGORI_KODE = "99";
-    public static final Date FERIEPERIODE_FOM = new LocalDate(2013, 12, 1).toDate();
-    public static final Date FERIEPERIODE_TOM = new LocalDate(2013, 12, 21).toDate();
-    public static final Date FERIEPERIODE2_FOM = new LocalDate(2016, 10, 1).toDate();
-    public static final Date FERIEPERIODE2_TOM = new LocalDate(2016, 12, 16).toDate();
+    public static final Date FERIEPERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 12, 1));
+    public static final Date FERIEPERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 12, 21));
+    public static final Date FERIEPERIODE2_FOM = DateUtils.toDate(LocalDate.of(2016, 10, 1));
+    public static final Date FERIEPERIODE2_TOM = DateUtils.toDate(LocalDate.of(2016, 12, 16));
     public static final int FORBRUKTE_DAGER = 30;
     public static final boolean FORSIKRING_GYLDIG = true;
     public static final String FORSIKRINGSORDNING = "Helseforsikring";
-    public static final Date FORSIKRING_FOM = new LocalDate(2010, 8, 1).toDate();
-    public static final Date FORSIKRING_TOM = new LocalDate(2013, 8, 1).toDate();
+    public static final Date FORSIKRING_FOM = DateUtils.toDate(LocalDate.of(2010, 8, 1));
+    public static final Date FORSIKRING_TOM = DateUtils.toDate(LocalDate.of(2013, 8, 1));
     public static final double FORSIKRING_PREMIEGRUNNLAG = 100000.00;
-    public static final Date IDDATO = new LocalDate(2013, 12, 12).toDate();
-    public static final Date IDDATO2 = new LocalDate(2002, 1, 2).toDate();
-    public static final Date IDDATO3 = new LocalDate(2010, 5, 25).toDate();
-    public static final Date IDDATO4 = new LocalDate(2012, 5, 25).toDate();
-    public static final Date IDDATO5 = new LocalDate(2014, 5, 25).toDate();
-    public static final Date IDDATO6 = new LocalDate(2016, 5, 25).toDate();
-    public static final Date MAKSDATO = new LocalDate(2014, 2, 1).toDate();
+    public static final Date IDDATO = DateUtils.toDate(LocalDate.of(2013, 12, 12));
+    public static final Date IDDATO2 = DateUtils.toDate(LocalDate.of(2002, 1, 2));
+    public static final Date IDDATO3 = DateUtils.toDate(LocalDate.of(2010, 5, 25));
+    public static final Date IDDATO4 = DateUtils.toDate(LocalDate.of(2012, 5, 25));
+    public static final Date IDDATO5 = DateUtils.toDate(LocalDate.of(2014, 5, 25));
+    public static final Date IDDATO6 = DateUtils.toDate(LocalDate.of(2016, 5, 25));
+    public static final Date MAKSDATO = DateUtils.toDate(LocalDate.of(2014, 2, 1));
     public static final String STANSAARSAK_KODE = "Stansaarsak";
     public static final String STANSARRSAK_TERM = "Helse";
     public static final String STANSAARSAK_MANGLENDE_AKTIVITET_KODE = "MA";
@@ -66,88 +66,88 @@ public class SykepengerMockFactory {
     public static final String PERSON_ID = "12345612345";
     public static final String UNNTAK_AKTIVITET_KODE = "UnntakAktivitet";
     public static final String UNNTAK_AKTIVITET_TERM = "Unntak";
-    public static final Date MIDLERTIDIGSTANSDATO = new LocalDate(2013, 7, 29).toDate();
+    public static final Date MIDLERTIDIGSTANSDATO = DateUtils.toDate(LocalDate.of(2013, 7, 29));
     public static final double HISTORTISK_UTBETALING_BRUTTOBELOP = 220.55;
     public static final double HISTORTISK_UTBETALING_DAGSATS = 120.89;
-    public static final Date HISTORTISK_UTBETALING_DATO = new LocalDate(2013, 7, 22).toDate();
+    public static final Date HISTORTISK_UTBETALING_DATO = DateUtils.toDate(LocalDate.of(2013, 7, 22));
     public static final double HISTORTISK_UTBETALING2_BRUTTOBELOP = 22000.55;
     public static final double HISTORTISK_UTBETALING2_DAGSATS = 1000.00;
-    public static final Date HISTORTISK_UTBETALING2_PERIODE_FOM = new LocalDate(2013, 4, 30).toDate();
-    public static final Date HISTORTISK_UTBETALING2_PERIODE_TOM = new LocalDate(2013, 5, 20).toDate();
-    public static final Date HISTORTISK_UTBETALING2_DATO = new LocalDate(2012, 12, 30).toDate();
+    public static final Date HISTORTISK_UTBETALING2_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 4, 30));
+    public static final Date HISTORTISK_UTBETALING2_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 5, 20));
+    public static final Date HISTORTISK_UTBETALING2_DATO = DateUtils.toDate(LocalDate.of(2012, 12, 30));
     public static final double HISTORTISK_UTBETALING2_GRAD = 65.0;
 
     public static final String UTBETALING_PA_VENT_OPPGJORSTYPE_KODE = "41";
     public static final String UTBETALING_PA_VENT_OPPGJORSTYPE_TERM = "OPGJ999";
     public static final double UTBETALING_PA_VENT_UTBETALINGSGRAD = 22;
-    public static final Date UTBETALING_PA_VENT_PERIODE_FOM = new LocalDate(2016, 5, 1).toDate();
-    public static final Date UTBETALING_PA_VENT_PERIODE_TOM = new LocalDate(2016, 6, 1).toDate();
-    public static final Date UTBETALING_PA_VENT_FERIE_FOM = new LocalDate(2016, 5, 2).toDate();
-    public static final Date UTBETALING_PA_VENT_FERIE_TOM = new LocalDate(2016, 6, 2).toDate();
+    public static final Date UTBETALING_PA_VENT_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2016, 5, 1));
+    public static final Date UTBETALING_PA_VENT_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2016, 6, 1));
+    public static final Date UTBETALING_PA_VENT_FERIE_FOM = DateUtils.toDate(LocalDate.of(2016, 5, 2));
+    public static final Date UTBETALING_PA_VENT_FERIE_TOM = DateUtils.toDate(LocalDate.of(2016, 6, 2));
 
-    public static final Date UTBETALING_PA_VENT_PERIODE_FOM2 = new LocalDate(2013, 5, 1).toDate();
-    public static final Date UTBETALING_PA_VENT_PERIODE_TOM2 = new LocalDate(2013, 6, 1).toDate();
-    public static final Date UTBETALING_PA_VENT_FERIE_FOM2 = new LocalDate(2013, 5, 20).toDate();
-    public static final Date UTBETALING_PA_VENT_FERIE_TOM2 = new LocalDate(2013, 6, 2).toDate();
+    public static final Date UTBETALING_PA_VENT_PERIODE_FOM2 = DateUtils.toDate(LocalDate.of(2013, 5, 1));
+    public static final Date UTBETALING_PA_VENT_PERIODE_TOM2 = DateUtils.toDate(LocalDate.of(2013, 6, 1));
+    public static final Date UTBETALING_PA_VENT_FERIE_FOM2 = DateUtils.toDate(LocalDate.of(2013, 5, 20));
+    public static final Date UTBETALING_PA_VENT_FERIE_TOM2 = DateUtils.toDate(LocalDate.of(2013, 6, 2));
 
     public static final double KOMMENDE_UTBETALING1_UTBETALINGSGRAD = 50.0;
-    public static final Date KOMMENDE_UTBETALING1_PERIODE_FOM = new LocalDate(2013, 2, 6).toDate();
-    public static final Date KOMMENDE_UTBETALING1_PERIODE_TOM = new LocalDate(2013, 5, 6).toDate();
+    public static final Date KOMMENDE_UTBETALING1_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 2, 6));
+    public static final Date KOMMENDE_UTBETALING1_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 5, 6));
     public static final String KOMMENDE_UTBETALING1_TYPE_KODE = "UT";
     public static final String KOMMENDE_UTBETALING1_TYPE_TERMNAVN = "Utbetaling";
 
     public static final String KOMMENDE_UTBETALING2_OPPGJORSTYPE_KODE = "61";
     public static final String KOMMENDE_UTBETALING2_OPPGJORSTYPE_TERM = "OPGJ61";
     public static final double KOMMENDE_UTBETALING2_UTBETALINGSGRAD = 70.0;
-    public static final Date KOMMENDE_UTBETALING2_PERIODE_FOM = new LocalDate(2013, 3, 6).toDate();
-    public static final Date KOMMENDE_UTBETALING2_PERIODE_TOM = new LocalDate(2013, 7, 6).toDate();
+    public static final Date KOMMENDE_UTBETALING2_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 3, 6));
+    public static final Date KOMMENDE_UTBETALING2_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 7, 6));
     public static final double KOMMENDE_UTBETALING3_UTBETALINGSGRAD = 70.0;
-    public static final Date KOMMENDE_UTBETALING3_PERIODE_FOM = new LocalDate(2013, 4, 6).toDate();
-    public static final Date KOMMENDE_UTBETALING3_PERIODE_TOM = new LocalDate(2013, 5, 6).toDate();
+    public static final Date KOMMENDE_UTBETALING3_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 4, 6));
+    public static final Date KOMMENDE_UTBETALING3_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 5, 6));
     public static final String SYKMELDING1_SYKMELDER = "Dr. Bjarne Hansensen";
-    public static final Date SYKMELDING1_BEHANDLINGSDATO = new LocalDate(2013, 2, 8).toDate();
-    public static final Date SYKMELDING1_PERIODE_FOM = new LocalDate(2013, 4, 8).toDate();
-    public static final Date SYKMELDING1_PERIODE_TOM = new LocalDate(2013, 11, 8).toDate();
-    public static final Date SYKMELDING1_YRKESSKADE_SKADET_DATO = new LocalDate(2013, 8, 8).toDate();
-    public static final Date SYKMEDLING1_YRKESSKADE_VEDTAKS_DATO = new LocalDate(2013, 6, 8).toDate();
+    public static final Date SYKMELDING1_BEHANDLINGSDATO = DateUtils.toDate(LocalDate.of(2013, 2, 8));
+    public static final Date SYKMELDING1_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 4, 8));
+    public static final Date SYKMELDING1_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 11, 8));
+    public static final Date SYKMELDING1_YRKESSKADE_SKADET_DATO = DateUtils.toDate(LocalDate.of(2013, 8, 8));
+    public static final Date SYKMEDLING1_YRKESSKADE_VEDTAKS_DATO = DateUtils.toDate(LocalDate.of(2013, 6, 8));
     public static final String SYKMEDLING1_YRKESSKADE_SKADEART_KODE = "Skadeart";
     public static final String SYKMEDLING1_YRKESSKADE_SKADEART_TERM = "Hodeskade";
     public static final FimsykYrkesskade SYKMELDING1_YRKESSKADE = createYrkesskade();
     public static final double SYKMELDING1_GRADERING1_GRAD = 70.0;
-    public static final Date SYKMELDING1_GRADERING1_PERIODE_FOM = new LocalDate(2013, 3, 8).toDate();
-    public static final Date SYKMELDING1_GRADERING1_PERIODE_TOM = new LocalDate(2013, 4, 8).toDate();
+    public static final Date SYKMELDING1_GRADERING1_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 3, 8));
+    public static final Date SYKMELDING1_GRADERING1_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 4, 8));
     public static final double SYKMELDING1_GRADERING2_GRAD = 80.0;
-    public static final Date SYKMELDING1_GRADERING2_PERIODE_FOM = new LocalDate(2013, 7, 20).toDate();
-    public static final Date SYKMELDING1_GRADERING2_PERIODE_TOM = new LocalDate(2013, 8, 8).toDate();
+    public static final Date SYKMELDING1_GRADERING2_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 7, 20));
+    public static final Date SYKMELDING1_GRADERING2_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 8, 8));
     public static final double SYKMELDING1_GRADERING3_GRAD = 90.0;
-    public static final Date SYKMELDING1_GRADERING3_PERIODE_FOM = new LocalDate(2013, 8, 9).toDate();
-    public static final Date SYKMELDING1_GRADERING3_PERIODE_TOM = new LocalDate(2013, 11, 15).toDate();
+    public static final Date SYKMELDING1_GRADERING3_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2013, 8, 9));
+    public static final Date SYKMELDING1_GRADERING3_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 11, 15));
     public static final String SYKMELDING2_SYKMELDER = "Dr. Herman Hermansen";
-    public static final Date SYKMELDING2_BEHANDLINGSDATO = new LocalDate(2012, 4, 8).toDate();
-    public static final Date SYKMELDING2_PERIODE_FOM = new LocalDate(2012, 5, 8).toDate();
-    public static final Date SYKMELDING2_PERIODE_TOM = new LocalDate(2013, 5, 18).toDate();
+    public static final Date SYKMELDING2_BEHANDLINGSDATO = DateUtils.toDate(LocalDate.of(2012, 4, 8));
+    public static final Date SYKMELDING2_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2012, 5, 8));
+    public static final Date SYKMELDING2_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2013, 5, 18));
     public static final FimsykYrkesskade SYKMELDING2_YRKESSKADE = null;
     public static final double SYKMELDING2_GRADERING1_GRAD = 50.0;
-    public static final Date SYKMELDING2_GRADERING1_PERIODE_FOM = new LocalDate(2012, 6, 8).toDate();
-    public static final Date SYKMELDING2_GRADERING1_PERIODE_TOM = new LocalDate(2012, 8, 14).toDate();
+    public static final Date SYKMELDING2_GRADERING1_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2012, 6, 8));
+    public static final Date SYKMELDING2_GRADERING1_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2012, 8, 14));
     public static final String SYKMELDING3_SYKMELDER = "Dr. Kalle Hermansen";
-    public static final Date SYKMELDING3_BEHANDLINGSDATO = new LocalDate(2011, 6, 9).toDate();
-    public static final Date SYKMELDING3_PERIODE_FOM = new LocalDate(2011, 6, 11).toDate();
-    public static final Date SYKMELDING3_PERIODE_TOM = new LocalDate(2012, 6, 18).toDate();
+    public static final Date SYKMELDING3_BEHANDLINGSDATO = DateUtils.toDate(LocalDate.of(2011, 6, 9));
+    public static final Date SYKMELDING3_PERIODE_FOM = DateUtils.toDate(LocalDate.of(2011, 6, 11));
+    public static final Date SYKMELDING3_PERIODE_TOM = DateUtils.toDate(LocalDate.of(2012, 6, 18));
     public static final FimsykYrkesskade SYKMELDING3_YRKESSKADE = null;
     public static final boolean ARBEIDSGIVER_PERIODE = true;
     public static final String ARBEIDSFORHOLD_ORGNR = "1234512345";
     public static final String KOMMENDE_UTBETALING_SAKSBEHANLDER = "SAKB001";
     public static final String ARBEIDSFORHOLD2_ORGNR = "9912135555";
     public static final String KOMMENDE_UTBETALING2_SAKSBEHANLDER = "SAKB002";
-    public static final Date SANKSJON_FOM = new LocalDate(2002, 6, 11).toDate();
-    public static final Date SANKSJON_TOM = new LocalDate(2002, 9, 11).toDate();
+    public static final Date SANKSJON_FOM = DateUtils.toDate(LocalDate.of(2002, 6, 11));
+    public static final Date SANKSJON_TOM = DateUtils.toDate(LocalDate.of(2002, 9, 11));
 
-    public static final Date SANKSJON2_FOM = new LocalDate(2016, 5, 11).toDate();
+    public static final Date SANKSJON2_FOM = DateUtils.toDate(LocalDate.of(2016, 5, 11));
     public static final Date SANKSJON2_TOM = null;
 
-    public static final Date SANKSJON3_FOM = new LocalDate(2016, 7, 11).toDate();
-    public static final Date SANKSJON3_TOM = new LocalDate(2016, 9, 11).toDate();
+    public static final Date SANKSJON3_FOM = DateUtils.toDate(LocalDate.of(2016, 7, 11));
+    public static final Date SANKSJON3_TOM = DateUtils.toDate(LocalDate.of(2016, 9, 11));
 
     public static FimHentSykepengerListeResponse createFimHentSykepengerResponse() {
         FimHentSykepengerListeResponse response = new FimHentSykepengerListeResponse();
@@ -196,8 +196,8 @@ public class SykepengerMockFactory {
         inntektperiode.setTermnavn(ARBEIDSFORHOLD_INNTEKTPERIODE_TERM);
         sykmeldingsperiode
                 .withArbeidsforholdListe(CommonMockFactory.createArbeidsforholdSykepenger(ARBEIDSFORHOLD_KONTONUMMER, ARBEIDSFORHOLD_NAVN,
-                        LocalDate.fromDateFields(ARBEIDSFORFOLD_REFUSJON_TOM), refusjonstype,
-                        LocalDate.fromDateFields(ARBEIDSFORFOLD_SYKEPENGER_FOM), ARBEIDSFORHOLD_INNTEKT, inntektperiode))
+                        DateUtils.toLocalDate(ARBEIDSFORFOLD_REFUSJON_TOM), refusjonstype,
+                        DateUtils.toLocalDate(ARBEIDSFORFOLD_SYKEPENGER_FOM), ARBEIDSFORHOLD_INNTEKT, inntektperiode))
                 .withErArbeidsgiverperiode(ARBEIDSGIVER_PERIODE)
                 .withArbeidskategori(createArbeidskategori())
                 .withFerie1(createFimPeriode(FERIEPERIODE_FOM, FERIEPERIODE_TOM))
@@ -232,10 +232,10 @@ public class SykepengerMockFactory {
         inntektperiode.setTermnavn(ARBEIDSFORHOLD_INNTEKTPERIODE_TERM);
         sykmeldingsperiode
                 .withArbeidsforholdListe(
-                        CommonMockFactory.createArbeidsforholdSykepenger(ARBEIDSFORHOLD_KONTONUMMER2, ARBEIDSFORHOLD_NAVN2, LocalDate.fromDateFields(ARBEIDSFORFOLD_REFUSJON_TOM2), refusjonstype,
-                                LocalDate.fromDateFields(ARBEIDSFORFOLD_SYKEPENGER_FOM2), ARBEIDSFORHOLD_INNTEKT, inntektperiode),
-                        CommonMockFactory.createArbeidsforholdSykepenger(ARBEIDSFORHOLD_KONTONUMMER, ARBEIDSFORHOLD_NAVN, LocalDate.fromDateFields(ARBEIDSFORFOLD_REFUSJON_TOM), refusjonstype2,
-                                LocalDate.fromDateFields(ARBEIDSFORFOLD_SYKEPENGER_FOM), ARBEIDSFORHOLD_INNTEKT, inntektperiode))
+                        CommonMockFactory.createArbeidsforholdSykepenger(ARBEIDSFORHOLD_KONTONUMMER2, ARBEIDSFORHOLD_NAVN2, DateUtils.toLocalDate(ARBEIDSFORFOLD_REFUSJON_TOM2), refusjonstype,
+                                DateUtils.toLocalDate(ARBEIDSFORFOLD_SYKEPENGER_FOM2), ARBEIDSFORHOLD_INNTEKT, inntektperiode),
+                        CommonMockFactory.createArbeidsforholdSykepenger(ARBEIDSFORHOLD_KONTONUMMER, ARBEIDSFORHOLD_NAVN, DateUtils.toLocalDate(ARBEIDSFORFOLD_REFUSJON_TOM), refusjonstype2,
+                                DateUtils.toLocalDate(ARBEIDSFORFOLD_SYKEPENGER_FOM), ARBEIDSFORHOLD_INNTEKT, inntektperiode))
                 .withErArbeidsgiverperiode(ARBEIDSGIVER_PERIODE)
                 .withFerie1(createFimPeriode(FERIEPERIODE_FOM, FERIEPERIODE_TOM))
                 .withForbrukteDager(BigInteger.valueOf(20))

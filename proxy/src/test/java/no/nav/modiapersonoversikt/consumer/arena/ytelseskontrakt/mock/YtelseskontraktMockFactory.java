@@ -6,7 +6,7 @@ import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimPeriode;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimVedtak;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimYtelseskontrakt;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,16 +18,16 @@ import java.util.List;
  */
 public final class YtelseskontraktMockFactory {
 
-    public static final Date DATO_KRAV_MOTTATT = new LocalDate(2020, 10, 14).toDate();
-    public static final Date FOM_GYLDIGHETSPERIODE = new LocalDate(2020, 10, 14).toDate();
-    public static final Date TOM_GYLDIGHETSPERIODE = new LocalDate(2020, 10, 14).toDate();
-    public static final Date VEDTAK_BESLUTNINGSDATO = new LocalDate(2020, 10, 14).toDate();
+    public static final Date DATO_KRAV_MOTTATT = DateUtils.toDate(LocalDate.of(2020, 10, 14));
+    public static final Date FOM_GYLDIGHETSPERIODE = DateUtils.toDate(LocalDate.of(2020, 10, 14));
+    public static final Date TOM_GYLDIGHETSPERIODE = DateUtils.toDate(LocalDate.of(2020, 10, 14));
+    public static final Date VEDTAK_BESLUTNINGSDATO = DateUtils.toDate(LocalDate.of(2020, 10, 14));
     public static final String PERIODE_FOR_YTELSE = "periodeForYtelse";
     public static final int UTTAKSGRAD = 200;
     public static final int VEDTAK_BRUTTO_BELOEP = 100000;
     public static final int VEDTAK_NETTO_BELOEP = 75000;
-    public static final Date FOM = new LocalDate(2020, 10, 14).toDate();
-    public static final Date TOM = new LocalDate(2020, 10, 14).toDate();
+    public static final Date FOM = DateUtils.toDate(LocalDate.of(2020, 10, 14));
+    public static final Date TOM = DateUtils.toDate(LocalDate.of(2020, 10, 14));
     public static final String YTELSESTYPE_DAG = "Dagpenger";
     public static final String YTELSESTYPE_IND = "Individstønad";
     public static final String YTELSESTYPE_APP = "Arbeidsavklaringspenger";

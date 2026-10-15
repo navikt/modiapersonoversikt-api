@@ -3,11 +3,12 @@ package no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt;
 import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.Bruker;
 import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse;
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.mock.OppfolgingkontraktMockFactory;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.personoversikt.common.test.snapshot.SnapshotRule;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class OppfolgingskontraktMapperTest {
         assertEquals(oppfolgingskontraktRequest.getFodselsnummer(), fimHentOppfolgingskontraktListeRequest.getPersonidentifikator());
 
         GregorianCalendar from = new GregorianCalendar();
-        from.setTime(oppfolgingskontraktRequest.getFrom().toDate());
+        from.setTime(DateUtils.toDate(oppfolgingskontraktRequest.getFrom()));
         XMLGregorianCalendar expectedFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(from);
         XMLGregorianCalendar actualFrom = fimHentOppfolgingskontraktListeRequest.getPeriode().getFom();
         assertEquals(expectedFrom.getDay(), actualFrom.getDay());
@@ -47,7 +48,7 @@ public class OppfolgingskontraktMapperTest {
         assertEquals(expectedFrom.getYear(), actualFrom.getYear());
 
         GregorianCalendar to = new GregorianCalendar();
-        to.setTime(oppfolgingskontraktRequest.getTo().toDate());
+        to.setTime(DateUtils.toDate(oppfolgingskontraktRequest.getTo()));
         XMLGregorianCalendar expectedTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(to);
         XMLGregorianCalendar actualTo = fimHentOppfolgingskontraktListeRequest.getPeriode().getTom();
         assertEquals(expectedTo.getDay(), actualTo.getDay());
@@ -212,7 +213,7 @@ public class OppfolgingskontraktMapperTest {
     private XMLGregorianCalendar toXMLGregorian(LocalDate date) {
 
         try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendarDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(), 0);
+            return DatatypeFactory.newInstance().newXMLGregorianCalendarDate(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0);
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException("Klarer ikke å lage dato", e);
         }

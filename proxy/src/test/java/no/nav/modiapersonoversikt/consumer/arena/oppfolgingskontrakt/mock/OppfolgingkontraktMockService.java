@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.Oppfolgings
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktService;
 import no.nav.modiapersonoversikt.consumer.arena.oppfolgingskontrakt.OppfolgingskontraktRequest;
 import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.OppfolgingskontraktResponse;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
 
 import java.util.Date;
@@ -25,8 +26,8 @@ public class OppfolgingkontraktMockService implements OppfolgingskontraktService
             rawResponse.getOppfoelgingskontraktListe().add(OppfolgingkontraktMockFactory.createSYFOkontrakt(null, OppfolgingkontraktMockFactory.FAGSAKSTATUS_INAKTIV, null, null));
         } else if (isNotBlank(request.getFodselsnummer()) && request.getFrom() != null && request.getTo() != null) {
             String fnr = request.getFodselsnummer();
-            Date fra = request.getFrom().toDate();
-            Date til = request.getTo().toDate();
+            Date fra = DateUtils.toDate(request.getFrom());
+            Date til = DateUtils.toDate(request.getTo());
             rawResponse.getOppfoelgingskontraktListe().addAll(OppfolgingkontraktMockFactory.createOppfoelgingskontrakter(fnr, fra, til));
         }
 

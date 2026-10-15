@@ -1,11 +1,13 @@
 package no.nav.modiapersonoversikt.infrastructure
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility
+import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
-import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
@@ -16,14 +18,31 @@ import okhttp3.MediaType.Companion.toMediaType
 import okio.Buffer
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
+
+private val legacyOffsetDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 
 object OkHttpUtils {
     val objectMapper: ObjectMapper =
         jacksonObjectMapper()
-            .registerModule(JodaModule())
-            .registerModule(JavaTimeModule())
-            .registerModule(Jdk8Module())
+            .registerModule(
+                JavaTimeModule().apply {
+                    addSerializer(
+                        OffsetDateTime::class.java,
+                        object : JsonSerializer<OffsetDateTime>() {
+                            override fun serialize(
+                                value: OffsetDateTime,
+                                gen: JsonGenerator,
+                                serializers: SerializerProvider,
+                            ) {
+                                gen.writeString(value.format(legacyOffsetDateTimeFormatter))
+                            }
+                        },
+                    )
+                },
+            ).registerModule(Jdk8Module())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)

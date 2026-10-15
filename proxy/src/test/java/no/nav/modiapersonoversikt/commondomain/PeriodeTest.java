@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.commondomain;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -10,21 +10,21 @@ public class PeriodeTest {
 
     @Test
     public void testIsNotGyldigNullFrom() {
-        assertFalse(new Periode(null, new LocalDate()).erGyldig());
+        assertFalse(new Periode(null, LocalDate.now()).erGyldig());
     }
 
     @Test
     public void testGyldigBasedOnFom() {
-        assertTrue(new Periode(new LocalDate(), null).erGyldig());
+        assertTrue(new Periode(LocalDate.now(), null).erGyldig());
     }
 
     @Test
     public void testIsNotGyldigRange() {
-        assertFalse(new Periode(new LocalDate(2000, 1, 1), new LocalDate(2010, 1, 1)).erGyldig());
+        assertFalse(new Periode(LocalDate.of(2000, 1, 1), LocalDate.of(2010, 1, 1)).erGyldig());
     }
 
     @Test
     public void testIsGyldig() {
-        assertTrue(new Periode(new LocalDate(2000, 1, 1), LocalDate.now()).erGyldig());
+        assertTrue(new Periode(LocalDate.of(2000, 1, 1), LocalDate.now()).erGyldig());
     }
 }
