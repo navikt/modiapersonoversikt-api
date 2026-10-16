@@ -7,6 +7,9 @@ metadata:
     team: personoversikt
 spec:
   image: "{{image}}"
+  valkey:
+    - instance: modiapersonoversikt-api
+      access: readwrite
   port: 8080
   liveness:
     path: /modiapersonoversikt-api/internal/isAlive
