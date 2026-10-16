@@ -27,14 +27,15 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
-import org.joda.time.DateTime
-import org.joda.time.LocalDate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import org.slf4j.MDC
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import javax.xml.datatype.DatatypeFactory
 import kotlin.contracts.ExperimentalContracts
 
@@ -152,7 +153,7 @@ class SakerServiceImplTest {
                 fagsystemKode = JournalforingSak.FAGSYSTEMKODE_ARENA
                 sakstype = JournalforingSak.SAKSTYPE_MED_FAGSAK
                 temaKode = TEMAKODE_OPPFOLGING
-                opprettetDato = DateTime(xmlDato.toGregorianCalendar().time)
+                opprettetDato = OffsetDateTime.ofInstant(xmlDato.toGregorianCalendar().toInstant(), ZoneId.systemDefault())
             }
         }
 
@@ -165,7 +166,7 @@ class SakerServiceImplTest {
                 .toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].fagsystemSaksId, `is`(sakId))
-        assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
+        assertThat(saker[0].opprettetDato, `is`(dato.atStartOfDay().atZone(ZoneId.systemDefault()).toOffsetDateTime()))
         assertThat(saker[0].fagsystemKode, `is`(FAGSYSTEMKODE_ARENA))
     }
 

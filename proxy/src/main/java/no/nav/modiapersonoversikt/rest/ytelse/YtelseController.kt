@@ -5,12 +5,12 @@ import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.Ytelseskontrakt
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.SykepengerServiceBi
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.SykepengerResponse
-import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
+import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.RequestBodyContent
-import org.joda.time.IllegalFieldValueException
-import org.joda.time.LocalDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.time.DateTimeException
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/rest")
@@ -58,8 +58,8 @@ class YtelseController
         private fun lagRiktigDato(dato: String?): LocalDate? =
             dato?.let {
                 try {
-                    LocalDate.parse(dato, JODA_DATOFORMAT)
-                } catch (exception: IllegalFieldValueException) {
+                    LocalDate.parse(dato, DATOFORMAT)
+                } catch (exception: DateTimeException) {
                     throw RuntimeException(exception.message)
                 }
             }

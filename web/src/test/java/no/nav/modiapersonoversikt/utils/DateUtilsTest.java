@@ -1,8 +1,9 @@
 package no.nav.modiapersonoversikt.utils;
 
-import no.nav.modiapersonoversikt.utils.DateUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.junit.Test;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -15,22 +16,41 @@ public class DateUtilsTest {
 
     @Test
     public void testConvertDateToXmlGregorianCalendar() {
-        final DateTime date = new DateTime(2013, 2, 13, 0, 0);
+        final ZonedDateTime date = ZonedDateTime.of(2013, 2, 13, 0, 0, 0, 0, ZoneId.systemDefault());
 
-        XMLGregorianCalendar xmlGregorianCalendar = DateUtils.convertDateToXmlGregorianCalendar(date.toDate());
+        XMLGregorianCalendar xmlGregorianCalendar = DateUtils.convertDateToXmlGregorianCalendar(Date.from(date.toInstant()));
 
         assertEquals(date.getYear(), xmlGregorianCalendar.getYear());
-        assertEquals(date.getMonthOfYear(), xmlGregorianCalendar.getMonth());
+        assertEquals(date.getMonthValue(), xmlGregorianCalendar.getMonth());
         assertEquals(date.getDayOfMonth(), xmlGregorianCalendar.getDay());
     }
 
     @Test
+    public void testLocalDateConversionPreservesDateInSystemZone() {
+        LocalDate date = LocalDate.of(2024, 1, 15);
+
+        XMLGregorianCalendar xml = DateUtils.convertDateToXmlGregorianCalendar(DateUtils.toDate(date));
+
+        assertEquals(date.getYear(), xml.getYear());
+        assertEquals(date.getMonthValue(), xml.getMonth());
+        assertEquals(date.getDayOfMonth(), xml.getDay());
+    }
+
+    @Test
+    public void testOffsetDateTimeConversionPreservesInstant() {
+        OffsetDateTime dateTime = OffsetDateTime.parse("2024-01-15T10:30:00+02:00");
+
+        assertEquals(Date.from(dateTime.toInstant()), DateUtils.toDate(dateTime));
+    }
+
+    @Test
     public void testGetRandomDate() {
-        Interval interval = new Interval(DateTime.now().minusMonths(2), DateTime.now().plusMonths(1));
+        ZonedDateTime start = ZonedDateTime.now().minusMonths(2);
+        ZonedDateTime end = ZonedDateTime.now().plusMonths(1);
 
         Date date = DateUtils.getRandomDate();
 
-        assertTrue(interval.contains(date.getTime()));
+        assertTrue(date.after(Date.from(start.toInstant())) && date.before(Date.from(end.toInstant())));
     }
 
     @Test

@@ -2,10 +2,12 @@ package no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt;
 
 import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Dagpengeytelse;
 import no.nav.modiapersonoversikt.arena.ytelseskontrakt.Vedtak;
-import org.joda.time.LocalDate;
+import no.nav.modiapersonoversikt.utils.DateUtils;
+import java.time.LocalDate;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 
@@ -16,8 +18,8 @@ public class DagpengeytelseTest {
     public static final int DAGER_IGJEN_PERMITTERING = 20;
     public static final int UKER_IGJEN_PERMITTERING = 10;
     public static final String VEDTAKSTATUS = "vedtakstatus";
-    private static final LocalDate FOM = new LocalDate(System.currentTimeMillis() - 891569941);
-    private static final LocalDate TOM = new LocalDate(System.currentTimeMillis() + 891555641);
+    private static final LocalDate FOM = DateUtils.toLocalDate(new Date(System.currentTimeMillis() - 891569941));
+    private static final LocalDate TOM = DateUtils.toLocalDate(new Date(System.currentTimeMillis() + 891555641));
 
     @Test
     public void testBean() {

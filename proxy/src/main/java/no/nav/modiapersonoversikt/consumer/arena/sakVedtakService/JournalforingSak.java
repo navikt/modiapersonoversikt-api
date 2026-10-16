@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.arena.sakVedtakService;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.joda.time.DateTime;
+import java.time.OffsetDateTime;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,7 +12,7 @@ public class JournalforingSak implements Serializable, Comparable<JournalforingS
     public String fnr = null;
     public String fagsystemSaksId = null;
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
-    public DateTime opprettetDato;
+    public OffsetDateTime opprettetDato;
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
     public static final String TEMAKODE_KLAGE_ANKE = "KLA";

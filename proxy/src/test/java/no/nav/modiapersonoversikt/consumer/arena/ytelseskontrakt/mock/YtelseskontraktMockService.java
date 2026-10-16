@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.Ytelseskontrakt
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktService;
 import no.nav.modiapersonoversikt.consumer.arena.ytelseskontrakt.YtelseskontraktRequest;
 import no.nav.modiapersonoversikt.arena.ytelseskontrakt.YtelseskontraktResponse;
+import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimBruker;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimRettighetsgruppe;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;
@@ -26,7 +27,7 @@ public class YtelseskontraktMockService implements YtelseskontraktService, Seria
         if (isBlank(request.getFodselsnummer())) {
             rawResponse.withYtelseskontraktListe(YtelseskontraktMockFactory.createYtelsesKontrakter());
         } else if (isNotBlank(request.getFodselsnummer()) && request.getFrom() != null && request.getTo() != null) {
-            rawResponse.withYtelseskontraktListe(YtelseskontraktMockFactory.createYtelsesKontrakter(request.getFodselsnummer(), request.getFrom().toDate(), request.getTo().toDate()));
+            rawResponse.withYtelseskontraktListe(YtelseskontraktMockFactory.createYtelsesKontrakter(request.getFodselsnummer(), DateUtils.toDate(request.getFrom()), DateUtils.toDate(request.getTo())));
         } else {
             rawResponse.withYtelseskontraktListe(YtelseskontraktMockFactory.createYtelsesKontrakter(request.getFodselsnummer(), null, null));
         }

@@ -6,7 +6,7 @@ import no.nav.modiapersonoversikt.arena.oppfolgingskontrakt.SYFOPunkt;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -95,7 +95,7 @@ public class OppfolgingskontraktMapper {
         if (source == null) {
             return null;
         }
-        return new LocalDate(source.getYear(), source.getMonth(), source.getDay());
+        return LocalDate.of(source.getYear(), source.getMonth(), source.getDay());
     }
 
     private Bruker map(WSBruker source) {
@@ -130,7 +130,7 @@ public class OppfolgingskontraktMapper {
         try {
             return DatatypeFactory
                     .newInstance()
-                    .newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
+                    .newXMLGregorianCalendarDate(source.getYear(), source.getMonthValue(), source.getDayOfMonth(), 0);
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException("Could not map to XMLGregorianCalendar", e);
         }

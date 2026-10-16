@@ -9,7 +9,7 @@ import no.nav.modiapersonoversikt.utils.DateUtils;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeRequest;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeResponse;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -304,14 +304,14 @@ public class SykepengerMapper {
         if (source == null) {
             return null;
         }
-        return DateUtils.convertDateToXmlGregorianCalendar(source.toDate());
+        return DateUtils.convertDateToXmlGregorianCalendar(DateUtils.toDate(source));
     }
 
     public LocalDate map(XMLGregorianCalendar source) {
         if (source == null) {
             return null;
         }
-        return new LocalDate(source.getYear(), source.getMonth(), source.getDay());
+        return LocalDate.of(source.getYear(), source.getMonth(), source.getDay());
     }
 
     private <S, T> List<T> forEach(List<S> list, Function<S, T> fn) {

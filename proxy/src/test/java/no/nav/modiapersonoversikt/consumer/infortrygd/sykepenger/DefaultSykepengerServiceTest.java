@@ -8,7 +8,7 @@ import no.nav.tjeneste.virksomhet.sykepenger.v2.HentSykepengerListeSikkerhetsbeg
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeRequest;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeResponse;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

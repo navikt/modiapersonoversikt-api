@@ -19,7 +19,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
+import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -83,9 +83,9 @@ class OppfolgingController
                         meldeplikt = kontraktResponse.bruker?.meldeplikt,
                         formidlingsgruppe = kontraktResponse.bruker?.formidlingsgruppe,
                         innsatsgruppe = kontraktResponse.bruker?.innsatsgruppe,
-                        sykmeldtFra = kontraktResponse.bruker?.sykmeldtFrom?.toString(JODA_DATOFORMAT),
+                        sykmeldtFra = kontraktResponse.bruker?.sykmeldtFrom?.format(DATOFORMAT),
                         rettighetsgruppe = ytelserResponse.rettighetsgruppe,
-                        vedtaksdato = kontraktResponse.vedtaksdato?.toString(JODA_DATOFORMAT),
+                        vedtaksdato = kontraktResponse.vedtaksdato?.format(DATOFORMAT),
                         sykefravaersoppfolging = hentSyfoPunkt(kontraktResponse.syfoPunkter),
                         ytelser = hentYtelser(ytelserResponse.ytelser),
                     )
@@ -173,9 +173,9 @@ class OppfolgingController
                 if (it.type == "Dagpenger") {
                     val dagpengeYtelse = it as Dagpengeytelse
                     DagpengeytelseDTO(
-                        datoKravMottatt = dagpengeYtelse.datoKravMottatt?.toString(JODA_DATOFORMAT),
-                        fom = dagpengeYtelse.fom?.toString(JODA_DATOFORMAT),
-                        tom = dagpengeYtelse.tom?.toString(JODA_DATOFORMAT),
+                        datoKravMottatt = dagpengeYtelse.datoKravMottatt?.format(DATOFORMAT),
+                        fom = dagpengeYtelse.fom?.format(DATOFORMAT),
+                        tom = dagpengeYtelse.tom?.format(DATOFORMAT),
                         status = dagpengeYtelse.status,
                         type = dagpengeYtelse.type,
                         vedtak = hentVedtak(dagpengeYtelse.vedtak),
@@ -188,9 +188,9 @@ class OppfolgingController
                     )
                 } else {
                     OppfolgingsYtelseDTO(
-                        datoKravMottatt = it.datoKravMottatt?.toString(JODA_DATOFORMAT),
-                        fom = it.fom?.toString(JODA_DATOFORMAT),
-                        tom = it.tom?.toString(JODA_DATOFORMAT),
+                        datoKravMottatt = it.datoKravMottatt?.format(DATOFORMAT),
+                        fom = it.fom?.format(DATOFORMAT),
+                        tom = it.tom?.format(DATOFORMAT),
                         status = it.status,
                         type = it.type,
                         vedtak = hentVedtak(it.vedtak),
@@ -206,8 +206,8 @@ class OppfolgingController
 
             return vedtak.map {
                 OppfolgingYtelseVedtakDTO(
-                    aktivFra = it.activeFrom?.toString(JODA_DATOFORMAT),
-                    aktivTil = it.activeTo?.toString(JODA_DATOFORMAT),
+                    aktivFra = it.activeFrom?.format(DATOFORMAT),
+                    aktivTil = it.activeTo?.format(DATOFORMAT),
                     aktivitetsfase = it.aktivitetsfase,
                     vedtakstatus = it.vedtakstatus,
                     vedtakstype = it.vedtakstype,
@@ -220,7 +220,7 @@ class OppfolgingController
 
             return syfoPunkter.map {
                 SyfoPunktDTO(
-                    dato = it.dato?.toString(JODA_DATOFORMAT),
+                    dato = it.dato?.format(DATOFORMAT),
                     fastOppfolgingspunkt = it.isFastOppfolgingspunkt,
                     status = it.status,
                     syfoHendelse = it.syfoHendelse,
