@@ -2,13 +2,14 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
 
-private fun HenvendelseDTO.erHovedreferat(): Boolean = kjedeId.isBlank() || kjedeId == meldinger?.singleOrNull()?.meldingsId
+private fun HenvendelseDTO.erHovedreferat(): Boolean =
+    kjedeId.isBlank() || kjedeId == meldinger?.singleOrNull()?.meldingsId
 
 internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
     val referater = henvendelser.filter { it.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT }
-    val heads = referater.filter { it.erHovedreferat() }
+    val hovedreferater = referater.filter { it.erHovedreferat() }
     val headsWithId =
-        heads.map { head ->
+        hovedreferater.map { head ->
             val melding = head.meldinger?.singleOrNull()
             require(!melding?.meldingsId.isNullOrBlank()) {
                 "Samtalereferat mangler entydig hovedmelding"
@@ -34,7 +35,7 @@ internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<H
             require(
                 kjede.all {
                     it.fnr == henvendelse.fnr &&
-                        it.aktorId == henvendelse.aktorId
+                            it.aktorId == henvendelse.aktorId
                 },
             ) { "Samtalereferater i samme kjede har ulike eiere" }
             require(kjede.all { it.meldinger?.size == 1 }) {
@@ -44,10 +45,11 @@ internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<H
             val meldinger = referaterMedMelding.map { it.second }
             require(
                 meldinger.all { !it.meldingsId.isNullOrBlank() } &&
-                    meldinger.map { it.meldingsId }.distinct().size == meldinger.size,
+                        meldinger.map { it.meldingsId }.distinct().size == meldinger.size,
             ) { "Samtalereferat har manglende eller duplikat meldings-ID" }
             val nyesteSendtDato = meldinger.maxOf { it.sendtDato.toInstant() }
-            val nyesteReferater = referaterMedMelding.filter { (_, melding) -> melding.sendtDato.toInstant() == nyesteSendtDato }
+            val nyesteReferater =
+                referaterMedMelding.filter { (_, melding) -> melding.sendtDato.toInstant() == nyesteSendtDato }
             require(nyesteReferater.map { it.first.gjeldendeTemagruppe }.distinct().size == 1) {
                 "Samtalereferater med samme sendetidspunkt har ulike temagrupper"
             }
