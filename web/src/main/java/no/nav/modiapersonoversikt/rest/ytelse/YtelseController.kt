@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/rest/ytelse")
@@ -103,7 +104,9 @@ class YtelseController
                         AuditIdentifier.FNR to fnrRequest.fnr,
                     ),
                 ) {
-                    pensjonService.hentSaker(fnrRequest.fnr)
+                    pensjonService
+                        .hentSaker(fnrRequest.fnr)
+                        .filtrerPensjonSaker(fnrRequest.fom, fnrRequest.tom)
                 }
 
         @PostMapping("arbeidsavklaringspenger")
@@ -162,3 +165,18 @@ class YtelseController
                     dagpengerService.hentDagpenger(datodelingRequest)
                 }
     }
+
+internal fun List<PensjonSak>.filtrerPensjonSaker(
+    fom: String?,
+    tom: String?,
+): List<PensjonSak> {
+    if (fom == null && tom == null) return this
+
+    val fomDato = fom?.let(LocalDate::parse)
+    val tomDato = tom?.let(LocalDate::parse)
+
+    return filter { sak ->
+        (fomDato == null || sak.tomDato == null || sak.tomDato >= fomDato) &&
+            (tomDato == null || sak.fomDato == null || sak.fomDato <= tomDato)
+    }
+}
