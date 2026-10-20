@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.consumer.infortrygd.domain;
 import no.nav.modiapersonoversikt.commondomain.Periode;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.HistoriskUtbetaling;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kreditortrekk;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import static org.junit.Assert.assertEquals;
 
 public class HistoriskUtbetalingTest {
 
-    public static final LocalDate PERIODEFRA = new LocalDate(2013, 8, 6);
-    public static final LocalDate PERIODETOM = new LocalDate(2014, 2, 11);
-    public static final LocalDate UTBETALINGSDATO = new LocalDate(2012, 7, 11);
+    public static final LocalDate PERIODEFRA = LocalDate.of(2013, 8, 6);
+    public static final LocalDate PERIODETOM = LocalDate.of(2014, 2, 11);
+    public static final LocalDate UTBETALINGSDATO = LocalDate.of(2012, 7, 11);
     public static final Double HISTORTISK_UTBETALING_NETTOBELOP = 200.55;
     public static final Double HISTORTISK_UTBETALING_BRUTTOBELOP = 220.55;
     public static final Double HISTORTISK_UTBETALING_DAGSATS = 120.89;

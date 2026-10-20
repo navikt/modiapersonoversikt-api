@@ -17,10 +17,10 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor
 import org.apache.wss4j.common.ext.WSPasswordCallback
 import org.apache.wss4j.dom.WSConstants
 import org.apache.wss4j.dom.handler.WSHandlerConstants
-import org.joda.time.LocalDate
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.time.LocalDate
 import java.util.*
 import javax.security.auth.callback.Callback
 import javax.security.auth.callback.CallbackHandler

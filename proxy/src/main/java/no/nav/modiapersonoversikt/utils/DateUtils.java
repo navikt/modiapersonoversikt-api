@@ -1,7 +1,10 @@
 package no.nav.modiapersonoversikt.utils;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +31,18 @@ public class DateUtils {
         return xml.toGregorianCalendar().getTime();
     }
 
+    public static Date toDate(LocalDate date) {
+        return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static Date toDate(OffsetDateTime date) {
+        return Date.from(date.toInstant());
+    }
+
+    public static LocalDate toLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
     public static Date getDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month - 1, day);
@@ -47,8 +62,8 @@ public class DateUtils {
 
     public static XMLGregorianCalendar convertDateTimeToXmlGregorianCalendar(LocalDateTime date) {
         try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(), date.getHourOfDay(), date.getMinuteOfHour(), date.getSecondOfMinute(),
-                    date.getMillisOfSecond(), 0);
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(), date.getMinute(), date.getSecond(),
+                        date.getNano() / 1_000_000, 0);
         } catch (DatatypeConfigurationException e) {
             logger.warn("DatatypeConfigurationException", e);
             throw new RuntimeException("Klarer ikke å lage dato", e);
@@ -59,9 +74,9 @@ public class DateUtils {
      * @return A random date in "sort of" 3-month interval
      */
     public static Date getRandomDate() {
-        DateTime end = DateTime.now().plusDays(25);
-        long offset = end.minusDays(50).getMillis();
-        long diff = end.getMillis() - offset;
+        ZonedDateTime end = ZonedDateTime.now().plusDays(25);
+        long offset = end.minusDays(50).toInstant().toEpochMilli();
+        long diff = end.toInstant().toEpochMilli() - offset;
         return new Date(offset + (long) (Math.random() * diff));
     }
 

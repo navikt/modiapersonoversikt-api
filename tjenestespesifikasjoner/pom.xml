@@ -18,7 +18,6 @@
         <cxf-xjc-boolean.version>3.1.0</cxf-xjc-boolean.version>
         <org.jvnet.jaxb.version>4.0.12</org.jvnet.jaxb.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
-        <joda-time.version>2.14.4</joda-time.version>
         <jaxb2-maven-plugin.version>4.1.0</jaxb2-maven-plugin.version>
         <jaxb2-value-constructor.version>3.0</jaxb2-value-constructor.version>
         <jaxws.version>4.0.3</jaxws.version>
@@ -53,11 +52,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>${joda-time.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.jvnet.jaxb</groupId>
                 <artifactId>jaxb-plugins</artifactId>

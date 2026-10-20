@@ -9,8 +9,8 @@ import no.nav.modiapersonoversikt.consumer.infotrygd.domain.sykepenger.Sykmeldin
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.SykepengerServiceBi
 import no.nav.modiapersonoversikt.consumer.infotrygd.sykepenger.mapping.to.SykepengerRequest
 import no.nav.modiapersonoversikt.infotrgd.sykepenger.*
-import no.nav.modiapersonoversikt.rest.JODA_DATOFORMAT
-import org.joda.time.LocalDate
+import no.nav.modiapersonoversikt.rest.DATOFORMAT
+import java.time.LocalDate
 
 class SykepengerUttrekk constructor(
     private val sykepengerService: SykepengerServiceBi,
@@ -58,7 +58,7 @@ class SykepengerUttrekk constructor(
         sykmeldingsperioder.map {
             Sykepenger(
                 fodselsnummer = it.fodselsnummer,
-                sykmeldtFom = it.sykmeldtFom?.toString(JODA_DATOFORMAT),
+                sykmeldtFom = it.sykmeldtFom?.format(DATOFORMAT),
                 forbrukteDager = it.forbrukteDager,
                 ferie1 = it.ferie1?.let { period -> toCommonPeriode(period) },
                 ferie2 = it.ferie2?.let { period -> toCommonPeriode(period) },
@@ -79,8 +79,8 @@ class SykepengerUttrekk constructor(
                 kommendeUtbetalinger = it.kommendeUtbetalinger?.let { utbetalinger -> hentKommendeUtbetalinger(utbetalinger) },
                 utbetalingerPaaVent = it.utbetalingerPaVent?.let { utbetalinger -> hentUtbetalingerPaVent(utbetalinger) },
                 bruker = it.bruker?.ident,
-                midlertidigStanset = it.midlertidigStanset?.toString(JODA_DATOFORMAT),
-                slutt = it.slutt?.toString(JODA_DATOFORMAT),
+                midlertidigStanset = it.midlertidigStanset?.format(DATOFORMAT),
+                slutt = it.slutt?.format(DATOFORMAT),
                 arbeidsforholdListe = it.arbeidsforholdListe?.let { arbeidsforhold -> hentArbeidsgiverForhold(arbeidsforhold) },
                 erArbeidsgiverperiode = it.erArbeidsgiverperiode,
                 arbeidskategori = it.arbeidskategori.termnavn,
@@ -94,9 +94,9 @@ class SykepengerUttrekk constructor(
                 arbeidsgiverKontonr = it.arbeidsgiverKontonr,
                 inntektsperiode = it.inntektsperiode.termnavn,
                 inntektForPerioden = it.inntektForPerioden,
-                refusjonTom = it.refusjonTom?.toString(JODA_DATOFORMAT),
+                refusjonTom = it.refusjonTom?.format(DATOFORMAT),
                 refusjonstype = it.refusjonstype?.termnavn,
-                sykepengerFom = it.sykepengerFom?.toString(JODA_DATOFORMAT),
+                sykepengerFom = it.sykepengerFom?.format(DATOFORMAT),
             )
         }
 
@@ -104,15 +104,15 @@ class SykepengerUttrekk constructor(
         sykmeldinger.map {
             SykmeldingItem(
                 sykmelder = it.sykmelder,
-                behandlet = it.behandlet?.toString(JODA_DATOFORMAT),
+                behandlet = it.behandlet?.format(DATOFORMAT),
                 sykmeldt = it.sykmeldt?.let { period -> toCommonPeriode(period) },
                 sykmeldingsgrad = it.sykmeldingsgrad,
                 gjelderYrkesskade =
                     it.gjelderYrkesskade?.let { yrkesskade ->
                         GjelderYrkesskade(
                             yrkesskadeart = yrkesskade.yrkesskadeart?.termnavn,
-                            skadet = yrkesskade.skadet?.toString(JODA_DATOFORMAT),
-                            vedtatt = yrkesskade.vedtatt?.toString(JODA_DATOFORMAT),
+                            skadet = yrkesskade.skadet?.format(DATOFORMAT),
+                            vedtatt = yrkesskade.vedtatt?.format(DATOFORMAT),
                         )
                     },
                 gradAvSykmeldingListe = it.gradAvSykmeldingListe?.let { sykemeldinger -> hentGraderinger(sykemeldinger) },

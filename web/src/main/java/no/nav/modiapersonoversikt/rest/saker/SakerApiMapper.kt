@@ -10,7 +10,6 @@ import no.nav.modiapersonoversikt.service.sakstema.domain.Sak
 import no.nav.modiapersonoversikt.service.soknadsstatus.SaksData
 import no.nav.modiapersonoversikt.service.soknadsstatus.Sakstema
 import no.nav.modiapersonoversikt.service.soknadsstatus.SoknadsstatusSakstema
-import no.nav.modiapersonoversikt.utils.ConvertionUtils.toJavaDateTime
 import no.nav.personoversikt.common.kabac.Decision
 import java.util.*
 
@@ -147,7 +146,7 @@ object SakerApiMapper {
             SakerApi.Sak(
                 temakode = sak.temakode,
                 fagsaksnummer = sak.fagsaksnummer,
-                avsluttet = sak.avsluttet.map { it.toJavaDateTime() }.orElse(null),
+                avsluttet = sak.avsluttet.map { it.toLocalDateTime() }.orElse(null),
                 fagsystem = sak.fagsystem,
                 fagsystemNavn = sak.fagsystemNavn.orElse(null),
                 baksystem = sak.baksystem,

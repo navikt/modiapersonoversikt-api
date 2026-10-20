@@ -14,9 +14,9 @@ import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykBruker
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykStansaarsak
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykSykmeldingsperiode
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeResponse
-import org.joda.time.LocalDate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 import javax.xml.datatype.DatatypeFactory
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -110,7 +110,7 @@ internal class SykepengerUttrekkSplitTest {
 
     @Test
     fun `Periode på nøyaktig to år (og en dag) gir ett kall`() {
-        val from = LocalDate(2020, 1, 1)
+        val from = LocalDate.of(2020, 1, 1)
         val to = from.plusYears(2)
 
         uttrekk.hent(FNR, from, to)
@@ -122,8 +122,8 @@ internal class SykepengerUttrekkSplitTest {
 
     @Test
     fun `Periode over to år deles i flere kall`() {
-        val from = LocalDate(2020, 1, 1)
-        val to = LocalDate(2023, 6, 1)
+        val from = LocalDate.of(2020, 1, 1)
+        val to = LocalDate.of(2023, 6, 1)
 
         uttrekk.hent(FNR, from, to)
 
@@ -136,8 +136,8 @@ internal class SykepengerUttrekkSplitTest {
 
     @Test
     fun `Periode over fire år deles i tre kall`() {
-        val from = LocalDate(2018, 1, 1)
-        val to = LocalDate(2023, 1, 2)
+        val from = LocalDate.of(2018, 1, 1)
+        val to = LocalDate.of(2023, 1, 2)
 
         uttrekk.hent(FNR, from, to)
 
@@ -150,7 +150,7 @@ internal class SykepengerUttrekkSplitTest {
 
     @Test
     fun `Fra og til samme dag gir ett kall`() {
-        val date = LocalDate(2022, 6, 15)
+        val date = LocalDate.of(2022, 6, 15)
 
         uttrekk.hent(FNR, date, date)
 

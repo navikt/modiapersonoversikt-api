@@ -2,15 +2,15 @@ package no.nav.modiapersonoversikt.consumer.infortrygd.domain;
 
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Arbeidsforhold;
 import no.nav.modiapersonoversikt.consumer.infotrygd.domain.Kodeverkstype;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class ArbeidsforholdTest {
     public static final String ARBEIDSGIVERNAVN = "Arbeidsgiver navn";
     public static final String ARBEIDSGIVERSKONTONUMMER = "12345678945";
-    public static final LocalDate SYKEPENGERFOM = new LocalDate(2013, 2, 1);
-    public static final LocalDate REFUSJONTOM = new LocalDate(2014, 2, 1);
+    public static final LocalDate SYKEPENGERFOM = LocalDate.of(2013, 2, 1);
+    public static final LocalDate REFUSJONTOM = LocalDate.of(2014, 2, 1);
     public static final String ARBEIDSFORHOLD_REFUSJONTYPE_KODE = "GRA";
     public static final String ARBEIDSFORHOLD_REFUSJONTYPE_TERM = "Generell refusjon A";
     public static final String ARBEIDSFORHOLD_INNTEKTPERIODE_KODE = "IP";
