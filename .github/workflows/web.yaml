@@ -17,6 +17,16 @@ jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
+    services:
+      valkey:
+        image: valkey/valkey:9.1
+        ports:
+          - 127.0.0.1:16379:6379
+        options: >-
+          --health-cmd "valkey-cli -a test-password ping"
+          --health-interval 2s
+          --health-timeout 2s
+          --health-retries 10
     permissions:
       packages: write
       contents: read
@@ -39,7 +49,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mvn -P ci -B test --settings .github/maven-settings.xml
+          docker exec ${{ job.services.valkey.id }} valkey-cli CONFIG SET requirepass test-password
+          mvn -P ci -B test --settings .github/maven-settings.xml -Dvalkey.integration.enabled=true
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
         if: github.ref == 'refs/heads/master'

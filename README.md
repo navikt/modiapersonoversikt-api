@@ -57,6 +57,10 @@ underliggende tjenesten.
 
 ### Teste Valkey lokalt
 
+Begge web-workflowene i CI bruker en Valkey-servicecontainer og kjører integrasjonstestene
+som del av Maven-testene. GitHub venter på healthcheck og rydder opp etter jobben.
+CI-instansen bruker samme testpassord som lokaloppsettet og eksponerer porten kun på localhost.
+
 Start testinstansen fra repoets rotmappe:
 
 ```sh
