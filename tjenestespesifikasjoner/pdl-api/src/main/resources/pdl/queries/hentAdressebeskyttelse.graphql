@@ -1,6 +1,6 @@
 query hentAdressebeskyttelse($ident: ID!){
     hentPerson(ident: $ident) {
-        adressebeskyttelse {
+        adressebeskyttelse(historikk: false) {
             gradering
         }
     }
