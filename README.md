@@ -34,8 +34,8 @@ begrenser tillatte typer til cachemodellene og utvalgte standardtyper. Nye model
 Nøkkelgeneratoren bruker også Jackson 3. Eksisterende Jackson 2-bruk utenfor cacheoppsettet er uendret.
 Prefikset er `cache:v2`, slik at verdier fra det tidligere, egenutviklede formatet ikke leses.
 Nøklene er JSON i klartekst med klasse, metode, Nav-ident og argumenter. Fødselsnumre og Nav-identer kan dermed
-leses i Valkey og i `db.statement` på Redis-spans i Tempo. I prod er Redis-spans slått av med
-`OTEL_INSTRUMENTATION_LETTUCE_ENABLED=false` i `web/.nais/prod.yml`. I dev er de på.
+leses i Valkey og i `db.statement` på Redis-spans i Tempo. Redis-spans er slått av med
+`OTEL_INSTRUMENTATION_LETTUCE_ENABLED=false` i både `web/.nais/dev.yml` og `web/.nais/prod.yml`.
 Valkey beholder oppføringer ved deploy til de utløper. Ved tilkoblingsfeil henter appen data direkte fra kildesystemet
 uten å cache svaret. Sett `cache.backend=caffeine` ved lokal kjøring eller som midlertidig rollback via ny deploy.
 

@@ -112,6 +112,8 @@ spec:
   envFrom:
     - secret: modiapersonoversikt-api-unleash-api-token
   env:
+    - name: OTEL_INSTRUMENTATION_LETTUCE_ENABLED
+      value: "false"
     - name: APP_ENVIRONMENT_NAME
       value: "q2"
     - name: MS_GRAPH_URL
