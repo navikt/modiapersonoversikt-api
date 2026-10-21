@@ -21,16 +21,63 @@ internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<H
     val headId = headsWithId.toMap()
     val headById = headsWithId.associate { (head, id) -> id to head }
     val children = referater.filterNot { it.erHovedreferat() }.groupBy { it.kjedeId }
-    require(children.keys.all { it in headById }) { "Samtalereferat mangler hovedmelding" }
+    val orphanHeadIndexes =
+        henvendelser
+            .withIndex()
+            .filter {
+                it.value.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT &&
+                    !it.value.erHovedreferat() &&
+                    it.value.kjedeId !in headById
+            }.groupBy { it.value.kjedeId }
+            .mapValues { (_, referaterUtenHovedmelding) ->
+                require(referaterUtenHovedmelding.all { it.value.meldinger?.size == 1 }) {
+                    "Samtalereferat har ikke nøyaktig én melding"
+                }
+                require(
+                    referaterUtenHovedmelding.all {
+                        !it.value.meldinger
+                            ?.single()
+                            ?.meldingsId
+                            .isNullOrBlank()
+                    },
+                ) {
+                    "Samtalereferat har manglende meldings-ID"
+                }
+                referaterUtenHovedmelding
+                    .minWith(
+                        compareBy<IndexedValue<HenvendelseDTO>> {
+                            it.value.meldinger!!
+                                .single()
+                                .sendtDato
+                                .toInstant()
+                        }.thenBy {
+                            it.value.meldinger!!
+                                .single()
+                                .meldingsId
+                        }.thenBy { it.index },
+                    ).index
+            }
 
-    return henvendelser.mapNotNull { henvendelse ->
+    return henvendelser.mapIndexedNotNull { index, henvendelse ->
         if (henvendelse.henvendelseType != HenvendelseDTO.HenvendelseType.SAMTALEREFERAT) {
             henvendelse
-        } else if (!henvendelse.erHovedreferat()) {
+        } else if (!henvendelse.erHovedreferat() && orphanHeadIndexes[henvendelse.kjedeId] != index) {
             null
         } else {
-            val id = headId.getValue(henvendelse)
-            val kjede = listOf(henvendelse) + children[id].orEmpty()
+            val id = if (henvendelse.erHovedreferat()) headId.getValue(henvendelse) else henvendelse.kjedeId
+            val kjede =
+                if (henvendelse.erHovedreferat()) {
+                    listOf(henvendelse) + children[id].orEmpty()
+                } else {
+                    children.getValue(id).sortedWith(
+                        compareBy<HenvendelseDTO> {
+                            it.meldinger!!
+                                .single()
+                                .sendtDato
+                                .toInstant()
+                        }.thenBy { it.meldinger!!.single().meldingsId },
+                    )
+                }
             require(
                 kjede.all {
                     it.fnr == henvendelse.fnr &&
