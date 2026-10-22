@@ -74,7 +74,7 @@ query hentPersondata($ident: ID!){
         gtLand
     }
     hentPerson(ident: $ident) {
-        navn {
+        navn(historikk: false) {
             fornavn
             mellomnavn
             etternavn
@@ -82,7 +82,7 @@ query hentPersondata($ident: ID!){
                 ...endringerOgMaster
             }
         }
-        kjoenn {
+        kjoenn(historikk: false) {
             kjoenn
         }
         foedselsdato {
@@ -93,10 +93,10 @@ query hentPersondata($ident: ID!){
             foedested
             foedekommune
         }
-        adressebeskyttelse {
+        adressebeskyttelse(historikk: false) {
             gradering
         }
-        statsborgerskap {
+        statsborgerskap(historikk: false) {
             land,
             gyldigFraOgMed,
             gyldigTilOgMed
@@ -112,10 +112,10 @@ query hentPersondata($ident: ID!){
               ...endringerOgMaster
             }
         }
-        folkeregisterpersonstatus {
+        folkeregisterpersonstatus(historikk: false) {
             status
         }
-        sivilstand {
+        sivilstand(historikk: false) {
             type
             gyldigFraOgMed
             relatertVedSivilstand
@@ -126,7 +126,7 @@ query hentPersondata($ident: ID!){
             gyldigFraOgMed
             gyldigTilOgMed
         }
-        kontaktinformasjonForDoedsbo {
+        kontaktinformasjonForDoedsbo(historikk: false) {
             skifteform
             attestutstedelsesdato
             personSomKontakt {
@@ -175,7 +175,7 @@ query hentPersondata($ident: ID!){
                 spraak
             }
         }
-        telefonnummer {
+        telefonnummer(historikk: false) {
             landskode
             nummer
             prioritet
@@ -213,14 +213,14 @@ query hentPersondata($ident: ID!){
                 opphoerstidspunkt
             }
         }
-        rettsligHandleevne {
+        rettsligHandleevne(historikk: false) {
             rettsligHandleevneomfang
             folkeregistermetadata {
                 gyldighetstidspunkt
                 opphoerstidspunkt
             }
         }
-        foreldreansvar {
+        foreldreansvar(historikk: false) {
             ansvar
             ansvarlig
             ansvarssubjekt
@@ -238,7 +238,7 @@ query hentPersondata($ident: ID!){
             }
             relatertPersonsRolle
         }
-        deltBosted{
+        deltBosted(historikk: false) {
             startdatoForKontrakt
             sluttdatoForKontrakt
             coAdressenavn
@@ -280,7 +280,7 @@ query hentPersondata($ident: ID!){
                 bostedskommune
             }
         }
-        kontaktadresse {
+        kontaktadresse(historikk: false) {
             gyldigFraOgMed
             gyldigTilOgMed
             metadata {
@@ -303,7 +303,7 @@ query hentPersondata($ident: ID!){
                 ...utenlandskadresseIFrittFormat
             }
         }
-        oppholdsadresse {
+        oppholdsadresse(historikk: false) {
             gyldigFraOgMed
             gyldigTilOgMed
             oppholdAnnetSted
