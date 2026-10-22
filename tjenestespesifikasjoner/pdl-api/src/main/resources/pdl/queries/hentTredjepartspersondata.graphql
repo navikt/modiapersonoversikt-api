@@ -2,7 +2,7 @@ query hentTredjepartspersondata($identer: [ID!]!){
     hentPersonBolk(identer: $identer) {
         ident
         person {
-            navn {
+            navn(historikk: false) {
                 fornavn
                 mellomnavn
                 etternavn
@@ -10,7 +10,7 @@ query hentTredjepartspersondata($identer: [ID!]!){
                     master
                 }
             }
-            kjoenn {
+            kjoenn(historikk: false) {
                 kjoenn
             }
             foedselsdato {
@@ -24,10 +24,10 @@ query hentTredjepartspersondata($identer: [ID!]!){
             doedsfall {
                 doedsdato
             }
-            adressebeskyttelse {
+            adressebeskyttelse(historikk: false) {
                 gradering
             }
-            bostedsadresse {
+            bostedsadresse(historikk: false) {
                 folkeregistermetadata {
                     ajourholdstidspunkt
                     kilde
