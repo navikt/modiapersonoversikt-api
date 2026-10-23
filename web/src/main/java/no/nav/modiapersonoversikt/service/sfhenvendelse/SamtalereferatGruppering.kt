@@ -1,118 +1,95 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO
 
-private fun HenvendelseDTO.erHovedreferat(): Boolean = kjedeId.isBlank() || kjedeId == meldinger?.singleOrNull()?.meldingsId
+private data class ReferatMedMelding(
+    val indeks: Int,
+    val referat: HenvendelseDTO,
+    val melding: MeldingDTO,
+    val meldingsId: String,
+)
+
+private fun ReferatMedMelding.erHovedreferat(): Boolean = referat.kjedeId.isBlank() || referat.kjedeId == meldingsId
+
+private val eldsteForst =
+    compareBy<ReferatMedMelding> { it.melding.sendtDato.toInstant() }
+        .thenBy { it.meldingsId }
+        .thenBy { it.indeks }
 
 internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
-    val referater = henvendelser.filter { it.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT }
-    val hovedreferater = referater.filter { it.erHovedreferat() }
-    val hovedreferaterMedId =
-        hovedreferater.map { hovedreferat ->
-            val melding = hovedreferat.meldinger?.singleOrNull()
-            require(!melding?.meldingsId.isNullOrBlank()) {
-                "Samtalereferat mangler entydig hovedmelding"
-            }
-            hovedreferat to requireNotNull(melding?.meldingsId)
-        }
-    require(hovedreferaterMedId.map { it.second }.distinct().size == hovedreferaterMedId.size) {
-        "Samtalereferater har flere hovedmeldinger med samme ID"
-    }
-    val hovedreferatId = hovedreferaterMedId.toMap()
-    val hovedreferatPerId = hovedreferaterMedId.associate { (hovedreferat, id) -> id to hovedreferat }
-    val underreferater = referater.filterNot { it.erHovedreferat() }.groupBy { it.kjedeId }
-    val indeksForEldsteReferatUtenHovedmelding =
+    val referater =
         henvendelser
             .withIndex()
-            .filter {
-                it.value.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT &&
-                    !it.value.erHovedreferat() &&
-                    it.value.kjedeId !in hovedreferatPerId
-            }.groupBy { it.value.kjedeId }
-            .mapValues { (_, referaterUtenHovedmelding) ->
-                require(referaterUtenHovedmelding.all { it.value.meldinger?.size == 1 }) {
-                    "Samtalereferat har ikke nøyaktig én melding"
-                }
-                require(
-                    referaterUtenHovedmelding.all {
-                        !it.value.meldinger
-                            ?.single()
-                            ?.meldingsId
-                            .isNullOrBlank()
-                    },
-                ) {
-                    "Samtalereferat har manglende meldings-ID"
-                }
-                referaterUtenHovedmelding
-                    .minWith(
-                        compareBy<IndexedValue<HenvendelseDTO>> {
-                            it.value.meldinger!!
-                                .single()
-                                .sendtDato
-                                .toInstant()
-                        }.thenBy {
-                            it.value.meldinger!!
-                                .single()
-                                .meldingsId
-                        }.thenBy { it.index },
-                    ).index
+            .filter { it.value.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT }
+            .map { (indeks, referat) ->
+                val melding = referat.meldinger?.singleOrNull()
+                requireNotNull(melding) { "Samtalereferat har ikke nøyaktig én melding" }
+                val meldingsId = melding.meldingsId
+                require(!meldingsId.isNullOrBlank()) { "Samtalereferat har manglende meldings-ID" }
+                ReferatMedMelding(indeks, referat, melding, meldingsId)
             }
+    // Hovedreferatet kan ha tom kjedeId; de andre referatene peker på meldingsId-en til dette referatet.
+    val referaterPerKjedeId =
+        referater.groupBy { referat ->
+            if (referat.erHovedreferat()) referat.meldingsId else referat.referat.kjedeId
+        }
+    val samledeReferaterPerIndeks =
+        referaterPerKjedeId
+            .map { (kjedeId, referaterIKjeden) ->
+                val hovedreferater = referaterIKjeden.filter { it.erHovedreferat() }
+                require(hovedreferater.size <= 1) { "Samtalereferater har flere hovedmeldinger med samme ID" }
 
-    return henvendelser.mapIndexedNotNull { index, henvendelse ->
-        if (henvendelse.henvendelseType != HenvendelseDTO.HenvendelseType.SAMTALEREFERAT) {
-            henvendelse
-        } else if (!henvendelse.erHovedreferat() && indeksForEldsteReferatUtenHovedmelding[henvendelse.kjedeId] != index) {
-            null
+                val hovedreferat = hovedreferater.singleOrNull()
+                // Uten hovedreferat velger vi det eldste, men beholder opprinnelig kjedeId som tråd-ID mot Salesforce.
+                val referatSomVises = hovedreferat ?: referaterIKjeden.minWith(eldsteForst)
+                val referaterIRekkefolge =
+                    if (hovedreferat == null) {
+                        referaterIKjeden.sortedWith(eldsteForst)
+                    } else {
+                        listOf(hovedreferat) + referaterIKjeden.filterNot { it.indeks == hovedreferat.indeks }
+                    }
+                referatSomVises.indeks to samleKjede(kjedeId, referatSomVises.referat, referaterIRekkefolge)
+            }.toMap()
+
+    return henvendelser.mapIndexedNotNull { indeks, henvendelse ->
+        if (henvendelse.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT) {
+            samledeReferaterPerIndeks[indeks]
         } else {
-            val id = if (henvendelse.erHovedreferat()) hovedreferatId.getValue(henvendelse) else henvendelse.kjedeId
-            val kjede =
-                if (henvendelse.erHovedreferat()) {
-                    listOf(henvendelse) + underreferater[id].orEmpty()
-                } else {
-                    underreferater.getValue(id).sortedWith(
-                        compareBy<HenvendelseDTO> {
-                            it.meldinger!!
-                                .single()
-                                .sendtDato
-                                .toInstant()
-                        }.thenBy { it.meldinger!!.single().meldingsId },
-                    )
-                }
-            require(
-                kjede.all {
-                    it.fnr == henvendelse.fnr &&
-                        it.aktorId == henvendelse.aktorId
-                },
-            ) { "Samtalereferater i samme kjede har ulike eiere" }
-            require(kjede.all { it.meldinger?.size == 1 }) {
-                "Samtalereferat har ikke nøyaktig én melding"
-            }
-            val referaterMedMelding = kjede.map { it to it.meldinger.orEmpty().single() }
-            val meldinger = referaterMedMelding.map { it.second }
-            require(
-                meldinger.all { !it.meldingsId.isNullOrBlank() } &&
-                    meldinger.map { it.meldingsId }.distinct().size == meldinger.size,
-            ) { "Samtalereferat har manglende eller duplikat meldings-ID" }
-            val nyesteSendtDato = meldinger.maxOf { it.sendtDato.toInstant() }
-            val nyesteReferater =
-                referaterMedMelding.filter { (_, melding) -> melding.sendtDato.toInstant() == nyesteSendtDato }
-            require(nyesteReferater.map { it.first.gjeldendeTemagruppe }.distinct().size == 1) {
-                "Samtalereferater med samme sendetidspunkt har ulike temagrupper"
-            }
-            val nyesteReferat = nyesteReferater.maxBy { (referat, _) -> referat.opprettetDato.toInstant() }.first
-
-            henvendelse.copy(
-                kjedeId = id,
-                gjeldendeTemagruppe = nyesteReferat.gjeldendeTemagruppe,
-                opprettetDato = nyesteReferat.opprettetDato,
-                meldinger = meldinger,
-                journalposter = kjede.flatMap { it.journalposter.orEmpty() },
-                markeringer = kjede.flatMap { it.markeringer.orEmpty() },
-                kasseringsDato = kjede.mapNotNull { it.kasseringsDato }.minOrNull(),
-                feilsendt = kjede.any { it.feilsendt },
-                sladding = if (kjede.any { it.sladding == true }) true else henvendelse.sladding,
-                avsluttetDato = kjede.mapNotNull { it.avsluttetDato }.maxOrNull(),
-            )
+            henvendelse
         }
     }
+}
+
+private fun samleKjede(
+    kjedeId: String,
+    referatSomVises: HenvendelseDTO,
+    referater: List<ReferatMedMelding>,
+): HenvendelseDTO {
+    require(referater.all { it.referat.fnr == referatSomVises.fnr && it.referat.aktorId == referatSomVises.aktorId }) {
+        "Samtalereferater i samme kjede har ulike eiere"
+    }
+    val meldinger = referater.map { it.melding }
+    require(referater.map { it.meldingsId }.distinct().size == referater.size) {
+        "Samtalereferat har manglende eller duplikat meldings-ID"
+    }
+    val nyesteSendtDato = meldinger.maxOf { it.sendtDato.toInstant() }
+    val nyesteReferater = referater.filter { it.melding.sendtDato.toInstant() == nyesteSendtDato }
+    require(nyesteReferater.map { it.referat.gjeldendeTemagruppe }.distinct().size == 1) {
+        "Samtalereferater med samme sendetidspunkt har ulike temagrupper"
+    }
+    val nyesteReferat = nyesteReferater.maxBy { it.referat.opprettetDato.toInstant() }.referat
+
+    return referatSomVises.copy(
+        kjedeId = kjedeId,
+        gjeldendeTemagruppe = nyesteReferat.gjeldendeTemagruppe,
+        opprettetDato = nyesteReferat.opprettetDato,
+        meldinger = meldinger,
+        journalposter = referater.flatMap { it.referat.journalposter.orEmpty() },
+        markeringer = referater.flatMap { it.referat.markeringer.orEmpty() },
+        kasseringsDato = referater.mapNotNull { it.referat.kasseringsDato }.minOrNull(),
+        feilsendt = referater.any { it.referat.feilsendt },
+        sladding = if (referater.any { it.referat.sladding == true }) true else referatSomVises.sladding,
+        avsluttetDato = referater.mapNotNull { it.referat.avsluttetDato }.maxOrNull(),
+    )
 }

@@ -174,6 +174,24 @@ internal class SamtalereferatGrupperingTest {
     }
 
     @Test
+    fun `bevarer plasseringen til hovedreferater og eldste referat uten hovedmelding`() {
+        val annen = referat("annen", "annen", HenvendelseDTO.HenvendelseType.MELDINGSKJEDE)
+        val hovedreferat = referat("", "head")
+        val underreferat = referat("head", "child")
+        val eldste = referat("missing", "eldste")
+        val nyeste =
+            referat("missing", "nyeste").copy(
+                meldinger = listOf(MeldingDTO(sendtDato = dato.plusMinutes(1), fra = fra, meldingsId = "nyeste")),
+            )
+
+        val resultat = grupperSamtalereferater(listOf(nyeste, underreferat, annen, hovedreferat, eldste))
+
+        assertThat(resultat.map { it.kjedeId }).containsExactly("annen", "head", "missing")
+        assertThat(resultat.first()).isSameAs(annen)
+        assertThat(resultat.last().meldinger?.map { it.meldingsId }).containsExactly("eldste", "nyeste")
+    }
+
+    @Test
     fun `avviser ulike eiere og ugyldige meldinger uten hovedmelding`() {
         assertThatThrownBy {
             grupperSamtalereferater(listOf(referat("", "head"), referat("head", "child").copy(fnr = "annen")))
