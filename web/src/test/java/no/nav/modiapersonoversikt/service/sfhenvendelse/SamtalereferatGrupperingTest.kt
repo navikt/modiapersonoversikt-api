@@ -137,70 +137,14 @@ internal class SamtalereferatGrupperingTest {
     }
 
     @Test
-    fun `beholder kjedeId for referat uten hovedmelding`() {
-        val referat = referat("missing", "child")
-
-        val resultat = grupperSamtalereferater(listOf(referat)).single()
-
-        assertThat(resultat.kjedeId).isEqualTo("missing")
-        assertThat(resultat.meldinger?.map { it.meldingsId }).containsExactly("child")
-    }
-
-    @Test
-    fun `grupperer referater uten hovedmelding med eldste som utgangspunkt`() {
-        val eldste = referat("missing", "eldste")
-        val mellom =
-            referat("missing", "mellom").copy(
-                meldinger = listOf(MeldingDTO(sendtDato = dato.plusMinutes(1), fra = fra, meldingsId = "mellom")),
-            )
-        val nyeste =
-            referat("missing", "nyeste").copy(
-                gjeldendeTemagruppe = "FMLI",
-                opprettetDato = dato.plusMinutes(2),
-                meldinger = listOf(MeldingDTO(sendtDato = dato.plusMinutes(2), fra = fra, meldingsId = "nyeste")),
-            )
-        val annen = referat("other-missing", "annen")
-
-        val resultat = grupperSamtalereferater(listOf(nyeste, annen, mellom, eldste))
-
-        assertThat(resultat).hasSize(2)
-        val kjede = resultat.single { it.kjedeId == "missing" }
-        assertThat(kjede.kjedeId).isEqualTo("missing")
-        assertThat(kjede.gjeldendeTemagruppe).isEqualTo("FMLI")
-        assertThat(kjede.opprettetDato).isEqualTo(nyeste.opprettetDato)
-        assertThat(kjede.meldinger?.map { it.meldingsId }).containsExactly("eldste", "mellom", "nyeste")
-        assertThat(resultat.single { it.kjedeId == "other-missing" }.meldinger?.map { it.meldingsId })
-            .containsExactly("annen")
-    }
-
-    @Test
-    fun `avviser ulike eiere og ugyldige meldinger uten hovedmelding`() {
+    fun `avviser foreldrelos melding og ulike eiere`() {
+        assertThatThrownBy { grupperSamtalereferater(listOf(referat("missing", "child"))) }
+            .isInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy {
             grupperSamtalereferater(listOf(referat("", "head"), referat("head", "child").copy(fnr = "annen")))
         }.isInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy {
             grupperSamtalereferater(listOf(referat("", "head"), referat("head", "child").copy(aktorId = "annen")))
-        }.isInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy {
-            grupperSamtalereferater(listOf(referat("missing", "eldste"), referat("missing", "nyeste").copy(fnr = "annen")))
-        }.isInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { grupperSamtalereferater(listOf(referat("missing", null))) }
-            .isInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy {
-            grupperSamtalereferater(listOf(referat("missing", "samme"), referat("missing", "samme")))
-        }.isInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy {
-            grupperSamtalereferater(
-                listOf(
-                    referat("missing", "en").copy(
-                        meldinger =
-                            listOf(
-                                MeldingDTO(sendtDato = dato, fra = fra, meldingsId = "en"),
-                                MeldingDTO(sendtDato = dato.plusMinutes(1), fra = fra, meldingsId = "to"),
-                            ),
-                    ),
-                ),
-            )
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
