@@ -7,30 +7,77 @@ private fun HenvendelseDTO.erHovedreferat(): Boolean = kjedeId.isBlank() || kjed
 internal fun grupperSamtalereferater(henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
     val referater = henvendelser.filter { it.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT }
     val hovedreferater = referater.filter { it.erHovedreferat() }
-    val headsWithId =
-        hovedreferater.map { head ->
-            val melding = head.meldinger?.singleOrNull()
+    val hovedreferaterMedId =
+        hovedreferater.map { hovedreferat ->
+            val melding = hovedreferat.meldinger?.singleOrNull()
             require(!melding?.meldingsId.isNullOrBlank()) {
                 "Samtalereferat mangler entydig hovedmelding"
             }
-            head to requireNotNull(melding?.meldingsId)
+            hovedreferat to requireNotNull(melding?.meldingsId)
         }
-    require(headsWithId.map { it.second }.distinct().size == headsWithId.size) {
+    require(hovedreferaterMedId.map { it.second }.distinct().size == hovedreferaterMedId.size) {
         "Samtalereferater har flere hovedmeldinger med samme ID"
     }
-    val headId = headsWithId.toMap()
-    val headById = headsWithId.associate { (head, id) -> id to head }
-    val children = referater.filterNot { it.erHovedreferat() }.groupBy { it.kjedeId }
-    require(children.keys.all { it in headById }) { "Samtalereferat mangler hovedmelding" }
+    val hovedreferatId = hovedreferaterMedId.toMap()
+    val hovedreferatPerId = hovedreferaterMedId.associate { (hovedreferat, id) -> id to hovedreferat }
+    val underreferater = referater.filterNot { it.erHovedreferat() }.groupBy { it.kjedeId }
+    val indeksForEldsteReferatUtenHovedmelding =
+        henvendelser
+            .withIndex()
+            .filter {
+                it.value.henvendelseType == HenvendelseDTO.HenvendelseType.SAMTALEREFERAT &&
+                    !it.value.erHovedreferat() &&
+                    it.value.kjedeId !in hovedreferatPerId
+            }.groupBy { it.value.kjedeId }
+            .mapValues { (_, referaterUtenHovedmelding) ->
+                require(referaterUtenHovedmelding.all { it.value.meldinger?.size == 1 }) {
+                    "Samtalereferat har ikke nøyaktig én melding"
+                }
+                require(
+                    referaterUtenHovedmelding.all {
+                        !it.value.meldinger
+                            ?.single()
+                            ?.meldingsId
+                            .isNullOrBlank()
+                    },
+                ) {
+                    "Samtalereferat har manglende meldings-ID"
+                }
+                referaterUtenHovedmelding
+                    .minWith(
+                        compareBy<IndexedValue<HenvendelseDTO>> {
+                            it.value.meldinger!!
+                                .single()
+                                .sendtDato
+                                .toInstant()
+                        }.thenBy {
+                            it.value.meldinger!!
+                                .single()
+                                .meldingsId
+                        }.thenBy { it.index },
+                    ).index
+            }
 
-    return henvendelser.mapNotNull { henvendelse ->
+    return henvendelser.mapIndexedNotNull { index, henvendelse ->
         if (henvendelse.henvendelseType != HenvendelseDTO.HenvendelseType.SAMTALEREFERAT) {
             henvendelse
-        } else if (!henvendelse.erHovedreferat()) {
+        } else if (!henvendelse.erHovedreferat() && indeksForEldsteReferatUtenHovedmelding[henvendelse.kjedeId] != index) {
             null
         } else {
-            val id = headId.getValue(henvendelse)
-            val kjede = listOf(henvendelse) + children[id].orEmpty()
+            val id = if (henvendelse.erHovedreferat()) hovedreferatId.getValue(henvendelse) else henvendelse.kjedeId
+            val kjede =
+                if (henvendelse.erHovedreferat()) {
+                    listOf(henvendelse) + underreferater[id].orEmpty()
+                } else {
+                    underreferater.getValue(id).sortedWith(
+                        compareBy<HenvendelseDTO> {
+                            it.meldinger!!
+                                .single()
+                                .sendtDato
+                                .toInstant()
+                        }.thenBy { it.meldinger!!.single().meldingsId },
+                    )
+                }
             require(
                 kjede.all {
                     it.fnr == henvendelse.fnr &&
