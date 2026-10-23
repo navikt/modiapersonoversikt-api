@@ -240,6 +240,55 @@ internal class SfHenvendelseServiceImplTest {
     }
 
     @Test
+    internal fun `viser referater uten hovedmelding som en trad med opprinnelig kjedeId`() {
+        every { ansattService.hentAnsattFagomrader(any()) } returns setOf("DAG")
+        val eldste =
+            dummyHenvendelse.copy(
+                henvendelseType = HenvendelseDTO.HenvendelseType.SAMTALEREFERAT,
+                kjedeId = "missing",
+                meldinger = listOf(dummyHenvendelse.meldinger!!.single().copy(meldingsId = "eldste")),
+            )
+        val nyeste =
+            eldste.copy(
+                gjeldendeTemagruppe = "FMLI",
+                opprettetDato = eldste.opprettetDato.plusMinutes(1),
+                meldinger =
+                    listOf(
+                        eldste.meldinger!!.single().copy(
+                            meldingsId = "nyeste",
+                            sendtDato =
+                                eldste.meldinger!!
+                                    .single()
+                                    .sendtDato
+                                    .plusMinutes(1),
+                        ),
+                    ),
+                journalposter = dummyHenvendelse.medJournalpost("SYK").journalposter,
+            )
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 1, 100) } returns
+            PaginertHenvendelseListeDTO(listOf(nyeste), 1, 100, 2, true)
+        every { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 2, 100) } returns
+            PaginertHenvendelseListeDTO(listOf(eldste), 2, 100, 2, false)
+
+        val resultat = sfHenvendelseServiceImpl.hentHenvendelser(EksternBruker.AktorId(dummyHenvendelse.aktorId), "0101")
+
+        assertThat(resultat).hasSize(1)
+        assertThat(resultat.single().kjedeId).isEqualTo("missing")
+        assertThat(resultat.single().opprettetDato).isEqualTo(nyeste.opprettetDato)
+        assertThat(resultat.single().gjeldendeTemagruppe).isEqualTo("FMLI")
+        assertThat(resultat.single().meldinger?.map { it.meldingsId }).containsExactly("eldste", "nyeste")
+        assertThat(
+            resultat
+                .single()
+                .meldinger!!
+                .map { it.fritekst }
+                .distinct(),
+        ).containsExactly(
+            "Du kan ikke se innholdet i denne henvendelsen fordi tråden er journalført på et tema du ikke har tilgang til.",
+        )
+    }
+
+    @Test
     internal fun `avviser ufullstendig paginering`() {
         every { ansattService.hentAnsattFagomrader(any()) } returns emptySet()
         every { henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(any(), any(), 1, 100) } returns
