@@ -133,18 +133,25 @@ class SfHenvendelseServiceImpl(
 
         while (hasNextPage) {
             val res =
-                henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(aktorId, callId, page, pageSize)
+                henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(aktorId, callId, page, pageSize)
                     ?: throw ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "Feil ved henting av paginerte henvendelser",
                     )
 
+            val tomForsteSide = page == 1 && res.totalPages == 0 && res.data.isEmpty()
+            val riktigSidenummer = res.currentPage == page
+            val riktigAntallSider = res.totalPages >= page || tomForsteSide
+            val riktigNesteSide = res.hasNextPage == (page < res.totalPages)
+            check(riktigSidenummer && riktigAntallSider && riktigNesteSide) {
+                "Ugyldig paginering fra Salesforce"
+            }
             allHenvendelser.addAll(res.data)
             hasNextPage = res.hasNextPage
             page = res.currentPage + 1
         }
 
-        return loggFeilSomErSpesialHandtert(bruker, allHenvendelser)
+        return loggFeilSomErSpesialHandtert(bruker, grupperSamtalereferater(allHenvendelser))
             .asSequence()
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
