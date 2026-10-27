@@ -1,6 +1,4 @@
-FROM gcr.io/distroless/java21-debian13
-
-USER nonroot
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-21
 
 COPY /proxy/target/modiabrukerdialog.jar app.jar
-CMD ["app.jar"]
+CMD ["-jar", "app.jar"]
