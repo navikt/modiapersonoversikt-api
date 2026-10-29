@@ -176,6 +176,14 @@ class SakstemaServiceImpl
 
         override fun getTemanavnForTemakode(temakode: String): ResultatWrapper<String> {
             val temanavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentVerdiEllerNull(temakode)
+            if (temakode == "AVP") {
+                LOG.info(
+                    "AVP-diagnostikk temakode={} funnet={} verdi={}",
+                    temakode,
+                    temanavn != null,
+                    temanavn,
+                )
+            }
             return if (temanavn == null) {
                 LOG.warn("Fant ikke temanavn for temakode $temakode. Bruker temakode som generisk tittel.")
                 ResultatWrapper(temakode).withEkstraFeilendeSystem(Baksystem.KODEVERK)

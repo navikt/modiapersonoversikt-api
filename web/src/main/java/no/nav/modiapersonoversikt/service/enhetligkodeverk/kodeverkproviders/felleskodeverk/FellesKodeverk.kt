@@ -8,11 +8,13 @@ import no.nav.modiapersonoversikt.config.interceptor.TjenestekallLoggingIntercep
 import no.nav.modiapersonoversikt.consumer.kodeverk.generated.apis.KodeverkApi
 import no.nav.modiapersonoversikt.consumer.kodeverk.generated.models.GetKodeverkKoderBetydningerResponseDTO
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.utils.DownstreamApi
 import no.nav.modiapersonoversikt.utils.createMachineToMachineToken
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
@@ -38,7 +40,33 @@ object FellesKodeverk {
                     "Feil ved henting av kodverk.",
                 )
 
-            return EnhetligKodeverk.Kodeverk(kodeverkNavn, parseTilKodeverk(respons))
+            if (kodeverkNavn == "Arkivtemaer") {
+                respons.betydninger.forEach { (temakode, betydninger) ->
+                    LOG.info(
+                        "Arkivtemaer-diagnostikk temakode={} betydninger={}",
+                        temakode,
+                        OkHttpUtils.objectMapper.writeValueAsString(betydninger),
+                    )
+                }
+            }
+
+            val kodeverk = parseTilKodeverk(respons)
+            if (kodeverkNavn == "Arkivtemaer") {
+                val betydninger = respons.betydninger["AVP"].orEmpty()
+                LOG.info(
+                    "AVP-diagnostikk kodeverk={} AVP-funnet={} antall-betydninger={} bokmålstermer={} AVP-verdi={}",
+                    kodeverkNavn,
+                    kodeverk.containsKey("AVP"),
+                    betydninger.size,
+                    betydninger.map { it.beskrivelser["nb"]?.term },
+                    kodeverk["AVP"],
+                )
+            }
+            return EnhetligKodeverk.Kodeverk(kodeverkNavn, kodeverk)
+        }
+
+        companion object {
+            private val LOG = LoggerFactory.getLogger(Provider::class.java)
         }
     }
 
