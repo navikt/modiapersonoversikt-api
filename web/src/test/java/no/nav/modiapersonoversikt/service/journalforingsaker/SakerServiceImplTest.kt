@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.consumer.saf.generated.enums.Tema
 import no.nav.modiapersonoversikt.consumer.saf.generated.hentbrukerssaker.Sak
 import no.nav.modiapersonoversikt.infrastructure.http.GenericGraphQlResponse
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.journalforingsaker.JournalforingSak.*
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerServiceImpl.Companion.leggTilFagsystemNavn
 import no.nav.modiapersonoversikt.service.journalforingsaker.SakerServiceImpl.Companion.leggTilTemaNavn
@@ -109,6 +110,26 @@ class SakerServiceImplTest {
         sakerPerTema.forEach { (tema, saker) ->
             assertThat("Tema $tema skal ha nøyaktig én generell sak", saker.size, `is`(1))
         }
+    }
+
+    @Test
+    fun `oppretter generell AVP sak med temanavn fra kodeverk`() {
+        every { safService.hentSaker(any()) } returns GenericGraphQlResponse()
+        every { kodeverk.hentKodeverk<String, String>(KodeverkConfig.ARKIVTEMA) } returns
+            EnhetligKodeverk.Kodeverk("Arkivtemaer", mapOf("AVP" to "Aktivitetspenger"))
+
+        val avpSaker =
+            sakerService
+                .hentSaker(FNR)
+                .saker
+                .filter { it.temaKode == "AVP" && it.sakstype == SAKSTYPE_GENERELL }
+
+        assertThat(avpSaker.size, `is`(1))
+        val avpSak = avpSaker.single()
+        assertThat(avpSak.temaNavn, `is`("Aktivitetspenger"))
+        assertThat(avpSak.fagsystemKode, `is`("FS22"))
+        assertThat(avpSak.sakstype, `is`(SAKSTYPE_GENERELL))
+        assertThat(avpSak.fagsystemSaksId, nullValue())
     }
 
     @Test
