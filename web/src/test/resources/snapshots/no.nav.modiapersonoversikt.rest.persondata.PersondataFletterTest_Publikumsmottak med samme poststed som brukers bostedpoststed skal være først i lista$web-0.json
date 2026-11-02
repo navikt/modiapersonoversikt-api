@@ -75,7 +75,8 @@
             "etternavn" : "Person",
             "fornavn" : "Dødsbo",
             "mellomnavn" : null
-          } ] ]
+          } ] ],
+          "skjulingsaarsak" : null
         }
       },
       "adresse" : {
@@ -124,7 +125,8 @@
         "fornavn" : "Adressebeskyttet",
         "mellomnavn" : null
       } ] ],
-      "rolle" : "BARN"
+      "rolle" : "BARN",
+      "skjulingsaarsak" : null
     }, {
       "adressebeskyttelse" : [ "java.util.Collections$SingletonList", [ {
         "beskrivelse" : "UGRADERT",
@@ -141,7 +143,8 @@
         "fornavn" : "Datteren",
         "mellomnavn" : null
       } ] ],
-      "rolle" : "BARN"
+      "rolle" : "BARN",
+      "skjulingsaarsak" : null
     }, {
       "adressebeskyttelse" : [ "kotlin.collections.EmptyList", [ ] ],
       "alder" : 21,
@@ -158,7 +161,8 @@
         "fornavn" : "Tredjepart",
         "mellomnavn" : "Relasjon"
       } ] ],
-      "rolle" : "MEDMOR"
+      "rolle" : "MEDMOR",
+      "skjulingsaarsak" : null
     } ] ],
     "foreldreansvar" : [ "java.util.ArrayList", [ {
       "ansvar" : "felles",
@@ -168,7 +172,8 @@
           "etternavn" : "MedForeldreansvar",
           "fornavn" : "Person",
           "mellomnavn" : null
-        }
+        },
+        "skjulingsaarsak" : null
       },
       "ansvarsubject" : {
         "ident" : "98765432100",
@@ -176,7 +181,8 @@
           "etternavn" : "Hans",
           "fornavn" : "Datteren",
           "mellomnavn" : null
-        }
+        },
+        "skjulingsaarsak" : null
       }
     } ] ],
     "fullmakt" : [ "kotlin.collections.EmptyList", [ ] ],
@@ -209,7 +215,8 @@
         "etternavn" : "MedFullmakt",
         "fornavn" : "Person",
         "mellomnavn" : null
-      }
+      },
+      "skjulingsaarsak" : null
     } ] ],
     "geografiskTilknytning" : "0123",
     "historiskeBostedAdresser" : [ "java.util.Arrays$ArrayList", [ {
@@ -275,6 +282,7 @@
         "mellomnavn" : null
       },
       "omfang" : "Ikke oppgitt",
+      "skjulingsaarsak" : null,
       "tjenesteOppgaver" : null,
       "vergesakstype" : "Voksen"
     } ] ],
@@ -438,7 +446,8 @@
           "etternavn" : "Relasjon",
           "fornavn" : "Gift",
           "mellomnavn" : null
-        } ] ]
+        } ] ],
+        "skjulingsaarsak" : null
       },
       "type" : {
         "beskrivelse" : "Gift",
@@ -494,6 +503,7 @@
         "mellomnavn" : null
       },
       "omfang" : "Ikke oppgitt",
+      "skjulingsaarsak" : null,
       "tjenesteOppgaver" : null,
       "vergesakstype" : "Voksen"
     } ] ]

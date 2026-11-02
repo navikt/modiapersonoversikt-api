@@ -14,6 +14,34 @@ Spørsmål knyttet til koden eller prosjektet kan rettes mot:
 
 Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.no/pages/viewpage.action?pageId=272512650
 
+### Tilgang til tredjepersoner
+
+Persondata bruker Tilgangsmaskinens bulk-endpoint med `KJERNE_REGELTYPE` for tredjepersoner.
+Tilgangskontrollen for hovedpersonen er uendret.
+For tredjepersoner med ident kreves godkjenning og et entydig, ikke-tomt PDL-resultat før persondata og eventuell kontaktinformasjon fra KRR returneres.
+Relasjoner til avviste personer beholdes i de eksisterende responsfeltene, med tomme persondata.
+Dette gjelder også identifiserte personer med uavklart tilgang eller manglende PDL-data.
+Ident er `null` der kontrakten tillater det, ellers en tom streng. Navnelister og andre personopplysninger er tomme eller `null`.
+Fullmektigens ident fjernes også fra den innbakte fullmakten, og endringsloggen utelates for skjulte fullmektiger.
+Dødsbokontaktens adresse tømmes når personen er skjult. Godkjente personer påvirkes ikke.
+
+Hver personoppføring i en relasjon har feltet `skjulingsaarsak`.
+`MANGLER_TILGANG` betyr at personen ble avvist. `UAVKLART` betyr at tilgangen eller PDL-dataene ikke kunne avklares.
+Feltet er `null` for godkjente personer med et entydig PDL-resultat og for personer uten ident.
+Dette gjelder sivilstandsrelasjoner, forelder-barn-relasjoner, fullmektiger, gjeldende og historiske vergemål og dødsbokontakter.
+I foreldreansvar har `ansvarlig` og `ansvarsubject` hver sin `skjulingsaarsak`.
+Frontenden kan dermed vise at en bestemt relasjon finnes, og hvorfor personopplysningene er tomme.
+Feltet oppgir ikke hvilken tilgangsregel som ga avslag.
+Tekniske feil i tilgangssjekken gir også `TILGANGSMASKINEN_TREDJEPARTSPERSONER` i `feilendeSystemer`.
+Personer uten ident beholder tidligere mapping fra PDL, inkludert navn og øvrige eksisterende felt i forelder-barn-relasjoner, foreldreansvar, vergemål og dødsbokontakter.
+Disse personene kontrolleres ikke av Tilgangsmaskinen og får ikke en skjulingsårsak.
+Advokat- og organisasjonskontakter beholder også tidligere mapping.
+
+**TODO før produksjon:** Bekreft at Tilgangsmaskinen har rettet bulk-feilen der gyldig enkelttilgang
+kan overstyre avslag fra kjernereglene. Verifiser dette i Navs dev-miljø, inkludert kode 6/7,
+skjerming og habilitet, før denne endringen merges til `master`.
+En TODO blokkerer ikke deployment: workflowen deployer automatisk til produksjon fra `master`.
+
 ## Git hooks
 
 Aktiver pre-commit-hooken for å kjøre linting før hver commit:

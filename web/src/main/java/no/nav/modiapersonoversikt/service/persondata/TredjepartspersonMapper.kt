@@ -15,39 +15,29 @@ class TredjepartspersonMapper(
     fun lagTredjepartsperson(
         ident: String,
         person: Person?,
-        tilganger: PersondataService.Tilganger,
         kontaktinformasjonTredjepartsperson: Persondata.DigitalKontaktinformasjonTredjepartsperson?,
     ): Persondata.TredjepartsPerson? {
         if (person == null) return null
         val fodselsdato = person.foedselsdato.mapNotNull { it.foedselsdato }
-        val harTilgang = person.harTilgang(tilganger)
         return Persondata.TredjepartsPerson(
             fnr = ident,
             navn =
                 person.navn
                     .prioriterKildesystem()
-                    .mapNotNull {
-                        if (harTilgang) {
-                            Persondata.Navn(
-                                fornavn = it.fornavn,
-                                mellomnavn = it.mellomnavn,
-                                etternavn = it.etternavn,
-                            )
-                        } else {
-                            null
-                        }
+                    .map {
+                        Persondata.Navn(
+                            fornavn = it.fornavn,
+                            mellomnavn = it.mellomnavn,
+                            etternavn = it.etternavn,
+                        )
                     },
-            fodselsdato = if (harTilgang) fodselsdato else emptyList(),
-            alder = if (harTilgang) hentAlder(fodselsdato) else null,
-            kjonn = if (harTilgang) hentKjonn(person) else emptyList(),
+            fodselsdato = fodselsdato,
+            alder = hentAlder(fodselsdato),
+            kjonn = hentKjonn(person),
             adressebeskyttelse = hentAdressebeskyttelse(person.adressebeskyttelse),
             bostedAdresse =
                 person.bostedsadresse.mapNotNull {
-                    if (harTilgang) {
-                        hentBostedAdresse(it)
-                    } else {
-                        null
-                    }
+                    hentBostedAdresse(it)
                 },
             dodsdato = person.doedsfall.mapNotNull { it.doedsdato },
             digitalKontaktinformasjon = kontaktinformasjonTredjepartsperson,
@@ -169,30 +159,6 @@ class TredjepartspersonMapper(
                 }
             Persondata.KodeBeskrivelse(kode = adressebeskyttelse, beskrivelse = kodebeskrivelse.beskrivelse)
         }
-
-    private fun Person?.harTilgang(tilganger: PersondataService.Tilganger): Boolean {
-        val person = this ?: return false
-        var kode = 0
-        val adressebeskyttelse = person.adressebeskyttelse
-        for (beskyttelse in adressebeskyttelse) {
-            if (beskyttelse.gradering == AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND) {
-                kode = 6
-                break
-            } else if (beskyttelse.gradering == AdressebeskyttelseGradering.STRENGT_FORTROLIG) {
-                kode = 6
-                break
-            } else if (beskyttelse.gradering == AdressebeskyttelseGradering.FORTROLIG) {
-                kode = 7
-                break
-            }
-        }
-
-        return when (kode) {
-            6 -> tilganger.kode6
-            7 -> tilganger.kode7
-            else -> true
-        }
-    }
 
     private fun List<Navn>.prioriterKildesystem(): List<Navn> = this.sortedBy { MasterPrioritet[it.metadata.master] }
 }

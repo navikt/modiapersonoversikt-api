@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.consumer.krr.Krr
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsmaskinen
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -27,6 +28,7 @@ open class PersondataConfig {
         kodeverk: EnhetligKodeverk.Service,
         representasjonApi: RepresentasjonApi,
         tjenestekallLogger: TjenestekallLogger,
+        tilgangsmaskinen: Tilgangsmaskinen,
     ): PersondataService =
         PersondataServiceImpl(
             pdl,
@@ -39,5 +41,6 @@ open class PersondataConfig {
             policyEnforcementPoint,
             kodeverk,
             tjenestekallLogger,
+            tilgangsmaskinen,
         )
 }

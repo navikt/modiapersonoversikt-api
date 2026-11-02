@@ -8,6 +8,7 @@ sealed class PersondataResult<T>(
         PROVIDED_VALUE,
         PDL_GT,
         PDL_TREDJEPARTSPERSONER,
+        TILGANGSMASKINEN_TREDJEPARTSPERSONER,
         EGEN_ANSATT,
         DKIF,
         DKIF_TREDJEPARTSPERSONER,

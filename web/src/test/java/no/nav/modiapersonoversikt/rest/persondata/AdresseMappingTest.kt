@@ -9,7 +9,6 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
 import no.nav.modiapersonoversikt.service.persondata.PersondataResult
 import no.nav.modiapersonoversikt.service.persondata.PersondataResult.InformasjonElement
-import no.nav.modiapersonoversikt.service.persondata.PersondataService
 import no.nav.modiapersonoversikt.service.persondata.TredjepartspersonMapper
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.junit.jupiter.api.Assertions
@@ -85,7 +84,6 @@ internal class AdresseMappingTest {
                 .lagTredjepartsperson(
                     barnFnr,
                     tredjepartsPerson,
-                    PersondataService.Tilganger(kode6 = true, kode7 = true),
                     kontaktinformasjonTredjepartsperson,
                 )
 
@@ -193,7 +191,6 @@ internal class AdresseMappingTest {
                 .lagTredjepartsperson(
                     barnFnr,
                     tredjepartsPerson,
-                    PersondataService.Tilganger(kode6 = true, kode7 = true),
                     kontaktinformasjonTredjepartsperson,
                 )
 

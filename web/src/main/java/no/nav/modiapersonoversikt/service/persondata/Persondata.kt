@@ -12,6 +12,11 @@ object Persondata {
         val person: Person,
     )
 
+    enum class Skjulingsaarsak {
+        MANGLER_TILGANG,
+        UAVKLART,
+    }
+
     data class Person(
         val fnr: String,
         val personIdent: String,
@@ -66,6 +71,7 @@ object Persondata {
         val bostedAdresse: List<Adresse>,
         val dodsdato: List<LocalDate>,
         val digitalKontaktinformasjon: DigitalKontaktinformasjonTredjepartsperson?,
+        val skjulingsaarsak: Skjulingsaarsak? = null,
     )
 
     data class KodeBeskrivelse<T>(
@@ -107,6 +113,7 @@ object Persondata {
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val harSammeAdresse: Boolean,
         val dodsdato: List<LocalDate>,
+        val skjulingsaarsak: Skjulingsaarsak? = null,
     )
 
     data class Sikkerhetstiltak(
@@ -209,6 +216,7 @@ object Persondata {
         val fnr: String?,
         val navn: List<Navn>,
         val fodselsdato: LocalDate?,
+        val skjulingsaarsak: Skjulingsaarsak? = null,
     )
 
     data class OrganisasjonSomAdressat(
@@ -259,6 +267,7 @@ object Persondata {
         val navn: Navn?,
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
         val fullmakt: Fullmakt,
+        val skjulingsaarsak: Skjulingsaarsak? = null,
     )
 
     data class Fullmakt(
@@ -305,6 +314,7 @@ object Persondata {
         val embete: String?,
         val gyldighetsPeriode: GyldighetsPeriode?,
         val historisk: Boolean = false,
+        val skjulingsaarsak: Skjulingsaarsak? = null,
     )
 
     data class RettsligHandleevne(
@@ -321,6 +331,7 @@ object Persondata {
     data class NavnOgIdent(
         val navn: Navn?,
         val ident: String?,
+        val skjulingsaarsak: Skjulingsaarsak? = null,
     )
 
     data class DeltBosted(
@@ -351,6 +362,7 @@ object Persondata {
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val harSammeAdresse: Boolean,
         val dodsdato: List<LocalDate>,
+        val skjulingsaarsak: Skjulingsaarsak? = null,
     )
 
     enum class Kjonn {
@@ -420,6 +432,6 @@ object Persondata {
     fun TredjepartsPerson?.asNavnOgIdent() =
         when (this) {
             null -> null
-            else -> NavnOgIdent(this.navn.firstOrNull(), this.fnr)
+            else -> NavnOgIdent(this.navn.firstOrNull(), this.fnr.takeIf { it.isNotEmpty() }, this.skjulingsaarsak)
         }
 }
