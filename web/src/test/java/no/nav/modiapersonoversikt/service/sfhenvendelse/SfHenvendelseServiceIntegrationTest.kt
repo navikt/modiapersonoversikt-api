@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
@@ -37,7 +38,7 @@ internal class SfHenvendelseServiceIntegrationTest {
 
     @Test
     fun `kan hente meldinger`() {
-        wiremock.get {
+        wiremock.get(WireMock.urlPathEqualTo("/henvendelseinfo/henvendelseliste/v2")) {
             status(200)
             json(meldinger)
         }
@@ -47,7 +48,7 @@ internal class SfHenvendelseServiceIntegrationTest {
 
             AuthContextUtils.withContext(testSubject) {
                 val api = SfHenvendelseApiFactory.createHenvendelseInfoApi(httpClient)
-                val result = api.henvendelseinfoHenvendelselisteGet("aktorid", "coorId")
+                val result = api.henvendelseinfoHenvendelselisteV2Get("aktorid", "coorId")
                 assertThat(result?.data).hasSize(1)
             }
         }
