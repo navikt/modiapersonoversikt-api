@@ -23,7 +23,7 @@ class JavaTimeSerializationTest {
     }
 
     @Test
-    fun `OffsetDateTime deserialiserer frå ISO-string`() {
+    fun `OffsetDateTime deserialiserer fra ISO-string`() {
         val expected = OffsetDateTime.parse("2024-01-15T10:30:00Z")
         val result = jacksonTester.parse("""{"value":"2024-01-15T10:30:00Z"}""")
 

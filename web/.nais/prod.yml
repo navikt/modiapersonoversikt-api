@@ -9,6 +9,9 @@ spec:
   envFrom:
     - secret: modiapersonoversikt-api-unleash-api-token
   image: "{{image}}"
+  valkey:
+    - instance: modiapersonoversikt-api
+      access: readwrite
   port: 8080
   liveness:
     path: /modiapersonoversikt-api/internal/isAlive
@@ -112,6 +115,8 @@ spec:
           namespace: personoversikt
           cluster: prod-fss
   env:
+    - name: OTEL_INSTRUMENTATION_LETTUCE_ENABLED
+      value: "false"
     - name: APP_ENVIRONMENT_NAME
       value: "p"
     - name: MS_GRAPH_URL

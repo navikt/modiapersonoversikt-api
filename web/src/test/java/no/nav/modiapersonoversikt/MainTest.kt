@@ -25,6 +25,7 @@ object MainTest {
             .initializers(localBeans)
             .lazyInitialization(true)
             .profiles("local")
+            .properties("cache.backend=caffeine")
             .run(*args)
     }
 

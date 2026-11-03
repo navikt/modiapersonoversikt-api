@@ -1,0 +1,11 @@
+services:
+  valkey:
+    image: valkey/valkey:9.1
+    command: ["valkey-server", "--requirepass", "test-password", "--save", "", "--appendonly", "no"]
+    ports:
+      - "127.0.0.1:16379:6379"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-a", "test-password", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 10

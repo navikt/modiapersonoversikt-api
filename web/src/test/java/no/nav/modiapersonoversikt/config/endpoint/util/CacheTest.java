@@ -16,6 +16,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Arrays;
 
@@ -24,6 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {CacheConfig.class, CacheTestConfig.class})
+@TestPropertySource(properties = "cache.backend=caffeine")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class CacheTest {
     static class ContainingMatcher extends BaseMatcher<Object> {
