@@ -158,7 +158,7 @@ internal class PersondataServiceImplTest {
     }
 
     @Test
-    fun `viser relasjonstyper for avviste og uavklarte personer uten identitetsopplysninger`() {
+    fun `beholder innebygde relasjonsdata uten a hente avviste og uavklarte personer`() {
         val tredjeparter =
             listOf(
                 fullmaktPerson.fullmektig,
@@ -206,14 +206,22 @@ internal class PersondataServiceImplTest {
                     ?.skjulingsaarsak,
             )
             assertEquals(
-                aarsak,
+                null,
                 person.dodsbo
                     .single()
                     .adressat.personSomAdressat
                     ?.skjulingsaarsak,
             )
-            assertEquals(aarsak, person.vergemal.single().skjulingsaarsak)
-            assertEquals(aarsak, person.historiskeVergemal.single().skjulingsaarsak)
+            assertEquals(
+                "Gateveien",
+                person.dodsbo
+                    .single()
+                    .adresse.linje1,
+            )
+            assertEquals(gittNavn("Person Vergemål"), person.vergemal.single().navn)
+            assertEquals(gittNavn("Person HistoriskVergemål"), person.historiskeVergemal.single().navn)
+            assertEquals(null, person.vergemal.single().skjulingsaarsak)
+            assertEquals(null, person.historiskeVergemal.single().skjulingsaarsak)
             val barn = person.forelderBarnRelasjon.filter { it.rolle == Persondata.ForelderBarnRelasjonRolle.BARN }
             assertEquals(
                 forelderBarnRelasjonData.count { !it.relatertPersonsIdent.isNullOrBlank() },
@@ -233,6 +241,36 @@ internal class PersondataServiceImplTest {
         }
         verify(exactly = 0) { pdl.hentTredjepartspersondata(any()) }
         tredjeparter.forEach { verify(exactly = 0) { krrService.hentDigitalKontaktinformasjon(it) } }
+    }
+
+    @Test
+    fun `godkjenning uten PDL-treff beholder innebygde vergenavn og dodsboadresse`() {
+        gittPersonMedFullmektige(inkluderRelasjoner = true)
+        every { tilgangsmaskinen.sjekkTilganger(any(), any()) } answers {
+            secondArg<List<String>>().associateWith { TredjepersonTilgang.GODKJENT }
+        }
+        every { pdl.hentTredjepartspersondata(any()) } returns emptyList()
+
+        val person = persondataServiceImpl.hentPerson("12345678910").person
+
+        assertEquals(gittNavn("Person Vergemål"), person.vergemal.single().navn)
+        assertEquals(gittNavn("Person HistoriskVergemål"), person.historiskeVergemal.single().navn)
+        assertEquals(null, person.vergemal.single().ident)
+        assertEquals(null, person.vergemal.single().skjulingsaarsak)
+        assertEquals(
+            "Gateveien",
+            person.dodsbo
+                .single()
+                .adresse.linje1,
+        )
+        assertEquals(
+            null,
+            person.dodsbo
+                .single()
+                .adressat.personSomAdressat
+                ?.skjulingsaarsak,
+        )
+        verify(exactly = 1) { pdl.hentTredjepartspersondata(any()) }
     }
 
     @Test

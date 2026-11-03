@@ -787,16 +787,17 @@ class PersondataFletter(
     private fun hentForeldreansvar(data: Data): List<Persondata.Foreldreansvar> =
         data.persondata.foreldreansvar.map { forelderansvar ->
             val ansvarligUtenIdentifikatorNavn =
-                if (forelderansvar.ansvarlig.isNullOrBlank()) {
-                    forelderansvar.ansvarligUtenIdentifikator?.navn?.let(::hentNavn)
-                } else {
-                    null
-                }
-            val ansvarlig = data.hentTredjeperson(forelderansvar.ansvarlig).asNavnOgIdent()
+                forelderansvar.ansvarligUtenIdentifikator?.navn?.let(::hentNavn)
+            val ansvarlig =
+                data.tredjepartsPerson
+                    .getOrElse(emptyMap())[forelderansvar.ansvarlig]
+                    .asNavnOgIdent()
             val ansvarligsubject = data.hentTredjeperson(forelderansvar.ansvarssubjekt).asNavnOgIdent()
             Persondata.Foreldreansvar(
                 ansvar = forelderansvar.ansvar ?: "Kunne ikke hente type ansvar",
-                ansvarlig = hentAnsvarlig(ansvarlig, ansvarligUtenIdentifikatorNavn),
+                ansvarlig =
+                    hentAnsvarlig(ansvarlig, ansvarligUtenIdentifikatorNavn)
+                        ?: data.hentTredjeperson(forelderansvar.ansvarlig).asNavnOgIdent(),
                 ansvarsubject = ansvarligsubject,
             )
         }
@@ -836,12 +837,9 @@ class PersondataFletter(
 
     private fun hentDodsbo(data: Data): List<Persondata.Dodsbo> =
         data.persondata.kontaktinformasjonForDoedsbo.map { dodsbo ->
-            val skjultKontakt =
-                !dodsbo.personSomKontakt?.identifikasjonsnummer.isNullOrBlank() &&
-                    !data.harTredjeperson(dodsbo.personSomKontakt?.identifikasjonsnummer)
             Persondata.Dodsbo(
                 adressat = hentAdressat(dodsbo, data),
-                adresse = if (skjultKontakt) Persondata.Adresse(linje1 = "", sistEndret = null) else hentAdresse(dodsbo.adresse),
+                adresse = hentAdresse(dodsbo.adresse),
                 registrert = dodsbo.attestutstedelsesdato,
                 skifteform =
                     when (dodsbo.skifteform) {
@@ -878,16 +876,11 @@ class PersondataFletter(
     ): Persondata.PersonSomAdressat? {
         val adressat = dodsbo.personSomKontakt ?: return null
         val adressatPerson = data.hentTredjeperson(adressat.identifikasjonsnummer)
-        if (!adressat.identifikasjonsnummer.isNullOrBlank() && !data.harTredjeperson(adressat.identifikasjonsnummer)) {
-            return Persondata.PersonSomAdressat(
-                fnr = null,
-                navn = emptyList(),
-                fodselsdato = null,
-                skjulingsaarsak = data.hentSkjulingsaarsak(adressat.identifikasjonsnummer),
-            )
-        }
         return Persondata.PersonSomAdressat(
-            fnr = adressat.identifikasjonsnummer,
+            fnr =
+                adressat.identifikasjonsnummer.takeIf {
+                    it.isNullOrBlank() || data.harTredjeperson(it)
+                },
             navn =
                 adressatPerson?.navn?.takeIf { it.isNotEmpty() }
                     ?: adressat.personnavn?.let { listOf(hentNavn(it)) }
@@ -976,12 +969,7 @@ class PersondataFletter(
 
             Persondata.Verge(
                 ident = if (ident.isNullOrBlank() || data.harTredjeperson(ident)) ident else null,
-                navn =
-                    if (ident.isNullOrBlank() || data.harTredjeperson(ident)) {
-                        motpart?.navn?.firstOrNull() ?: navn
-                    } else {
-                        null
-                    },
+                navn = motpart?.navn?.firstOrNull() ?: navn,
                 vergesakstype = hentVergemalType(vergemal.type),
                 omfang = hentVergemalOmfang(vergemal.vergeEllerFullmektig.omfang),
                 tjenesteOppgaver = hentTjenesteOppgaver(vergemal.vergeEllerFullmektig.tjenesteomraade),
@@ -992,7 +980,7 @@ class PersondataFletter(
                         vergemal.folkeregistermetadata?.opphoerstidspunkt,
                     ),
                 historisk = vergemal.metadata.historisk,
-                skjulingsaarsak = motpart?.skjulingsaarsak,
+                skjulingsaarsak = if (navn != null) null else motpart?.skjulingsaarsak,
             )
         }
 
@@ -1233,7 +1221,7 @@ class PersondataFletter(
                         ForelderBarnRelasjonRolle.BARN -> Persondata.ForelderBarnRelasjonRolle.BARN
                         else -> Persondata.ForelderBarnRelasjonRolle.UKJENT
                     }
-                if (relasjon.relatertPersonsIdent.isNullOrBlank() && relasjon.relatertPersonUtenFolkeregisteridentifikator != null) {
+                if (relasjon.relatertPersonUtenFolkeregisteridentifikator != null) {
                     val tredjepartsPerson = requireNotNull(relasjon.relatertPersonUtenFolkeregisteridentifikator)
                     Persondata.ForelderBarnRelasjon(
                         ident = null,

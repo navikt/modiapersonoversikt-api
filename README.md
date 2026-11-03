@@ -18,16 +18,22 @@ Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.
 
 Persondata bruker Tilgangsmaskinens bulk-endpoint med `KJERNE_REGELTYPE` for tredjepersoner.
 Tilgangskontrollen for hovedpersonen er uendret.
-For tredjepersoner med ident kreves godkjenning og et entydig, ikke-tomt PDL-resultat før persondata og eventuell kontaktinformasjon fra KRR returneres.
-Relasjoner til avviste personer beholdes i de eksisterende responsfeltene, med tomme persondata.
+For tredjepersoner med ident kreves godkjenning og et entydig, ikke-tomt PDL-resultat før opplysninger fra eget personoppslag og eventuell kontaktinformasjon fra KRR returneres.
+Relasjoner til avviste personer beholdes i de eksisterende responsfeltene, med tomme felt for opplysninger som bare kan hentes fra tredjepersonen.
 Dette gjelder også identifiserte personer med uavklart tilgang eller manglende PDL-data.
-Ident er `null` der kontrakten tillater det, ellers en tom streng. Navnelister og andre personopplysninger er tomme eller `null`.
+Skjult ident er `null` der kontrakten tillater det, ellers en tom streng. Skjulte navnelister er tomme, og andre skjulte personopplysninger er tomme eller `null`.
 Fullmektigens ident fjernes også fra den innbakte fullmakten, og endringsloggen utelates for skjulte fullmektiger.
-Dødsbokontaktens adresse tømmes når personen er skjult. Godkjente personer påvirkes ikke.
+
+Innebygde opplysninger på brukerens PDL-post beholder tidligere prioritet og brukes uavhengig av tredjepersonens tilgang og eget PDL-treff.
+Forelder-barn-relasjoner bruker innebygde personopplysninger når de finnes, også når relasjonen har ident.
+Foreldreansvar bruker innebygd navn når ansvarlig ikke finnes i det godkjente personresultatet.
+Gjeldende og historiske vergemål bruker innebygd navn når personoppslaget ikke gir navn.
+Dødsbokontakter beholder innebygd navn som alternativ, samt fødselsdato og adresse fra dødsboposten.
+Ident skjules fortsatt når tredjepersonen ikke har et godkjent, entydig PDL-resultat.
 
 Hver personoppføring i en relasjon har feltet `skjulingsaarsak`.
 `MANGLER_TILGANG` betyr at personen ble avvist. `UAVKLART` betyr at tilgangen eller PDL-dataene ikke kunne avklares.
-Feltet er `null` for godkjente personer med et entydig PDL-resultat og for personer uten ident.
+Feltet er `null` for godkjente personer med et entydig PDL-resultat, for personer uten ident og når innebygde opplysninger brukes.
 Dette gjelder sivilstandsrelasjoner, forelder-barn-relasjoner, fullmektiger, gjeldende og historiske vergemål og dødsbokontakter.
 I foreldreansvar har `ansvarlig` og `ansvarsubject` hver sin `skjulingsaarsak`.
 Frontenden kan dermed vise at en bestemt relasjon finnes, og hvorfor personopplysningene er tomme.
