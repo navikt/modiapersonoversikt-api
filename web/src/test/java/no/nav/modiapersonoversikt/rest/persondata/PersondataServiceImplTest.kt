@@ -14,8 +14,10 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
 import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.infrastructure.Serializer
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsmaskinen
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.TredjepersonTilgang
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.TredjepersonTilgangResultat
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.persondata.Persondata
@@ -102,9 +104,9 @@ internal class PersondataServiceImplTest {
         gittPersonMedFullmektige(tillatt, avvist, mangler)
         every { tilgangsmaskinen.sjekkTilganger(any(), any()) } returns
             mapOf(
-                tillatt to TredjepersonTilgang.GODKJENT,
-                avvist to TredjepersonTilgang.AVVIST,
-                mangler to TredjepersonTilgang.GODKJENT,
+                tillatt to TredjepersonTilgangResultat(TredjepersonTilgang.GODKJENT),
+                avvist to TredjepersonTilgangResultat(TredjepersonTilgang.AVVIST),
+                mangler to TredjepersonTilgangResultat(TredjepersonTilgang.GODKJENT),
             )
         every { pdl.hentTredjepartspersondata(any()) } returns
             listOf(
@@ -131,22 +133,26 @@ internal class PersondataServiceImplTest {
     fun `avviste og uavklarte fullmektige hentes ikke fra PDL eller KRR`() {
         val avvist = fullmaktPerson.fullmektig
         val uavklart = "99999999999"
+        val avslag = Tilgangsavslag("AVVIST_SKJERMING", "Du har ikke tilgang til skjermet person")
         gittPersonMedFullmektige(avvist, uavklart)
         every { tilgangsmaskinen.sjekkTilganger(any(), any()) } returns
             mapOf(
-                avvist to TredjepersonTilgang.AVVIST,
-                uavklart to TredjepersonTilgang.UAVKLART,
+                avvist to TredjepersonTilgangResultat(TredjepersonTilgang.AVVIST, avslag),
+                uavklart to TredjepersonTilgangResultat(TredjepersonTilgang.UAVKLART, avslag),
             )
 
         val result = persondataServiceImpl.hentPerson("12345678910")
 
         assertEquals(listOf("", ""), result.person.fullmektige.map { it.ident })
+        assertEquals(listOf(avslag, null), result.person.fullmektige.map { it.tilgangsavslag })
         val json = Serializer.jacksonObjectMapper.writeValueAsString(result)
-        assertFalse(json.contains(avvist))
-        assertFalse(json.contains(uavklart))
         assertFalse(json.contains("tredjepersonTilgang"))
         assertFalse(json.contains("skjermedeRelasjoner"))
-        assertTrue(result.person.fullmektige.all { it.fullmakt.fullmektig.isEmpty() && it.navn == null })
+        assertEquals(
+            listOf(forventetFullmakt, forventetFullmakt.copy(fullmektig = uavklart)),
+            result.person.fullmektige.map { it.fullmakt },
+        )
+        assertTrue(result.person.fullmektige.all { it.navn == null && it.digitalKontaktinformasjonTredjepartsperson == null })
         assertEquals(
             listOf(Persondata.Skjulingsaarsak.MANGLER_TILGANG, Persondata.Skjulingsaarsak.UAVKLART),
             result.person.fullmektige.map { it.skjulingsaarsak },
@@ -177,7 +183,7 @@ internal class PersondataServiceImplTest {
             TredjepersonTilgang.UAVKLART to Persondata.Skjulingsaarsak.UAVKLART,
         ).forEach { (tilgang, aarsak) ->
             every { tilgangsmaskinen.sjekkTilganger(any(), any()) } returns
-                tredjeparter.associateWith { tilgang }
+                tredjeparter.associateWith { TredjepersonTilgangResultat(tilgang) }
 
             val result = persondataServiceImpl.hentPerson("12345678910")
             val person = result.person
@@ -234,7 +240,7 @@ internal class PersondataServiceImplTest {
                     .single { it.rolle == Persondata.ForelderBarnRelasjonRolle.MEDMOR }
                     .skjulingsaarsak,
             )
-            val json = Serializer.jacksonObjectMapper.writeValueAsString(result)
+            val json = Serializer.jacksonObjectMapper.writeValueAsString(person.copy(fullmektige = emptyList()))
             tredjeparter.forEach { assertFalse(json.contains(it), "Skjult ident finnes i responsen") }
             assertFalse(json.contains("tredjepersonTilgang"))
             assertFalse(json.contains("skjermedeRelasjoner"))
@@ -247,7 +253,7 @@ internal class PersondataServiceImplTest {
     fun `godkjenning uten PDL-treff beholder innebygde vergenavn og dodsboadresse`() {
         gittPersonMedFullmektige(inkluderRelasjoner = true)
         every { tilgangsmaskinen.sjekkTilganger(any(), any()) } answers {
-            secondArg<List<String>>().associateWith { TredjepersonTilgang.GODKJENT }
+            secondArg<List<String>>().associateWith { TredjepersonTilgangResultat(TredjepersonTilgang.GODKJENT) }
         }
         every { pdl.hentTredjepartspersondata(any()) } returns emptyList()
 
@@ -274,10 +280,11 @@ internal class PersondataServiceImplTest {
     }
 
     @Test
-    fun `godkjenning uten entydig person i PDL gir ingen fullmektigdata`() {
+    fun `godkjenning uten entydig person i PDL beholder fullmaktsdata`() {
         val forespurt = fullmaktPerson.fullmektig
         gittPersonMedFullmektige(forespurt)
-        every { tilgangsmaskinen.sjekkTilganger(any(), any()) } returns mapOf(forespurt to TredjepersonTilgang.GODKJENT)
+        every { tilgangsmaskinen.sjekkTilganger(any(), any()) } returns
+            mapOf(forespurt to TredjepersonTilgangResultat(TredjepersonTilgang.GODKJENT))
         val pdlPerson =
             mockk<HentPersonBolkResult> {
                 every { ident } returns forespurt
@@ -303,10 +310,10 @@ internal class PersondataServiceImplTest {
                     .ident,
             )
             assertEquals(
-                "",
+                forventetFullmakt,
                 result.person.fullmektige
                     .single()
-                    .fullmakt.fullmektig,
+                    .fullmakt,
             )
             assertEquals(
                 Persondata.Skjulingsaarsak.UAVKLART,

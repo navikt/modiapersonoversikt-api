@@ -52,7 +52,8 @@ internal class TilgangsmaskinenBulkTest {
             ),
         )
 
-    private fun sjekk(vararg fnrs: String) = tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), fnrs.toList())
+    private fun sjekk(vararg fnrs: String) =
+        tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), fnrs.toList()).mapValues { it.value.tilgang }
 
     private fun mottatteBolker(): List<List<String>> =
         wiremock.findAll(postRequestedFor(urlEqualTo(BULK_URL))).map { objectMapper.readValue(it.bodyAsString) }
@@ -99,7 +100,7 @@ internal class TilgangsmaskinenBulkTest {
             json(resultater(VEILEDER, *fnrs.map { it to 204 }.toTypedArray()))
         }
 
-        val resultat = tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), fnrs)
+        val resultat = tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), fnrs).mapValues { it.value.tilgang }
 
         assertThat(mottatteBolker()).containsExactly(fnrs)
         assertThat(resultat).hasSize(1000).allSatisfy { _, tilgang -> assertThat(tilgang).isEqualTo(GODKJENT) }
@@ -120,7 +121,7 @@ internal class TilgangsmaskinenBulkTest {
                 .willReturn(aResponse().withStatus(500)),
         )
 
-        val resultat = tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), fnrs)
+        val resultat = tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), fnrs).mapValues { it.value.tilgang }
 
         assertThat(mottatteBolker()).containsExactlyInAnyOrder(fnrs.take(1000), listOf(fnr(1001)))
         assertThat(resultat).hasSize(1001)
@@ -195,5 +196,75 @@ internal class TilgangsmaskinenBulkTest {
 
         assertThat(resultat).isEqualTo(mapOf(fnr(1) to GODKJENT, fnr(2) to UAVKLART, fnr(3) to UAVKLART, fnr(4) to UAVKLART))
         assertThat(resultat).doesNotContainKey(fnr(9))
+    }
+
+    @Test
+    fun `videresender bare tittel og begrunnelse fra avslag per person`() {
+        wiremock.post {
+            status(207)
+            json(
+                """{"ansattId":"$VEILEDER","resultater":[
+                    {"brukerId":"${fnr(1)}","status":403,"detaljer":{
+                        "title":"AVVIST_SKJERMING","begrunnelse":"Du har ikke tilgang til skjermet person",
+                        "brukerIdent":"${fnr(1)}","navIdent":"$VEILEDER","traceId":"intern-sporing"}},
+                    {"brukerId":"${fnr(2)}","status":403,"detaljer":{
+                        "title":"NY_AVSLAGSKODE","begrunnelse":"Annen begrunnelse"}},
+                    {"brukerId":"${fnr(3)}","status":204,"detaljer":{
+                        "title":"AVVIST_SKJERMING","begrunnelse":"Skal ikke videreformidles"}}
+                ]}""",
+            )
+        }
+
+        val resultater = tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), listOf(fnr(1), fnr(2), fnr(3)))
+
+        assertThat(resultater[fnr(1)]).isEqualTo(
+            TredjepersonTilgangResultat(AVVIST, Tilgangsavslag("AVVIST_SKJERMING", "Du har ikke tilgang til skjermet person")),
+        )
+        assertThat(resultater[fnr(2)]?.avslag).isEqualTo(Tilgangsavslag("NY_AVSLAGSKODE", "Annen begrunnelse"))
+        assertThat(resultater[fnr(3)]).isEqualTo(TredjepersonTilgangResultat(GODKJENT))
+        assertThat(
+            objectMapper
+                .readTree(objectMapper.writeValueAsString(resultater[fnr(1)]?.avslag))
+                .fieldNames()
+                .asSequence()
+                .toList(),
+        ).containsExactlyInAnyOrder("title", "message")
+    }
+
+    @Test
+    fun `manglende eller ugyldige detaljer endrer ikke avslag til godkjenning`() {
+        listOf(
+            "null",
+            """{"title":null,"begrunnelse":"Begrunnelse uten tittel"}""",
+            """{"title":" ","begrunnelse":""}""",
+            """{"title":123,"begrunnelse":"Ugyldig tittel"}""",
+            """{"title":"AVVIST_SKJERMING","brukerIdent":"${fnr(9)}"}""",
+            """{"title":"AVVIST_SKJERMING","navIdent":"Z111111"}""",
+        ).forEachIndexed { index, detaljer ->
+            wiremock.post {
+                status(207)
+                json("""{"ansattId":"$VEILEDER","resultater":[{"brukerId":"${fnr(1)}","status":403,"detaljer":$detaljer}]}""")
+            }
+            val resultat = tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), listOf(fnr(1))).getValue(fnr(1))
+
+            assertThat(resultat.tilgang).isEqualTo(AVVIST)
+            assertThat(resultat.avslag).isEqualTo(if (index == 1) Tilgangsavslag(null, "Begrunnelse uten tittel") else null)
+        }
+    }
+
+    @Test
+    fun `duplikate resultater mister ogsaa avslagsdetaljer`() {
+        wiremock.post {
+            status(207)
+            json(
+                """{"ansattId":"$VEILEDER","resultater":[
+                    {"brukerId":"${fnr(1)}","status":403,"detaljer":{"title":"AVVIST_SKJERMING","begrunnelse":"Skjermet"}},
+                    {"brukerId":"${fnr(1)}","status":204}
+                ]}""",
+            )
+        }
+
+        assertThat(tilgangsmaskinen.sjekkTilganger(NavIdent(VEILEDER), listOf(fnr(1))).getValue(fnr(1)))
+            .isEqualTo(TredjepersonTilgangResultat(UAVKLART))
     }
 }

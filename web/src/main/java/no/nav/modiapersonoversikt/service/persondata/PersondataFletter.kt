@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Kontaktinformasjo
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -46,6 +47,7 @@ class PersondataFletter(
         val harTilgangTilSkjermetPerson: Boolean,
         val skjulingsaarsaker: Map<String, Persondata.Skjulingsaarsak> = emptyMap(),
         val tilgangsfeil: Boolean = false,
+        val tilgangsavslag: Map<String, Tilgangsavslag> = emptyMap(),
     ) {
         fun harTredjeperson(ident: String?): Boolean = ident != null && tredjepartsPerson.getOrElse(emptyMap()).containsKey(ident)
 
@@ -55,6 +57,9 @@ class PersondataFletter(
             } else {
                 skjulingsaarsaker[ident] ?: Persondata.Skjulingsaarsak.UAVKLART
             }
+
+        fun hentTilgangsavslag(ident: String?): Tilgangsavslag? =
+            tilgangsavslag[ident].takeIf { hentSkjulingsaarsak(ident) == Persondata.Skjulingsaarsak.MANGLER_TILGANG }
 
         fun hentTredjeperson(ident: String?): Persondata.TredjepartsPerson? {
             if (ident.isNullOrBlank()) return null
@@ -69,6 +74,7 @@ class PersondataFletter(
                 dodsdato = emptyList(),
                 digitalKontaktinformasjon = null,
                 skjulingsaarsak = hentSkjulingsaarsak(ident),
+                tilgangsavslag = hentTilgangsavslag(ident),
             )
         }
 
@@ -781,6 +787,7 @@ class PersondataFletter(
                 ),
             dodsdato = person.dodsdato,
             skjulingsaarsak = person.skjulingsaarsak,
+            tilgangsavslag = person.tilgangsavslag,
         )
     }
 
@@ -914,18 +921,14 @@ class PersondataFletter(
             .getOrElse(emptyList())
             .map { fullmakt ->
                 val ident = fullmakt.fullmektig
-                val person = tredjepartsPersoner[ident]
+                val fullmektigPerson = tredjepartsPersoner[ident]
                 Persondata.Fullmektig(
-                    ident = if (person == null) "" else ident,
-                    navn = person?.navn?.firstOrNull(),
-                    digitalKontaktinformasjonTredjepartsperson = person?.digitalKontaktinformasjon,
-                    fullmakt =
-                        if (person == null) {
-                            hentFullmakt(fullmakt).copy(fullmektig = "", endringslogg = emptyList())
-                        } else {
-                            hentFullmakt(fullmakt)
-                        },
+                    ident = if (fullmektigPerson == null) "" else ident,
+                    navn = fullmektigPerson?.navn?.firstOrNull(),
+                    digitalKontaktinformasjonTredjepartsperson = fullmektigPerson?.digitalKontaktinformasjon,
+                    fullmakt = hentFullmakt(fullmakt),
                     skjulingsaarsak = data.hentSkjulingsaarsak(ident),
+                    tilgangsavslag = data.hentTilgangsavslag(ident),
                 )
             }
     }
@@ -961,7 +964,7 @@ class PersondataFletter(
     private fun hentVergemal(data: Data): List<Persondata.Verge> =
         data.persondata.vergemaalEllerFremtidsfullmakt.map { vergemal ->
             val ident = vergemal.vergeEllerFullmektig.motpartsPersonident
-            val motpart = data.hentTredjeperson(ident)
+            val vergehaverEllerFullmaktsgiver = data.hentTredjeperson(ident)
             val navn =
                 vergemal.vergeEllerFullmektig.identifiserendeInformasjon
                     ?.navn
@@ -969,7 +972,7 @@ class PersondataFletter(
 
             Persondata.Verge(
                 ident = if (ident.isNullOrBlank() || data.harTredjeperson(ident)) ident else null,
-                navn = motpart?.navn?.firstOrNull() ?: navn,
+                navn = vergehaverEllerFullmaktsgiver?.navn?.firstOrNull() ?: navn,
                 vergesakstype = hentVergemalType(vergemal.type),
                 omfang = hentVergemalOmfang(vergemal.vergeEllerFullmektig.omfang),
                 tjenesteOppgaver = hentTjenesteOppgaver(vergemal.vergeEllerFullmektig.tjenesteomraade),
@@ -980,7 +983,8 @@ class PersondataFletter(
                         vergemal.folkeregistermetadata?.opphoerstidspunkt,
                     ),
                 historisk = vergemal.metadata.historisk,
-                skjulingsaarsak = if (navn != null) null else motpart?.skjulingsaarsak,
+                skjulingsaarsak = if (navn != null) null else vergehaverEllerFullmaktsgiver?.skjulingsaarsak,
+                tilgangsavslag = if (navn != null) null else vergehaverEllerFullmaktsgiver?.tilgangsavslag,
             )
         }
 
@@ -1251,6 +1255,7 @@ class PersondataFletter(
                             ),
                         dodsdato = tredjepartsPerson?.dodsdato ?: emptyList(),
                         skjulingsaarsak = tredjepartsPerson?.skjulingsaarsak,
+                        tilgangsavslag = tredjepartsPerson?.tilgangsavslag,
                     )
                 }
             }.sortedBy { it.alder }

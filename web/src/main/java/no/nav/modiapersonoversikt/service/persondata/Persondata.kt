@@ -1,7 +1,9 @@
 package no.nav.modiapersonoversikt.service.persondata
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Oppholdstillatelse
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
@@ -72,6 +74,8 @@ object Persondata {
         val dodsdato: List<LocalDate>,
         val digitalKontaktinformasjon: DigitalKontaktinformasjonTredjepartsperson?,
         val skjulingsaarsak: Skjulingsaarsak? = null,
+        @get:JsonInclude(JsonInclude.Include.NON_NULL)
+        val tilgangsavslag: Tilgangsavslag? = null,
     )
 
     data class KodeBeskrivelse<T>(
@@ -114,6 +118,8 @@ object Persondata {
         val harSammeAdresse: Boolean,
         val dodsdato: List<LocalDate>,
         val skjulingsaarsak: Skjulingsaarsak? = null,
+        @get:JsonInclude(JsonInclude.Include.NON_NULL)
+        val tilgangsavslag: Tilgangsavslag? = null,
     )
 
     data class Sikkerhetstiltak(
@@ -217,6 +223,8 @@ object Persondata {
         val navn: List<Navn>,
         val fodselsdato: LocalDate?,
         val skjulingsaarsak: Skjulingsaarsak? = null,
+        @get:JsonInclude(JsonInclude.Include.NON_NULL)
+        val tilgangsavslag: Tilgangsavslag? = null,
     )
 
     data class OrganisasjonSomAdressat(
@@ -268,6 +276,8 @@ object Persondata {
         val digitalKontaktinformasjonTredjepartsperson: DigitalKontaktinformasjonTredjepartsperson?,
         val fullmakt: Fullmakt,
         val skjulingsaarsak: Skjulingsaarsak? = null,
+        @get:JsonInclude(JsonInclude.Include.NON_NULL)
+        val tilgangsavslag: Tilgangsavslag? = null,
     )
 
     data class Fullmakt(
@@ -315,6 +325,8 @@ object Persondata {
         val gyldighetsPeriode: GyldighetsPeriode?,
         val historisk: Boolean = false,
         val skjulingsaarsak: Skjulingsaarsak? = null,
+        @get:JsonInclude(JsonInclude.Include.NON_NULL)
+        val tilgangsavslag: Tilgangsavslag? = null,
     )
 
     data class RettsligHandleevne(
@@ -332,6 +344,8 @@ object Persondata {
         val navn: Navn?,
         val ident: String?,
         val skjulingsaarsak: Skjulingsaarsak? = null,
+        @get:JsonInclude(JsonInclude.Include.NON_NULL)
+        val tilgangsavslag: Tilgangsavslag? = null,
     )
 
     data class DeltBosted(
@@ -363,6 +377,8 @@ object Persondata {
         val harSammeAdresse: Boolean,
         val dodsdato: List<LocalDate>,
         val skjulingsaarsak: Skjulingsaarsak? = null,
+        @get:JsonInclude(JsonInclude.Include.NON_NULL)
+        val tilgangsavslag: Tilgangsavslag? = null,
     )
 
     enum class Kjonn {
@@ -432,6 +448,6 @@ object Persondata {
     fun TredjepartsPerson?.asNavnOgIdent() =
         when (this) {
             null -> null
-            else -> NavnOgIdent(this.navn.firstOrNull(), this.fnr.takeIf { it.isNotEmpty() }, this.skjulingsaarsak)
+            else -> NavnOgIdent(this.navn.firstOrNull(), this.fnr.takeIf { it.isNotEmpty() }, this.skjulingsaarsak, this.tilgangsavslag)
         }
 }

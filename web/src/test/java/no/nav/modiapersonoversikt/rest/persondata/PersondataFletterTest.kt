@@ -15,6 +15,8 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Opphold
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.RelatertBiPerson
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.infrastructure.Serializer
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.persondata.Persondata
 import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
@@ -75,16 +77,10 @@ internal class PersondataFletterTest {
                 .ident,
         )
         assertEquals(
-            "",
+            forventetFullmakt,
             result.person.fullmektige
                 .single()
-                .fullmakt.fullmektig,
-        )
-        assertTrue(
-            result.person.fullmektige
-                .single()
-                .fullmakt.endringslogg
-                .isEmpty(),
+                .fullmakt,
         )
         assertNull(
             result.person.fullmektige
@@ -208,7 +204,6 @@ internal class PersondataFletterTest {
         )
         val json = Serializer.jacksonObjectMapper.writeValueAsString(result)
         listOf(
-            "55555666000",
             "55555111000",
             "55555222000",
             "11225666000",
@@ -216,6 +211,61 @@ internal class PersondataFletterTest {
         ).forEach {
             assertFalse(json.contains(it), "Utelatt tredjeperson finnes i responsen")
         }
+    }
+
+    @Test
+    fun `avslagsdetaljer foelger skjulte personer men ikke innebygde fallbackdata`() {
+        val avslag = Tilgangsavslag("AVVIST_SKJERMING", "Du har ikke tilgang til skjermet person")
+        val identer =
+            listOf(
+                fullmaktPerson.fullmektig,
+                sivilstandPerson.relatertVedSivilstand!!,
+                foreldreansvarData.ansvarlig!!,
+                foreldreansvarData.ansvarssubjekt!!,
+                vergemal.vergeEllerFullmektig.motpartsPersonident!!,
+                kontaktinformasjonDodsbo.personSomKontakt!!.identifikasjonsnummer!!,
+            ) + forelderBarnRelasjonData.mapNotNull { it.relatertPersonsIdent }
+        val person =
+            mapper
+                .flettSammenData(
+                    testData.copy(
+                        tredjepartsPerson = PersondataResult.of(emptyMap()),
+                        skjulingsaarsaker = identer.associateWith { Persondata.Skjulingsaarsak.MANGLER_TILGANG },
+                        tilgangsavslag = identer.associateWith { avslag },
+                    ),
+                ).person
+
+        assertEquals(avslag, person.fullmektige.single().tilgangsavslag)
+        assertEquals(
+            avslag,
+            person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.tilgangsavslag,
+        )
+        assertEquals(
+            avslag,
+            person.foreldreansvar
+                .single()
+                .ansvarlig
+                ?.tilgangsavslag,
+        )
+        assertEquals(
+            avslag,
+            person.foreldreansvar
+                .single()
+                .ansvarsubject
+                ?.tilgangsavslag,
+        )
+        assertTrue(person.forelderBarnRelasjon.filter { it.skjulingsaarsak != null }.all { it.tilgangsavslag == avslag })
+        assertTrue(person.forelderBarnRelasjon.filter { it.skjulingsaarsak == null }.all { it.tilgangsavslag == null })
+        assertNull(person.vergemal.single().tilgangsavslag)
+        assertNull(
+            person.dodsbo
+                .single()
+                .adressat.personSomAdressat
+                ?.tilgangsavslag,
+        )
     }
 
     @Test
@@ -1004,6 +1054,52 @@ internal class PersondataFletterTest {
             ),
             result.person.fullmektige.map { it.fullmakt },
         )
+    }
+
+    @Test
+    internal fun `beholder fullmektig og endringslogg uten tilgjengelig tredjepartsperson`() {
+        val endring =
+            FullmaktEndringDto(
+                endringId = 1,
+                registrert = gittDateTime("2026-09-29T12:39:32"),
+                registrertAv = "system",
+                kilde = FullmaktEndringDto.Kilde.SYSTEM,
+                hendelse = FullmaktEndringDto.Hendelse.OPPRETTELSE_AV_BRUKER,
+                gyldigFraOgMed = fullmaktPerson.gyldigFraOgMed,
+                gyldigTilOgMed = fullmaktPerson.gyldigTilOgMed,
+                leserettigheter = fullmaktPerson.leserettigheter,
+                skriverettigheter = fullmaktPerson.skriverettigheter,
+            )
+        val forventetEndring =
+            Persondata.FullmaktEndring(
+                endringId = endring.endringId,
+                registrert = endring.registrert,
+                registrertAv = endring.registrertAv,
+                kilde = endring.kilde,
+                hendelse = endring.hendelse,
+                gyldigFraOgMed = forventetFullmakt.gyldigFraOgMed,
+                gyldigTilOgMed = forventetFullmakt.gyldigTilOgMed,
+                leserettigheter = forventetFullmakt.leserettigheter,
+                skriverettigheter = forventetFullmakt.skriverettigheter,
+            )
+
+        listOf(null, Persondata.Skjulingsaarsak.MANGLER_TILGANG, Persondata.Skjulingsaarsak.UAVKLART).forEach { aarsak ->
+            val result =
+                mapper.flettSammenData(
+                    testData.copy(
+                        fullmektige = PersondataResult.of(listOf(fullmaktPerson.copy(endringslogg = listOf(endring)))),
+                        tredjepartsPerson = PersondataResult.of(emptyMap()),
+                        skjulingsaarsaker = aarsak?.let { mapOf(fullmaktPerson.fullmektig to it) } ?: emptyMap(),
+                    ),
+                )
+            val fullmektig = result.person.fullmektige.single()
+
+            assertEquals(forventetFullmakt.copy(endringslogg = listOf(forventetEndring)), fullmektig.fullmakt)
+            assertEquals("", fullmektig.ident)
+            assertNull(fullmektig.navn)
+            assertNull(fullmektig.digitalKontaktinformasjonTredjepartsperson)
+            assertEquals(aarsak ?: Persondata.Skjulingsaarsak.UAVKLART, fullmektig.skjulingsaarsak)
+        }
     }
 
     @Test

@@ -68,10 +68,9 @@ class PersondataServiceImpl(
                 representasjonApi.hentFullmakterForFullmaktsgiver(Fnr(personIdent))
             }
         val fullmektigIdenter = finnFullmektigIdenter(fullmektige)
-        val kandidatIdenter = persondata.findTredjepartsPersoner(fullmektigIdenter)
-        val tredjepersonIdenter = kandidatIdenter.filter { it.isNotBlank() }
+        val tredjepersonIdenter = persondata.findTredjepartsPersoner(fullmektigIdenter).filter { it.isNotBlank() }
         val tilganger = tilgangsmaskinen.sjekkTilganger(AuthContextUtils.requireNavIdent(), tredjepersonIdenter)
-        val godkjente = tredjepersonIdenter.filter { tilganger[it] == TredjepersonTilgang.GODKJENT }
+        val godkjente = tredjepersonIdenter.filter { tilganger[it]?.tilgang == TredjepersonTilgang.GODKJENT }
         val pdlTredjepersoner =
             PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
                 if (godkjente.isEmpty()) emptyList() else pdl.hentTredjepartspersondata(godkjente)
@@ -128,13 +127,18 @@ class PersondataServiceImpl(
                     tredjepersonIdenter
                         .filterNot { it in tillatte }
                         .associateWith {
-                            if (tilganger[it] == TredjepersonTilgang.AVVIST) {
+                            if (tilganger[it]?.tilgang == TredjepersonTilgang.AVVIST) {
                                 Persondata.Skjulingsaarsak.MANGLER_TILGANG
                             } else {
                                 Persondata.Skjulingsaarsak.UAVKLART
                             }
                         },
-                tilgangsfeil = tredjepersonIdenter.any { tilganger[it] == null || tilganger[it] == TredjepersonTilgang.UAVKLART },
+                tilgangsavslag =
+                    tilganger
+                        .mapNotNull { (ident, resultat) ->
+                            resultat.avslag?.takeIf { resultat.tilgang == TredjepersonTilgang.AVVIST }?.let { ident to it }
+                        }.toMap(),
+                tilgangsfeil = tredjepersonIdenter.any { tilganger[it] == null || tilganger[it]?.tilgang == TredjepersonTilgang.UAVKLART },
             ),
         )
     }

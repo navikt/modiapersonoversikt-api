@@ -25,7 +25,7 @@ interface Tilgangsmaskinen {
     fun sjekkTilganger(
         veilederIdent: NavIdent,
         fnrs: List<String>,
-    ): Map<String, TredjepersonTilgang>
+    ): Map<String, TredjepersonTilgangResultat>
 }
 
 enum class TredjepersonTilgang {
@@ -33,6 +33,16 @@ enum class TredjepersonTilgang {
     AVVIST,
     UAVKLART,
 }
+
+data class Tilgangsavslag(
+    val title: String?,
+    val message: String?,
+)
+
+data class TredjepersonTilgangResultat(
+    val tilgang: TredjepersonTilgang,
+    val avslag: Tilgangsavslag? = null,
+)
 
 data class TilgangsMaskinResponse(
     val harTilgang: Boolean,
@@ -127,11 +137,11 @@ open class TilgangsmaskinenImpl(
     override fun sjekkTilganger(
         veilederIdent: NavIdent,
         fnrs: List<String>,
-    ): Map<String, TredjepersonTilgang> {
+    ): Map<String, TredjepersonTilgangResultat> {
         val unikeFnrs = fnrs.distinct()
         if (unikeFnrs.isEmpty()) return emptyMap()
 
-        val resultat = LinkedHashMap<String, TredjepersonTilgang>()
+        val resultat = LinkedHashMap<String, TredjepersonTilgangResultat>()
         unikeFnrs.chunked(BULK_MAKS_STORRELSE).forEachIndexed { bolkIndeks, bolk ->
             val statuser =
                 try {
@@ -145,7 +155,7 @@ open class TilgangsmaskinenImpl(
                     )
                     null
                 }
-            bolk.forEach { fnr -> resultat[fnr] = statuser?.get(fnr) ?: TredjepersonTilgang.UAVKLART }
+            bolk.forEach { fnr -> resultat[fnr] = statuser?.get(fnr) ?: TredjepersonTilgangResultat(TredjepersonTilgang.UAVKLART) }
         }
         return resultat
     }
@@ -154,7 +164,7 @@ open class TilgangsmaskinenImpl(
         veilederIdent: NavIdent,
         bolk: List<String>,
         bolkIndeks: Int,
-    ): Map<String, TredjepersonTilgang>? {
+    ): Map<String, TredjepersonTilgangResultat>? {
         val url =
             baseUrl
                 .toHttpUrl()
@@ -190,7 +200,7 @@ open class TilgangsmaskinenImpl(
         veilederIdent: NavIdent,
         bolk: List<String>,
         bolkIndeks: Int,
-    ): Map<String, TredjepersonTilgang>? {
+    ): Map<String, TredjepersonTilgangResultat>? {
         val ansattId = json?.get("ansattId")
         val resultater = json?.get("resultater")
         if (json == null || !json.isObject || ansattId == null || !ansattId.isTextual || resultater == null || !resultater.isArray) {
@@ -203,7 +213,7 @@ open class TilgangsmaskinenImpl(
         }
 
         val forespurte = bolk.toSet()
-        val statuser = mutableMapOf<String, TredjepersonTilgang>()
+        val statuser = mutableMapOf<String, TredjepersonTilgangResultat>()
         val duplikater = mutableSetOf<String>()
         var ukjente = 0
         for (element in resultater) {
@@ -218,11 +228,18 @@ open class TilgangsmaskinenImpl(
                 ukjente++
                 continue
             }
-            if (statuser.putIfAbsent(id, tilTilgang(status.intValue())) != null) {
+            val tilgang = tilTilgang(status.intValue())
+            val avslag =
+                if (tilgang == TredjepersonTilgang.AVVIST) {
+                    hentAvslag(element.get("detaljer"), id, veilederIdent, bolkIndeks, bolk.size)
+                } else {
+                    null
+                }
+            if (statuser.putIfAbsent(id, TredjepersonTilgangResultat(tilgang, avslag)) != null) {
                 duplikater += id
             }
         }
-        duplikater.forEach { statuser[it] = TredjepersonTilgang.UAVKLART }
+        duplikater.forEach { statuser[it] = TredjepersonTilgangResultat(TredjepersonTilgang.UAVKLART) }
 
         val mangler = bolk.count { it !in statuser }
         if (ukjente > 0 || duplikater.isNotEmpty() || mangler > 0) {
@@ -239,6 +256,38 @@ open class TilgangsmaskinenImpl(
             )
         }
         return statuser
+    }
+
+    private fun hentAvslag(
+        detaljer: JsonNode?,
+        brukerId: String,
+        veilederIdent: NavIdent,
+        bolkIndeks: Int,
+        bolkStorrelse: Int,
+    ): Tilgangsavslag? {
+        if (detaljer == null || detaljer.isNull) return null
+        if (!detaljer.isObject ||
+            listOf("title", "begrunnelse", "brukerIdent", "navIdent").any {
+                val felt = detaljer.get(it)
+                felt != null && !felt.isNull && !felt.isTextual
+            } ||
+            detaljer
+                .get("brukerIdent")
+                ?.takeUnless { it.isNull }
+                ?.textValue()
+                ?.let { it != brukerId } == true ||
+            detaljer
+                .get("navIdent")
+                ?.takeUnless { it.isNull }
+                ?.textValue()
+                ?.let { it != veilederIdent.get() } == true
+        ) {
+            loggBolkFeil("Ugyldige avslagsdetaljer fra bulk-tilgangssjekk i tilgangsmaskinen", bolkIndeks, bolkStorrelse)
+            return null
+        }
+        val title = detaljer.get("title")?.textValue()?.takeIf { it.isNotBlank() }
+        val message = detaljer.get("begrunnelse")?.textValue()?.takeIf { it.isNotBlank() }
+        return if (title == null && message == null) null else Tilgangsavslag(title, message)
     }
 
     private fun tilTilgang(status: Int): TredjepersonTilgang =

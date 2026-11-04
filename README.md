@@ -22,7 +22,8 @@ For tredjepersoner med ident kreves godkjenning og et entydig, ikke-tomt PDL-res
 Relasjoner til avviste personer beholdes i de eksisterende responsfeltene, med tomme felt for opplysninger som bare kan hentes fra tredjepersonen.
 Dette gjelder også identifiserte personer med uavklart tilgang eller manglende PDL-data.
 Skjult ident er `null` der kontrakten tillater det, ellers en tom streng. Skjulte navnelister er tomme, og andre skjulte personopplysninger er tomme eller `null`.
-Fullmektigens ident fjernes også fra den innbakte fullmakten, og endringsloggen utelates for skjulte fullmektiger.
+Fullmaktsdata fra Representasjon returneres uavhengig av tredjepersonens tilgang og eget PDL-resultat, inkludert `fullmektig` og `endringslogg`.
+For fullmektiger gjelder `skjulingsaarsak` de separate personopplysningene, ikke selve fullmakten.
 
 Innebygde opplysninger på brukerens PDL-post beholder tidligere prioritet og brukes uavhengig av tredjepersonens tilgang og eget PDL-treff.
 Forelder-barn-relasjoner bruker innebygde personopplysninger når de finnes, også når relasjonen har ident.
@@ -37,7 +38,9 @@ Feltet er `null` for godkjente personer med et entydig PDL-resultat, for persone
 Dette gjelder sivilstandsrelasjoner, forelder-barn-relasjoner, fullmektiger, gjeldende og historiske vergemål og dødsbokontakter.
 I foreldreansvar har `ansvarlig` og `ansvarsubject` hver sin `skjulingsaarsak`.
 Frontenden kan dermed vise at en bestemt relasjon finnes, og hvorfor personopplysningene er tomme.
-Feltet oppgir ikke hvilken tilgangsregel som ga avslag.
+Ved avslag videreformidles også tilgjengelig tittel og begrunnelse fra Tilgangsmaskinen i `tilgangsavslag.title` og `tilgangsavslag.message`.
+Andre avslagsdetaljer videreformidles ikke. Feltet utelates når personoppføringen ikke er skjult på grunn av avslag, eller når detaljene mangler eller er ugyldige.
+Frontenden viser tittel og melding som tekst, med den generelle skjulingsårsaken som alternativ når detaljer mangler.
 Tekniske feil i tilgangssjekken gir også `TILGANGSMASKINEN_TREDJEPARTSPERSONER` i `feilendeSystemer`.
 Personer uten ident beholder tidligere mapping fra PDL, inkludert navn og øvrige eksisterende felt i forelder-barn-relasjoner, foreldreansvar, vergemål og dødsbokontakter.
 Disse personene kontrolleres ikke av Tilgangsmaskinen og får ikke en skjulingsårsak.
