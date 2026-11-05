@@ -115,7 +115,7 @@ object Persondata {
         val navn: List<Navn>,
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
-        val harSammeAdresse: Boolean,
+        val harSammeAdresse: Boolean?,
         val dodsdato: List<LocalDate>,
         val skjulingsaarsak: Skjulingsaarsak? = null,
         @get:JsonInclude(JsonInclude.Include.NON_NULL)
@@ -374,7 +374,7 @@ object Persondata {
         val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
-        val harSammeAdresse: Boolean,
+        val harSammeAdresse: Boolean?,
         val dodsdato: List<LocalDate>,
         val skjulingsaarsak: Skjulingsaarsak? = null,
         @get:JsonInclude(JsonInclude.Include.NON_NULL)

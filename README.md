@@ -40,7 +40,7 @@ I foreldreansvar har `ansvarlig` og `ansvarsubject` hver sin `skjulingsaarsak`.
 Frontenden kan dermed vise at en bestemt relasjon finnes, og hvorfor personopplysningene er tomme.
 Ved avslag videreformidles også tilgjengelig tittel og begrunnelse fra Tilgangsmaskinen i `tilgangsavslag.title` og `tilgangsavslag.message`.
 Andre avslagsdetaljer videreformidles ikke. Feltet utelates når personoppføringen ikke er skjult på grunn av avslag, eller når detaljene mangler eller er ugyldige.
-Frontenden viser tittel og melding som tekst, med den generelle skjulingsårsaken som alternativ når detaljer mangler.
+Frontenden viser meldingen som tekst, med den generelle skjulingsårsaken som alternativ når meldingen mangler eller er tom. Tittelen vises ikke.
 Tekniske feil i tilgangssjekken gir også `TILGANGSMASKINEN_TREDJEPARTSPERSONER` i `feilendeSystemer`.
 Personer uten ident beholder tidligere mapping fra PDL, inkludert navn og øvrige eksisterende felt i forelder-barn-relasjoner, foreldreansvar, vergemål og dødsbokontakter.
 Disse personene kontrolleres ikke av Tilgangsmaskinen og får ikke en skjulingsårsak.

@@ -120,7 +120,7 @@
       "alder" : 10,
       "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
-      "harSammeAdresse" : false,
+      "harSammeAdresse" : null,
       "ident" : "11223344910",
       "kjonn" : [ "kotlin.collections.EmptyList", [ ] ],
       "navn" : [ "java.util.Collections$SingletonList", [ {
@@ -138,7 +138,7 @@
       "alder" : 15,
       "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
-      "harSammeAdresse" : false,
+      "harSammeAdresse" : null,
       "ident" : "98765432100",
       "kjonn" : [ "kotlin.collections.EmptyList", [ ] ],
       "navn" : [ "java.util.Collections$SingletonList", [ {
@@ -153,7 +153,7 @@
       "alder" : 21,
       "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "fodselsdato" : [ "java.util.Collections$SingletonList", [ "2000-01-01" ] ],
-      "harSammeAdresse" : false,
+      "harSammeAdresse" : null,
       "ident" : null,
       "kjonn" : [ "java.util.Collections$SingletonList", [ {
         "beskrivelse" : "Mann",
@@ -405,7 +405,7 @@
         "alder" : 20,
         "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
         "fnr" : "11225678910",
-        "harSammeAdresse" : false,
+        "harSammeAdresse" : null,
         "navn" : [ "java.util.Collections$SingletonList", [ {
           "etternavn" : "Relasjon",
           "fornavn" : "Gift",

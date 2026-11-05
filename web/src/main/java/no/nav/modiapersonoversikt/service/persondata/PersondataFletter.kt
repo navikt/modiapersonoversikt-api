@@ -1235,7 +1235,7 @@ class PersondataFletter(
                         alder = hentAlder(tredjepartsPerson.foedselsdato, clock),
                         kjonn = listOf(hentKjonnFraType(tredjepartsPerson.kjoenn)),
                         adressebeskyttelse = emptyList(),
-                        harSammeAdresse = false,
+                        harSammeAdresse = null,
                         dodsdato = emptyList(),
                     )
                 } else {
@@ -1263,9 +1263,9 @@ class PersondataFletter(
     private fun harSammeAdresse(
         personAdresse: Persondata.Adresse?,
         tredjepartsPersonAdresse: Persondata.Adresse?,
-    ): Boolean {
+    ): Boolean? {
         if (personAdresse == null || tredjepartsPersonAdresse == null) {
-            return false
+            return null
         }
         return (personAdresse.linje1 == tredjepartsPersonAdresse.linje1) &&
             (personAdresse.linje2 == tredjepartsPersonAdresse.linje2) &&

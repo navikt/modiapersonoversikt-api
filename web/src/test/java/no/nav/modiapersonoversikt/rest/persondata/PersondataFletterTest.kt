@@ -138,7 +138,7 @@ internal class PersondataFletterTest {
             assertNull(it.alder)
             assertTrue(it.adressebeskyttelse.isEmpty())
             assertTrue(it.dodsdato.isEmpty())
-            assertFalse(it.harSammeAdresse)
+            assertNull(it.harSammeAdresse)
             assertEquals(Persondata.Skjulingsaarsak.MANGLER_TILGANG, it.skjulingsaarsak)
         }
         val uidentifisert = result.person.forelderBarnRelasjon.single { it.rolle == Persondata.ForelderBarnRelasjonRolle.MEDMOR }
@@ -164,6 +164,7 @@ internal class PersondataFletterTest {
                 .kode,
         )
         assertNull(uidentifisert.skjulingsaarsak)
+        assertNull(uidentifisert.harSammeAdresse)
         assertTrue(
             uidentifisert.adressebeskyttelse
                 .isEmpty(),
@@ -704,11 +705,80 @@ internal class PersondataFletterTest {
     internal fun `skal ha tomme adresselister når pdl ikke returnerer bostedsadresse`() {
         val result =
             mapper.flettSammenData(
-                testData.copy(persondata = testPerson.copy(bostedsadresse = emptyList())),
+                testData.copy(
+                    persondata = testPerson.copy(bostedsadresse = emptyList()),
+                    tredjepartsPerson =
+                        PersondataResult.of(
+                            tredjepartsPersoner.mapValues { (_, person) ->
+                                person.copy(bostedAdresse = listOf(Persondata.Adresse(linje1 = "Testgata 1", sistEndret = null)))
+                            },
+                        ),
+                ),
             )
 
         assertTrue(result.person.bostedAdresse.isEmpty())
         assertTrue(result.person.historiskeBostedAdresser.isEmpty())
+        result.person.forelderBarnRelasjon.forEach { assertNull(it.harSammeAdresse) }
+        assertNull(
+            result.person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.harSammeAdresse,
+        )
+    }
+
+    @Test
+    internal fun `bostedssammenligning er ukjent når tredjeparten mangler bostedsadresse`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(persondata = testPerson.copy(bostedsadresse = listOf(bostedadresseData))),
+            )
+
+        assertEquals(1, result.person.bostedAdresse.size)
+        result.person.forelderBarnRelasjon.forEach { assertNull(it.harSammeAdresse) }
+        assertNull(
+            result.person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.harSammeAdresse,
+        )
+    }
+
+    @Test
+    internal fun `bostedssammenligning beholder kjent lik og ulik adresse`() {
+        val data = testData.copy(persondata = testPerson.copy(bostedsadresse = listOf(bostedadresseData)))
+        val hovedpersonensAdresse =
+            mapper
+                .flettSammenData(data)
+                .person.bostedAdresse
+                .single()
+
+        listOf(true, false).forEach { sammeAdresse ->
+            val adresse =
+                if (sammeAdresse) hovedpersonensAdresse else hovedpersonensAdresse.copy(linje1 = "En annen adresse")
+            val result =
+                mapper.flettSammenData(
+                    data.copy(
+                        tredjepartsPerson =
+                            PersondataResult.of(
+                                tredjepartsPersoner.mapValues { (_, person) ->
+                                    person.copy(bostedAdresse = listOf(adresse))
+                                },
+                            ),
+                    ),
+                )
+
+            result.person.forelderBarnRelasjon
+                .filter { it.rolle == Persondata.ForelderBarnRelasjonRolle.BARN }
+                .forEach { assertEquals(sammeAdresse, it.harSammeAdresse) }
+            assertEquals(
+                sammeAdresse,
+                result.person.sivilstand
+                    .single()
+                    .sivilstandRelasjon
+                    ?.harSammeAdresse,
+            )
+        }
     }
 
     @Test
