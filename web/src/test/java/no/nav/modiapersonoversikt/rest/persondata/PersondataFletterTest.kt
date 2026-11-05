@@ -4,12 +4,19 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
+import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.KjoennType
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Oppholdstillatelse
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Doedsfall
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Folkeregistermetadata
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.KontaktinformasjonForDoedsboAdvokatSomKontakt
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.KontaktinformasjonForDoedsboOrganisasjonSomKontakt
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Metadata2
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Opphold
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.RelatertBiPerson
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.infrastructure.Serializer
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.persondata.Persondata
 import no.nav.modiapersonoversikt.service.persondata.PersondataFletter
@@ -17,6 +24,7 @@ import no.nav.modiapersonoversikt.service.persondata.PersondataResult
 import no.nav.personoversikt.common.logging.TjenestekallLogg
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -24,7 +32,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.Clock
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
+import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Personnavn as PdlPersonnavn
 
 internal class PersondataFletterTest {
     @JvmField
@@ -38,6 +48,572 @@ internal class PersondataFletterTest {
     @BeforeEach
     internal fun setUp() {
         every { kodeverk.hentKodeverk<String, String>(any()) } returns gittKodeverk()
+    }
+
+    @Test
+    fun `skjulte tredjeparter beholder relasjoner og innebygde opplysninger`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(
+                    tredjepartsPerson = PersondataResult.of(emptyMap()),
+                    skjulingsaarsaker =
+                        (
+                            listOf(
+                                fullmaktPerson.fullmektig,
+                                sivilstandPerson.relatertVedSivilstand!!,
+                                foreldreansvarData.ansvarlig!!,
+                                foreldreansvarData.ansvarssubjekt!!,
+                                kontaktinformasjonDodsbo.personSomKontakt!!.identifikasjonsnummer!!,
+                                vergemal.vergeEllerFullmektig.motpartsPersonident!!,
+                                historiskVergemal.vergeEllerFullmektig.motpartsPersonident!!,
+                            ) + forelderBarnRelasjonData.mapNotNull { it.relatertPersonsIdent }
+                        ).associateWith { Persondata.Skjulingsaarsak.MANGLER_TILGANG },
+                ),
+            )
+        assertEquals(
+            "",
+            result.person.fullmektige
+                .single()
+                .ident,
+        )
+        assertEquals(
+            forventetFullmakt,
+            result.person.fullmektige
+                .single()
+                .fullmakt,
+        )
+        assertNull(
+            result.person.fullmektige
+                .single()
+                .digitalKontaktinformasjonTredjepartsperson,
+        )
+        assertNull(
+            result.person.vergemal
+                .single()
+                .ident,
+        )
+        assertEquals(
+            gittNavn("Person Vergemål"),
+            result.person.vergemal
+                .single()
+                .navn,
+        )
+        assertNull(
+            result.person.historiskeVergemal
+                .single()
+                .ident,
+        )
+        assertEquals(
+            gittNavn("Person HistoriskVergemål"),
+            result.person.historiskeVergemal
+                .single()
+                .navn,
+        )
+        assertEquals(
+            "Gateveien",
+            result.person.dodsbo
+                .single()
+                .adresse.linje1,
+        )
+        assertEquals(
+            Persondata.PersonSomAdressat(null, emptyList(), null, Persondata.Skjulingsaarsak.MANGLER_TILGANG),
+            result.person.dodsbo
+                .single()
+                .adressat.personSomAdressat,
+        )
+        assertEquals(
+            Persondata.Foreldreansvar(
+                ansvar = "felles",
+                ansvarlig = Persondata.NavnOgIdent(null, null, Persondata.Skjulingsaarsak.MANGLER_TILGANG),
+                ansvarsubject = Persondata.NavnOgIdent(null, null, Persondata.Skjulingsaarsak.MANGLER_TILGANG),
+            ),
+            result.person.foreldreansvar.single(),
+        )
+        assertEquals(forelderBarnRelasjonData.size, result.person.forelderBarnRelasjon.size)
+        result.person.forelderBarnRelasjon.filter { it.rolle == Persondata.ForelderBarnRelasjonRolle.BARN }.forEach {
+            assertNull(it.ident)
+            assertTrue(it.navn.isEmpty())
+            assertTrue(it.fodselsdato.isEmpty())
+            assertTrue(it.kjonn.isEmpty())
+            assertNull(it.alder)
+            assertTrue(it.adressebeskyttelse.isEmpty())
+            assertTrue(it.dodsdato.isEmpty())
+            assertNull(it.harSammeAdresse)
+            assertEquals(Persondata.Skjulingsaarsak.MANGLER_TILGANG, it.skjulingsaarsak)
+        }
+        val uidentifisert = result.person.forelderBarnRelasjon.single { it.rolle == Persondata.ForelderBarnRelasjonRolle.MEDMOR }
+        assertEquals(
+            Persondata.ForelderBarnRelasjonRolle.MEDMOR,
+            uidentifisert.rolle,
+        )
+        assertNull(
+            uidentifisert.ident,
+        )
+        assertEquals(
+            listOf(Persondata.Navn("Tredjepart", "Relasjon", "Fra utlandet")),
+            uidentifisert.navn,
+        )
+        assertEquals(
+            listOf(LocalDate.parse("2000-01-01")),
+            uidentifisert.fodselsdato,
+        )
+        assertEquals(
+            Persondata.Kjonn.M,
+            uidentifisert.kjonn
+                .single()
+                .kode,
+        )
+        assertNull(uidentifisert.skjulingsaarsak)
+        assertNull(uidentifisert.harSammeAdresse)
+        assertTrue(
+            uidentifisert.adressebeskyttelse
+                .isEmpty(),
+        )
+        assertTrue(
+            uidentifisert.dodsdato
+                .isEmpty(),
+        )
+        assertEquals(
+            "",
+            result.person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.fnr,
+        )
+        assertEquals(
+            Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+            result.person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.skjulingsaarsak,
+        )
+        assertNull(
+            result.person.vergemal
+                .single()
+                .skjulingsaarsak,
+        )
+        assertNull(
+            result.person.historiskeVergemal
+                .single()
+                .skjulingsaarsak,
+        )
+        assertEquals(
+            Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+            result.person.fullmektige
+                .single()
+                .skjulingsaarsak,
+        )
+        val json = Serializer.jacksonObjectMapper.writeValueAsString(result)
+        listOf(
+            "55555111000",
+            "55555222000",
+            "11225666000",
+            "11225678910",
+        ).forEach {
+            assertFalse(json.contains(it), "Utelatt tredjeperson finnes i responsen")
+        }
+    }
+
+    @Test
+    fun `avslagsdetaljer foelger skjulte personer men ikke innebygde fallbackdata`() {
+        val avslag = Tilgangsavslag("AVVIST_SKJERMING", "Du har ikke tilgang til skjermet person")
+        val identer =
+            listOf(
+                fullmaktPerson.fullmektig,
+                sivilstandPerson.relatertVedSivilstand!!,
+                foreldreansvarData.ansvarlig!!,
+                foreldreansvarData.ansvarssubjekt!!,
+                vergemal.vergeEllerFullmektig.motpartsPersonident!!,
+                kontaktinformasjonDodsbo.personSomKontakt!!.identifikasjonsnummer!!,
+            ) + forelderBarnRelasjonData.mapNotNull { it.relatertPersonsIdent }
+        val person =
+            mapper
+                .flettSammenData(
+                    testData.copy(
+                        tredjepartsPerson = PersondataResult.of(emptyMap()),
+                        skjulingsaarsaker = identer.associateWith { Persondata.Skjulingsaarsak.MANGLER_TILGANG },
+                        tilgangsavslag = identer.associateWith { avslag },
+                    ),
+                ).person
+
+        assertEquals(avslag, person.fullmektige.single().tilgangsavslag)
+        assertEquals(
+            avslag,
+            person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.tilgangsavslag,
+        )
+        assertEquals(
+            avslag,
+            person.foreldreansvar
+                .single()
+                .ansvarlig
+                ?.tilgangsavslag,
+        )
+        assertEquals(
+            avslag,
+            person.foreldreansvar
+                .single()
+                .ansvarsubject
+                ?.tilgangsavslag,
+        )
+        assertTrue(person.forelderBarnRelasjon.filter { it.skjulingsaarsak != null }.all { it.tilgangsavslag == avslag })
+        assertTrue(person.forelderBarnRelasjon.filter { it.skjulingsaarsak == null }.all { it.tilgangsavslag == null })
+        assertNull(person.vergemal.single().tilgangsavslag)
+        assertEquals(
+            avslag,
+            person.dodsbo
+                .single()
+                .adressat.personSomAdressat
+                ?.tilgangsavslag,
+        )
+    }
+
+    @Test
+    fun `dodsbokontakt uten innebygde opplysninger markerer manglende PDL-treff`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(tredjepartsPerson = PersondataResult.of(emptyMap())),
+            )
+
+        assertEquals(
+            Persondata.PersonSomAdressat(null, emptyList(), null, Persondata.Skjulingsaarsak.UAVKLART),
+            result.person.dodsbo
+                .single()
+                .adressat.personSomAdressat,
+        )
+    }
+
+    @Test
+    fun `dodsbokontakt beholder innebygde opplysninger uten eget PDL-treff`() {
+        val ident = kontaktinformasjonDodsbo.personSomKontakt!!.identifikasjonsnummer!!
+        val avslag = Tilgangsavslag("AVVIST_SKJERMING", "Du har ikke tilgang til skjermet person")
+        val navn = gittPersonnavn("Utenlandsk Kontakt")
+        val fodselsdato = LocalDate.parse("1990-05-06")
+        listOf(null, Persondata.Skjulingsaarsak.MANGLER_TILGANG, Persondata.Skjulingsaarsak.UAVKLART).forEach { aarsak ->
+            listOf(navn to fodselsdato, navn to null, null to fodselsdato).forEach { (innebygdNavn, innebygdFodselsdato) ->
+                val result =
+                    mapper.flettSammenData(
+                        testData.copy(
+                            tredjepartsPerson = PersondataResult.of(emptyMap()),
+                            skjulingsaarsaker = aarsak?.let { mapOf(ident to it) } ?: emptyMap(),
+                            tilgangsavslag = mapOf(ident to avslag),
+                            persondata =
+                                testPerson.copy(
+                                    kontaktinformasjonForDoedsbo =
+                                        listOf(
+                                            kontaktinformasjonDodsbo.copy(
+                                                personSomKontakt =
+                                                    requireNotNull(kontaktinformasjonDodsbo.personSomKontakt).copy(
+                                                        personnavn = innebygdNavn,
+                                                        foedselsdato = innebygdFodselsdato,
+                                                    ),
+                                            ),
+                                        ),
+                                ),
+                        ),
+                    )
+                val dodsbo = result.person.dodsbo.single()
+                assertEquals(
+                    Persondata.PersonSomAdressat(
+                        null,
+                        if (innebygdNavn != null) listOf(gittNavn("Utenlandsk Kontakt")) else emptyList(),
+                        innebygdFodselsdato,
+                    ),
+                    dodsbo.adressat.personSomAdressat,
+                )
+                assertEquals("Gateveien", dodsbo.adresse.linje1)
+                assertEquals("9988 Poststed", dodsbo.adresse.linje2)
+                assertFalse(Serializer.jacksonObjectMapper.writeValueAsString(dodsbo).contains(ident))
+            }
+        }
+    }
+
+    @Test
+    fun `foreldreansvar beholder godkjent part og utelater persondata for manglende part`() {
+        listOf("55333111000", "98765432100").forEach { godkjentIdent ->
+            val godkjentPerson = tredjepartsPersoner.getValue(godkjentIdent)
+            val result =
+                mapper.flettSammenData(
+                    testData.copy(
+                        tredjepartsPerson = PersondataResult.of(mapOf(godkjentIdent to godkjentPerson)),
+                    ),
+                )
+            val ansvar = result.person.foreldreansvar.single()
+            val godkjent = Persondata.NavnOgIdent(godkjentPerson.navn.firstOrNull(), godkjentIdent)
+            val uavklart = Persondata.NavnOgIdent(null, null, Persondata.Skjulingsaarsak.UAVKLART)
+
+            assertEquals("felles", ansvar.ansvar)
+            assertEquals(if (godkjentIdent == "55333111000") godkjent else uavklart, ansvar.ansvarlig)
+            assertEquals(if (godkjentIdent == "98765432100") godkjent else uavklart, ansvar.ansvarsubject)
+            val skjultIdent = if (godkjentIdent == "55333111000") "98765432100" else "55333111000"
+            val json = Serializer.jacksonObjectMapper.writeValueAsString(ansvar)
+            assertFalse(json.contains(skjultIdent))
+            assertFalse(
+                json.contains(
+                    tredjepartsPersoner
+                        .getValue(skjultIdent)
+                        .navn
+                        .first()
+                        .etternavn,
+                ),
+            )
+        }
+    }
+
+    @Test
+    fun `foreldreansvar uten identifikator beholder tidligere navnemapping`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(
+                    persondata =
+                        testPerson.copy(
+                            foreldreansvar =
+                                listOf(
+                                    foreldreansvarData.copy(
+                                        ansvarlig = null,
+                                        ansvarssubjekt = null,
+                                        ansvarligUtenIdentifikator =
+                                            RelatertBiPerson(
+                                                navn = gittPersonnavn("Hemmelig Forelder"),
+                                                foedselsdato = LocalDate.parse("1990-05-06"),
+                                                statsborgerskap = "NOR",
+                                                kjoenn = KjoennType.KVINNE,
+                                            ),
+                                    ),
+                                    foreldreansvarData.copy(
+                                        ansvarlig = null,
+                                        ansvarssubjekt = null,
+                                    ),
+                                ),
+                        ),
+                ),
+            )
+
+        assertEquals(2, result.person.foreldreansvar.size)
+        assertEquals(
+            "felles",
+            result.person.foreldreansvar
+                .first()
+                .ansvar,
+        )
+        assertEquals(
+            Persondata.NavnOgIdent(gittNavn("Hemmelig Forelder"), null),
+            result.person.foreldreansvar
+                .first()
+                .ansvarlig,
+        )
+        assertNull(
+            result.person.foreldreansvar
+                .first()
+                .ansvarsubject,
+        )
+        assertNull(
+            result.person.foreldreansvar
+                .last()
+                .ansvarlig,
+        )
+        assertNull(
+            result.person.foreldreansvar
+                .last()
+                .ansvarsubject,
+        )
+        val json = Serializer.jacksonObjectMapper.writeValueAsString(result)
+        assertTrue(json.contains("Hemmelig"))
+        assertTrue(json.contains("Forelder"))
+        assertFalse(json.contains("1990-05-06"))
+    }
+
+    @Test
+    fun `innebygde opplysninger beholder tidligere prioritet ogsa nar relasjonen har ident`() {
+        val inlinePerson =
+            RelatertBiPerson(
+                navn = gittPersonnavn("Utenlandsk Person"),
+                foedselsdato = LocalDate.parse("1990-05-06"),
+                statsborgerskap = "NOR",
+                kjoenn = KjoennType.KVINNE,
+            )
+        val ansvarligIdent = foreldreansvarData.ansvarlig!!
+        val barnIdent = forelderBarnRelasjonData.first().relatertPersonsIdent!!
+        listOf<PersondataResult<Map<String, Persondata.TredjepartsPerson>>>(
+            testData.tredjepartsPerson,
+            PersondataResult.of(emptyMap()),
+            PersondataResult.Failure(PersondataResult.InformasjonElement.PDL_TREDJEPARTSPERSONER, Throwable("PDL utilgjengelig")),
+        ).forEach { personer ->
+            val result =
+                mapper.flettSammenData(
+                    testData.copy(
+                        tredjepartsPerson = personer,
+                        skjulingsaarsaker =
+                            listOf(ansvarligIdent, barnIdent).associateWith { Persondata.Skjulingsaarsak.MANGLER_TILGANG },
+                        persondata =
+                            testPerson.copy(
+                                foreldreansvar = listOf(foreldreansvarData.copy(ansvarligUtenIdentifikator = inlinePerson)),
+                                forelderBarnRelasjon =
+                                    listOf(
+                                        forelderBarnRelasjonData.first().copy(
+                                            relatertPersonUtenFolkeregisteridentifikator = inlinePerson,
+                                        ),
+                                    ),
+                            ),
+                    ),
+                )
+            val godkjentAnsvarlig = personer.getOrElse(emptyMap())[ansvarligIdent]
+            assertEquals(
+                if (godkjentAnsvarlig != null) {
+                    Persondata.NavnOgIdent(godkjentAnsvarlig.navn.firstOrNull(), ansvarligIdent)
+                } else {
+                    Persondata.NavnOgIdent(gittNavn("Utenlandsk Person"), null)
+                },
+                result.person.foreldreansvar
+                    .single()
+                    .ansvarlig,
+            )
+            val barn = result.person.forelderBarnRelasjon.single()
+            assertEquals(listOf(gittNavn("Utenlandsk Person")), barn.navn)
+            assertEquals(listOf(LocalDate.parse("1990-05-06")), barn.fodselsdato)
+            assertEquals(Persondata.Kjonn.K, barn.kjonn.single().kode)
+            assertNull(barn.ident)
+            assertNull(barn.skjulingsaarsak)
+        }
+    }
+
+    @Test
+    fun `delvis tilgang beholder godkjent fullmektig og skjuler resten`() {
+        val ident = fullmaktPerson.fullmektig
+        val result =
+            mapper.flettSammenData(
+                testData.copy(
+                    tredjepartsPerson = PersondataResult.of(mapOf(ident to tredjepartsPersoner.getValue(ident))),
+                    skjulingsaarsaker =
+                        mapOf(
+                            "55555111000" to Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+                            "55555222000" to Persondata.Skjulingsaarsak.UAVKLART,
+                            "11225678910" to Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+                            "55333111000" to Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+                            "98765432100" to Persondata.Skjulingsaarsak.UAVKLART,
+                        ) +
+                            forelderBarnRelasjonData
+                                .mapNotNull { it.relatertPersonsIdent }
+                                .associateWith { Persondata.Skjulingsaarsak.UAVKLART },
+                    tilgangsfeil = true,
+                ),
+            )
+        assertEquals(listOf(ident), result.person.fullmektige.map { it.ident })
+        assertEquals(
+            forelderBarnRelasjonData.size,
+            result.person.forelderBarnRelasjon.size,
+            "Uidentifisert PDL-relasjon skal fortsatt vises",
+        )
+        assertEquals(
+            listOf(Persondata.Navn("Tredjepart", "Relasjon", "Fra utlandet")),
+            result.person.forelderBarnRelasjon
+                .single { it.rolle == Persondata.ForelderBarnRelasjonRolle.MEDMOR }
+                .navn,
+        )
+        assertEquals(
+            "Gateveien",
+            result.person.dodsbo
+                .single()
+                .adresse.linje1,
+        )
+        assertEquals(listOf(PersondataResult.InformasjonElement.TILGANGSMASKINEN_TREDJEPARTSPERSONER), result.feilendeSystemer)
+    }
+
+    @Test
+    fun `skjulingsaarsak oppgis per person uten personidentitet`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(
+                    tredjepartsPerson = PersondataResult.of(emptyMap()),
+                    persondata =
+                        testPerson.copy(
+                            vergemaalEllerFremtidsfullmakt =
+                                testPerson.vergemaalEllerFremtidsfullmakt.map {
+                                    it.copy(vergeEllerFullmektig = it.vergeEllerFullmektig.copy(identifiserendeInformasjon = null))
+                                },
+                        ),
+                    skjulingsaarsaker =
+                        mapOf(
+                            "11225678910" to Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+                            "55555111000" to Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+                            "55555222000" to Persondata.Skjulingsaarsak.UAVKLART,
+                        ),
+                ),
+            )
+
+        val json = Serializer.jacksonObjectMapper.writeValueAsString(result)
+        assertTrue(
+            result.person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.fnr == "",
+        )
+        assertNull(
+            result.person.vergemal
+                .single()
+                .ident,
+        )
+        assertNull(
+            result.person.historiskeVergemal
+                .single()
+                .ident,
+        )
+        assertEquals(
+            Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+            result.person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.skjulingsaarsak,
+        )
+        assertEquals(
+            Persondata.Skjulingsaarsak.MANGLER_TILGANG,
+            result.person.vergemal
+                .single()
+                .skjulingsaarsak,
+        )
+        assertEquals(
+            Persondata.Skjulingsaarsak.UAVKLART,
+            result.person.historiskeVergemal
+                .single()
+                .skjulingsaarsak,
+        )
+        listOf("11225678910", "55555111000", "Person Vergemål", "Person HistoriskVergemål").forEach {
+            assertFalse(json.contains(it), "Skjermet identitet finnes i responsen")
+        }
+    }
+
+    @Test
+    fun `beholder advokat som adressat med kontaktpersonens navn`() {
+        val advokatnavn = PdlPersonnavn(fornavn = "Skjermet", mellomnavn = null, etternavn = "Kontaktperson")
+        val dodsbo =
+            kontaktinformasjonDodsbo.copy(
+                personSomKontakt = null,
+                advokatSomKontakt =
+                    KontaktinformasjonForDoedsboAdvokatSomKontakt(
+                        personnavn = advokatnavn,
+                        organisasjonsnavn = "Juridisk firma",
+                        organisasjonsnummer = "123456789",
+                    ),
+            )
+
+        val result =
+            mapper.flettSammenData(
+                testData.copy(persondata = testPerson.copy(kontaktinformasjonForDoedsbo = listOf(dodsbo))),
+            )
+        val adressat =
+            result.person.dodsbo
+                .single()
+                .adressat.advokatSomAdressat
+
+        assertEquals("Skjermet", adressat?.kontaktperson?.fornavn)
+        assertEquals("Kontaktperson", adressat?.kontaktperson?.etternavn)
+        assertEquals("Juridisk firma", adressat?.organisasjonsnavn)
+        assertEquals("123456789", adressat?.organisasjonsnummer)
+        val json = Serializer.jacksonObjectMapper.writeValueAsString(result)
+        assertTrue(json.contains("Skjermet"))
+        assertTrue(json.contains("Kontaktperson"))
     }
 
     @Test
@@ -155,11 +731,80 @@ internal class PersondataFletterTest {
     internal fun `skal ha tomme adresselister når pdl ikke returnerer bostedsadresse`() {
         val result =
             mapper.flettSammenData(
-                testData.copy(persondata = testPerson.copy(bostedsadresse = emptyList())),
+                testData.copy(
+                    persondata = testPerson.copy(bostedsadresse = emptyList()),
+                    tredjepartsPerson =
+                        PersondataResult.of(
+                            tredjepartsPersoner.mapValues { (_, person) ->
+                                person.copy(bostedAdresse = listOf(Persondata.Adresse(linje1 = "Testgata 1", sistEndret = null)))
+                            },
+                        ),
+                ),
             )
 
         assertTrue(result.person.bostedAdresse.isEmpty())
         assertTrue(result.person.historiskeBostedAdresser.isEmpty())
+        result.person.forelderBarnRelasjon.forEach { assertNull(it.harSammeAdresse) }
+        assertNull(
+            result.person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.harSammeAdresse,
+        )
+    }
+
+    @Test
+    internal fun `bostedssammenligning er ukjent når tredjeparten mangler bostedsadresse`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(persondata = testPerson.copy(bostedsadresse = listOf(bostedadresseData))),
+            )
+
+        assertEquals(1, result.person.bostedAdresse.size)
+        result.person.forelderBarnRelasjon.forEach { assertNull(it.harSammeAdresse) }
+        assertNull(
+            result.person.sivilstand
+                .single()
+                .sivilstandRelasjon
+                ?.harSammeAdresse,
+        )
+    }
+
+    @Test
+    internal fun `bostedssammenligning beholder kjent lik og ulik adresse`() {
+        val data = testData.copy(persondata = testPerson.copy(bostedsadresse = listOf(bostedadresseData)))
+        val hovedpersonensAdresse =
+            mapper
+                .flettSammenData(data)
+                .person.bostedAdresse
+                .single()
+
+        listOf(true, false).forEach { sammeAdresse ->
+            val adresse =
+                if (sammeAdresse) hovedpersonensAdresse else hovedpersonensAdresse.copy(linje1 = "En annen adresse")
+            val result =
+                mapper.flettSammenData(
+                    data.copy(
+                        tredjepartsPerson =
+                            PersondataResult.of(
+                                tredjepartsPersoner.mapValues { (_, person) ->
+                                    person.copy(bostedAdresse = listOf(adresse))
+                                },
+                            ),
+                    ),
+                )
+
+            result.person.forelderBarnRelasjon
+                .filter { it.rolle == Persondata.ForelderBarnRelasjonRolle.BARN }
+                .forEach { assertEquals(sammeAdresse, it.harSammeAdresse) }
+            assertEquals(
+                sammeAdresse,
+                result.person.sivilstand
+                    .single()
+                    .sivilstandRelasjon
+                    ?.harSammeAdresse,
+            )
+        }
     }
 
     @Test
@@ -307,7 +952,7 @@ internal class PersondataFletterTest {
     }
 
     @Test
-    internal fun `skal bruke personnavn fra adressat når identifikasjonsnummer mangler`() {
+    internal fun `skal beholde adressat når identifikasjonsnummer mangler`() {
         val result =
             mapper.flettSammenData(
                 data =
@@ -321,14 +966,100 @@ internal class PersondataFletterTest {
                 clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault()),
             )
 
-        val personSomAdressat =
+        val adressat =
             result.person.dodsbo
-                .first()
+                .single()
                 .adressat.personSomAdressat
-        assertNull(personSomAdressat?.fnr, "fnr skal være null når identifikasjonsnummer mangler")
-        assertEquals(1, personSomAdressat?.navn?.size, "Navn skal hentes fra personnavn-feltet")
-        assertEquals("Ola", personSomAdressat?.navn?.first()?.fornavn)
-        assertEquals("Nordmann", personSomAdressat?.navn?.first()?.etternavn)
+        assertNull(adressat?.fnr)
+        assertEquals(listOf(gittNavn("Ola Nordmann")), adressat?.navn)
+        assertEquals(LocalDate.parse("1960-01-01"), adressat?.fodselsdato)
+        assertNull(adressat?.skjulingsaarsak)
+    }
+
+    @Test
+    fun `vergemal uten ident beholder tidligere navn og metadata`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(
+                    tredjepartsPerson = PersondataResult.of(emptyMap()),
+                    persondata =
+                        testPerson.copy(
+                            vergemaalEllerFremtidsfullmakt =
+                                listOf(
+                                    vergemal.copy(
+                                        vergeEllerFullmektig = vergemal.vergeEllerFullmektig.copy(motpartsPersonident = null),
+                                    ),
+                                    historiskVergemal.copy(
+                                        vergeEllerFullmektig = historiskVergemal.vergeEllerFullmektig.copy(motpartsPersonident = null),
+                                    ),
+                                ),
+                        ),
+                ),
+            )
+
+        val gjeldende = result.person.vergemal.single()
+        val historisk = result.person.historiskeVergemal.single()
+        assertNull(gjeldende.ident)
+        assertNull(historisk.ident)
+        assertEquals(gittNavn("Person Vergemål"), gjeldende.navn)
+        assertEquals(gittNavn("Person HistoriskVergemål"), historisk.navn)
+        assertFalse(gjeldende.historisk)
+        assertTrue(historisk.historisk)
+        assertEquals("Voksen", gjeldende.vergesakstype)
+    }
+
+    @Test
+    fun `organisasjon som adressat beholder kontaktpersonens navn`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(
+                    persondata =
+                        testPerson.copy(
+                            kontaktinformasjonForDoedsbo =
+                                listOf(
+                                    kontaktinformasjonDodsbo.copy(
+                                        personSomKontakt = null,
+                                        organisasjonSomKontakt =
+                                            KontaktinformasjonForDoedsboOrganisasjonSomKontakt(
+                                                organisasjonsnavn = "Testorganisasjon",
+                                                organisasjonsnummer = "123456789",
+                                                kontaktperson = gittPersonnavn("Ola Nordmann"),
+                                            ),
+                                    ),
+                                ),
+                        ),
+                ),
+            )
+        val adressat =
+            result.person.dodsbo
+                .single()
+                .adressat.organisasjonSomAdressat
+        assertEquals(gittNavn("Ola Nordmann"), adressat?.kontaktperson)
+        assertEquals("Testorganisasjon", adressat?.organisasjonsnavn)
+        assertEquals("123456789", adressat?.organisasjonsnummer)
+    }
+
+    @Test
+    fun `forelder barn uten ident eller inline person beholder relasjonsrollen`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(
+                    persondata =
+                        testPerson.copy(
+                            forelderBarnRelasjon =
+                                listOf(
+                                    forelderBarnRelasjonData.first().copy(
+                                        relatertPersonsIdent = null,
+                                        relatertPersonUtenFolkeregisteridentifikator = null,
+                                    ),
+                                ),
+                        ),
+                ),
+            )
+        val relasjon = result.person.forelderBarnRelasjon.single()
+        assertEquals(Persondata.ForelderBarnRelasjonRolle.BARN, relasjon.rolle)
+        assertNull(relasjon.ident)
+        assertTrue(relasjon.navn.isEmpty())
     }
 
     @Test
@@ -422,6 +1153,52 @@ internal class PersondataFletterTest {
     }
 
     @Test
+    internal fun `beholder fullmektig og endringslogg uten tilgjengelig tredjepartsperson`() {
+        val endring =
+            FullmaktEndringDto(
+                endringId = 1,
+                registrert = gittDateTime("2026-09-29T12:39:32"),
+                registrertAv = "system",
+                kilde = FullmaktEndringDto.Kilde.SYSTEM,
+                hendelse = FullmaktEndringDto.Hendelse.OPPRETTELSE_AV_BRUKER,
+                gyldigFraOgMed = fullmaktPerson.gyldigFraOgMed,
+                gyldigTilOgMed = fullmaktPerson.gyldigTilOgMed,
+                leserettigheter = fullmaktPerson.leserettigheter,
+                skriverettigheter = fullmaktPerson.skriverettigheter,
+            )
+        val forventetEndring =
+            Persondata.FullmaktEndring(
+                endringId = endring.endringId,
+                registrert = endring.registrert,
+                registrertAv = endring.registrertAv,
+                kilde = endring.kilde,
+                hendelse = endring.hendelse,
+                gyldigFraOgMed = forventetFullmakt.gyldigFraOgMed,
+                gyldigTilOgMed = forventetFullmakt.gyldigTilOgMed,
+                leserettigheter = forventetFullmakt.leserettigheter,
+                skriverettigheter = forventetFullmakt.skriverettigheter,
+            )
+
+        listOf(null, Persondata.Skjulingsaarsak.MANGLER_TILGANG, Persondata.Skjulingsaarsak.UAVKLART).forEach { aarsak ->
+            val result =
+                mapper.flettSammenData(
+                    testData.copy(
+                        fullmektige = PersondataResult.of(listOf(fullmaktPerson.copy(endringslogg = listOf(endring)))),
+                        tredjepartsPerson = PersondataResult.of(emptyMap()),
+                        skjulingsaarsaker = aarsak?.let { mapOf(fullmaktPerson.fullmektig to it) } ?: emptyMap(),
+                    ),
+                )
+            val fullmektig = result.person.fullmektige.single()
+
+            assertEquals(forventetFullmakt.copy(endringslogg = listOf(forventetEndring)), fullmektig.fullmakt)
+            assertEquals("", fullmektig.ident)
+            assertNull(fullmektig.navn)
+            assertNull(fullmektig.digitalKontaktinformasjonTredjepartsperson)
+            assertEquals(aarsak ?: Persondata.Skjulingsaarsak.UAVKLART, fullmektig.skjulingsaarsak)
+        }
+    }
+
+    @Test
     internal fun `repr-fullmektig faar kontaktinfo bare ved tilgjengelig tredjepartsperson`() {
         val result =
             mapper.flettSammenData(
@@ -449,7 +1226,7 @@ internal class PersondataFletterTest {
                 ),
             )
         assertEquals(
-            "55555666000",
+            "",
             utenPerson.person.fullmektige
                 .single()
                 .ident,
@@ -463,12 +1240,6 @@ internal class PersondataFletterTest {
             utenPerson.person.fullmektige
                 .single()
                 .digitalKontaktinformasjonTredjepartsperson,
-        )
-        assertEquals(
-            forventetFullmakt,
-            utenPerson.person.fullmektige
-                .single()
-                .fullmakt,
         )
     }
 

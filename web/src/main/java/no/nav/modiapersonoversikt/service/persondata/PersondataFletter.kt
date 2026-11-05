@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Kontaktinformasjo
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -44,7 +45,39 @@ class PersondataFletter(
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
         val kontaktinformasjonTredjepartsperson: PersondataResult<Map<String, Persondata.DigitalKontaktinformasjonTredjepartsperson>>,
         val harTilgangTilSkjermetPerson: Boolean,
+        val skjulingsaarsaker: Map<String, Persondata.Skjulingsaarsak> = emptyMap(),
+        val tilgangsfeil: Boolean = false,
+        val tilgangsavslag: Map<String, Tilgangsavslag> = emptyMap(),
     ) {
+        fun harTredjeperson(ident: String?): Boolean = ident != null && tredjepartsPerson.getOrElse(emptyMap()).containsKey(ident)
+
+        fun hentSkjulingsaarsak(ident: String?): Persondata.Skjulingsaarsak? =
+            if (ident.isNullOrBlank() || harTredjeperson(ident)) {
+                null
+            } else {
+                skjulingsaarsaker[ident] ?: Persondata.Skjulingsaarsak.UAVKLART
+            }
+
+        fun hentTilgangsavslag(ident: String?): Tilgangsavslag? =
+            tilgangsavslag[ident].takeIf { hentSkjulingsaarsak(ident) == Persondata.Skjulingsaarsak.MANGLER_TILGANG }
+
+        fun hentTredjeperson(ident: String?): Persondata.TredjepartsPerson? {
+            if (ident.isNullOrBlank()) return null
+            return tredjepartsPerson.getOrElse(emptyMap())[ident] ?: Persondata.TredjepartsPerson(
+                fnr = "",
+                navn = emptyList(),
+                fodselsdato = emptyList(),
+                alder = null,
+                kjonn = emptyList(),
+                adressebeskyttelse = emptyList(),
+                bostedAdresse = emptyList(),
+                dodsdato = emptyList(),
+                digitalKontaktinformasjon = null,
+                skjulingsaarsak = hentSkjulingsaarsak(ident),
+                tilgangsavslag = hentTilgangsavslag(ident),
+            )
+        }
+
         private val ekstraDatapunker =
             listOf(
                 oppfolging,
@@ -79,6 +112,7 @@ class PersondataFletter(
         clock: Clock = Clock.systemDefaultZone(),
     ): Persondata.Data {
         val feilendeSystemer = data.feilendeSystemer().toMutableList()
+        if (data.tilgangsfeil) feilendeSystemer.add(InformasjonElement.TILGANGSMASKINEN_TREDJEPARTSPERSONER)
         val (historiskeVergemal, gjeldendeVergemal) = hentVergemal(data).partition { it.historisk }
         return Persondata.Data(
             feilendeSystemer = feilendeSystemer,
@@ -739,7 +773,7 @@ class PersondataFletter(
         data: Data,
         relatertVedSivilstand: String?,
     ): Persondata.SivilstandRelasjon? {
-        val person = data.tredjepartsPerson.map { it[relatertVedSivilstand] }.getOrNull() ?: return null
+        val person = data.hentTredjeperson(relatertVedSivilstand) ?: return null
 
         return Persondata.SivilstandRelasjon(
             fnr = person.fnr,
@@ -752,26 +786,25 @@ class PersondataFletter(
                     person.bostedAdresse.firstOrNull(),
                 ),
             dodsdato = person.dodsdato,
+            skjulingsaarsak = person.skjulingsaarsak,
+            tilgangsavslag = person.tilgangsavslag,
         )
     }
 
     private fun hentForeldreansvar(data: Data): List<Persondata.Foreldreansvar> =
         data.persondata.foreldreansvar.map { forelderansvar ->
-            val ansvarligUtenIdentifikatorNavn = forelderansvar.ansvarligUtenIdentifikator?.navn?.let(::hentNavn)
+            val ansvarligUtenIdentifikatorNavn =
+                forelderansvar.ansvarligUtenIdentifikator?.navn?.let(::hentNavn)
             val ansvarlig =
                 data.tredjepartsPerson
-                    .map { it[forelderansvar.ansvarlig] }
-                    .map { it.asNavnOgIdent() }
-                    .getOrNull()
-            val ansvarligsubject =
-                data.tredjepartsPerson
-                    .map { it[forelderansvar.ansvarssubjekt] }
-                    .map { it.asNavnOgIdent() }
-                    .getOrNull()
-            hentAnsvarlig(ansvarlig, ansvarligUtenIdentifikatorNavn)
+                    .getOrElse(emptyMap())[forelderansvar.ansvarlig]
+                    .asNavnOgIdent()
+            val ansvarligsubject = data.hentTredjeperson(forelderansvar.ansvarssubjekt).asNavnOgIdent()
             Persondata.Foreldreansvar(
                 ansvar = forelderansvar.ansvar ?: "Kunne ikke hente type ansvar",
-                ansvarlig = hentAnsvarlig(ansvarlig, ansvarligUtenIdentifikatorNavn),
+                ansvarlig =
+                    hentAnsvarlig(ansvarlig, ansvarligUtenIdentifikatorNavn)
+                        ?: data.hentTredjeperson(forelderansvar.ansvarlig).asNavnOgIdent(),
                 ansvarsubject = ansvarligsubject,
             )
         }
@@ -812,7 +845,7 @@ class PersondataFletter(
     private fun hentDodsbo(data: Data): List<Persondata.Dodsbo> =
         data.persondata.kontaktinformasjonForDoedsbo.map { dodsbo ->
             Persondata.Dodsbo(
-                adressat = hentAdressat(dodsbo, data.tredjepartsPerson),
+                adressat = hentAdressat(dodsbo, data),
                 adresse = hentAdresse(dodsbo.adresse),
                 registrert = dodsbo.attestutstedelsesdato,
                 skifteform =
@@ -827,11 +860,11 @@ class PersondataFletter(
 
     private fun hentAdressat(
         dodsbo: KontaktinformasjonForDoedsbo,
-        tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
+        data: Data,
     ): Persondata.Adressat =
         Persondata.Adressat(
             advokatSomAdressat = hentAdvokatSomAdressat(dodsbo),
-            personSomAdressat = hentPersonSomAdressat(dodsbo, tredjepartsPerson),
+            personSomAdressat = hentPersonSomAdressat(dodsbo, data),
             organisasjonSomAdressat = hentOrganisasjonSomAdressat(dodsbo),
         )
 
@@ -846,17 +879,23 @@ class PersondataFletter(
 
     private fun hentPersonSomAdressat(
         dodsbo: KontaktinformasjonForDoedsbo,
-        tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>,
+        data: Data,
     ): Persondata.PersonSomAdressat? {
         val adressat = dodsbo.personSomKontakt ?: return null
-        val adressatPerson = tredjepartsPerson.map { it[adressat.identifikasjonsnummer] }.getOrNull()
+        val adressatPerson = data.hentTredjeperson(adressat.identifikasjonsnummer)
+        val harInnebygdeOpplysninger = adressat.personnavn != null || adressat.foedselsdato != null
         return Persondata.PersonSomAdressat(
-            fnr = adressat.identifikasjonsnummer,
+            fnr =
+                adressat.identifikasjonsnummer.takeIf {
+                    it.isNullOrBlank() || data.harTredjeperson(it)
+                },
             navn =
                 adressatPerson?.navn?.takeIf { it.isNotEmpty() }
                     ?: adressat.personnavn?.let { listOf(hentNavn(it)) }
                     ?: emptyList(),
             fodselsdato = adressat.foedselsdato,
+            skjulingsaarsak = adressatPerson?.skjulingsaarsak.takeUnless { harInnebygdeOpplysninger },
+            tilgangsavslag = adressatPerson?.tilgangsavslag.takeUnless { harInnebygdeOpplysninger },
         )
     }
 
@@ -885,12 +924,14 @@ class PersondataFletter(
             .getOrElse(emptyList())
             .map { fullmakt ->
                 val ident = fullmakt.fullmektig
-                val person = tredjepartsPersoner[ident]
+                val fullmektigPerson = tredjepartsPersoner[ident]
                 Persondata.Fullmektig(
-                    ident = ident,
-                    navn = person?.navn?.firstOrNull(),
-                    digitalKontaktinformasjonTredjepartsperson = person?.digitalKontaktinformasjon,
+                    ident = if (fullmektigPerson == null) "" else ident,
+                    navn = fullmektigPerson?.navn?.firstOrNull(),
+                    digitalKontaktinformasjonTredjepartsperson = fullmektigPerson?.digitalKontaktinformasjon,
                     fullmakt = hentFullmakt(fullmakt),
+                    skjulingsaarsak = data.hentSkjulingsaarsak(ident),
+                    tilgangsavslag = data.hentTilgangsavslag(ident),
                 )
             }
     }
@@ -925,19 +966,16 @@ class PersondataFletter(
 
     private fun hentVergemal(data: Data): List<Persondata.Verge> =
         data.persondata.vergemaalEllerFremtidsfullmakt.map { vergemal ->
-            val motpart =
-                data.tredjepartsPerson
-                    .map { personer ->
-                        personer[vergemal.vergeEllerFullmektig.motpartsPersonident]?.navn
-                    }.getOrNull()
+            val ident = vergemal.vergeEllerFullmektig.motpartsPersonident
+            val vergehaverEllerFullmaktsgiver = data.hentTredjeperson(ident)
             val navn =
                 vergemal.vergeEllerFullmektig.identifiserendeInformasjon
                     ?.navn
                     ?.let(::hentNavn)
 
             Persondata.Verge(
-                ident = vergemal.vergeEllerFullmektig.motpartsPersonident,
-                navn = motpart?.firstOrNull() ?: navn,
+                ident = if (ident.isNullOrBlank() || data.harTredjeperson(ident)) ident else null,
+                navn = vergehaverEllerFullmaktsgiver?.navn?.firstOrNull() ?: navn,
                 vergesakstype = hentVergemalType(vergemal.type),
                 omfang = hentVergemalOmfang(vergemal.vergeEllerFullmektig.omfang),
                 tjenesteOppgaver = hentTjenesteOppgaver(vergemal.vergeEllerFullmektig.tjenesteomraade),
@@ -948,6 +986,8 @@ class PersondataFletter(
                         vergemal.folkeregistermetadata?.opphoerstidspunkt,
                     ),
                 historisk = vergemal.metadata.historisk,
+                skjulingsaarsak = if (navn != null) null else vergehaverEllerFullmaktsgiver?.skjulingsaarsak,
+                tilgangsavslag = if (navn != null) null else vergehaverEllerFullmaktsgiver?.tilgangsavslag,
             )
         }
 
@@ -1198,13 +1238,13 @@ class PersondataFletter(
                         alder = hentAlder(tredjepartsPerson.foedselsdato, clock),
                         kjonn = listOf(hentKjonnFraType(tredjepartsPerson.kjoenn)),
                         adressebeskyttelse = emptyList(),
-                        harSammeAdresse = false,
+                        harSammeAdresse = null,
                         dodsdato = emptyList(),
                     )
                 } else {
-                    val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
+                    val tredjepartsPerson = data.hentTredjeperson(relasjon.relatertPersonsIdent)
                     Persondata.ForelderBarnRelasjon(
-                        ident = tredjepartsPerson?.fnr,
+                        ident = tredjepartsPerson?.fnr?.takeIf { it.isNotEmpty() },
                         rolle = rolle,
                         navn = tredjepartsPerson?.navn ?: emptyList(),
                         fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
@@ -1217,6 +1257,8 @@ class PersondataFletter(
                                 tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull(),
                             ),
                         dodsdato = tredjepartsPerson?.dodsdato ?: emptyList(),
+                        skjulingsaarsak = tredjepartsPerson?.skjulingsaarsak,
+                        tilgangsavslag = tredjepartsPerson?.tilgangsavslag,
                     )
                 }
             }.sortedBy { it.alder }
@@ -1224,9 +1266,9 @@ class PersondataFletter(
     private fun harSammeAdresse(
         personAdresse: Persondata.Adresse?,
         tredjepartsPersonAdresse: Persondata.Adresse?,
-    ): Boolean {
+    ): Boolean? {
         if (personAdresse == null || tredjepartsPersonAdresse == null) {
-            return false
+            return null
         }
         return (personAdresse.linje1 == tredjepartsPersonAdresse.linje1) &&
             (personAdresse.linje2 == tredjepartsPersonAdresse.linje2) &&

@@ -5,9 +5,10 @@ import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.AdressebeskyttelseGradering
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.*
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import no.nav.modiapersonoversikt.service.persondata.PersondataService
 import no.nav.modiapersonoversikt.service.persondata.TredjepartspersonMapper
 import no.nav.personoversikt.common.test.snapshot.SnapshotExtension
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -27,7 +28,6 @@ internal class TredjepartspersonMapperTest {
 
     @Test
     internal fun `skal mapper ulike adresse typer til internt domene`() {
-        val tilganger = gittTilganger(kode6 = false, kode7 = false)
         val person =
             gittPerson(
                 navn = "Aremark Testfamilien",
@@ -37,7 +37,6 @@ internal class TredjepartspersonMapperTest {
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
-                tilganger = tilganger,
                 person = person,
                 kontaktinformasjonTredjepartsperson = null,
             ),
@@ -45,7 +44,6 @@ internal class TredjepartspersonMapperTest {
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
-                tilganger = tilganger,
                 person = person.copy(bostedsadresse = vegadresse()),
                 kontaktinformasjonTredjepartsperson = null,
             ),
@@ -53,7 +51,6 @@ internal class TredjepartspersonMapperTest {
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
                 ident = "00000000000",
-                tilganger = tilganger,
                 person = person.copy(bostedsadresse = matrikkel()),
                 kontaktinformasjonTredjepartsperson = null,
             ),
@@ -61,44 +58,22 @@ internal class TredjepartspersonMapperTest {
     }
 
     @Test
-    internal fun `skal fjerne informasjon relatert til kode 6-7 ved manglende tilgang`() {
-        val tilganger = gittTilganger(kode6 = false, kode7 = false)
-        snapshot.assertMatches(
-            mapper.lagTredjepartsperson(
-                ident = "00000000000",
-                tilganger = tilganger,
-                person =
-                    gittPerson(
-                        adressebeskyttelse = AdressebeskyttelseGradering.FORTROLIG,
-                        bosted = ukjentBosted("Ett sted i Aremark"),
-                    ),
-                kontaktinformasjonTredjepartsperson = null,
-            ),
-        )
-        snapshot.assertMatches(
-            mapper.lagTredjepartsperson(
-                ident = "00000000000",
-                tilganger = tilganger,
-                person =
-                    gittPerson(
-                        adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG,
-                        bosted = ukjentBosted("Ett sted i Aremark"),
-                    ),
-                kontaktinformasjonTredjepartsperson = null,
-            ),
-        )
-        snapshot.assertMatches(
-            mapper.lagTredjepartsperson(
-                ident = "00000000000",
-                tilganger = tilganger,
-                person =
-                    gittPerson(
-                        adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
-                        bosted = ukjentBosted("Ett sted i Aremark"),
-                    ),
-                kontaktinformasjonTredjepartsperson = null,
-            ),
-        )
+    internal fun `skal mappe godkjente personer uavhengig av adressebeskyttelse`() {
+        listOf(
+            AdressebeskyttelseGradering.FORTROLIG,
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+        ).forEach { gradering ->
+            val result =
+                mapper.lagTredjepartsperson(
+                    ident = "00000000000",
+                    person = gittPerson(adressebeskyttelse = gradering),
+                    kontaktinformasjonTredjepartsperson = null,
+                )
+            assertNotNull(result)
+            assertFalse(result!!.navn.isEmpty())
+            assertFalse(result.bostedAdresse.isEmpty())
+        }
     }
 
     @Test
@@ -128,11 +103,6 @@ internal class TredjepartspersonMapperTest {
         foedested = emptyList(),
         doedsfall = emptyList(),
     )
-
-    private fun gittTilganger(
-        kode6: Boolean,
-        kode7: Boolean,
-    ) = PersondataService.Tilganger(kode6, kode7)
 
     private fun gittNavn(
         navn: String,

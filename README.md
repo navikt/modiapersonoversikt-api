@@ -14,6 +14,43 @@ Spørsmål knyttet til koden eller prosjektet kan rettes mot:
 
 Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.no/pages/viewpage.action?pageId=272512650
 
+### Tilgang til tredjepersoner
+
+Persondata bruker Tilgangsmaskinens bulk-endpoint med `KJERNE_REGELTYPE` for tredjepersoner.
+Tilgangskontrollen for hovedpersonen er uendret.
+For tredjepersoner med ident kreves godkjenning og et entydig, ikke-tomt PDL-resultat før opplysninger fra eget personoppslag og eventuell kontaktinformasjon fra KRR returneres.
+Relasjoner til avviste personer beholdes i de eksisterende responsfeltene, med tomme felt for opplysninger som bare kan hentes fra tredjepersonen.
+Dette gjelder også identifiserte personer med uavklart tilgang eller manglende PDL-data.
+Skjult ident er `null` der kontrakten tillater det, ellers en tom streng. Skjulte navnelister er tomme, og andre skjulte personopplysninger er tomme eller `null`.
+Fullmaktsdata fra Representasjon returneres uavhengig av tredjepersonens tilgang og eget PDL-resultat, inkludert `fullmektig` og `endringslogg`.
+For fullmektiger gjelder `skjulingsaarsak` de separate personopplysningene, ikke selve fullmakten.
+
+Innebygde opplysninger på brukerens PDL-post beholder tidligere prioritet og brukes uavhengig av tredjepersonens tilgang og eget PDL-treff.
+Forelder-barn-relasjoner bruker innebygde personopplysninger når de finnes, også når relasjonen har ident.
+Foreldreansvar bruker innebygd navn når ansvarlig ikke finnes i det godkjente personresultatet.
+Gjeldende og historiske vergemål bruker innebygd navn når personoppslaget ikke gir navn.
+Dødsbokontakter beholder innebygd navn som alternativ, samt fødselsdato og adresse fra dødsboposten.
+Ident skjules fortsatt når tredjepersonen ikke har et godkjent, entydig PDL-resultat.
+
+Hver personoppføring i en relasjon har feltet `skjulingsaarsak`.
+`MANGLER_TILGANG` betyr at personen ble avvist. `UAVKLART` betyr at tilgangen eller PDL-dataene ikke kunne avklares.
+Feltet er `null` for godkjente personer med et entydig PDL-resultat, for personer uten ident og når innebygde opplysninger brukes.
+Dette gjelder sivilstandsrelasjoner, forelder-barn-relasjoner, fullmektiger, gjeldende og historiske vergemål og dødsbokontakter.
+I foreldreansvar har `ansvarlig` og `ansvarsubject` hver sin `skjulingsaarsak`.
+Frontenden kan dermed vise at en bestemt relasjon finnes, og hvorfor personopplysningene er tomme.
+Ved avslag videreformidles også tilgjengelig tittel og begrunnelse fra Tilgangsmaskinen i `tilgangsavslag.title` og `tilgangsavslag.message`.
+Andre avslagsdetaljer videreformidles ikke. Feltet utelates når personoppføringen ikke er skjult på grunn av avslag, eller når detaljene mangler eller er ugyldige.
+Frontenden viser meldingen som tekst, med den generelle skjulingsårsaken som alternativ når meldingen mangler eller er tom. Tittelen vises ikke.
+Tekniske feil i tilgangssjekken gir også `TILGANGSMASKINEN_TREDJEPARTSPERSONER` i `feilendeSystemer`.
+Personer uten ident beholder tidligere mapping fra PDL, inkludert navn og øvrige eksisterende felt i forelder-barn-relasjoner, foreldreansvar, vergemål og dødsbokontakter.
+Disse personene kontrolleres ikke av Tilgangsmaskinen og får ikke en skjulingsårsak.
+Advokat- og organisasjonskontakter beholder også tidligere mapping.
+
+**TODO før produksjon:** Bekreft at Tilgangsmaskinen har rettet bulk-feilen der gyldig enkelttilgang
+kan overstyre avslag fra kjernereglene. Verifiser dette i Navs dev-miljø, inkludert kode 6/7,
+skjerming og habilitet, før denne endringen merges til `master`.
+En TODO blokkerer ikke deployment: workflowen deployer automatisk til produksjon fra `master`.
+
 ## Git hooks
 
 Aktiver pre-commit-hooken for å kjøre linting før hver commit:
