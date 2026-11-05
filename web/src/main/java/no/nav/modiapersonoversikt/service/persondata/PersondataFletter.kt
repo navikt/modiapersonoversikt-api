@@ -883,6 +883,7 @@ class PersondataFletter(
     ): Persondata.PersonSomAdressat? {
         val adressat = dodsbo.personSomKontakt ?: return null
         val adressatPerson = data.hentTredjeperson(adressat.identifikasjonsnummer)
+        val harInnebygdeOpplysninger = adressat.personnavn != null || adressat.foedselsdato != null
         return Persondata.PersonSomAdressat(
             fnr =
                 adressat.identifikasjonsnummer.takeIf {
@@ -893,6 +894,8 @@ class PersondataFletter(
                     ?: adressat.personnavn?.let { listOf(hentNavn(it)) }
                     ?: emptyList(),
             fodselsdato = adressat.foedselsdato,
+            skjulingsaarsak = adressatPerson?.skjulingsaarsak.takeUnless { harInnebygdeOpplysninger },
+            tilgangsavslag = adressatPerson?.tilgangsavslag.takeUnless { harInnebygdeOpplysninger },
         )
     }
 

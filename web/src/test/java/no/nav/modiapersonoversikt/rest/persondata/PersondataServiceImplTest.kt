@@ -212,7 +212,7 @@ internal class PersondataServiceImplTest {
                     ?.skjulingsaarsak,
             )
             assertEquals(
-                null,
+                aarsak,
                 person.dodsbo
                     .single()
                     .adressat.personSomAdressat
@@ -270,7 +270,7 @@ internal class PersondataServiceImplTest {
                 .adresse.linje1,
         )
         assertEquals(
-            null,
+            Persondata.Skjulingsaarsak.UAVKLART,
             person.dodsbo
                 .single()
                 .adressat.personSomAdressat

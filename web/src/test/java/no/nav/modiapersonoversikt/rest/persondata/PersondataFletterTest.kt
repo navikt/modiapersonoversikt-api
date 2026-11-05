@@ -116,7 +116,7 @@ internal class PersondataFletterTest {
                 .adresse.linje1,
         )
         assertEquals(
-            Persondata.PersonSomAdressat(null, emptyList(), null),
+            Persondata.PersonSomAdressat(null, emptyList(), null, Persondata.Skjulingsaarsak.MANGLER_TILGANG),
             result.person.dodsbo
                 .single()
                 .adressat.personSomAdressat,
@@ -261,7 +261,8 @@ internal class PersondataFletterTest {
         assertTrue(person.forelderBarnRelasjon.filter { it.skjulingsaarsak != null }.all { it.tilgangsavslag == avslag })
         assertTrue(person.forelderBarnRelasjon.filter { it.skjulingsaarsak == null }.all { it.tilgangsavslag == null })
         assertNull(person.vergemal.single().tilgangsavslag)
-        assertNull(
+        assertEquals(
+            avslag,
             person.dodsbo
                 .single()
                 .adressat.personSomAdressat
@@ -270,37 +271,62 @@ internal class PersondataFletterTest {
     }
 
     @Test
+    fun `dodsbokontakt uten innebygde opplysninger markerer manglende PDL-treff`() {
+        val result =
+            mapper.flettSammenData(
+                testData.copy(tredjepartsPerson = PersondataResult.of(emptyMap())),
+            )
+
+        assertEquals(
+            Persondata.PersonSomAdressat(null, emptyList(), null, Persondata.Skjulingsaarsak.UAVKLART),
+            result.person.dodsbo
+                .single()
+                .adressat.personSomAdressat,
+        )
+    }
+
+    @Test
     fun `dodsbokontakt beholder innebygde opplysninger uten eget PDL-treff`() {
         val ident = kontaktinformasjonDodsbo.personSomKontakt!!.identifikasjonsnummer!!
+        val avslag = Tilgangsavslag("AVVIST_SKJERMING", "Du har ikke tilgang til skjermet person")
+        val navn = gittPersonnavn("Utenlandsk Kontakt")
+        val fodselsdato = LocalDate.parse("1990-05-06")
         listOf(null, Persondata.Skjulingsaarsak.MANGLER_TILGANG, Persondata.Skjulingsaarsak.UAVKLART).forEach { aarsak ->
-            val result =
-                mapper.flettSammenData(
-                    testData.copy(
-                        tredjepartsPerson = PersondataResult.of(emptyMap()),
-                        skjulingsaarsaker = aarsak?.let { mapOf(ident to it) } ?: emptyMap(),
-                        persondata =
-                            testPerson.copy(
-                                kontaktinformasjonForDoedsbo =
-                                    listOf(
-                                        kontaktinformasjonDodsbo.copy(
-                                            personSomKontakt =
-                                                requireNotNull(kontaktinformasjonDodsbo.personSomKontakt).copy(
-                                                    personnavn = gittPersonnavn("Utenlandsk Kontakt"),
-                                                    foedselsdato = LocalDate.parse("1990-05-06"),
-                                                ),
+            listOf(navn to fodselsdato, navn to null, null to fodselsdato).forEach { (innebygdNavn, innebygdFodselsdato) ->
+                val result =
+                    mapper.flettSammenData(
+                        testData.copy(
+                            tredjepartsPerson = PersondataResult.of(emptyMap()),
+                            skjulingsaarsaker = aarsak?.let { mapOf(ident to it) } ?: emptyMap(),
+                            tilgangsavslag = mapOf(ident to avslag),
+                            persondata =
+                                testPerson.copy(
+                                    kontaktinformasjonForDoedsbo =
+                                        listOf(
+                                            kontaktinformasjonDodsbo.copy(
+                                                personSomKontakt =
+                                                    requireNotNull(kontaktinformasjonDodsbo.personSomKontakt).copy(
+                                                        personnavn = innebygdNavn,
+                                                        foedselsdato = innebygdFodselsdato,
+                                                    ),
+                                            ),
                                         ),
-                                    ),
-                            ),
+                                ),
+                        ),
+                    )
+                val dodsbo = result.person.dodsbo.single()
+                assertEquals(
+                    Persondata.PersonSomAdressat(
+                        null,
+                        if (innebygdNavn != null) listOf(gittNavn("Utenlandsk Kontakt")) else emptyList(),
+                        innebygdFodselsdato,
                     ),
+                    dodsbo.adressat.personSomAdressat,
                 )
-            val dodsbo = result.person.dodsbo.single()
-            assertEquals(
-                Persondata.PersonSomAdressat(null, listOf(gittNavn("Utenlandsk Kontakt")), LocalDate.parse("1990-05-06")),
-                dodsbo.adressat.personSomAdressat,
-            )
-            assertEquals("Gateveien", dodsbo.adresse.linje1)
-            assertEquals("9988 Poststed", dodsbo.adresse.linje2)
-            assertFalse(Serializer.jacksonObjectMapper.writeValueAsString(dodsbo).contains(ident))
+                assertEquals("Gateveien", dodsbo.adresse.linje1)
+                assertEquals("9988 Poststed", dodsbo.adresse.linje2)
+                assertFalse(Serializer.jacksonObjectMapper.writeValueAsString(dodsbo).contains(ident))
+            }
         }
     }
 
