@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.OffsetDateTime
+import java.util.concurrent.CancellationException
 import kotlin.reflect.KProperty1
 
 sealed class EksternBruker(
@@ -126,25 +127,35 @@ class SfHenvendelseServiceImpl(
         val aktorId = bruker.aktorId()
         val callId = getCallId()
 
-        val allHenvendelser = mutableListOf<HenvendelseDTO>()
-        var page = 1
-        var hasNextPage = true
         val pageSize = 100
+        val alleHenvendelser =
+            hentAlleSider { page ->
+                henvendelseInfoApi.henvendelseinfoHenvendelselisteV2Get(aktorId, callId, page, pageSize)?.also { res ->
+                    val tomForsteSide = page == 1 && res.totalPages == 0 && res.data.isEmpty()
+                    val riktigSidenummer = res.currentPage == page
+                    val riktigAntallSider = res.totalPages >= page || tomForsteSide
+                    val riktigNesteSide = res.hasNextPage == (page < res.totalPages)
+                    check(riktigSidenummer && riktigAntallSider && riktigNesteSide) {
+                        "Ugyldig paginering fra Salesforce"
+                    }
+                }
+            }
+        val henvendelser =
+            try {
+                grupperSamtalereferater(alleHenvendelser)
+            } catch (feil: CancellationException) {
+                throw feil
+            } catch (feil: RuntimeException) {
+                logger.warn(
+                    "Gruppering av samtalereferater fra Salesforce v2 feilet; forsøker v1-fallback. Årsak: {}",
+                    grupperingsfeilArsak(feil),
+                )
+                hentAlleSider { page ->
+                    henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(aktorId, callId, page, pageSize)
+                }
+            }
 
-        while (hasNextPage) {
-            val res =
-                henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(aktorId, callId, page, pageSize)
-                    ?: throw ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "Feil ved henting av paginerte henvendelser",
-                    )
-
-            allHenvendelser.addAll(res.data)
-            hasNextPage = res.hasNextPage
-            page = res.currentPage + 1
-        }
-
-        return loggFeilSomErSpesialHandtert(bruker, allHenvendelser)
+        return loggFeilSomErSpesialHandtert(bruker, henvendelser)
             .asSequence()
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
@@ -152,6 +163,35 @@ class SfHenvendelseServiceImpl(
             .map(::unikeJournalposter)
             .toList()
     }
+
+    private fun hentAlleSider(hentSide: (Int) -> PaginertHenvendelseListeDTO?): List<HenvendelseDTO> {
+        val henvendelser = mutableListOf<HenvendelseDTO>()
+        var page = 1
+        var hasNextPage = true
+        while (hasNextPage) {
+            val res =
+                hentSide(page)
+                    ?: throw ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Feil ved henting av paginerte henvendelser",
+                    )
+            henvendelser.addAll(res.data)
+            hasNextPage = res.hasNextPage
+            page = res.currentPage + 1
+        }
+        return henvendelser
+    }
+
+    private fun grupperingsfeilArsak(feil: RuntimeException): String =
+        when (feil.message) {
+            "Samtalereferat har ikke nøyaktig én melding" -> "FEIL_ANTALL_MELDINGER"
+            "Samtalereferat har manglende meldings-ID" -> "MANGLENDE_MELDINGS_ID"
+            "Samtalereferater har flere hovedmeldinger med samme ID" -> "FLERE_HOVEDMELDINGER"
+            "Samtalereferater i samme kjede har ulike eiere" -> "ULIKE_EIERE"
+            "Samtalereferat har manglende eller duplikat meldings-ID" -> "MANGLENDE_ELLER_DUPLIKAT_ID"
+            "Samtalereferater med samme sendetidspunkt har ulike temagrupper" -> "TEMAKONFLIKT"
+            else -> "UKJENT_GRUPPERINGSFEIL"
+        }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
         val callId = getCallId()
