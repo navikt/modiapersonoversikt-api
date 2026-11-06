@@ -53,7 +53,8 @@ Tjenestekall mot andre tjenester har egne cacher. Valkey oppdateres ikke automat
 PDL-oppføringene utløper etter én time.
 
 Cacheoppsettet er ikke blocking, dvs at dersom to tråder spør med like keys vil cachen slippe gjennom to kall til den
-underliggende tjenesten.
+underliggende tjenesten. Alle pods deler samme cache i valkey.
+Dersom man ønsker å flushe cachen er det bare å koble til valkey instansen og kjøre kommandoen `FLUSHALL`. Hver enkelt cache key kan også fjernes. For å koble til må man først generere innloggingsinformasjon med `nais valkey credentials modiapersonoversikt-api --environment <DEV|PROD>-gcp -p WRITE --ttl 1d`. Koble deretter til med redis-cli, f. eks. med `redis-cli --tls -u rediss://$VALKEY_USERNAME:$VALKEY_PASSWORD@$VALKEY_HOST:$VALKEY_PORT`, og kjør `FLUSHALL`.
 
 ### Teste Valkey lokalt
 
