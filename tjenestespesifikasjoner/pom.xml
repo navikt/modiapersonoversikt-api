@@ -14,13 +14,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cxf.version>4.2.3</cxf.version>
+        <cxf.version>4.2.4</cxf.version>
         <cxf-xjc-boolean.version>3.1.0</cxf-xjc-boolean.version>
-        <org.jvnet.jaxb.version>4.0.12</org.jvnet.jaxb.version>
-        <jackson-annotations.version>2.22</jackson-annotations.version>
-        <jaxb2-maven-plugin.version>4.1.0</jaxb2-maven-plugin.version>
+        <org.jvnet.jaxb.version>4.0.16</org.jvnet.jaxb.version>
+        <jackson-annotations.version>2.23</jackson-annotations.version>
+        <jaxb2-maven-plugin.version>4.3.0</jaxb2-maven-plugin.version>
         <jaxb2-value-constructor.version>3.0</jaxb2-value-constructor.version>
-        <jaxws.version>4.0.3</jaxws.version>
+        <jaxws.version>4.0.5</jaxws.version>
     </properties>
 
     <modules>
@@ -87,7 +87,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -136,7 +136,7 @@
                 <plugin>
                     <groupId>org.openapitools</groupId>
                     <artifactId>openapi-generator-maven-plugin</artifactId>
-                    <version>7.25.0</version>
+                    <version>7.27.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

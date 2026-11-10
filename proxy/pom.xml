@@ -188,7 +188,7 @@
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
             <artifactId>jakarta.xml.ws-api</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
         </dependency>
 
         <!--Modia common-->
@@ -270,7 +270,7 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client-mock-jvm</artifactId>
-            <version>3.3.3</version>
+            <version>3.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
