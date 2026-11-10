@@ -1,20 +1,69 @@
 version: 2
 updates:
   - package-ecosystem: maven
-    directory: /
+    directories:
+      - /
+      - /arena-infotrygd-models
+      - /proxy
+      - /web
+      - /tjenestespesifikasjoner
+      - /tjenestespesifikasjoner/aap-api-intern
+      - /tjenestespesifikasjoner/arenasakvedtakservice
+      - /tjenestespesifikasjoner/dagpenger-api
+      - /tjenestespesifikasjoner/kodeverk-api
+      - /tjenestespesifikasjoner/kontoregister-api
+      - /tjenestespesifikasjoner/krr-api
+      - /tjenestespesifikasjoner/modia-soknadsstatus-api
+      - /tjenestespesifikasjoner/nav-sykepenger-v2-tjenestespesifikasjon
+      - /tjenestespesifikasjoner/norg-api
+      - /tjenestespesifikasjoner/oppfoelging-v1-tjenestespesifikasjon
+      - /tjenestespesifikasjoner/oppgave-api
+      - /tjenestespesifikasjoner/oppslag-arbeidssoekerregisteret
+      - /tjenestespesifikasjoner/pdl-api
+      - /tjenestespesifikasjoner/pdl-pip-api
+      - /tjenestespesifikasjoner/representasjon
+      - /tjenestespesifikasjoner/saf-api
+      - /tjenestespesifikasjoner/sf-henvendelse-api
+      - /tjenestespesifikasjoner/skjermede-personer-pip-api
+      - /tjenestespesifikasjoner/tilgangsmaskinen
+      - /tjenestespesifikasjoner/tiltakspenger
+      - /tjenestespesifikasjoner/utbetaling-api
+      - /tjenestespesifikasjoner/veilarboppfolging-api
+      - /tjenestespesifikasjoner/veilarbvedtaksstotte-api
+      - /tjenestespesifikasjoner/ytelseskontrakt-v3-tjenestespesifikasjon
     schedule:
-      interval: daily
-      time: "05:00"
+      interval: weekly
+      day: monday
+      time: "06:00"
       timezone: Europe/Oslo
+    open-pull-requests-limit: 5
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: daily
-      time: "05:00"
+      interval: weekly
+      day: monday
+      time: "06:00"
       timezone: Europe/Oslo
+    open-pull-requests-limit: 5
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: docker
-    directory: /
+    directories:
+      - /web
+      - /proxy
     schedule:
-      interval: daily
-      time: "05:00"
+      interval: weekly
+      day: monday
+      time: "06:00"
       timezone: Europe/Oslo
+    open-pull-requests-limit: 5
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
