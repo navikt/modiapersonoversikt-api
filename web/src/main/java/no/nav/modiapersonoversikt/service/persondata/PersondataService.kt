@@ -10,9 +10,10 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.Person
 import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
 import no.nav.modiapersonoversikt.consumer.skjermedePersoner.SkjermedePersonerApi
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsmaskinen
+import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.TredjepersonTilgang
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode6Policy
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedKode7Policy
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.kabac.policies.TilgangTilBrukerMedSkjermingPolicy
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.kontonummer.KontonummerService
@@ -24,11 +25,6 @@ import no.nav.personoversikt.common.logging.TjenestekallLogger
 
 interface PersondataService {
     fun hentPerson(personIdent: String): Persondata.Data
-
-    data class Tilganger(
-        val kode6: Boolean,
-        val kode7: Boolean,
-    )
 }
 
 class PersondataServiceImpl(
@@ -42,6 +38,7 @@ class PersondataServiceImpl(
     private val policyEnforcementPoint: Kabac.PolicyEnforcementPoint,
     kodeverk: EnhetligKodeverk.Service,
     tjenestekallLogger: TjenestekallLogger,
+    private val tilgangsmaskinen: Tilgangsmaskinen,
 ) : PersondataService {
     private val persondataFletter = PersondataFletter(kodeverk, tjenestekallLogger)
     private val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
@@ -66,33 +63,36 @@ class PersondataServiceImpl(
             PersondataResult
                 .runCatching(InformasjonElement.VEILEDER_ROLLER) { harTilgangTilSkjermetPerson() }
                 .getOrElse(false)
-        val tilganger =
-            PersondataResult
-                .runCatching(InformasjonElement.VEILEDER_ROLLER) { hentTilganger() }
-                .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
-
         val fullmektige =
             PersondataResult.runCatching(InformasjonElement.REPR_API) {
                 representasjonApi.hentFullmakterForFullmaktsgiver(Fnr(personIdent))
             }
         val fullmektigIdenter = finnFullmektigIdenter(fullmektige)
+        val tredjepersonIdenter = persondata.findTredjepartsPersoner(fullmektigIdenter).filter { it.isNotBlank() }
+        val tilganger = tilgangsmaskinen.sjekkTilganger(AuthContextUtils.requireNavIdent(), tredjepersonIdenter)
+        val godkjente = tredjepersonIdenter.filter { tilganger[it]?.tilgang == TredjepersonTilgang.GODKJENT }
+        val pdlTredjepersoner =
+            PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
+                if (godkjente.isEmpty()) emptyList() else pdl.hentTredjepartspersondata(godkjente)
+            }
+        val funn = pdlTredjepersoner.getOrElse(emptyList()).groupBy { it.ident }
+        val tillatte = godkjente.filter { ident -> funn[ident]?.singleOrNull()?.person != null }.toSet()
         val kontaktinformasjonTredjepartsperson =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
                 fullmektigIdenter
+                    .filter { it in tillatte }
                     .associateWith { krrService.hentDigitalKontaktinformasjon(it) }
                     .mapValues { tredjepartspersonMapper.tilKontaktinformasjonTredjepartsperson(it.value) }
             }
         val kontaktinformasjonTredjepartspersonMap = kontaktinformasjonTredjepartsperson.getOrElse(emptyMap())
         val tredjepartsPerson =
-            PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
-                persondata
-                    .findTredjepartsPersoner(fullmektigIdenter)
-                    .let { pdl.hentTredjepartspersondata(it) }
+            pdlTredjepersoner.map { personer ->
+                personer
+                    .filter { it.ident in tillatte }
                     .mapNotNull {
                         tredjepartspersonMapper.lagTredjepartsperson(
                             it.ident,
                             it.person,
-                            tilganger,
                             kontaktinformasjonTredjepartspersonMap[it.ident],
                         )
                     }.associateBy { it.fnr }
@@ -123,6 +123,22 @@ class PersondataServiceImpl(
                 tredjepartsPerson,
                 kontaktinformasjonTredjepartsperson,
                 harTilgangTilSkjermetPerson,
+                skjulingsaarsaker =
+                    tredjepersonIdenter
+                        .filterNot { it in tillatte }
+                        .associateWith {
+                            if (tilganger[it]?.tilgang == TredjepersonTilgang.AVVIST) {
+                                Persondata.Skjulingsaarsak.MANGLER_TILGANG
+                            } else {
+                                Persondata.Skjulingsaarsak.UAVKLART
+                            }
+                        },
+                tilgangsavslag =
+                    tilganger
+                        .mapNotNull { (ident, resultat) ->
+                            resultat.avslag?.takeIf { resultat.tilgang == TredjepersonTilgang.AVVIST }?.let { ident to it }
+                        }.toMap(),
+                tilgangsfeil = tredjepersonIdenter.any { tilganger[it] == null || tilganger[it]?.tilgang == TredjepersonTilgang.UAVKLART },
             ),
         )
     }
@@ -207,24 +223,6 @@ class PersondataServiceImpl(
 
     internal fun finnFullmektigIdenter(fullmektige: PersondataResult<List<FullmaktDto>>): List<String> =
         fullmektige.getOrElse(emptyList()).map { it.fullmektig }.distinct()
-
-    private fun hentTilganger(): PersondataService.Tilganger {
-        val ctx = policyEnforcementPoint.createEvaluationContext()
-        val tilgangKode6 =
-            policyEnforcementPoint.evaluatePolicyWithContext(
-                ctx = ctx,
-                policy = TilgangTilBrukerMedKode6Policy,
-            )
-        val tilgangKode7 =
-            policyEnforcementPoint.evaluatePolicyWithContext(
-                ctx = ctx,
-                policy = TilgangTilBrukerMedKode7Policy,
-            )
-        return PersondataService.Tilganger(
-            kode6 = tilgangKode6.type == Decision.Type.PERMIT,
-            kode7 = tilgangKode7.type == Decision.Type.PERMIT,
-        )
-    }
 
     private fun harTilgangTilSkjermetPerson(): Boolean {
         val ctx = policyEnforcementPoint.createEvaluationContext()
