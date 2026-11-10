@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.2.0-M2</version>
+        <version>4.2.0-RC2</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -24,17 +24,17 @@
 
     <properties>
         <java.version>21</java.version>
-        <kotlin.version>2.4.20</kotlin.version>
-        <serialization.version>1.9.0</serialization.version>
-        <mockk.version>1.14.11</mockk.version>
+        <kotlin.version>2.4.21</kotlin.version>
+        <serialization.version>1.12.0</serialization.version>
+        <mockk.version>1.14.12</mockk.version>
         <wiremock.version>3.13.2</wiremock.version>
 
-        <common.version>4.2026.09.24_06.17-80dfc0eacb29</common.version>
-        <modia-common-utils.version>1.2025.12.29-09.14-bbbf737775be</modia-common-utils.version>
+        <common.version>4.2026.11.05_07.24-dd0ce2805c16</common.version>
+        <modia-common-utils.version>1.2026.09.02-15.52-e0484649b92e</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2633.1685ed5</tjenestespesifikasjoner.version>
-        <org.jvnet.jaxb.version>4.0.12</org.jvnet.jaxb.version>
-        <graphql-kotlin.version>10.0.0</graphql-kotlin.version>
-        <kotlin-coroutines.version>1.10.2</kotlin-coroutines.version>
+        <org.jvnet.jaxb.version>4.0.16</org.jvnet.jaxb.version>
+        <graphql-kotlin.version>11.0.0</graphql-kotlin.version>
+        <kotlin-coroutines.version>1.11.0</kotlin-coroutines.version>
 
     </properties>
 
@@ -132,7 +132,7 @@
             <dependency>
                 <groupId>no.bekk.bekkopen</groupId>
                 <artifactId>nocommons</artifactId>
-                <version>0.16.0</version>
+                <version>0.17.0</version>
             </dependency>
 
             <!--Modia common-->

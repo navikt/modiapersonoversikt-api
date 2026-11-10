@@ -103,7 +103,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
 
         <!-- Logging -->
@@ -319,13 +319,13 @@
         <dependency>
             <groupId>io.getunleash</groupId>
             <artifactId>unleash-client-java</artifactId>
-            <version>12.3.0</version>
+            <version>12.3.2</version>
         </dependency>
 
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
             <artifactId>jakarta.xml.ws-api</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
         </dependency>
 
         <!--Modia common-->
@@ -385,7 +385,7 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client-mock-jvm</artifactId>
-            <version>3.3.3</version>
+            <version>3.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -396,7 +396,7 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client-okhttp-jvm</artifactId>
-            <version>3.3.3</version>
+            <version>3.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -448,7 +448,7 @@
             <plugin>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-maven-plugin</artifactId>
-                <version>1.5</version>
+                <version>1.6</version>
                 <executions>
                     <execution>
                         <id>integration-test</id>
