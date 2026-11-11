@@ -1,6 +1,12 @@
 version: 2
+registries:
+  nav-maven-mirror:
+    type: maven-repository
+    url: https://github-package-registry-mirror.gc.nav.no/cached/maven-release
 updates:
   - package-ecosystem: maven
+    registries:
+      - nav-maven-mirror
     directories:
       - /
       - /arena-infotrygd-models
