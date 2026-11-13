@@ -17,6 +17,14 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class PersondataConfig {
     @Bean
+    open fun representasjonsoppdragService(
+        representasjonApi: RepresentasjonApi,
+        pdl: PdlOppslagService,
+        tilgangsmaskinen: Tilgangsmaskinen,
+        kodeverk: EnhetligKodeverk.Service,
+    ): RepresentasjonsoppdragService = RepresentasjonsoppdragService(representasjonApi, pdl, tilgangsmaskinen, kodeverk)
+
+    @Bean
     open fun persondataService(
         pdl: PdlOppslagService,
         krrService: Krr.Service,
