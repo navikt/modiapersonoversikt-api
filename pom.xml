@@ -28,6 +28,7 @@
         <serialization.version>1.13.0</serialization.version>
         <mockk.version>1.14.12</mockk.version>
         <wiremock.version>3.13.2</wiremock.version>
+        <wss4j.version>4.0.3</wss4j.version>
 
         <common.version>4.2026.11.05_07.24-dd0ce2805c16</common.version>
         <modia-common-utils.version>1.2026.09.02-15.52-e0484649b92e</modia-common-utils.version>
@@ -44,6 +45,36 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>33.8.0-jre</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wss4j</groupId>
+                <artifactId>wss4j-bindings</artifactId>
+                <version>${wss4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wss4j</groupId>
+                <artifactId>wss4j-policy</artifactId>
+                <version>${wss4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wss4j</groupId>
+                <artifactId>wss4j-ws-security-common</artifactId>
+                <version>${wss4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wss4j</groupId>
+                <artifactId>wss4j-ws-security-dom</artifactId>
+                <version>${wss4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wss4j</groupId>
+                <artifactId>wss4j-ws-security-policy-stax</artifactId>
+                <version>${wss4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wss4j</groupId>
+                <artifactId>wss4j-ws-security-stax</artifactId>
+                <version>${wss4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.expediagroup</groupId>
