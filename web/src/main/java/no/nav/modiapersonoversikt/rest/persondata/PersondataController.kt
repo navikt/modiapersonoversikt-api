@@ -11,8 +11,6 @@ import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.persondata.Persondata
 import no.nav.modiapersonoversikt.service.persondata.PersondataService
-import no.nav.modiapersonoversikt.service.persondata.Representasjonsoppdrag
-import no.nav.modiapersonoversikt.service.persondata.RepresentasjonsoppdragService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,7 +22,6 @@ class PersondataController(
     private val persondataService: PersondataService,
     private val tilgangskontroll: Tilgangskontroll,
     private val pdlOppslagService: PdlOppslagService,
-    private val representasjonsoppdragService: RepresentasjonsoppdragService,
 ) {
     @PostMapping
     fun hentPersondata(
@@ -40,22 +37,6 @@ class PersondataController(
                 ),
             ) {
                 persondataService.hentPerson(fnrRequest.fnr)
-            }
-
-    @PostMapping("/representasjonsoppdrag")
-    fun hentRepresentasjonsoppdrag(
-        @RequestBody fnrRequest: FnrRequest,
-    ): Representasjonsoppdrag =
-        tilgangskontroll
-            .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(
-                Audit.describe(
-                    Audit.Action.READ,
-                    AuditResources.Person.Personalia,
-                    AuditIdentifier.FNR to fnrRequest.fnr,
-                ),
-            ) {
-                representasjonsoppdragService.hentRepresentasjonsOppdrag(Fnr(fnrRequest.fnr))
             }
 
     @PostMapping("/identer")

@@ -46,6 +46,8 @@ object Persondata {
         val deltBosted: List<DeltBosted>,
         val dodsbo: List<Dodsbo>,
         val fullmektige: List<Fullmektig>,
+        val fullmaktsgivere: List<Fullmaktsoppdrag>,
+        val vergehavere: List<Vergeoppdrag>,
         val fullmakt: List<Fullmakt>,
         val vergemal: List<Verge>,
         val historiskeVergemal: List<Verge>,

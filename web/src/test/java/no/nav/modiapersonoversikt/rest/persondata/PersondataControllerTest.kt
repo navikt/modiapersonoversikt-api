@@ -10,8 +10,8 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.PolicyWithAttributes
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollInstance
 import no.nav.modiapersonoversikt.rest.common.FnrRequest
-import no.nav.modiapersonoversikt.service.persondata.Representasjonsoppdrag
-import no.nav.modiapersonoversikt.service.persondata.RepresentasjonsoppdragService
+import no.nav.modiapersonoversikt.service.persondata.Persondata
+import no.nav.modiapersonoversikt.service.persondata.PersondataService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -19,22 +19,22 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 internal class PersondataControllerTest {
-    private val service = mockk<RepresentasjonsoppdragService>()
+    private val service = mockk<PersondataService>()
     private val tilgang = mockk<TilgangskontrollInstance>()
-    private val controller = PersondataController(mockk(), tilgang, mockk(), service)
+    private val controller = PersondataController(service, tilgang, mockk())
     private val request = FnrRequest("00000000000")
-    private val result = Representasjonsoppdrag(emptyList(), emptyList(), emptySet())
+    private val result = mockk<Persondata.Data>()
 
     @Test
     fun `sjekker hovedpersonens tilgang for oppdrag og returnerer tillatt respons`() {
         val policy = slot<PolicyWithAttributes>()
         every { tilgang.check(capture(policy)) } returns tilgang
-        every { tilgang.get(any<Audit.AuditDescriptor<Representasjonsoppdrag>>(), any()) } answers {
-            secondArg<() -> Representasjonsoppdrag>()()
+        every { tilgang.get(any<Audit.AuditDescriptor<Persondata.Data>>(), any()) } answers {
+            secondArg<() -> Persondata.Data>()()
         }
-        every { service.hentRepresentasjonsOppdrag(Fnr(request.fnr)) } returns result
+        every { service.hentPerson(request.fnr) } returns result
 
-        assertEquals(result, controller.hentRepresentasjonsoppdrag(request))
+        assertEquals(result, controller.hentPersondata(request))
         val forventet = Policies.tilgangTilBruker(Fnr(request.fnr))
         assertEquals(forventet.policy, policy.captured.policy)
         assertEquals(
@@ -44,16 +44,16 @@ internal class PersondataControllerTest {
                 .provide(mockk())
                 .toString(),
         )
-        verify(exactly = 1) { service.hentRepresentasjonsOppdrag(Fnr(request.fnr)) }
+        verify(exactly = 1) { service.hentPerson(request.fnr) }
     }
 
     @Test
     fun `avslag for hovedpersonen starter ikke oppslag av relasjoner`() {
         every { tilgang.check(any()) } returns tilgang
-        every { tilgang.get(any<Audit.AuditDescriptor<Representasjonsoppdrag>>(), any()) } throws
+        every { tilgang.get(any<Audit.AuditDescriptor<Persondata.Data>>(), any()) } throws
             ResponseStatusException(HttpStatus.FORBIDDEN)
 
-        assertThrows(ResponseStatusException::class.java) { controller.hentRepresentasjonsoppdrag(request) }
-        verify(exactly = 0) { service.hentRepresentasjonsOppdrag(any()) }
+        assertThrows(ResponseStatusException::class.java) { controller.hentPersondata(request) }
+        verify(exactly = 0) { service.hentPerson(any()) }
     }
 }

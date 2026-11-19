@@ -5,9 +5,12 @@ import com.nimbusds.jwt.PlainJWT
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.verifyOrder
 import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.consumer.krr.Krr
+import no.nav.modiapersonoversikt.consumer.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.HentPersonBolkResult
 import no.nav.modiapersonoversikt.consumer.pdl.generated.henttredjepartspersondata.Person
 import no.nav.modiapersonoversikt.consumer.representasjon.RepresentasjonApi
@@ -18,12 +21,14 @@ import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsmaskinen
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.TredjepersonTilgang
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.TredjepersonTilgangResultat
+import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.persondata.Persondata
-import no.nav.modiapersonoversikt.service.persondata.RepresentasjonsoppdragFeil
-import no.nav.modiapersonoversikt.service.persondata.RepresentasjonsoppdragService
+import no.nav.modiapersonoversikt.service.persondata.PersondataResult.InformasjonElement
+import no.nav.modiapersonoversikt.service.persondata.PersondataServiceImpl
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
+import no.nav.personoversikt.common.logging.TjenestekallLogg
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -31,7 +36,7 @@ import java.io.IOException
 import java.time.LocalDate
 import java.util.*
 
-internal class RepresentasjonsoppdragServiceTest {
+internal class RepresentasjonsoppdragPersondataTest {
     @JvmField
     @RegisterExtension
     val auth =
@@ -42,13 +47,44 @@ internal class RepresentasjonsoppdragServiceTest {
     private val pdl = mockk<PdlOppslagService>()
     private val tilgang = mockk<Tilgangsmaskinen>()
     private val kodeverk = mockk<EnhetligKodeverk.Service>()
-    private val service = RepresentasjonsoppdragService(repr, pdl, tilgang, kodeverk)
+    private val krr = mockk<Krr.Service>(relaxed = true)
+    private val service =
+        PersondataServiceImpl(
+            pdl = pdl,
+            representasjonApi = repr,
+            krrService = krr,
+            norgApi = mockk(),
+            skjermedePersonerApi = mockk { every { erSkjermetPerson(any()) } returns false },
+            kontonummerService = mockk { every { hentKontonummer(any()) } returns null },
+            oppfolgingService =
+                mockk {
+                    every { hentOppfolgingsinfo(any()) } returns ArbeidsrettetOppfolging.Info(false, false, null, null)
+                },
+            policyEnforcementPoint = mockk(),
+            kodeverk = kodeverk,
+            tjenestekallLogger = TjenestekallLogg,
+            tilgangsmaskinen = tilgang,
+        )
     private val start = LocalDate.of(2026, 1, 1)
 
     init {
         every { kodeverk.hentKodeverk(any<EnhetligKodeverk.Kilde<String, String>>()) } returns gittKodeverk()
+        every { pdl.hentPersondata(fnr.get()) } returns
+            mockk<HentPersondata.Result> {
+                every { hentPerson } returns
+                    testPerson.copy(
+                        vergemaalEllerFremtidsfullmakt = emptyList(),
+                        foreldreansvar = emptyList(),
+                        sivilstand = emptyList(),
+                        forelderBarnRelasjon = emptyList(),
+                        kontaktinformasjonForDoedsbo = emptyList(),
+                    )
+                every { hentGeografiskTilknytning } returns null
+            }
+        every { repr.hentFullmakterForFullmaktsgiver(fnr) } returns emptyList()
         every { repr.hentFullmakterForFullmektig(fnr) } returns emptyList()
         every { repr.hentVergemalForVerge(fnr) } returns emptyList()
+        every { tilgang.sjekkTilganger(any(), emptyList()) } returns emptyMap()
     }
 
     private fun fullmakt(ident: String) = FullmaktDto(UUID.randomUUID(), ident, fnr.get(), start, setOf("AAP"), emptySet(), emptyList())
@@ -73,7 +109,8 @@ internal class RepresentasjonsoppdragServiceTest {
             mapOf(ident to TredjepersonTilgangResultat(TredjepersonTilgang.GODKJENT))
         every { pdl.hentTredjepartspersondata(listOf(ident)) } returns listOf(pdlPerson(ident))
 
-        val result = service.hentRepresentasjonsOppdrag(fnr)
+        val data = service.hentPerson(fnr.get())
+        val result = data.person
 
         assertEquals(2, result.fullmaktsgivere.size)
         assertEquals(
@@ -91,8 +128,47 @@ internal class RepresentasjonsoppdragServiceTest {
                 .beskrivelse,
         )
         assertFalse(result.vergehavere.single().aktivt)
-        assertTrue(result.feilendeSystemer.isEmpty())
+        assertTrue(data.feilendeSystemer.isEmpty())
         verify(exactly = 1) { pdl.hentTredjepartspersondata(listOf(ident)) }
+        verifyOrder {
+            tilgang.sjekkTilganger(any(), listOf(ident))
+            pdl.hentTredjepartspersondata(listOf(ident))
+        }
+        verify(exactly = 0) { krr.hentDigitalKontaktinformasjon(ident) }
+    }
+
+    @Test
+    fun `deler tilgangskontroll og PDL-oppslag med eksisterende fullmektige`() {
+        val ident = "00000000001"
+        val annen = "00000000002"
+        every { repr.hentFullmakterForFullmaktsgiver(fnr) } returns
+            listOf(fullmakt(fnr.get()).copy(fullmektig = ident))
+        every { repr.hentFullmakterForFullmektig(fnr) } returns listOf(fullmakt(ident))
+        every { repr.hentVergemalForVerge(fnr) } returns listOf(vergemal(annen))
+        every { tilgang.sjekkTilganger(any(), listOf(ident, annen)) } returns
+            listOf(ident, annen).associateWith { TredjepersonTilgangResultat(TredjepersonTilgang.GODKJENT) }
+        every { pdl.hentTredjepartspersondata(listOf(ident, annen)) } returns
+            listOf(pdlPerson(ident), pdlPerson(annen))
+
+        val person = service.hentPerson(fnr.get()).person
+
+        assertEquals(ident, person.fullmektige.single().ident)
+        assertEquals(
+            ident,
+            person.fullmaktsgivere
+                .single()
+                .person.ident,
+        )
+        assertEquals(
+            annen,
+            person.vergehavere
+                .single()
+                .person.ident,
+        )
+        verify(exactly = 1) { tilgang.sjekkTilganger(any(), any()) }
+        verify(exactly = 1) { pdl.hentTredjepartspersondata(any()) }
+        verify(exactly = 1) { krr.hentDigitalKontaktinformasjon(ident) }
+        verify(exactly = 0) { krr.hentDigitalKontaktinformasjon(annen) }
     }
 
     @Test
@@ -108,7 +184,8 @@ internal class RepresentasjonsoppdragServiceTest {
                 uavklart to TredjepersonTilgangResultat(TredjepersonTilgang.UAVKLART),
             )
 
-        val result = service.hentRepresentasjonsOppdrag(fnr)
+        val data = service.hentPerson(fnr.get())
+        val result = data.person
         val json = Serializer.jacksonObjectMapper.writeValueAsString(result)
 
         assertFalse(json.contains(avvist))
@@ -132,7 +209,7 @@ internal class RepresentasjonsoppdragServiceTest {
                 .single()
                 .person.skjulingsaarsak,
         )
-        assertEquals(setOf(RepresentasjonsoppdragFeil.TILGANGSMASKINEN), result.feilendeSystemer)
+        assertEquals(listOf(InformasjonElement.TILGANGSMASKINEN_TREDJEPARTSPERSONER), data.feilendeSystemer)
         verify(exactly = 0) { pdl.hentTredjepartspersondata(any()) }
     }
 
@@ -145,11 +222,12 @@ internal class RepresentasjonsoppdragServiceTest {
         every { pdl.hentTredjepartspersondata(any()) } returns
             listOf(pdlPerson(identer[0]), pdlPerson(identer[1]), pdlPerson(identer[1]), pdlPerson(identer[2], null))
 
-        val result = service.hentRepresentasjonsOppdrag(fnr)
+        val data = service.hentPerson(fnr.get())
+        val result = data.person
 
         assertEquals(listOf(identer[0], null, null, null), result.fullmaktsgivere.map { it.person.ident })
         assertTrue(result.fullmaktsgivere.drop(1).all { it.person.skjulingsaarsak == Persondata.Skjulingsaarsak.UAVKLART })
-        assertTrue(RepresentasjonsoppdragFeil.PERSONOPPLYSNINGER in result.feilendeSystemer)
+        assertTrue(InformasjonElement.PDL_TREDJEPARTSPERSONER in data.feilendeSystemer)
     }
 
     @Test
@@ -158,12 +236,13 @@ internal class RepresentasjonsoppdragServiceTest {
         every { repr.hentVergemalForVerge(fnr) } returns listOf(vergemal("00000000001"))
         every { tilgang.sjekkTilganger(any(), any()) } returns emptyMap()
 
-        val result = service.hentRepresentasjonsOppdrag(fnr)
+        val data = service.hentPerson(fnr.get())
+        val result = data.person
 
         assertTrue(result.fullmaktsgivere.isEmpty())
         assertEquals(1, result.vergehavere.size)
-        assertTrue(RepresentasjonsoppdragFeil.FULLMAKTER in result.feilendeSystemer)
-        assertFalse(RepresentasjonsoppdragFeil.VERGEMAL in result.feilendeSystemer)
+        assertTrue(InformasjonElement.REPR_API_FULLMAKTSGIVERE in data.feilendeSystemer)
+        assertFalse(InformasjonElement.REPR_API_VERGEHAVERE in data.feilendeSystemer)
     }
 
     @Test
@@ -179,23 +258,39 @@ internal class RepresentasjonsoppdragServiceTest {
             bolk.map { pdlPerson(it) }
         }
 
-        val result = service.hentRepresentasjonsOppdrag(fnr)
+        val data = service.hentPerson(fnr.get())
+        val result = data.person
 
         assertEquals(listOf(100, 100, 5), bolker.map { it.size })
         assertEquals(205, result.fullmaktsgivere.size)
         assertEquals(105, result.fullmaktsgivere.count { it.person.ident != null })
-        assertEquals(setOf(RepresentasjonsoppdragFeil.PERSONOPPLYSNINGER), result.feilendeSystemer)
+        assertEquals(listOf(InformasjonElement.PDL_TREDJEPARTSPERSONER), data.feilendeSystemer)
     }
 
     @Test
     fun `tomme lister gir ingen personoppslag og feil part i repr-respons avvises`() {
-        assertTrue(service.hentRepresentasjonsOppdrag(fnr).feilendeSystemer.isEmpty())
-        verify(exactly = 0) { tilgang.sjekkTilganger(any(), any()) }
+        assertTrue(service.hentPerson(fnr.get()).feilendeSystemer.isEmpty())
+        verify(exactly = 0) { pdl.hentTredjepartspersondata(any()) }
         every { repr.hentFullmakterForFullmektig(fnr) } returns listOf(fullmakt("00000000001").copy(fullmektig = "00000000002"))
 
-        val result = service.hentRepresentasjonsOppdrag(fnr)
+        val result = service.hentPerson(fnr.get())
 
-        assertTrue(result.fullmaktsgivere.isEmpty())
-        assertEquals(setOf(RepresentasjonsoppdragFeil.FULLMAKTER), result.feilendeSystemer)
+        assertTrue(result.person.fullmaktsgivere.isEmpty())
+        assertEquals(listOf(InformasjonElement.REPR_API_FULLMAKTSGIVERE), result.feilendeSystemer)
+    }
+
+    @Test
+    fun `blank motpartsident forblir uavklart uten personoppslag`() {
+        every { repr.hentFullmakterForFullmektig(fnr) } returns listOf(fullmakt(""))
+        every { repr.hentVergemalForVerge(fnr) } returns listOf(vergemal(""))
+
+        val person = service.hentPerson(fnr.get()).person
+
+        listOf(person.fullmaktsgivere.single().person, person.vergehavere.single().person).forEach {
+            assertNull(it.ident)
+            assertNull(it.navn)
+            assertEquals(Persondata.Skjulingsaarsak.UAVKLART, it.skjulingsaarsak)
+        }
+        verify(exactly = 0) { pdl.hentTredjepartspersondata(any()) }
     }
 }

@@ -4,19 +4,6 @@ import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import java.time.LocalDate
 import java.util.UUID
 
-data class Representasjonsoppdrag(
-    val fullmaktsgivere: List<Fullmaktsoppdrag>,
-    val vergehavere: List<Vergeoppdrag>,
-    val feilendeSystemer: Set<RepresentasjonsoppdragFeil>,
-)
-
-enum class RepresentasjonsoppdragFeil {
-    FULLMAKTER,
-    VERGEMAL,
-    PERSONOPPLYSNINGER,
-    TILGANGSMASKINEN,
-}
-
 data class RepresentertPerson(
     val ident: String?,
     val navn: Persondata.Navn?,
