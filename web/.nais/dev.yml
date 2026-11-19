@@ -131,7 +131,7 @@ spec:
     - name: FORTROLIG_ADRESSE_ID
       value: "2e1dc582-f762-4510-a660-88bf68fb7128"
     - name: EGNE_ANSATTE_ID
-      value: "dbe4ad45-320b-4e9a-aaa1-73cca4ee124d"
+      value: "8df187e3-f6ab-4a5d-8830-61bf148e59fe"
     - name: FELLES_KODEVERK_URL
       value: "http://kodeverk-api.team-rocket"
     - name: FELLES_KODEVERK_SCOPE
