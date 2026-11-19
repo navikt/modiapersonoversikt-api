@@ -186,6 +186,7 @@
       }
     } ] ],
     "fullmakt" : [ "kotlin.collections.EmptyList", [ ] ],
+    "fullmaktsgivere" : [ "java.util.ArrayList", [ ] ],
     "fullmektige" : [ "java.util.ArrayList", [ {
       "digitalKontaktinformasjonTredjepartsperson" : {
         "mobiltelefonnummer" : "90909090",
@@ -489,6 +490,7 @@
       } ] ]
     },
     "utflyttingFraNorge" : [ "java.util.ArrayList", [ ] ],
+    "vergehavere" : [ "java.util.ArrayList", [ ] ],
     "vergemal" : [ "java.util.ArrayList", [ {
       "embete" : "Fylkesmannen i Oslo og Viken",
       "gyldighetsPeriode" : {

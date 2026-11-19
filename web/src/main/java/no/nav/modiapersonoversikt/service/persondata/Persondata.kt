@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.service.persondata
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Oppholdstillatelse
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktEndringDto
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
@@ -14,6 +15,7 @@ object Persondata {
         val person: Person,
     )
 
+    @Schema(enumAsRef = true)
     enum class Skjulingsaarsak {
         MANGLER_TILGANG,
         UAVKLART,
@@ -44,6 +46,8 @@ object Persondata {
         val deltBosted: List<DeltBosted>,
         val dodsbo: List<Dodsbo>,
         val fullmektige: List<Fullmektig>,
+        val fullmaktsgivere: List<Fullmaktsoppdrag>,
+        val vergehavere: List<Vergeoppdrag>,
         val fullmakt: List<Fullmakt>,
         val vergemal: List<Verge>,
         val historiskeVergemal: List<Verge>,

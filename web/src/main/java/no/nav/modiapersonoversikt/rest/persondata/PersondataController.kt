@@ -11,7 +11,10 @@ import no.nav.modiapersonoversikt.rest.common.FnrRequest
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.persondata.Persondata
 import no.nav.modiapersonoversikt.service.persondata.PersondataService
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/rest/person")
@@ -26,7 +29,13 @@ class PersondataController(
     ): Persondata.Data =
         tilgangskontroll
             .check(Policies.tilgangTilBruker(Fnr(fnrRequest.fnr)))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fnrRequest.fnr)) {
+            .get(
+                Audit.describe(
+                    Audit.Action.READ,
+                    AuditResources.Person.Personalia,
+                    AuditIdentifier.FNR to fnrRequest.fnr,
+                ),
+            ) {
                 persondataService.hentPerson(fnrRequest.fnr)
             }
 

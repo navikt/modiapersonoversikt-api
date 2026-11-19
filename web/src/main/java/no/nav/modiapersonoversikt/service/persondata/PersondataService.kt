@@ -67,16 +67,39 @@ class PersondataServiceImpl(
             PersondataResult.runCatching(InformasjonElement.REPR_API) {
                 representasjonApi.hentFullmakterForFullmaktsgiver(Fnr(personIdent))
             }
+        val fullmaktsgivere =
+            PersondataResult.runCatching(InformasjonElement.REPR_API_FULLMAKTSGIVERE) {
+                representasjonApi.hentFullmakterForFullmektig(Fnr(personIdent)).also { oppdrag ->
+                    require(oppdrag.all { it.fullmektig == personIdent }) { "Uventet fullmektig i repr-respons" }
+                }
+            }
+        val vergehavere =
+            PersondataResult.runCatching(InformasjonElement.REPR_API_VERGEHAVERE) {
+                representasjonApi.hentVergemalForVerge(Fnr(personIdent)).also { oppdrag ->
+                    require(oppdrag.all { it.verge == personIdent }) { "Uventet verge i repr-respons" }
+                }
+            }
         val fullmektigIdenter = finnFullmektigIdenter(fullmektige)
-        val tredjepersonIdenter = persondata.findTredjepartsPersoner(fullmektigIdenter).filter { it.isNotBlank() }
+        val representerteIdenter =
+            fullmaktsgivere.getOrElse(emptyList()).map { it.fullmaktsgiver } +
+                vergehavere.getOrElse(emptyList()).map { it.vergehaver }
+        val tredjepersonIdenter = persondata.findTredjepartsPersoner(fullmektigIdenter + representerteIdenter).filter { it.isNotBlank() }
         val tilganger = tilgangsmaskinen.sjekkTilganger(AuthContextUtils.requireNavIdent(), tredjepersonIdenter)
         val godkjente = tredjepersonIdenter.filter { tilganger[it]?.tilgang == TredjepersonTilgang.GODKJENT }
-        val pdlTredjepersoner =
-            PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
-                if (godkjente.isEmpty()) emptyList() else pdl.hentTredjepartspersondata(godkjente)
+        val pdlTredjepersonOppslag =
+            godkjente.chunked(100).map { bolk ->
+                PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
+                    pdl.hentTredjepartspersondata(bolk)
+                }
             }
-        val funn = pdlTredjepersoner.getOrElse(emptyList()).groupBy { it.ident }
+        val pdlTredjepersoner = pdlTredjepersonOppslag.flatMap { it.getOrElse(emptyList()) }
+        val funn = pdlTredjepersoner.groupBy { it.ident }
         val tillatte = godkjente.filter { ident -> funn[ident]?.singleOrNull()?.person != null }.toSet()
+        val pdlTredjepersonFeil =
+            pdlTredjepersonOppslag.firstOrNull { it is PersondataResult.Failure }?.map { Unit }
+                ?: PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
+                    check(godkjente.all { it in tillatte }) { "Mangler entydig tredjeperson fra PDL" }
+                }
         val kontaktinformasjonTredjepartsperson =
             PersondataResult.runCatching(InformasjonElement.DKIF_TREDJEPARTSPERSONER) {
                 fullmektigIdenter
@@ -86,8 +109,8 @@ class PersondataServiceImpl(
             }
         val kontaktinformasjonTredjepartspersonMap = kontaktinformasjonTredjepartsperson.getOrElse(emptyMap())
         val tredjepartsPerson =
-            pdlTredjepersoner.map { personer ->
-                personer
+            PersondataResult.runCatching(InformasjonElement.PDL_TREDJEPARTSPERSONER) {
+                pdlTredjepersoner
                     .filter { it.ident in tillatte }
                     .mapNotNull {
                         tredjepartspersonMapper.lagTredjepartsperson(
@@ -123,6 +146,9 @@ class PersondataServiceImpl(
                 tredjepartsPerson,
                 kontaktinformasjonTredjepartsperson,
                 harTilgangTilSkjermetPerson,
+                fullmaktsgivere = fullmaktsgivere,
+                vergehavere = vergehavere,
+                pdlTredjepersonFeil = pdlTredjepersonFeil,
                 skjulingsaarsaker =
                     tredjepersonIdenter
                         .filterNot { it in tillatte }

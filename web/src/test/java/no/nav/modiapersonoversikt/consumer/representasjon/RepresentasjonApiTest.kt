@@ -145,4 +145,80 @@ internal class RepresentasjonApiTest {
             RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmaktsgiver(Fnr("12345678910"))
         }
     }
+
+    @Test
+    fun `henter fullmakter motsatt vei uten endringslogg`() {
+        val client =
+            client(
+                200,
+                """
+                [{
+                  "fullmaktId": "db40e7d2-44dd-4dab-a954-114513c761d1",
+                  "fullmaktsgiver": "55555666000",
+                  "fullmektig": "12345678910",
+                  "gyldigFraOgMed": "2026-01-01",
+                  "leserettigheter": ["AAP"],
+                  "skriverettigheter": [],
+                  "endringslogg": []
+                }]
+                """.trimIndent(),
+            ) {
+                assertEquals("/api/v2/internbruker/fullmakt/bruker-som-fullmektig/alle-fullmakter", it.url.encodedPath)
+                assertEquals("false", it.url.queryParameter("endringslogg"))
+                val body = Buffer()
+                it.body!!.writeTo(body)
+                assertEquals("""{"ident":"12345678910"}""", body.readUtf8())
+                assertEquals("POST", it.method)
+            }
+        val result = RepresentasjonApiImpl("http://localhost", client).hentFullmakterForFullmektig(Fnr("12345678910"))
+        assertEquals("55555666000", result.single().fullmaktsgiver)
+    }
+
+    @Test
+    fun `henter vergemal hvor brukeren er verge`() {
+        val client =
+            client(
+                200,
+                """
+                [{
+                  "id": 42,
+                  "verge": "12345678910",
+                  "vergehaver": "55555666000",
+                  "vergemaalstype": "VOKSEN",
+                  "gyldigFraOgMed": "2026-01-01",
+                  "aktivt": false,
+                  "leserettigheter": ["AAP"],
+                  "skriverettigheter": []
+                }]
+                """.trimIndent(),
+            ) {
+                assertEquals("/api/v2/internbruker/vergemaal/bruker-som-verge/aktive-og-utgaatte-vergemaal", it.url.encodedPath)
+                assertEquals("false", it.url.queryParameter("endringslogg"))
+                val body = Buffer()
+                it.body!!.writeTo(body)
+                assertEquals("""{"ident":"12345678910"}""", body.readUtf8())
+                assertEquals("POST", it.method)
+            }
+        val result = RepresentasjonApiImpl("http://localhost", client).hentVergemalForVerge(Fnr("12345678910"))
+        assertEquals("55555666000", result.single().vergehaver)
+        assertEquals(false, result.single().aktivt)
+    }
+
+    @Test
+    fun `nye oppslag skiller tom liste og dokumentert 404 fra feil`() {
+        for (hent in listOf(RepresentasjonApi::hentFullmakterForFullmektig, RepresentasjonApi::hentVergemalForVerge)) {
+            for (status in listOf(401, 403, 500, 503)) {
+                val api = RepresentasjonApiImpl("http://localhost", client(status, """{"title":"Feil"}"""))
+                assertThrows(Exception::class.java) { hent(api, Fnr("12345678910")) }
+            }
+            for ((status, body) in listOf(200 to "[]", 404 to """{"title":"Not Found"}""")) {
+                val api = RepresentasjonApiImpl("http://localhost", client(status, body))
+                assertTrue(hent(api, Fnr("12345678910")).isEmpty())
+            }
+            for ((status, body) in listOf(204 to "", 200 to "ugyldig json")) {
+                val api = RepresentasjonApiImpl("http://localhost", client(status, body))
+                assertThrows(Exception::class.java) { hent(api, Fnr("12345678910")) }
+            }
+        }
+    }
 }

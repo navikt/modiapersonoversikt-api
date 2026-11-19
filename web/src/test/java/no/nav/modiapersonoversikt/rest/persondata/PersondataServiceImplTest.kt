@@ -329,6 +329,8 @@ internal class PersondataServiceImplTest {
         vararg identer: String,
         inkluderRelasjoner: Boolean = false,
     ) {
+        every { representasjonApi.hentFullmakterForFullmektig(any()) } returns emptyList()
+        every { representasjonApi.hentVergemalForVerge(any()) } returns emptyList()
         every { kodeverk.hentKodeverk<String, String>(any()) } returns gittKodeverk()
         every { pdl.hentPersondata(any()) } returns
             mockk<HentPersondata.Result> {

@@ -10,6 +10,7 @@ import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Kontaktinformasjo
 import no.nav.modiapersonoversikt.consumer.pdl.generated.enums.Sivilstandstype
 import no.nav.modiapersonoversikt.consumer.pdl.generated.hentpersondata.*
 import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.FullmaktDto
+import no.nav.modiapersonoversikt.consumer.representasjon.generated.models.VergemaalDto
 import no.nav.modiapersonoversikt.consumer.tilgangsmaskinen.Tilgangsavslag
 import no.nav.modiapersonoversikt.consumer.veilarboppfolging.ArbeidsrettetOppfolging
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -48,6 +49,9 @@ class PersondataFletter(
         val skjulingsaarsaker: Map<String, Persondata.Skjulingsaarsak> = emptyMap(),
         val tilgangsfeil: Boolean = false,
         val tilgangsavslag: Map<String, Tilgangsavslag> = emptyMap(),
+        val fullmaktsgivere: PersondataResult<List<FullmaktDto>> = PersondataResult.NotRelevant(),
+        val vergehavere: PersondataResult<List<VergemaalDto>> = PersondataResult.NotRelevant(),
+        val pdlTredjepersonFeil: PersondataResult<Unit> = PersondataResult.NotRelevant(),
     ) {
         fun harTredjeperson(ident: String?): Boolean = ident != null && tredjepartsPerson.getOrElse(emptyMap()).containsKey(ident)
 
@@ -82,6 +86,9 @@ class PersondataFletter(
             listOf(
                 oppfolging,
                 fullmektige,
+                fullmaktsgivere,
+                vergehavere,
+                pdlTredjepersonFeil,
                 geografiskeTilknytning,
                 erEgenAnsatt,
                 navEnhet,
@@ -148,6 +155,8 @@ class PersondataFletter(
                     deltBosted = hentDeltBosted(data),
                     dodsbo = hentDodsbo(data),
                     fullmektige = hentFullmektige(data),
+                    fullmaktsgivere = hentFullmaktsgivere(data),
+                    vergehavere = hentVergehavere(data),
                     fullmakt = emptyList(),
                     vergemal = gjeldendeVergemal,
                     historiskeVergemal = historiskeVergemal,
@@ -935,6 +944,44 @@ class PersondataFletter(
                 )
             }
     }
+
+    private fun hentRepresentertPerson(
+        data: Data,
+        ident: String,
+    ): RepresentertPerson {
+        val person = data.tredjepartsPerson.getOrElse(emptyMap())[ident]
+        return RepresentertPerson(
+            ident = ident.takeIf { person != null },
+            navn = person?.navn?.firstOrNull(),
+            skjulingsaarsak = if (person != null) null else data.hentSkjulingsaarsak(ident) ?: Persondata.Skjulingsaarsak.UAVKLART,
+            tilgangsavslag = data.hentTilgangsavslag(ident),
+        )
+    }
+
+    private fun hentFullmaktsgivere(data: Data): List<Fullmaktsoppdrag> =
+        data.fullmaktsgivere.getOrElse(emptyList()).map {
+            Fullmaktsoppdrag(
+                id = it.fullmaktId,
+                person = hentRepresentertPerson(data, it.fullmaktsgiver),
+                gyldigFraOgMed = it.gyldigFraOgMed,
+                gyldigTilOgMed = it.gyldigTilOgMed,
+                leserettigheter = hentTemaer(it.leserettigheter),
+                skriverettigheter = hentTemaer(it.skriverettigheter),
+            )
+        }
+
+    private fun hentVergehavere(data: Data): List<Vergeoppdrag> =
+        data.vergehavere.getOrElse(emptyList()).map {
+            Vergeoppdrag(
+                id = it.id,
+                person = hentRepresentertPerson(data, it.vergehaver),
+                gyldigFraOgMed = it.gyldigFraOgMed,
+                aktivt = it.aktivt,
+                vergemaalstype = it.vergemaalstype,
+                leserettigheter = hentTemaer(it.leserettigheter),
+                skriverettigheter = hentTemaer(it.skriverettigheter),
+            )
+        }
 
     private fun hentFullmakt(fullmakt: FullmaktDto): Persondata.Fullmakt =
         Persondata.Fullmakt(
