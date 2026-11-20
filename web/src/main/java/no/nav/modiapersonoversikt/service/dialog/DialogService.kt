@@ -84,6 +84,7 @@ data class MeldingDTO(
     val ferdigstiltDato: OffsetDateTime,
     val sendtTilSladding: Boolean,
     val markertSomFeilsendtAv: Veileder?,
+    val sladdet: Boolean? = null,
 )
 
 class FortsettDialogDTO(

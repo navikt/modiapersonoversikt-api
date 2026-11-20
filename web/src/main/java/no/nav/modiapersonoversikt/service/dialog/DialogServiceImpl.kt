@@ -190,6 +190,7 @@ class DialogServiceImpl(
                     ferdigstiltDato = melding.sendtDato,
                     sendtTilSladding = (henvendelse.sladding == true),
                     markertSomFeilsendtAv = markertSomFeilsendtAv,
+                    sladdet = melding.sladdet,
                 )
             }
 
