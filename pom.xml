@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.2.0-RC2</version>
+        <version>4.2.0</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -30,7 +30,7 @@
         <wiremock.version>3.13.2</wiremock.version>
         <wss4j.version>4.0.3</wss4j.version>
 
-        <common.version>4.2026.11.05_07.24-dd0ce2805c16</common.version>
+        <common.version>4.2026.11.22_13.52-19e913ac7e8d</common.version>
         <modia-common-utils.version>1.2026.09.02-15.52-e0484649b92e</modia-common-utils.version>
         <tjenestespesifikasjoner.version>2633.1685ed5</tjenestespesifikasjoner.version>
         <org.jvnet.jaxb.version>4.0.16</org.jvnet.jaxb.version>
