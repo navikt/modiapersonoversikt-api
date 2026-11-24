@@ -4,10 +4,14 @@ import no.nav.common.types.identer.NavIdent
 import no.nav.modiapersonoversikt.commondomain.Temagruppe
 import no.nav.modiapersonoversikt.commondomain.Veileder
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.HenvendelseDTO
+import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.JournalRequestDTO
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.JournalpostDTO
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MarkeringDTO
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingDTO.Kanal
 import no.nav.modiapersonoversikt.consumer.sfhenvendelse.generated.models.MeldingFraDTO
+import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
+import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
+import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.rest.dialog.domain.Meldingstype
 import no.nav.modiapersonoversikt.rest.dialog.domain.Status
 import no.nav.modiapersonoversikt.rest.dialog.domain.TraadType
@@ -322,6 +326,27 @@ class DialogServiceImpl(
         meldingRequest: SendMelding,
     ): TraadDTO {
         if (meldingRequest.traadType == TraadType.SAMTALEREFERAT) {
+            val sak = meldingRequest.sak
+            if (sak != null) {
+                val gyldigFagsak =
+                    sak.fagsystemSaksId == null ||
+                        sak.fagsystemSaksId == "-" ||
+                        (
+                            !sak.fagsystemSaksId.isBlank() &&
+                                JournalRequestDTO.Fagsaksystem.entries.any { it.name == sak.fagsystemKode }
+                        )
+                if (
+                    meldingRequest.enhet.isBlank() ||
+                    meldingRequest.fritekst.isBlank() ||
+                    meldingRequest.fritekst.length > 15000 ||
+                    Temagruppe.SAMTALEREFERAT.none { it.name == meldingRequest.temagruppe } ||
+                    sak.temaKode.isNullOrBlank() ||
+                    (sak.fnr != null && sak.fnr != fnr) ||
+                    !gyldigFagsak
+                ) {
+                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Ugyldig referat eller journalføringsmål")
+                }
+            }
             val henvendelse =
                 sfHenvendelseService.sendSamtalereferat(
                     kjedeId = null,
@@ -331,7 +356,27 @@ class DialogServiceImpl(
                     fritekst = meldingRequest.fritekst,
                 )
 
-            return parseFraHenvendelseTilTraad(henvendelse)
+            val journalforingFeilet =
+                if (sak != null) {
+                    val audit =
+                        Audit.describe(
+                            Audit.Action.UPDATE,
+                            AuditResources.Person.Henvendelse.Journalfor,
+                            AuditIdentifier.FNR to fnr,
+                            AuditIdentifier.TRAAD_ID to henvendelse.kjedeId,
+                            AuditIdentifier.SAK_ID to sak.fagsystemSaksId,
+                        )
+                    journalfor(meldingRequest.enhet, henvendelse.kjedeId, sak).also { feilet ->
+                        if (feilet) {
+                            audit.failed(IllegalStateException("Journalføring feilet"))
+                        } else {
+                            audit.log(Unit)
+                        }
+                    }
+                } else {
+                    false
+                }
+            return parseFraHenvendelseTilTraad(henvendelse).copy(journalforingFeilet = journalforingFeilet)
         } else {
             val sak = meldingRequest.sak!!
             val temagruppe = DialogTemagruppeTemaMapping.hentTemagruppeForTema(sak.temaKode)
