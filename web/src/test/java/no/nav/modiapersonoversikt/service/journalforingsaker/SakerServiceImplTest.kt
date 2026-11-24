@@ -133,6 +133,26 @@ class SakerServiceImplTest {
     }
 
     @Test
+    fun `oppretter generell KLL sak med temanavn fra kodeverk`() {
+        every { safService.hentSaker(any()) } returns GenericGraphQlResponse()
+        every { kodeverk.hentKodeverk<String, String>(KodeverkConfig.ARKIVTEMA) } returns
+            EnhetligKodeverk.Kodeverk("Arkivtemaer", mapOf("KLL" to "Klage - lønnsgaranti"))
+
+        val kllSaker =
+            sakerService
+                .hentSaker(FNR)
+                .saker
+                .filter { it.temaKode == "KLL" && it.sakstype == SAKSTYPE_GENERELL }
+
+        assertThat(kllSaker.size, `is`(1))
+        val kllSak = kllSaker.single()
+        assertThat(kllSak.temaNavn, `is`("Klage - lønnsgaranti"))
+        assertThat(kllSak.fagsystemKode, `is`("FS22"))
+        assertThat(kllSak.sakstype, `is`(SAKSTYPE_GENERELL))
+        assertThat(kllSak.fagsystemSaksId, nullValue())
+    }
+
+    @Test
     @DisplayName("oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak")
     fun `oppretter ikke generell oppfolgingssak`() {
         every { safService.hentSaker(any()) } returns createOppfolgingSaksliste()
