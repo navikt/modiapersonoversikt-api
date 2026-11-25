@@ -249,6 +249,11 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>tms-event-api</artifactId>
+            <version>dev</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-soknadsstatus-api</artifactId>
             <version>${project.version}</version>
         </dependency>

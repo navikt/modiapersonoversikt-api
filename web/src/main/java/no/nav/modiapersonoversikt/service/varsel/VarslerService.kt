@@ -33,5 +33,11 @@ interface VarslerService {
         val sendteKanaler: List<String>,
         val feilhistorikk: List<Brukernotifikasjon.Feilhistorikk>,
         val sistOppdatert: ZonedDateTime,
+        val kanal: String? = null,
+        val tittel: String? = null,
+        val tekst: String? = null,
+        val renotifikasjonKanal: String? = null,
+        val renotifikasjonTittel: String? = null,
+        val renotifikasjonTekst: String? = null,
     )
 }

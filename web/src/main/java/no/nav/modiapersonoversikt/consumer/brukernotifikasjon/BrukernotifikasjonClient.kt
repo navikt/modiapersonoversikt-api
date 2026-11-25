@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.consumer.brukernotifikasjon
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.consumer.tms.generated.BrukervarselDTO
 import no.nav.modiapersonoversikt.infrastructure.http.OkHttpUtils.objectMapper
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -12,7 +13,7 @@ class BrukernotifikasjonClient(
     val baseUrl: String,
     val httpClient: OkHttpClient,
 ) : Brukernotifikasjon.Client {
-    override fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<Brukernotifikasjon.Event> {
+    override fun hentAlleBrukernotifikasjoner(fnr: Fnr): List<BrukervarselDTO> {
         val requestBody =
             objectMapper
                 .writeValueAsString(mapOf("ident" to fnr.get()))

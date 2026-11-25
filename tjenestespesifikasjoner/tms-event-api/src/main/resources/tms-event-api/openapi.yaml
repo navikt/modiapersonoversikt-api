@@ -1,0 +1,266 @@
+openapi: 3.0.3
+info:
+  title: tms-event-api
+  version: "1.0.0"
+  description: Api for å gi innsyn i privatbrukers varsler
+servers:
+  - url: /tms-event-api
+paths:
+  /varsel/{aktiv-filter}:
+    get:
+      tags:
+        - Varsel
+      summary: Hent varsler med fødselsnummer fra header. Bør erstattes med post-endepunkt for å forhindre feilaktig logging av headere.
+      deprecated: true
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: aktiv-filter
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [alle, aktive, inaktive]
+          description: Filter for hvilke varsler som returneres.
+        - name: fodselsnummer
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          description: Fødselsnummer (11 tegn).
+      responses:
+        "200":
+          description: Liste med varsler.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Brukervarsel"
+        "400":
+          description: Ugyldig eller manglende fødselsnummer.
+        "401":
+          description: Manglende eller ugyldig token.
+        "404":
+          description: Ugyldig verdi for path-parameteren aktiv.
+        "503":
+          description: Feil ved kall til baktjeneste.
+        "500":
+          description: Uventet feil.
+    post:
+      tags:
+        - Varsel
+      summary: Hent varsler med ident i request body
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: aktiv-filter
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [alle, aktive, inaktive]
+          description: Filter for hvilke varsler som returneres.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IdentBody"
+      responses:
+        "200":
+          description: Liste med varsler.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Brukervarsel"
+                example:
+                  - type: beskjed
+                    varselId: "abc-123"
+                    aktiv: true
+                    produsent:
+                      namespace: team-fagsystem
+                      appnavn: applikasjonsnavn
+                    sensitivitet: substantial
+                    innhold:
+                      tekst: Beskjed på min side
+                      link: "https://www.nav.no"
+                    opprettet: "2026-01-01T10:00:00Z"
+                    aktivFremTil: "2026-02-01T10:00:00Z"
+                    inaktivert: null
+                    inaktivertAv: null
+                    eksternVarsling:
+                      sendt: true
+                      sendtTidspunkt: "2026-01-01T10:05:00Z"
+                      sendtSomBatch: false
+                      kanal: "SMS"
+                      tittel: null
+                      tekst: "Du har fått en ny beskjed på nav.no"
+                      renotifikasjonSendt: false
+                      renotifikasjonTidspunkt: null
+                      renotifikasjonKanal: null
+                      renotifikasjonTittel: null
+                      renotifikasjonTekst: null
+                      kanaler:
+                        - SMS
+                      feilhistorikk: [ ]
+                      sistOppdatert: "2026-01-01T10:05:00Z"
+        "400":
+          description: Ugyldig eller manglende ident i body.
+        "401":
+          description: Manglende eller ugyldig token.
+        "404":
+          description: Ugyldig verdi for path-parameteren aktiv.
+        "503":
+          description: Feil ved kall til varsel-authority.
+        "500":
+          description: Uventet feil.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    IdentBody:
+      type: object
+      required: [ident]
+      properties:
+        ident:
+          type: string
+          minLength: 11
+          maxLength: 11
+          description: Fødselsnummer (11 tegn).
+    Brukervarsel:
+      type: object
+      required:
+        - type
+        - varselId
+        - aktiv
+        - produsent
+        - sensitivitet
+        - innhold
+        - opprettet
+      properties:
+        type:
+          type: string
+          enum: [innboks, beskjed, oppgave]
+        varselId:
+          type: string
+        aktiv:
+          type: boolean
+        produsent:
+          $ref: "#/components/schemas/Produsent"
+        sensitivitet:
+          $ref: "#/components/schemas/Sensitivitet"
+        innhold:
+          $ref: "#/components/schemas/Innhold"
+        eksternVarsling:
+          $ref: "#/components/schemas/EksternVarsling"
+        opprettet:
+          type: string
+          format: date-time
+        aktivFremTil:
+          type: string
+          format: date-time
+          nullable: true
+        inaktivert:
+          type: string
+          format: date-time
+          nullable: true
+        inaktivertAv:
+          type: string
+          nullable: true
+    Innhold:
+      type: object
+      required: [tekst]
+      properties:
+        tekst:
+          type: string
+        link:
+          type: string
+          nullable: true
+    Produsent:
+      type: object
+      required: [namespace, appnavn]
+      properties:
+        namespace:
+          type: string
+        appnavn:
+          type: string
+    Sensitivitet:
+      type: string
+      enum: [substantial, high]
+    EksternVarsling:
+      type: object
+      required:
+        - sendt
+        - sendtSomBatch
+        - renotifikasjonSendt
+        - kanaler
+        - feilhistorikk
+        - sistOppdatert
+      properties:
+        sendt:
+          type: boolean
+        sendtTidspunkt:
+          type: string
+          format: date-time
+          nullable: true
+        sendtSomBatch:
+          type: boolean
+        kanal:
+          type: string
+          nullable: true
+          description:
+            Kanal for initiell sending. Hvis denne er null vil tittel og tekst alltid være null.
+            For varsler sendt før 11/11/2026 vil denne alltid være null grunnet manglende data i baksystem.
+        tittel:
+          type: string
+          nullable: true
+        tekst:
+          type: string
+          nullable: true
+        renotifikasjonSendt:
+          type: boolean
+        renotifikasjonTidspunkt:
+          type: string
+          format: date-time
+          nullable: true
+        renotifikasjonKanal:
+          type: string
+          nullable: true
+          description:
+            Kanal for siste renotifikasjon. Hvis denne er null vil renotifikasjonTittel og renotifikasjonTekst alltid være null.
+            For varsler sendt før 11/11/2026 vil denne alltid være null grunnet manglende data i baksystem.
+        renotifikasjonTittel:
+          type: string
+          nullable: true
+        renotifikasjonTekst:
+          type: string
+          nullable: true
+        kanaler:
+          type: array
+          items:
+            type: string
+        feilhistorikk:
+          type: array
+          items:
+            $ref: "#/components/schemas/EksternVarslingFeil"
+        sistOppdatert:
+          type: string
+          format: date-time
+    EksternVarslingFeil:
+      type: object
+      required: [feilmelding, tidspunkt]
+      properties:
+        feilmelding:
+          type: string
+        tidspunkt:
+          type: string
+          format: date-time
