@@ -43,7 +43,7 @@ jobs:
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
         if: github.ref == 'refs/heads/master'
-        uses: nais/docker-build-push@v0
+        uses: nais/docker-build-push@v1
         id: docker-build-push
         with:
           team: personoversikt

@@ -47,7 +47,7 @@ jobs:
           mvn -P ci -B test --settings .github/maven-settings.xml -Dvalkey.integration.enabled=true
           mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
       - name: Publish Image
-        uses: nais/docker-build-push@v0
+        uses: nais/docker-build-push@v1
         id: docker-build-push
         with:
           team: personoversikt
