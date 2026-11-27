@@ -46,8 +46,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <!-- Source: https://github.com/navikt/tms-event-api/blob/4d7fe9c0c81a38b4f8c021d916e03c7b82ab00f5/src/main/resources/swagger.yaml -->
-                            <inputSpec>${project.basedir}/src/main/resources/tms-event-api/openapi.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/navikt/tms-event-api/refs/heads/main/src/main/resources/swagger.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <packageName>no.nav.modiapersonoversikt.consumer.tms.generated</packageName>
                             <modelPackage>no.nav.modiapersonoversikt.consumer.tms.generated</modelPackage>
